@@ -18,5 +18,8 @@
   "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
   "devDependencies": {
     "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "node-opcua": "^2.50.0"
   }
 }
