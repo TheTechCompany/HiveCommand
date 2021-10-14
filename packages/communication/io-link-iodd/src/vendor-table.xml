@@ -1,0 +1,4150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by Martin Wollschlaeger (Prozesskommunikation, Fakultaet Informatik, TU Dresden) -->
+<?xml-stylesheet type="text/xsl" href="Vendor_ID_Table.xsl"?>
+<Man_ID_Table xmlns="http://www.profibus.com/IM/2003/11/Man_ID" xmlns:doc="http://www.profibus.com/Document" xmlns:prim="http://www.profibus.com/Common/2003/11/Primitives" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.profibus.com/IM/2003/11/Man_ID IM-Man_ID-v1.0.xsd">
+	<doc:DocumentInfo Version="145" ReleaseType="Version" ReleaseDate="2021-06-18">
+		<prim:LastModified Tool="PROFIBUS I&amp;M Functions" User="IO-Link Webmaster" Timestamp="20221-05-12T12:36:00+01:00"/>
+		<doc:DocumentType>Table</doc:DocumentType>
+		<doc:DocumentTitle xml:lang="en">Vendor ID Table</doc:DocumentTitle>
+		<doc:DocumentTitle xml:lang="de">Lieferanten-ID-Tabelle</doc:DocumentTitle>
+		<doc:DocumentNumber>6.015</doc:DocumentNumber>
+		<doc:Author TC="4" TC_Name="System Integration" WG="6" WG_Name="Prof. Martin Wollschlaeger, TU Dresden, for the IO-Link Community"/>
+		<doc:Copyright>(C) Copyright IO-Link 2009-2021 - All Rights Reserved</doc:Copyright>
+		<doc:Comment>This file contains the list of manufacturers within IO-Link. This XML document may be downloaded by any engineering or service tools as long as its vendor is a member of the IO-Link community.</doc:Comment>
+	</doc:DocumentInfo>
+		
+	<Manufacturer ID="1">
+		<ManufacturerInfo>
+			<ManufacturerName>Pepperl+Fuchs</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pepperl-fuchs.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 621 776 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+  <Manufacturer ID="2">
+    <ManufacturerInfo>
+      <ManufacturerName>Rockwell Automation</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.rockwellautomation.com/"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="17">
+		<ManufacturerInfo>
+			<ManufacturerName>Endress+Hauser</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.process-solutions.endress.com "/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+  <Manufacturer ID="26">
+		<ManufacturerInfo>
+			<ManufacturerName>SICK AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sick.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="29">
+		<ManufacturerInfo>
+			<ManufacturerName>M-System Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.m-system.co.jp"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-6-6659-8201"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="38">
+		<ManufacturerInfo>
+			<ManufacturerName>Rosemount Inc.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.emerson.com/rosemount"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+1 800 999 9307"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="42">
+		<ManufacturerInfo>
+			<ManufacturerName>SIEMENS AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.siemens.de"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="66">
+		<ManufacturerInfo>
+			<ManufacturerName>SAMSON AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.samson.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="87">
+		<ManufacturerInfo>
+			<ManufacturerName>wenglor sensoric GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wenglor.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="98">
+		<ManufacturerInfo>
+			<ManufacturerName>VEGA Grieshaber KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.vega.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="114">
+		<ManufacturerInfo>
+			<ManufacturerName> Dynisco Instruments LLC</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.dynisco.com/sensors-and-measurement/sensors/Melt-Pressure-Transmitters"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+1 508 541 9400"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="117">
+		<ManufacturerInfo>
+			<ManufacturerName>Klay Instruments b.v.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.klay-instruments.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+31521591550"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="120">
+		<ManufacturerInfo>
+			<ManufacturerName>Bürkert Werke GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.burkert.com/en"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="127">
+		<ManufacturerInfo>
+			<ManufacturerName>LABOM Mess- und Regeltechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.labom.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 4408 804-444"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="131">
+		<ManufacturerInfo>
+			<ManufacturerName>SMC Corp.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.smcworld.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81 (0) 297 52 6665"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="176">
+		<ManufacturerInfo>
+			<ManufacturerName>Phoenix Contact GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="234">
+		<ManufacturerInfo>
+			<ManufacturerName>J. Schmalz GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.schmalz.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 7443 2403 0"/>
+    </ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="259">
+		<ManufacturerInfo>
+			<ManufacturerName>Bosch Rexroth AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="262">
+		<ManufacturerInfo>
+			<ManufacturerName>Lenze Drives GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.lenze.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 5154 820"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="266">
+		<ManufacturerInfo>
+			<ManufacturerName>SEW-EURODRIVE GmbH &amp; Co KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sew-eurodrive.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=" +49 800 7394357"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="271">
+		<ManufacturerInfo>
+			<ManufacturerName>Parker Hannifin</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.parker.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="272">
+		<ManufacturerInfo>
+			<ManufacturerName>Fraba B.V.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.posital.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+4922196213-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="285">
+		<ManufacturerInfo>
+			<ManufacturerName>Wago Kontakttechnik GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wago.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="286">
+		<ManufacturerInfo>
+			<ManufacturerName>Hilscher Gesellschaft fuer Systemautomation mbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+		<Manufacturer ID="287">
+		<ManufacturerInfo>
+			<ManufacturerName>Bosch Rexroth AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="288">
+		<ManufacturerInfo>
+			<ManufacturerName>Beckhoff Automation GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.beckhoff.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+ 49 5246 963-157"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="289">
+		<ManufacturerInfo>
+			<ManufacturerName>Bihl+Wiedemann GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.bihl-wiedemann.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49621339960"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="292">
+		<ManufacturerInfo>
+			<ManufacturerName>Deutschmann Automation GmbH und Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.deutschmann.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 6434 9433 0"/> 
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="295">
+		<ManufacturerInfo>
+			<ManufacturerName>Molex Incorporated</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.molex.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/> 
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="297">
+		<ManufacturerInfo>
+			<ManufacturerName>Schneider Electric</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="303">
+		<ManufacturerInfo>
+			<ManufacturerName>Murrelektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.murrelektronik.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 7191 / 47 1000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="308">
+		<ManufacturerInfo>
+			<ManufacturerName>Weidmüller Interface GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.weidmueller.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5231 140"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="309">
+		<ManufacturerInfo>
+			<ManufacturerName>EUCHNER GmbH + Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.euchner.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 711-7597-500"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="310">
+		<ManufacturerInfo>
+			<ManufacturerName>ifm electronic gmbh</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ifm.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 1803 / 43 64 63"/>
+			<Info xml:lang="de" Tag="hotline_call" URI="+49 (0) 1803 / 43 64 63"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="317">
+		<ManufacturerInfo>
+			<ManufacturerName>Hans Turck GmbH &amp; Co.KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.turck.de/io-link"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="333">
+		<ManufacturerInfo>
+			<ManufacturerName>Festo</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.festo.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="334">
+		<ManufacturerInfo>
+			<ManufacturerName>MESCO Engineering GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mesco-engineering.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="335">
+		<ManufacturerInfo>
+			<ManufacturerName>TMG TE GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.tmgte.de/en/io-link"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 721 828 060"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="338">
+		<ManufacturerInfo>
+			<ManufacturerName>Leuze electronic GmbH + Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.leuze.de"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="339">
+		<ManufacturerInfo>
+			<ManufacturerName>TR-Electronic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.tr-electronic.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49(7425)228-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="342">
+		<ManufacturerInfo>
+			<ManufacturerName>Contrinex AG Industrial Electronics</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.contrinex.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="345">
+		<ManufacturerInfo>
+			<ManufacturerName>TWK-ELEKTRONIK GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.twk.de/produkte"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 211/96117-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="346">
+		<ManufacturerInfo>
+			<ManufacturerName>Intelligent Platforms, LLC</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.emerson.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+1-888-565-4155"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+  <Manufacturer ID="347">
+    <ManufacturerInfo>
+      <ManufacturerName>Sensopart Industriesensorik GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.sensopart.net/index.php?newlang=english"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="348">
+		<ManufacturerInfo>
+			<ManufacturerName>HYDAC ELECTRONIC GMBH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hydac.com/de-en.html"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="350">
+    <ManufacturerInfo>
+    	<ManufacturerName>Baumer Electric AG</ManufacturerName>
+    	<Info xml:lang="en" Tag="web_url" URI="www.baumergroup.de"/>
+    </ManufacturerInfo>
+    <IM_Info>
+    	<IM_Root URI=""/>
+    	<IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="355">
+    <ManufacturerInfo>
+    	<ManufacturerName>Pepperl+Fuchs Comtrol Inc</ManufacturerName>
+    	<Info xml:lang="en" Tag="web_url" URI="www.comtrol.com"/>
+		<Info xml:lang="en" Tag="hotline_call" URI="+1 800 926 6876"/>
+    </ManufacturerInfo>
+    <IM_Info>
+    	<IM_Root URI=""/>
+    	<IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="362">
+    <ManufacturerInfo>
+    	<ManufacturerName>Belden Deutschland GmbH</ManufacturerName>
+    	<Info xml:lang="en" Tag="web_url" URI="www.beldensolutions.com"/>
+    </ManufacturerInfo>
+    <IM_Info>
+    	<IM_Root URI=""/>
+    	<IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="364">
+    <ManufacturerInfo>
+    	<ManufacturerName>Microcyber Inc.</ManufacturerName>
+    	<Info xml:lang="en" Tag="web_url" URI="www.microcyber.cn/en/"/>
+    </ManufacturerInfo>
+    <IM_Info>
+    	<IM_Root URI=""/>
+    	<IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="371">
+    <ManufacturerInfo>
+    	<ManufacturerName>KEBA AG</ManufacturerName>
+    	<Info xml:lang="en" Tag="web_url" URI="www.keba.com"/>
+    </ManufacturerInfo>
+    <IM_Info>
+    	<IM_Root URI=""/>
+    	<IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="375">
+    <ManufacturerInfo>
+      <ManufacturerName>Karl E. Brinkmann GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.keb.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 5263 4010"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="396">
+    <ManufacturerInfo>
+      <ManufacturerName>Renesas Electronics Corporation</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.renesas.com/index.jsp"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="397">
+    <ManufacturerInfo>
+      <ManufacturerName>Wieland Electric GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.wieland-electric.com"/>
+	  <Info xml:lang="en" Tag="hotline_call" URI="+49 951 9324 995"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="403">
+		<ManufacturerInfo>
+			<ManufacturerName>HARTING Electric GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.harting.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+495772470"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+  <Manufacturer ID="408">
+		<ManufacturerInfo>
+			<ManufacturerName>Kübler Group, Fritz Kübler GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kuebler.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 7720 - 3903 849"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+  <Manufacturer ID="412">
+		<ManufacturerInfo>
+			<ManufacturerName>Datalogic s.r.l</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.datalogic.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+39 051 314 7011"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+  <Manufacturer ID="414">
+    <ManufacturerInfo>
+      <ManufacturerName>embeX GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.embex.de"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="418">
+		<ManufacturerInfo>
+			<ManufacturerName>HOMAG AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.homag.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="419">
+    <ManufacturerInfo>
+      <ManufacturerName>microsonic GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.microsonic.de/en/Products/picoplus/IO-LINK.htm"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 231 975151 0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="422">
+    <ManufacturerInfo>
+      <ManufacturerName>HMT Microelectronic AG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.hmt.ch"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+41 32 365 1181"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="429">
+    <ManufacturerInfo>
+      <ManufacturerName>Hottinger Brüel &amp; Kjaer GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.hbkworld.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 6151 8030"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="431">
+    <ManufacturerInfo>
+      <ManufacturerName>Infineon Technologies AG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.infineon.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="434">
+    <ManufacturerInfo>
+      <ManufacturerName>DR. JOHANNES HEIDENHAIN GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.heidenhain.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="438">
+    <ManufacturerInfo>
+      <ManufacturerName>Schildknecht AG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.schildknecht.ag/en/"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="451">
+    <ManufacturerInfo>
+      <ManufacturerName>Banner Engineering Corp.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.bannerengineering.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="452">
+    <ManufacturerInfo>
+      <ManufacturerName>Texas Instruments</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.ti.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+ 
+ 
+  <Manufacturer ID="478">
+    <ManufacturerInfo>
+      <ManufacturerName>Maxim Integrated Products, Inc.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.maxim-ic.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="505">
+    <ManufacturerInfo>
+      <ManufacturerName>GEFRAN SPA</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.gefran.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+3903098881"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="507">
+    <ManufacturerInfo>
+      <ManufacturerName>Pentronic AB</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.pentroic.se"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+46 490258500"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+ 
+ <Manufacturer ID="509">
+    <ManufacturerInfo>
+      <ManufacturerName>KEYENCE CORPORATION</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.keyence.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="516">
+    <ManufacturerInfo>
+      <ManufacturerName>MESA Systemtechnik GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.mesa-systemtechnik.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+ <Manufacturer ID="528">
+    <ManufacturerInfo>
+      <ManufacturerName>UNIVER S.p.A.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.univer-group.com/it/prodotti.php"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+39 02 25298.291"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="540">
+    <ManufacturerInfo>
+      <ManufacturerName>MITSUBISHI ELECTRIC CORPORATION</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.mitsubishielectric.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="545">
+    <ManufacturerInfo>
+      <ManufacturerName>di-soric GmbH &amp; Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.di-soric.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="558">
+    <ManufacturerInfo>
+      <ManufacturerName>Freescale Semiconductor</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.freescale.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="561">
+    <ManufacturerInfo>
+      <ManufacturerName>ITOH DENKI CO.,LTD</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.itohdenki.co.jp"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="565">
+    <ManufacturerInfo>
+      <ManufacturerName>Dialog Semiconductor Bingen GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.dialog-semiconductor.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="574">
+    <ManufacturerInfo>
+      <ManufacturerName>Shenzhen Maxonic Automation Control Co., Ltd.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.maxonic.com.cn"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="575">
+    <ManufacturerInfo>
+      <ManufacturerName>Kistler Instrumente GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.kistler.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="576">
+    <ManufacturerInfo>
+      <ManufacturerName>IQ2 Development GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.iq2-development.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="587">
+    <ManufacturerInfo>
+      <ManufacturerName>K. A. Schmersal GmbH &amp; Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.schmersal.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49(0)202 6474 0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="592">
+    <ManufacturerInfo>
+      <ManufacturerName>iC-Haus GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.ichaus.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="604">
+    <ManufacturerInfo>
+      <ManufacturerName>TRsystems GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="wwww.trsystems.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 7425 228 0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="612">
+    <ManufacturerInfo>
+      <ManufacturerName>OMRON Corporation</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.eu.omron.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+
+  <Manufacturer ID="621">
+    <ManufacturerInfo>
+      <ManufacturerName>Sensirion AG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.sensirion.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="623">
+    <ManufacturerInfo>
+      <ManufacturerName>Hosta Motion Control CO.,LTD</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.hostamc.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="635">
+		<ManufacturerInfo>
+			<ManufacturerName>Wachendorff Automation GmbH &amp; Co.KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wachendorff-automation.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6722 9965-414"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+  </Manufacturer>
+	
+  <Manufacturer ID="641">
+    <ManufacturerInfo>
+      <ManufacturerName>LAUMAS ELETTRONICA SRL</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.laumas.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+390521683124"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="643">
+    <ManufacturerInfo>
+      <ManufacturerName>Friedrich Luetze GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.luetze.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="646">
+    <ManufacturerInfo>
+      <ManufacturerName>TEConcept GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.teconcept.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="649">
+    <ManufacturerInfo>
+      <ManufacturerName>ASA-RT s.r.l.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.asa-rt.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="673">
+    <ManufacturerInfo>
+      <ManufacturerName>HSD S.p.A.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.hsd.it"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="669">
+    <ManufacturerInfo>
+      <ManufacturerName>BD SENSORS GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.bdsensors.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="690">
+    <ManufacturerInfo>
+      <ManufacturerName>WERMA Signaltechnik GmbH + Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.werma.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="693">
+    <ManufacturerInfo>
+      <ManufacturerName>AVENTICS GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.aventics.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="696">
+    <ManufacturerInfo>
+      <ManufacturerName>E-T-A Elektrotechnische Apparate GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.e-t-a.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="703">
+    <ManufacturerInfo>
+      <ManufacturerName>EGE-Elektronik Spezial-Sensoren GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.ege-elektronik.com/en/"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="728">
+    <ManufacturerInfo>
+      <ManufacturerName>halstrup-walcher GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.halstrup-walcher.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="734">
+    <ManufacturerInfo>
+      <ManufacturerName>LARsys-Automation GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.LARsys.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="753">
+    <ManufacturerInfo>
+      <ManufacturerName>ASCO Numatics GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.asconumatics.eu"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="754">
+    <ManufacturerInfo>
+      <ManufacturerName>SONTEC Sensorbau GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.sontec.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="757">
+    <ManufacturerInfo>
+      <ManufacturerName>Anywire Corporation</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.anywire.jp"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+81-75-956-1611"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="763">
+    <ManufacturerInfo>
+      <ManufacturerName>PATLITE Corporation</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.patlite.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+81 6 7688 5400"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="765">
+    <ManufacturerInfo>
+      <ManufacturerName>SCHUNK GmbH &amp; Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI=""/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="773">
+    <ManufacturerInfo>
+      <ManufacturerName>M.D. Micro Detectors S.p.A.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.microdetectors.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+39 059420411"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="779">
+    <ManufacturerInfo>
+      <ManufacturerName>Novotechnik Messwertaufnehmer OHG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.novotechnik.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 (0)711 4489 250"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="780">
+    <ManufacturerInfo>
+      <ManufacturerName>ipf electronic gmbh</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.ipf-electronic.de/service/downloads/IO-Link"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 2351 9365-65"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="783">
+    <ManufacturerInfo>
+      <ManufacturerName>item Industrietechnik GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.item24.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 212 65 80-0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="786">
+    <ManufacturerInfo>
+      <ManufacturerName>Tianjin Geneuo Technology Co., Ltd.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.gsee-tech.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="789">
+    <ManufacturerInfo>
+      <ManufacturerName>XECRO GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="xecro.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 5131 97791-0"/>
+	  <Info xml:lang="en" Tag="web_query" URI="support@xecro.com"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="791">
+    <ManufacturerInfo>
+      <ManufacturerName>Germbedded GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.germbedded.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+41 52 551 01 83"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="793">
+    <ManufacturerInfo>
+      <ManufacturerName>Bernstein AG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.bernstein.eu"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 571 793 0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="795">
+    <ManufacturerInfo>
+      <ManufacturerName>Bühler Technologies GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.buehler-technologies.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 2102 4989 0"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="796">
+    <ManufacturerInfo>
+      <ManufacturerName>PIAB AB</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.piab.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+46 86 30 25 00"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="805">
+    <ManufacturerInfo>
+      <ManufacturerName>Camozzi Automation spa</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.catalogue.camozzi.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+39 030 3792790"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="806">
+    <ManufacturerInfo>
+      <ManufacturerName>RAFI Systec GmbH + Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.rafi-systec.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="807">
+    <ManufacturerInfo>
+      <ManufacturerName>AMADA ENGINEERING CO., LTD.</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.amada.co.jp"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+81 463 961 111"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="808">
+    <ManufacturerInfo>
+      <ManufacturerName>Lemonage Software GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.lemonage.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="809">
+    <ManufacturerInfo>
+      <ManufacturerName>Temposonics GmbH + Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.temposonics.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+  <Manufacturer ID="810">
+    <ManufacturerInfo>
+      <ManufacturerName>TRONTEQ Electronic GbR</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.tronteq.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+	<Manufacturer ID="811">
+		<ManufacturerInfo>
+			<ManufacturerName>Cosys Inc.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.cosys-control.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+  <Manufacturer ID="815">
+    <ManufacturerInfo>
+      <ManufacturerName>Weiss Robotics GmbH + Co. KG</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.weiss-robotics.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="820">
+    <ManufacturerInfo>
+      <ManufacturerName>MLS Lanny GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.mls-lanny.de"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 (0)7081 9534-33"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="821">
+    <ManufacturerInfo>
+      <ManufacturerName>TE Connectivity Germany GmbH</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.te.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI="+49 6151 607 1999"/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+  
+  <Manufacturer ID="829">
+    <ManufacturerInfo>
+      <ManufacturerName>Cypress Semiconductor</ManufacturerName>
+      <Info xml:lang="en" Tag="web_url" URI="www.cypress.com"/>
+      <Info xml:lang="en" Tag="hotline_call" URI=""/>
+    </ManufacturerInfo>
+    <IM_Info>
+      <IM_Root URI=""/>
+      <IM_Definitions URI=""/>
+    </IM_Info>
+  </Manufacturer>
+
+	<Manufacturer ID="832">
+		<ManufacturerInfo>
+			<ManufacturerName>KELLER HCW GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.keller.de/its"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="834">
+		<ManufacturerInfo>
+			<ManufacturerName>Panasonic Industrial Devices SUNX Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="http://www2.panasonic.co.jp/id/pidsx/e/index.html"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49-89-45354-1000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="836">
+		<ManufacturerInfo>
+			<ManufacturerName>Zimmer GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="zimmer-group.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="837">
+		<ManufacturerInfo>
+			<ManufacturerName>autosen gmbh</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.autosen.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 201 749 189 21"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+	
+	<Manufacturer ID="839">
+		<ManufacturerInfo>
+			<ManufacturerName>JUMO GmbH u. Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.jumo.net"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 661 6003-9135"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="844">
+		<ManufacturerInfo>
+			<ManufacturerName>AIRTEC Pneumatic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.airtec.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 6173 95620"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="847">
+		<ManufacturerInfo>
+			<ManufacturerName>U.I. Lapp GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.lappkabel.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="850">
+		<ManufacturerInfo>
+			<ManufacturerName>Genge Thoma AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gengethoma.ch"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+41 32 652 33 30"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="851">
+		<ManufacturerInfo>
+			<ManufacturerName>Sensor Instruments GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sensorinstruments.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 854497190"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="855">
+		<ManufacturerInfo>
+			<ManufacturerName>CKD Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ckd.co.jp/english"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="856">
+		<ManufacturerInfo>
+			<ManufacturerName>MP-SENSOR GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mp-sensor.de/de/service/software.html"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 7158 9879740"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="858">
+		<ManufacturerInfo>
+			<ManufacturerName>Dimetix AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.dimetix.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>	
+
+	<Manufacturer ID="867">
+		<ManufacturerInfo>
+			<ManufacturerName>CHUO ELECTRONICS CO.,LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.cec.co.jp/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="871">
+		<ManufacturerInfo>
+			<ManufacturerName>NAGANO KEIKI CO., LTD.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.naganokeiki.co.jp/?lng=eng"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81337765328"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="877">
+		<ManufacturerInfo>
+			<ManufacturerName>Aquaduna GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.aquaduna.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="888">
+		<ManufacturerInfo>
+			<ManufacturerName>Balluff</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.balluff.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="896">
+		<ManufacturerInfo>
+			<ManufacturerName>Carlo Gavazzi Industri A/S</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gavazziautomation.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="898">
+		<ManufacturerInfo>
+			<ManufacturerName>Barksdale GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.barksdale.de"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="899">
+		<ManufacturerInfo>
+			<ManufacturerName>Autonics Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.autonics.co.kr"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+82 032-610-2730"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="900">
+		<ManufacturerInfo>
+			<ManufacturerName>W.E.St. Elektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.w-e-st.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 2163 577355-14"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="910">
+		<ManufacturerInfo>
+			<ManufacturerName>Azbil Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.azbil.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-466-20-2225"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="911">
+		<ManufacturerInfo>
+			<ManufacturerName>JSL Technology Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="jslt.co.jp"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-283-24-5077"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="923">
+		<ManufacturerInfo>
+			<ManufacturerName>Contelec AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.contelec.ch/loesungen/technologie/io-link.html"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+41 32 366 56 00"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="926">
+		<ManufacturerInfo>
+			<ManufacturerName>K.MECS Co., LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kmecs.com/en/"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-3-5825-5333"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="929">
+		<ManufacturerInfo>
+			<ManufacturerName>Takenaka Electronic Industrial Co. Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.takex-elec.co.jp/en/"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81 75 581 7111"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="930">
+		<ManufacturerInfo>
+			<ManufacturerName>SICK OPTEX CO., LTD.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.optex-fa.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81 75 313 3100"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="931">
+		<ManufacturerInfo>
+			<ManufacturerName>Bräuer Systemtechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.braeuersysteme.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 3733 59 676 10"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="942">
+		<ManufacturerInfo>
+			<ManufacturerName>Norgren</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.imi-precision.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+44 (0) 121 717 3700"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="947">
+		<ManufacturerInfo>
+			<ManufacturerName>DUOmetric AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.DUOmetric.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+		
+	<Manufacturer ID="949">
+		<ManufacturerInfo>
+			<ManufacturerName>Römheld GmbH Friedrichshütte</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.roemheld-gruppe.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 6405/890"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="950">
+		<ManufacturerInfo>
+			<ManufacturerName>M&amp;M Software GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mm-software.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="960">
+		<ManufacturerInfo>
+			<ManufacturerName>Layher AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.layher-ag.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="961">
+		<ManufacturerInfo>
+			<ManufacturerName>Fraunhofer-Institut für Mikroelektronische Schaltungen und Systeme IMS</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ims.fraunhofer.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="970">
+		<ManufacturerInfo>
+			<ManufacturerName>Advantech Europe BV</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.advantech.com/products"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+1-888-576-9668"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="973">
+		<ManufacturerInfo>
+			<ManufacturerName>Leadec BV &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.leadec-services.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="974">
+		<ManufacturerInfo>
+			<ManufacturerName>MYOTOKU Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.convum.co.jp/en"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-197-35-8370"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="979">
+		<ManufacturerInfo>
+			<ManufacturerName>Aichi Tokei Denki co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.aichitokei.net"/>
+			<Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="980">
+		<ManufacturerInfo>
+			<ManufacturerName>motrona GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.motrona.de"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 7731 9332 18"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="985">
+		<ManufacturerInfo>
+			<ManufacturerName>B&amp;PLUS KK</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.b-plus-kk.jp/blog/2017/02/15/213"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-493-71-6551"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="986">
+		<ManufacturerInfo>
+			<ManufacturerName>Nabeya Bi-tech Kaisha</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.nbk1560.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+81-575-23-1162"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="997">
+		<ManufacturerInfo>
+			<ManufacturerName>Utthunga</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.utthunga.com/iolink-protocol/"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+91 80 4654 3000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="998">
+		<ManufacturerInfo>
+			<ManufacturerName>Kawasaki Heavy Industries, Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="global.kawasaki.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+ 81-78-915-8636"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="999">
+		<ManufacturerInfo>
+			<ManufacturerName>Mechatronics Labs S.r.l.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mechatronicslabs.com/index.php/en/mechatronics-product/io-link-slave-module"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+39 0396020240"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1000">
+		<ManufacturerInfo>
+			<ManufacturerName>BLOCK Transformatoren-Elektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.block.eu/en_IN/products/product/5963869.htm"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 4231 678 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1004">
+		<ManufacturerInfo>
+			<ManufacturerName>CONTEC CO., LTD.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.contec.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-50-3736-7861"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1010">
+		<ManufacturerInfo>
+			<ManufacturerName>FIAtec GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.fiatec.de/io-link/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1011">
+		<ManufacturerInfo>
+			<ManufacturerName>Coretigo Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.coretigo.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1019">
+		<ManufacturerInfo>
+			<ManufacturerName>Delta Electronics, Inc.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.deltaww.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+886 3 362 6301"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1020">
+		<ManufacturerInfo>
+			<ManufacturerName>MISUMI Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.misumi.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81 3 5805 7437"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1021">
+		<ManufacturerInfo>
+			<ManufacturerName>MACOME CORPORATION</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.macome.co.jp/english/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81 3 3734 2211"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+<!--	<Manufacturer ID="1022">
+		<ManufacturerInfo>
+			<ManufacturerName>Engler Steuer- und Messtechnik GmbH &amp; Co.KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.engler-msr.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7389 9092 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>-->
+
+	<Manufacturer ID="1045">
+		<ManufacturerInfo>
+			<ManufacturerName>Koganei Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="official.en.koganei.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-42-383-7271"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1046">
+		<ManufacturerInfo>
+			<ManufacturerName>Metal Work SpA</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.metalwork.it"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39030218711"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1053">
+		<ManufacturerInfo>
+			<ManufacturerName>Braunkabel GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.braunkabel.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 715 197 9340"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1054">
+		<ManufacturerInfo>
+			<ManufacturerName>elobau GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.elobau.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7561 970-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1055">
+		<ManufacturerInfo>
+			<ManufacturerName>Peter Hirt GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.peterhirt.ch"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+41 44 251 24 39"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1057">
+		<ManufacturerInfo>
+			<ManufacturerName>COVAL SAS</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.coval.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+33 475 59 91 91"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1061">
+		<ManufacturerInfo>
+			<ManufacturerName>STMicroelectronics</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.st.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1062">
+		<ManufacturerInfo>
+			<ManufacturerName>MICRO-EPSILON MESSTECHNIK GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.micro-epsilon.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1065">
+		<ManufacturerInfo>
+			<ManufacturerName>ELGO Electronic GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.elgo.de/en/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7731933991"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1066">
+		<ManufacturerInfo>
+			<ManufacturerName>Fuzhou ATK electronic Co.,ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.atk-electronic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 18959160086"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1070">
+		<ManufacturerInfo>
+			<ManufacturerName>KSB SAS</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ksb.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1073">
+		<ManufacturerInfo>
+			<ManufacturerName>WITTENSTEIN cyber motor GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="motion-control.wittenstein.de/de-de/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7931 493-10900"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1074">
+		<ManufacturerInfo>
+			<ManufacturerName>TAIYO,LTD.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.taiyo-ltd.co.jp/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-296-44-4218"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1075">
+		<ManufacturerInfo>
+			<ManufacturerName>SIKO GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.siko-global.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1076">
+		<ManufacturerInfo>
+			<ManufacturerName>OPTEX FA CO.,LTD.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.optex-fa.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-75-313-3100"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1084">
+		<ManufacturerInfo>
+			<ManufacturerName>Hefei Onsoon Intelligent Electronics Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.onsoon.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 13771578359"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1088">
+		<ManufacturerInfo>
+			<ManufacturerName>IBS Japan Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ibsjapan.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1089">
+		<ManufacturerInfo>
+			<ManufacturerName>Kirchgaesser Industrieelektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kirchgaesser.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 2102 955-6"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1091">
+		<ManufacturerInfo>
+			<ManufacturerName>HYDROTECHNIK GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hydrotechnik.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6431 4004 233"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1093">
+		<ManufacturerInfo>
+			<ManufacturerName>PULS GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pulspower.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 89 9278 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1094">
+		<ManufacturerInfo>
+			<ManufacturerName>SMW-AUTOBLOK Spannsysteme GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="smw-autoblok.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7542 405 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1095">
+		<ManufacturerInfo>
+			<ManufacturerName>KUNBUS GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kunbus.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1100">
+		<ManufacturerInfo>
+			<ManufacturerName>scemtec Transponder Technology GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.stt-rfid.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 2261 80407 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1105">
+		<ManufacturerInfo>
+			<ManufacturerName>KOBOLD Messring GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kobold.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6192 2990"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1108">
+		<ManufacturerInfo>
+			<ManufacturerName>FAS Electronics (Fujian).CO.,Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.fas-elec.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86-591-83519772"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1109">
+		<ManufacturerInfo>
+			<ManufacturerName>Dyadic Systems Co.,Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.dyadic.co.jp/jp/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-76-267-9103"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1115">
+		<ManufacturerInfo>
+			<ManufacturerName>TAIHEI SYSTEM KOGYO CO., LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.taiheiboeki.co.jp/eng/index.html"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-42-727-9151"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1116">
+		<ManufacturerInfo>
+			<ManufacturerName>Shanghai Lanbao Sensing Technology Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.shlanbao.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+ 86-21-57486188"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1117">
+		<ManufacturerInfo>
+			<ManufacturerName>promesstec GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.promesstec.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5923 902 290"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1127">
+		<ManufacturerInfo>
+			<ManufacturerName>SED Flow Control GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sed-flowcontrol.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1128">
+		<ManufacturerInfo>
+			<ManufacturerName>BEI Sensors SAS</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.beisensors.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+33 3 88 20 80 80"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1129">
+		<ManufacturerInfo>
+			<ManufacturerName>RECHNER Industrie-Elektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rechner-sensors.de/produkte"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6206 5007-33"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1132">
+		<ManufacturerInfo>
+			<ManufacturerName>SHENZHEN SIGNAL ELECTRONICS CO.,LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.signal-connector.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86-0755-86250720"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1137">
+		<ManufacturerInfo>
+			<ManufacturerName>ARROW Central Europe GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.arrow.com/io-link"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1138">
+		<ManufacturerInfo>
+			<ManufacturerName>Anderson-Negele</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.anderson-negele.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 8333 9204 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1144">
+		<ManufacturerInfo>
+			<ManufacturerName>Nanotec Electronic GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.nanotec.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 900 686-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1145">
+		<ManufacturerInfo>
+			<ManufacturerName>IDEC CORPORATION</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.idec.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1152">
+		<ManufacturerInfo>
+			<ManufacturerName>Yamamoto Electric Works Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.manostar.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-78-631-6000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1157">
+		<ManufacturerInfo>
+			<ManufacturerName>KROHNE Messtechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.krohne.com/en/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 203 301 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1161">
+		<ManufacturerInfo>
+			<ManufacturerName>rrumba electronic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rrumba.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7051 9672 160"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1166">
+		<ManufacturerInfo>
+			<ManufacturerName>Panasonic Electric Works Europe AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.panasonic-electric-works.com/eu/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 89 45354 1000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1167">
+		<ManufacturerInfo>
+			<ManufacturerName>LINAK A/S</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.linak.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1171">
+		<ManufacturerInfo>
+			<ManufacturerName>rt-labs AB</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rt-labs.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+46-31-240250"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1189">
+		<ManufacturerInfo>
+			<ManufacturerName>WIKA Alexander Wiegand SE &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wika.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 9372 132 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1174">
+		<ManufacturerInfo>
+			<ManufacturerName>WEG INDÚSTRIAS S/A -  AUTOMAÇÃO</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.weg.net/institutional/US/en/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1180">
+		<ManufacturerInfo>
+			<ManufacturerName>Seli GmbH Automatisierungstechnik</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.seli.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5973-9474-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1181">
+		<ManufacturerInfo>
+			<ManufacturerName>Elco (Tianjin) Electronics Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.elco-holding.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 15022378096"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1182">
+		<ManufacturerInfo>
+			<ManufacturerName>Müller Industrie-Elektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mueller-ie.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5032 9672 - 111"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1184">
+		<ManufacturerInfo>
+			<ManufacturerName>KunShan SVLEC Electrical Co. LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.svlec.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 512 57272018"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1191">
+		<ManufacturerInfo>
+			<ManufacturerName>STEM S.r.L.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.stemsrl.it"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+390382583011"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1192">
+		<ManufacturerInfo>
+			<ManufacturerName>GIMATIC S.R.L</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gimatic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+390302584655"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1193">
+		<ManufacturerInfo>
+			<ManufacturerName>GICAM S.R.L</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gicamgra.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 0344 90063"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1198">
+		<ManufacturerInfo>
+			<ManufacturerName>Sitomatic Process Technology B.V.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sitomatic.nl/io-link"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+31 (0)594-516 670"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1206">
+		<ManufacturerInfo>
+			<ManufacturerName>ACS Control System GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.acs-controlsystem.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+498721 9668 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1208">
+		<ManufacturerInfo>
+			<ManufacturerName>Wandfluh AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wandfluh.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+41 33 672 72 72"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1211">
+		<ManufacturerInfo>
+			<ManufacturerName>ISAC SRL</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.isacsrl.eu"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 050711131"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1213">
+		<ManufacturerInfo>
+			<ManufacturerName>Metrol Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.metrol.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81 42 527 3278"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1214">
+		<ManufacturerInfo>
+			<ManufacturerName>Meister Strömungstechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.meister-flow.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6096 9720 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1215">
+		<ManufacturerInfo>
+			<ManufacturerName>Heidelberger Druckmaschinen AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.heidelberg.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6221 92 00"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1218">
+		<ManufacturerInfo>
+			<ManufacturerName>Diana Electronic-Systeme GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.dianaelectronic.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7195 977070"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1222">
+		<ManufacturerInfo>
+			<ManufacturerName>STEGO Elektrotechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.stego.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1234">
+		<ManufacturerInfo>
+			<ManufacturerName>AZ Pneumatica s.r.l.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.azpneumatica.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 02966911"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1236">
+		<ManufacturerInfo>
+			<ManufacturerName>Haehne Elektrische Messgeräte GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.haehne.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 211 925 910"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1239">
+		<ManufacturerInfo>
+			<ManufacturerName>CAPTRON Electronic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.captron.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 8142 - 44 88 - 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1240">
+		<ManufacturerInfo>
+			<ManufacturerName>HTM Sensors</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.htmsensors.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+1 800-644-1756"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1246">
+		<ManufacturerInfo>
+			<ManufacturerName>Afag Automation AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.afag.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+41 62 959 86 86"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1247">
+		<ManufacturerInfo>
+			<ManufacturerName>CloudRail GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.cloudrail.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 621 48345965"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1248">
+		<ManufacturerInfo>
+			<ManufacturerName>EUROSWITCH S.r.l.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.euroswitch.it"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 030986549"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1252">
+		<ManufacturerInfo>
+			<ManufacturerName>R. S. Schwarze Elektrotechnik Moderne Industrieelektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rs-schwarze.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5207 950660"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1254">
+		<ManufacturerInfo>
+			<ManufacturerName>KITA sensor TECH.CO.,LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kita.com.tw"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1256">
+		<ManufacturerInfo>
+			<ManufacturerName>ARGO-HYTOS GMBH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.argo-hytos.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7250 76 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1257">
+		<ManufacturerInfo>
+			<ManufacturerName>PNEUMAX  S.p.A.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.PNEUMAXSPA.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 035 4192 777"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1258">
+		<ManufacturerInfo>
+			<ManufacturerName>iwis antriebssysteme GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.iwis.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1264">
+		<ManufacturerInfo>
+			<ManufacturerName>SIKA Dr. Siebert &amp; Kühn GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sika.net"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 5605 803-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1267">
+		<ManufacturerInfo>
+			<ManufacturerName>Pewatron AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pewatron.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+41 44 877 35 00"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1269">
+		<ManufacturerInfo>
+			<ManufacturerName>ReeR S.p.A</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.reer.it/en/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+390112482215"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1270">
+		<ManufacturerInfo>
+			<ManufacturerName>Schrempp electronic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.schrempp-electronic.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6196 802399-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1272">
+		<ManufacturerInfo>
+			<ManufacturerName>Duplomatic MS s.p.a</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.duplomatic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+39 0331 895111"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1273">
+		<ManufacturerInfo>
+			<ManufacturerName>Satron Instruments Inc</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.satron.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+358 (0) 20 7464 800"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1274">
+		<ManufacturerInfo>
+			<ManufacturerName>Herbert Waldmann GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.waldmann.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1283">
+		<ManufacturerInfo>
+			<ManufacturerName>GMN Paul Müller Industrie GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gmn.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 911 5691 600"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1290">
+		<ManufacturerInfo>
+			<ManufacturerName>Gneuß Kunststofftechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gneuss.com/en/measurement/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 700 463877 24"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1291">
+		<ManufacturerInfo>
+			<ManufacturerName>Keller AG für Druckmesstechnik</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.keller-druck.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+41 52 235 25 25"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1292">
+		<ManufacturerInfo>
+			<ManufacturerName>Alfa Laval</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.alfalaval.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1299">
+		<ManufacturerInfo>
+			<ManufacturerName>MegaChips Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.megachips.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-6-6399-2863"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1300">
+		<ManufacturerInfo>
+			<ManufacturerName>Sense Eletrônica Ltda</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sense.com.br"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+551121450400"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1306">
+		<ManufacturerInfo>
+			<ManufacturerName>Huba Control AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hubacontrol.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1311">
+		<ManufacturerInfo>
+			<ManufacturerName>Powertronic GmbH &amp; Co.KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.powertronic.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1312">
+		<ManufacturerInfo>
+			<ManufacturerName>Christian Maier GmbH &amp; Co.KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.maier-heidenheim.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+551121450400"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1313">
+		<ManufacturerInfo>
+			<ManufacturerName>JingQi（Tianjin）technology Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.marvtech.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 15900201575"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1316">
+		<ManufacturerInfo>
+			<ManufacturerName>Kracht GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.kracht.eu"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 2392 935-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1317">
+		<ManufacturerInfo>
+			<ManufacturerName>Tianjin Sentinel Electronics Co., Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sentinel-china.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 2285689572"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1318">
+		<ManufacturerInfo>
+			<ManufacturerName>Ott-Jakob Spanntechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ott-jakob.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49836498210"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1319">
+		<ManufacturerInfo>
+			<ManufacturerName>Zhejiang Eternal Automation Sci-Tec Co., Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.emc-machinery.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1324">
+		<ManufacturerInfo>
+			<ManufacturerName>GEA Tuchenhagen GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gea.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1331">
+		<ManufacturerInfo>
+			<ManufacturerName>Shanghai Junqian Sensing Technology Co.Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.jsensor.net"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 21 34782838"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1332">
+		<ManufacturerInfo>
+			<ManufacturerName>Conch Electronic Co.,Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.conch.com.tw"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1334">
+		<ManufacturerInfo>
+			<ManufacturerName>ASIX Electronics Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.asix.com.tw"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+886-3-5799500"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1335">
+		<ManufacturerInfo>
+			<ManufacturerName>Wöhner GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.woehner.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1343">
+		<ManufacturerInfo>
+			<ManufacturerName>RAFI GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rafi.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 751 89 6500"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1346">
+		<ManufacturerInfo>
+			<ManufacturerName>Hefei WNK Smart Technology Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.wnksensor.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86-551-65369666"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1349">
+		<ManufacturerInfo>
+			<ManufacturerName>Georg Schlegel GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="wwww.schlegel.biz"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7371 502 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1352">
+		<ManufacturerInfo>
+			<ManufacturerName>LKM electronic GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.lkmelectronic.de/io-link"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1353">
+		<ManufacturerInfo>
+			<ManufacturerName>Norgren Manufacturing Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.imi-precision.com.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 21 2416 1800"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1356">
+		<ManufacturerInfo>
+			<ManufacturerName>Yuken Kogyo Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.yuken.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1359">
+		<ManufacturerInfo>
+			<ManufacturerName>M2M craft Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.m2mcraft.co.jp/products/iolink.html"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-11-788-9422"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1360">
+		<ManufacturerInfo>
+			<ManufacturerName>New Japan Radio CO. LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.njr.co.jp"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+81-49-278-2508"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1361">
+		<ManufacturerInfo>
+			<ManufacturerName>HMS Industrial Networks AB</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hms-networks.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+46 35 172900"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1364">
+		<ManufacturerInfo>
+			<ManufacturerName>GHM Messtechnik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ghm-group.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 2191 9672 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1366">
+		<ManufacturerInfo>
+			<ManufacturerName>SENSTRONIC S.A.S.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.senstronic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+33 3 88 71 26 33"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1369">
+		<ManufacturerInfo>
+			<ManufacturerName>GEA Diessel GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.gea.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1370">
+		<ManufacturerInfo>
+			<ManufacturerName>DEFINOX SAS</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.definox.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1372">
+		<ManufacturerInfo>
+			<ManufacturerName>evopro systems engineering AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="wwww.evopro-ag.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 941 899 6450"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1373">
+		<ManufacturerInfo>
+			<ManufacturerName>FEIG ELECTRONIC GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.feig.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6471 3109-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1374">
+		<ManufacturerInfo>
+			<ManufacturerName>JVL A/S</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.jvl.dk"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+45 45824440"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1379">
+		<ManufacturerInfo>
+			<ManufacturerName>E + E Elektronik Ges.m.b.H</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.epluse.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+43 7235 605-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1381">
+		<ManufacturerInfo>
+			<ManufacturerName>Otennlux Lighting Technology Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.otennlux.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1391">
+		<ManufacturerInfo>
+			<ManufacturerName>EBV Elektronik GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ebv.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1394">
+		<ManufacturerInfo>
+			<ManufacturerName>Kyowa Manufacturing Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pulseroller.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1399">
+		<ManufacturerInfo>
+			<ManufacturerName>Telco Sensors (Telco A/S)</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.telcosensors.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1402">
+		<ManufacturerInfo>
+			<ManufacturerName>Schubert &amp; Salzer Control Systems GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.schubert-salzer.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 841 9654 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1408">
+		<ManufacturerInfo>
+			<ManufacturerName>Shanghai Horebtech Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.horebtech.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 13564080445"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1409">
+		<ManufacturerInfo>
+			<ManufacturerName>Beijing DS Fieldbus Technology Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.c-profibus.com.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86-010-82285082"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1410">
+		<ManufacturerInfo>
+			<ManufacturerName>PATLITE （China） Corporation</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.patlite.cn/product/detail0000000700.html"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 21-66308959"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1411">
+		<ManufacturerInfo>
+			<ManufacturerName>Ambient Technomancy AB</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="ambient.azurewebsites.net"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1416">
+		<ManufacturerInfo>
+			<ManufacturerName>Sitron Sensor GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sitron.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 (0) 511 72850-0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1417">
+		<ManufacturerInfo>
+			<ManufacturerName>Auer Signal GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.auersignal.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1419">
+		<ManufacturerInfo>
+			<ManufacturerName>Shanghai Hurry Electronics Tech. Co., Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hurry-tech.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1420">
+		<ManufacturerInfo>
+			<ManufacturerName>Jining KeLi Photoelectronic Industrial Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.sdkeli.com/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1421">
+		<ManufacturerInfo>
+			<ManufacturerName>YUHENG OPTICS CO., LTD(CHANGCHUN)</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="en.yu-heng.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1424">
+		<ManufacturerInfo>
+			<ManufacturerName>Pentasoft SL</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pentasoft.es"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+34 913 751 300"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1425">
+		<ManufacturerInfo>
+			<ManufacturerName>Chengdu Vantron Technology, Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.vantrontech.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 28 8512 3935"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1426">
+		<ManufacturerInfo>
+			<ManufacturerName>Shanghai Zhaomu Industrial Technology.LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.shzhaomu.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 13501708890"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1434">
+		<ManufacturerInfo>
+			<ManufacturerName>Hongke Technology Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hkaco.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1442">
+		<ManufacturerInfo>
+			<ManufacturerName>Drumag GmbH Fluidtechnik</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.specken-drumag.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7761 55050"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1443">
+		<ManufacturerInfo>
+			<ManufacturerName>F &amp; C Sensing Technology (Hunan) Co. Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.fctaiwan.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1456">
+		<ManufacturerInfo>
+			<ManufacturerName>LQ Mechatronik-Systeme GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.lq-group.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7143 968 0"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1457">
+		<ManufacturerInfo>
+			<ManufacturerName>EMA Precision Electronics (Suzhou) Corp.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ema-electronic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86-512-65868166"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1465">
+		<ManufacturerInfo>
+			<ManufacturerName>KNOCKS Fluid-Technik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.knocks.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1470">
+		<ManufacturerInfo>
+			<ManufacturerName>Round Solutions GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.roundsolutions.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 6102 799280"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1475">
+		<ManufacturerInfo>
+			<ManufacturerName>HAUBER-Elektronik GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hauber-elektronik.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 7022217500"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1476">
+		<ManufacturerInfo>
+			<ManufacturerName>Pizzato Elettrica s.r.l.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pizzato.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1478">
+		<ManufacturerInfo>
+			<ManufacturerName>Belden Hirschmann Industries (Suzhou) Limited</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.belden.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1481">
+		<ManufacturerInfo>
+			<ManufacturerName>Hanyoung nux</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="wwww.hynux.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+82-32-870-7733"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1490">
+		<ManufacturerInfo>
+			<ManufacturerName>SUTO iTec （China）Co.Limited</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.suto-itec.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+852 2328 9782"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1491">
+		<ManufacturerInfo>
+			<ManufacturerName>Stark Spannsysteme GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.stark-inc.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1493">
+		<ManufacturerInfo>
+			<ManufacturerName>DropsA S.p.A.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.dropsa.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1497">
+		<ManufacturerInfo>
+			<ManufacturerName>ST Microelectronics (Shenzhen) R&amp;D Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.st.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1498">
+		<ManufacturerInfo>
+			<ManufacturerName>Tri-Tronics</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.ttco.com/io-link"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+1-813-886-4000"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1499">
+		<ManufacturerInfo>
+			<ManufacturerName>Pixsys Srl</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pixsys.net"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1502">
+		<ManufacturerInfo>
+			<ManufacturerName>Mecademic Inc.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mecademic.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+1-514-360-2205"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1503">
+		<ManufacturerInfo>
+			<ManufacturerName>HAWE Hydraulik SE</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hawe.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1504">
+		<ManufacturerInfo>
+			<ManufacturerName>EAO AG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.eao.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1508">
+		<ManufacturerInfo>
+			<ManufacturerName>Hengesbach GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.hengesbach.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+49 2104 30320"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1521">
+		<ManufacturerInfo>
+			<ManufacturerName>Future Systems GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.future.systems"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1522">
+		<ManufacturerInfo>
+			<ManufacturerName>Espai de producció i electrònica S.L.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.espailabs.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1524">
+		<ManufacturerInfo>
+			<ManufacturerName>Xingyu Electron (NINGBO) Co., Ltd.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.xyelectron.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 13858227613"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1525">
+		<ManufacturerInfo>
+			<ManufacturerName>DRUCK &amp; TEMPERATUR Leitenberger GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.druck-temperatur.de"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1531">
+		<ManufacturerInfo>
+			<ManufacturerName>Trafag AG  sensors &amp; controls</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.trafag.com/en/"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1535">
+		<ManufacturerInfo>
+			<ManufacturerName>AIRBEST (CHANGXING) TECHNOLOGY C0.,LTD</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.airbest.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+86 572 6081 777"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1536">
+		<ManufacturerInfo>
+			<ManufacturerName>Poseidon Systems, LLC</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.poseidonsys.com/products-and-services/products/IO-Link"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+1 585-239-6025"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1538">
+		<ManufacturerInfo>
+			<ManufacturerName>WinterWinds Robotics Inc.</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.winterwinds.io"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1539">
+		<ManufacturerInfo>
+			<ManufacturerName>NEUMO Armaturenfabrik-Apparatebau-Metallgießerei GmbH + Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.rr-rieger.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1541">
+		<ManufacturerInfo>
+			<ManufacturerName>Universal Flow Monitors</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.flowmeters.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI="+1 248 542-9635"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+	<Manufacturer ID="1548">
+		<ManufacturerInfo>
+			<ManufacturerName>TOFI Sensing Technology (Shanghai) Co.,Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.tofi-tech.com"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+	
+		<Manufacturer ID="1549">
+		<ManufacturerInfo>
+			<ManufacturerName>Mettler-Toledo GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.mt.com/ch/en/home/products/Industrial_Weighing_Solutions/AutomPrecision/load-cell-and-weigh-module.html"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="1672">
+		<ManufacturerInfo>
+			<ManufacturerName>Intellisense (Xiamen) Microelectronics Ltd</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.chinasensors.com.cn"/>
+            <Info xml:lang="en" Tag="hotline_call" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="2351">
+		<ManufacturerInfo>
+			<ManufacturerName>Pilz GmbH &amp; Co. KG</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.pilz.com"/>
+			<Info xml:lang="en" Tag="hotline_call" URI="+49 711 3409-444"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="2403">
+		<ManufacturerInfo>
+			<ManufacturerName>Prozesskommunikation, TU Dresden</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI=""/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="13763">
+		<ManufacturerInfo>
+			<ManufacturerName>SPX Flow Technology Germany GmbH</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.spxflow.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+	<Manufacturer ID="65535">
+		<ManufacturerInfo>
+			<ManufacturerName>IO-Link Community</ManufacturerName>
+			<Info xml:lang="en" Tag="web_url" URI="www.io-link.com"/>
+		</ManufacturerInfo>
+		<IM_Info>
+			<IM_Root URI=""/>
+			<IM_Definitions URI=""/>
+		</IM_Info>
+	</Manufacturer>
+
+</Man_ID_Table>

@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+	  "baseUrl": "./packages",
+	  "paths": {
+		"@hive-command/opcua-server": ["./communication/opc-server/src"],
+		"@hive-command/opcua-client": ["./communication/opc-client/src"],
+		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
+		"@hive-command/opcua-lds": ["./communication/opc-lds/src"],
+		"@io-link/core": ["./communication/io-link-core/src"],
+		"@io-link/iodd": ["./communication/io-link-iodd/src"],
+		"@io-link/master-api": ["./communication/io-link-master-api/src"],
+		"@io-link/master-discovery": ["./communication/io-link-master-discovery/src"],
+	  }
+	}
+}

@@ -1,0 +1,43 @@
+{
+  "name": "@io-link/master-api",
+  "version": "1.3.2-alpha.66",
+  "description": "> TODO: description",
+  "author": "The Tech Company",
+  "homepage": "https://github.com/TheTechCompany/ifm-core/tree/main/packages/ifm-core-api#readme",
+  "license": "ISC",
+  "main": "dist/index.js",
+  "directories": {
+    "dist": "dist",
+    "test": "__tests__"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheTechCompany/ifm-core.git"
+  },
+  "scripts": {
+    "build:dev": "yarn run build:api && yarn build",
+    "build": "tsc -b",
+    "build:api": "openapi-generator generate -i ./src/api.yaml -g typescript-axios -o ./src && yarn run clean:api-artifacts",
+    "clean:api-artifacts": "rm -r ./src/.openapi-generator* && rm ./src/.*ignore && rm ./src/git_push.sh",
+    "test": "jest"
+  },
+  "bugs": {
+    "url": "https://github.com/TheTechCompany/ifm-core/issues"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "jest": "^27.0.6",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.4.3"
+  },
+  "gitHead": "a5a537fab82d841d6147670c2e3ea7d84d37c8cc"
+}

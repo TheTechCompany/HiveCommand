@@ -1,0 +1,93 @@
+import { parseString } from "xml2js"
+import { XMLIODD, IODD, IODDBits, IODDFilter } from "../types"
+
+export const parseIODD = async (iodd: string) : Promise<XMLIODD> => {
+    return new Promise((resolve, reject) => {
+        parseString(iodd, (err, result) => {
+            if(err) return reject(err);
+            resolve(result);
+        })
+    })
+}
+
+export const getWord = (iodd_wordlist: {id: string, value: string}[], lookup : string) => {
+    return iodd_wordlist.find((a) => a.id == lookup)
+}
+
+export const convertIODD = (iodd: XMLIODD) : IODD => {
+    const wordlist = iodd.IODevice.ExternalTextCollection[0].PrimaryLanguage[0].Text.map((x) => x.$)
+
+    return {
+        identity: {
+            ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
+        },
+        function: {
+            features: iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataIn.map((y) => ({
+                name: getWord(wordlist, y.Name[0].$.textId)?.value,
+                struct: y.Datatype[0].RecordItem.map((x) => ({
+                    name: getWord(wordlist, x.Name[0].$.textId)?.value,
+                    bits: {
+                        type: x.SimpleDatatype[0].$["xsi:type"],
+                        length: x.SimpleDatatype[0].$.bitLength,
+                        offset: x.$.bitOffset,
+                        subindex: x.$.subindex
+                    }
+                }))
+            }))
+        }
+        
+    }
+}
+
+export const createFilter = (iodd: IODDBits[]) : IODDFilter => {
+
+    return (value: string) => {
+        let bin = toBinString(Buffer.from(value, 'hex'))
+
+        let iodd_blob = iodd.map((bit) => {
+            let offset = parseInt(bit.offset)
+            let slice = bin.substring(bin.length - offset, bin.length - (offset + parseInt(bit.length || '0')))
+
+            return {name: bit.name || 'Name not found', value: binToInt(slice)}
+        })
+        
+        let obj : any = {}
+
+        iodd_blob.forEach((blob) => {
+            obj[blob.name] = blob.value
+        })
+       return obj
+
+    }
+}
+
+export const getBits = (input: string, bitOffset: number, bitLength: number) => {
+    let binary = toBinString(Buffer.from(input, 'hex'))
+    let substring = binary.substring(binary.length - bitOffset, binary.length - (bitOffset + bitLength))
+    return substring;
+}
+/*
+    let flow = bin.substring(bin.length - 16, bin.length - (16 + 16))
+    let temp = bin.substring(bin.length - 2, bin.length - (2 + 14))
+
+    console.log(data, binToInt(flow), binToInt(temp))
+*/
+    /*
+
+    PV8003
+    
+    let temp = bin.substring(bin.length - 16, bin.length - (16 + 16))
+    let pressure = bin.substring(bin.length - 48, bin.length - (48 + 16))
+    console.log(data, binToInt(temp), pressure)
+})
+*/
+
+
+
+const binToInt = (binString: string) => {
+    return parseInt(binString, 2)
+}
+
+const toBinString = (bytes : Uint8Array) => {
+  return bytes.reduce((str, byte) => str + byte.toString(2).padStart(8, '0'), '');
+}

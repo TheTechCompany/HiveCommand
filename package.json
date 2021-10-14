@@ -1,0 +1,22 @@
+{
+  "name": "@hivecomand-clients/root",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheTechCompany/HiveCommandClient.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheTechCompany/HiveCommandClient/issues"
+  },
+  "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
