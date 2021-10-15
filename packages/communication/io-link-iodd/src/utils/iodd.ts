@@ -22,7 +22,19 @@ export const convertIODD = (iodd: XMLIODD) : IODD => {
             ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
         },
         function: {
-            features: iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataIn.map((y) => ({
+            inputs: iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataIn.map((y) => ({
+                name: getWord(wordlist, y.Name[0].$.textId)?.value,
+                struct: y.Datatype[0].RecordItem.map((x) => ({
+                    name: getWord(wordlist, x.Name[0].$.textId)?.value,
+                    bits: {
+                        type: x.SimpleDatatype[0].$["xsi:type"],
+                        length: x.SimpleDatatype[0].$.bitLength,
+                        offset: x.$.bitOffset,
+                        subindex: x.$.subindex
+                    }
+                }))
+            })),
+            outputs: (iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataOut || []).map((y) => ({
                 name: getWord(wordlist, y.Name[0].$.textId)?.value,
                 struct: y.Datatype[0].RecordItem.map((x) => ({
                     name: getWord(wordlist, x.Name[0].$.textId)?.value,

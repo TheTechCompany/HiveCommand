@@ -86,7 +86,7 @@ export default class IODDStore {
 
     async getIODDFilter(path: string){
         let iodd = await this.getIODD(path)
-        let bits = iodd.function.features.map((feat) => {
+        let bits = iodd.function.inputs.map((feat) => {
             return feat.struct.map((x) => {
                 x.bits.name = x.name;
                 return x.bits

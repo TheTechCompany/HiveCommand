@@ -5,10 +5,17 @@ export interface IODD {
         deviceId: string
     },
     function: {
-        features: {
+        inputs: {
             name?: string,
             struct: {
                 name?: string,
+                bits: IODDBits
+            }[]
+        }[],
+        outputs: {
+            name?: string;
+            struct: {
+                name?: string;
                 bits: IODDBits
             }[]
         }[]
@@ -163,6 +170,50 @@ export interface XMLIODD {
                             id: string
                         },
                         ProcessDataIn: {
+                            '$': {
+                                id: string,
+                                bitLength: string
+                            },
+                            Datatype: {
+                                '$': {
+                                    'xsi:type': string,
+                                    bitLength: string,
+                                    subindexAccessSupported: string
+                                },
+                                RecordItem: {
+                                    '$': {
+                                        bitOffset: string,
+                                        subindex: string
+                                    },
+                                    SimpleDatatype: {
+                                        '$': {
+                                            'xsi:type': string,
+                                            bitLength: string
+                                        },
+                                        ValueRange: {
+                                            '$': {
+                                                lowerValue: string,
+                                                upperValue: string
+                                            }
+                                        }[],
+                                        SingleValue: {
+                                            '$': {
+                                                value: string
+                                            },
+                                            Name: {
+                                                '$': {
+                                                    textId: string
+                                                }
+                                            }[]
+                                        }[]
+                                    }[],
+                                    Name: {'$': {textId: string}}[]
+                                    Description: {textId: string}[]
+                                }[]
+                            }[],
+                            Name: {'$': { textId: string}}[]
+                        }[],
+                        ProcessDataOut?: {
                             '$': {
                                 id: string,
                                 bitLength: string
