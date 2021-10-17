@@ -1,6 +1,6 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
-import { DataType, Variant } from 'node-opcua';
+import { DataType, StatusCodes, Variant } from 'node-opcua';
 
 export interface CommandNetworkOptions{
 	baseURL?: string;
@@ -133,6 +133,7 @@ export class CommandNetwork {
 									set: (value, callback) => {
 										console.log(`SET VALUE FOR DO_${ix + 1}`, value)
 										this.valueBank.request?.(bus.id, `O_${ix + 1}`, value.value ? 1 : 0)
+										callback(null, StatusCodes.Good);
 									}
 								}
 							}
