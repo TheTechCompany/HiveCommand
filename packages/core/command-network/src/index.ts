@@ -80,6 +80,7 @@ export class CommandNetwork {
 			switch(bus.type){
 				case 'REVPI':
 					//Inputs
+					console.log("REVPI BUilder");
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
 						console.log("Add port", "DI " + ix)
 						await this.opc?.addDevice({
@@ -119,6 +120,7 @@ export class CommandNetwork {
 
 					break;
 				case 'IO-LINK':
+					console.log("IO")
 					await Promise.all(Array.from(Array(8)).map((port, ix) => {
 						console.log("Add port", "IO " + ix)
 
