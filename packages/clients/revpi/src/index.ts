@@ -119,6 +119,6 @@ export class CommandClient {
 		//Start network and share context with the mothership
 		await this.network.start({hostname: self.identity?.named})
 
-		await this.readEnvironment()
+		await this.readEnvironment(environment)
 	}
 }
