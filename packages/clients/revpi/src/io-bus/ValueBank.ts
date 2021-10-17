@@ -7,7 +7,7 @@ export class ValueBank {
 	}
 
 	get(id: string, port: string){
-		return this.values[id].find((a) => a.port == port)?.value;
+		return this.values?.[id].find((a) => a.port == port)?.value;
 	}
 
 	setMany(id: string, values: {port: string, value: string}[]){
