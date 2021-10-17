@@ -30,7 +30,7 @@ export default class IOLinkPlugin extends BasePlugin {
 			return {
 				id: master.serial,
 				name: master.product,
-				devices: devices.ports.map(async (port) => {
+				devices: await Promise.all(devices.ports.map(async (port) => {
 					let ioddDef = await this.ioddManager.lookupDevice(`${port.vendorId}:${port.deviceId}`)
 					if(!ioddDef) return port;
 					let iodd = await this.ioddManager.getIODD(ioddDef?.iodd)
@@ -38,7 +38,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						...port,
 						iodd:iodd
 					}
-				})
+				}))
 			}
 		}))
 	}
