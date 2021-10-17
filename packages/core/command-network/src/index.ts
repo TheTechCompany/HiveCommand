@@ -1,8 +1,13 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
-import { DataType, Variant } from 'communication/opc-server/node_modules/node-opcua-variant/dist';
+import { DataType, Variant } from 'node-opcua';
+
 export interface CommandNetworkOptions{
 	baseURL?: string;
+
+	valueBank?: {
+		get: (id: string, port: string) => any;
+	}
 }
 
 export interface CommandBus {
@@ -20,11 +25,18 @@ export class CommandNetwork {
 
 	private buses: CommandBus[] = [];
 
+	private valueBank : {
+		get?: (id: string, port: string) => any;
+	} = {}
+
 	constructor(opts: CommandNetworkOptions){
 		this.httpInstance = axios.create({
 			baseURL: opts.baseURL || 'http://discovery.hexhive.io:8080'
 		})
 
+		this.valueBank = {
+			get: opts.valueBank?.get
+		}
 	}
 
 	async whoami() : Promise<{error?: any, identity?: {named: string, address: string}}>{
@@ -84,7 +96,7 @@ export class CommandNetwork {
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
 						console.log("Add port", "DI " + ix)
 						await this.opc?.addDevice({
-							name: `revpi_di_${ix}`,
+							name: `revpi_${bus.id}_di_${ix}`,
 							type: 'RevPi_DI'
 						}, {
 							state: {
@@ -92,7 +104,7 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI GET", key)
-										return new Variant({dataType: DataType.Boolean, value: true});
+										return new Variant({dataType: DataType.Boolean, value: this.valueBank.get?.(bus.id, `I_${ix + 1}`) == 1 });
 									}
 								}
 							}
@@ -111,7 +123,7 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI DO GET", key)
-										return new Variant({dataType: DataType.Boolean, value: true});
+										return new Variant({dataType: DataType.Boolean, value: this.valueBank.get?.(bus.id, `O_${ix + 1}`) == 1});
 									}
 								}
 							}

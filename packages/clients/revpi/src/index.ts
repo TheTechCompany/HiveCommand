@@ -6,6 +6,7 @@ import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
 import IODDManager from '@io-link/iodd'
+import { ValueBank } from './io-bus/ValueBank';
 
 export interface CommandClientOptions {
 	networkInterface?: string;
@@ -29,7 +30,11 @@ export class CommandClient {
 
 	private ioddManager : IODDManager;
 
+	private valueBank : ValueBank;
+
 	constructor(opts: CommandClientOptions){
+
+		this.valueBank = new ValueBank();
 
 		this.ioddManager = new IODDManager({
 			storagePath: opts.storagePath || '/tmp'
@@ -53,7 +58,8 @@ export class CommandClient {
 		this.logs.log(`Starting network...`);
 
 		this.network = new CommandNetwork({
-			baseURL: opts.commandCenter
+			baseURL: opts.commandCenter, 
+			valueBank: this.valueBank
 		});
 
 		this.machine = new CommandStateMachine();
@@ -80,6 +86,8 @@ export class CommandClient {
 			let plugin = this.plugins.find((a) => a.TAG == bus.type)
 
 			const value = await plugin?.read()
+			if(!value) return
+			this.valueBank.setMany(bus.id, value); //[bus.id] = value || [];
 			return value;
 		}))
 		console.log("ENV VALUE", envValue)
