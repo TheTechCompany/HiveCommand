@@ -75,6 +75,7 @@ export class CommandNetwork {
 
 	//Turn buses into OPC map
 	async initOPC(){
+		console.log("INIT", this.buses)
 		await Promise.all(this.buses.map(async (bus) => {
 			switch(bus.type){
 				case 'REVPI':
