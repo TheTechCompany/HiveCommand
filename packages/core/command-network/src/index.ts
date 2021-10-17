@@ -151,9 +151,10 @@ export class CommandNetwork {
 			discoveryServer: credentials.discoveryServer
 		})
 
+		await this.initOPC();
+
 		await this.opc.start()
 
-		await this.initOPC();
 	}
 
 }
