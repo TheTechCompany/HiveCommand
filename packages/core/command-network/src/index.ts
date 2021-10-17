@@ -81,6 +81,7 @@ export class CommandNetwork {
 				case 'REVPI':
 					//Inputs
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
+						console.log("Add port", "DI " + ix)
 						await this.opc?.addDevice({
 							name: `revpi_di_${ix}`,
 							type: 'RevPi_DI'
@@ -98,6 +99,8 @@ export class CommandNetwork {
 					}))
 					//Outputs
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
+						console.log("Add port", "DO " + ix)
+					
 						await this.opc?.addDevice({
 							name: `revpi_do_${ix}`,
 							type: 'RevPi_DO'
@@ -117,6 +120,8 @@ export class CommandNetwork {
 					break;
 				case 'IO-LINK':
 					await Promise.all(Array.from(Array(8)).map((port, ix) => {
+						console.log("Add port", "IO " + ix)
+
 						this.opc?.addDevice({
 							name: `io_port_${bus.id}_${ix}`,
 							type: `IO-PORT`
