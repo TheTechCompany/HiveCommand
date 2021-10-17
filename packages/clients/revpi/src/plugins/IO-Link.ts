@@ -52,6 +52,10 @@ export default class IOLinkPlugin extends BasePlugin {
 				}))
 			}
 		}))
-		return this.masters
+		return this.masters.map((x) => ({
+			id: x.id,
+			name: x.name,
+			devices: x.devices
+		}))
 	}
 }
