@@ -75,6 +75,17 @@ export class CommandClient {
 		}, [])
 	}
 
+	async readEnvironment(env: {type: string, id: string, name: string}[]){
+		const envValue = await Promise.all(env.map(async (bus) => {
+			let plugin = this.plugins.find((a) => a.TAG == bus.type)
+
+			const value = await plugin?.read()
+			return value;
+		}))
+		console.log("ENV VALUE", envValue)
+		return envValue
+	}	
+
 	async discoverSelf(){
 		//Discover the identity of the self
 		return await this.network.whoami()
@@ -90,7 +101,7 @@ export class CommandClient {
 		const self = await this.discoverSelf()
 
 		if(!self.identity?.named) throw new Error("No self found, check credentials");
-		
+
 		await this.network.provideContext(environment, this.identity.identity)
 
 		this.logs.log(`Found self ${JSON.stringify(self)}`)
