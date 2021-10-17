@@ -7,6 +7,7 @@ export class ValueBank {
 	}
 
 	get(id: string, port: string){
+		console.log(this.values)
 		return this.values?.[id].find((a) => a.port == port)?.value;
 	}
 
@@ -21,7 +22,7 @@ export class ValueBank {
 		let bus = this.values[id]
 		let ix = bus.map((x) => x.port).indexOf(port)
 		if(ix > -1){
-			this.values[id][ix].value= value;
+			this.values[id][ix].value = value;
 		}else{
 			this.values[id].push({port: port, value: value})
 		}
