@@ -6,7 +6,10 @@ export class ValueBank extends EventEmitter{
 
 	constructor(){
 		super();
+		this.request = this.request.bind(this);
 		this.get = this.get.bind(this)
+		this.set = this.set.bind(this);
+		this.setMany = this.setMany.bind(this);
 	}
 
 	get(id: string, port: string){
