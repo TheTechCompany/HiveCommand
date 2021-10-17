@@ -19,13 +19,13 @@ export default class RevPiPlugin extends BasePlugin {
 	}
 
 	async read(){
-		const inputs = Array.from(Array(14)).map(async (port, ix) => {
+		const inputs = await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
 			return this.pi.readValue(`I_${ix + 1}`)
-		})
+		}))
 
-		const outputs = Array.from(Array(14)).map(async (port, ix) => {
+		const outputs = await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
 			return this.pi.readValue(`O_${ix + 1}`)
-		})
+		}))
 		// const value = this.pi.readValue(port)
 		return [inputs, outputs];
 	}
