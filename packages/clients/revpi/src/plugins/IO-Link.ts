@@ -33,7 +33,7 @@ export default class IOLinkPlugin extends BasePlugin {
 				devices: devices.ports.map(async (port) => {
 					let ioddDef = await this.ioddManager.lookupDevice(`${port.vendorId}:${port.deviceId}`)
 					if(!ioddDef) return port;
-					let iodd = this.ioddManager.getIODD(ioddDef?.iodd)
+					let iodd = await this.ioddManager.getIODD(ioddDef?.iodd)
 					return {
 						...port,
 						iodd:iodd
