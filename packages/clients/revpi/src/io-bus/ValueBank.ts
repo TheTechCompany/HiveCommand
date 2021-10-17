@@ -17,10 +17,13 @@ export class ValueBank {
 	}
 
 	set(id: string, port: string, value: any){
+		if(!this.values[id]) this.values[id] = [];
 		let bus = this.values[id]
 		let ix = bus.map((x) => x.port).indexOf(port)
 		if(ix > -1){
 			this.values[id][ix].value= value;
+		}else{
+			this.values[id].push({port: port, value: value})
 		}
 	}
 }
