@@ -2,6 +2,7 @@
 	"compilerOptions": {
 	  "baseUrl": "./packages",
 	  "paths": {
+		"node-opcua": ["../node_modules/node-opcua"],
 		"@hive-command/opcua-server": ["./communication/opc-server/src"],
 		"@hive-command/opcua-client": ["./communication/opc-client/src"],
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
