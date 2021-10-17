@@ -1,6 +1,6 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
-import { DataType } from 'communication/opc-server/node_modules/node-opcua-variant/dist';
+import { DataType, Variant } from 'communication/opc-server/node_modules/node-opcua-variant/dist';
 export interface CommandNetworkOptions{
 	baseURL?: string;
 }
@@ -92,7 +92,7 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI GET", key)
-										return true;
+										return new Variant({dataType: DataType.Boolean, value: true});
 									}
 								}
 							}
@@ -111,7 +111,7 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI DO GET", key)
-										return true;
+										return new Variant({dataType: DataType.Boolean, value: true});
 									}
 								}
 							}
@@ -132,8 +132,7 @@ export class CommandNetwork {
 								value: {
 									type: DataType.Double,
 									get: () => {
-										return 0.0
-									}
+										return new Variant({dataType: DataType.Double, value: 0.0})									}
 								}
 							}
 						})
@@ -158,9 +157,10 @@ export class CommandNetwork {
 			discoveryServer: credentials.discoveryServer
 		})
 
-		await this.initOPC();
 
 		await this.opc.start()
+		await this.initOPC();
+
 
 	}
 
