@@ -1,6 +1,6 @@
 import { discoverDevices, IOMaster, discoverMasters, getIODD } from "@io-link/core";
 import { BasePlugin } from "./Base";
-import IODDManager from '@io-link/iodd'
+import IODDManager, { createFilter, IODD } from '@io-link/iodd'
 
 export default class IOLinkPlugin extends BasePlugin {
 	public TAG : string = "IO-LINK";
@@ -22,9 +22,11 @@ export default class IOLinkPlugin extends BasePlugin {
 
 		return await Promise.all((master?.devices || []).map(async (device) => {
 			const value = await master?.api.readPort(device.ix + 1)
+			const iodd : IODD = device.iodd;
+			const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => y.bits)).reduce((prev, curr) => prev.concat(curr), []))
 			return {
 				port: device.ix + 1,
-				value: value?.data?.value
+				value: filter(value?.data?.value)
 			}
 		}))
 	}
