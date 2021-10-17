@@ -40,7 +40,10 @@ export class CommandClient {
 
 	private valueBank : ValueBank;
 
+	private options : CommandClientOptions;
+
 	constructor(opts: CommandClientOptions){
+		this.options = opts;
 
 		this.valueBank = new ValueBank();
 
@@ -134,7 +137,10 @@ export class CommandClient {
 
 		this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 		//Start network and share context with the mothership
-		await this.network.start({hostname: self.identity?.named})
+		await this.network.start({
+			hostname: self.identity?.named,
+			discoveryServer: this.options.discoveryServer,
+		})
 
 		await this.readEnvironment(this.environment)
 	}
