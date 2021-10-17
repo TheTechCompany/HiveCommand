@@ -5,7 +5,7 @@ export abstract class BasePlugin {
 		return [];
 	}
 
-	async read() : Promise<any[]> {
+	async read(bus: string) : Promise<any[]> {
 		return []
 	}
 

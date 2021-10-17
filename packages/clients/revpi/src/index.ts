@@ -105,7 +105,7 @@ export class CommandClient {
 		const envValue = await Promise.all(env.map(async (bus) => {
 			let plugin = this.plugins.find((a) => a.TAG == bus.type)
 
-			const value = await plugin?.read()
+			const value = await plugin?.read(bus.id)
 			if(!value) return
 			this.valueBank.setMany(bus.id, value); //[bus.id] = value || [];
 			return value;
