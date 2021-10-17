@@ -1,10 +1,12 @@
 import axios, { Axios, AxiosInstance } from 'axios';
-
+import OPCUAServer from '@hive-command/opcua-server'
 export interface CommandNetworkOptions{
 	baseURL?: string;
 }
 
 export class CommandNetwork {
+
+	private opc? : OPCUAServer
 
 	private httpInstance : AxiosInstance;
 
@@ -14,6 +16,7 @@ export class CommandNetwork {
 		this.httpInstance = axios.create({
 			baseURL: opts.baseURL || 'http://discovery.hexhive.io:8080'
 		})
+
 	}
 
 	async whoami() : Promise<{error?: any, identity?: {named: string, address: string}}>{
@@ -63,8 +66,21 @@ export class CommandNetwork {
 		}
 	}
 
-	async start(credentials: any){
-		
+	/*
+		- Start OPCUA Server and Companions
+		- Load initialState (decouples building the schema from running the server)
+	*/
+	async start(credentials: {
+		hostname: string,
+		discoveryServer?: string
+	}){
+		this.opc = new OPCUAServer({
+			productName: "CommandPilot",
+            hostname: credentials.hostname,
+			discoveryServer: credentials.discoveryServer
+		})
+
+		await this.opc.start()
 	}
 
 }

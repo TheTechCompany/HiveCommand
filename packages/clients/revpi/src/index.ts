@@ -89,6 +89,8 @@ export class CommandClient {
 		//Find self identity
 		const self = await this.discoverSelf()
 
+		if(!self.identity?.named) throw new Error("No self found, check credentials");
+		
 		await this.network.provideContext(environment, this.identity.identity)
 
 		this.logs.log(`Found self ${JSON.stringify(self)}`)
@@ -96,7 +98,7 @@ export class CommandClient {
 
 		this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 		//Start network and share context with the mothership
-		await this.network.start(credentials)
+		await this.network.start({hostname: self.identity?.named})
 
 	}
 }
