@@ -97,7 +97,6 @@ export class CommandNetwork {
 					//Inputs
 					console.log("REVPI BUilder");
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
-						console.log("Add port", "DI " + ix)
 						await this.opc?.addDevice({
 							name: `revpi_${bus.id}_di_${ix + 1}`,
 							type: 'RevPi_DI'
@@ -107,7 +106,6 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										let value = this.valueBank.get?.(bus.id, `I_${ix + 1}`)
-										console.log("REVPI DI GET", bus.id, `I_${ix + 1}`, value)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1) });
 									}
 								}
@@ -116,7 +114,6 @@ export class CommandNetwork {
 					}))
 					//Outputs
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
-						console.log("Add port", "DO " + ix)
 					
 						await this.opc?.addDevice({
 							name: `revpi_do_${ix + 1}`,
@@ -127,7 +124,6 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										let value = this.valueBank.get?.(bus.id, `O_${ix + 1}`)
-										console.log("REVPI DO GET", bus.id, `O_${ix + 1}`, value)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
 									},
 									set: (value) => {
@@ -154,6 +150,7 @@ export class CommandNetwork {
 								value: {
 									type: DataType.Double,
 									get: () => {
+										// console.log("GET IO")
 										return new Variant({dataType: DataType.Double, value: 0.0})									}
 								}
 							}
