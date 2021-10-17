@@ -21,7 +21,11 @@ export default class IOLinkPlugin extends BasePlugin {
 		let master = this.masters.find((a) => a.id == bus)
 
 		return await Promise.all((master?.devices || []).map(async (device) => {
-			return await master?.api.readPort(device.ix)
+			const value = await master?.api.readPort(device.ix + 1)
+			return {
+				port: device.ix + 1,
+				value: value?.data?.value
+			}
 		}))
 	}
 
