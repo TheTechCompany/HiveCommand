@@ -10,7 +10,7 @@ import {
 import { networkInterfaces } from 'os';
 
 import { getNodeId } from '@hive-command/opcua-utils'
-import { StatusCodes } from 'node-opcua-status-code';
+import { StatusCodes } from 'node-opcua';
 
 export interface ServerOpts {
     productName: string;
@@ -97,7 +97,7 @@ export default class Server {
                     [key: string]: {
                         type: DataType, 
                         get: ((key: string) => any),
-                        set?: (value: Variant, callback: (err: Error | null, statusCode: StatusCode) => void) => void
+                        set?: (value: Variant) => void
                     }
                 }
             }
@@ -149,10 +149,13 @@ export default class Server {
                             // const parts = this.parent?.displayName.toString().split('_')
                             return getter(key)
                         },
-                        set: function (this: UAVariable, value: Variant, callback: (err: Error | null, statusCode: StatusCode) => void){
+                        set: function (this: UAVariable, value: Variant){
                             
-                            if(!setter) return callback(null, StatusCodes.BadNotSupported);
-                            setter?.(value, callback)
+                            if(!setter) return StatusCodes.BadNotWritable;
+                            
+                            setter?.(value)
+
+                            return StatusCodes.Good;
                         }
                     }, true)
 

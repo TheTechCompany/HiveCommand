@@ -130,10 +130,10 @@ export class CommandNetwork {
 										console.log("REVPI DO GET", bus.id, `O_${ix + 1}`, value)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
 									},
-									set: (value, callback) => {
+									set: (value) => {
 										console.log(`SET VALUE FOR DO_${ix + 1}`, value)
 										this.valueBank.request?.(bus.id, `O_${ix + 1}`, value.value ? 1 : 0)
-										callback(null, StatusCodes.Good);
+										// callback(null, StatusCodes.Good);
 									}
 								}
 							}
