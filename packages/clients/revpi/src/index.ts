@@ -75,11 +75,11 @@ export class CommandClient {
 		this.machine = new CommandStateMachine();
 	}
 
-	async requestState(bus: string | null, port: string, value: any){
-		let busDevice = this.environment.find((a) => a.id == bus)
+	async requestState(event: {bus: string | null, port: string, value: any}){
+		let busDevice = this.environment.find((a) => a.id == event.bus)
 		let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
-		console.log("REQUESTING STATE FROM ", bus, port, value)
-		await plugin?.write(bus, port, value);
+		console.log("REQUESTING STATE FROM ", event.bus, event.port, event.value)
+		await plugin?.write(event.bus, event.port, event.value);
 	}
 
 	async discoverEnvironment(){
