@@ -5,7 +5,7 @@ import {
     makeEUInformation,
     makeRelativePath,
     Namespace,
-    OPCUAServer, RegisterServerMethod, UAObject, UAObjectType, UAVariable, Variant
+    OPCUAServer, RegisterServerMethod, StatusCode, UAObject, UAObjectType, UAVariable, Variant
 } from 'node-opcua'
 import { networkInterfaces } from 'os';
 
@@ -94,7 +94,9 @@ export default class Server {
             definition: {
                 state: {
                     [key: string]: {
-                        type: DataType, get: ((key: string) => any) 
+                        type: DataType, 
+                        get: ((key: string) => any),
+                        set?: (value: Variant, callback: (err: Error | null, statusCode: StatusCode) => void) => void
                     }
                 }
             }
@@ -139,11 +141,15 @@ export default class Server {
                 for(var k in definition?.state){
                     const key = k;
                     const getter = definition?.state[key]?.get;
+                    const setter = definition?.state[key]?.set;
 
                     (obj?.getComponentByName(k) as UAVariable).bindVariable({
                         get: function (this: UAVariable){
                             // const parts = this.parent?.displayName.toString().split('_')
                             return getter(key)
+                        },
+                        set: function (this: UAVariable, value: Variant, callback: (err: Error | null, statusCode: StatusCode) => void){
+                            setter?.(value, callback)
                         }
                     }, true)
 

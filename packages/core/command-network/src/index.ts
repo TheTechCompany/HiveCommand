@@ -126,6 +126,9 @@ export class CommandNetwork {
 										let value = this.valueBank.get?.(bus.id, `O_${ix + 1}`)
 										console.log("REVPI DO GET", bus.id, `O_${ix + 1}`, value)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
+									},
+									set: (value, callback) => {
+										console.log(`SET VALUE FOR DO_${ix + 1}`, value)
 									}
 								}
 							}
