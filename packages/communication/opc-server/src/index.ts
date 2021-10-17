@@ -10,6 +10,7 @@ import {
 import { networkInterfaces } from 'os';
 
 import { getNodeId } from '@hive-command/opcua-utils'
+import { StatusCodes } from 'node-opcua-status-code';
 
 export interface ServerOpts {
     productName: string;
@@ -149,6 +150,8 @@ export default class Server {
                             return getter(key)
                         },
                         set: function (this: UAVariable, value: Variant, callback: (err: Error | null, statusCode: StatusCode) => void){
+                            
+                            if(!setter) return callback(null, StatusCodes.BadNotSupported);
                             setter?.(value, callback)
                         }
                     }, true)

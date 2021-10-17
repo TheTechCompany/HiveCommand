@@ -8,6 +8,12 @@ import { BasePlugin } from './plugins/Base';
 import IODDManager from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
 
+export interface CommandEnvironment {
+	id: string;
+	type: string;
+	name: string;
+}
+
 export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
@@ -17,6 +23,8 @@ export interface CommandClientOptions {
 }
 
 export class CommandClient { 
+
+	private environment : CommandEnvironment[] = [];
 
 	private plugins : BasePlugin[];
 
@@ -35,6 +43,8 @@ export class CommandClient {
 	constructor(opts: CommandClientOptions){
 
 		this.valueBank = new ValueBank();
+
+		this.valueBank.on('REQUEST_STATE', this.requestState.bind(this))
 
 		this.ioddManager = new IODDManager({
 			storagePath: opts.storagePath || '/tmp'
@@ -63,6 +73,13 @@ export class CommandClient {
 		});
 
 		this.machine = new CommandStateMachine();
+	}
+
+	async requestState(bus: string | null, port: string, value: any){
+		let busDevice = this.environment.find((a) => a.id == bus)
+		let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
+		console.log("REQUESTING STATE FROM ", bus, port, value)
+		await plugin?.write(bus, port, value);
 	}
 
 	async discoverEnvironment(){
@@ -101,16 +118,16 @@ export class CommandClient {
 
 	async start(){
 		//Find IO-Buses and Connected Devices
-		const environment = await this.discoverEnvironment()
+		this.environment = await this.discoverEnvironment()
 
-		this.logs.log(`Found environment ${JSON.stringify(environment)}`)
+		this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
 		const self = await this.discoverSelf()
 
 		if(!self.identity?.named) throw new Error("No self found, check credentials");
 
-		await this.network.provideContext(environment, this.identity.identity)
+		await this.network.provideContext(this.environment, this.identity.identity)
 
 		this.logs.log(`Found self ${JSON.stringify(self)}`)
 		const credentials = await this.network.becomeSelf(self)
@@ -119,6 +136,6 @@ export class CommandClient {
 		//Start network and share context with the mothership
 		await this.network.start({hostname: self.identity?.named})
 
-		await this.readEnvironment(environment)
+		await this.readEnvironment(this.environment)
 	}
 }

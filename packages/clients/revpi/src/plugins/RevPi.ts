@@ -35,4 +35,8 @@ export default class RevPiPlugin extends BasePlugin {
 		// const value = this.pi.readValue(port)
 		return inputs.concat(outputs);
 	}
+
+	async write(bus: string | null, port: string, value: any){
+		await this.pi.writeValue(port, value)
+	}
 }

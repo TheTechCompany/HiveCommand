@@ -9,4 +9,8 @@ export abstract class BasePlugin {
 		return []
 	}
 
+	async write(bus: string | null, port: string, value: any) {
+		
+	}
+
 }

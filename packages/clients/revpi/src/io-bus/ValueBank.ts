@@ -1,14 +1,21 @@
-export class ValueBank { 
+import { EventEmitter } from "events";
+
+export class ValueBank extends EventEmitter{ 
 
 	private values: {[key: string]: {port: string, value: any}[]} = {};
 
 	constructor(){
+		super();
 		this.get = this.get.bind(this)
 	}
 
 	get(id: string, port: string){
 		console.log(this.values)
 		return this.values?.[`${id}`]?.find((a) => a.port == port)?.value;
+	}
+
+	request(id: string, port: string, value: any){
+		this.emit('REQUEST_STATE', {bus: id, port: port, value})
 	}
 
 	setMany(id: string, values: {port: string, value: string}[]){

@@ -6,6 +6,7 @@ export interface CommandNetworkOptions{
 	baseURL?: string;
 
 	valueBank?: {
+		request: (id: string, port: string, value: any)=> void;
 		get: (id: string, port: string) => any;
 	}
 }
@@ -26,6 +27,7 @@ export class CommandNetwork {
 	private buses: CommandBus[] = [];
 
 	private valueBank : {
+		request?: (id: string, port: string, value: any)=> void;
 		get?: (id: string, port: string) => any;
 	} = {}
 
@@ -35,6 +37,7 @@ export class CommandNetwork {
 		})
 
 		this.valueBank = {
+			request: opts.valueBank?.request,
 			get: opts.valueBank?.get
 		}
 	}
@@ -129,6 +132,7 @@ export class CommandNetwork {
 									},
 									set: (value, callback) => {
 										console.log(`SET VALUE FOR DO_${ix + 1}`, value)
+										this.valueBank.request?.(bus.id, `O_${ix + 1}`, value.value ? 1 : 0)
 									}
 								}
 							}
