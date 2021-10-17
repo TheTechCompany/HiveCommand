@@ -13,7 +13,7 @@ let key = readFileSync('/home/pi/hivecommand.key', 'utf8')
 		commandCenter: 'http://discovery.hexhive.io:8080',
 		privateKey: key,
 		networkInterface: 'eth0',
-		discoveryServer: 'http://discovery.hexhive.io:8080'
+		discoveryServer: 'opc.tcp://discovery.hexhive.io:4840'
 	})
 
 	hostCommander.start().then(() => {
