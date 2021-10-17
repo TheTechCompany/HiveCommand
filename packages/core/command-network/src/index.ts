@@ -104,7 +104,8 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI GET", key)
-										return new Variant({dataType: DataType.Boolean, value: this.valueBank.get?.(bus.id, `I_${ix + 1}`) == 1 });
+										let value = this.valueBank.get?.(bus.id, `I_${ix + 1}`)
+										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1) });
 									}
 								}
 							}
@@ -123,7 +124,8 @@ export class CommandNetwork {
 									type: DataType.Boolean,
 									get: (key) => {
 										console.log("REVPI DO GET", key)
-										return new Variant({dataType: DataType.Boolean, value: this.valueBank.get?.(bus.id, `O_${ix + 1}`) == 1});
+										let value = this.valueBank.get?.(bus.id, `O_${ix + 1}`)
+										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
 									}
 								}
 							}
