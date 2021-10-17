@@ -3,7 +3,7 @@ export class ValueBank {
 	private values: {[key: string]: {port: string, value: any}[]} = {};
 
 	constructor(){
-		this.get.bind(this)
+		this.get = this.get.bind(this)
 	}
 
 	get(id: string, port: string){
