@@ -152,7 +152,9 @@ export class CommandNetwork {
 
 							let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
 
-							device.iodd.function.inputs.forEach((input) => {
+							device.iodd.function.inputs.reduce<any[]>((prev, curr) => {
+								return prev.concat(curr.struct)
+							}, []).forEach((input) => {
 
 								stateDefinition[input.name] = {
 									type: DataType.Double,
@@ -162,7 +164,9 @@ export class CommandNetwork {
 								}
 							})
 
-							device.iodd.function.outputs?.forEach((output) => {
+							device.iodd.function.outputs?.reduce<any[]>((prev, curr) => {
+								return prev.concat(curr.struct)
+							}, []).forEach((output) => {
 								stateDefinition[output.name] = {
 									type: DataType.Double,
 									get: () => {
