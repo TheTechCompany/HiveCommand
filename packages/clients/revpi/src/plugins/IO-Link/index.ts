@@ -55,11 +55,18 @@ export default class IOLinkPlugin extends BasePlugin {
 					if(parts[4] === 'pdin'){
 						// let dev = this.devices[`${subscription?.master}-${port}`]
 					
-						
+						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => a.port == port)
+						const iodd : IODD = device.iodd;
+						const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
+							let bits = y.bits;
+							bits.name = y.name;
+							return bits
+						})).reduce((prev, curr) => prev.concat(curr), []))
+
 						this.emit('PORT:VALUE', {
 							bus: subscription?.master,
 							port: port,
-							value: payload[k].data
+							value: filter(payload[k].data)
 						})
 					
 						// dev.registerValue(payload[k].data)
