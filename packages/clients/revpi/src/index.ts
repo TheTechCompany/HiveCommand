@@ -5,14 +5,14 @@ import { CommandNetwork } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
-import IODDManager from '@io-link/iodd'
+import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
 
 export interface CommandEnvironment {
 	id: string;
 	type: string;
 	name: string;
-	devices?: {ix: number, product: string}[];
+	devices?: {ix: number, product: string, iodd: any}[];
 }
 
 export interface CommandClientOptions {
