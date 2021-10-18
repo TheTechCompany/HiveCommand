@@ -92,19 +92,6 @@ export default class IOLinkPlugin extends BasePlugin {
 
 	async subscribe(bus: string){
 
-		const subscriptionLock = this.lock.isSubscriptionLock();
-		if(subscriptionLock){
-			console.log("Found subscription lock, unsubscribing now...")
-			await Promise.all(subscriptionLock.map(async (lock: {master: string, id: number}) => {
-				let currentMaster = this.masters.find((a) => a.id == lock.master)?.api;
-
-				let callbackURL = this.ingressServer.getCallbackURL();
-				if(!callbackURL) return;
-				await currentMaster?.unsubscribe(lock.id, callbackURL)
-			}))
-			console.log("Unsubscribed from locked subscriptions")
-		}	
-
 		console.log("IO-Link Subscribing", this.masters, bus)
 		let m = this.masters.find((a) => a.id == bus);
 		let devices = m?.devices || [];
@@ -156,6 +143,20 @@ export default class IOLinkPlugin extends BasePlugin {
 				}))
 			}
 		}))
+
+		const subscriptionLock = this.lock.isSubscriptionLock();
+		if(subscriptionLock){
+			console.log("Found subscription lock, unsubscribing now...")
+			await Promise.all(subscriptionLock.map(async (lock: {master: string, id: number}) => {
+				let currentMaster = this.masters.find((a) => a.id == lock.master)?.api;
+
+				let callbackURL = this.ingressServer.getCallbackURL();
+				if(!callbackURL) return;
+				await currentMaster?.unsubscribe(lock.id, callbackURL)
+			}))
+			console.log("Unsubscribed from locked subscriptions")
+		}	
+		
 		return this.masters.map((x) => ({
 			id: x.id,
 			name: x.name,
