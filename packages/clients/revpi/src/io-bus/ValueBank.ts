@@ -13,7 +13,6 @@ export class ValueBank extends EventEmitter{
 	}
 
 	get(id: string, port: string){
-		console.log("GET", JSON.stringify(this.values))
 		return this.values?.[`${id}`]?.find((a) => a.port == port)?.value;
 	}
 
