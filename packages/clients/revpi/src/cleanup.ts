@@ -6,6 +6,8 @@ const app = express()
 app.post('/io', (req, res) => {
 	let {cid} = req.body;
 
+	console.log(`Unsubscribing from ${cid}`)
+
 	axios.request({
 		method: "POST",
 		url: 'http://192.168.10.225/timer[1]/counter/datachanged/unsubscribe',
