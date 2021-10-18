@@ -94,6 +94,10 @@ export class CommandNetwork {
 		}
 	}
 
+	getDeviceName = (type: string, bus: string, port: any) => {
+		return `${type}|${bus}|${port}`
+	}
+
 	//Turn buses into OPC map
 	async initOPC(){
 		console.log("INIT", this.buses)
@@ -103,15 +107,16 @@ export class CommandNetwork {
 					//Inputs
 					console.log("REVPI BUilder");
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
+						let portKey = `I_${ix + 1}`
 						await this.opc?.addDevice({
-							name: `revpi_${bus.id}_di_${ix + 1}`,
+							name: this.getDeviceName(`REVPI`, bus.id, portKey),
 							type: 'RevPi_DI'
 						}, {
 							state: {
 								value: {
 									type: DataType.Boolean,
 									get: (key) => {
-										let value = this.valueBank.get?.(bus.id, `I_${ix + 1}`)
+										let value = this.valueBank.get?.(bus.id, portKey)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1) });
 									}
 								}
@@ -120,21 +125,21 @@ export class CommandNetwork {
 					}))
 					//Outputs
 					await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
-					
+						let portKey = `O_${ix + 1}`
 						await this.opc?.addDevice({
-							name: `revpi_do_${ix + 1}`,
+							name: this.getDeviceName(`REVPI`, bus.id, portKey),
 							type: 'RevPi_DO'
 						}, {
 							state: {
 								value: {
 									type: DataType.Boolean,
 									get: (key) => {
-										let value = this.valueBank.get?.(bus.id, `O_${ix + 1}`)
+										let value = this.valueBank.get?.(bus.id, portKey)
 										return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
 									},
 									set: (value) => {
-										console.log(`SET VALUE FOR DO_${ix + 1}`, value)
-										this.valueBank.request?.(bus.id, `O_${ix + 1}`, value.value ? 1 : 0)
+										console.log(`SET VALUE FOR ${port}`, value)
+										this.valueBank.request?.(bus.id, portKey, value.value ? 1 : 0)
 										// callback(null, StatusCodes.Good);
 									}
 								}
@@ -179,7 +184,7 @@ export class CommandNetwork {
 							})
 
 							this.opc?.addDevice({
-								name: `io_port_${bus.id}_${device.ix + 1}`,
+								name: this.getDeviceName(`IO-LINK`, bus.id, device.ix + 1),
 								type: device.product
 							}, {
 								state: stateDefinition
@@ -191,7 +196,7 @@ export class CommandNetwork {
 							console.log("Add port", "IO " + ix)
 	
 							this.opc?.addDevice({
-								name: `io_port_${bus.id}_${ix}`,
+								name: this.getDeviceName(`IO-LINK`, bus.id, ix + 1),
 								type: `IO-PORT`
 							}, {
 								state: {
