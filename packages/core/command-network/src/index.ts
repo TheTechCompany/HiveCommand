@@ -150,7 +150,6 @@ export class CommandNetwork {
 						await Promise.all((bus.devices || []).map(async (device) => {
 							let stateDefinition : any = {};
 
-							let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
 
 							device.iodd.function.inputs.reduce<any[]>((prev, curr) => {
 								return prev.concat(curr.struct)
@@ -159,6 +158,8 @@ export class CommandNetwork {
 								stateDefinition[input.name] = {
 									type: DataType.Double,
 									get: () => {
+										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
+
 										return new Variant({dataType: DataType.Double, value: value?.[input.name]})
 									}
 								}
@@ -170,6 +171,8 @@ export class CommandNetwork {
 								stateDefinition[output.name] = {
 									type: DataType.Double,
 									get: () => {
+										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
+
 										return new Variant({dataType: DataType.Double, value: value?.[output.name]})
 									}
 								}
