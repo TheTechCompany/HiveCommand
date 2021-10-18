@@ -138,9 +138,10 @@ export class CommandClient {
 
 			await plugin?.subscribe(bus.id)
 
+			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
 				console.log("Port Value", event)
-				this.valueBank.set(bus.id, event.port, event.value)
+				this.valueBank.set(event.bus, event.port, event.value)
 			})
 		}))
 	}
