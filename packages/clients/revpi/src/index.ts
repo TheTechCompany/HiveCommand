@@ -43,6 +43,8 @@ export class CommandClient {
 
 	private options : CommandClientOptions;
 
+	private cycleTimer?: any;
+
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
@@ -118,7 +120,11 @@ export class CommandClient {
 	}	
 
 	startCyclicRead(cycle_time: number = 10 * 1000){
-		setInterval(this.readEnvironment, cycle_time)
+		this.cycleTimer = setInterval(() => this.readEnvironment(this.environment), cycle_time)
+	}
+
+	stopCyclicRead(){
+		clearInterval(this.cycleTimer)
 	}
 
 	async discoverSelf(){
@@ -149,6 +155,8 @@ export class CommandClient {
 			discoveryServer: this.options.discoveryServer,
 		})
 
-		await this.readEnvironment(this.environment)
+		this.startCyclicRead()
+
+		// await this.readEnvironment(this.environment)
 	}
 }
