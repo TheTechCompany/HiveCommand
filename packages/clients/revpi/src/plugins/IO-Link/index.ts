@@ -34,6 +34,7 @@ export default class IOLinkPlugin extends BasePlugin {
 
 		return await Promise.all((master?.devices || []).map(async (device) => {
 			const value = await master?.api.readPort(device.ix + 1)
+
 			const iodd : IODD = device.iodd;
 			const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
 				let bits = y.bits;
@@ -98,7 +99,7 @@ export default class IOLinkPlugin extends BasePlugin {
 		let devices = m?.devices || [];
 		let master = m?.api
 		console.log("Subscribing to ports", devices.map((x) => x.ix))
-		const subscription = await master?.subscribeToPorts(devices.map((x) => x.ix), this.ingressServer.getCallbackURL())
+		const subscription = await master?.subscribeToPorts(devices.map((x) => x.ix + 1), this.ingressServer.getCallbackURL())
 		
 		if(!master) return;
 
