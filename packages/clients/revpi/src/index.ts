@@ -77,6 +77,8 @@ export class CommandClient {
 		});
 
 		this.machine = new CommandStateMachine();
+
+		this.readEnvironment = this.readEnvironment.bind(this);
 	}
 
 	async requestState(event: {bus: string | null, port: string, value: any}){
@@ -114,6 +116,10 @@ export class CommandClient {
 		console.log("ENV VALUE", envValue)
 		return envValue
 	}	
+
+	startCyclicRead(cycle_time: number = 10 * 1000){
+		setInterval(this.readEnvironment, cycle_time)
+	}
 
 	async discoverSelf(){
 		//Discover the identity of the self
