@@ -31,6 +31,7 @@
     "@hive-command/network": "^1.3.2-alpha.118",
     "@hive-command/opcua-server": "^1.3.2-alpha.109",
     "@hive-command/state-machine": "^1.3.2-alpha.117",
+    "@hive-command/subscription-lock": "^1.0.0",
     "@io-link/core": "^1.3.2-alpha.98",
     "@io-link/iodd": "^1.3.2-alpha.83",
     "@revpi/node": "^1.0.6",

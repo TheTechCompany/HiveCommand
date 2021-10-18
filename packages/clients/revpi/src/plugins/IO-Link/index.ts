@@ -2,6 +2,7 @@ import { discoverDevices, IOMaster, discoverMasters, getIODD } from "@io-link/co
 import { BasePlugin } from "../Base";
 import IODDManager, { createFilter, IODD } from '@io-link/iodd'
 import { IngressServer } from "./CallbackServer";
+import { SubscriptionLock } from '@hive-command/subscription-lock'
 
 export default class IOLinkPlugin extends BasePlugin {
 	public TAG : string = "IO-LINK";
@@ -16,9 +17,12 @@ export default class IOLinkPlugin extends BasePlugin {
 
 	private subscriptions : {id: number, result: any, master: string}[] = []
 
+	private lock : SubscriptionLock
 
 	constructor(networkInterface : string, ioddManager: IODDManager){
 		super();
+
+		this.lock = new SubscriptionLock({path: `/tmp/`})
 
 		this.ingressServer = new IngressServer(9000, this.webhook.bind(this))
 		this.networkInterface = networkInterface;
@@ -87,6 +91,20 @@ export default class IOLinkPlugin extends BasePlugin {
 	}
 
 	async subscribe(bus: string){
+
+		const subscriptionLock = this.lock.isSubscriptionLock();
+		if(subscriptionLock){
+			console.log("Found subscription lock, unsubscribing now...")
+			await Promise.all(subscriptionLock.map(async (lock: {master: string, id: number}) => {
+				let currentMaster = this.masters.find((a) => a.id == lock.master)?.api;
+
+				let callbackURL = this.ingressServer.getCallbackURL();
+				if(!callbackURL) return;
+				await currentMaster?.unsubscribe(lock.id, callbackURL)
+			}))
+			console.log("Unsubscribed from locked subscriptions")
+		}	
+
 		let m = this.masters.find((a) => a.id == bus);
 		let devices = m?.devices || [];
 		let master = m?.api
