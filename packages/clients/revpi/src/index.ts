@@ -80,7 +80,7 @@ export class CommandClient {
 
 		this.machine = new CommandStateMachine();
 
-		this.readEnvironment = this.readEnvironment.bind(this);
+		// this.readEnvironment = this.readEnvironment.bind(this);
 	}
 
 	async requestState(event: {bus: string | null, port: string, value: any}){
@@ -106,30 +106,43 @@ export class CommandClient {
 		}, [])
 	}
 
-	async readEnvironment(env: {type: string, id: string, name: string}[]){
-		const envValue = await Promise.all(env.map(async (bus) => {
-			let plugin = this.plugins.find((a) => a.TAG == bus.type)
+	// async readEnvironment(env: {type: string, id: string, name: string}[]){
+	// 	const envValue = await Promise.all(env.map(async (bus) => {
+	// 		let plugin = this.plugins.find((a) => a.TAG == bus.type)
 
-			const value = await plugin?.read(bus.id)
-			if(!value) return
-			this.valueBank.setMany(bus.id, value); //[bus.id] = value || [];
-			return value;
-		}))
-		console.log("ENV VALUE", envValue)
-		return envValue
-	}	
+	// 		const value = await plugin?.read(bus.id)
+	// 		if(!value) return
+	// 		this.valueBank.setMany(bus.id, value); //[bus.id] = value || [];
+	// 		return value;
+	// 	}))
+	// 	console.log("ENV VALUE", envValue)
+	// 	return envValue
+	// }	
 
-	startCyclicRead(cycle_time: number = 10 * 1000){
-		this.cycleTimer = setInterval(() => this.readEnvironment(this.environment), cycle_time)
-	}
+	// startCyclicRead(cycle_time: number = 10 * 1000){
+	// 	this.cycleTimer = setInterval(() => this.readEnvironment(this.environment), cycle_time)
+	// }
 
-	stopCyclicRead(){
-		clearInterval(this.cycleTimer)
-	}
+	// stopCyclicRead(){
+	// 	clearInterval(this.cycleTimer)
+	// }
 
 	async discoverSelf(){
 		//Discover the identity of the self
 		return await this.network.whoami()
+	}
+
+	async subscribeToBusSystem(env: {type: string, id: string, name: string}[]){
+		await Promise.all(env.map(async (bus) => {
+			let plugin = this.plugins.find((a) => a.TAG == bus.type)
+
+			await plugin?.subscribe(bus.id)
+
+			plugin?.on('PORT:VALUE', (event) => {
+				console.log("Port Value", event)
+				this.valueBank.set(bus.id, event.port, event.value)
+			})
+		}))
 	}
 
 	async start(){
@@ -155,7 +168,9 @@ export class CommandClient {
 			discoveryServer: this.options.discoveryServer,
 		})
 
-		this.startCyclicRead()
+		await this.subscribeToBusSystem(this.environment);
+
+		// this.startCyclicRead()
 
 		// await this.readEnvironment(this.environment)
 	}

@@ -1,10 +1,13 @@
 import {RevPi} from '@revpi/node'
+import { nanoid } from 'nanoid';
 import { BasePlugin } from './Base';
 
 export default class RevPiPlugin extends BasePlugin {
 	public TAG : string = "REVPI";
 
 	private pi: RevPi;
+
+	private subscription: any;
 
 	constructor(){
 		super()
@@ -18,7 +21,7 @@ export default class RevPiPlugin extends BasePlugin {
 		}));
 	}
 
-	async read(){
+	private async readAll(){
 		const inputs = await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
 			return {
 				port: `I_${ix + 1}`,
@@ -35,6 +38,28 @@ export default class RevPiPlugin extends BasePlugin {
 		// const value = this.pi.readValue(port)
 		return inputs.concat(outputs);
 	}
+
+	async subscribe(bus: string){
+		
+		this.subscription = setInterval(async () => {
+			const allPorts = await this.readAll()
+
+			allPorts.forEach((port) => {
+				this.emit('PORT:VALUE', {
+					bux: bus,
+					port: port.port,
+					value: port.value
+				})
+			})
+		}, 10 * 1000);
+
+		return {
+			id: 3,
+			result: this.subscription
+		}
+	}
+
+
 
 	async write(bus: string | null, port: string, value: any){
 		await this.pi.writeValue(port, value)
