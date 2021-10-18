@@ -1,7 +1,10 @@
 import axios from 'axios'
+import bodyParser from 'body-parser';
 import express, { Express } from 'express'
 
 const app = express()
+
+app.use(bodyParser.json())
 
 app.post('/io', (req, res) => {
 	let {cid} = req.body;
