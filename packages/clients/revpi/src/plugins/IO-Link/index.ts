@@ -56,6 +56,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						// let dev = this.devices[`${subscription?.master}-${port}`]
 					
 						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => a.port == port)
+						if(!device) return
 						const iodd : IODD = device.iodd;
 						const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
 							let bits = y.bits;
