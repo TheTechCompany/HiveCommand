@@ -105,9 +105,11 @@ export default class IOLinkPlugin extends BasePlugin {
 			console.log("Unsubscribed from locked subscriptions")
 		}	
 
+		console.log("IO-Link Subscribing", this.masters, bus)
 		let m = this.masters.find((a) => a.id == bus);
 		let devices = m?.devices || [];
 		let master = m?.api
+		console.log("Subscribing to ports", devices.map((x) => x.ix))
 		const subscription = await master?.subscribeToPorts(devices.map((x) => x.ix), this.ingressServer.getCallbackURL())
 		
 		if(!master) return;
