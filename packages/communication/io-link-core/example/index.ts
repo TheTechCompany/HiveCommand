@@ -1,4 +1,4 @@
-import { discoverDevices, discoverMasters } from "@io-link/core";
+import { discoverDevices, discoverMasters } from "../src";
 
 (async () => {
 	const masters = await discoverMasters('eth0')
