@@ -80,7 +80,18 @@ export default class IOLinkPlugin extends BasePlugin {
 		let m = this.masters.find((a) => a.id == bus);
 		let devices = m?.devices || [];
 		let master = m?.api
-		return await master?.subscribeToPorts(devices.map((x) => x.ix), this.ingressServer.getCallbackURL())
+		const subscription = await master?.subscribeToPorts(devices.map((x) => x.ix), this.ingressServer.getCallbackURL())
+		
+		if(!master) return;
+
+		this.subscriptions.push({
+			id: -1,
+			...subscription,
+			result: '',
+			master: master.serial || ''
+		})
+
+		return subscription
 	}
 
 	async discover(){

@@ -46,7 +46,7 @@ export default class RevPiPlugin extends BasePlugin {
 
 			allPorts.forEach((port) => {
 				this.emit('PORT:VALUE', {
-					bux: bus,
+					bus: bus,
 					port: port.port,
 					value: port.value
 				})
