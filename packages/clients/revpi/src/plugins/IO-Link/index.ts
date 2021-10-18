@@ -48,7 +48,7 @@ export default class IOLinkPlugin extends BasePlugin {
 	}
 
 	webhook(id: number, payload: any){
-		console.log("Webhook", id, payload)
+		console.log("Webhook", id, this.subscriptions, payload)
 		let subscription = this.subscriptions.find((a) => a.id == id)
 
 		for(var k in payload){
@@ -111,7 +111,7 @@ export default class IOLinkPlugin extends BasePlugin {
 			id: -1,
 			...subscription,
 			result: '',
-			master: master.serial || ''
+			master: m?.id || ''
 		})
 
 		return subscription
