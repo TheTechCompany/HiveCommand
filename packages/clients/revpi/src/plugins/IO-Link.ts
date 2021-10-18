@@ -23,7 +23,11 @@ export default class IOLinkPlugin extends BasePlugin {
 		return await Promise.all((master?.devices || []).map(async (device) => {
 			const value = await master?.api.readPort(device.ix + 1)
 			const iodd : IODD = device.iodd;
-			const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => y.bits)).reduce((prev, curr) => prev.concat(curr), []))
+			const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
+				let bits = y.bits;
+				bits.name = y.name;
+				return bits
+			})).reduce((prev, curr) => prev.concat(curr), []))
 			return {
 				port: device.ix + 1,
 				value: filter(value?.data?.value)
