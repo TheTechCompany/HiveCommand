@@ -48,6 +48,7 @@ export default class IOLinkPlugin extends BasePlugin {
 	}
 
 	webhook(id: number, payload: any){
+		console.log("Webhook", id, payload)
 		let subscription = this.subscriptions.find((a) => a.id == id)
 
 		for(var k in payload){
@@ -156,7 +157,7 @@ export default class IOLinkPlugin extends BasePlugin {
 			}))
 			console.log("Unsubscribed from locked subscriptions")
 		}	
-		
+
 		return this.masters.map((x) => ({
 			id: x.id,
 			name: x.name,
