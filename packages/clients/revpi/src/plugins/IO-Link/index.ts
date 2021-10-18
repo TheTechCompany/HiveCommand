@@ -112,6 +112,11 @@ export default class IOLinkPlugin extends BasePlugin {
 		
 		if(!master) return;
 
+		this.lock.addSubscription({
+			master: master.serial || '',
+			id: subscription?.id || -1
+		})
+
 		this.subscriptions.push({
 			id: -1,
 			...subscription,
