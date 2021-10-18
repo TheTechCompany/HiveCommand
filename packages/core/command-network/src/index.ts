@@ -14,6 +14,12 @@ export interface CommandNetworkOptions{
 export interface CommandBus {
 	id: string;
 	type: string;
+	devices?: {ix: number, product: string, iodd: {
+		function: {
+			inputs: {name: string, struct: {name: string}[]}[],
+			outputs?: {name: string, struct: {name: string}[]}[]
+		}
+	}}[]
 }
 
 export class CommandNetwork {
@@ -139,23 +145,61 @@ export class CommandNetwork {
 					break;
 				case 'IO-LINK':
 					console.log("IO")
-					await Promise.all(Array.from(Array(8)).map((port, ix) => {
-						console.log("Add port", "IO " + ix)
 
-						this.opc?.addDevice({
-							name: `io_port_${bus.id}_${ix}`,
-							type: `IO-PORT`
-						}, {
-							state: {
-								value: {
+					if((bus.devices || []).length > 0){
+						await Promise.all((bus.devices || []).map(async (device) => {
+							let stateDefinition : any = {};
+
+							let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
+
+							device.iodd.function.inputs.forEach((input) => {
+
+								stateDefinition[input.name] = {
 									type: DataType.Double,
 									get: () => {
-										// console.log("GET IO")
-										return new Variant({dataType: DataType.Double, value: 0.0})									}
+										return new Variant({dataType: DataType.Double, value: value?.[input.name]})
+									}
 								}
-							}
-						})
-					}))
+							})
+
+							device.iodd.function.outputs?.forEach((output) => {
+								stateDefinition[output.name] = {
+									type: DataType.Double,
+									get: () => {
+										return new Variant({dataType: DataType.Double, value: value?.[output.name]})
+									}
+								}
+							})
+
+							this.opc?.addDevice({
+								name: `io_port_${bus.id}_${device.ix + 1}`,
+								type: device.product
+							}, {
+								state: stateDefinition
+							})
+
+						}))
+					}else{
+						await Promise.all(Array.from(Array(8)).map((port, ix) => {
+							console.log("Add port", "IO " + ix)
+	
+							this.opc?.addDevice({
+								name: `io_port_${bus.id}_${ix}`,
+								type: `IO-PORT`
+							}, {
+								state: {
+									value: {
+										type: DataType.Double,
+										get: () => {
+											// console.log("GET IO")
+											return new Variant({dataType: DataType.Double, value: 0.0})									}
+									}
+								}
+							})
+						}))
+					}
+
+					
 					break;
 			}
 			
