@@ -178,7 +178,7 @@ export class CommandNetwork {
 									get: () => {
 										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
 
-										return new Variant({dataType: DataType.Double, value: value?.[output.name]})
+										return new Variant({dataType: DataType.Double, value: value?.[`${output.name}-${output.subindex}`]})
 									},
 									set: (value: Variant) => {
 										
