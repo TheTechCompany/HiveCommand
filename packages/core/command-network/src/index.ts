@@ -16,8 +16,8 @@ export interface CommandBus {
 	type: string;
 	devices?: {ix: number, product: string, iodd: {
 		function: {
-			inputs: {name: string, struct: {name: string}[]}[],
-			outputs?: {name: string, struct: {name: string}[]}[]
+			inputs: {name: string, struct: {name: string, bits: {subindex: string}}[]}[],
+			outputs?: {name: string, struct: {name: string, bits: {subindex: string}}[]}[]
 		}
 	}}[]
 }
@@ -160,7 +160,7 @@ export class CommandNetwork {
 								return prev.concat(curr.struct)
 							}, []).forEach((input) => {
 								console.log(input)
-								stateDefinition[`${input.name}-${input.subindex}`] = {
+								stateDefinition[`${input.name}-${input.bits.subindex}`] = {
 									type: DataType.Double,
 									get: () => {
 										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
@@ -173,16 +173,16 @@ export class CommandNetwork {
 							device.iodd.function.outputs?.reduce<any[]>((prev, curr) => {
 								return prev.concat(curr.struct)
 							}, []).forEach((output) => {
-								stateDefinition[`${output.name}-${output.subindex}`] = {
+								stateDefinition[`${output.name}-${output.bits.subindex}`] = {
 									type: DataType.Double,
 									get: () => {
 										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
 
-										return new Variant({dataType: DataType.Double, value: value?.[`${output.name}-${output.subindex}`]})
+										return new Variant({dataType: DataType.Double, value: value?.[`${output.name}-${output.bits.subindex}`]})
 									},
 									set: (value: Variant) => {
 										
-										this.valueBank.request?.(bus.id, `${device.ix + 1}`, {[`${output.name}-${output.subindex}`]: value.value})
+										this.valueBank.request?.(bus.id, `${device.ix + 1}`, {[`${output.name}-${output.bits.subindex}`]: value.value})
 									}
 								}
 							})
