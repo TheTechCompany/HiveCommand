@@ -68,6 +68,19 @@ export class IOMaster extends EventEmitter {
         return portData?.data
     }
 
+    async writePort(port: number, value: string){
+
+        const setPortData = await this.portClient?.setPortData(port, {
+            code: 'request',
+            adr: `/iolinkmaster/port[${port}]/iolinkdevice/pdout/setdata`,
+            cid: -1,
+            data: {
+                newvalue: value
+            }
+        })
+        return setPortData?.data
+    }
+
     
     getRandomInt(max: number){
         return Math.floor(Math.random() * max);
@@ -97,6 +110,7 @@ export class IOMaster extends EventEmitter {
                     return [
                         `/iolinkmaster/port[${port}]/iolinkdevice/pin2in`,
                         `/iolinkmaster/port[${port}]/iolinkdevice/pdin`,
+                        `/iolinkmaster/port[${port}]/iolinkdevice/pdout`,
                         `/iolinkmaster/port[${port}]/iolinkdevice/productname`
                     ]
                 }).reduce((prev, curr) => prev.concat(curr), []).concat([

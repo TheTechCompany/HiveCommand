@@ -31,7 +31,14 @@ export class ValueBank extends EventEmitter{
 		let bus = this.values[id]
 		let ix = bus.map((x) => x.port).indexOf(port)
 		if(ix > -1){
-			this.values[id][ix].value = value;
+			if(typeof(value) == "object"){
+				this.values[id][ix].value = {
+					...this.values[id][ix].value,
+					...value,
+				}
+			}else{
+				this.values[id][ix].value = value;
+			}
 		}else{
 			this.values[id].push({port: port, value: value})
 		}

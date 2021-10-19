@@ -168,6 +168,37 @@ export interface InlineObject1 {
 /**
  * 
  * @export
+ * @interface InlineObject2
+ */
+export interface InlineObject2 {
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject2
+     */
+    adr?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof InlineObject2
+     */
+    cid?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof InlineObject2
+     */
+    code?: string;
+    /**
+     * 
+     * @type {IolinkmasterPortPortIolinkdevicePdoutSetdataData}
+     * @memberof InlineObject2
+     */
+    data?: IolinkmasterPortPortIolinkdevicePdoutSetdataData;
+}
+/**
+ * 
+ * @export
  * @interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData
  */
 export interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData {
@@ -196,6 +227,19 @@ export interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscri
      * @memberof IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData
      */
     callback?: string;
+}
+/**
+ * 
+ * @export
+ * @interface IolinkmasterPortPortIolinkdevicePdoutSetdataData
+ */
+export interface IolinkmasterPortPortIolinkdevicePdoutSetdataData {
+    /**
+     * New value to set
+     * @type {string}
+     * @memberof IolinkmasterPortPortIolinkdevicePdoutSetdataData
+     */
+    newvalue?: string;
 }
 /**
  * 
@@ -2175,6 +2219,44 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Set data on port
+         * @param {number} port Port index to set data for
+         * @param {InlineObject2} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setPortData: async (port: number, data?: InlineObject2, options: any = {}): Promise<RequestArgs> => {
+            // verify required parameter 'port' is not null or undefined
+            assertParamExists('setPortData', 'port', port)
+            const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/pdout/setdata`
+                .replace(`{${"port"}}`, encodeURIComponent(String(port)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Subscribe to port info events
          * @param {number} port Port index to lookup data for
          * @param {InlineObject1} [data] 
@@ -2394,6 +2476,18 @@ export const PortsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Set data on port
+         * @param {number} port Port index to set data for
+         * @param {InlineObject2} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async setPortData(port: number, data?: InlineObject2, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.setPortData(port, data, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
          * @summary Subscribe to port info events
          * @param {number} port Port index to lookup data for
          * @param {InlineObject1} [data] 
@@ -2526,6 +2620,17 @@ export const PortsApiFactory = function (configuration?: Configuration, basePath
          */
         getPortVendorId(port: number, options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.getPortVendorId(port, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Set data on port
+         * @param {number} port Port index to set data for
+         * @param {InlineObject2} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setPortData(port: number, data?: InlineObject2, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.setPortData(port, data, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2675,6 +2780,19 @@ export class PortsApi extends BaseAPI {
      */
     public getPortVendorId(port: number, options?: any) {
         return PortsApiFp(this.configuration).getPortVendorId(port, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Set data on port
+     * @param {number} port Port index to set data for
+     * @param {InlineObject2} [data] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PortsApi
+     */
+    public setPortData(port: number, data?: InlineObject2, options?: any) {
+        return PortsApiFp(this.configuration).setPortData(port, data, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

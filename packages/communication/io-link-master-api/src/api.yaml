@@ -405,7 +405,49 @@ paths:
           description: "Successfully ran"
           schema:
             $ref: "#/definitions/GenericResponse"
-        
+  
+  /iolinkmaster/port[{port}]/iolinkdevice/pdout/setdata:
+    post:
+      tags:
+        - "Ports"
+      summary: "Set data on port"
+      operationId: setPortData
+      parameters:
+        - in: path
+          name: port
+          type: integer
+          required: true
+          description: Port index to set data for
+        - in: body
+          name: data
+          schema:
+            properties:
+              adr:
+                type: string
+                required: true
+              cid: 
+                type: integer
+                default: -1
+                required: true
+              code:
+                type: string
+                default: request
+                required: true
+              data: 
+                type: object
+                properties: 
+                  newvalue:
+                      description: |-
+                        New value to set
+                      type: string
+      produces:
+      - "application/json"
+    
+      responses:
+        "200":
+          description: "Success"
+          schema:
+            $ref: "#/definitions/GenericResponse"
   
   /iolinkmaster/port[{port}]/iolinkdevice/pdin/getdata:
     get:

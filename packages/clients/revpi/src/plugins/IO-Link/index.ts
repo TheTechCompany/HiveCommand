@@ -1,6 +1,6 @@
 import { discoverDevices, IOMaster, discoverMasters, getIODD } from "@io-link/core";
 import { BasePlugin } from "../Base";
-import IODDManager, { createFilter, IODD } from '@io-link/iodd'
+import IODDManager, { createFilter, createGulper, IODD } from '@io-link/iodd'
 import { IngressServer } from "./CallbackServer";
 import { SubscriptionLock } from '@hive-command/subscription-lock'
 
@@ -29,24 +29,24 @@ export default class IOLinkPlugin extends BasePlugin {
 		this.ioddManager = ioddManager
 	}
 
-	async read(bus: string){
-		let master = this.masters.find((a) => a.id == bus)
+	// async read(bus: string){
+	// 	let master = this.masters.find((a) => a.id == bus)
 
-		return await Promise.all((master?.devices || []).map(async (device) => {
-			const value = await master?.api.readPort(device.ix + 1)
+	// 	return await Promise.all((master?.devices || []).map(async (device) => {
+	// 		const value = await master?.api.readPort(device.ix + 1)
 
-			const iodd : IODD = device.iodd;
-			const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
-				let bits = y.bits;
-				bits.name = y.name;
-				return bits
-			})).reduce((prev, curr) => prev.concat(curr), []))
-			return {
-				port: device.ix + 1,
-				value: filter(value?.data?.value)
-			}
-		}))
-	}
+	// 		const iodd : IODD = device.iodd;
+	// 		const filter = createFilter(iodd.function.inputs.map((x) => x.struct.map((y) => {
+	// 			let bits = y.bits;
+	// 			bits.name = y.name;
+	// 			return bits
+	// 		})).reduce((prev, curr) => prev.concat(curr), []))
+	// 		return {
+	// 			port: device.ix + 1,
+	// 			value: filter(value?.data?.value)
+	// 		}
+	// 	}))
+	// }
 
 	webhook(id: number, payload: any){
 		console.log("Webhook", id, this.subscriptions, payload)
@@ -80,6 +80,24 @@ export default class IOLinkPlugin extends BasePlugin {
 					
 						// dev.registerValue(payload[k].data)
 					
+					}else if(parts[4] == 'pdout'){
+						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
+						
+						if(!device) return
+
+						const iodd : IODD = device.iodd;
+						const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
+							let bits = y.bits;
+							bits.name = y.name;
+							return bits
+						})).reduce((prev, curr) => prev.concat(curr), []))
+
+						this.emit('PORT:VALUE', {
+							bus: subscription?.master,
+							port: port,
+							value: filter(payload[k].data)
+						})
+
 					}
 					// this.registerDeviceValue(`${subscription?.master}-${port}-${parts[4]}`, payload[k].data)
 					break;
@@ -164,5 +182,23 @@ export default class IOLinkPlugin extends BasePlugin {
 			name: x.name,
 			devices: x.devices
 		}))
+	}
+
+
+	async write(bus: string | null, port: string, value: any){
+		let master = this.masters.find((a) => a.id == bus)
+		let device = master?.devices.find((a) => a.port == port)
+	
+		let iodd : IODD = device.iodd;
+
+		let gulper = createGulper(iodd.function.outputs.map((func) => {
+			return func.struct.map((x) => ({
+				...x.bits,
+				name: x.name
+			}))
+		}).reduce((prev, curr) => prev.concat(curr), []))
+
+		let newValue = gulper(value)
+		await master?.api.writePort(parseInt(port), newValue)
 	}
 }

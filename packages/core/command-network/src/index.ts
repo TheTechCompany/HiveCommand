@@ -173,12 +173,16 @@ export class CommandNetwork {
 							device.iodd.function.outputs?.reduce<any[]>((prev, curr) => {
 								return prev.concat(curr.struct)
 							}, []).forEach((output) => {
-								stateDefinition[output.name] = {
+								stateDefinition[`${output.name}-${output.subindex}`] = {
 									type: DataType.Double,
 									get: () => {
 										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
 
 										return new Variant({dataType: DataType.Double, value: value?.[output.name]})
+									},
+									set: (value: Variant) => {
+										
+										this.valueBank.request?.(bus.id, `${device.ix + 1}`, {[`${output.name}-${output.subindex}`]: value.value})
 									}
 								}
 							})

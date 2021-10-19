@@ -87,6 +87,18 @@ export class CommandClient {
 		let busDevice = this.environment.find((a) => a.id == event.bus)
 		let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
 		console.log("REQUESTING STATE FROM ", event.bus, event.port, event.value)
+		
+		if(!event.bus) return;
+
+		//An object value is a partial state to merge before sending else its a value
+		if(typeof(event.value) == "object"){
+			let prevState = this.valueBank.get(event.bus, event.port)
+			event.value = {
+				...prevState,
+				...event.value
+			}
+		}
+		
 		await plugin?.write(event.bus, event.port, event.value);
 	}
 

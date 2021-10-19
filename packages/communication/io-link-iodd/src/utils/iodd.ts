@@ -9,6 +9,9 @@ export const parseIODD = async (iodd: string) : Promise<XMLIODD> => {
         })
     })
 }
+const intToBin = (int: number, length: number) => {
+    return int.toString(2) //.padStart(length)
+}
 
 export const getWord = (iodd_wordlist: {id: string, value: string}[], lookup : string) => {
     return iodd_wordlist.find((a) => a.id == lookup)
@@ -60,7 +63,7 @@ export const createFilter = (iodd: IODDBits[]) : IODDFilter => {
             let offset = parseInt(bit.offset)
             let slice = bin.substring(bin.length - offset, bin.length - (offset + parseInt(bit.length || '0')))
 
-            return {name: bit.name || 'Name not found', value: binToInt(slice)}
+            return {name: `${bit.name}-${bit.subindex}` || 'Name not found', value: binToInt(slice)}
         })
         
         let obj : any = {}
@@ -73,6 +76,45 @@ export const createFilter = (iodd: IODDBits[]) : IODDFilter => {
     }
 }
 
+
+export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
+
+    return (value: {[key: string]: any}) => {
+
+        //Current [0, 1]
+        let values = iodd.sort((a,b ) => {
+            let aOffset = parseInt(a.offset)
+            let bOffset = parseInt(b.offset)
+            return aOffset - bOffset
+        }).map((bit) => {
+            if(!bit.name) return;
+            if(!bit.length) return;
+            let length = parseInt(bit.length)
+            let val = value[`${bit.name}-${bit.subindex}`]
+
+            console.log(val)
+
+            return parseInt(val).toString(16).padStart(length / 4, '0').toUpperCase()
+
+            //01, 011 -> [00000001, 00000011]
+            // return intToBin(val, length)
+        }).join('')
+
+        console.log(values)
+
+        return values
+
+    }
+}
+
+
+const gulp = createGulper([{name: 'Test', offset: '16', type: "IntegerT", subindex: '1', length: '16'}, {name: 'Test2', type: "IntegerT", subindex: '2', offset: '0', length: '16'}])
+const gulped = gulp({
+    Test: 123,
+    Test2: 124
+})
+
+console.log(gulped)
 export const getBits = (input: string, bitOffset: number, bitLength: number) => {
     let binary = toBinString(Buffer.from(input, 'hex'))
     let substring = binary.substring(binary.length - bitOffset, binary.length - (bitOffset + bitLength))
@@ -93,7 +135,6 @@ export const getBits = (input: string, bitOffset: number, bitLength: number) => 
     console.log(data, binToInt(temp), pressure)
 })
 */
-
 
 
 const binToInt = (binString: string) => {
