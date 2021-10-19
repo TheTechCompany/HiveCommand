@@ -90,7 +90,7 @@ export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
             if(!bit.name) return;
             if(!bit.length) return;
             let length = parseInt(bit.length)
-            let val = value[`${bit.name}-${bit.subindex}`]
+            let val = value[`${bit.name}-${bit.subindex}`] || 0
 
             console.log(val)
 
