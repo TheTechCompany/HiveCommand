@@ -85,6 +85,8 @@ export default class IOLinkPlugin extends BasePlugin {
 						
 						if(!device) return
 
+						if(!payload[k].data) return;
+						
 						const iodd : IODD = device.iodd;
 						const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
 							let bits = y.bits;
