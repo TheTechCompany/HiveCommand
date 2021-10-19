@@ -83,8 +83,8 @@ export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
 
         //Current [0, 1]
         let values = iodd.sort((a,b ) => {
-            let aOffset = parseInt(a.offset)
-            let bOffset = parseInt(b.offset)
+            let aOffset = parseInt(a.subindex)
+            let bOffset = parseInt(b.subindex)
             return aOffset - bOffset
         }).map((bit) => {
             if(!bit.name) return;
