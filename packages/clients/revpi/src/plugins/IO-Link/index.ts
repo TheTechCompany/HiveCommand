@@ -86,7 +86,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						if(!device) return
 
 						if(!payload[k].data) return;
-						
+
 						const iodd : IODD = device.iodd;
 						const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
 							let bits = y.bits;
@@ -189,7 +189,7 @@ export default class IOLinkPlugin extends BasePlugin {
 
 	async write(bus: string | null, port: string, value: any){
 		let master = this.masters.find((a) => a.id == bus)
-		let device = master?.devices.find((a) => a.port == port)
+		let device = master?.devices.find((a) => `${a.ix + 1}` == `${port}`);
 	
 		let iodd : IODD = device.iodd;
 
