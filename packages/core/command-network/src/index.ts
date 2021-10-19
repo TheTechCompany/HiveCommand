@@ -159,8 +159,8 @@ export class CommandNetwork {
 							device.iodd.function.inputs.reduce<any[]>((prev, curr) => {
 								return prev.concat(curr.struct)
 							}, []).forEach((input) => {
-
-								stateDefinition[input.name] = {
+								console.log(input)
+								stateDefinition[`${input.name}-${input.subindex}`] = {
 									type: DataType.Double,
 									get: () => {
 										let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
