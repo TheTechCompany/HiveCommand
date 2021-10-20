@@ -12,7 +12,11 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/dot": "^1.1.4",
     "typescript": "^4.4.4"
   },
-  "gitHead": "6b372375734c1503bb29dc43a07da77eab814dae"
+  "gitHead": "6b372375734c1503bb29dc43a07da77eab814dae",
+  "dependencies": {
+    "dot": "^1.1.3"
+  }
 }
