@@ -1,10 +1,11 @@
 import { IOProcess } from "./Process";
+import { ProgramProcess } from "./types/ProgramProcess";
 
 export class CommandStateMachine {
 
 	private values : {[key: string]: any} = {};
 
-	private running : boolean = false;
+	private running : boolean = true;
 
 	private processes : IOProcess[] = [];
 
@@ -14,8 +15,14 @@ export class CommandStateMachine {
 
     };
 
-	constructor(){
-		
+	constructor(program: {
+		processes: ProgramProcess[]
+	}){
+		console.debug(`Initializing State Machine`)
+
+		this.processes = program.processes.map((x) => new IOProcess(x, this))
+
+		this.start = this.start.bind(this)
 	}
 
 	get isRunning (){
@@ -34,19 +41,26 @@ export class CommandStateMachine {
 		return this.values[key]
 	}
 
-	performOperation(device: string, operation: string){
+	async performOperation(device: string, operation: string){
 		console.log(`Perform operation ${operation} on ${device}`)
 	}
 
 	async start(){
+		console.debug(`Starting State Machine`)
 
+		this.running = true;
 		while(this.running){
+			console.debug(`State Tick`)
 			//Run all actions in current stage of execution
+			try{
+				const actions =   Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+			}catch(e){
+				console.debug(e)
+			}
+			// console.debug(`State Tick`)
 
-			const actions = await Promise.all(this.processes.map((x) => x.doCurrent()))
-
-			//Log actions
-			console.log(actions)
+			// //Log actions
+			// console.log(actions)
 
 			const next = await Promise.all(this.processes.map((x) => x.moveNext()))
 

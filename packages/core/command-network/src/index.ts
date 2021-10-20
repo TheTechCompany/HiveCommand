@@ -1,6 +1,9 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { DataType, StatusCodes, Variant } from 'node-opcua';
+import { PayloadResponse } from './types';
+
+export * from './types'
 
 export interface CommandNetworkOptions{
 	baseURL?: string;
@@ -54,6 +57,14 @@ export class CommandNetwork {
 		})
 		return result.data
 	}
+
+	async getPurpose() : Promise<PayloadResponse> {
+		const result = await this.httpInstance.request<PayloadResponse>({
+			url: '/api/identity/purpose'
+		})
+		return result.data
+	}
+
 
 	async proveIdentity () {
 		const result = await this.httpInstance.request({

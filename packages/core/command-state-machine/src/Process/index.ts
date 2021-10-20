@@ -51,6 +51,7 @@ export class IOProcess extends EventEmitter{
     doCurrent() : Promise<boolean>{
         return new Promise((resolve, reject) => {
             let current_action = this.actions.find((a) => a.id == this.current_state)
+			// console.log(current_action, this.actions, this.current_state)
             if(current_action){
                 if(!current_action.hasRun && !current_action.isRunning){
 

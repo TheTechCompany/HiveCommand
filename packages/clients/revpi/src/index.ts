@@ -1,7 +1,7 @@
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandStateMachine } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
-import { CommandNetwork } from '@hive-command/network'
+import { CommandNetwork, PayloadResponse } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
@@ -29,7 +29,7 @@ export class CommandClient {
 
 	private plugins : BasePlugin[];
 
-	private machine : CommandStateMachine;
+	private machine? : CommandStateMachine;
 
 	private logs : CommandLogging;
 
@@ -78,7 +78,9 @@ export class CommandClient {
 			valueBank: this.valueBank
 		});
 
-		this.machine = new CommandStateMachine();
+		// this.machine = new CommandStateMachine({
+			
+		// });
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
 	}
@@ -158,6 +160,58 @@ export class CommandClient {
 		}))
 	}
 
+	async loadMachine(commandPayload: PayloadResponse){
+		let nodes = (commandPayload.payload || []).map((action) => {
+			return {
+				id: action.id,
+				extras: {
+					blockType: 'action',
+					actions: action.actions?.map((x) => ({
+						device: x.device,
+						operation: x.request
+					}))
+				}
+			}
+		}).reduce((prev, curr) => {
+			return {
+				...prev,
+				[curr.id]: curr
+			}
+		}, {})
+
+		let paths = commandPayload.payload?.map((action) => {
+			return action.next.map((next) => {
+				return {
+					id: next.id,
+					source: action.id,
+					target: next.target
+				}
+			})
+			
+		}).reduce((prev, curr) => {
+			return prev.concat(curr)
+		}, []).reduce((prev, curr) => {
+			return {
+				...prev,
+				[curr.id]: curr
+			}
+		}, {})
+
+		console.log(`Received command payload, starting state machine`)
+		this.machine = new CommandStateMachine({
+			processes: [{
+				id: 'default',
+				name: 'Default',
+				nodes: nodes,
+				links: paths,
+				sub_processes: []
+			}]
+		})
+		await this.machine.start()
+
+		console.log(`State machine started`)
+	}
+
 	async start(){
 		//Find IO-Buses and Connected Devices
 		this.environment = await this.discoverEnvironment()
@@ -175,6 +229,15 @@ export class CommandClient {
 		const credentials = await this.network.becomeSelf(self)
 
 		this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
+
+		//Get our command payload
+
+		const commandPayload = await this.network.getPurpose()
+		if(commandPayload.payload){
+
+			await this.loadMachine(commandPayload)
+		}
+
 		//Start network and share context with the mothership
 		await this.network.start({
 			hostname: self.identity?.named,

@@ -14,9 +14,9 @@ export interface ProgramProcess {
 	nodes: {
 		[key: string]: ProcessNode
 	}
-	links: {
+	links?: {
 		[key: string]: ProcessLink
 	}
-	sub_processes: ProgramProcess[],
+	sub_processes?: ProgramProcess[],
 
 }
