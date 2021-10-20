@@ -80,6 +80,7 @@ export class CommandClient {
 			valueBank: this.valueBank
 		});
 
+		this.requestOperation = this.requestOperation.bind(this);
 		// this.machine = new CommandStateMachine({
 			
 		// });
