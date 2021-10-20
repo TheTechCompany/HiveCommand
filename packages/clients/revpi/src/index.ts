@@ -163,7 +163,7 @@ export class CommandClient {
 	async loadMachine(commandPayload: PayloadResponse){
 		let nodes = (commandPayload.payload || []).map((action) => {
 			return {
-				id: action.id,
+				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
 					blockType: 'action',
 					actions: action.actions?.map((x) => ({
@@ -183,7 +183,7 @@ export class CommandClient {
 			return action.next.map((next) => {
 				return {
 					id: next.id,
-					source: action.id,
+					source: action.type == "Trigger" ? 'origin' : action.id,
 					target: next.target
 				}
 			})
