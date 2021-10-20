@@ -1,7 +1,7 @@
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandStateMachine } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
-import { CommandNetwork, PayloadResponse } from '@hive-command/network'
+import { AssignmentPayload, CommandNetwork, PayloadResponse } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
@@ -44,6 +44,8 @@ export class CommandClient {
 	private options : CommandClientOptions;
 
 	private cycleTimer?: any;
+
+	private portAssignment: AssignmentPayload[] = []
 
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
@@ -104,6 +106,19 @@ export class CommandClient {
 		await plugin?.write(event.bus, event.port, event.value);
 	}
 
+	//Request state + translator for name
+	async requestOperation(event: {device: string, operation: string}){
+		console.log("Requesting operation with device name - StateMachine")
+		let busPort = this.portAssignment.find((a) => a.name == event.device)
+		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
+
+		this.requestState({
+			bus: busPort?.bus,
+			port: busPort?.port,
+			value: event.operation
+		})
+	}
+
 	async discoverEnvironment(){
 		//Run discovery for all loaded plugins
 		let environment = await Promise.all(this.plugins.map(async (plugin) => {
@@ -161,7 +176,12 @@ export class CommandClient {
 	}
 
 	async loadMachine(commandPayload: PayloadResponse){
-		let nodes = (commandPayload.payload || []).map((action) => {
+		let payload = commandPayload.payload?.command;
+		let layout = commandPayload.payload?.layout;
+
+		if(layout) this.portAssignment = layout;
+
+		let nodes = (payload || []).map((action) => {
 			return {
 				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
@@ -179,7 +199,7 @@ export class CommandClient {
 			}
 		}, {})
 
-		let paths = commandPayload.payload?.map((action) => {
+		let paths = payload?.map((action) => {
 			return action.next.map((next) => {
 				return {
 					id: next.id,
@@ -207,6 +227,9 @@ export class CommandClient {
 				sub_processes: []
 			}]
 		})
+
+		this.machine.on('REQUEST:OPERATION', this.requestOperation)
+		
 		await this.machine.start()
 
 		console.log(`State machine started`)

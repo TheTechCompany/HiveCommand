@@ -1,7 +1,8 @@
 import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
+import { EventEmitter } from 'events'
 
-export class CommandStateMachine {
+export class CommandStateMachine extends EventEmitter {
 
 	private values : {[key: string]: any} = {};
 
@@ -18,6 +19,7 @@ export class CommandStateMachine {
 	constructor(program: {
 		processes: ProgramProcess[]
 	}){
+		super();
 		console.debug(`Initializing State Machine`)
 
 		this.processes = program.processes.map((x) => new IOProcess(x, this))
@@ -42,6 +44,7 @@ export class CommandStateMachine {
 	}
 
 	async performOperation(device: string, operation: string){
+		this.emit('REQUEST:OPERATION', {device, operation})
 		console.log(`Perform operation ${operation} on ${device}`)
 	}
 
