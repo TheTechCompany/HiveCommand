@@ -210,7 +210,7 @@ export class CommandClient {
 			
 		}).reduce((prev, curr) => {
 			return prev.concat(curr)
-		}, []).reduce((prev, curr) => {
+		}, []).filter((a) => a).reduce((prev, curr) => {
 			return {
 				...prev,
 				[curr.id]: curr
