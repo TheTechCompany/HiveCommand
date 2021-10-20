@@ -200,7 +200,7 @@ export class CommandClient {
 		}, {})
 
 		let paths = payload?.map((action) => {
-			return action.next.map((next) => {
+			return action.next?.map((next) => {
 				return {
 					id: next.id,
 					source: action.type == "Trigger" ? 'origin' : action.id,
