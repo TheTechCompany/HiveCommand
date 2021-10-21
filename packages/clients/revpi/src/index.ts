@@ -1,5 +1,5 @@
 import { CommandIdentity } from '@hive-command/identity'
-import { CommandStateMachine } from '@hive-command/state-machine'
+import { CommandStateMachine, ProcessNode } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
 import { AssignmentPayload, CommandNetwork, PayloadResponse } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
@@ -176,21 +176,39 @@ export class CommandClient {
 		}))
 	}
 
+	getBlockType(type: string){
+		switch(type){
+			case 'Trigger':
+			case 'Action':
+				return 'action';
+			case 'Clock':
+				return 'timer';
+			case 'Cycle':
+				return 'action'; //TODO pid
+		}
+	}
+
 	async loadMachine(commandPayload: PayloadResponse){
 		let payload = commandPayload.payload?.command;
 		let layout = commandPayload.payload?.layout;
 
 		if(layout) this.portAssignment = layout;
 
-		let nodes = (payload || []).map((action) => {
+
+		let nodes = (payload || []).map((action) : ProcessNode => {
+			let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
+			let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
+
+			let actions = [];
+			if(deviceId && operation){
+				actions.push({device: deviceId, operation})
+			}
 			return {
 				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
-					blockType: 'action',
-					actions: action.actions?.map((x) => ({
-						device: x.device,
-						operation: x.request
-					}))
+					blockType: this.getBlockType(action.type) || 'action',
+					timer: action.configuration?.find((a) => a.key == 'timeout')?.value,
+					actions: actions
 				}
 			}
 		}).reduce((prev, curr) => {

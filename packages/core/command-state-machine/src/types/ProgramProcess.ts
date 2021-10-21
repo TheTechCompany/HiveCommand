@@ -1,6 +1,6 @@
 import { ProcessLink, ProcessNode } from "./ProcessLink";
 
-export type ProgramActionType = "action" | "timer"  | "sub-process" 
+export type ProgramActionType = "action" | "timer"  | "sub-process" | "pid"
 
 export interface ProgramAction {
 	device: string;

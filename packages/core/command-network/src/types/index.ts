@@ -3,9 +3,9 @@ export interface PayloadResponse {
 		command: {
 			id: string;
 			type: string;
-			actions?: {
-				device: string;
-				request: string;
+			configuration?: {
+				key: string;
+				value: string;
 			}[];
 			next: {
 				target: string,

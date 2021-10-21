@@ -2,6 +2,8 @@ import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
 
+export * from './types'
+
 export class CommandStateMachine extends EventEmitter {
 
 	private values : {[key: string]: any} = {};
