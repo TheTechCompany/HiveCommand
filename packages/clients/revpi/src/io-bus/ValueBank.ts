@@ -13,7 +13,7 @@ export class ValueBank extends EventEmitter{
 	}
 
 	get(id: string, port: string){
-		return this.values?.[`${id}`]?.find((a) => a.port == port)?.value;
+		return this.values?.[`${id}`]?.find((a) => `${a.port}` == `${port}`)?.value;
 	}
 
 	request(id: string, port: string, value: any){
@@ -27,6 +27,7 @@ export class ValueBank extends EventEmitter{
 	}
 
 	set(id: string, port: string, value: any){
+		port = `${port}`
 		if(!this.values[id]) this.values[id] = [];
 		let bus = this.values[id]
 		let ix = bus.map((x) => x.port).indexOf(port)
