@@ -219,6 +219,8 @@ export class CommandClient {
 			}
 		}, {})
 
+		console.log(nodes)
+
 		let paths = payload?.map((action) => {
 			return action.next?.map((next) => {
 				return {
