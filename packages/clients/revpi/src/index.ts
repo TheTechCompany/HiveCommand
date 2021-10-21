@@ -177,6 +177,7 @@ export class CommandClient {
 	}
 
 	getBlockType(type: string){
+		console.log("Get TYpe", type)
 		switch(type){
 			case 'Trigger':
 			case 'Action':
