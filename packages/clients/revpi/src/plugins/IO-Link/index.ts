@@ -58,7 +58,7 @@ export default class IOLinkPlugin extends BasePlugin {
 			switch(parts[1]){
 				case 'iolinkmaster':
 					let port = parts[2].match(/\[(.*?)\]/)?.[1]
-					if(parts[4] === 'pdin'){
+					if(parts[4] == 'pdin'){
 						// let dev = this.devices[`${subscription?.master}-${port}`]
 					
 						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
@@ -79,28 +79,28 @@ export default class IOLinkPlugin extends BasePlugin {
 						})
 					
 						// dev.registerValue(payload[k].data)
-					
-					}else if(parts[4] == 'pdout'){
-						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
-						
-						if(!device) return
-
-						if(!payload[k].data) return;
-
-						const iodd : IODD = device.iodd;
-						const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
-							let bits = y.bits;
-							bits.name = y.name;
-							return bits
-						})).reduce((prev, curr) => prev.concat(curr), []))
-
-						this.emit('PORT:VALUE:OUT', {
-							bus: subscription?.master,
-							port: port,
-							value: filter(payload[k].data)
-						})
-
 					}
+					// }else if(parts[4] == 'pdout'){
+					// 	let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
+						
+					// 	if(!device) return
+
+					// 	if(!payload[k].data) return;
+
+					// 	const iodd : IODD = device.iodd;
+					// 	const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
+					// 		let bits = y.bits;
+					// 		bits.name = y.name;
+					// 		return bits
+					// 	})).reduce((prev, curr) => prev.concat(curr), []))
+
+					// 	this.emit('PORT:VALUE:OUT', {
+					// 		bus: subscription?.master,
+					// 		port: port,
+					// 		value: filter(payload[k].data)
+					// 	})
+
+					// }
 					// this.registerDeviceValue(`${subscription?.master}-${port}-${parts[4]}`, payload[k].data)
 					break;
 				case 'timer[1]':
