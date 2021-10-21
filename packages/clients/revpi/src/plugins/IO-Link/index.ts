@@ -62,7 +62,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						// let dev = this.devices[`${subscription?.master}-${port}`]
 					
 						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
-						
+						console.log("PDIN", device)
 						if(!device) return
 
 						const iodd : IODD = device.iodd;
