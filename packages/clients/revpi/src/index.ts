@@ -110,7 +110,7 @@ export class CommandClient {
 	//Request state + translator for name
 	async requestOperation(event: {device: string, operation: string}){
 		console.log("Requesting operation with device name - StateMachine")
-		let busPort = this.portAssignment.find((a) => a.name == event.device)
+		let busPort = this.portAssignment.find((a) => a.id == event.device)
 		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
 		this.requestState({
