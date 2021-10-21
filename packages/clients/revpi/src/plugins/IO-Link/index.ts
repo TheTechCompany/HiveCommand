@@ -94,7 +94,7 @@ export default class IOLinkPlugin extends BasePlugin {
 							return bits
 						})).reduce((prev, curr) => prev.concat(curr), []))
 
-						this.emit('PORT:VALUE', {
+						this.emit('PORT:VALUE:OUT', {
 							bus: subscription?.master,
 							port: port,
 							value: filter(payload[k].data)
