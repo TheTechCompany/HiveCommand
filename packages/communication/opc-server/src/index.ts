@@ -105,9 +105,7 @@ export default class Server {
         if(this.deviceFolder){
 
             let obj;
-              
-                console.log("DEF", definition)     
-
+            
                 let type;
                 if(this.objectTypes[device.type]) type = this.objectTypes[device.type];
                 if(!this.objectTypes[device.type]) {
@@ -132,7 +130,6 @@ export default class Server {
 
                 }
 
-                console.log("Instantiating", device, definition)
 
                 obj = type?.instantiate({
                     browseName: device.name,
