@@ -252,7 +252,7 @@ export class CommandClient {
 
 		this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
-		await this.machine.start()
+		this.machine.start()
 
 		console.log(`State machine started`)
 	}
