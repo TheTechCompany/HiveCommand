@@ -150,6 +150,7 @@ export default class IOLinkPlugin extends BasePlugin {
 			}))
 			
 
+
 			return {
 				id: master.serial,
 				name: master.product,
@@ -160,7 +161,23 @@ export default class IOLinkPlugin extends BasePlugin {
 					let iodd = await this.ioddManager.getIODD(ioddDef?.iodd)
 					return {
 						...port,
-						iodd:iodd
+						inputs: iodd?.function?.inputs?.map((x) => {
+								return x?.struct?.map((y) => {
+									return {
+										key: y.name,
+										type: y?.bits?.type
+									}
+								})
+							}).reduce((prev, curr) => prev.concat(curr), [])
+						,
+						outputs: iodd?.function?.outputs?.map((x) => {
+							return x?.struct?.map((y) => {
+								return {
+									key: y.name,
+									type: y?.bits?.type
+								}
+							})
+						}).reduce((prev, curr) => prev.concat(curr), [])
 					}
 				}))
 			}

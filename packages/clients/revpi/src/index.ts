@@ -12,7 +12,7 @@ export interface CommandEnvironment {
 	id: string;
 	type: string;
 	name: string;
-	devices?: {ix: number, product: string, iodd: any}[];
+	devices?: {ix: number, product: string, inputs?: any[], outputs?: any[], iodd: any}[];
 }
 
 export interface CommandClientOptions {
