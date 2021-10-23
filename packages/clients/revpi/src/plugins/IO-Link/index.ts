@@ -165,7 +165,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						inputs: iodd?.function?.inputs?.map((x) => {
 								return x?.struct?.map((y) => {
 									return {
-										key: y.name,
+										key: `${y.name}-${y.bits.subindex}`,
 										type: y?.bits?.type
 									}
 								})
@@ -174,7 +174,7 @@ export default class IOLinkPlugin extends BasePlugin {
 						outputs: iodd?.function?.outputs?.map((x) => {
 							return x?.struct?.map((y) => {
 								return {
-									key: y.name,
+									key: `${y.name}-${y.bits.subindex}`,
 									type: y?.bits?.type
 								}
 							})
