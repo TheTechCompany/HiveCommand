@@ -20,6 +20,10 @@ export default class RevPiPlugin extends BasePlugin {
 			let portKey = `I_${port + 1}`;
 			return {
 				port: portKey,
+				serial: portKey,
+				product: 'input',
+				deviceId: 'revpi-di',
+				vendorId: 'revpi',
 				inputs: [{
 					key: 'active',
 					type: 'BooleanT'
@@ -31,6 +35,10 @@ export default class RevPiPlugin extends BasePlugin {
 			let portKey = `O_${port + 1}`;
 			return {
 				port: portKey,
+				serial: portKey,
+				product: 'output',
+				deviceId: 'revpi-do',
+				vendorId: 'revpi',
 				outputs: [{
 					key: 'active',
 					type: 'BooleanT' 
