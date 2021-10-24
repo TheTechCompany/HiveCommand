@@ -15,9 +15,36 @@ export default class RevPiPlugin extends BasePlugin {
 	}
 
 	async discover(){
+		
+		let inputs : any[] = Array.from(Array(14)).map((e, port) => {
+			let portKey = `I_${port + 1}`;
+			return {
+				port: portKey,
+				inputs: [{
+					key: 'active',
+					type: 'BooleanT'
+				}]
+			}
+		});
+
+		let outputs : any[] = Array.from(Array(14)).map((e, port) => {
+			let portKey = `O_${port + 1}`;
+			return {
+				port: portKey,
+				outputs: [{
+					key: 'active',
+					type: 'BooleanT' 
+				}]
+			}
+		})
+
+		let devices : any[] = inputs.concat(outputs);
+
+
 		return this.pi.getDeviceList().filter((a) => a.name !== "RevPi Core").map((item) => ({
 			id: item.address,
-			name: item.name
+			name: item.name,
+			devices: devices
 		}));
 	}
 

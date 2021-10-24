@@ -161,6 +161,7 @@ export default class IOLinkPlugin extends BasePlugin {
 					let iodd = await this.ioddManager.getIODD(ioddDef?.iodd)
 					return {
 						...port,
+						port: `${port.ix + 1}`,
 						iodd: iodd,
 						inputs: iodd?.function?.inputs?.map((x) => {
 								return x?.struct?.map((y) => {
