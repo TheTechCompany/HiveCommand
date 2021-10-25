@@ -83,9 +83,9 @@ export default class IOLinkPlugin extends BasePlugin {
 					 if(parts[4] == 'pdout'){
 						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
 						
-						if(!device) return
+						if(!device) break
 
-						if(!payload[k].data) return;
+						if(!payload[k].data) break;
 
 						const iodd : IODD = device.iodd;
 						const filter = createFilter(iodd.function.outputs.map((x) => x.struct.map((y) => {
