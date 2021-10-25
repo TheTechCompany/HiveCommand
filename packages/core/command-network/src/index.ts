@@ -124,7 +124,7 @@ export class CommandNetwork {
 							type: 'RevPi_DI'
 						}, {
 							state: {
-								value: {
+								active: {
 									type: DataType.Boolean,
 									get: (key) => {
 										let value = this.valueBank.get?.(bus.id, portKey)
@@ -142,7 +142,7 @@ export class CommandNetwork {
 							type: 'RevPi_DO'
 						}, {
 							state: {
-								value: {
+								active: {
 									type: DataType.Boolean,
 									get: (key) => {
 										let value = this.valueBank.get?.(bus.id, portKey)
