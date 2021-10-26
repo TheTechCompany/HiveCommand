@@ -7,6 +7,10 @@ export interface PayloadResponse {
 				key: string;
 				value: string;
 			}[];
+			actions?: {
+				key: string,
+				target: string
+			}[],
 			next: {
 				target: string,
 				id: string,

@@ -200,10 +200,15 @@ export class CommandClient {
 			let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
 			let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
 
-			let actions = [];
-			if(deviceId && operation){
-				actions.push({device: deviceId, operation})
-			}
+			let actions = action.actions?.map((action) => ({
+				device: action.target,
+				operation: action.key
+			}))
+
+			// if(deviceId && operation){
+			// 	actions.push({device: deviceId, operation})
+			// }
+			
 			return {
 				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
