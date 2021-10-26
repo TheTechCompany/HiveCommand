@@ -208,7 +208,7 @@ export class CommandClient {
 			// if(deviceId && operation){
 			// 	actions.push({device: deviceId, operation})
 			// }
-			
+
 			return {
 				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
@@ -224,7 +224,7 @@ export class CommandClient {
 			}
 		}, {})
 
-		console.log(nodes)
+		console.log(JSON.stringify(nodes))
 
 		let paths = payload?.map((action) => {
 			return action.next?.map((next) => {
