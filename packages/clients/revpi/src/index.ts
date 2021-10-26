@@ -129,8 +129,16 @@ export class CommandClient {
 			(state: any) => {
 				console.log("Set State", state)
 			},
-			(operation: any) => {
-				console.log("OP", operation)
+			async (operation: any) => {
+				if(busPort?.bus && busPort?.port){
+					await this.requestState({
+						bus: busPort?.bus,
+						port: busPort?.port,
+						value: operation
+					})
+					console.log("OP", operation)
+
+				}
 			}
 		)
 		console.timeEnd(`${id}-${action.key}`)
