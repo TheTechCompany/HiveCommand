@@ -280,8 +280,15 @@ export class CommandClient {
 		const commandPayload = await this.network.getPurpose()
 		if(commandPayload.payload){
 
+			if(commandPayload.payload.layout){
+				await this.network.start({
+					hostname: self.identity.named,
+					discoveryServer: this.options.discoveryServer
+				}, commandPayload.payload.layout)
+			}
 			await this.loadMachine(commandPayload)
 		}
+
 
 		//Start network and share context with the mothership
 		await this.network.start({
