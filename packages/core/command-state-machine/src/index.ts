@@ -4,6 +4,11 @@ import { EventEmitter } from 'events'
 
 export * from './types'
 
+export interface CommandClient { 
+	performOperation: (ev: {device: string, operation: string}) => Promise<any>;
+
+}
+
 export class CommandStateMachine extends EventEmitter {
 
 	private values : {[key: string]: any} = {};
@@ -18,10 +23,15 @@ export class CommandStateMachine extends EventEmitter {
 
     };
 
+	private client : CommandClient;
+
 	constructor(program: {
 		processes: ProgramProcess[]
-	}){
+	}, client: CommandClient){
 		super();
+
+		this.client = client;
+
 		console.debug(`Initializing State Machine`)
 
 		this.processes = program.processes.map((x) => new IOProcess(x, this))
@@ -46,8 +56,9 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	async performOperation(device: string, operation: string){
-		this.emit('REQUEST:OPERATION', {device, operation})
-		console.log(`Perform operation ${operation} on ${device}`)
+		await this.client.performOperation({device, operation})
+		// this.emit('REQUEST:OPERATION', {device, operation})
+		// console.log(`Perform operation ${operation} on ${device}`)
 	}
 
 	async start(){

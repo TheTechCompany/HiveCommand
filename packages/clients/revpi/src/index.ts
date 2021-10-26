@@ -276,9 +276,11 @@ export class CommandClient {
 				links: paths,
 				sub_processes: []
 			}]
+		}, {
+			performOperation: this.requestOperation
 		})
 
-		this.machine.on('REQUEST:OPERATION', this.requestOperation)
+		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
 		this.machine.start()
 
