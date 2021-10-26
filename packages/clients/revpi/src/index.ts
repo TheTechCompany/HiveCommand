@@ -119,6 +119,7 @@ export class CommandClient {
 
 		let driverFunction = getDriverFunction(action?.func)
 
+		console.log("Running driver func", action.key)
 		await driverFunction(
 			{},
 			(state: any) => {
@@ -128,6 +129,8 @@ export class CommandClient {
 				console.log("OP", operation)
 			}
 		)
+		console.log("Finished driver func", action.key)
+
 		// this.requestState({
 		// 	bus: busPort?.bus,
 		// 	port: busPort?.port,
