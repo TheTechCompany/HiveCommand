@@ -291,10 +291,10 @@ export class CommandClient {
 
 
 		//Start network and share context with the mothership
-		await this.network.start({
-			hostname: self.identity?.named,
-			discoveryServer: this.options.discoveryServer,
-		})
+		// await this.network.start({
+		// 	hostname: self.identity?.named,
+		// 	discoveryServer: this.options.discoveryServer,
+		// })
 
 		await this.subscribeToBusSystem(this.environment);
 
