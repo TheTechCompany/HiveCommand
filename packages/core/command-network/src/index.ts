@@ -117,17 +117,18 @@ export class CommandNetwork {
 		}
 	}
 
-	getDataValue = (type: string, value: any) => {
+	getDataValue = (type: string, key: string, value: any) => {
+		let v = typeof(value) == "object" ? value[key] : value;
 		switch(type){
 			case 'BooleanT':
-				return Boolean(value);
+				return Boolean(v);
 			case 'IntegerT':
 			case 'UIntegerT':
 			default:
-				return	parseFloat(value);		
+				return	parseFloat(v);		
 		}
 	}
-	getDeviceName = (type: string, bus: string, port: any) => {
+	getDeviceName = (type: string,  bus: string, port: any) => {
 		return `${type}|${bus}|${port}`
 	}
 
@@ -147,7 +148,7 @@ export class CommandNetwork {
 							type: this.getDataType(curr.type),
 							get: () => {
 								let value = this.valueBank.get?.(layout.bus, layout.port)
-								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
+								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, curr.key, value)})
 							}
 						}
 					}
