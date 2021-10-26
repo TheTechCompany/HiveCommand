@@ -115,6 +115,7 @@ export class CommandClient {
 		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
 		let action = busPort.actions?.find((a) => a.key == event.operation)
+		console.log("Found action", action)
 		if(!action?.func) return;
 
 		let driverFunction = getDriverFunction(action?.func)
