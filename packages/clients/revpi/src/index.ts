@@ -8,6 +8,7 @@ import { BasePlugin } from './plugins/Base';
 import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
 import { getDriverFunction } from './device-types/AsyncType';
+import { nanoid } from 'nanoid';
 
 export interface CommandEnvironment {
 	id: string;
@@ -120,8 +121,9 @@ export class CommandClient {
 		if(!action?.func) return;
 
 		let driverFunction = getDriverFunction(action?.func)
-
-		console.log("Running driver func", action.key)
+		
+		let id = nanoid();
+		console.time(`${id}-${action.key}`)
 		await driverFunction(
 			{},
 			(state: any) => {
@@ -131,7 +133,9 @@ export class CommandClient {
 				console.log("OP", operation)
 			}
 		)
-		console.log("Finished driver func", action.key)
+		console.timeEnd(`${id}-${action.key}`)
+
+		// console.log("Finished driver func", action.key)
 
 		// this.requestState({
 		// 	bus: busPort?.bus,
