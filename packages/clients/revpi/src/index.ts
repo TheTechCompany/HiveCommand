@@ -7,6 +7,7 @@ import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
 import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
+import { getDriverFunction } from './device-types/AsyncType';
 
 export interface CommandEnvironment {
 	id: string;
@@ -113,11 +114,25 @@ export class CommandClient {
 		let busPort = this.portAssignment.find((a) => a.id == event.device)
 		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
-		this.requestState({
-			bus: busPort?.bus,
-			port: busPort?.port,
-			value: event.operation
-		})
+		let action = busPort.actions?.find((a) => a.key == event.operation)
+		if(!action?.func) return;
+
+		let driverFunction = getDriverFunction(action?.func)
+
+		await driverFunction(
+			{},
+			(state: any) => {
+				console.log("Set State", state)
+			},
+			(operation: any) => {
+				console.log("OP", operation)
+			}
+		)
+		// this.requestState({
+		// 	bus: busPort?.bus,
+		// 	port: busPort?.port,
+		// 	value: event.operation
+		// })
 	}
 
 	async discoverEnvironment(){
@@ -257,7 +272,7 @@ export class CommandClient {
 
 		this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
-		// this.machine.start()
+		this.machine.start()
 
 		console.log(`State machine started`)
 	}
