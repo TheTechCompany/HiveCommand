@@ -131,12 +131,32 @@ export class CommandClient {
 			},
 			async (operation: any) => {
 				if(busPort?.bus && busPort?.port){
+					/*
+						Test the operation value for object type
+						if object remap keys to busmap keys
+						if value write directly
+					*/
+					
+					let writeOp: any;
+
+					if(typeof(operation) == 'object'){
+						writeOp = {};
+						for(var k in operation){
+							let stateItem = busPort.state?.find((a) => a.key == k)
+							if(!stateItem) continue;
+							writeOp[stateItem?.foreignKey] = operation[k];
+						}
+
+					}else{
+						writeOp = operation;
+					}
+
 					await this.requestState({
 						bus: busPort?.bus,
 						port: busPort?.port,
-						value: operation
+						value: writeOp
 					})
-					console.log("OP", operation)
+					console.log("OP", writeOp)
 
 				}
 			}

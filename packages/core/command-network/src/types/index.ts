@@ -24,7 +24,8 @@ export interface PayloadResponse {
 
 export interface AssignmentPayload {
 	actions?: {key: string, func: string}[]
-	state?: {key: string, type: string}[]
+	state?: {key: string, type: string, foreignKey: string}[]
+
 	type: string;
 	port: string
 	bus: string
