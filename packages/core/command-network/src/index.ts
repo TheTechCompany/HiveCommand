@@ -119,6 +119,7 @@ export class CommandNetwork {
 
 	getDataValue = (type: string, key: string, value: any) => {
 		let v = typeof(value) == "object" ? value[key] : value;
+		console.log("GET DATA VAALUE", JSON.stringify(value))
 		switch(type){
 			case 'BooleanT':
 				return Boolean(v);
