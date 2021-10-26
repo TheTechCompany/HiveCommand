@@ -190,7 +190,6 @@ export class CommandClient {
 
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
-				console.log(event)
 				this.valueBank.set(event.bus, event.port, event.value)
 			})
 		}))
