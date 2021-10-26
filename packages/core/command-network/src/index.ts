@@ -112,6 +112,8 @@ export class CommandNetwork {
 			case 'IntegerT':
 			case 'UIntegerT':
 				return DataType.Double;		
+			default:
+				return DataType.Double
 		}
 	}
 	getDeviceName = (type: string, bus: string, port: any) => {
