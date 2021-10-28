@@ -332,7 +332,7 @@ export class CommandClient {
 						let actuatorDevice = this.portAssignment.find((a) => a.id == pluginObject.actuator)
 						if(!targetDevice || !actuatorDevice) return;
 						pluginTick(plugin.instance, {
-							actuatorValue: this.valueBank.get(actuatorDevice.bus, actuatorDevice.port)?.[pluginObject?.actuatorField || ''],
+							actuatorValue: this.valueBank.get(actuatorDevice.bus, actuatorDevice.port)?.[pluginObject?.actuatorField || ''] || 0,
 							targetValue: this.valueBank.get(targetDevice.bus, targetDevice.port)?.[pluginObject.targetDeviceField || '']
 						}, async (state) => {
 
