@@ -316,7 +316,9 @@ export class CommandClient {
 			console.log("STATE TICK")
 			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
-					console.log("PLugin tick ", plugin.name, plugin.config)
+
+					let pluginObject = plugin.configuration.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+					console.log("PLugin tick ", plugin.name, plugin.configuration, pluginObject)
 				}))
 			}))
 		})
