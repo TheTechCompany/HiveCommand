@@ -314,8 +314,10 @@ export class CommandClient {
 
 		this.machine.on('TICK', async () => {
 			console.log("STATE TICK")
-			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined).map(async (plugin) => {
-				console.log("PLUGIN TICK ", plugin.name)
+			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
+				await Promise.all((device?.plugins || []).map(async (plugin) => {
+					console.log("PLugin tick ", plugin.name, plugin.config)
+				}))
 			}))
 		})
 
