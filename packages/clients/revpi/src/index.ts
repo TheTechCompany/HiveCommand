@@ -7,8 +7,9 @@ import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
 import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
-import { getDriverFunction } from './device-types/AsyncType';
+import { getDriverFunction, getPluginWrapper } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
+import PIDController from "node-pid-controller";
 
 export interface CommandEnvironment {
 	id: string;
@@ -246,6 +247,7 @@ export class CommandClient {
 
 		if(layout) this.portAssignment = layout;
 
+		await this.loadPlugins(commandPayload.payload?.layout || []);
 
 		let nodes = (payload || []).map((action) : ProcessNode => {
 			let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
@@ -317,13 +319,78 @@ export class CommandClient {
 			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
-					let pluginObject = plugin.configuration.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
-					console.log("PLugin tick ", plugin.name, plugin.configuration, pluginObject)
+					let pluginObject = plugin.configuration.reduce<{
+						targetDevice?: string;
+						targetDeviceField?: string;
+						actuator?: string;
+						actuatorField?: string;
+					}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+
+					if(plugin.instance){
+						const pluginTick = getPluginWrapper(plugin.tick)
+						let targetDevice = this.portAssignment.find((a) => a.id == pluginObject.targetDevice)
+						let actuatorDevice = this.portAssignment.find((a) => a.id == pluginObject.actuator)
+						if(!targetDevice || !actuatorDevice) return;
+						pluginTick(plugin.instance, {
+							actuatorValue: this.valueBank.get(actuatorDevice.bus, actuatorDevice.port)?.[pluginObject?.actuatorField || ''],
+							targetValue: this.valueBank.get(targetDevice.bus, targetDevice.port)?.[pluginObject.targetDeviceField || '']
+						}, async (state) => {
+
+							let value = state.actuatorValue;
+							let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
+							if(!key) return;
+							let writeOp: any = {
+								[key?.foreignKey]: value
+							};
+
+							await this.requestState({
+								bus: device?.bus,
+								port: device?.port,
+								value: writeOp
+							})
+
+						})
+					}
+					console.log("PLugin tick ", plugin.name)
 				}))
 			}))
 		})
 
 		console.log(`State machine started`)
+	}
+
+	async loadPlugins(payload: AssignmentPayload[]){
+		//Init all plugins for all ports
+		await Promise.all(payload.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
+			await Promise.all((device?.plugins || []).map(async (plugin, ix) => {
+
+				let pluginObject = plugin.configuration.reduce<{
+					p?: string,
+					i?: string,
+					d?: string,
+					target?: string;
+				}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+
+				let portIx = this.portAssignment.map((x) => x.id).indexOf(device.id);
+
+				if(portIx > -1){
+					let plugins = this.portAssignment[portIx].plugins?.slice() || [];
+
+					plugins[ix].instance = new PIDController({
+						k_p: pluginObject.p ? parseFloat(pluginObject.p) : 0.5,
+						k_i: pluginObject.i ? parseFloat(pluginObject.i) : 0.01,
+						k_d: pluginObject.d ? parseFloat(pluginObject.d) : 0.01,
+						dt: 1000
+					})
+
+					plugins[ix].instance.setTarget(pluginObject.target ? parseFloat(pluginObject.target) : 0)
+
+					this.portAssignment[portIx].plugins = plugins
+				}
+
+				console.log("PLugin init ", plugin.name, pluginObject)
+			}))
+		}))
 	}
 
 	async start(){
@@ -350,6 +417,7 @@ export class CommandClient {
 		if(commandPayload.payload){
 
 			if(commandPayload.payload.layout){
+
 				await this.network.start({
 					hostname: self.identity.named,
 					discoveryServer: this.options.discoveryServer
