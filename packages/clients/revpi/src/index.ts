@@ -312,6 +312,13 @@ export class CommandClient {
 		
 		this.machine.start()
 
+		this.machine.on('TICK', async () => {
+			console.log("STATE TICK")
+			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined).map(async (plugin) => {
+				console.log("PLUGIN TICK ", plugin.name)
+			}))
+		})
+
 		console.log(`State machine started`)
 	}
 

@@ -24,6 +24,7 @@ export interface PayloadResponse {
 
 export interface AssignmentPayload {
 	actions?: {key: string, func: string}[]
+	plugins?: {id: string, name: string, config: {key: string, value: string}[]}[]
 	state?: {key: string, type: string, foreignKey: string}[]
 
 	type: string;
