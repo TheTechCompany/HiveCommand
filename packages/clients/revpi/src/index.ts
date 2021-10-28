@@ -396,7 +396,7 @@ export class CommandClient {
 						k_p: pluginObject.p ? parseFloat(pluginObject.p) : 0.5,
 						k_i: pluginObject.i ? parseFloat(pluginObject.i) : 0.01,
 						k_d: pluginObject.d ? parseFloat(pluginObject.d) : 0.01,
-						dt: 2
+						dt: 1
 					})
 
 					plugins[ix].instance.setTarget(pluginObject.target ? parseFloat(pluginObject.target) : 0)
