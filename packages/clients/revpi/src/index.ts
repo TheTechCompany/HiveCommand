@@ -336,13 +336,18 @@ export class CommandClient {
 							targetValue: this.valueBank.get(targetDevice.bus, targetDevice.port)?.[pluginObject.targetDeviceField || '']
 						}, async (state) => {
 
+							console.log("REQUEST STATE", state)
+
 							let value = state.actuatorValue;
 							let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
+
+							console.log("KV", key, value)
 							if(!key) return;
 							let writeOp: any = {
 								[key?.foreignKey]: value
 							};
 
+							console.log("WRITE", writeOp)
 							await this.requestState({
 								bus: device?.bus,
 								port: device?.port,
