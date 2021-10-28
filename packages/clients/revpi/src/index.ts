@@ -335,9 +335,12 @@ export class CommandClient {
 						let actuatorValue = this.valueBank.get(actuatorDevice.bus, actuatorDevice.port)
 						let targetValue = this.valueBank.get(targetDevice.bus, targetDevice.port)
 
+						let actuatorKey = actuatorDevice.state?.find((a) => a.key == pluginObject.actuatorField)
+						let targetKey = targetDevice.state?.find((a) => a.key == pluginObject.targetDeviceField)
+
 						let state = {
-							actuatorValue: actuatorValue?.[pluginObject?.actuatorField || ''] || 0,
-							targetValue:  targetValue?.[pluginObject.targetDeviceField || ''] || 0
+							actuatorValue: actuatorValue?.[actuatorKey?.foreignKey || ''] || 0,
+							targetValue:  targetValue?.[targetKey?.foreignKey || ''] || 0
 						}
 
 						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
