@@ -1,11 +1,12 @@
 import Controller from "node-pid-controller";
 
 const controller = new Controller({
-	k_p: 0.25,
+	k_p: 0.5,
 	k_i: 0.01,
 	k_d: 0.01,
 	dt: 1
 })
+
 
 //12L/min
 controller.setTarget(12)
@@ -25,9 +26,9 @@ let i = 0;
 // }
 
 const cycleTick = () => {
-	let input = controller.update(output / 100)
+	let input = controller.update(output)
 
-	output += input 
+	setTimeout(() => output += input, 2000)
 
 	console.log(output)
 

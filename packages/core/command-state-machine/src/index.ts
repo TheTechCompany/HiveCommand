@@ -82,7 +82,7 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.emit('TICK')
 
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 500))
+			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 1000))
 		}
 	}
 
