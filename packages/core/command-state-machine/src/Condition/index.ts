@@ -41,7 +41,7 @@ export class Condition {
 
         }
 
-        console.log(this.condition.comparator, input, value)
+        console.log("Checked", this.condition.comparator, input, value)
 
         switch(this.condition.comparator){
             case '>':
