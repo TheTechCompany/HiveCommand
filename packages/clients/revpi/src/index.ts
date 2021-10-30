@@ -157,11 +157,11 @@ export class CommandClient {
 						writeOp = operation;
 					}
 
-					await this.requestState({
-						bus: busPort?.bus,
-						port: busPort?.port,
-						value: writeOp
-					})
+					// await this.requestState({
+					// 	bus: busPort?.bus,
+					// 	port: busPort?.port,
+					// 	value: writeOp
+					// })
 					console.log("OP", writeOp)
 
 				}
@@ -329,7 +329,7 @@ export class CommandClient {
 
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
-		// this.machine.start()
+		this.machine.start()
 
 		this.machine.on('TICK', async () => {
 			console.log("STATE TICK")
