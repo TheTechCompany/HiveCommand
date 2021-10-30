@@ -345,27 +345,27 @@ export class CommandClient {
 
 						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
-						pluginTick(plugin.instance, state, async (state) => {
+						// pluginTick(plugin.instance, state, async (state) => {
 
-							console.log("REQUEST STATE", state)
+						// 	console.log("REQUEST STATE", state)
 
-							let value = state.actuatorValue;
-							let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
+						// 	let value = state.actuatorValue;
+						// 	let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
 
-							console.log("KV", key, value)
-							if(!key) return;
-							let writeOp: any = {
-								[key?.foreignKey]: value
-							};
+						// 	console.log("KV", key, value)
+						// 	if(!key) return;
+						// 	let writeOp: any = {
+						// 		[key?.foreignKey]: value
+						// 	};
 
-							console.log("WRITE", writeOp)
-							await this.requestState({
-								bus: device?.bus,
-								port: device?.port,
-								value: writeOp
-							})
+						// 	console.log("WRITE", writeOp)
+						// 	await this.requestState({
+						// 		bus: device?.bus,
+						// 		port: device?.port,
+						// 		value: writeOp
+						// 	})
 
-						})
+						// })
 					}
 					console.log("PLugin tick ", plugin.name)
 				}))
