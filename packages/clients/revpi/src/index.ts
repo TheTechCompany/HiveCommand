@@ -367,8 +367,8 @@ export class CommandClient {
 						let targetKey = targetDevice.state?.find((a) => a.key == pluginObject.targetDeviceField)
 
 						if(!actuatorKey || !targetKey) return;
-						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.foreignKey)
-						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.foreignKey)
+						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
+						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
 						let state = {
 							actuatorValue: actuatorValue || 0,
