@@ -50,7 +50,7 @@ export default class RevPiPlugin extends BasePlugin {
 
 
 		return this.pi.getDeviceList().filter((a) => a.name !== "RevPi Core").map((item) => ({
-			id: item.address,
+			id: `${item.address}`,
 			name: item.name,
 			devices: devices
 		}));
@@ -84,7 +84,7 @@ export default class RevPiPlugin extends BasePlugin {
 
 			allPorts.forEach((port) => {
 				this.emit('PORT:VALUE', {
-					bus: bus,
+					bus: `${bus}`,
 					port: port.port,
 					value: port.value
 				})
