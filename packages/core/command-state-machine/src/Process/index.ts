@@ -59,19 +59,7 @@ export class IOProcess extends EventEmitter{
                         resolve(true);
                     });
 
-/*                    this.current_isRunning = true;
-
-                    console.info(`Process: ${this.process.name} run ${current_action.id}`)
-                    const result =  current_action.performAction().then((result) => {
-                        this.current_isRunning = false;
-                        this.current_hasRun = true;
-
-                        resolve(true)
-                    });*/
-
-/*                    this.current_isRunning = false;
-                    this.current_hasRun = true;
-                    return true;*/
+               
                 }
             }else{
                 resolve(false);
