@@ -11,6 +11,10 @@ export class Condition {
         return this.condition.input
     }
 
+    get input_key(){
+        return this.condition.inputKey
+    }
+
     get value_id(){
         return this.condition.value
     }

@@ -216,16 +216,17 @@ export class IOProcess extends EventEmitter{
 
             let truthy = true;
             conds.forEach((cond) => {  
-                let inputValue = this.templateValue(cond.input_id)
 
+                //Get input value from value bank valueBank[input][inputKey]
+                const inputValue = this.parent.state.getByKey(cond.input_id, cond.input_key)
+            
                 let checkValue = this.templateValue(cond.value_id)
-
-                //let checkValue = this.parent.variables[cond.value_id]
 
                 if(!cond.check(inputValue, checkValue)){
                     truthy = false;
-
                 }
+
+                console.log(`Checked condition ${cond.input_id}-${cond.input_key} ${cond.value_id} value ${truthy}`)
 
                 output_conds.push({cond: cond, value: truthy, inputValue, checkValue, value_id: cond.value_id})
             })

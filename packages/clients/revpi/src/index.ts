@@ -284,7 +284,16 @@ export class CommandClient {
 				return {
 					id: next.id,
 					source: action.type == "Trigger" ? 'origin' : action.id,
-					target: next.target
+					target: next.target,
+					extras: {
+                        conditions: next.conditions?.map((cond) => ({
+							input: cond.input,
+							inputKey: cond.inputKey,
+							comparator: cond.comparator,
+							value: cond.assertion
+						}))
+	
+                    }
 				}
 			})
 			

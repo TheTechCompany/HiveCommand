@@ -1,6 +1,7 @@
 import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
+import { State } from "./State";
 
 export * from './types'
 
@@ -11,7 +12,7 @@ export interface CommandClient {
 
 export class CommandStateMachine extends EventEmitter {
 
-	private values : {[key: string]: any} = {};
+	public state : State;;
 
 	private running : boolean = true;
 
@@ -30,6 +31,8 @@ export class CommandStateMachine extends EventEmitter {
 	}, client: CommandClient){
 		super();
 
+		this.state = new State();
+
 		this.client = client;
 
 		console.debug(`Initializing State Machine`)
@@ -47,13 +50,13 @@ export class CommandStateMachine extends EventEmitter {
         this.process_state[parent_proc || proc_id] = parent_proc ? proc_id : new_state
     }
 
-	registerValue(key: string, value: any){
-		this.values[key] = value;
-	}
+	// registerValue(key: string, value: any){
+	// 	this.values[key] = value;
+	// }
 
-	getValue(key: string){
-		return this.values[key]
-	}
+	// getState(key: string){
+	// 	return this.values[key]
+	// }
 
 	async performOperation(device: string, operation: string){
 		await this.client.performOperation({device, operation})

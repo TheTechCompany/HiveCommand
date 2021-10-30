@@ -15,7 +15,13 @@ export interface PayloadResponse {
 				target: string,
 				id: string,
 				sourceHandle: string,
-				targetHandle: string
+				targetHandle: string,
+				conditions?: {
+					input: string,
+					inputKey: string,
+					comparator: string,
+					assertion: string,
+				}[]
 			}[]
 		}[]
 		layout?: AssignmentPayload[]
