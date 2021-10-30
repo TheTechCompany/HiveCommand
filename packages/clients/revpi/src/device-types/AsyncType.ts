@@ -2,7 +2,7 @@ import vm from 'vm';
 
 
 
-	export const getPluginWrapper = (func: string) : ((instance: any, state: any, updateState: (state: any) => void) => Promise<any>)=> {
+	export const getPluginFunction = (func: string) : ((instance: any, state: any, updateState: (state: any) => void) => Promise<any>)=> {
 		return vm.runInNewContext(`
 			const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 			new AsyncFunction(
@@ -18,7 +18,7 @@ import vm from 'vm';
 		})
 	}
 
-	export const getDriverFunction = (func_desc: string) => {
+	export const getDeviceFunction = (func_desc: string) => {
 		const func = vm.runInNewContext(`
 			const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 			new AsyncFunction(

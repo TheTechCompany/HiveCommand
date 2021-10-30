@@ -7,7 +7,7 @@ import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
 import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
-import { getDriverFunction, getPluginWrapper } from './device-types/AsyncType';
+import { getDeviceFunction, getPluginFunction } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
 import { DeviceMap } from './io-bus/DeviceMap';
 
@@ -115,6 +115,48 @@ export class CommandClient {
 		await plugin?.write(event.bus, event.port, event.value);
 	}
 
+	setState(device: string, state: any){
+		// const busPort = this.deviceMap.getDeviceBusPort(device)
+
+		this.machine?.state.update(device, {
+			...state
+		})
+	}
+
+	async useAction(device: string, operation: any){
+		const busPort = this.deviceMap.getDeviceBusPort(device)
+
+		if(busPort?.bus && busPort?.port){
+			/*
+				Test the operation value for object type
+				if object remap keys to busmap keys
+				if value write directly
+			*/
+			
+			let writeOp: any;
+
+			if(typeof(operation) == 'object'){
+				writeOp = {};
+				for(var k in operation){
+					let stateItem = busPort.state?.find((a) => a.key == k)
+					if(!stateItem) continue;
+					writeOp[stateItem?.foreignKey] = operation[k];
+				}
+
+			}else{
+				writeOp = operation;
+			}
+
+			// await this.requestState({
+			// 	bus: busPort?.bus,
+			// 	port: busPort?.port,
+			// 	value: writeOp
+			// })
+			console.log("OP", writeOp)
+
+		}
+	}
+
 	//Request state + translator for name
 	async requestOperation(event: {device: string, operation: string}){
 		console.log("Requesting operation with device name - StateMachine")
@@ -126,46 +168,14 @@ export class CommandClient {
 		console.log("Found action", action)
 		if(!action?.func) return;
 
-		let driverFunction = getDriverFunction(action?.func)
+		let driverFunction = getDeviceFunction(action?.func)
 		
 		let id = nanoid();
 		console.time(`${id}-${action.key}`)
 		await driverFunction(
 			{},
-			(state: any) => {
-				console.log("Set State", state)
-			},
-			async (operation: any) => {
-				if(busPort?.bus && busPort?.port){
-					/*
-						Test the operation value for object type
-						if object remap keys to busmap keys
-						if value write directly
-					*/
-					
-					let writeOp: any;
-
-					if(typeof(operation) == 'object'){
-						writeOp = {};
-						for(var k in operation){
-							let stateItem = busPort.state?.find((a) => a.key == k)
-							if(!stateItem) continue;
-							writeOp[stateItem?.foreignKey] = operation[k];
-						}
-
-					}else{
-						writeOp = operation;
-					}
-
-					// await this.requestState({
-					// 	bus: busPort?.bus,
-					// 	port: busPort?.port,
-					// 	value: writeOp
-					// })
-					console.log("OP", writeOp)
-
-				}
-			}
+			(state: any) => this.setState(event.device, state),
+			(operation: any) => this.useAction(event.device, operation)	
 		)
 		console.timeEnd(`${id}-${action.key}`)
 
@@ -356,7 +366,7 @@ export class CommandClient {
 					}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
 
 					if(plugin.instance){
-						const pluginTick = getPluginWrapper(plugin.tick)
+						const pluginTick = getPluginFunction(plugin.tick)
 						if(!pluginObject.targetDevice || !pluginObject.actuator) return;
 
 						let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
@@ -374,32 +384,35 @@ export class CommandClient {
 
 						let state = {
 							actuatorValue: actuatorValue || 0,
-							targetValue:  targetValue || 0
+							targetValue:  targetValue || 0,
+							__host: {
+								...this.machine?.state.get(device.name)
+							}
 						}
 
 						// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
-						// pluginTick(plugin.instance, state, async (state) => {
+						pluginTick(plugin.instance, state, async (state) => {
 
-						// 	console.log("REQUEST STATE", state)
+							console.log("REQUEST STATE", state)
 
-						// 	let value = state.actuatorValue;
-						// 	let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
+							let value = state.actuatorValue;
+							let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
 
-						// 	console.log("KV", key, value)
-						// 	if(!key) return;
-						// 	let writeOp: any = {
-						// 		[key?.foreignKey]: value
-						// 	};
+							console.log("KV", key, value)
+							if(!key) return;
+							let writeOp: any = {
+								[key?.foreignKey]: value
+							};
 
-						// 	console.log("WRITE", writeOp)
-						// 	await this.requestState({
-						// 		bus: device?.bus,
-						// 		port: device?.port,
-						// 		value: writeOp
-						// 	})
+							console.log("WRITE", writeOp)
+							await this.requestState({
+								bus: device?.bus,
+								port: device?.port,
+								value: writeOp
+							})
 
-						// })
+						})
 					}
 					// console.log("PLugin tick ", plugin.name)
 				}))
