@@ -242,7 +242,9 @@ export class CommandClient {
 
 				}
 
-				console.log("UPDATE", event)
+				if(event.bus == '31' || event.bus == 31){
+					console.log("UPDATE", event)
+				}
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
