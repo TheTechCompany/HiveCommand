@@ -329,7 +329,7 @@ export class CommandClient {
 
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
-		this.machine.start()
+		// this.machine.start()
 
 		this.machine.on('TICK', async () => {
 			console.log("STATE TICK")
