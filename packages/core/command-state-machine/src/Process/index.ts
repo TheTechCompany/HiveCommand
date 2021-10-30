@@ -193,8 +193,8 @@ export class IOProcess extends EventEmitter{
         return next.length > 0
     }
 
-    templateValue(template: string){
-        let iT = doT.template(template)
+    templateValue(template?: string){
+        let iT = doT.template(template || '')
         return iT({
             // io: this.parent.device_bus?.getAll(),
             // flags: {
