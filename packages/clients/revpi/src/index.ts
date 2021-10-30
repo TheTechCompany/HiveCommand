@@ -246,7 +246,7 @@ export class CommandClient {
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
 				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
-				console.log(device?.name, event.bus, event.port);
+				// console.log(device?.name, event.bus, event.port);
 				if(!device) return;
 				let cleanState = event.value;
 				if(typeof(event.value) == "object"){
