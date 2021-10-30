@@ -382,6 +382,7 @@ export class CommandClient {
 						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
 						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
+						console.log(`Host: ${device.name}`, this.machine?.state.get(device.name))
 						let state = {
 							actuatorValue: actuatorValue || 0,
 							targetValue:  targetValue || 0,
