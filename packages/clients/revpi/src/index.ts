@@ -147,11 +147,11 @@ export class CommandClient {
 				writeOp = operation;
 			}
 
-			// await this.requestState({
-			// 	bus: busPort?.bus,
-			// 	port: busPort?.port,
-			// 	value: writeOp
-			// })
+			await this.requestState({
+				bus: busPort?.bus,
+				port: busPort?.port,
+				value: writeOp
+			})
 			console.log("OP", writeOp)
 
 		}
