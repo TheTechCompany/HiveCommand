@@ -5,7 +5,6 @@ import fastq from 'fastq'
 import path from 'path'
 import { existsSync, readFile, readFileSync, writeFileSync } from "fs";
 import IODDManager from '@io-link/iodd'
-import { RunnerNetwork } from "../../network";
 import { Device } from "../device/Device";
 import { IODDDevice } from "../device/IODDDevice";
 import ifmMap from "../ifm-map";
@@ -16,7 +15,6 @@ export class DeviceRegister {
 
 	private values : {[key: string]: any} = {};
 
-	private network : RunnerNetwork;
 
 	private io : DeviceIO;
 	private callbackServer? : IngressServer;
@@ -26,11 +24,10 @@ export class DeviceRegister {
 	private subscriptions : {id: number, result: any, master: string}[] = []
 	// private registrationQueue : fastq.queueAsPromised = fastq.promise(this.register.bind(this), 1);
 
-	private opts: { storagePath: string, ioddManager: IODDManager, network: RunnerNetwork };
-	constructor(opts: {storagePath: string, ioddManager: IODDManager, network: RunnerNetwork}){
+	private opts: { storagePath: string, ioddManager: IODDManager };
+	constructor(opts: {storagePath: string, ioddManager: IODDManager}){
 		this.ioddManager = opts.ioddManager
 		this.opts = opts;
-		this.network = opts.network
 		this.io = new DeviceIO();
 
 		// this.callbackServer.setup()
@@ -62,7 +59,7 @@ export class DeviceRegister {
 				case 'timer[1]':
 					break;
 				case 'processdatamaster':
-					console.log(`IO-Master Temperature: ${payload[k].data}`)
+					// console.log(`IO-Master Temperature: ${payload[k].data}`)
 					break;
 			}
 		}

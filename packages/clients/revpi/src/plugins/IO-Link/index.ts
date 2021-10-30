@@ -105,7 +105,7 @@ export default class IOLinkPlugin extends BasePlugin {
 				case 'timer[1]':
 					break;
 				case 'processdatamaster':
-					console.log(`IO-Master Temperature: ${payload[k].data}`)
+					// console.log(`IO-Master Temperature: ${payload[k].data}`)
 					break;
 			}
 		}
