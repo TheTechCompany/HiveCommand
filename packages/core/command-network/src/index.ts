@@ -10,7 +10,7 @@ export interface CommandNetworkOptions{
 
 	valueBank?: {
 		request?: (id: string, port: string, value: any)=> void;
-		get: (id: string, port: string) => any;
+		get: (device: string) => any;
 	}
 }
 
@@ -37,7 +37,7 @@ export class CommandNetwork {
 
 	private valueBank : {
 		request?: (id: string, port: string, value: any)=> void;
-		get?: (id: string, port: string) => any;
+		get?: (device: string) => any;
 	} = {}
 
 	constructor(opts: CommandNetworkOptions){
@@ -148,7 +148,7 @@ export class CommandNetwork {
 						[curr.key]: {
 							type: this.getDataType(curr.type),
 							get: () => {
-								let value = this.valueBank.get?.(layout.bus, layout.port)
+								let value = this.valueBank.get?.(layout.name)
 								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, curr.foreignKey, value)})
 							}
 						}
