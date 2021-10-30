@@ -82,7 +82,8 @@ export class CommandClient {
 
 		this.network = new CommandNetwork({
 			baseURL: opts.commandCenter, 
-			valueBank: this.machine?.state
+			valueBank: {
+				get: this.machine?.state.getByKey.bind(this.machine?.state) || (() => {}),
 		});
 
 		this.requestOperation = this.requestOperation.bind(this);
