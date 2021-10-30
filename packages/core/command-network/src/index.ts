@@ -10,7 +10,7 @@ export interface CommandNetworkOptions{
 
 	valueBank?: {
 		request?: (id: string, port: string, value: any)=> void;
-		get: (device: string) => any;
+		get: (device: string, key:string ) => any;
 	}
 }
 
@@ -37,7 +37,7 @@ export class CommandNetwork {
 
 	private valueBank : {
 		request?: (id: string, port: string, value: any)=> void;
-		get?: (device: string) => any;
+		get?: (device: string, key: string) => any;
 	} = {}
 
 	constructor(opts: CommandNetworkOptions){
@@ -117,8 +117,8 @@ export class CommandNetwork {
 		}
 	}
 
-	getDataValue = (type: string, key: string, value: any) => {
-		let v = typeof(value) == "object" ? value[key] : value;
+	getDataValue = (type: string, value: any) => {
+		let v = value //typeof(value) == "object" ? value[key] : value;
 		console.log("GET DATA VAALUE", JSON.stringify(value))
 		switch(type){
 			case 'BooleanT':
@@ -129,6 +129,7 @@ export class CommandNetwork {
 				return	parseFloat(v);		
 		}
 	}
+
 	getDeviceName = (type: string,  bus: string, port: any) => {
 		return `${type}|${bus}|${port}`
 	}
@@ -148,8 +149,9 @@ export class CommandNetwork {
 						[curr.key]: {
 							type: this.getDataType(curr.type),
 							get: () => {
-								let value = this.valueBank.get?.(layout.name)
-								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, curr.key, value)})
+								let value = this.valueBank.get?.(layout.name, curr.key);
+								console.log("GET DATA VALUE", curr, layout.name)
+								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
 							}
 						}
 					}
