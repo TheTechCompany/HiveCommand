@@ -232,13 +232,17 @@ export class CommandClient {
 				if(!device) return;
 				let cleanState = event.value;
 				if(typeof(event.value) == "object"){
+
 					cleanState = device.state?.reduce((prev, curr) => {
 						return {
 							...prev,
 							[curr.key]: event.value[curr.foreignKey]
 						}
 					}, {})
+
 				}
+
+				console.log("UPDATE", event)
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
