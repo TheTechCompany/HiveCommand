@@ -26,7 +26,7 @@ export class Condition {
             if(!isNaN(val)){
                 input = val;
             }
-            console.log(input)
+            // console.log(input)
         }catch(e){
 
         }
@@ -36,12 +36,12 @@ export class Condition {
             if(!isNaN(val)){
                 value = val;
             }
-            console.log(value)
+            // console.log(value)
         }catch(e){
 
         }
 
-        console.log("Checked", this.condition.comparator, input, value)
+        // console.log("Checked", this.condition.comparator, input, value)
 
         switch(this.condition.comparator){
             case '>':

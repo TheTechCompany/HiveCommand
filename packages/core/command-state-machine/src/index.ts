@@ -69,17 +69,12 @@ export class CommandStateMachine extends EventEmitter {
 
 		this.running = true;
 		while(this.running){
-			console.debug(`State Tick`)
 			//Run all actions in current stage of execution
 			try{
 				const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
 			}catch(e){
 				console.debug(e)
 			}
-			// console.debug(`State Tick`)
-
-			// //Log actions
-			// console.log(actions)
 
 			const next = await Promise.all(this.processes.map((x) => x.moveNext()))
 

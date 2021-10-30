@@ -33,6 +33,8 @@ export class Action {
     }
 
     async onEnter(){
+        console.log(`Entering node ${this.node.extras?.blockType}`)
+
         switch(this.blockType){
             case 'action':
                 this.isRunning = true;
@@ -77,6 +79,7 @@ export class Action {
     }
 
     async onExit(){
+        console.log(`Exiting node ${this.node.extras?.blockType}`)
         switch(this.blockType){
             case 'timer':
                 this.runner.timers[this.node.extras?.timer].hasRun = false;
