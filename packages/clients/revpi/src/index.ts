@@ -244,7 +244,7 @@ export class CommandClient {
 				let cleanState = event.value;
 				if(typeof(event.value) == "object"){
 
-					cleanState = device.state?.reduce((prev, curr) => {
+					cleanState = device.state?.filter((a) => event.value[a.foreignKey]).reduce((prev, curr) => {
 						return {
 							...prev,
 							[curr.key]: event.value[curr.foreignKey]
