@@ -228,7 +228,6 @@ export class CommandClient {
 
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
-				console.log("PORT:VALUE", event.bus, event.port)
 				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
 			
 				if(!device) return;
@@ -243,6 +242,7 @@ export class CommandClient {
 					}, {})
 
 				}
+				console.log("PORT:VALUE", event.bus, cleanState)
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
