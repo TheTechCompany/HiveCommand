@@ -242,7 +242,6 @@ export class CommandClient {
 					}, {})
 
 				}
-				console.log("PORT:VALUE", event.bus, cleanState)
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
@@ -346,7 +345,6 @@ export class CommandClient {
 		this.machine.start()
 
 		this.machine.on('TICK', async () => {
-			console.log("STATE TICK")
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
@@ -379,7 +377,7 @@ export class CommandClient {
 							targetValue:  targetValue || 0
 						}
 
-						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
+						// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
 						// pluginTick(plugin.instance, state, async (state) => {
 
@@ -403,7 +401,7 @@ export class CommandClient {
 
 						// })
 					}
-					console.log("PLugin tick ", plugin.name)
+					// console.log("PLugin tick ", plugin.name)
 				}))
 			}))
 		})
