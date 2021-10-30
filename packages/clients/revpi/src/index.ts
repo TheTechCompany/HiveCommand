@@ -83,7 +83,7 @@ export class CommandClient {
 		this.network = new CommandNetwork({
 			baseURL: opts.commandCenter, 
 			valueBank: {
-				get: this.machine?.state.getByKey.bind(this.machine?.state) || (() => {}),
+				get: this.getByKey.bind(this)
 			}
 		});
 
@@ -93,6 +93,10 @@ export class CommandClient {
 		// });
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
+	}
+
+	getByKey(dev: string, key: string){
+		return this.machine?.state.getByKey(dev, key)
 	}
 
 	async requestState(event: {bus: string | null, port: string, value: any}){
