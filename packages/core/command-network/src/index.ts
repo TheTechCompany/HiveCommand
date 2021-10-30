@@ -9,7 +9,7 @@ export interface CommandNetworkOptions{
 	baseURL?: string;
 
 	valueBank?: {
-		request: (id: string, port: string, value: any)=> void;
+		request?: (id: string, port: string, value: any)=> void;
 		get: (id: string, port: string) => any;
 	}
 }

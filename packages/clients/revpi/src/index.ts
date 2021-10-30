@@ -9,7 +9,7 @@ import IODDManager, { IODD } from '@io-link/iodd'
 import { ValueBank } from './io-bus/ValueBank';
 import { getDriverFunction, getPluginWrapper } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
-import PIDController from "node-pid-controller";
+import { DeviceMap } from './io-bus/DeviceMap';
 
 export interface CommandEnvironment {
 	id: string;
@@ -42,20 +42,22 @@ export class CommandClient {
 
 	private ioddManager : IODDManager;
 
-	private valueBank : ValueBank;
+	// private valueBank : ValueBank;
 
 	private options : CommandClientOptions;
 
 	private cycleTimer?: any;
 
-	private portAssignment: AssignmentPayload[] = []
+	private deviceMap : DeviceMap;
+	// private portAssignment: AssignmentPayload[] = []
 
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
-		this.valueBank = new ValueBank();
+		this.deviceMap = new DeviceMap();
+		// this.valueBank = new ValueBank();
 
-		this.valueBank.on('REQUEST_STATE', this.requestState.bind(this))
+		// this.valueBank.on('REQUEST_STATE', this.requestState.bind(this))
 
 		this.ioddManager = new IODDManager({
 			storagePath: opts.storagePath || '/tmp'
@@ -80,7 +82,7 @@ export class CommandClient {
 
 		this.network = new CommandNetwork({
 			baseURL: opts.commandCenter, 
-			valueBank: this.valueBank
+			valueBank: this.machine?.state
 		});
 
 		this.requestOperation = this.requestOperation.bind(this);
@@ -100,7 +102,10 @@ export class CommandClient {
 
 		//An object value is a partial state to merge before sending else its a value
 		if(typeof(event.value) == "object"){
-			let prevState = this.valueBank.get(event.bus, event.port)
+			let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
+			if(!deviceName) return;
+			let prevState = this.machine?.state.get(deviceName)
+			// let prevState = this.valueBank.get(event.bus, event.port)
 			event.value = {
 				...prevState,
 				...event.value
@@ -113,7 +118,7 @@ export class CommandClient {
 	//Request state + translator for name
 	async requestOperation(event: {device: string, operation: string}){
 		console.log("Requesting operation with device name - StateMachine")
-		let busPort = this.portAssignment.find((a) => a.name == event.device)
+		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 		
 		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
@@ -223,7 +228,10 @@ export class CommandClient {
 
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
-				this.valueBank.set(event.bus, event.port, event.value)
+				let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
+				if(!deviceName) return;
+				this.machine?.state.update(deviceName, event.value)
+				// this.valueBank.set(event.bus, event.port, event.value)
 			})
 		}))
 	}
@@ -245,7 +253,7 @@ export class CommandClient {
 		let payload = commandPayload.payload?.command;
 		let layout = commandPayload.payload?.layout;
 
-		if(layout) this.portAssignment = layout;
+		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 
 		await this.loadPlugins(commandPayload.payload?.layout || []);
 
@@ -325,7 +333,7 @@ export class CommandClient {
 
 		this.machine.on('TICK', async () => {
 			console.log("STATE TICK")
-			await Promise.all(this.portAssignment.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
+			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
@@ -337,19 +345,24 @@ export class CommandClient {
 
 					if(plugin.instance){
 						const pluginTick = getPluginWrapper(plugin.tick)
-						let targetDevice = this.portAssignment.find((a) => a.id == pluginObject.targetDevice)
-						let actuatorDevice = this.portAssignment.find((a) => a.id == pluginObject.actuator)
+						if(!pluginObject.targetDevice || !pluginObject.actuator) return;
+
+						let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
+						let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
 						if(!targetDevice || !actuatorDevice) return;
 						
-						let actuatorValue = this.valueBank.get(actuatorDevice.bus, actuatorDevice.port)
-						let targetValue = this.valueBank.get(targetDevice.bus, targetDevice.port)
+					
 
 						let actuatorKey = actuatorDevice.state?.find((a) => a.key == pluginObject.actuatorField)
 						let targetKey = targetDevice.state?.find((a) => a.key == pluginObject.targetDeviceField)
 
+						if(!actuatorKey || !targetKey) return;
+						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.foreignKey)
+						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.foreignKey)
+
 						let state = {
-							actuatorValue: actuatorValue?.[actuatorKey?.foreignKey || ''] || 0,
-							targetValue:  targetValue?.[targetKey?.foreignKey || ''] || 0
+							actuatorValue: actuatorValue || 0,
+							targetValue:  targetValue || 0
 						}
 
 						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
@@ -386,35 +399,10 @@ export class CommandClient {
 
 	async loadPlugins(payload: AssignmentPayload[]){
 		//Init all plugins for all ports
-		await Promise.all(payload.filter((a) => a.plugins != undefined && a.plugins.length > 0).map(async (device) => {
-			await Promise.all((device?.plugins || []).map(async (plugin, ix) => {
+		await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 
-				let pluginObject = plugin.configuration.reduce<{
-					p?: string,
-					i?: string,
-					d?: string,
-					target?: string;
-				}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
-
-				let portIx = this.portAssignment.map((x) => x.id).indexOf(device.id);
-
-				if(portIx > -1){
-					let plugins = this.portAssignment[portIx].plugins?.slice() || [];
-
-					plugins[ix].instance = new PIDController({
-						k_p: pluginObject.p ? parseFloat(pluginObject.p) : 0.5,
-						k_i: pluginObject.i ? parseFloat(pluginObject.i) : 0.01,
-						k_d: pluginObject.d ? parseFloat(pluginObject.d) : 0.01,
-						dt: 1
-					})
-
-					plugins[ix].instance.setTarget(pluginObject.target ? parseFloat(pluginObject.target) : 0)
-
-					this.portAssignment[portIx].plugins = plugins
-				}
-
-				console.log("PLugin init ", plugin.name, pluginObject)
-			}))
+			this.deviceMap.setupDevicePlugins(device.id)
+			
 		}))
 	}
 
