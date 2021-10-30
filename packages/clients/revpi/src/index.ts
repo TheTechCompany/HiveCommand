@@ -84,6 +84,7 @@ export class CommandClient {
 			baseURL: opts.commandCenter, 
 			valueBank: {
 				get: this.machine?.state.getByKey.bind(this.machine?.state) || (() => {}),
+			}
 		});
 
 		this.requestOperation = this.requestOperation.bind(this);
