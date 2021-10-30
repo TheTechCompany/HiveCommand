@@ -229,6 +229,10 @@ export class CommandClient {
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
 				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
+				if(event.bus == 31 || event.bus == '31'){
+					console.log(event)
+				}
+				
 				if(!device) return;
 				let cleanState = event.value;
 				if(typeof(event.value) == "object"){
