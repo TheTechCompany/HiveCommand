@@ -226,8 +226,6 @@ export class IOProcess extends EventEmitter{
                     truthy = false;
                 }
 
-                console.log(`Checked condition ${cond.input_id}-${cond.input_key} ${cond.value_id} value ${truthy}`)
-
                 output_conds.push({cond: cond, value: truthy, inputValue, checkValue, value_id: cond.value_id})
             })
             return {target: transition.target, value: truthy, conds: conds.length, output_conds};

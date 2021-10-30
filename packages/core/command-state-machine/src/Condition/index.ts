@@ -41,6 +41,8 @@ export class Condition {
 
         }
 
+        console.log(this.condition.comparator, input, value)
+
         switch(this.condition.comparator){
             case '>':
                 return input > value;
