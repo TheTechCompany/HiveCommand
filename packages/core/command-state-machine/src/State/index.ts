@@ -15,6 +15,7 @@ export class State {
 	}	
 
 	public getByKey(key: string, subKey: string): any {
+		console.log("GET BY KEY", key, subKey, this.internalState[key]);
 		return this.internalState?.[key]?.[subKey];
 	}	
 
