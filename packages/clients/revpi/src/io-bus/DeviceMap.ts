@@ -58,12 +58,17 @@ export class DeviceMap {
 
 	//Get device name from assignment by bus and port
 	public getDeviceName(bus: string, port: string): string | undefined {
-		return this.assignment.find(assignment => assignment.bus === bus && assignment.port === port)?.name;
+		return this.getDeviceByBusPort(bus, port)?.name;
 	}
 
 	//Get device by id
 	public getDeviceById(id: string): AssignmentPayload | undefined {
 		return this.assignment.find((a) => a.id == id)
+	}
+
+	//Get assignment by bus and port
+	public getDeviceByBusPort(bus: string, port: string): AssignmentPayload | undefined {
+		return this.assignment.find(assignment => assignment.bus === bus && assignment.port === port)
 	}
 
 	//Get assignment by device name

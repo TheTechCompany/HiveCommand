@@ -228,9 +228,19 @@ export class CommandClient {
 
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
-				let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
-				if(!deviceName) return;
-				this.machine?.state.update(deviceName, event.value)
+				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
+				if(!device) return;
+				let cleanState = event.value;
+				if(typeof(event.value) == "object"){
+					cleanState = device.state?.reduce((prev, curr) => {
+						return {
+							...prev,
+							[curr.key]: event.value[curr.foreignKey]
+						}
+					}, {})
+				}
+
+				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
 			})
 		}))
