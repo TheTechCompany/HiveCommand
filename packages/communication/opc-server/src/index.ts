@@ -63,7 +63,7 @@ export default class Server {
                 browseName: 'ControllerHw'                
             })
 
-            this.namespace.addAnalogDataItem({
+            this.namespace.addDataItem({
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
