@@ -1,6 +1,6 @@
 import path from "path";
 import fs from 'fs/promises'
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, statSync } from "fs";
 import { getVendorIdTable, findIODD, downloadIODD, extractIODD, extractIODDXML, convertIODD, parseIODD, createFilter } from "./utils";
 import { IODD } from "./types";
 
@@ -55,24 +55,40 @@ export default class IODDStore {
         let device = this.deviceList[dev]
         if(!device) {
 
-            const iodd = await findIODD(this.vendorTable?.[vendorId], deviceId)
-            
-            const download = await downloadIODD(vendorId, iodd.ioddId)
-            
-            const defintion = await extractIODDXML(download)
+            if(statSync(path.join(this.options.storagePath, `${dev}.xml`))){
+                let info = readFileSync(path.join(this.options.storagePath, `${dev}.xml`), 'utf8')
+                const xmliodd = await parseIODD(info)
+                const iodd = convertIODD(xmliodd)
 
-            const writePath = path.join(this.options.storagePath, `${dev}.xml`)
-            await fs.writeFile(writePath, defintion, 'utf8')
-            
-            device = {
-                name: iodd.productName,
-                version: iodd.versionString,
-                ioLinkRev: iodd.ioLinkRev,
-                iodd: writePath,
-                cached: true
+                device = {
+                    name: '',
+                    version: '',
+                    ioLinkRev: '',
+                    iodd: path.join(this.options.storagePath, `${dev}.xml`),
+                    cached: true
+                }
+
+                this.deviceList[dev] = device
+            }else{
+                const iodd = await findIODD(this.vendorTable?.[vendorId], deviceId)
+                
+                const download = await downloadIODD(vendorId, iodd.ioddId)
+                
+                const defintion = await extractIODDXML(download)
+
+                const writePath = path.join(this.options.storagePath, `${dev}.xml`)
+                await fs.writeFile(writePath, defintion, 'utf8')
+                
+                device = {
+                    name: iodd.productName,
+                    version: iodd.versionString,
+                    ioLinkRev: iodd.ioLinkRev,
+                    iodd: writePath,
+                    cached: true
+                }
+
+                this.deviceList[dev] = device
             }
-
-            this.deviceList[dev] = device
         }
         return device;
     }
