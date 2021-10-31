@@ -32,6 +32,8 @@ export default class Server {
         [key: string]: UAObjectType
     } = {};
 
+    private commandEndpoint?: (value: Variant) => void;
+
     constructor(opts: ServerOpts){
         let discovery = {};
         if(opts.discoveryServer) discovery = {
@@ -72,14 +74,7 @@ export default class Server {
                 componentOf: this.controller,
                 minimumSamplingInterval: 500,
                 modellingRule: "Mandatory",
-                // value: {
-                //     get: function(this){
-                //         return new Variant({dataType: DataType.Double, value: 0.0});
-                //     },
-                //     set: function(this, variant: Variant){
-                //         console.log("SET VALUE", variant)
-                //     }
-                // }
+              
             })
             
         }
@@ -157,6 +152,7 @@ export default class Server {
                     //         }
                     //     ]
                     // })
+
 
                     for(var k in definition?.state){
                         this.namespace?.addAnalogDataItem({
@@ -251,6 +247,10 @@ export default class Server {
         }
     }
 
+    setComandEndpoint(callback: (value: Variant) => void){
+        this.commandEndpoint = callback
+    }
+
     async getDevice(name: string) {
         let browsePath = new BrowsePath({
             startingNode: getNodeId("RootFolder"),
@@ -282,19 +282,25 @@ export default class Server {
         await this.initializeObjectTypes();
         await this.server.start()
 
-        await this.controller?.instantiate({
+        const controller = await this.controller?.instantiate({
             browseName: "Machine",
             organizedBy: this.controllerFolder
         });
 
-        (this.controller?.getComponentByName("CommandPoint") as UAVariable).bindVariable({
+        const that = this;
+
+        (controller?.getComponentByName("CommandPoint") as UAVariable).bindVariable({
             get: function(this: UAVariable){
-                return new Variant({dataType: DataType.String, value: `${Math.random()}`})
+                return new Variant({dataType: DataType.String, value: ``})
             },
             set: function(this: UAVariable, value: Variant){
                 console.log(this, value)
+                
+                that.commandEndpoint?.(value)
+                
+                return StatusCodes.Good;
             }
-        })
+        }, true)
 
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
     }

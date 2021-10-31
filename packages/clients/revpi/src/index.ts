@@ -83,7 +83,8 @@ export class CommandClient {
 		this.network = new CommandNetwork({
 			baseURL: opts.commandCenter, 
 			valueBank: {
-				get: this.getByKey.bind(this)
+				get: this.getByKey.bind(this),
+				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
 			}
 		});
 

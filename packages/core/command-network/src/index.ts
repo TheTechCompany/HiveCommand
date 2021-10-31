@@ -9,7 +9,7 @@ export interface CommandNetworkOptions{
 	baseURL?: string;
 
 	valueBank?: {
-		request?: (id: string, port: string, value: any)=> void;
+		requestAction?: (device: string, action: string)=> void;
 		get: (device: string, key:string ) => any;
 	}
 }
@@ -36,7 +36,7 @@ export class CommandNetwork {
 	private buses: CommandBus[] = [];
 
 	private valueBank : {
-		request?: (id: string, port: string, value: any)=> void;
+		requestAction?: (device: string, action: string)=> void;
 		get?: (device: string, key: string) => any;
 	} = {}
 
@@ -46,7 +46,7 @@ export class CommandNetwork {
 		})
 
 		this.valueBank = {
-			request: opts.valueBank?.request,
+			requestAction: opts.valueBank?.requestAction,
 			get: opts.valueBank?.get
 		}
 	}
@@ -134,13 +134,23 @@ export class CommandNetwork {
 		return `${type}|${bus}|${port}`
 	}
 
+	request(variant: Variant){
+		if(this.valueBank.requestAction){
+			let parts = variant.value.toString().split('|')
+			if(!parts) return;
+			const [ device, action ] = parts;
+			this.valueBank.requestAction(device, action)
+		}
+	}
+
 	//Turn buses into OPC map
 	async initOPC(layout: AssignmentPayload[]){
 		console.log("INIT", this.buses)
 
-		await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
-			return new Variant({dataType: DataType.String, value: "Action"})
-		})
+		await this.opc?.setComandEndpoint(this.request.bind(this))
+		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
+		// 	return new Variant({dataType: DataType.String, value: "Action"})
+		// })
 
 		await Promise.all(layout.map(async (layout) => {
 			await this.opc?.addDevice({
