@@ -11,6 +11,7 @@ import { networkInterfaces } from 'os';
 
 import { getNodeId } from '@hive-command/opcua-utils'
 import { StatusCodes } from 'node-opcua';
+import { EUInformation } from 'node-opcua-types';
 
 export interface ServerOpts {
     productName: string;
@@ -63,7 +64,9 @@ export default class Server {
                 browseName: 'ControllerHw'                
             })
 
-            this.namespace.addDataItem({
+            this.namespace.addAnalogDataItem({
+                engineeringUnits: makeEUInformation('a',  "A", "Amps"),
+                engineeringUnitsRange: {low: 0, high: 100},
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
