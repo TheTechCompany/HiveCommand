@@ -76,6 +76,7 @@ export default class Server {
     }
 
     async addControllerInfo(key: string, type: DataType, getter: () => any){
+
         this.namespace?.addVariable({
             browseName: key,
             componentOf: this.controller,

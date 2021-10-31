@@ -138,6 +138,10 @@ export class CommandNetwork {
 	async initOPC(layout: AssignmentPayload[]){
 		console.log("INIT", this.buses)
 
+		await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
+			return "Action"
+		})
+
 		await Promise.all(layout.map(async (layout) => {
 			await this.opc?.addDevice({
 				name: layout.name,
