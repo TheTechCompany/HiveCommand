@@ -67,7 +67,12 @@ export default class Server {
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
-                modellingRule: "Mandatory"
+                modellingRule: "Mandatory",
+                value: {
+                    get: function(this){
+                        return new Variant({dataType: DataType.String, value: "Test"});
+                    }
+                }
             })
             
         }
