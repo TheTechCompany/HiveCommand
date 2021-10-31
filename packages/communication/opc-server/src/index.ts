@@ -64,9 +64,9 @@ export default class Server {
                 browseName: 'ControllerHw'                
             })
 
-            this.namespace.addAnalogDataItem({
-                engineeringUnits: makeEUInformation('a',  "A", "Amps"),
-                engineeringUnitsRange: {low: 0, high: 100},
+            this.namespace.addVariable({
+                // engineeringUnits: makeEUInformation('a',  "A", "Amps"),
+                // engineeringUnitsRange: {low: 0, high: 100},
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
