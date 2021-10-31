@@ -139,7 +139,7 @@ export class CommandNetwork {
 		console.log("INIT", this.buses)
 
 		await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
-			return "Action"
+			return new Variant({dataType: DataType.String, value: "Action"})
 		})
 
 		await Promise.all(layout.map(async (layout) => {
