@@ -57,6 +57,8 @@ export default class Server {
             this.controllerFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Controller'})
             this.deviceFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Devices'})
 
+            // this.namespace.addMethod
+
             this.controller = this.namespace.addObjectType({
                 browseName: 'ControllerHw'                
             })
@@ -115,6 +117,26 @@ export default class Server {
                         browseName: device.type,
                     })
                 
+                    if(!type) return;
+                    
+                    this.namespace?.addMethod(type, {
+                        browseName: "Set",
+                        inputArguments: [
+                            {
+                                name: "Value",
+                                description: {text: "Value"},
+                                dataType: DataType.Double,
+                            }
+                        ],
+                        outputArguments: [
+                            {
+                                name: 'Success',
+                                description: {text: 'Success'},
+                                dataType: DataType.Boolean,
+                                valueRank: 1
+                            }
+                        ]
+                    })
 
                     for(var k in definition?.state){
                         this.namespace?.addAnalogDataItem({
@@ -240,7 +262,7 @@ export default class Server {
         await this.initializeObjectTypes();
         await this.server.start()
         await this.controller?.instantiate({
-            browseName: "Controller",
+            browseName: "Machine",
             organizedBy: this.controllerFolder
         })
 
