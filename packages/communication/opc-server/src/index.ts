@@ -63,7 +63,7 @@ export default class Server {
                 browseName: 'ControllerHw'                
             })
 
-            this.namespace.addVariable({
+            this.namespace.addAnalogDataItem({
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
@@ -71,6 +71,9 @@ export default class Server {
                 value: {
                     get: function(this){
                         return new Variant({dataType: DataType.String, value: "Test"});
+                    },
+                    set: function(this, variant: Variant){
+                        console.log("SET VALUE", variant)
                     }
                 }
             })
