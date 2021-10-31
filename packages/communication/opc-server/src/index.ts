@@ -62,6 +62,14 @@ export default class Server {
             this.controller = this.namespace.addObjectType({
                 browseName: 'ControllerHw'                
             })
+
+            this.namespace.addVariable({
+                browseName: "CommandPoint",
+                dataType: DataType.String,
+                componentOf: this.controller,
+                modellingRule: "Mandatory"
+            })
+            
         }
     }
 
@@ -118,25 +126,25 @@ export default class Server {
                     })
                 
                     if(!type) return;
-                    
-                    this.namespace?.addMethod(type, {
-                        browseName: "Set",
-                        inputArguments: [
-                            {
-                                name: "Value",
-                                description: {text: "Value"},
-                                dataType: DataType.Double,
-                            }
-                        ],
-                        outputArguments: [
-                            {
-                                name: 'Success',
-                                description: {text: 'Success'},
-                                dataType: DataType.Boolean,
-                                valueRank: 1
-                            }
-                        ]
-                    })
+
+                    // this.namespace?.addMethod(type, {
+                    //     browseName: "Set",
+                    //     inputArguments: [
+                    //         {
+                    //             name: "Value",
+                    //             description: {text: "Value"},
+                    //             dataType: DataType.Double,
+                    //         }
+                    //     ],
+                    //     outputArguments: [
+                    //         {
+                    //             name: 'Success',
+                    //             description: {text: 'Success'},
+                    //             dataType: DataType.Boolean,
+                    //             valueRank: 1
+                    //         }
+                    //     ]
+                    // })
 
                     for(var k in definition?.state){
                         this.namespace?.addAnalogDataItem({
