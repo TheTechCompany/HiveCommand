@@ -70,15 +70,16 @@ export default class Server {
                 browseName: "CommandPoint",
                 dataType: DataType.String,
                 componentOf: this.controller,
+                minimumSamplingInterval: 500,
                 modellingRule: "Mandatory",
-                value: {
-                    get: function(this){
-                        return new Variant({dataType: DataType.String, value: "Test"});
-                    },
-                    set: function(this, variant: Variant){
-                        console.log("SET VALUE", variant)
-                    }
-                }
+                // value: {
+                //     get: function(this){
+                //         return new Variant({dataType: DataType.Double, value: 0.0});
+                //     },
+                //     set: function(this, variant: Variant){
+                //         console.log("SET VALUE", variant)
+                //     }
+                // }
             })
             
         }
@@ -280,9 +281,19 @@ export default class Server {
         await this.initializeFolders();
         await this.initializeObjectTypes();
         await this.server.start()
+
         await this.controller?.instantiate({
             browseName: "Machine",
             organizedBy: this.controllerFolder
+        });
+
+        (this.controller?.getComponentByName("CommandPoint") as UAVariable).bindVariable({
+            get: function(this: UAVariable){
+                return new Variant({dataType: DataType.String, value: `${Math.random()}`})
+            },
+            set: function(this: UAVariable, value: Variant){
+                console.log(this, value)
+            }
         })
 
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
