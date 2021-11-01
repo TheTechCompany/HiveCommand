@@ -374,7 +374,7 @@ export class CommandClient {
 		}).filter((a) => a != undefined)
 
 		
-
+		console.log("FLOWS", flows)
 		console.log(`Received command payload, starting state machine`)
 		this.machine = new CommandStateMachine({
 			processes: flows || []
