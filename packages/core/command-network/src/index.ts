@@ -119,7 +119,6 @@ export class CommandNetwork {
 
 	getDataValue = (type: string, value: any) => {
 		let v = value //typeof(value) == "object" ? value[key] : value;
-		console.log("GET DATA VAALUE", JSON.stringify(value))
 		switch(type){
 			case 'BooleanT':
 				return Boolean(v);
@@ -145,7 +144,6 @@ export class CommandNetwork {
 
 	//Turn buses into OPC map
 	async initOPC(layout: AssignmentPayload[]){
-		console.log("INIT", this.buses)
 
 		await this.opc?.setComandEndpoint(this.request.bind(this))
 		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
@@ -164,7 +162,6 @@ export class CommandNetwork {
 							type: this.getDataType(curr.type),
 							get: () => {
 								let value = this.valueBank.get?.(layout.name, curr.key);
-								console.log("GET DATA VALUE", curr, layout.name, value)
 								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
 							}
 						}

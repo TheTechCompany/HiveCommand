@@ -27,6 +27,12 @@ const machine = new CommandStateMachine({
 						blockType: 'timer',
 						timer: 10 * 1000
 					}
+				},
+				"0.3": {
+					id: '0.3',
+					extras: {
+						blockType: 'action',
+					}
 				}
 			},
 			links: {
@@ -40,11 +46,19 @@ const machine = new CommandStateMachine({
 				},
 				link3: {
 					source: '0.2',
+					target: '0.3'
+				},
+				links4: {
+					source: '0.3',
 					target: 'origin'
 				}
 			}
 		}
 	]
+}, {
+	performOperation: async (event) => {
+		console.log("perform op", event)
+	}
 });
 
 (async () => {

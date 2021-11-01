@@ -97,7 +97,6 @@ export class CommandClient {
 	}
 
 	getByKey(dev: string, key: string){
-		console.log("OPCUA Requests")
 		return this.machine?.state.getByKey(dev, key)
 	}
 
