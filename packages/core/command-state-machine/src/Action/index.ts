@@ -51,7 +51,7 @@ export class Action {
             case 'sub-process':
                 this.isRunning = true;
                 
-                let sub_process = this.process.sub_processes?.find((a) => a.id == this.node?.["sub-process"]);
+                let sub_process = this.process.sub_processes?.find((a) => a.id == this.node?.extras?.["sub-process"]);
                 if(sub_process){
                     let sub = new IOProcess(sub_process, this.runner, this.process)
                     const result = await sub.runOnce();
@@ -111,7 +111,7 @@ export class Action {
             case 'sub-process':
                 this.hasRun = false;
                 this.isRunning = true;
-                let sub_p = this.process.sub_processes?.find((a) => a.id == this.node?.["sub-process"])
+                let sub_p = this.process.sub_processes?.find((a) => a.id == this.node?.extras?.["sub-process"])
                 if(sub_p){
                     console.log(`Run sub-process ${sub_p.name}`)
                     let new_p = new IOProcess(sub_p, this.runner, this.process)
