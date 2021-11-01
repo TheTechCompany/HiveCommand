@@ -355,7 +355,7 @@ export class CommandClient {
 			name: flow?.name || '',
 			nodes: nodes || {},
 			links: paths || {},
-			sub_processes: subprocs
+			sub_processes: subprocs || []
 		}
 	}
 
