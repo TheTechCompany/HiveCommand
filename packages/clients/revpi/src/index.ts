@@ -345,10 +345,7 @@ export class CommandClient {
 		let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
 			if(!subproc.subprocess?.id) return;
 			return {...this.loadFlow(payload, subproc.subprocess?.id)}
-		}).reduce((prev, curr) => ({
-			...prev,
-			[curr?.id || '']: curr
-		}), {})
+		})
 
 		return {
 			id: flow?.id || '',
