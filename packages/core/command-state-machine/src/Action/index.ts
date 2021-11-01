@@ -65,10 +65,11 @@ export class Action {
                 
                 let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
                  
-                this.runner.timers[this.node.extras?.timer] = new Timer(timeout)
+                this.runner.timers[this.node.id] = new Timer(timeout)
                 
-                let timer : Timer = this.runner.timers[this.node.extras?.timer]
+                let timer : Timer = this.runner.timers[this.node.id]
 
+                setTimeout(() => {console.log("TIMER HAS RUN")}, timeout)
                 const timer_status = await timer.countDown()
                 this.hasRun = true;
                 this.isRunning = false;
