@@ -406,8 +406,6 @@ export class CommandClient {
 						let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
 						if(!targetDevice || !actuatorDevice) return;
 						
-					
-
 						let actuatorKey = actuatorDevice.state?.find((a) => a.key == pluginObject.actuatorField)
 						let targetKey = targetDevice.state?.find((a) => a.key == pluginObject.targetDeviceField)
 
@@ -415,7 +413,6 @@ export class CommandClient {
 						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
 						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
-						console.log(`Host: ${device.name}`, this.machine?.state.get(device.name))
 						let state = {
 							actuatorValue: actuatorValue || 0,
 							targetValue:  targetValue || 0,

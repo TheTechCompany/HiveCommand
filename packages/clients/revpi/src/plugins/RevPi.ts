@@ -77,10 +77,8 @@ export default class RevPiPlugin extends BasePlugin {
 	async subscribe(bus: string){
 		console.log("Subscribe to RevPI: ", bus)
 		this.subscription = setInterval(async () => {
-			console.log("Subscription Tick");
 
 			const allPorts = await this.readAll()
-			console.log("Subscription Result");
 
 			allPorts.forEach((port) => {
 				this.emit('PORT:VALUE', {
