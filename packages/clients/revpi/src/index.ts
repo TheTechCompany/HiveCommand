@@ -184,8 +184,8 @@ export class CommandClient {
 			{},
 			(state: any) => this.setState(event.device, state),
 			(operation: any) => {
-				console.log(operation);
-				// this.useAction(event.device, operation)	
+				// console.log(operation);
+				this.useAction(event.device, operation)	
 			}
 		)
 
