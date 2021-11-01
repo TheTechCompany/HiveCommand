@@ -180,11 +180,14 @@ export class CommandClient {
 		let id = nanoid();
 		console.time(`${id}-${action.key}`)
 		
-		// await driverFunction(
-		// 	{},
-		// 	(state: any) => this.setState(event.device, state),
-		// 	(operation: any) => this.useAction(event.device, operation)	
-		// )
+		await driverFunction(
+			{},
+			(state: any) => this.setState(event.device, state),
+			(operation: any) => {
+				console.log(operation);
+				this.useAction(event.device, operation)	
+			}
+		)
 
 		console.timeEnd(`${id}-${action.key}`)
 
