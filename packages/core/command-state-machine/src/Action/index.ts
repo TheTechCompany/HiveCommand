@@ -83,7 +83,7 @@ export class Action {
         console.log(`Exiting node ${this.node.extras?.blockType}`)
         switch(this.blockType){
             case 'timer':
-                this.runner.timers[this.node.extras?.timer].hasRun = false;
+                this.runner.timers[this.node.id].hasRun = false;
                 this.hasRun = false;
                 break;
             case 'sub-process':
