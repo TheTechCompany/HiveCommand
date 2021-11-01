@@ -1,12 +1,29 @@
 export interface PayloadResponse {
 	payload?: {
-		command: {
+		command: CommandPayloadItem[],
+		layout?: AssignmentPayload[]
+	}
+}
+
+export interface CommandPayloadItem {
+	
+		name: string,
+		id: string,
+		parent: {
+			id: string,
+			name: string
+		} | null,
+		nodes: {
 			id: string;
 			type: string;
 			configuration?: {
 				key: string;
 				value: string;
 			}[];
+			subprocess?: {
+				id: string,
+				name: string,
+			}
 			actions?: {
 				key: string,
 				target: string
@@ -24,8 +41,7 @@ export interface PayloadResponse {
 				}[]
 			}[]
 		}[]
-		layout?: AssignmentPayload[]
-	}
+	
 }
 
 export interface AssignmentPayload {

@@ -1,7 +1,7 @@
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandStateMachine, ProcessNode } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
-import { AssignmentPayload, CommandNetwork, PayloadResponse } from '@hive-command/network'
+import { AssignmentPayload, CommandNetwork, CommandPayloadItem, PayloadResponse } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
@@ -270,6 +270,8 @@ export class CommandClient {
 	getBlockType(type: string){
 		console.log("Get TYpe", type)
 		switch(type){
+			case 'Connect':
+				return 'sub-process';
 			case 'Trigger':
 			case 'Action':
 				return 'action';
@@ -280,15 +282,10 @@ export class CommandClient {
 		}
 	}
 
-	async loadMachine(commandPayload: PayloadResponse){
-		let payload = commandPayload.payload?.command;
-		let layout = commandPayload.payload?.layout;
+	loadFlow = (payload: CommandPayloadItem[], id: string) => {
+		let flow = payload.find((a) => a.id == id);
 
-		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
-
-		await this.loadPlugins(commandPayload.payload?.layout || []);
-
-		let nodes = (payload || []).map((action) : ProcessNode => {
+		let nodes = (flow)?.nodes.map((action) : ProcessNode => {
 			let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
 			let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
 
@@ -300,11 +297,12 @@ export class CommandClient {
 			// if(deviceId && operation){
 			// 	actions.push({device: deviceId, operation})
 			// }
-
+	
 			return {
 				id: action.type == "Trigger" ? "origin" : action.id,
 				extras: {
 					blockType: this.getBlockType(action.type) || 'action',
+					["sub-process"]: action?.subprocess?.id || undefined,
 					timer: action.configuration?.find((a) => a.key == 'timeout')?.value,
 					actions: actions
 				}
@@ -316,23 +314,22 @@ export class CommandClient {
 			}
 		}, {})
 
-		console.log(JSON.stringify(nodes))
 
-		let paths = payload?.map((action) => {
+		let paths = flow?.nodes.map((action) => {
 			return action.next?.map((next) => {
 				return {
 					id: next.id,
 					source: action.type == "Trigger" ? 'origin' : action.id,
 					target: next.target,
 					extras: {
-                        conditions: next.conditions?.map((cond) => ({
+						conditions: next.conditions?.map((cond) => ({
 							input: cond.input,
 							inputKey: cond.inputKey,
 							comparator: cond.comparator,
 							value: cond.assertion
 						}))
 	
-                    }
+					}
 				}
 			})
 			
@@ -345,15 +342,42 @@ export class CommandClient {
 			}
 		}, {})
 
+		let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
+			if(!subproc.subprocess?.id) return;
+			return {...this.loadFlow(payload, subproc.subprocess?.id)}
+		}).reduce((prev, curr) => ({
+			...prev,
+			[curr?.id || '']: curr
+		}), {})
+
+		return {
+			id: flow?.id || '',
+			name: flow?.name || '',
+			nodes: nodes || {},
+			links: paths || {},
+			sub_processes: subprocs
+		}
+	}
+
+	async loadMachine(commandPayload: PayloadResponse){
+		let payload = commandPayload.payload?.command;
+		let layout = commandPayload.payload?.layout;
+
+		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
+
+		await this.loadPlugins(commandPayload.payload?.layout || []);
+
+		const flows = payload?.filter((a) => a.parent == null).map((flow) => {
+			if(!payload) return {id: '', name: '', nodes: {}, links: {}};
+			return this.loadFlow(payload, flow.id)
+
+		}).filter((a) => a != undefined)
+
+		
+
 		console.log(`Received command payload, starting state machine`)
 		this.machine = new CommandStateMachine({
-			processes: [{
-				id: 'default',
-				name: 'Default',
-				nodes: nodes,
-				links: paths,
-				sub_processes: []
-			}]
+			processes: flows || []
 		}, {
 			performOperation: this.requestOperation
 		})

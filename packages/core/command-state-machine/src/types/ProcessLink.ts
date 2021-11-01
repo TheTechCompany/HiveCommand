@@ -3,9 +3,9 @@ import { TransitionCondition } from "./TransitionCondition";
 
 export interface ProcessNode {
 	id: string
-	"sub-process"?: string
 	extras?: {
 		timer?: any;
+		"sub-process"?: string;
 		blockType?: ProgramActionType;
 		actions?: ProgramAction[];
 	}
