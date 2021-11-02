@@ -415,7 +415,7 @@ export class CommandClient {
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
 		//TODO add manual/timer/stopped/auto states
-		// this.machine.start()
+		this.machine.start()
 
 
 		this.machine.on('TICK', async () => {
