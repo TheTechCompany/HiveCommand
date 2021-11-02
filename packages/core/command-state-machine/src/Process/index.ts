@@ -75,7 +75,7 @@ export class IOProcess extends EventEmitter{
         
         let current_action = this.actions.find((a) => a.id == this.current_state)
 
-        console.log("MOVE NEXT", current_action, current_action?.hasRun, sortedSteps)
+        // console.log("MOVE NEXT", current_action, current_action?.hasRun, sortedSteps)
         if((!current_action || current_action.hasRun) && sortedSteps.length > 0){ //!current_action || current_hasRun
             if(current_action) {
                 console.log(current_action.blockType)
@@ -231,6 +231,7 @@ export class IOProcess extends EventEmitter{
 
     nextPoints(current: string){
         let points : Transition[] = [];
+        console.log(this.process.links, current)
         Object.keys(this.process.links || {}).forEach((key) => {
             if(this.process.links?.[key].source == current){
                 points.push(new Transition(this.process.links?.[key]))
