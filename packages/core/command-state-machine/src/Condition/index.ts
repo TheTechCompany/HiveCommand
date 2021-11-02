@@ -45,8 +45,8 @@ export class Condition {
             value = `${value}`
         }
 
-        console.log("Checked", this.condition.comparator, "input", input, "value", value)
-        console.log("Type", typeof(input), typeof(value))
+        // console.log("Checked", this.condition.comparator, "input", input, "value", value)
+        // console.log("Type", typeof(input), typeof(value))
         switch(this.condition.comparator){
             case '>':
                 return input > value;
