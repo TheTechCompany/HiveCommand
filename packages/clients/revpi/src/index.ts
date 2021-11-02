@@ -352,7 +352,7 @@ export class CommandClient {
 			console.log(action.next)
 			return action.next?.map((next) => {
 				return {
-					id: next.id,
+					id: nanoid(),
 					source: action.type == "Trigger" ? 'origin' : action.id,
 					target: next.target,
 					extras: {
