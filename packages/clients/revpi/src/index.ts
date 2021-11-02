@@ -385,7 +385,9 @@ export class CommandClient {
 
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
-		this.machine.start()
+		//TODO add manual/timer/stopped/auto states
+		// this.machine.start()
+
 
 		this.machine.on('TICK', async () => {
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
