@@ -231,7 +231,7 @@ export class IOProcess extends EventEmitter{
 
     nextPoints(current: string){
         let points : Transition[] = [];
-        console.log(this.process.links, current)
+        // console.log(this.process.links, current)
         Object.keys(this.process.links || {}).forEach((key) => {
             if(this.process.links?.[key].source == current){
                 points.push(new Transition(this.process.links?.[key]))

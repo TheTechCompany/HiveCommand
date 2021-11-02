@@ -349,6 +349,7 @@ export class CommandClient {
 
 
 		let paths = flow?.nodes.map((action) => {
+			console.log(action.next)
 			return action.next?.map((next) => {
 				return {
 					id: next.id,
