@@ -1,5 +1,5 @@
 import { CommandIdentity } from '@hive-command/identity'
-import { CommandStateMachine, ProcessNode } from '@hive-command/state-machine'
+import { CommandStateMachine, CommandStateMachineMode, ProcessNode } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
 import { AssignmentPayload, CommandNetwork, CommandPayloadItem, PayloadResponse } from '@hive-command/network'
 import IOLinkPlugin from './plugins/IO-Link';
@@ -10,6 +10,7 @@ import { ValueBank } from './io-bus/ValueBank';
 import { getDeviceFunction, getPluginFunction } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
 import { DeviceMap } from './io-bus/DeviceMap';
+import { DataType, StatusCodes, Variant } from 'node-opcua';
 
 export interface CommandEnvironment {
 	id: string;
@@ -85,6 +86,34 @@ export class CommandClient {
 			valueBank: {
 				get: this.getByKey.bind(this),
 				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
+			},
+			controller: {
+				CommandPoint: {
+					type: DataType.String,
+					get: () => {
+						return new Variant({dataType: DataType.String, value: 'Enter Command'})
+					},
+					set: (value) => {
+						let parts = value.value.toString().split('|')
+						// if(!parts) return;
+						const [ device, action ] = parts;
+						
+						this.requestOperation({device, operation: action})
+
+						return StatusCodes.Good;
+					}
+				},
+				Mode: {
+					type: DataType.String,
+					get: () => {
+						return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
+					},
+					set: (value) => {
+						this.machine?.changeMode((CommandStateMachineMode as any)[value.value.toString().toUpperCase()])
+						return StatusCodes.Good;
+
+					}
+				}
 			}
 		});
 

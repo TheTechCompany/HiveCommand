@@ -17,6 +17,14 @@ export interface ServerOpts {
     productName: string;
     hostname?: string;
     discoveryServer?: string;
+
+    controller: {
+        [key: string]: {
+            type: DataType;
+            get: () => Variant;
+            set: (variant: Variant) => StatusCode;
+        }
+    }
 }
 
 export default class Server {
@@ -34,7 +42,11 @@ export default class Server {
 
     private commandEndpoint?: (value: Variant) => void;
 
+    private options : ServerOpts;
+
     constructor(opts: ServerOpts){
+        this.options = opts;
+
         let discovery = {};
         if(opts.discoveryServer) discovery = {
             discoveryServerEndpointUrl: opts.discoveryServer,
@@ -51,6 +63,23 @@ export default class Server {
         })
     }
 
+    async initializeController(){
+        this.controller = this.namespace?.addObjectType({
+            browseName: 'ControllerHw'                
+        })
+
+        Object.keys(this.options.controller || {}).forEach((key) => {
+            this.namespace?.addVariable({
+                browseName: key,
+                dataType: this.options.controller[key].type,
+                componentOf: this.controller,
+                minimumSamplingInterval: 500,
+                modellingRule: "Mandatory"
+            })
+        })
+       
+    }
+
     async initializeFolders(){
         const addressSpace = this.server.engine.addressSpace;
         if(addressSpace){
@@ -62,31 +91,11 @@ export default class Server {
 
             // this.namespace.addMethod
 
-            this.controller = this.namespace.addObjectType({
-                browseName: 'ControllerHw'                
-            })
-
-            this.namespace.addVariable({
-                // engineeringUnits: makeEUInformation('a',  "A", "Amps"),
-                // engineeringUnitsRange: {low: 0, high: 100},
-                browseName: "CommandPoint",
-                dataType: DataType.String,
-                componentOf: this.controller,
-                minimumSamplingInterval: 500,
-                modellingRule: "Mandatory",
-              
-            })
+            await this.initializeController();
             
         }
     }
 
-    initializeObjectTypes(){
-        if(this.namespace){
-            // this.objectTypes = ObjectTypes(this.namespace)
-        }
-//        valve(this.namespace!, this.deviceFolder!)
-//        this.namespace?.addObjectType(valve)
-    }
 
     getDeviceTypes(){
         return this.objectTypes;    
@@ -133,26 +142,6 @@ export default class Server {
                     })
                 
                     if(!type) return;
-
-                    // this.namespace?.addMethod(type, {
-                    //     browseName: "Set",
-                    //     inputArguments: [
-                    //         {
-                    //             name: "Value",
-                    //             description: {text: "Value"},
-                    //             dataType: DataType.Double,
-                    //         }
-                    //     ],
-                    //     outputArguments: [
-                    //         {
-                    //             name: 'Success',
-                    //             description: {text: 'Success'},
-                    //             dataType: DataType.Boolean,
-                    //             valueRank: 1
-                    //         }
-                    //     ]
-                    // })
-
 
                     for(var k in definition?.state){
                         this.namespace?.addAnalogDataItem({
@@ -203,52 +192,12 @@ export default class Server {
                 }
             if(!obj) return;
 
-            /*
-            (obj.getComponentByName("Input") as UAVariable).bindVariable({
-                    get: function(this: UAVariable){
-                        console.log("GET Var", this.parent?.displayName[0].text)
-                        return new Variant({dataType: DataType.Double, value: Math.random()})
-                    }
-            }, true)
-            
-            this.namespace?.addVariable({
-                browseName: "Inputs",
-                dataType: DataType.Double,
-                componentOf: obj,
-                minimumSamplingInterval: 100,
-                value: {
-                    get: function(this: UAVariable) {
-                        console.log("Random val", this.parent?.browseName.toString())
-                        return new Variant({dataType: DataType.Double, value: Math.random()})
-                    },
-                    set: function(this: UAVariable, value: Variant){
-                        console.log("SET", this.parent?.browseName.toString(), value.toString())
-                    }
-                }
-            })*/
-
             return{
                 device: obj,
                 type: obj.typeDefinitionObj.browseName.toString()
             }
 
-            /*
-            let dev_node = this.namespace?.addFolder(this.deviceFolder, {browseName: device.name})
-            this.namespace?.addVariable({
-                componentOf: dev_node,
-                browseName: "var",
-                nodeId: `s=${device.name}-var`,
-                dataType: 'Double',
-                minimumSamplingInterval: 1000,
-                value: {
-                    get: () => new Variant({dataType: 'Double', value: Math.random()})
-                }
-            })*/
         }
-    }
-
-    setComandEndpoint(callback: (value: Variant) => void){
-        this.commandEndpoint = callback
     }
 
     async getDevice(name: string) {
@@ -279,7 +228,7 @@ export default class Server {
     async start(){
         await this.server.initialize();
         await this.initializeFolders();
-        await this.initializeObjectTypes();
+
         await this.server.start()
 
         const controller = await this.controller?.instantiate({
@@ -289,18 +238,12 @@ export default class Server {
 
         const that = this;
 
-        (controller?.getComponentByName("CommandPoint") as UAVariable).bindVariable({
-            get: function(this: UAVariable){
-                return new Variant({dataType: DataType.String, value: ``})
-            },
-            set: function(this: UAVariable, value: Variant){
-                console.log(this, value)
-                
-                that.commandEndpoint?.(value)
-                
-                return StatusCodes.Good;
-            }
-        }, true)
+        Object.keys(this.options.controller || {}).forEach((key) => {
+            (controller?.getComponentByName(key) as UAVariable).bindVariable({
+                get: this.options.controller[key].get,
+                set: this.options.controller[key].set
+            }, true)
+        });
 
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
     }

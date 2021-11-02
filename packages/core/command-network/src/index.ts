@@ -1,6 +1,6 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
-import { DataType, StatusCodes, Variant } from 'node-opcua';
+import { DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
 import { AssignmentPayload, PayloadResponse } from './types';
 
 export * from './types'
@@ -8,6 +8,13 @@ export * from './types'
 export interface CommandNetworkOptions{
 	baseURL?: string;
 
+	controller: {
+		[key: string]: {
+			type: DataType;
+			get: () => Variant
+			set: (value: Variant) => StatusCode
+		}
+	}
 	valueBank?: {
 		requestAction?: (device: string, action: string)=> void;
 		get: (device: string, key:string ) => any;
@@ -40,7 +47,11 @@ export class CommandNetwork {
 		get?: (device: string, key: string) => any;
 	} = {}
 
+	private options : CommandNetworkOptions;
+
 	constructor(opts: CommandNetworkOptions){
+		this.options = opts;
+
 		this.httpInstance = axios.create({
 			baseURL: opts.baseURL || 'http://discovery.hexhive.io:8080'
 		})
@@ -145,7 +156,8 @@ export class CommandNetwork {
 	//Turn buses into OPC map
 	async initOPC(layout: AssignmentPayload[]){
 
-		await this.opc?.setComandEndpoint(this.request.bind(this))
+		// await this.opc?.setComandEndpoint(this.request.bind(this))
+		
 		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
@@ -304,7 +316,8 @@ export class CommandNetwork {
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
             hostname: credentials.hostname,
-			discoveryServer: credentials.discoveryServer
+			discoveryServer: credentials.discoveryServer,
+			controller: this.options.controller || {}
 		})
 
 

@@ -10,9 +10,18 @@ export interface CommandClient {
 
 }
 
+export enum CommandStateMachineMode {
+	AUTO,
+	MANUAL,
+	TIMER,
+	DISABLED
+}
+
 export class CommandStateMachine extends EventEmitter {
 
-	public state : State;;
+	public state : State;
+	
+	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED;
 
 	private running : boolean = true;
 
@@ -42,6 +51,10 @@ export class CommandStateMachine extends EventEmitter {
 		this.start = this.start.bind(this)
 	}
 
+	changeMode(mode: CommandStateMachineMode){
+		this.mode = mode;
+	}
+
 	get isRunning (){
 		return this.running
 	}
@@ -68,15 +81,18 @@ export class CommandStateMachine extends EventEmitter {
 		console.debug(`Starting State Machine`)
 
 		this.running = true;
+
 		while(this.running){
 			//Run all actions in current stage of execution
-			try{
-				const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-			}catch(e){
-				console.debug(e)
-			}
+			if(this.mode !== CommandStateMachineMode.DISABLED){
+				try{
+					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+				}catch(e){
+					console.debug(e)
+				}
 
-			const next = await Promise.all(this.processes.map((x) => x.moveNext()))
+				const next = await Promise.all(this.processes.map((x) => x.moveNext()))
+			}
 
 			this.emit('TICK')
 
