@@ -26,9 +26,10 @@ export class Condition {
             if(!isNaN(val)){
                 input = val;
             }
+            value = parseFloat(value)
             // console.log(input)
         }catch(e){
-
+            input = `${input}`
         }
 
         try{
@@ -38,7 +39,7 @@ export class Condition {
             }
             // console.log(value)
         }catch(e){
-
+            value = `${value}`
         }
 
         // console.log("Checked", this.condition.comparator, input, value)
