@@ -25,8 +25,9 @@ export class Condition {
             let val = parseFloat(input)
             if(!isNaN(val)){
                 input = val;
+            }else{
+                input = `${input}`
             }
-            value = parseFloat(value)
             // console.log(input)
         }catch(e){
             input = `${input}`
@@ -36,6 +37,8 @@ export class Condition {
             let val = parseFloat(value)
             if(!isNaN(val)){
                 value = val;
+            }else{
+                value = `${value}`
             }
             // console.log(value)
         }catch(e){
