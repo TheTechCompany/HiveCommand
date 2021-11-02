@@ -206,8 +206,9 @@ export class IOProcess extends EventEmitter{
             conds.forEach((cond) => {  
 
                 //Get input value from value bank valueBank[input][inputKey]
-                console.log(this.parent.state.get(cond.input_id))
+                console.log(this.parent.state.get(cond.input_id), cond.input_key)
                 const inputValue = this.templateValue(this.parent.state.getByKey(cond.input_id, cond.input_key))
+                console.log("IV", inputValue)
             
                 let checkValue = this.templateValue(cond.value_id)
 
