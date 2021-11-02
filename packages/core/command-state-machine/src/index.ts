@@ -86,7 +86,7 @@ export class CommandStateMachine extends EventEmitter {
 			//Run all actions in current stage of execution
 			if(this.mode !== CommandStateMachineMode.DISABLED){
 				try{
-					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+					const actions = Promise.all(this.processes.map(async (x) => x.doCurrent()))
 				}catch(e){
 					console.debug(e)
 				}
