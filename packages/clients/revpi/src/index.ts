@@ -117,6 +117,7 @@ export class CommandClient {
 			}
 		});
 
+		this.writeState = this.writeState.bind(this)
 		this.requestOperation = this.requestOperation.bind(this);
 		// this.machine = new CommandStateMachine({
 			
@@ -163,7 +164,7 @@ export class CommandClient {
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.environment.find((a) => a.id == bus)
 
-			await changes[bus].map(async (port) => {
+			await Promise.all(changes[bus].map(async (port) => {
 
 
 				let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
@@ -195,10 +196,10 @@ export class CommandClient {
 				
 				// }
 		
-				// console.log("WRITE", writeOp)
+				console.log("WRITE", port)
 				
 				await plugin?.write(bus, port.port, port.value);
-			})
+			}))
 		}))
 		
 	}
@@ -540,6 +541,8 @@ export class CommandClient {
 					// console.log("PLugin tick ", plugin.name)
 				}))
 			}))
+
+			await this.writeState()
 		})
 
 		console.log(`State machine started`)
