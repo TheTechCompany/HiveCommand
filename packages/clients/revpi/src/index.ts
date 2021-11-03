@@ -160,13 +160,17 @@ export class CommandClient {
 
 	async writeState(){
 		const changes = this.busMap.getChanged()
+
+		console.log("Changes", changes)
 		if(!changes) return;
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.environment.find((a) => a.id == bus)
 
+			console.log("Change bus", bus)
 			await Promise.all(changes[bus].map(async (port) => {
 
+				console.log("Change port", port)
 
 				let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
 
