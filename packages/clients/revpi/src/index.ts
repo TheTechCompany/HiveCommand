@@ -174,6 +174,7 @@ export class CommandClient {
 	setState(device: string, state: any){
 		// const busPort = this.deviceMap.getDeviceBusPort(device)
 
+		console.log("UPDATE DEV STATE", device, state)
 		this.machine?.state.update(device, {
 			...state
 		})
