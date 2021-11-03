@@ -477,7 +477,7 @@ export class CommandClient {
 							}
 						}
 
-						// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
+						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
 						pluginTick(plugin.instance, state, async (state) => {
 
