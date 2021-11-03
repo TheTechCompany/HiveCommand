@@ -33,7 +33,7 @@ export class IOProcess extends EventEmitter{
     }
 
     get name(){
-        return this.process.name
+        return this.process.id
     }
     
     get sub_processes(){

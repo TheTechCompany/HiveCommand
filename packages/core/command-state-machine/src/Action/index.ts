@@ -33,7 +33,7 @@ export class Action {
     }
 
     async onEnter(){
-        console.log(`Entering node ${this.node.extras?.blockType} ${this.node.id}`)
+        console.log(`Entering node ${this.node.extras?.blockType} ${this.node.id} ${this.process.name}`)
 
         switch(this.blockType){
             case 'action':
