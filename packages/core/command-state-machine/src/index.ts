@@ -86,13 +86,14 @@ export class CommandStateMachine extends EventEmitter {
 			//Run all actions in current stage of execution
 			if(this.mode !== CommandStateMachineMode.DISABLED){
 				try{
-					const actions = await Promise.all(this.processes.map(async (x) => x.doCurrent()))
+					const actions = Promise.all(this.processes.map(async (x) => x.doCurrent()))
 				}catch(e){
 					console.debug(e)
 				}
 
 				const next = await Promise.all(this.processes.map((x) => x.moveNext()))
 			}
+			console.log('MTICK')
 
 			this.emit('TICK')
 
