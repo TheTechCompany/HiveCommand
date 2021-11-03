@@ -80,7 +80,7 @@ export class Action {
     }
 
     async onExit(){
-        console.log(`Exiting node ${this.node.extras?.blockType} ${this.node.id}`)
+        console.log(`Exiting node ${this.node.extras?.blockType} ${this.node.id} ${this.process.name}`)
         switch(this.blockType){
             case 'timer':
                 this.runner.timers[this.node.id].hasRun = false;
