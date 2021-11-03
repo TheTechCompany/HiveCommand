@@ -52,6 +52,8 @@ export class CommandClient {
 	private deviceMap : DeviceMap;
 	// private portAssignment: AssignmentPayload[] = []
 
+	private busValues : any = {};
+
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
@@ -143,7 +145,9 @@ export class CommandClient {
 		if(typeof(event.value) == 'object'){
 			let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
 			if(!deviceName) return;
-			let prevState = this.machine?.state.get(deviceName)
+
+			let prevState = this.busValues[`${event.bus}-${event.port}`];
+			console.log("PREV STATE", prevState)
 			// let prevState = this.valueBank.get(event.bus, event.port)
 			event.value = {
 				...prevState,
@@ -288,6 +292,9 @@ export class CommandClient {
 
 			//TODO DEDUPE this
 			plugin?.on('PORT:VALUE', (event) => {
+				//TODO device(s) instead of device
+				//TODO add to bus port value bank
+
 				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
 				// console.log(device?.name, event.bus, event.port);
 				if(!device) return;
@@ -302,6 +309,8 @@ export class CommandClient {
 					}, {})
 
 				}
+
+				this.busValues[`${event.bus}-${event.port}`] = cleanState
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
