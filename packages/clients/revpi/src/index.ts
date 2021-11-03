@@ -445,6 +445,8 @@ export class CommandClient {
 
 		this.machine.on('TICK', async () => {
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
+				console.log("P TICK", device.name)
+
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
@@ -499,6 +501,8 @@ export class CommandClient {
 							})
 
 						})
+					}else{
+						console.log("PLUGIN NOT INSTANTIATED", plugin.name)
 					}
 					// console.log("PLugin tick ", plugin.name)
 				}))
