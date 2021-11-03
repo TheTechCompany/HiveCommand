@@ -42,10 +42,13 @@ export class BusMap extends EventEmitter{
 		let ix = bus.map((x) => x.port).indexOf(port)
 		if(ix > -1){
 			if(typeof(value) == "object"){
-				this.requests[id][ix].value = {
-					...this.requests[id][ix].value,
-					...value,
+				for(var k in value){
+					this.requests[id][ix].value[k] = value[k];
 				}
+				// this.requests[id][ix].value = {
+				// 	...this.requests[id][ix].value,
+				// 	...value,
+				// }
 			}else{
 				this.requests[id][ix].value = value;
 			}
