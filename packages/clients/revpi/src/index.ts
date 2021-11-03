@@ -165,6 +165,8 @@ export class CommandClient {
 		// if(typeof(event.value) == "object"){
 		
 		// }
+
+		console.log("WRITE", writeOp)
 		
 		await plugin?.write(event.bus, event.port, writeOp);
 	}
