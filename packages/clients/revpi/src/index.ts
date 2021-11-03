@@ -52,8 +52,6 @@ export class CommandClient {
 	private deviceMap : DeviceMap;
 	// private portAssignment: AssignmentPayload[] = []
 
-	private busValues : any = {};
-
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
@@ -139,22 +137,11 @@ export class CommandClient {
 		console.log("REQUESTING STATE FROM ", busPort?.bus, busPort?.port, event.value)
 		
 		if(!busPort?.bus) return;
+		
+		let prevState = this.busMap.get(busPort.bus, busPort.port)
 
 		let writeOp: any;
-
-		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
-		this.busMap.request(busPort.bus, busPort.port, event.value)
-
 		if(typeof(event.value) == 'object'){
-
-			let prevState = this.busValues[`${busPort?.bus}-${busPort?.port}`];
-			console.log("PREV STATE", prevState)
-			// let prevState = this.valueBank.get(event.bus, event.port)
-
-			// event.value = {
-			// 	...prevState,
-			// 	...event.value
-			// }
 
 			writeOp = {...prevState};
 			for(var k in event.value){
@@ -162,19 +149,58 @@ export class CommandClient {
 				if(!stateItem) continue;
 				writeOp[stateItem?.foreignKey] = event.value[k];
 			}
-
 		}else{
 			writeOp = event.value;
 		}
+		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
+		this.busMap.request(busPort.bus, busPort.port, writeOp)
+	}
 
-		// //An object value is a partial state to merge before sending else its a value
-		// if(typeof(event.value) == "object"){
-		
-		// }
+	async writeState(){
+		const changes = this.busMap.getChanged()
+		if(!changes) return;
 
-		console.log("WRITE", writeOp)
+		await Promise.all(Object.keys(changes).map(async (bus) => {
+			let busDevice = this.environment.find((a) => a.id == bus)
+
+			await changes[bus].map(async (port) => {
+
+
+				let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
+
+				// if(typeof(port.value) == 'object'){
+
+					
+				// 	console.log("PREV STATE", prevState)
+				// 	// let prevState = this.valueBank.get(event.bus, event.port)
 		
-		await plugin?.write(busPort?.bus, busPort?.port, writeOp);
+				// 	// event.value = {
+				// 	// 	...prevState,
+				// 	// 	...event.value
+				// 	// }
+		
+				// 	writeOp = {...prevState};
+				// 	for(var k in event.value){
+				// 		let stateItem = busPort?.state?.find((a) => a.key == k)
+				// 		if(!stateItem) continue;
+				// 		writeOp[stateItem?.foreignKey] = event.value[k];
+				// 	}
+		
+				// }else{
+				// 	writeOp = event.value;
+				// }
+		
+				// //An object value is a partial state to merge before sending else its a value
+				// if(typeof(event.value) == "object"){
+				
+				// }
+		
+				// console.log("WRITE", writeOp)
+				
+				await plugin?.write(bus, port.port, port.value);
+			})
+		}))
+		
 	}
 
 	setState(device: string, state: any){
@@ -319,8 +345,6 @@ export class CommandClient {
 				})
 				
 				this.busMap.set(event.bus, event.port, event.value);
-
-				this.busValues[`${event.bus}-${event.port}`] = event.value;
 				
 				// this.valueBank.set(event.bus, event.port, event.value)
 			})

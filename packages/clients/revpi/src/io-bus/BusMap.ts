@@ -23,6 +23,9 @@ export class BusMap extends EventEmitter{
 		//Reset lastValues
 
 		this.lastValues = this.values;
+		const reqs = {...this.requests};
+		this.requests = {};
+		return reqs;
 	}
 
 	get(id: string, port: string){
