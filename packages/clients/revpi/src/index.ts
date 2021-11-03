@@ -295,24 +295,30 @@ export class CommandClient {
 				//TODO device(s) instead of device
 				//TODO add to bus port value bank
 
-				let device = this.deviceMap.getDeviceByBusPort(event.bus, event.port)
+				let devices = this.deviceMap.getDevicesByBusPort(event.bus, event.port)
 				// console.log(device?.name, event.bus, event.port);
-				if(!device) return;
-				let cleanState = event.value;
-				if(typeof(event.value) == "object"){
+				if(!devices) return;
 
-					cleanState = device.state?.filter((a) => event.value[a.foreignKey] != undefined ).reduce((prev, curr) => {
-						return {
-							...prev,
-							[curr.key]: event.value[curr.foreignKey]
-						}
-					}, {})
 
-				}
+				devices.map((device) => {
+					let cleanState = event.value;
 
+					if(typeof(event.value) == "object"){
+
+						cleanState = device.state?.filter((a) => event.value[a.foreignKey] != undefined ).reduce((prev, curr) => {
+							return {
+								...prev,
+								[curr.key]: event.value[curr.foreignKey]
+							}
+						}, {})
+	
+					}
+	
+					this.machine?.state.update(device?.name, cleanState)
+				})
+				
 				this.busValues[`${event.bus}-${event.port}`] = event.value;
-
-				this.machine?.state.update(device?.name, cleanState)
+				
 				// this.valueBank.set(event.bus, event.port, event.value)
 			})
 		}))

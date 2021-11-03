@@ -66,6 +66,10 @@ export class DeviceMap {
 		return this.assignment.find((a) => a.id == id)
 	}
 
+	public getDevicesByBusPort(bus: string, port: string): AssignmentPayload[] {
+		return this.assignment.filter(assignment => assignment.bus === bus && assignment.port === port)
+	}
+
 	//Get assignment by bus and port
 	public getDeviceByBusPort(bus: string, port: string): AssignmentPayload | undefined {
 		return this.assignment.find(assignment => assignment.bus === bus && assignment.port === port)
