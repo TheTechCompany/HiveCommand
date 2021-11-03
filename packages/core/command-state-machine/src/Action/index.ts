@@ -75,7 +75,7 @@ export class Action {
                 this.isRunning = false;
                 return timer_status;
             default:
-                break;
+                return;
         }
     }
 
