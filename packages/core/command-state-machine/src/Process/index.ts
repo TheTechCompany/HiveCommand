@@ -140,35 +140,43 @@ export class IOProcess extends EventEmitter{
     async runOnce(){
         let origin = this.startPoint;
 
+        let finish : any = () => {};
         let finished = false;
 
+        let resolver = new Promise((resolve) => finish = resolve)
+
         this.actions.forEach((action) => {
+
             action.hasRun = false;
         })
 
-        while(this.hasNext() || !finished){
-            let action = this.actions.find((a) => a.id == this.current_state);
-            if(action){
-                if(!action.hasRun && !action.isRunning){
-                    await action.onEnter();
+        this.parent.on('TICK', async () => {
+            if(this.hasNext() || !finished){
+                let action = this.actions.find((a) => a.id == this.current_state);
+                if(action){
+                    if(!action.hasRun && !action.isRunning){
+                        await action.onEnter();
+                    }
+                }
+    
+                let next = this.checkNext();
+    
+                let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
+                if(priority.length > 0){
+                    await action?.onExit()
+    
+                    this.current_state = next[0].target
+    
+                    this.parent.updateState(this.process.id, this.current_state, this.parent_process?.process.id)
+    
+                }else{
+                    finish();
+                    finished = true;
                 }
             }
-
-            let next = this.checkNext();
-
-            let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
-            if(priority.length > 0){
-                await action?.onExit()
-
-                this.current_state = next[0].target
-
-                this.parent.updateState(this.process.id, this.current_state, this.parent_process?.process.id)
-
-            }else{
-                finished = true;
-            }
-        }
-            
+        })
+        
+        await resolver
         console.log("Done")
     }
 
