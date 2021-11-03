@@ -149,7 +149,7 @@ export class CommandClient {
 			let prevState = this.busValues[`${busPort?.bus}-${busPort?.port}`];
 			console.log("PREV STATE", prevState)
 			// let prevState = this.valueBank.get(event.bus, event.port)
-			
+
 			// event.value = {
 			// 	...prevState,
 			// 	...event.value
@@ -483,7 +483,7 @@ export class CommandClient {
 							console.log("KV", key, value)
 							if(!key) return;
 							let writeOp: any = {
-								[key?.foreignKey]: value
+								[key?.key]: value
 							};
 
 							console.log("WRITE", writeOp)
