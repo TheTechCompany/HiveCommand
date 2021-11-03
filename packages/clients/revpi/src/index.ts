@@ -491,7 +491,7 @@ export class CommandClient {
 							console.log("REQUEST STATE", state)
 
 							let value = state.actuatorValue;
-							let key = device.state?.find((a) => a.key == pluginObject.actuatorField)
+							let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
 
 							console.log("KV", key, value)
 							if(!key) return;
