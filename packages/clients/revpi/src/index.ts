@@ -144,7 +144,7 @@ export class CommandClient {
 		let writeOp: any;
 		if(typeof(event.value) == 'object'){
 
-			writeOp = {...prevState};
+			writeOp = {};
 			for(var k in event.value){
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 				if(!stateItem) continue;
@@ -153,6 +153,7 @@ export class CommandClient {
 		}else{
 			writeOp = event.value;
 		}
+
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
 		this.busMap.request(busPort.bus, busPort.port, writeOp)
 	}
@@ -169,9 +170,16 @@ export class CommandClient {
 
 				let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
 
-				// if(typeof(port.value) == 'object'){
+				let writeOp = port.value;
+				if(typeof(port.value) == 'object'){
 
+					let prevState = this.busMap.get(bus, port.port)
 					
+					writeOp = {...prevState};
+					for(var k in port.value){
+						writeOp[k] = port.value[k];
+					}
+				}
 				// 	console.log("PREV STATE", prevState)
 				// 	// let prevState = this.valueBank.get(event.bus, event.port)
 		
@@ -196,9 +204,9 @@ export class CommandClient {
 				
 				// }
 		
-				console.log("WRITE", port)
+				console.log("WRITE", port, writeOp)
 				
-				await plugin?.write(bus, port.port, port.value);
+				await plugin?.write(bus, port.port, writeOp);
 			}))
 		}))
 		
