@@ -136,8 +136,11 @@ export class CommandClient {
 		
 		if(!event.bus) return;
 
-		//An object value is a partial state to merge before sending else its a value
-		if(typeof(event.value) == "object"){
+		let writeOp: any;
+
+		let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
+
+		if(typeof(event.value) == 'object'){
 			let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
 			if(!deviceName) return;
 			let prevState = this.machine?.state.get(deviceName)
@@ -146,9 +149,24 @@ export class CommandClient {
 				...prevState,
 				...event.value
 			}
+
+			writeOp = {};
+			for(var k in event.value){
+				let stateItem = busPort?.state?.find((a) => a.key == k)
+				if(!stateItem) continue;
+				writeOp[stateItem?.foreignKey] = event.value[k];
+			}
+
+		}else{
+			writeOp = event.value;
 		}
+
+		// //An object value is a partial state to merge before sending else its a value
+		// if(typeof(event.value) == "object"){
 		
-		await plugin?.write(event.bus, event.port, event.value);
+		// }
+		
+		await plugin?.write(event.bus, event.port, writeOp);
 	}
 
 	setState(device: string, state: any){
@@ -169,26 +187,14 @@ export class CommandClient {
 				if value write directly
 			*/
 			
-			let writeOp: any;
-
-			if(typeof(operation) == 'object'){
-				writeOp = {};
-				for(var k in operation){
-					let stateItem = busPort.state?.find((a) => a.key == k)
-					if(!stateItem) continue;
-					writeOp[stateItem?.foreignKey] = operation[k];
-				}
-
-			}else{
-				writeOp = operation;
-			}
+		
 
 			await this.requestState({
 				bus: busPort?.bus,
 				port: busPort?.port,
-				value: writeOp
+				value: operation
 			})
-			console.log("OP", writeOp)
+			console.log("OP", operation)
 
 		}
 	}
