@@ -456,7 +456,7 @@ export class CommandClient {
 						actuatorField?: string;
 					}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
 					console.log("Plugin tick");
-					
+
 					if(plugin.instance){
 						const pluginTick = getPluginFunction(plugin.tick)
 						if(!pluginObject.targetDevice || !pluginObject.actuator) return;
@@ -472,6 +472,7 @@ export class CommandClient {
 							console.error("No actuator or target");
 							return;
 						} 
+						
 						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
 						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 

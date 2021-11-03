@@ -56,7 +56,7 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
-	state?: {key: string, type: string, foreignKey: string}[]
+	state?: {id: string, key: string, type: string, foreignKey: string}[]
 
 	type: string;
 	port: string
