@@ -444,9 +444,10 @@ export class CommandClient {
 
 
 		this.machine.on('TICK', async () => {
+			console.log("TICK")
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-
+				console.log("PTICK")
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
