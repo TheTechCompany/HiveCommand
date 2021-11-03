@@ -6,7 +6,7 @@ import IOLinkPlugin from './plugins/IO-Link';
 import RevPiPlugin from './plugins/RevPi';
 import { BasePlugin } from './plugins/Base';
 import IODDManager, { IODD } from '@io-link/iodd'
-import { ValueBank } from './io-bus/ValueBank';
+import { BusMap } from './io-bus/BusMap';
 import { getDeviceFunction, getPluginFunction } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
 import { DeviceMap } from './io-bus/DeviceMap';
@@ -43,12 +43,12 @@ export class CommandClient {
 
 	private ioddManager : IODDManager;
 
-	// private valueBank : ValueBank;
 
 	private options : CommandClientOptions;
 
 	private cycleTimer?: any;
 
+	private busMap : BusMap;
 	private deviceMap : DeviceMap;
 	// private portAssignment: AssignmentPayload[] = []
 
@@ -58,7 +58,7 @@ export class CommandClient {
 		this.options = opts;
 
 		this.deviceMap = new DeviceMap();
-		// this.valueBank = new ValueBank();
+		this.busMap = new BusMap();
 
 		// this.valueBank.on('REQUEST_STATE', this.requestState.bind(this))
 
@@ -143,6 +143,7 @@ export class CommandClient {
 		let writeOp: any;
 
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
+		this.busMap.set(busPort.bus, busPort.port, event.value)
 
 		if(typeof(event.value) == 'object'){
 
@@ -317,6 +318,8 @@ export class CommandClient {
 					this.machine?.state.update(device?.name, cleanState)
 				})
 				
+				this.busMap.set(event.bus, event.port, event.value);
+
 				this.busValues[`${event.bus}-${event.port}`] = event.value;
 				
 				// this.valueBank.set(event.bus, event.port, event.value)
