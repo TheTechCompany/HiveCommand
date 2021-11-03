@@ -131,30 +131,31 @@ export class CommandClient {
 		return this.machine?.state.getByKey(dev, key)
 	}
 
-	async requestState(event: {bus: string | null, port: string, value: any}){
-		let busDevice = this.environment.find((a) => a.id == event.bus)
+	async requestState(event: {device: string, value: any}){
+		let busPort = this.deviceMap.getDeviceBusPort(event.device)
+
+		let busDevice = this.environment.find((a) => a.id == busPort?.bus)
 		let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
-		console.log("REQUESTING STATE FROM ", event.bus, event.port, event.value)
+		console.log("REQUESTING STATE FROM ", busPort?.bus, busPort?.port, event.value)
 		
-		if(!event.bus) return;
+		if(!busPort?.bus) return;
 
 		let writeOp: any;
 
-		let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
+		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
 
 		if(typeof(event.value) == 'object'){
-			let deviceName = this.deviceMap.getDeviceName(event.bus, event.port)
-			if(!deviceName) return;
 
-			let prevState = this.busValues[`${event.bus}-${event.port}`];
+			let prevState = this.busValues[`${busPort?.bus}-${busPort?.port}`];
 			console.log("PREV STATE", prevState)
 			// let prevState = this.valueBank.get(event.bus, event.port)
-			event.value = {
-				...prevState,
-				...event.value
-			}
+			
+			// event.value = {
+			// 	...prevState,
+			// 	...event.value
+			// }
 
-			writeOp = {};
+			writeOp = {...prevState};
 			for(var k in event.value){
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 				if(!stateItem) continue;
@@ -172,7 +173,7 @@ export class CommandClient {
 
 		console.log("WRITE", writeOp)
 		
-		await plugin?.write(event.bus, event.port, writeOp);
+		await plugin?.write(busPort?.bus, busPort?.port, writeOp);
 	}
 
 	setState(device: string, state: any){
@@ -187,7 +188,7 @@ export class CommandClient {
 	async useAction(device: string, operation: any){
 		const busPort = this.deviceMap.getDeviceBusPort(device)
 
-		if(busPort?.bus && busPort?.port){
+		// if(busPort?.bus && busPort?.port){
 			/*
 				Test the operation value for object type
 				if object remap keys to busmap keys
@@ -197,13 +198,12 @@ export class CommandClient {
 		
 
 			await this.requestState({
-				bus: busPort?.bus,
-				port: busPort?.port,
+				device: device,
 				value: operation
 			})
 			console.log("OP", operation)
 
-		}
+		
 	}
 
 	//Request state + translator for name
@@ -310,7 +310,7 @@ export class CommandClient {
 
 				}
 
-				this.busValues[`${event.bus}-${event.port}`] = cleanState
+				this.busValues[`${event.bus}-${event.port}`] = event.value;
 
 				this.machine?.state.update(device?.name, cleanState)
 				// this.valueBank.set(event.bus, event.port, event.value)
@@ -488,8 +488,7 @@ export class CommandClient {
 
 							console.log("WRITE", writeOp)
 							await this.requestState({
-								bus: device?.bus,
-								port: device?.port,
+								device: device?.name,
 								value: writeOp
 							})
 
