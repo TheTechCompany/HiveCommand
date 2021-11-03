@@ -91,7 +91,7 @@ export class CommandStateMachine extends EventEmitter {
 					console.debug(e)
 				}
 
-				const next = await Promise.all(this.processes.map((x) => x.moveNext()))
+				const next = Promise.all(this.processes.map((x) => x.moveNext()))
 			}
 			console.log('MTICK')
 
