@@ -445,7 +445,7 @@ export class CommandClient {
 
 		this.machine.on('TICK', async () => {
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
-				console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
+				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
 
 				await Promise.all((device?.plugins || []).map(async (plugin) => {
 
@@ -455,7 +455,7 @@ export class CommandClient {
 						actuator?: string;
 						actuatorField?: string;
 					}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
-					console.log("Plugin tick");
+					// console.log("Plugin tick");
 
 					if(plugin.instance){
 						const pluginTick = getPluginFunction(plugin.tick)
@@ -484,7 +484,7 @@ export class CommandClient {
 							}
 						}
 
-						console.log("PLUGIN STATE", state, actuatorValue, targetValue)
+						// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
 						pluginTick(plugin.instance, state, async (state) => {
 
