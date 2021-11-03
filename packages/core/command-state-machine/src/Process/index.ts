@@ -162,7 +162,7 @@ export class IOProcess extends EventEmitter{
                 let next = this.checkNext();
     
                 let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
-                if(priority.length > 0){
+                if((!action || action.hasRun) && priority.length > 0){
                     await action?.onExit()
     
                     this.current_state = next[0].target
