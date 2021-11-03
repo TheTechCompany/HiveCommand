@@ -210,7 +210,7 @@ export class IOProcess extends EventEmitter{
                 // console.log(this.parent.state.get(cond.input_id), cond.input_key)
                 let input = this.parent.state.get(cond.input_id)[cond.input_key]
                 const inputValue = this.templateValue(`${input}`)
-                console.log("IV", inputValue)
+                console.trace("IV", inputValue)
             
                 let checkValue = this.templateValue(cond.value_id)
 
