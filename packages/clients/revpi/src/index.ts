@@ -554,7 +554,7 @@ export class CommandClient {
 				}))
 			}))
 
-			// await this.writeState()
+			await this.writeState()
 		})
 
 		console.log(`State machine started`)
