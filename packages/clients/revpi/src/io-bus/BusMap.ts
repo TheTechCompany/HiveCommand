@@ -4,6 +4,8 @@ export class BusMap extends EventEmitter{
 
 	private values: {[key: string]: {port: string, value: any}[]} = {};
 
+	private requests: {[key: string]: {port: string, value: any}[]} = {};
+
 	private lastValues : {[key: string]: {port: string, value: any}[]} = {};
 
 	constructor(){
@@ -28,7 +30,25 @@ export class BusMap extends EventEmitter{
 	}
 
 	request(id: string, port: string, value: any){
-		this.emit('REQUEST_STATE', {bus: id, port: port, value})
+		console.log("REQ", id, port, value)
+		
+		port = `${port}`
+
+		if(!this.requests[id]) this.requests[id] = [];
+		let bus = this.requests[id]
+		let ix = bus.map((x) => x.port).indexOf(port)
+		if(ix > -1){
+			if(typeof(value) == "object"){
+				this.requests[id][ix].value = {
+					...this.requests[id][ix].value,
+					...value,
+				}
+			}else{
+				this.requests[id][ix].value = value;
+			}
+		}else{
+			this.requests[id].push({port: port, value: value})
+		}
 	}
 
 	setMany(id: string, values: {port: string, value: string}[]){
@@ -38,7 +58,6 @@ export class BusMap extends EventEmitter{
 	}
 
 	set(id: string, port: string, value: any){
-		console.log("SET", id, port, value)
 		port = `${port}`
 
 		if(!this.values[id]) this.values[id] = [];

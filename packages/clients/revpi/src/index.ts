@@ -143,7 +143,7 @@ export class CommandClient {
 		let writeOp: any;
 
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
-		this.busMap.set(busPort.bus, busPort.port, event.value)
+		this.busMap.request(busPort.bus, busPort.port, event.value)
 
 		if(typeof(event.value) == 'object'){
 
