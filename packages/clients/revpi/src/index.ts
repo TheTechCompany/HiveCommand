@@ -465,14 +465,14 @@ export class CommandClient {
 						let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
 						if(!targetDevice || !actuatorDevice) return;
 						
-						let actuatorKey = actuatorDevice.state?.find((a) => a.key == pluginObject.actuatorField)
-						let targetKey = targetDevice.state?.find((a) => a.key == pluginObject.targetDeviceField)
+						let actuatorKey = actuatorDevice.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
+						let targetKey = targetDevice.state?.find((a) => a.id == pluginObject.targetDeviceField || a.key == pluginObject.targetDeviceField)
 
 						if(!actuatorKey || !targetKey){
 							console.error("No actuator or target");
 							return;
 						} 
-						
+
 						let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
 						let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
