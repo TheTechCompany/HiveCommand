@@ -42,7 +42,7 @@ export class Action {
                 let actions = this.node.extras?.actions || [];
                 let result = await Promise.all(actions.map((async (action: ProgramAction) => {
 					
-                    return await this.runner.performOperation(action.device, action.operation)
+                    return await this.runner.performOperation(action.device, action.release || false, action.operation)
                 })))
 
                 this.isRunning = false;
@@ -104,8 +104,9 @@ export class Action {
                 let actions = this.node.extras?.actions || [];
                 let result = await Promise.all(actions.map(async (action : ProgramAction) => {
 
-                    return await this.runner.performOperation(action.device, action.operation)
+                    return await this.runner.performOperation(action.device, action.release || false, action.operation)
                 }))
+                console.log("Action run")
                 this.isRunning = false;
                 this.hasRun = true;
                 return result;

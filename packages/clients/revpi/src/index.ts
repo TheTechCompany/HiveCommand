@@ -388,7 +388,8 @@ export class CommandClient {
 
 			let actions = action.actions?.map((action) => ({
 				device: action.target,
-				operation: action.key
+				operation: action.key,
+				release: action.release
 			}))
 
 			// if(deviceId && operation){
@@ -472,6 +473,7 @@ export class CommandClient {
 		console.log("FLOWS", flows)
 		console.log(`Received command payload, starting state machine`)
 		this.machine = new CommandStateMachine({
+			devices: layout?.map((x) => ({name: x.name, requiresMutex: x.requiresMutex})),
 			processes: flows || []
 		}, {
 			performOperation: this.requestOperation

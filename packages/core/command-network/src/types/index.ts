@@ -27,6 +27,7 @@ export interface CommandPayloadItem {
 			actions?: {
 				key: string,
 				target: string
+				release?: boolean;
 			}[],
 			next: {
 				target: string,
@@ -57,7 +58,7 @@ export interface AssignmentPayload {
 		}[]
 	}[]
 	state?: {id: string, key: string, type: string, foreignKey: string}[]
-
+	requiresMutex: boolean;
 	type: string;
 	port: string
 	bus: string

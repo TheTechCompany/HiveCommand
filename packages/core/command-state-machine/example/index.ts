@@ -1,4 +1,4 @@
-import {CommandStateMachine} from '../src'
+import {CommandStateMachine, CommandStateMachineMode} from '../src'
 
 const machine = new CommandStateMachine({
 	processes: [
@@ -25,7 +25,7 @@ const machine = new CommandStateMachine({
 					id: "0.2",
 					extras: {
 						blockType: 'timer',
-						timer: 10 * 1000
+						timer: 30 * 1000
 					}
 				},
 				"0.3": {
@@ -62,5 +62,5 @@ const machine = new CommandStateMachine({
 });
 
 (async () => {
-	machine.start()
+	machine.start(CommandStateMachineMode.AUTO)
 })()

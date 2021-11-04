@@ -2,6 +2,9 @@ import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
 import { State } from "./State";
+import { ProgramDevice } from "./types/ProgramDevice";
+import { Condition } from "./Condition";
+import { StateDevice } from "./Device";
 
 export * from './types'
 
@@ -29,6 +32,8 @@ export class CommandStateMachine extends EventEmitter {
 
 	private process_state: any = {};
 
+	private devices? : StateDevice[] = [];
+
     public timers: any = {
 
     };
@@ -36,11 +41,16 @@ export class CommandStateMachine extends EventEmitter {
 	private client : CommandClient;
 
 	constructor(program: {
+		initialState?: any;
+		devices?: ProgramDevice[]
 		processes: ProgramProcess[]
 	}, client: CommandClient){
 		super();
 
-		this.state = new State();
+
+		this.devices = program.devices?.map((x) => new StateDevice(x));
+
+		this.state = new State(program.initialState);
 
 		this.client = client;
 
@@ -49,6 +59,7 @@ export class CommandStateMachine extends EventEmitter {
 		this.processes = program.processes.map((x) => new IOProcess(x, this))
 
 		this.start = this.start.bind(this)
+		this.performOperation = this.performOperation.bind(this);
 	}
 
 	changeMode(mode: CommandStateMachineMode){
@@ -71,31 +82,75 @@ export class CommandStateMachine extends EventEmitter {
 	// 	return this.values[key]
 	// }
 
-	async performOperation(device: string, operation: string){
-		await this.client.performOperation({device, operation})
+	// checkCondition(device: string, deviceKey: string, comparator: string, value: any){
+	// 	let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
+	// 	let state = this.state.get(device);
+	// 	let input = state?.[deviceKey]
+	// 	return cond.check(input, value)
+	// }
+
+	async checkInterlocks(){
+		await this.devices?.filter((a) => a.hasInterlock).filter((device) => {
+			return device.checkInterlockNeeded(this.state.get(device.name))
+		}).map(async (device) => {
+
+			let locked = await device.checkInterlock(this.state.get(device.name))
+		
+			if(locked){
+				console.log("Reacting to lock");
+				await device.doFallback(this.performOperation)
+			}
+			console.log("DEVICE", device.name, "LOCKED", locked)
+		})	
+	}
+
+	async performOperation(deviceName: string, release?: boolean, operation?: string){
+		let device =  this.devices?.find((a) => a.name == deviceName)
+
+		if(device?.requiresMutex){
+			console.log("Requires mutex")
+			if(!release){
+				await device?.lock()
+				console.log("Mutext acquired")
+
+			}else{
+				await device?.unlock()
+				console.log("Mutext released")
+
+			}
+		}
+
+		if(operation){
+			await this.client.performOperation({device: deviceName, operation})
+		}
 		// this.emit('REQUEST:OPERATION', {device, operation})
 		// console.log(`Perform operation ${operation} on ${device}`)
 	}
 
-	async start(){
+	async start(mode?: CommandStateMachineMode){
 		console.debug(`Starting State Machine`)
+
+		if(mode != undefined) {
+			console.log(`Changing mode to ${mode}`)
+			this.mode = mode;
+		}
 
 		this.running = true;
 
 		while(this.running){
 			//Run all actions in current stage of execution
+
+			await this.checkInterlocks();
+
 			if(this.mode !== CommandStateMachineMode.DISABLED){
-				console.log("ACT")
 				try{
 					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
 				}catch(e){
 					console.debug(e)
 				}
 
-				console.log("CHECK")
 				const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
 			}
-			console.log('MTICK')
 
 			this.emit('TICK')
 
