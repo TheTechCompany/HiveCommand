@@ -20,7 +20,7 @@ export const getWord = (iodd_wordlist: {id: string, value: string}[], lookup : s
 export const convertIODD = (iodd: XMLIODD) : IODD => {
     const wordlist = iodd.IODevice.ExternalTextCollection[0].PrimaryLanguage[0].Text.map((x) => x.$)
 
-    console.log(iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_DAMPING")?.VariableRef)
+    console.log(iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_DAMPING"))
     return {
         identity: {
             ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
