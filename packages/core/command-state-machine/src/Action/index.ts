@@ -40,8 +40,8 @@ export class Action {
                 this.isRunning = true;
 
                 let actions = this.node.extras?.actions || [];
+
                 let result = await Promise.all(actions.map((async (action: ProgramAction) => {
-					
                     return await this.runner.performOperation(action.device, action.release || false, action.operation)
                 })))
 
@@ -75,6 +75,8 @@ export class Action {
                 this.isRunning = false;
                 return timer_status;
             default:
+                this.hasRun = true;
+                this.isRunning = false;
                 return;
         }
     }
@@ -93,6 +95,7 @@ export class Action {
                 this.hasRun = false;
                 break;
             default:
+                this.hasRun = false;
                 break;
         }
     }
