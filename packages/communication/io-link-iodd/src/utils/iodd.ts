@@ -20,12 +20,12 @@ export const getWord = (iodd_wordlist: {id: string, value: string}[], lookup : s
 export const convertIODD = (iodd: XMLIODD) : IODD => {
     const wordlist = iodd.IODevice.ExternalTextCollection[0].PrimaryLanguage[0].Text.map((x) => x.$)
 
-    console.log(iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_DAMPING"))
+    console.log(iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_Damping"))
     return {
         identity: {
             ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
         },
-        gradient: iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_DAMPING")?.VariableRef?.find((a) => a.$.variableId == "V_dAP")?.$.gradient || '1',
+        gradient: iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_Damping")?.VariableRef?.find((a) => a.$.variableId == "V_dAP")?.$.gradient || '1',
         function: {
             inputs: iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataIn.map((y) => ({
                 name: getWord(wordlist, y.Name[0].$.textId)?.value,
