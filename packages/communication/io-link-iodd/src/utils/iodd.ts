@@ -20,6 +20,7 @@ export const getWord = (iodd_wordlist: {id: string, value: string}[], lookup : s
 export const convertIODD = (iodd: XMLIODD) : IODD => {
     const wordlist = iodd.IODevice.ExternalTextCollection[0].PrimaryLanguage[0].Text.map((x) => x.$)
 
+    console.log(iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu)
     return {
         identity: {
             ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
