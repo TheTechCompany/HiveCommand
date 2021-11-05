@@ -24,6 +24,7 @@ export const convertIODD = (iodd: XMLIODD) : IODD => {
         identity: {
             ...iodd.IODevice.ProfileBody[0].DeviceIdentity[0].$
         },
+        gradient: iodd.IODevice.ProfileBody[0].DeviceFunction[0].UserInterface[0].MenuCollection[0].Menu.find((a) => a.$.id == "M_OR_DAMPING")?.VariableRef?.find((a) => a.$.variableId == "V_dAP")?.$.gradient || '1',
         function: {
             inputs: iodd.IODevice.ProfileBody[0].DeviceFunction[0].ProcessDataCollection[0].ProcessData[0].ProcessDataIn.map((y) => ({
                 name: getWord(wordlist, y.Name[0].$.textId)?.value,
@@ -54,7 +55,7 @@ export const convertIODD = (iodd: XMLIODD) : IODD => {
     }
 }
 
-export const createFilter = (iodd: IODDBits[]) : IODDFilter => {
+export const createFilter = (iodd: IODDBits[], gradient: number = 1) : IODDFilter => {
 
     return (value: string) => {
         let bin = toBinString(Buffer.from(value, 'hex'))
@@ -63,7 +64,7 @@ export const createFilter = (iodd: IODDBits[]) : IODDFilter => {
             let offset = parseInt(bit.offset)
             let slice = bin.substring(bin.length - offset, bin.length - (offset + parseInt(bit.length || '0')))
 
-            return {name: `${bit.name}-${bit.subindex}` || 'Name not found', value: binToInt(slice)}
+            return {name: `${bit.name}-${bit.subindex}` || 'Name not found', value: binToInt(slice) * gradient}
         })
         
         let obj : any = {}

@@ -69,7 +69,7 @@ export default class IOLinkPlugin extends BasePlugin {
 							let bits = y.bits;
 							bits.name = y.name;
 							return bits
-						})).reduce((prev, curr) => prev.concat(curr), []))
+						})).reduce((prev, curr) => prev.concat(curr), []), iodd.gradient ? parseFloat(iodd.gradient) : 1)
 
 						this.emit('PORT:VALUE', {
 							bus: subscription?.master,
@@ -91,7 +91,7 @@ export default class IOLinkPlugin extends BasePlugin {
 							let bits = y.bits;
 							bits.name = y.name;
 							return bits
-						})).reduce((prev, curr) => prev.concat(curr), []))
+						})).reduce((prev, curr) => prev.concat(curr), []), iodd.gradient ? parseFloat(iodd.gradient) : 1)
 
 						this.emit('PORT:VALUE', {
 							bus: subscription?.master,

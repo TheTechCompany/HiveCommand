@@ -4,6 +4,7 @@ export interface IODD {
         vendorName: string
         deviceId: string
     },
+    gradient: string;
     function: {
         inputs: {
             name?: string,
