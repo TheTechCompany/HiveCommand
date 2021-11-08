@@ -57,11 +57,20 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
-	state?: {id: string, key: string, type: string, foreignKey: string}[]
+	state?: AssignmentState[]
 	requiresMutex: boolean;
 	type: string;
 	port: string
 	bus: string
 	id: string
 	name: string
+}
+
+export interface AssignmentState {
+	id: string;
+	key: string;
+	type: string;
+	min?: number;
+	max?: number;
+	foreignKey: string;
 }

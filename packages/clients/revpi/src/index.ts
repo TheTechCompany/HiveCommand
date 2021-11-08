@@ -148,6 +148,12 @@ export class CommandClient {
 			for(var k in event.value){
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 				if(!stateItem) continue;
+				let value = event.value[k];
+				if(stateItem.max && stateItem.min){
+					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
+					if(value > stateItem.max) value = stateItem.max
+					if(value < stateItem.min) value = stateItem.min
+				}
 				writeOp[stateItem?.foreignKey] = event.value[k];
 			}
 		}else{
@@ -346,9 +352,15 @@ export class CommandClient {
 					if(typeof(event.value) == "object"){
 
 						cleanState = device.state?.filter((a) => event.value[a.foreignKey] != undefined ).reduce((prev, curr) => {
+							let value = event.value[curr.foreignKey]
+
+							if(curr.min && curr.max){
+								value = ((value - curr.min) / (curr.max - curr.min)) * 100
+							}
+
 							return {
 								...prev,
-								[curr.key]: event.value[curr.foreignKey]
+								[curr.key]: value //event.value[curr.foreignKey]
 							}
 						}, {})
 	
