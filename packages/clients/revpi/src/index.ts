@@ -355,7 +355,7 @@ export class CommandClient {
 							let value = event.value[curr.foreignKey]
 
 							if(curr.min && curr.max){
-								console.log("MIN MAXING")
+								console.log("MIN MAXING", value)
 								value = ((value - curr.min) / (curr.max - curr.min)) * 100
 								console.log("Min maxing", value, curr)
 							}
