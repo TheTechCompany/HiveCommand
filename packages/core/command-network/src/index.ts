@@ -196,11 +196,11 @@ export class CommandNetwork {
 					mode: {
 						type: DataType.String,
 						get: () => {
-							
+
 							return new Variant({dataType: DataType.String, value: "Automatic"})
 						}, 
 						set: () => {
-
+							console.log(`Change mode for ${layout.name}`)
 							return StatusCodes.Good;
 						}
 					}
