@@ -147,6 +147,7 @@ export class CommandClient {
 
 			writeOp = {};
 			for(var k in event.value){
+				console.log(k, busPort.state)
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 				if(!stateItem) continue;
 				let value = event.value[k];
