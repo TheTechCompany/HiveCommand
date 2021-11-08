@@ -186,6 +186,7 @@ export class CommandNetwork {
 							return StatusCodes.Good;
 						}
 					}
+					return opcPoint
 				}, {})
 			})
 		}))
