@@ -16,6 +16,7 @@ export interface CommandNetworkOptions{
 		}
 	}
 	valueBank?: {
+		requestState?: (device: string, key: string, value: any) => void;
 		requestAction?: (device: string, action: string)=> void;
 		get: (device: string, key:string ) => any;
 	}
@@ -43,6 +44,7 @@ export class CommandNetwork {
 	private buses: CommandBus[] = [];
 
 	private valueBank : {
+		requestState?: (device: string, key: string, value: any) => void;
 		requestAction?: (device: string, action: string)=> void;
 		get?: (device: string, key: string) => any;
 	} = {}
@@ -58,6 +60,7 @@ export class CommandNetwork {
 
 		this.valueBank = {
 			requestAction: opts.valueBank?.requestAction,
+			requestState: opts.valueBank?.requestState,
 			get: opts.valueBank?.get
 		}
 	}
@@ -183,6 +186,7 @@ export class CommandNetwork {
 					if(curr.writable){
 						opcPoint[curr.key].set = (variant: Variant) => {
 							console.log("OPC POINT", variant)
+							this.valueBank.requestState?.(layout.name, curr.key, variant.value)
 							return StatusCodes.Good;
 						}
 					}

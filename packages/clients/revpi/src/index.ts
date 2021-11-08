@@ -85,6 +85,7 @@ export class CommandClient {
 			baseURL: opts.commandCenter, 
 			valueBank: {
 				get: this.getByKey.bind(this),
+				requestState: async (device, key, value) => await this.requestState({device: device, value: {[key]: value}}),
 				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
 			},
 			controller: {
