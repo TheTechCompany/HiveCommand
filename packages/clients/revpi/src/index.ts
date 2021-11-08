@@ -156,7 +156,7 @@ export class CommandClient {
 					if(value > stateItem.max) value = stateItem.max
 					if(value < stateItem.min) value = stateItem.min
 				}
-				writeOp[stateItem?.foreignKey] = event.value[k];
+				writeOp[stateItem?.foreignKey] = value //event.value[k];
 			}
 		}else{
 			writeOp = event.value;
