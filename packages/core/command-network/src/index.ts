@@ -170,28 +170,41 @@ export class CommandNetwork {
 				name: layout.name,
 				type: layout.type
 			}, {
-				state: (layout.state || []).reduce((prev, curr) => {
-					let opcPoint: any = {
-						...prev,
-						[curr.key]: {
-							type: this.getDataType(curr.type),
-							get: () => {
-								let value = this.valueBank.get?.(layout.name, curr.key);
-								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
+				state: {
+					...(layout.state || []).reduce((prev, curr) => {
+						let opcPoint: any = {
+							...prev,
+							[curr.key]: {
+								type: this.getDataType(curr.type),
+								get: () => {
+									let value = this.valueBank.get?.(layout.name, curr.key);
+									return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
+								}
+								
 							}
-							
 						}
-					}
 
-					if(curr.writable){
-						opcPoint[curr.key].set = (variant: Variant) => {
-							console.log("OPC POINT", variant)
-							this.valueBank.requestState?.(layout.name, curr.key, variant.value)
+						if(curr.writable){
+							opcPoint[curr.key].set = (variant: Variant) => {
+								console.log("OPC POINT", variant)
+								this.valueBank.requestState?.(layout.name, curr.key, variant.value)
+								return StatusCodes.Good;
+							}
+						}
+						return opcPoint
+					}, {}),
+					mode: {
+						type: DataType.String,
+						get: () => {
+							
+							return new Variant({dataType: DataType.String, value: "Automatic"})
+						}, 
+						set: () => {
+
 							return StatusCodes.Good;
 						}
 					}
-					return opcPoint
-				}, {})
+				},
 			})
 		}))
 
