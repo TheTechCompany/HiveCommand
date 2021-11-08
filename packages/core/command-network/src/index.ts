@@ -168,7 +168,7 @@ export class CommandNetwork {
 				type: layout.type
 			}, {
 				state: (layout.state || []).reduce((prev, curr) => {
-					return {
+					let opcPoint: any = {
 						...prev,
 						[curr.key]: {
 							type: this.getDataType(curr.type),
@@ -176,6 +176,14 @@ export class CommandNetwork {
 								let value = this.valueBank.get?.(layout.name, curr.key);
 								return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
 							}
+							
+						}
+					}
+
+					if(curr.writable){
+						opcPoint[curr.key].set = (variant: Variant) => {
+							console.log("OPC POINT", variant)
+							return StatusCodes.Good;
 						}
 					}
 				}, {})

@@ -70,6 +70,7 @@ export interface AssignmentState {
 	id: string;
 	key: string;
 	type: string;
+	writable?: boolean;
 	min?: number;
 	max?: number;
 	foreignKey: string;
