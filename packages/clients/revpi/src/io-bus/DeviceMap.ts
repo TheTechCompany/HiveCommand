@@ -3,9 +3,11 @@ import PIDController from "node-pid-controller";
 
 export class DeviceMap {
 	private assignment: AssignmentPayload[];
+	private modeSet : (AssignmentPayload & {mode: string})[];
 
 	constructor(assignment?: AssignmentPayload[]){
 		this.assignment = assignment = [];
+		this.modeSet = (assignment.map((assignment) => ({...assignment, mode: "Automatic"})) || []);
 	}
 
 	public setAssignment(assignment: AssignmentPayload[]){
@@ -44,6 +46,19 @@ export class DeviceMap {
 
 			console.log("PLugin init ", plugin.name, pluginObject)
 		}))
+	}
+
+	//Get device mode
+	public getDeviceModeByName(name: string){
+		return this.modeSet.find(assignment => assignment.name === name)?.mode
+	}
+
+	//Set device mode
+	public setDeviceModeByName(name: string, mode: string){
+		let ix = this.modeSet.map((x) => x.name).indexOf(name);
+		if(ix > -1){
+			this.modeSet[ix].mode = mode
+		}
 	}
 
 	//Get device index

@@ -5,6 +5,14 @@ import { AssignmentPayload, PayloadResponse } from './types';
 
 export * from './types'
 
+export interface ValueBankInterface {
+	getDeviceMode?: (device: string) => any;
+	setDeviceMode?: (device: string, mode: string) => any;
+
+	requestState?: (device: string, key: string, value: any) => void;
+	requestAction?: (device: string, action: string)=> void;
+	get?: (device: string, key:string ) => any;
+}
 export interface CommandNetworkOptions{
 	baseURL?: string;
 
@@ -15,11 +23,7 @@ export interface CommandNetworkOptions{
 			set: (value: Variant) => StatusCode
 		}
 	}
-	valueBank?: {
-		requestState?: (device: string, key: string, value: any) => void;
-		requestAction?: (device: string, action: string)=> void;
-		get: (device: string, key:string ) => any;
-	}
+	valueBank?: ValueBankInterface
 }
 
 export interface CommandBus {
@@ -43,11 +47,7 @@ export class CommandNetwork {
 
 	private buses: CommandBus[] = [];
 
-	private valueBank : {
-		requestState?: (device: string, key: string, value: any) => void;
-		requestAction?: (device: string, action: string)=> void;
-		get?: (device: string, key: string) => any;
-	} = {}
+	private valueBank : ValueBankInterface = {}
 
 	private options : CommandNetworkOptions;
 
@@ -59,9 +59,7 @@ export class CommandNetwork {
 		})
 
 		this.valueBank = {
-			requestAction: opts.valueBank?.requestAction,
-			requestState: opts.valueBank?.requestState,
-			get: opts.valueBank?.get
+			...opts.valueBank
 		}
 	}
 
@@ -197,10 +195,11 @@ export class CommandNetwork {
 						type: DataType.String,
 						get: () => {
 
-							return new Variant({dataType: DataType.String, value: "Automatic"})
+							return new Variant({dataType: DataType.String, value: this.valueBank.getDeviceMode?.(layout.name) || "Automatic"})
 						}, 
-						set: () => {
+						set: (variant: Variant) => {
 							console.log(`Change mode for ${layout.name}`)
+							this.valueBank.setDeviceMode?.(layout.name, variant.value.toString())
 							return StatusCodes.Good;
 						}
 					}
