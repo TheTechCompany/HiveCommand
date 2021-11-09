@@ -85,6 +85,8 @@ export class CommandClient {
 			baseURL: opts.commandCenter, 
 			valueBank: {
 				get: this.getByKey.bind(this),
+				getDeviceMode: this.getDeviceMode.bind(this),
+				setDeviceMode: this.setDeviceMode.bind(this), 
 				requestState: async (device, key, value) => await this.requestState({device: device, value: {[key]: value}}),
 				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
 			},
@@ -125,6 +127,14 @@ export class CommandClient {
 		// });
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
+	}
+
+	getDeviceMode(device: string){
+		return this.deviceMap.getDeviceModeByName(device)
+	}
+
+	setDeviceMode(device: string, mode: string){
+		return this.deviceMap.setDeviceModeByName(device, mode)
 	}
 
 	getByKey(dev: string, key: string){
