@@ -55,6 +55,7 @@ export class DeviceMap {
 
 	//Set device mode
 	public setDeviceModeByName(name: string, mode: string){
+		console.log("SET BY NAME", this.modeSet, name, mode)
 		let ix = this.modeSet.map((x) => x.name).indexOf(name);
 		if(ix > -1){
 			this.modeSet[ix].mode = mode
