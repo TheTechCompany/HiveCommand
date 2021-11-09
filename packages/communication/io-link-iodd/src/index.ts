@@ -55,7 +55,7 @@ export default class IODDStore {
         let device = this.deviceList[dev]
         if(!device) {
 
-            if(statSync(path.join(this.options.storagePath, `${dev}.xml`))){
+            if(existsSync(path.join(this.options.storagePath, `${dev}.xml`))){
                 let info = readFileSync(path.join(this.options.storagePath, `${dev}.xml`), 'utf8')
                 const xmliodd = await parseIODD(info)
                 const iodd = convertIODD(xmliodd)
