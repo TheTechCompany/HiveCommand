@@ -68,13 +68,13 @@ export class Action {
                 console.time(`Timer ${id}`)
                 
                 let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
-                console.log("TIMER", timeout)
                  
                 this.runner.timers[this.node.id] = new Timer(timeout)
                 
                 let timer : Timer = this.runner.timers[this.node.id]
 
-                // setTimeout(() => {console.log("TIMER HAS RUN")}, timeout)
+                console.log("TIMER", timeout)
+                 setTimeout(() => {console.log("TIMER WILL RUN")}, 1000)
                 const timer_status = await timer.countDown()
                 console.timeEnd(`Timer ${id}`)
 
