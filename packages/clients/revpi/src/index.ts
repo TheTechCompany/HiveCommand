@@ -506,7 +506,7 @@ export class CommandClient {
 				interlock: {
 					state: {},
 					// state: {on: true},
-					locks: x.interlocks?.map((lock) => ({
+					locks: (x.interlocks || []).map((lock) => ({
 						device: lock.input.name,
 						deviceKey: lock.inputKey.key,
 						comparator: lock.comparator,
