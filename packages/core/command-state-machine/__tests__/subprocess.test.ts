@@ -142,13 +142,13 @@ describe('Subprocess as a blockType', () => {
 									"sub-process": 'sub1'
 								}
 							},
-							"0.3": {
-								id: '0.3',
-								extras: {
-									blockType: 'timer',
-									timer: 1 * 1000
-								}
-							},
+							// "0.3": {
+							// 	id: '0.3',
+							// 	extras: {
+							// 		blockType: 'timer',
+							// 		timer: 1 * 1000
+							// 	}
+							// },
 							'0.4': {
 								id: '0.4',
 								extras: {
@@ -259,16 +259,12 @@ describe('Subprocess as a blockType', () => {
 							},
 							link3: {
 								source: '0.2',
-								target: '0.3',
+								target: '0.4',
 								extras: {
 									conditions: []
 								}
 							},
 							link4: {
-								source: '0.3',
-								target: '0.4'
-							},
-							links5: {
 								source: '0.4',
 								target: '0.2'
 							}

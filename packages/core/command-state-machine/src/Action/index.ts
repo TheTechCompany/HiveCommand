@@ -68,6 +68,7 @@ export class Action {
                 console.time(`Timer ${id}`)
                 
                 let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
+                console.log("TIMER", timeout)
                  
                 this.runner.timers[this.node.id] = new Timer(timeout)
                 
