@@ -153,29 +153,35 @@ export class IOProcess extends EventEmitter{
         await new Promise((resolve) => {
             this.parent.on('TICK', async () => {
                 if(this.hasNext() || !finished){
-                    let action = this.actions.find((a) => a.id == this.current_state);
-                    if(action){
-                        if(!action.hasRun && !action.isRunning){
-                            await action.onEnter();
-                        }
-                    }
+
+                    await this.doCurrent();
+
+
+                    await this.moveNext();
+
+                    // let action = this.actions.find((a) => a.id == this.current_state);
+                    // if(action){
+                    //     if(!action.hasRun && !action.isRunning){
+                    //         await action.onEnter();
+                    //     }
+                    // }
         
-                    let next = this.checkNext();
+                    // let next = this.checkNext();
         
-                    let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
-                    if((!action || action.hasRun) && priority.length > 0){
-                        await action?.onExit()
+                    // let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
+                    // if((!action || action.hasRun) && priority.length > 0){
+                    //     await action?.onExit()
         
-                        this.current_state = next[0].target
+                    //     this.current_state = next[0].target
         
-                        this.parent.updateState(this.process.id, this.current_state, this.parent_process?.process.id)
+                    //     this.parent.updateState(this.process.id, this.current_state, this.parent_process?.process.id)
         
-                    }
+                    // }
                     
-                    if(priority.length == 0){
-                        resolve(true);
-                        finished = true;
-                    }
+                    // if(priority.length == 0){
+                    //     resolve(true);
+                    //     finished = true;
+                    // }
                 }
             })
         })
