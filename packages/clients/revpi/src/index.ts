@@ -179,8 +179,8 @@ export class CommandClient {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		console.log("Changes", changes)
-		if(!changes) return;
+		if(Object.keys(changes).length > 0)console.log("Changes", changes)
+		if(Object.keys(changes).length < 1) return;
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.environment.find((a) => a.id == bus)
