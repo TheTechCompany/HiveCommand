@@ -64,7 +64,7 @@ export const createFilter = (iodd: IODDBits[], gradient: number = 1) : IODDFilte
         let iodd_blob = iodd.map((bit) => {
             let offset = parseInt(bit.offset)
             let slice = bin.substring(bin.length - offset, bin.length - (offset + parseInt(bit.length || '0')))
-            console.log(bit.name, slice)
+            // console.log(bit.name, slice)
             
             let value = binToInt(slice)
 
