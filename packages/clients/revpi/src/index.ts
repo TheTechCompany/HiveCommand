@@ -504,7 +504,7 @@ export class CommandClient {
 				name: x.name, 
 				requiresMutex: x.requiresMutex,
 				interlock: {
-					state: {},
+					state: {on: 'true'},
 					// state: {on: true},
 					locks: (x.interlocks || []).map((lock) => ({
 						device: lock.input.name,
