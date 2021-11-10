@@ -23,7 +23,7 @@ describe('State Machine Timers', () => {
 								id: "0.2",
 								extras: {
 									blockType: 'timer',
-									timer: 2 * 1000
+									timer: 5 * 1000
 								}
 							},
 							"0.3": {

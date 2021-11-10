@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import { CommandStateMachine } from "..";
 import { IOProcess } from "../Process";
 import { Timer } from "../Timer";
@@ -62,6 +63,9 @@ export class Action {
             break;
             case 'timer':
                 this.isRunning = true;
+                let id = nanoid();
+
+                console.time(`Timer ${id}`)
                 
                 let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
                  
@@ -69,14 +73,16 @@ export class Action {
                 
                 let timer : Timer = this.runner.timers[this.node.id]
 
-                setTimeout(() => {console.log("TIMER HAS RUN")}, timeout)
+                // setTimeout(() => {console.log("TIMER HAS RUN")}, timeout)
                 const timer_status = await timer.countDown()
+                console.timeEnd(`Timer ${id}`)
+
                 this.hasRun = true;
                 this.isRunning = false;
                 return timer_status;
             default:
                 this.hasRun = true;
-                this.isRunning = false;
+                // this.isRunning = false;
                 return;
         }
     }
