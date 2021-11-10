@@ -101,7 +101,6 @@ export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
             let length = parseInt(bit.length)
             let val = value[`${bit.name}-${bit.subindex}`] || 0
 
-            console.log(val)
 
             return parseInt(val).toString(16).padStart(length / 4, '0').toUpperCase()
 
@@ -109,7 +108,6 @@ export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
             // return intToBin(val, length)
         }).join('')
 
-        console.log(values)
 
         return values
 
