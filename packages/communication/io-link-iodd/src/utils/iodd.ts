@@ -68,7 +68,7 @@ export const createFilter = (iodd: IODDBits[], gradient: number = 1) : IODDFilte
             
             let value = binToInt(slice)
 
-            if(bit.type == "UIntegerT") {
+            if(bit.type == "IntegerT") {
                 value = (value << 16) >> 16
             }
 
