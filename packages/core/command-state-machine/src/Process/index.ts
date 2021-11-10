@@ -159,6 +159,11 @@ export class IOProcess extends EventEmitter{
 
                     await this.moveNext();
 
+                    if(!this.hasNext()){
+                        resolve(true)
+                        finished = true;
+                    }
+
                     // let action = this.actions.find((a) => a.id == this.current_state);
                     // if(action){
                     //     if(!action.hasRun && !action.isRunning){
