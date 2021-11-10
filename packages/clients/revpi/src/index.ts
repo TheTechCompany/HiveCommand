@@ -179,16 +179,16 @@ export class CommandClient {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		if(Object.keys(changes).length > 0)console.log("Changes", changes)
+		// if(Object.keys(changes).length > 0)console.log("Changes", changes)
 		if(Object.keys(changes).length < 1) return;
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.environment.find((a) => a.id == bus)
 
-			console.log("Change bus", bus)
+			// console.log("Change bus", bus)
 			await Promise.all(changes[bus].map(async (port) => {
 
-				console.log("Change port", port)
+				// console.log("Change port", port)
 
 				let plugin = this.plugins.find((a) => a.TAG == busDevice?.type)
 
@@ -226,7 +226,7 @@ export class CommandClient {
 				
 				// }
 		
-				console.log("WRITE", port, writeOp)
+				// console.log("WRITE", port, writeOp)
 				
 				await plugin?.write(bus, port.port, writeOp);
 			}))
@@ -571,18 +571,18 @@ export class CommandClient {
 
 						pluginTick(plugin.instance, state, async (state) => {
 
-							console.log("REQUEST STATE", state)
+							// console.log("REQUEST STATE", state)
 
 							let value = state.actuatorValue;
 							let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
 
-							console.log("KV", key, value)
+							// console.log("KV", key, value)
 							if(!key) return;
 							let writeOp: any = {
 								[key?.key]: value
 							};
 
-							console.log("WRITE", writeOp)
+							// console.log("WRITE", writeOp)
 							await this.requestState({
 								device: device?.name,
 								value: writeOp

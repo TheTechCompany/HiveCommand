@@ -33,7 +33,6 @@ export class BusMap extends EventEmitter{
 	}
 
 	request(id: string, port: string, value: any){
-		console.log("REQ", id, port, value)
 		
 		port = `${port}`
 
