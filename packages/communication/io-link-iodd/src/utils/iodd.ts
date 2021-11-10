@@ -65,7 +65,14 @@ export const createFilter = (iodd: IODDBits[], gradient: number = 1) : IODDFilte
             let offset = parseInt(bit.offset)
             let slice = bin.substring(bin.length - offset, bin.length - (offset + parseInt(bit.length || '0')))
             console.log(bit.name, slice)
-            return {name: `${bit.name}-${bit.subindex}` || 'Name not found', value: binToInt(slice) * gradient}
+            
+            let value = binToInt(slice)
+
+            if(bit.type == "UIntegerT") {
+                value = (value << 16) >> 16
+            }
+
+            return {name: `${bit.name}-${bit.subindex}` || 'Name not found', value: value * gradient}
         })
         
         let obj : any = {}

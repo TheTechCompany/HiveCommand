@@ -2,14 +2,14 @@ import Controller from "node-pid-controller";
 
 const controller = new Controller({
 	k_p: 0.5,
-	k_i: 0.005,
-	k_d: 0.05,
+	k_i: 0.001,
+	k_d: 0.01,
 	dt: 1
 })
 
 
 //12L/min
-controller.setTarget(120)
+controller.setTarget(10)
 
 let output = 1;
 
