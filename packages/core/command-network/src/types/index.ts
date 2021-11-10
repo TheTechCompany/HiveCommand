@@ -57,6 +57,14 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
+	interlocks?: {
+		id: string,
+		input: {id: string, name: string},
+		inputKey: {id: string, key: string, type: string},
+		comparator: string,
+		assertion: string,
+		action: {id: string, key: string}
+	}[]
 	state?: AssignmentState[]
 	requiresMutex: boolean;
 	type: string;

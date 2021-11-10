@@ -500,7 +500,22 @@ export class CommandClient {
 		console.log("FLOWS", flows)
 		console.log(`Received command payload, starting state machine`)
 		this.machine = new CommandStateMachine({
-			devices: layout?.map((x) => ({name: x.name, requiresMutex: x.requiresMutex})),
+			devices: layout?.map((x) => ({
+				name: x.name, 
+				requiresMutex: x.requiresMutex,
+				interlock: {
+					state: {},
+					// state: {on: true},
+					locks: x.interlocks?.map((lock) => ({
+						device: lock.input.name,
+						deviceKey: lock.inputKey.key,
+						comparator: lock.comparator,
+						value: lock.assertion,
+
+						fallback: lock.action.key
+					}))
+				}
+			})),
 			processes: flows || []
 		}, {
 			performOperation: this.requestOperation

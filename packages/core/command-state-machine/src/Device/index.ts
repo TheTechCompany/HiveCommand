@@ -60,7 +60,7 @@ export class StateDevice {
 
 		const locked = lockedUp.includes(false);
 
-		return locked;
+		return {locked, lock: locks[lockedUp.indexOf(false)]};
 	}
 
 	async lock(){
@@ -84,9 +84,9 @@ export class StateDevice {
 	}
 
 
-	async doFallback(performOperation: (device: string, release: boolean, operation: string) => void){
-		await this.device.interlock?.fallback.map(async (operation) => {
-			await performOperation?.(this.device.name, operation.release || false, operation.operation)
-		})
+	async doFallback(lock: any, performOperation: (device: string, release: boolean, operation: string) => void){
+		// await this.device.interlock?.locfallback.map(async (operation) => {
+			await performOperation?.(this.device.name, false, lock.fallback)
+		// })
 	}
 }

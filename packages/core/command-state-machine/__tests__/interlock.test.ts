@@ -222,10 +222,11 @@ describe('Interlock Machine', () => {
 								device: 'LT201',
 								deviceKey: 'level',
 								comparator: '>=',
-								value: 12000
+								value: 12000,
+
+								fallback: 'stop'
 							}],
-							fallback: [{operation: 'stop'}],
-							fallforward: [{operation: 'start'}]
+						
 						}
 					}
 				],
