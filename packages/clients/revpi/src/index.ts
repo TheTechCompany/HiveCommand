@@ -534,7 +534,7 @@ export class CommandClient {
 
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-				await Promise.all((device?.plugins || []).filter((a) => !a.rules || activeStages?.indexOf(a.rules.id) ).map(async (plugin) => {
+				await Promise.all((device?.plugins || []).filter((a) => !a.rules || (activeStages || [])?.indexOf(a.rules.id) ).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
 						targetDevice?: string;

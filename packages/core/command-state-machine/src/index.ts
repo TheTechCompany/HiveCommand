@@ -63,7 +63,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	get currentPosition(){
-
+		return this.processes.map((x) => x.currentPosition)
 	}
 
 	changeMode(mode: CommandStateMachineMode){
