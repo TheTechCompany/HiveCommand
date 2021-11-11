@@ -1,3 +1,4 @@
+import process from 'process'
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandStateMachine, CommandStateMachineMode, ProcessNode } from '@hive-command/state-machine'
 import { CommandLogging } from '@hive-command/logging'
@@ -127,6 +128,11 @@ export class CommandClient {
 		// });
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
+
+		process.on('uncaughtException', function (err) {
+			console.error(err.stack);
+			console.log("Node NOT Exiting...");
+		});
 	}
 
 	getDeviceMode(device: string){

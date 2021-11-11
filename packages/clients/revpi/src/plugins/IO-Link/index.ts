@@ -220,6 +220,10 @@ export default class IOLinkPlugin extends BasePlugin {
 
 		let newValue = gulper(value)
 		console.log("IO-Link writing", newValue, "to port", port)
-		await master?.api.writePort(parseInt(port), newValue)
+		try{
+			await master?.api.writePort(parseInt(port), newValue)
+		}catch(error){
+			console.error("IO-Link Write Error", error)
+		}
 	}
 }
