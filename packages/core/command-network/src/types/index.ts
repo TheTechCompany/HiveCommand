@@ -48,10 +48,14 @@ export interface CommandPayloadItem {
 export interface AssignmentPayload {
 	actions?: {key: string, func: string}[]
 	plugins?: {
-		id: string, 
-		name: string, 
+		id: string,
 		instance: any,
-		tick: string,
+		plugin: {
+			id: string,
+			name: string,
+			tick: string
+		}
+		rules: {id: string, name: string},
 		configuration: {
 			key: string,
 			value: string

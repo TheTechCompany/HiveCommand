@@ -528,9 +528,13 @@ export class CommandClient {
 
 
 		this.machine.on('TICK', async () => {
+			let activeStages = this.machine?.currentPosition;
+
+			console.log("ACTIVE STAGES", activeStages)
+
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-				await Promise.all((device?.plugins || []).map(async (plugin) => {
+				await Promise.all((device?.plugins || []).filter((a) => !a.rules || activeStages?.indexOf(a.rules.id) ).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
 						targetDevice?: string;
@@ -541,7 +545,7 @@ export class CommandClient {
 					// console.log("Plugin tick");
 
 					if(plugin.instance){
-						const pluginTick = getPluginFunction(plugin.tick)
+						const pluginTick = getPluginFunction(plugin.plugin?.tick)
 						if(!pluginObject.targetDevice || !pluginObject.actuator) return;
 
 						let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
@@ -590,7 +594,7 @@ export class CommandClient {
 
 						})
 					}else{
-						console.log("PLUGIN NOT INSTANTIATED", plugin.name)
+						console.log("PLUGIN NOT INSTANTIATED", plugin.id, plugin.plugin.name)
 					}
 					// console.log("PLugin tick ", plugin.name)
 				}))

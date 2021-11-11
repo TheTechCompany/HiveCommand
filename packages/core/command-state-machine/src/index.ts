@@ -62,6 +62,10 @@ export class CommandStateMachine extends EventEmitter {
 		this.performOperation = this.performOperation.bind(this);
 	}
 
+	get currentPosition(){
+
+	}
+
 	changeMode(mode: CommandStateMachineMode){
 		this.mode = mode;
 	}

@@ -48,6 +48,10 @@ export class IOProcess extends EventEmitter{
         return [];
     }
 
+    get currentPosition(){
+        return this.current_state
+    }
+
     doCurrent() : Promise<boolean>{
         return new Promise((resolve, reject) => {
             let current_action = this.actions.find((a) => a.id == this.current_state)
