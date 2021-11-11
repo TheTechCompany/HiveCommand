@@ -49,7 +49,7 @@ export class IOProcess extends EventEmitter{
     }
 
     get currentPosition(){
-        return this.current_state
+        return this.actions.find((a) => a.id == this.current_state)?.actionId
     }
 
     doCurrent() : Promise<boolean>{

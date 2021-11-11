@@ -29,6 +29,10 @@ export class Action {
         }
     }
 
+    get actionId(){
+        return this.node?.extras?.["sub-process"]
+    }
+
     get blockType(){
         return (this.node.extras && this.node.extras.blockType) || '';
     }
