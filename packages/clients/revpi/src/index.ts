@@ -530,11 +530,11 @@ export class CommandClient {
 		this.machine.on('TICK', async () => {
 			let activeStages = this.machine?.currentPosition;
 
-			console.log("ACTIVE STAGES", activeStages)
+			// console.log("ACTIVE STAGES", activeStages)
 
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-				console.log(device.plugins?.map((a) => a.rules))
+				// console.log(device.plugins?.map((a) => a.rules))
 				await Promise.all((device?.plugins || []).filter((a) => !a.rules || ((activeStages || [])?.indexOf(a.rules.id) > -1) ).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
