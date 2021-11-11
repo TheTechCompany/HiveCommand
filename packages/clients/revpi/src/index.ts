@@ -157,7 +157,7 @@ export class CommandClient {
 
 			writeOp = {};
 			for(var k in event.value){
-				console.log(k, busPort.state)
+				// console.log(k, busPort.state)
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 				if(!stateItem) continue;
 				let value = event.value[k];
@@ -534,6 +534,7 @@ export class CommandClient {
 
 			await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
 				// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
+				console.log(device.plugins?.map((a) => a.rules))
 				await Promise.all((device?.plugins || []).filter((a) => !a.rules || (activeStages || [])?.indexOf(a.rules.id) ).map(async (plugin) => {
 
 					let pluginObject = plugin.configuration.reduce<{
