@@ -45,7 +45,7 @@ export class DeviceMap {
 				this.assignment[portIx].plugins = plugins
 			}
 
-			console.log("PLugin init ", plugin.name, pluginObject)
+			console.log("PLugin init ", plugin.plugin?.name, pluginObject)
 		}))
 	}
 
