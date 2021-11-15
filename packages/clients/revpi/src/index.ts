@@ -155,6 +155,7 @@ export class CommandClient {
 
 	async setupHeartbeat(){
 		await this.hearbeat();
+		await this.liveHeartbeat();
 	}
 
 	async liveHeartbeat(){
