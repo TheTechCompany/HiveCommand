@@ -14,6 +14,8 @@ import { DeviceMap } from './io-bus/DeviceMap';
 import { DataType, StatusCodes, Variant } from 'node-opcua';
 import { sendSMS } from '@hive-command/sms'
 
+import client, {Socket} from 'socket.io-client'
+
 export interface CommandEnvironment {
 	id: string;
 	type: string;
@@ -25,6 +27,8 @@ export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
 	commandCenter? : string
+	healthCenter?: string;
+
 	privateKey?: string
 	discoveryServer?: string
 
@@ -60,6 +64,8 @@ export class CommandClient {
 
 	private busMap : BusMap;
 	private deviceMap : DeviceMap;
+
+	private healthClient: Socket;
 	// private portAssignment: AssignmentPayload[] = []
 
 	constructor(opts: CommandClientOptions){
@@ -137,8 +143,9 @@ export class CommandClient {
 		// });
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
+		this.healthClient = client(this.options.healthCenter || 'ws://localhost:3000');
 
-		this.hearbeat();
+		this.setupHeartbeat();
 
 		process.on('uncaughtException', function (err) {
 			console.error(err.stack);
@@ -146,8 +153,18 @@ export class CommandClient {
 		});
 	}
 
+	async setupHeartbeat(){
+		await this.hearbeat();
+	}
+
+	async liveHeartbeat(){
+		this.healthClient.emit('identity:heartbeat')
+		setTimeout(() => this.liveHeartbeat(), 5 * 1000)
+	}
+
 	async hearbeat(){
 		if(!this.options.healthCheck) return;
+		
 		await sendSMS(this.options.healthCheck?.number,  this.options.healthCheck?.message || 'Hive Command Client is running...', this.options.healthCheck?.username, this.options.healthCheck?.password)
 
 		setTimeout(() => this.hearbeat(), this.options.healthCheck.interval || 60 * 60 * 1000)
