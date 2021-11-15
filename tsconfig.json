@@ -7,6 +7,7 @@
 		"@hive-command/opcua-server": ["./communication/opc-server/src"],
 		"@hive-command/opcua-client": ["./communication/opc-client/src"],
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
+		"@hive-command/sms": ["./communication/sms-utils/src"],
 		"@hive-command/opcua-lds": ["./communication/opc-lds/src"],
 		"@hive-command/state-machine": ["./core/command-state-machine/src"],
 		"@hive-command/network": ["./core/command-network/src"],

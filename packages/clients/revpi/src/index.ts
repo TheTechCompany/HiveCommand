@@ -12,6 +12,7 @@ import { getDeviceFunction, getPluginFunction } from './device-types/AsyncType';
 import { nanoid } from 'nanoid';
 import { DeviceMap } from './io-bus/DeviceMap';
 import { DataType, StatusCodes, Variant } from 'node-opcua';
+import { sendSMS } from '@hive-command/sms'
 
 export interface CommandEnvironment {
 	id: string;
@@ -26,6 +27,14 @@ export interface CommandClientOptions {
 	commandCenter? : string
 	privateKey?: string
 	discoveryServer?: string
+
+	healthCheck?: {
+		number: string,
+		message: string,
+		interval: number,
+		username: string,
+		password: string
+	}
 }
 
 export class CommandClient { 
@@ -129,10 +138,19 @@ export class CommandClient {
 
 		// this.readEnvironment = this.readEnvironment.bind(this);
 
+		this.hearbeat();
+
 		process.on('uncaughtException', function (err) {
 			console.error(err.stack);
 			console.log("Node NOT Exiting...");
 		});
+	}
+
+	async hearbeat(){
+		if(!this.options.healthCheck) return;
+		await sendSMS(this.options.healthCheck?.number,  this.options.healthCheck?.message || 'Hive Command Client is running...', this.options.healthCheck?.username, this.options.healthCheck?.password)
+
+		setTimeout(() => this.hearbeat(), this.options.healthCheck.interval || 60 * 60 * 1000)
 	}
 
 	getDeviceMode(device: string){
