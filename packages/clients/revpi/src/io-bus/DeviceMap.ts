@@ -63,6 +63,10 @@ export class DeviceMap {
 		}
 	}
 
+	public getDeviceByType(type: string){
+		return this.assignment.filter(assignment => assignment.type === type)
+	}
+
 	//Get device index
 	public getDeviceIndexById(id: string): number {
 		return this.assignment.map((x) => x.id).indexOf(id);;

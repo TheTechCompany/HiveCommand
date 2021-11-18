@@ -13,7 +13,7 @@ import { nanoid } from 'nanoid';
 import { DeviceMap } from './io-bus/DeviceMap';
 import { DataType, StatusCodes, Variant } from 'node-opcua';
 import { sendSMS } from '@hive-command/sms'
-
+import cleanup from 'node-cleanup'
 import client, {Socket} from 'socket.io-client'
 
 export interface CommandEnvironment {
@@ -146,6 +146,8 @@ export class CommandClient {
 		this.healthClient = client(this.options.healthCenter || 'ws://localhost:3000');
 
 		this.setupHeartbeat();
+
+		cleanup(this.shutdown.bind(this))
 
 		process.on('uncaughtException', function (err) {
 			console.error(err.stack);
@@ -656,6 +658,32 @@ export class CommandClient {
 			this.deviceMap.setupDevicePlugins(device.id)
 			
 		}))
+	}
+
+	async shutdown(exitCode: number, signal: string) : Promise<boolean> {
+		console.time("Shutdown");
+
+		console.log("Shutdown requested...");
+
+		await this.stop();
+		
+		console.log("State Machine stopped...");
+
+		let pumps = this.deviceMap.getDeviceByType("pump")
+		
+		await Promise.all(pumps.map(async (pump) => {
+			this.requestOperation({device: pump.name, operation: "Stop"})
+		}))
+
+		console.log("All VSD Pumps stopped");
+
+		console.timeEnd("Shutdown")
+		return true;
+	}
+
+	async stop(){
+		await this.machine?.stop()
+
 	}
 
 	async start(){
