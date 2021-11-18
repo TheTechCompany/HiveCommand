@@ -675,6 +675,8 @@ export class CommandClient {
 			await Promise.all(pumps.map(async (pump) => {
 				this.requestOperation({device: pump.name, operation: "Stop"})
 			}))
+
+			if(this.options.healthCheck) await sendSMS(this.options.healthCheck?.number, `HiveCommand Stopped ${signal} ${exitCode}`, this.options.healthCheck?.username, this.options.healthCheck?.password)
 	
 			console.log("All VSD Pumps stopped");
 	
