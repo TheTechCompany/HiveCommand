@@ -660,17 +660,17 @@ export class CommandClient {
 		}))
 	}
 
-	async shutdown(exitCode: number, signal: string) : Promise<boolean> {
+	async shutdown(exitCode: number | null, signal: string | null) : Promise<boolean> {
 		console.time("Shutdown");
 
-		console.log("Shutdown requested...");
+		console.log("Shutdown requested...", {exitCode, signal});
 
 		await this.stop();
 		
 		console.log("State Machine stopped...");
 
 		let pumps = this.deviceMap.getDeviceByType("pump")
-		
+
 		await Promise.all(pumps.map(async (pump) => {
 			this.requestOperation({device: pump.name, operation: "Stop"})
 		}))
