@@ -94,6 +94,8 @@ export class CommandStateMachine extends EventEmitter {
 	// }
 
 	async checkInterlocks(){
+		console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock))
+
 		await this.devices?.filter((a) => a.hasInterlock).filter((device) => {
 			return device.checkInterlockNeeded(this.state.get(device.name))
 		}).map(async (device) => {
@@ -143,7 +145,7 @@ export class CommandStateMachine extends EventEmitter {
 
 		while(this.running){
 			//Run all actions in current stage of execution
-
+			console.log("Run loop")
 			await this.checkInterlocks();
 
 			if(this.mode !== CommandStateMachineMode.DISABLED){
