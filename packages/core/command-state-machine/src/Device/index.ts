@@ -49,6 +49,9 @@ export class StateDevice {
 		return cond.check(input, value)
 	}
 
+	get interlock () {
+		return this.device.interlock?.locks
+	}
 
 	async checkInterlock(state: any){
 		let locks = this.device.interlock?.locks || [];
