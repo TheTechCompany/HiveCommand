@@ -33,6 +33,7 @@ export class StateDevice {
 		let device = this.device.name
 		let desiredState = this.device.interlock?.state 
 
+		console.log(desiredState, currentState)
 		let exists = true;
 		for(var k in desiredState){
 			if(currentState?.[k] !== desiredState?.[k]){
