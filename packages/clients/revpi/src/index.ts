@@ -203,6 +203,7 @@ export class CommandClient {
 			for(var k in event.value){
 				// console.log(k, busPort.state)
 				let stateItem = busPort?.state?.find((a) => a.key == k)
+				console.log({stateItem})
 				if(!stateItem) continue;
 				let value = event.value[k];
 				if(stateItem.max && stateItem.min){
