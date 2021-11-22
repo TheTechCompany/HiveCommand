@@ -207,7 +207,10 @@ export class CommandClient {
 				if(!stateItem) continue;
 				let value = event.value[k];
 				if(stateItem.max && stateItem.min){
+					console.log("Min max", stateItem.min, stateItem.max, value)
 					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
+					console.log("Min max", stateItem.min, stateItem.max, value)
+
 					if(value > stateItem.max) value = stateItem.max
 					if(value < stateItem.min) value = stateItem.min
 				}

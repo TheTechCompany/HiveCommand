@@ -219,7 +219,7 @@ export default class IOLinkPlugin extends BasePlugin {
 		}).reduce((prev, curr) => prev.concat(curr), []))
 
 		let newValue = gulper(value)
-		console.log("IO-Link writing", newValue, "to port", port)
+		console.log("transformed", value, "IO-Link writing", newValue, "to port", port)
 		try{
 			await master?.api.writePort(parseInt(port), newValue)
 		}catch(error){
