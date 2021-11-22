@@ -17,7 +17,10 @@
   },
   "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
   "devDependencies": {
+    "@types/jest": "^27.0.3",
+    "jest": "^27.3.1",
     "lerna": "^4.0.0",
+    "ts-jest": "^27.0.7",
     "typescript": "^4.4.4"
   },
   "dependencies": {

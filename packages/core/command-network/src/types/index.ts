@@ -66,7 +66,14 @@ export interface AssignmentPayload {
 		input: {id: string, name: string},
 		inputKey: {id: string, key: string, type: string},
 		comparator: string,
-		assertion: string,
+		assertion: {
+			type: 'value' | 'setpoint',
+			value: string, 
+			setpoint: {
+				value: string, 
+				type: 'ratio' | 'value'
+			}
+		},
 		action: {id: string, key: string}
 	}[]
 	state?: AssignmentState[]

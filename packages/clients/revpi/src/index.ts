@@ -554,7 +554,7 @@ export class CommandClient {
 						device: lock.input.name,
 						deviceKey: lock.inputKey.key,
 						comparator: lock.comparator,
-						value: lock.assertion,
+						value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
 
 						fallback: lock.action.key
 					}))
