@@ -66,6 +66,18 @@ export class CommandStateMachine extends EventEmitter {
 		return this.processes.map((x) => x.currentPosition)
 	}
 
+	getDeviceControl(deviceName: string){
+		return this.devices?.find((a) => a.name == deviceName)?.isControlled
+	}
+
+	changeDeviceControl(deviceName: string, control: boolean){
+		let ix = this.devices?.map((x) => x.name).indexOf(deviceName)
+		if(ix != undefined && ix > -1){
+			this.devices?.[ix].changeControlled(control)
+		}
+		// this.devices?.find((x) => x.name == deviceName)?.control = control;
+	}
+
 	changeMode(mode: CommandStateMachineMode){
 		this.mode = mode;
 	}

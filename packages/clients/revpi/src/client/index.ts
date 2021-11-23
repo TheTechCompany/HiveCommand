@@ -1,8 +1,5 @@
-import { DeviceManager } from "../devices";
 import { IdentityManager } from "../identity";
 import path from 'path';
-import { RunnerNetwork } from "../network";
-import { IOBus } from "../io-bus/IOBus";
 import { whoami } from "../identity/utils";
 
 export interface RevPiCommandClientOpts {

@@ -9,6 +9,8 @@ export class StateDevice {
 
 	private lockOwner?: string;
 
+	private controlled: boolean = true;
+
 	constructor(device: ProgramDevice) {
 		this.device = device;
 
@@ -21,6 +23,10 @@ export class StateDevice {
 		return this.device.name;
 	}
 
+	get isControlled(){
+		return this.controlled;
+	}
+
 	get hasInterlock(){
 		return this.device.interlock != undefined;
 	}
@@ -29,12 +35,19 @@ export class StateDevice {
 		return this.device.requiresMutex;
 	}
 
+	changeControlled(controlled: boolean){
+		this.controlled = controlled;
+	}
+
 	checkInterlockNeeded(currentState: any){
 		let device = this.device.name
 		let desiredState = this.device.interlock?.state 
 
-		console.log(desiredState, currentState)
+		// console.log(desiredState, currentState)
 		let exists = true;
+
+		if(!this.isControlled) return exists;
+		
 		for(var k in desiredState){
 			if(currentState?.[k] !== desiredState?.[k]){
 				exists = false;

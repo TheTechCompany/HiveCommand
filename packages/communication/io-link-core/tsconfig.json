@@ -72,6 +72,7 @@
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
   },
+  "exclude": ["**/*.test.ts", "example/", "dist/"],
   "references": [
     {"path": "../io-link-master-discovery"},
     {"path": "../io-link-master-api"},

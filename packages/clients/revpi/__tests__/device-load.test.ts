@@ -1,6 +1,7 @@
 import sudbuster from './sudbuster.json';
+import { CommandClient } from '../src';
 
-const layout = sudbuster.payload.layout;
+const layout = sudbuster.layout;
 
 describe('Load device-map from definitions', () => {
 	it('Pumps load with percentage drive', () => {
@@ -19,6 +20,11 @@ describe('Load device-map from definitions', () => {
 		expect(value).toBe(7200);
 	})
 
+	it('Loads', () => {
+		let client = new CommandClient({});
+
+		client.loadMachine({payload: sudbuster as any});
+	})
 	// it('Pump write produces a rectified drive value', () => {
 
 	// })

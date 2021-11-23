@@ -7,7 +7,7 @@ export * from './types'
 
 export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
-	setDeviceMode?: (device: string, mode: string) => any;
+	setDeviceMode?: (device: string, mode: boolean) => any;
 
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
@@ -195,11 +195,11 @@ export class CommandNetwork {
 						type: DataType.String,
 						get: () => {
 
-							return new Variant({dataType: DataType.String, value: this.valueBank.getDeviceMode?.(layout.name) || "Automatic"})
+							return new Variant({dataType: DataType.String, value: this.valueBank.getDeviceMode?.(layout.name) ?  "Automatic" : "Manual"})
 						}, 
 						set: (variant: Variant) => {
 							console.log(`Change mode for ${layout.name}`)
-							this.valueBank.setDeviceMode?.(layout.name, variant.value.toString())
+							this.valueBank.setDeviceMode?.(layout.name, variant.value.toString() == "Automatic" ? true : false)
 							return StatusCodes.Good;
 						}
 					}

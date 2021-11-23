@@ -1,5 +1,4 @@
 {
-	"payload": {
 		"command": [
 			{
 				"parent": null,
@@ -2503,5 +2502,4 @@
 				"name": "CT301"
 			}
 		]
-	}
 }

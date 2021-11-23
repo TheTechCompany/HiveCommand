@@ -174,11 +174,12 @@ export class CommandClient {
 	}
 
 	getDeviceMode(device: string){
-		return this.deviceMap.getDeviceModeByName(device)
+		return this.machine?.getDeviceControl(device);
 	}
 
-	setDeviceMode(device: string, mode: string){
-		return this.deviceMap.setDeviceModeByName(device, mode)
+	setDeviceMode(device: string, mode: boolean){
+		return this.machine?.changeDeviceControl(device, mode)
+		// return this.deviceMap.setDeviceModeByName(device, mode)
 	}
 
 	getByKey(dev: string, key: string){
@@ -569,6 +570,7 @@ export class CommandClient {
 			performOperation: this.requestOperation
 		})
 
+		console.log(this.machine)
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
 		//TODO add manual/timer/stopped/auto states
