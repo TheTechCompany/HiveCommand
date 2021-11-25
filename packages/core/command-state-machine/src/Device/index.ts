@@ -1,5 +1,6 @@
 import { Mutex } from "locks";
 import { Condition } from "../Condition";
+import { State } from "../State";
 import { ProgramDevice } from "../types/ProgramDevice";
 
 export class StateDevice {
@@ -57,9 +58,10 @@ export class StateDevice {
 		return exists
 	}
 
-	checkCondition(state: any, device: string, deviceKey: string, comparator: string, value: any){
+	checkCondition(state: State, device: string, deviceKey: string, comparator: string, value: any){
 		let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
-		let input = state?.[deviceKey]
+
+		let input = state?.get(device)?.[deviceKey]
 		console.log("Check condition", {input, value}, {device, deviceKey})
 		return cond.check(input, value)
 	}
