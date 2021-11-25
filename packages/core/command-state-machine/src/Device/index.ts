@@ -77,6 +77,8 @@ export class StateDevice {
 
 		const locked = lockedUp.includes(false);
 
+		console.log(state, this.device.name, locked)
+
 		return {locked, lock: locks[lockedUp.indexOf(false)]};
 	}
 
