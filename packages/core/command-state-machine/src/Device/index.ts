@@ -60,6 +60,7 @@ export class StateDevice {
 	checkCondition(state: any, device: string, deviceKey: string, comparator: string, value: any){
 		let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
 		let input = state?.[deviceKey]
+		console.log("Check condition", {input, value}, {device, deviceKey})
 		return cond.check(input, value)
 	}
 
