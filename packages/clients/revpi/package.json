@@ -1,6 +1,6 @@
 {
   "name": "@hivecommand-clients/revpi",
-  "version": "1.3.2-alpha.127",
+  "version": "1.3.3",
   "description": "",
   "main": "index.js",
   "files": [
@@ -30,16 +30,16 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "@hive-command/identity": "^1.3.3",
+    "@hive-command/logging": "^1.3.3",
+    "@hive-command/network": "^1.3.3",
+    "@hive-command/opcua-server": "^1.3.3",
+    "@hive-command/sms": "^1.3.3",
+    "@hive-command/state-machine": "^1.3.3",
+    "@hive-command/subscription-lock": "^1.3.3",
+    "@io-link/core": "^1.3.3",
+    "@io-link/iodd": "^1.3.3",
     "@revpi/node": "^1.0.8",
-    "@hive-command/identity": "^1.3.2-alpha.117",
-    "@hive-command/logging": "^1.3.2-alpha.117",
-    "@hive-command/network": "^1.3.2-alpha.118",
-    "@hive-command/opcua-server": "^1.3.2-alpha.109",
-    "@hive-command/sms": "^1.0.0",
-    "@hive-command/state-machine": "^1.3.2-alpha.117",
-    "@hive-command/subscription-lock": "^1.0.0",
-    "@io-link/core": "^1.3.2-alpha.98",
-    "@io-link/iodd": "^1.3.2-alpha.83",
     "axios": "^0.22.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
