@@ -1,6 +1,6 @@
 {
   "name": "@io-link/core",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "description": "> TODO: description",
   "author": "The Tech Company",
   "homepage": "https://github.com/TheTechCompany/ifm-core/tree/main/packages/ifm-core#readme",
@@ -29,9 +29,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@io-link/iodd": "^1.3.4",
-    "@io-link/master-api": "^1.3.4",
-    "@io-link/master-discovery": "^1.3.4"
+    "@io-link/iodd": "^1.3.5",
+    "@io-link/master-api": "^1.3.5",
+    "@io-link/master-discovery": "^1.3.5"
   },
   "devDependencies": {
     "tsconfig-paths": "^3.9.0",
