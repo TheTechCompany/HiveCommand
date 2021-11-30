@@ -15,7 +15,7 @@
   "devDependencies": {
     "typescript": "^4.4.4"
   },
-  "gitHead": "d9cf04ae2e777776b32ac914ac8db136e5ab15fe",
+  "gitHead": "d334b1f9c8bd95c581fa8e1655712792df414d56",
   "dependencies": {
     "@hive-command/opcua-server": "^1.3.4",
     "axios": "^0.23.0"
