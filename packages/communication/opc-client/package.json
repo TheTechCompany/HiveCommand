@@ -6,6 +6,7 @@
   "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
   "license": "ISC",
   "main": "dist/index.js",
+  "private": true,
   "bin": {
     "opcua-client": "./dist/cmd.js"
   },
