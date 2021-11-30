@@ -25,5 +25,6 @@
     "vorpal": "^1.12.0",
     "vorpal-repl": "^1.1.8",
     "yargs": "^17.2.1"
-  }
+  },
+  "gitHead": "d9cf04ae2e777776b32ac914ac8db136e5ab15fe"
 }

@@ -50,5 +50,5 @@
     "socket.io-client": "^4.2.0",
     "yargs": "^17.2.1"
   },
-  "gitHead": "6b372375734c1503bb29dc43a07da77eab814dae"
+  "gitHead": "d9cf04ae2e777776b32ac914ac8db136e5ab15fe"
 }
