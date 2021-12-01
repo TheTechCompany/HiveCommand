@@ -144,6 +144,8 @@ export default class IOLinkPlugin extends BasePlugin {
 			
 			const devices = await discoverDevices(master)
 
+			console.log("Discovered devices", devices)
+
 			const iodd = await Promise.all(devices.unique.map(async (id) => {
 				return await getIODD(this.ioddManager, id)
 			}))
