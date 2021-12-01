@@ -59,6 +59,6 @@ import { discoverMasters, discoverDevices } from '@io-link/core'
 		}
 	}))
 
-	console.log({result})
+	console.log({result: result.map((x) => x.devices)})
 	
 })()
