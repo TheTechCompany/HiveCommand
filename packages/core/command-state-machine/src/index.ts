@@ -10,7 +10,6 @@ export * from './types'
 
 export interface CommandClient { 
 	performOperation: (ev: {device: string, operation: string}) => Promise<any>;
-
 }
 
 export enum CommandStateMachineMode {
@@ -34,19 +33,31 @@ export class CommandStateMachine extends EventEmitter {
 
 	private devices? : StateDevice[] = [];
 
+	private program? : {
+		initialState?: any;
+		devices?: ProgramDevice[]
+		processes?: ProgramProcess[]
+	} = {}
+
     public timers: any = {
 
     };
 
 	private client : CommandClient;
 
+	private tickRate: number = 1000;
+
 	constructor(program: {
 		initialState?: any;
 		devices?: ProgramDevice[]
-		processes: ProgramProcess[]
+		processes: ProgramProcess[],
+		tickRate?: number
 	}, client: CommandClient){
 		super();
 
+		this.tickRate = program.tickRate || 1000;
+
+		this.program = program;
 
 		this.devices = program.devices?.map((x) => new StateDevice(x));
 
@@ -76,6 +87,39 @@ export class CommandStateMachine extends EventEmitter {
 			this.devices?.[ix].changeControlled(control)
 		}
 		// this.devices?.find((x) => x.name == deviceName)?.control = control;
+	}
+
+	async runOneshot(processId: string){
+		// console.log(this.processes)
+		console.log("ONESHOT")
+		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
+		let process = allProcesses?.find((a) => a.id == processId)
+
+		if(!process) return new Error("No process found")
+
+		// if(process.parent){}
+		console.log(this.mode)
+		if(this.mode == CommandStateMachineMode.AUTO){
+			//Request priority for this process
+			console.log("VIP Incoming... Requesting priority")
+			console.log(process)
+			
+			if((process as any).parent){
+				this.processes.find((a) => a.id == (process as any).parent.id)?.requestPriority(process.id)
+			}else{
+				// this.processes.find((a) => a.id == process.id).requestPriority()
+			}
+		}else{
+			//Run process in seperate loop
+
+			let cleanProcess = new IOProcess(process, this)
+			const result = await cleanProcess.runOnce()
+
+		}
+
+		// console.log(process)
+
+		// return process.doCurrent()
 	}
 
 	changeMode(mode: CommandStateMachineMode){
@@ -158,10 +202,9 @@ export class CommandStateMachine extends EventEmitter {
 
 		while(this.running){
 			//Run all actions in current stage of execution
-			console.log("Run loop")
 			await this.checkInterlocks();
 
-			if(this.mode !== CommandStateMachineMode.DISABLED){
+			if(this.mode == CommandStateMachineMode.AUTO){
 				try{
 					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
 				}catch(e){
@@ -173,7 +216,7 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.emit('TICK')
 
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 1000))
+			await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
 		}
 	}
 

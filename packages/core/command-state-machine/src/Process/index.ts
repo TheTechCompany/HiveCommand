@@ -21,6 +21,8 @@ export class IOProcess extends EventEmitter{
 
     public running: boolean = false;
 
+    private prioritize?: string; //Node id to prioritize reaching
+
     constructor(process: ProgramProcess, parent: CommandStateMachine, parent_process?: IOProcess){
         super();
         this.parent = parent
@@ -30,6 +32,14 @@ export class IOProcess extends EventEmitter{
         this.current_state = 'origin';
 
         this.actions = this.action_nodes
+    }
+
+    get parentId(){
+        return this.parent_process?.id
+    }
+
+    get id(){
+        return this.process.id
     }
 
     get name(){
@@ -52,18 +62,42 @@ export class IOProcess extends EventEmitter{
         return this.actions.find((a) => a.id == this.current_state)?.actionId
     }
 
+    requestPriority(id: string){
+        if(this.current_state == id) return;
+        console.log("Requesting priority: ", id)
+        let current_action = this.actions.find((a) => a.id == this.current_state)
+        if(current_action){
+            current_action.requestPriority(id)
+        }   
+
+        this.prioritize = id;
+    }
+
     doCurrent() : Promise<boolean>{
         return new Promise((resolve, reject) => {
             let current_action = this.actions.find((a) => a.id == this.current_state)
 			// console.log(current_action, this.actions, this.current_state)
             if(current_action){
                 if(!current_action.hasRun && !current_action.isRunning){
+                    // let priority = this.prioritize;
+                    if(this.prioritize == this.process.nodes[this.current_state]?.extras?.["sub-process"]){
+                        this.prioritize = undefined;
+                    }
+                    // console.log(this.process.nodes[this.current_state].extras?.["sub-process"])
 
-                    current_action.onEnter().then((result) => {
+                    current_action.onEnter(this.prioritize).then((result) => {
+                        console.log(this.current_state, this.process.name, this.prioritize)
+                       
+                        // console.log(`Process: ${this.process.name} run ${this.current_state}`)
+                        // if(this.process.nodes[this.current_state].extras?.["sub-process"] == this.prioritize){
+                        //     // console.log("De prioritize")
+                        //     this.prioritize = undefined;
+    
+                        // }
                         resolve(true);
                     });
+             
 
-               
                 }
             }else{
                 resolve(false);

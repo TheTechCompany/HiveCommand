@@ -17,6 +17,8 @@ export class Action {
     public hasRun: boolean = false;
     public isRunning: boolean = false;
 
+    private prioritize?: string;
+
     constructor(node: ProcessNode, process: IOProcess, runner: CommandStateMachine){
         this.node = node
         this.id = this.node.id;
@@ -37,9 +39,16 @@ export class Action {
         return (this.node.extras && this.node.extras.blockType) || '';
     }
 
-    async onEnter(){
+    requestPriority(id?: string){
+
+    }
+
+    async onEnter(priority?: string){
         console.log(`Entering node ${this.node.extras?.blockType} ${this.node.id} ${this.process.name}`)
 
+        let isPrioritized = priority != undefined; //&& priority == this.node.id;
+
+        console.log("isPrioritize", isPrioritized, priority)
         switch(this.blockType){
             case 'action':
                 this.isRunning = true;
@@ -59,32 +68,43 @@ export class Action {
                 let sub_process = this.process.sub_processes?.find((a) => a.id == this.node?.extras?.["sub-process"]);
                 if(sub_process){
                     let sub = new IOProcess(sub_process, this.runner, this.process)
+                    
+                    if(priority) sub.requestPriority(priority);
+
                     const result = await sub.runOnce();
+                    
                     this.hasRun = true;
                     this.isRunning = false;
                     return result;
                 }
             break;
             case 'timer':
-                this.isRunning = true;
-                let id = nanoid();
+                if(!isPrioritized || priority == this.node.id || priority == this.process.id){
+                    this.isRunning = true;
+                    let id = nanoid();
 
-                console.time(`Timer ${id}`)
-                
-                let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
-                 
-                this.runner.timers[this.node.id] = new Timer(timeout)
-                
-                let timer : Timer = this.runner.timers[this.node.id]
+                    console.time(`Timer ${id}`)
+                    
+                    let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
+                    
+                    this.runner.timers[this.node.id] = new Timer(timeout)
+                    
+                    let timer : Timer = this.runner.timers[this.node.id]
 
-                console.log("TIMER", timeout)
-                 setTimeout(() => {console.log("TIMER WILL RUN")}, 1000)
-                const timer_status = await timer.countDown()
-                console.timeEnd(`Timer ${id}`)
+                    console.log("TIMER", timeout)
+                    setTimeout(() => {console.log("TIMER WILL RUN")}, 1000)
+                    const timer_status = await timer.countDown()
+                    console.timeEnd(`Timer ${id}`)
 
+                    this.hasRun = true;
+                    this.isRunning = false;
+                    return timer_status;
+                   
+                }
                 this.hasRun = true;
                 this.isRunning = false;
-                return timer_status;
+                return true;
+
             default:
                 this.hasRun = true;
                 // this.isRunning = false;
@@ -96,7 +116,7 @@ export class Action {
         console.log(`Exiting node ${this.node.extras?.blockType} ${this.node.id} ${this.process.name}`)
         switch(this.blockType){
             case 'timer':
-                this.runner.timers[this.node.id].hasRun = false;
+                if(this.runner.timers[this.node.id]) this.runner.timers[this.node.id].hasRun = false;
                 this.hasRun = false;
                 break;
             case 'sub-process':

@@ -1,15 +1,30 @@
 
 export class Timer {
+
     public hasRun: boolean = false;
     private timeout: number;
+    private bypass: boolean = false;
+
+    private timer?: NodeJS.Timeout;
+
+    private success?: (suc: boolean) => void;
 
     constructor(timeout: number){
         this.timeout = timeout;    
     }
 
+    skip(){
+        if(this.timer){
+            clearTimeout(this.timer)
+            this.success?.(true);
+        }
+    }
+
     async countDown(){
         return new Promise((resolve, reject) => {
-            setTimeout(() => {
+            this.success = resolve;
+
+            this.timer = setTimeout(() => {
                 this.hasRun = true;
                 resolve(true);
             }, this.timeout)

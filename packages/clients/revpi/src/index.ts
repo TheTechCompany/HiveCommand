@@ -122,6 +122,17 @@ export class CommandClient {
 						return StatusCodes.Good;
 					}
 				},
+				flowPriority: {
+					type: DataType.String,
+					get: () => {
+						return new Variant({dataType: DataType.String, value: `Flow Priority`})
+					},
+					set: (value) => {
+						console.log("RUN ONESHOT", value)
+						// this.machine?.runOneshot(value.value.toString())
+						return StatusCodes.Good;
+					}	
+				},
 				Mode: {
 					type: DataType.String,
 					get: () => {
