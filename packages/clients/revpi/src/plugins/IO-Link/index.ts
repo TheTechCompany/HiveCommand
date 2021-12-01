@@ -141,24 +141,26 @@ export default class IOLinkPlugin extends BasePlugin {
 		const masters = await discoverMasters(this.networkInterface)	
 
 		this.masters = await Promise.all(masters.map(async (master) => {
-			
+			console.log("Discovering master")
 			const devices = await discoverDevices(master)
+		
+			console.log("Discovered devices", {devices})
 
-			console.log("Discovered devices", devices)
-
-			const iodd = await Promise.all(devices.unique.map(async (id) => {
-				return await getIODD(this.ioddManager, id)
-			}))
-			
-
+			// const iodd = await Promise.all(devices.unique.map(async (id) => {
+			// 	return await getIODD(this.ioddManager, id)
+			// }))
 
 			return {
 				id: master.serial,
 				name: master.product,
 				api: master,
 				devices: await Promise.all(devices.ports.map(async (port) => {
+					console.log({port})
 					let ioddDef = await this.ioddManager.lookupDevice(`${port.vendorId}:${port.deviceId}`)
-					if(!ioddDef) return port;
+					if(!ioddDef) {
+						console.log("NO IODD", port)
+						return port;
+					}
 					let iodd = await this.ioddManager.getIODD(ioddDef?.iodd)
 					return {
 						...port,
