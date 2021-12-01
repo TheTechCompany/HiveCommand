@@ -128,8 +128,8 @@ export class CommandClient {
 						return new Variant({dataType: DataType.String, value: `Flow Priority`})
 					},
 					set: (value) => {
-						console.log("RUN ONESHOT", value)
-						// this.machine?.runOneshot(value.value.toString())
+						console.log("RUN ONESHOT", value.value.toString())
+						this.machine?.runOneshot(value.value.toString())
 						return StatusCodes.Good;
 					}	
 				},
