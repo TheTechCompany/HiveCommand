@@ -32,8 +32,11 @@ export const discoverMasters = async (device: string) => {
 }
 
 export const discoverDevices = async (master: IOMaster) => {
+    console.log("Discovering devices on ", master)
     const ports = await master.scanPorts()
 
+    console.log("Discovered", {ports})
+    
     const port_devices = [...new Set(ports.map((x) => `${x.vendorId}:${x.deviceId}`))]
     return {unique: port_devices, ports:  ports?.map((x) => ({...x, master: master.serial})) }
 }
