@@ -5,7 +5,7 @@ import { discoverMasters, discoverDevices } from '@io-link/core'
 	const masters = await discoverMasters('eth0')	
 	console.log(`IO-Link Discovered ${masters.length} masters`)
 	
-	return await Promise.all(masters.map(async (master) => {
+	const result = await Promise.all(masters.map(async (master) => {
 		console.log("Discovering master")
 		const devices = await discoverDevices(master)
 		console.log("Discovered devices", devices)
@@ -57,5 +57,7 @@ import { discoverMasters, discoverDevices } from '@io-link/core'
 			devices: mappedDevices
 		}
 	}))
+
+	console.log({result})
 	
 })()
