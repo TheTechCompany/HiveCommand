@@ -138,8 +138,10 @@ export default class IOLinkPlugin extends BasePlugin {
 	}
 
 	async discover(){
+		console.log(`IO-Link Discovering`)
 		const masters = await discoverMasters(this.networkInterface)	
-
+		console.log(`IO-Link Discovered ${masters.length} masters`)
+		
 		this.masters = await Promise.all(masters.map(async (master) => {
 			console.log("Discovering master")
 			const devices = await discoverDevices(master)
@@ -147,7 +149,7 @@ export default class IOLinkPlugin extends BasePlugin {
 
 			const mappedDevices =  await Promise.all(devices.ports.map(async (port) => {
 				console.log({port})
-				
+
 				let ioddDef = await this.ioddManager.lookupDevice(`${port.vendorId}:${port.deviceId}`)
 				if(!ioddDef) {
 					console.log("NO IODD", port)
