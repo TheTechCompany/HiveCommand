@@ -1,0 +1,125 @@
+0 silly argv {
+0 silly argv   _: [ 'publish' ],
+0 silly argv   composed: 'publish',
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': '/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/.bin/lerna'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath /Users/the-kid/work/contract-work/HiveCommandClient
+3 verbose session f8465f176bd8c656
+4 verbose user-agent lerna/4.0.0/node@v16.3.0+arm64 (darwin)
+5 silly argv { _: [ 'publish' ], composed: 'publish', lernaVersion: '4.0.0' }
+6 verbose rootPath /Users/the-kid/work/contract-work/HiveCommandClient
+7 info current version 1.3.6-alpha.13
+8 silly isAnythingCommitted
+9 verbose isAnythingCommitted 1
+10 silly getCurrentBranch
+11 verbose currentBranch master
+12 silly remoteBranchExists
+13 silly isBehindUpstream
+14 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 1
+15 silly hasTags
+16 verbose hasTags true
+17 silly git-describe.sync "v1.3.6-alpha.13-1-g8854db7" => {"lastTagName":"v1.3.6-alpha.13","lastVersion":"v1.3.6-alpha.13","refCount":"1","sha":"8854db7","isDirty":false}
+18 info Looking for changed packages since v1.3.6-alpha.13
+19 silly checking diff packages/clients/io-link
+20 silly no diff found in @hivecommand-clients/io-link
+21 silly checking diff packages/clients/revpi
+22 silly found diff in packages/clients/revpi/src/plugins/IO-Link/index.ts
+23 verbose filtered diff [ 'packages/clients/revpi/src/plugins/IO-Link/index.ts' ]
+24 silly checking diff packages/communication/io-link-core
+25 silly no diff found in @io-link/core
+26 silly checking diff packages/communication/io-link-iodd
+27 silly no diff found in @io-link/iodd
+28 silly checking diff packages/communication/io-link-master-api
+29 silly no diff found in @io-link/master-api
+30 silly checking diff packages/communication/io-link-master-discovery
+31 silly no diff found in @io-link/master-discovery
+32 silly checking diff packages/communication/opc-client
+33 silly no diff found in @hive-command/opcua-client
+34 silly checking diff packages/communication/opc-lds
+35 silly no diff found in @hive-command/opcua-lds
+36 silly checking diff packages/communication/opc-server
+37 silly no diff found in @hive-command/opcua-server
+38 silly checking diff packages/communication/opc-utils
+39 silly no diff found in @hive-command/opcua-utils
+40 silly checking diff packages/communication/sms-utils
+41 silly no diff found in @hive-command/sms
+42 silly checking diff packages/core/command-identity
+43 silly no diff found in @hive-command/identity
+44 silly checking diff packages/core/command-logging
+45 silly no diff found in @hive-command/logging
+46 silly checking diff packages/core/command-network
+47 silly no diff found in @hive-command/network
+48 silly checking diff packages/core/command-state-machine
+49 silly no diff found in @hive-command/state-machine
+50 silly checking diff packages/core/command-subscription-lock
+51 silly no diff found in @hive-command/subscription-lock
+52 verbose updated @hivecommand-clients/revpi
+53 verbose git-describe undefined => "v1.3.6-alpha.13-1-g8854db7"
+54 silly git-describe parsed => {"lastTagName":"v1.3.6-alpha.13","lastVersion":"v1.3.6-alpha.13","refCount":"1","sha":"8854db7","isDirty":false}
+55 info execute Skipping releases
+56 silly lifecycle No script for "preversion" in "@hivecomand-clients/root", continuing
+57 silly lifecycle No script for "preversion" in "@hivecommand-clients/revpi", continuing
+58 silly lifecycle No script for "version" in "@hivecommand-clients/revpi", continuing
+59 silly lifecycle No script for "version" in "@hivecomand-clients/root", continuing
+60 silly gitAdd [
+60 silly gitAdd   'packages/clients/revpi/package.json',
+60 silly gitAdd   'packages/clients/revpi/package-lock.json',
+60 silly gitAdd   'lerna.json'
+60 silly gitAdd ]
+61 silly gitCommit v1.3.6-alpha.14
+62 verbose git [ 'commit', '-m', 'v1.3.6-alpha.14' ]
+63 silly gitTag v1.3.6-alpha.14
+64 verbose git [ 'tag', 'v1.3.6-alpha.14', '-m', 'v1.3.6-alpha.14' ]
+65 silly lifecycle No script for "postversion" in "@hivecommand-clients/revpi", continuing
+66 silly lifecycle No script for "postversion" in "@hivecomand-clients/root", continuing
+67 info git Pushing tags...
+68 silly gitPush origin master
+69 info publish Publishing packages to npm...
+70 info Verifying npm credentials
+71 verbose Retrieving npm user profile
+72 http fetch GET 200 https://registry.npmjs.org/-/npm/v1/user 571ms
+73 silly npm profile get received {"tfa":false,"name":"thetechcompany","email":"professional.balbatross@gmail.com","email_verified":true,"created":"2020-08-25T02:14:23.878Z","updated":"2021-06-05T09:38:58.022Z","cidr_whitelist":null}
+74 silly get npm username received {"username":"thetechcompany","tfa":false,"name":"thetechcompany","email":"professional.balbatross@gmail.com","email_verified":true,"created":"2020-08-25T02:14:23.878Z","updated":"2021-06-05T09:38:58.022Z","cidr_whitelist":null}
+75 silly verifyNpmPackageAccess
+76 http fetch GET 200 https://registry.npmjs.org/-/org/thetechcompany/package?format=cli 459ms (cache updated)
+77 info Checking two-factor auth mode
+78 verbose Retrieving npm user profile
+79 http fetch GET 200 https://registry.npmjs.org/-/npm/v1/user 772ms
+80 silly npm profile get received {"tfa":false,"name":"thetechcompany","email":"professional.balbatross@gmail.com","email_verified":true,"created":"2020-08-25T02:14:23.878Z","updated":"2021-06-05T09:38:58.022Z","cidr_whitelist":null}
+81 silly 2FA false
+82 warn ENOLICENSE Package @hivecommand-clients/revpi is missing a license.
+82 warn ENOLICENSE One way to fix this is to add a LICENSE.md file to the root of this repository.
+82 warn ENOLICENSE See https://choosealicense.com for additional guidance.
+83 silly getCurrentSHA
+84 verbose getCurrentSHA da7d1c1d7ac3e8dc0aba67dc381874edd409bda0
+85 silly lifecycle No script for "prepublish" in "@hivecomand-clients/root", continuing
+86 silly lifecycle No script for "prepare" in "@hivecomand-clients/root", continuing
+87 silly lifecycle No script for "prepublishOnly" in "@hivecomand-clients/root", continuing
+88 silly lifecycle No script for "prepack" in "@hivecomand-clients/root", continuing
+89 verbose pack-directory
+90 silly lifecycle No script for "prepublish" in "@hivecommand-clients/revpi", continuing
+91 silly lifecycle No script for "prepare" in "@hivecommand-clients/revpi", continuing
+92 silly lifecycle No script for "prepublishOnly" in "@hivecommand-clients/revpi", continuing
+93 silly lifecycle No script for "prepack" in "@hivecommand-clients/revpi", continuing
+94 silly lifecycle No script for "postpack" in "@hivecommand-clients/revpi", continuing
+95 verbose packed packages/clients/revpi
+96 silly lifecycle No script for "postpack" in "@hivecomand-clients/root", continuing
+97 verbose publish @hivecommand-clients/revpi
+98 silly FetchError: network timeout at: https://registry.npmjs.org/@hivecommand-clients%2frevpi
+98 silly     at Timeout.<anonymous> (/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/minipass-fetch/lib/index.js:89:18)
+98 silly     at listOnTimeout (node:internal/timers:557:17)
+98 silly     at processTimers (node:internal/timers:500:7)
+98 silly  FetchError: network timeout at: https://registry.npmjs.org/@hivecommand-clients%2frevpi
+98 silly     at Timeout.<anonymous> (/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/minipass-fetch/lib/index.js:89:18)
+98 silly     at listOnTimeout (node:internal/timers:557:17)
+98 silly     at processTimers (node:internal/timers:500:7) {
+98 silly   code: 'FETCH_ERROR',
+98 silly   errno: 'FETCH_ERROR',
+98 silly   type: 'request-timeout'
+98 silly }
+99 error FETCH_ERROR network timeout at: https://registry.npmjs.org/@hivecommand-clients%2frevpi
+100 error FetchError: network timeout at: https://registry.npmjs.org/@hivecommand-clients%2frevpi
+100 error     at Timeout.<anonymous> (/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/minipass-fetch/lib/index.js:89:18)
+100 error     at listOnTimeout (node:internal/timers:557:17)
