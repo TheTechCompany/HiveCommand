@@ -18,6 +18,13 @@ export interface ServerOpts {
     hostname?: string;
     discoveryServer?: string;
 
+    plant: {
+        [key: string]: {
+            type: DataType,
+            get: () => Variant,
+            set?: (value: Variant) => StatusCode,
+        }
+    },
     controller: {
         [key: string]: {
             type: DataType;
@@ -35,6 +42,7 @@ export default class Server {
     public controllerFolder?: UAObject;
 
     public controller?: UAObjectType;
+    public plant?: UAObjectType;
 
     private objectTypes: {
         [key: string]: UAObjectType
@@ -64,6 +72,20 @@ export default class Server {
     }
 
     async initializeController(){
+        this.plant = this.namespace?.addObjectType({
+            browseName: 'Plant',
+        })
+
+        Object.keys(this.options.plant || {}).forEach((key) => {
+            this.namespace?.addVariable({
+                browseName: key,
+                dataType: this.options.plant[key].type,
+                componentOf: this.plant,
+                minimumSamplingInterval: 500,
+                modellingRule: "Mandatory",
+            })
+        })
+
         this.controller = this.namespace?.addObjectType({
             browseName: 'ControllerHw'                
         })
@@ -236,6 +258,11 @@ export default class Server {
             organizedBy: this.controllerFolder
         });
 
+        const plant = await this.plant?.instantiate({
+            browseName: "Plant",
+            organizedBy: this.controllerFolder
+        })
+
         const that = this;
 
         Object.keys(this.options.controller || {}).forEach((key) => {
@@ -244,6 +271,13 @@ export default class Server {
                 set: this.options.controller[key].set
             }, true)
         });
+
+        Object.keys(this.options.plant || {}).forEach((key) => {
+            (plant?.getComponentByName(key) as UAVariable).bindVariable({
+                get: this.options.plant[key].get,
+                set: this.options.plant[key].set
+            }, true)
+        })  
 
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
     }

@@ -77,6 +77,11 @@ export class CommandStateMachine extends EventEmitter {
 		return this.processes.map((x) => x.currentPosition)
 	}
 
+	getProcessPosition(name: string){
+		let position = this.processes.find((x) => x.name == name)?.currentPosition
+		return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
+	}
+
 	getDeviceControl(deviceName: string){
 		return this.devices?.find((a) => a.name == deviceName)?.isControlled
 	}

@@ -22,6 +22,13 @@ export interface CommandNetworkOptions{
 			get: () => Variant
 			set: (value: Variant) => StatusCode
 		}
+	},
+	plant: {
+		[key: string]: {
+			type: DataType;
+			get: () => Variant
+			set?: (value: Variant) => StatusCode
+		}
 	}
 	valueBank?: ValueBankInterface
 }
@@ -342,7 +349,8 @@ export class CommandNetwork {
 			productName: "CommandPilot",
             hostname: credentials.hostname,
 			discoveryServer: credentials.discoveryServer,
-			controller: this.options.controller || {}
+			controller: this.options.controller || {},
+			plant: this.options.plant
 		})
 
 

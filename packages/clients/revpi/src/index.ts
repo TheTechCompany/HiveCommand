@@ -106,6 +106,22 @@ export class CommandClient {
 				requestState: async (device, key, value) => await this.requestState({device: device, value: {[key]: value}}),
 				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
 			},
+			plant: {
+				"UF_Plant": {
+					type: DataType.String,
+					get: () => {
+						let pos = this.machine?.getProcessPosition('UF Plant')
+						return new Variant({dataType: DataType.String, value: pos})
+					}
+				},
+				"NF_Plant": {
+					type: DataType.String,
+					get: () => {
+						let pos = this.machine?.getProcessPosition('NF Plant')
+						return new Variant({dataType: DataType.String, value: pos})
+					}
+				}
+			},
 			controller: {
 				CommandPoint: {
 					type: DataType.String,
