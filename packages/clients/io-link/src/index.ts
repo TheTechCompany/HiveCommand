@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { discoverMasters, discoverDevices } from '@io-link/core'
 
 (async () => {
