@@ -49,8 +49,9 @@ export class StateDevice {
 
 		if(!this.isControlled) return exists;
 		
+		console.log("Checking interlock", {device, desiredState, currentState})
 		for(var k in desiredState){
-			if(currentState?.[k] !== desiredState?.[k]){
+			if(`${currentState?.[k]}` !== `${desiredState?.[k]}`){
 				exists = false;
 				break;
 			}
