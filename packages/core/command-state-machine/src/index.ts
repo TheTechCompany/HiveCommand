@@ -163,12 +163,12 @@ export class CommandStateMachine extends EventEmitter {
 			// console.log("Checking")
 
 			let {locked, lock} = await device.checkInterlock(this.state)
-			console.log("Checked", {locked, lock})
+			// console.log("Checked", {locked, lock})
 			if(locked){
 				console.log("Reacting to lock");
 				await device.doFallback(lock, this.performOperation)
 			}
-			console.log("DEVICE", device.name, "LOCKED", locked)
+			// console.log("DEVICE", device.name, "LOCKED", locked)
 		})	
 	}
 

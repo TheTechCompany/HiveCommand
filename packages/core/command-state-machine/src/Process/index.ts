@@ -275,6 +275,8 @@ export class IOProcess extends EventEmitter{
             
                 let checkValue = this.templateValue(cond.value_id)
 
+                console.log(input, inputValue, checkValue)
+
                 if(!cond.check(inputValue, checkValue)){
                     truthy = false;
                 }
