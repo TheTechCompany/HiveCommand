@@ -116,7 +116,7 @@ export class IOProcess extends EventEmitter{
         // console.log("MOVE NEXT", current_action, current_action?.hasRun, sortedSteps)
         if((!current_action || current_action.hasRun) && sortedSteps.length > 0){ //!current_action || current_hasRun
             if(current_action) {
-                console.log(current_action.blockType)
+                // console.log(current_action.blockType)
                 current_action.onExit();
             }
 
@@ -268,7 +268,7 @@ export class IOProcess extends EventEmitter{
 
                 //Get input value from value bank valueBank[input][inputKey]
                 // console.log(this.parent.state.get(cond.input_id), cond.input_key)
-                console.log(this.parent.state.get(cond.input_id), this.parent.state)
+                // console.log(this.parent.state.get(cond.input_id), this.parent.state)
 
                 let input = this.parent.state.get(cond.input_id)?.[cond.input_key]
                 const inputValue = this.templateValue(`${input}`)

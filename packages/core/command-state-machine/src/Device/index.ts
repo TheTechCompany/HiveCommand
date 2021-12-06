@@ -49,7 +49,7 @@ export class StateDevice {
 
 		if(!this.isControlled) return exists;
 		
-		console.log("Checking interlock", {device, desiredState, currentState})
+		// console.log("Checking interlock", {device, desiredState, currentState})
 		for(var k in desiredState){
 			if(`${currentState?.[k]}` !== `${desiredState?.[k]}`){
 				exists = false;
@@ -63,7 +63,7 @@ export class StateDevice {
 		let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
 
 		let input = state?.get(device)?.[deviceKey]
-		console.log("Check condition", {input, value}, {device, deviceKey})
+		// console.log("Check condition", {input, value}, {device, deviceKey})
 		return cond.check(input, value)
 	}
 
@@ -81,7 +81,7 @@ export class StateDevice {
 
 		const locked = lockedUp.includes(false);
 
-		console.log(state, this.device.name, locked)
+		// console.log(state, this.device.name, locked)
 
 		return {locked, lock: locks[lockedUp.indexOf(false)]};
 	}

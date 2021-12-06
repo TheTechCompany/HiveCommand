@@ -48,7 +48,7 @@ export class Action {
 
         let isPrioritized = priority != undefined; //&& priority == this.node.id;
 
-        console.log("isPrioritize", isPrioritized, priority)
+        // console.log("isPrioritize", isPrioritized, priority)
         switch(this.blockType){
             case 'action':
                 this.isRunning = true;
@@ -91,8 +91,8 @@ export class Action {
                     
                     let timer : Timer = this.runner.timers[this.node.id]
 
-                    console.log("TIMER", timeout)
-                    setTimeout(() => {console.log("TIMER WILL RUN")}, 1000)
+                    // console.log("TIMER", timeout)
+                    // setTimeout(() => {console.log("TIMER WILL RUN")}, 1000)
                     const timer_status = await timer.countDown()
                     console.timeEnd(`Timer ${id}`)
 
@@ -140,7 +140,7 @@ export class Action {
 
                     return await this.runner.performOperation(action.device, action.release || false, action.operation)
                 }))
-                console.log("Action run")
+                // console.log("Action run")
                 this.isRunning = false;
                 this.hasRun = true;
                 return result;
@@ -158,7 +158,7 @@ export class Action {
                 }
                 break;
             case 'timer':
-                console.log("Timeout block")
+                // console.log("Timeout block")
                 this.hasRun = false;
                 this.isRunning = true;
                 let timeout = parseInt(this.process.templateValue(this.node.extras?.timer))
