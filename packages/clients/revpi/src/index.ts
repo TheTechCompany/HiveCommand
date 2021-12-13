@@ -108,60 +108,58 @@ export class CommandClient {
 				requestState: async (device, key, value) => await this.requestState({device: device, value: {[key]: value}}),
 				requestAction: async (device, action) => await this.requestOperation({device, operation: action})
 			},
-			plant: {
-				"UF_Plant": {
-					type: DataType.String,
-					get: () => {
-						let pos = this.machine?.getProcessPosition('UF Plant')
-						return new Variant({dataType: DataType.String, value: pos})
-					}
-				},
-				"NF_Plant": {
-					type: DataType.String,
-					get: () => {
-						let pos = this.machine?.getProcessPosition('NF Plant')
-						return new Variant({dataType: DataType.String, value: pos})
-					}
-				}
-			},
 			controller: {
-				CommandPoint: {
-					type: DataType.String,
-					get: () => {
-						return new Variant({dataType: DataType.String, value: 'Enter Command'})
+				state: {
+					Running: {
+						type: DataType.Boolean,
+						get: () => {
+							return new Variant({dataType: DataType.Boolean, value: this.machine?.isRunning})
+						}
 					},
-					set: (value) => {
-						let parts = value.value.toString().split('|')
-						// if(!parts) return;
-						const [ device, action ] = parts;
-						
-						this.requestOperation({device, operation: action})
-
-						return StatusCodes.Good;
+					Mode: {
+						type: DataType.String,
+						get: () => {
+							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
+						},
+						set: (value) => {
+							this.machine?.changeMode((CommandStateMachineMode as any)[value.value.toString().toUpperCase()])
+							return StatusCodes.Good;
+	
+						}
 					}
 				},
-				flowPriority: {
-					type: DataType.String,
-					get: () => {
-						return new Variant({dataType: DataType.String, value: `Flow Priority`})
+				actions: {
+					skipTo: {
+						inputs: [
+							new Variant({dataType: DataType.String}),
+						],
+						outputs: [
+							new Variant({dataType: DataType.Boolean}),
+						],
+						func: async (inputs) => {
+							const [value] = inputs;
+						
+							const result = await this.machine?.runOneshot(value.value.toString())
+							return [new Variant({dataType: DataType.Boolean, value: result})]
+						}
 					},
-					set: (value) => {
-						console.log("RUN ONESHOT", value.value.toString())
-						this.machine?.runOneshot(value.value.toString())
-						return StatusCodes.Good;
-					}	
-				},
-				Mode: {
-					type: DataType.String,
-					get: () => {
-						return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
-					},
-					set: (value) => {
-						this.machine?.changeMode((CommandStateMachineMode as any)[value.value.toString().toUpperCase()])
-						return StatusCodes.Good;
+					command: {
+						inputs: [
+							new Variant({dataType: DataType.String}),
+							new Variant({dataType: DataType.String})
+						],
+						outputs: [
+							new Variant({dataType: DataType.Boolean})
+						],
+						func: async (inputs) => {{
+							const [device, action] = inputs;
 
+							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})
+							return [new Variant({dataType: DataType.Boolean, value: result})];
+						}}
 					}
 				}
+
 			}
 		});
 

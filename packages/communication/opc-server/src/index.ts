@@ -5,31 +5,34 @@ import {
     makeEUInformation,
     makeRelativePath,
     Namespace,
-    OPCUAServer, RegisterServerMethod, StatusCode, UAObject, UAObjectType, UAVariable, Variant
+    OPCUAServer, RegisterServerMethod, StatusCode, UAMethod, UAObject, UAObjectType, UAVariable, Variant
 } from 'node-opcua'
 import { networkInterfaces } from 'os';
 
 import { getNodeId } from '@hive-command/opcua-utils'
 import { StatusCodes } from 'node-opcua';
 import { EUInformation } from 'node-opcua-types';
+import { DeviceManager } from './device-manager';
 
 export interface ServerOpts {
     productName: string;
     hostname?: string;
     discoveryServer?: string;
 
-    plant: {
-        [key: string]: {
-            type: DataType,
-            get: () => Variant,
-            set?: (value: Variant) => StatusCode,
-        }
-    },
     controller: {
-        [key: string]: {
-            type: DataType;
-            get: () => Variant;
-            set: (variant: Variant) => StatusCode;
+        state?: {
+            [key: string]: {
+                type: DataType;
+                get: () => Variant;
+                set?: (variant: Variant) => StatusCode;
+            }
+        },
+        actions?: {
+            [key: string]: {
+                inputs: Variant[]
+                outputs: Variant[]
+                func: (args: Variant[]) => Promise<Variant[]>
+            }
         }
     }
 }
@@ -52,8 +55,12 @@ export default class Server {
 
     private options : ServerOpts;
 
+    private deviceManager : DeviceManager;
+
     constructor(opts: ServerOpts){
         this.options = opts;
+
+        this.deviceManager = new DeviceManager();
 
         let discovery = {};
         if(opts.discoveryServer) discovery = {
@@ -76,29 +83,36 @@ export default class Server {
             browseName: 'Plant',
         })
 
-        Object.keys(this.options.plant || {}).forEach((key) => {
-            this.namespace?.addVariable({
-                browseName: key,
-                dataType: this.options.plant[key].type,
-                componentOf: this.plant,
-                minimumSamplingInterval: 500,
-                modellingRule: "Mandatory",
-            })
-        })
-
+      
         this.controller = this.namespace?.addObjectType({
             browseName: 'ControllerHw'                
         })
 
-        Object.keys(this.options.controller || {}).forEach((key) => {
-            this.namespace?.addVariable({
-                browseName: key,
-                dataType: this.options.controller[key].type,
-                componentOf: this.controller,
-                minimumSamplingInterval: 500,
-                modellingRule: "Mandatory"
+        if(this.controller !== undefined) {
+
+            const controller = this.controller;
+
+            //Init state vars
+            Object.keys(this.options.controller.state || {}).forEach((key) => {
+                this.namespace?.addVariable({
+                    browseName: key,
+                    dataType: this.options.controller.state?.[key].type,
+                    componentOf: this.controller,
+                    minimumSamplingInterval: 500,
+                    modellingRule: "Mandatory"
+                })
             })
-        })
+
+            //Init actions
+            Object.keys(this.options.controller.actions || {}).forEach((key) => {
+                this.namespace?.addMethod(controller, {
+                    browseName: key,
+                    inputArguments: this.options.controller.actions?.[key].inputs,
+                    outputArguments: this.options.controller.actions?.[key].outputs,
+                    modellingRule: "Mandatory"
+                })
+            })
+        }
        
     }
 
@@ -123,21 +137,7 @@ export default class Server {
         return this.objectTypes;    
     }
 
-    async addControllerInfo(key: string, type: DataType, getter: () => any){
 
-        this.namespace?.addVariable({
-            browseName: key,
-            componentOf: this.controller,
-            dataType: type,
-            modellingRule: "Mandatory",
-            minimumSamplingInterval: 1000,
-            value: {
-                get: () => {
-                    return getter()
-                }
-            }
-        })
-    }
 
     async addDevice(
             device: {name: string, type: string}, 
@@ -148,6 +148,13 @@ export default class Server {
                         get: ((key: string) => any),
                         set?: (value: Variant) => void
                     }
+                },
+                actions?: {
+                    [key: string]: {
+                        inputs?: {name: string, type: DataType}[],
+                        outputs?: {name: string, type: DataType}[],
+                        func: (args: Variant[]) => Promise<Variant[]>
+                    }
                 }
             }
         ){
@@ -157,6 +164,8 @@ export default class Server {
             
                 let type;
                 if(this.objectTypes[device.type]) type = this.objectTypes[device.type];
+                
+                //No template ready, make one now
                 if(!this.objectTypes[device.type]) {
 
                     type = this.namespace?.addObjectType({
@@ -165,6 +174,22 @@ export default class Server {
                 
                     if(!type) return;
 
+                    //Initialize actions
+                    for(var key in definition.actions){
+                        this.namespace?.addMethod(type, {
+                            browseName: key,
+                            inputArguments: definition.actions[key].inputs?.map(input => ({
+                                name: input.name,
+                                dataType: input.type, 
+                            })),
+                            outputArguments: definition.actions[key].outputs?.map(output => ({
+                                name: output.name,
+                                dataType: output.type, 
+                            })),
+                            modellingRule: "Mandatory"
+                        })
+                    }
+                    //Initialize state variables
                     for(var k in definition?.state){
                         this.namespace?.addAnalogDataItem({
                             browseName: k,
@@ -186,6 +211,21 @@ export default class Server {
                     organizedBy: this.deviceFolder
                 })
                 
+           
+                for(var key in definition.actions){
+                   (obj?.getMethodByName(key) as UAMethod)?.bindMethod(async (inputs, context, callback) => {
+                        //   callback()
+                        try{
+                            const outputs = await definition.actions?.[key].func(inputs)
+                            callback(null, {statusCode: StatusCodes.Good, outputArguments: outputs})
+                        }catch(err : any){
+                            callback(err, {statusCode: StatusCodes.BadInternalError})
+                        }
+
+                   });
+
+                }
+
                 for(var k in definition?.state){
                     const key = k;
                     const getter = definition?.state[key]?.get;
@@ -265,19 +305,29 @@ export default class Server {
 
         const that = this;
 
-        Object.keys(this.options.controller || {}).forEach((key) => {
+        //Bind controller state vars
+        Object.keys(this.options.controller.state || {}).forEach((key) => {
             (controller?.getComponentByName(key) as UAVariable).bindVariable({
-                get: this.options.controller[key].get,
-                set: this.options.controller[key].set
+                get: this.options.controller.state?.[key].get || (() => {return  new Variant({dataType: DataType.Double, value: 0})}),
+                set: this.options.controller.state?.[key].set
             }, true)
         });
 
-        Object.keys(this.options.plant || {}).forEach((key) => {
-            (plant?.getComponentByName(key) as UAVariable).bindVariable({
-                get: this.options.plant[key].get,
-                set: this.options.plant[key].set
-            }, true)
-        })  
+        //Bind controller actions
+        Object.keys(this.options.controller.actions || {}).forEach((key) => {
+            (controller?.getMethodByName(key) as UAMethod).bindMethod(async (inputs, context, callback) => {
+                return await new Promise(async (resolve, reject) => {
+                    try{
+                        const result = await this.options.controller.actions?.[key].func(inputs)
+                        callback(null, {statusCode: StatusCodes.Good, outputArguments: result})
+                    }catch(e: any){
+                        callback(e, {statusCode: StatusCodes.BadInternalError})
+                    }
+                })
+
+            })
+        })
+
 
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
     }

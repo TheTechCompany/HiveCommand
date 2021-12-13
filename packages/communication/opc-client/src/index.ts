@@ -48,6 +48,8 @@ export default class Client {
 
     async discover(){
         const servers = await this.client.findServers()
+
+        
         return servers
     }
 

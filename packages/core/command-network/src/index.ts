@@ -17,19 +17,22 @@ export interface CommandNetworkOptions{
 	baseURL?: string;
 
 	controller: {
-		[key: string]: {
-			type: DataType;
-			get: () => Variant
-			set: (value: Variant) => StatusCode
+		state?: {
+			[key: string]: {
+				type: DataType;
+				get: () => Variant
+				set?: (value: Variant) => StatusCode
+			}
+		}
+		actions?: {
+			[key: string]: {
+				inputs: Variant[]
+				outputs: Variant[]
+				func: (args: Variant[]) => Promise<Variant[]>
+			}
 		}
 	},
-	plant: {
-		[key: string]: {
-			type: DataType;
-			get: () => Variant
-			set?: (value: Variant) => StatusCode
-		}
-	}
+
 	valueBank?: ValueBankInterface
 }
 
@@ -175,6 +178,16 @@ export class CommandNetwork {
 				name: layout.name,
 				type: layout.type
 			}, {
+				actions: {
+					changeMode: {
+						inputs: [{name: 'mode', type: DataType.String}],
+						outputs: [{name: 'success', type: DataType.Boolean}],
+						func: async (args: Variant[]) => {
+							await this.valueBank.setDeviceMode?.(layout.name, args[0].toString() == "Automatic" ? true : false)
+							return [new Variant({dataType: DataType.Boolean, value: true})];
+						}
+					}
+				},
 				state: {
 					...(layout.state || []).reduce((prev, curr) => {
 						let opcPoint: any = {
@@ -214,126 +227,7 @@ export class CommandNetwork {
 			})
 		}))
 
-		// await Promise.all(this.buses.map(async (bus) => {
-		// 	switch(bus.type){
-		// 		case 'REVPI':
-		// 			//Inputs
-		// 			console.log("REVPI BUilder");
-		// 			await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
-		// 				let portKey = `I_${ix + 1}`
-		// 				await this.opc?.addDevice({
-		// 					name: this.getDeviceName(`REVPI`, bus.id, portKey),
-		// 					type: 'RevPi_DI'
-		// 				}, {
-		// 					state: {
-		// 						active: {
-		// 							type: DataType.Boolean,
-		// 							get: (key) => {
-		// 								let value = this.valueBank.get?.(bus.id, portKey)
-		// 								return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1) });
-		// 							}
-		// 						}
-		// 					}
-		// 				})
-		// 			}))
-		// 			//Outputs
-		// 			await Promise.all(Array.from(Array(14)).map(async (port, ix) => {
-		// 				let portKey = `O_${ix + 1}`
-		// 				await this.opc?.addDevice({
-		// 					name: this.getDeviceName(`REVPI`, bus.id, portKey),
-		// 					type: 'RevPi_DO'
-		// 				}, {
-		// 					state: {
-		// 						active: {
-		// 							type: DataType.Boolean,
-		// 							get: (key) => {
-		// 								let value = this.valueBank.get?.(bus.id, portKey)
-		// 								return new Variant({dataType: DataType.Boolean, value: Boolean(value && value == 1)});
-		// 							},
-		// 							set: (value) => {
-		// 								console.log(`SET VALUE FOR ${port}`, value)
-		// 								this.valueBank.request?.(bus.id, portKey, value.value ? 1 : 0)
-		// 								// callback(null, StatusCodes.Good);
-		// 							}
-		// 						}
-		// 					}
-		// 				})
-		// 			}))
-
-		// 			break;
-		// 		case 'IO-LINK':
-		// 			console.log("IO")
-
-		// 			if((bus.devices || []).length > 0){
-		// 				await Promise.all((bus.devices || []).map(async (device) => {
-		// 					let stateDefinition : any = {};
-
-
-		// 					device.iodd.function.inputs.reduce<any[]>((prev, curr) => {
-		// 						return prev.concat(curr.struct)
-		// 					}, []).forEach((input) => {
-		// 						console.log(input)
-		// 						stateDefinition[`${input.name}-${input.bits.subindex}`] = {
-		// 							type: DataType.Double,
-		// 							get: () => {
-		// 								let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
-
-		// 								return new Variant({dataType: DataType.Double, value: value?.[`${input.name}-${input.bits.subindex}`]})
-		// 							}
-		// 						}
-		// 					})
-
-		// 					device.iodd.function.outputs?.reduce<any[]>((prev, curr) => {
-		// 						return prev.concat(curr.struct)
-		// 					}, []).forEach((output) => {
-		// 						stateDefinition[`${output.name}-${output.bits.subindex}`] = {
-		// 							type: DataType.Double,
-		// 							get: () => {
-		// 								let value = this.valueBank.get?.(bus.id, `${device.ix + 1}`)
-
-		// 								console.log("Value", value, `${output.name}-${output.bits.subindex}`)
-		// 								return new Variant({dataType: DataType.Double, value: value?.[`${output.name}-${output.bits.subindex}`]})
-		// 							},
-		// 							set: (value: Variant) => {
-										
-		// 								this.valueBank.request?.(bus.id, `${device.ix + 1}`, {[`${output.name}-${output.bits.subindex}`]: value.value})
-		// 							}
-		// 						}
-		// 					})
-
-		// 					this.opc?.addDevice({
-		// 						name: this.getDeviceName(`IO-LINK`, bus.id, device.ix + 1),
-		// 						type: device.product
-		// 					}, {
-		// 						state: stateDefinition
-		// 					})
-
-		// 				}))
-		// 			}else{
-		// 				await Promise.all(Array.from(Array(8)).map((port, ix) => {
-		// 					console.log("Add port", "IO " + ix)
-	
-		// 					this.opc?.addDevice({
-		// 						name: this.getDeviceName(`IO-LINK`, bus.id, ix + 1),
-		// 						type: `IO-PORT`
-		// 					}, {
-		// 						state: {
-		// 							value: {
-		// 								type: DataType.Double,
-		// 								get: () => {
-		// 									// console.log("GET IO")
-		// 									return new Variant({dataType: DataType.Double, value: 0.0})									}
-		// 							}
-		// 						}
-		// 					})
-		// 				}))
-		// 			}
-
-					
-		// 			break;
-		// 	}
-			
-		//}))
+		
 	}
 
 	/*
@@ -350,7 +244,6 @@ export class CommandNetwork {
             hostname: credentials.hostname,
 			discoveryServer: credentials.discoveryServer,
 			controller: this.options.controller || {},
-			plant: this.options.plant
 		})
 
 
