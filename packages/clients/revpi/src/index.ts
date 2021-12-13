@@ -39,6 +39,8 @@ export interface CommandClientOptions {
 		username: string,
 		password: string
 	}
+
+	ignorePlugins?: string[];
 }
 
 export class CommandClient { 
@@ -378,7 +380,7 @@ export class CommandClient {
 
 	async discoverEnvironment(){
 		//Run discovery for all loaded plugins
-		let environment = await Promise.all(this.plugins.map(async (plugin) => {
+		let environment = await Promise.all(this.plugins.filter((a) => (this.options.ignorePlugins || []).indexOf(a.TAG) < 0).map(async (plugin) => {
 			const discovered = await plugin.discover()
 
 			console.log("Discovered Plugin Environment", discovered);
@@ -602,7 +604,7 @@ export class CommandClient {
 		this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
 			this.healthClient.emit('process:transition', {process, target})
 		})
-		
+
 		console.log(this.machine)
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		

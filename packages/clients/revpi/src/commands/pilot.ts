@@ -10,6 +10,7 @@ type Options = {
 	commandCenter: string | undefined
 	healthCenter: string | undefined,
 	discoveryServer?: string;
+	ignorePlugins?: string;
 	jesus: boolean | undefined;
   };
   
@@ -25,12 +26,13 @@ type Options = {
 		discoveryServer: {type: 'string'},
 		commandCenter: {type: 'string'},
 		healthCenter: {type: 'string'},
+		ignorePlugins: {type: 'string'},
 		networkInterface: {type: 'string', description: 'network interface to scan for IO-Link masters on', default: 'eth0'},
 		jesus: {type: 'boolean', description: 'In case the code is un-tested run in Jesus mode so at any point Jesus can take the wheel'}
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { commander, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
+	const { commander, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
 
 	console.info(`Starting HiveCommand Pilot v${pkg.version}`);
 	
@@ -44,6 +46,7 @@ type Options = {
 		commandCenter,
 		healthCenter: healthCenter,
 		privateKey: key,
+		ignorePlugins: ignorePlugins ? ignorePlugins.split(',').map((x) => x.trim()) : [],
 		networkInterface: networkInterface,
 		discoveryServer
 	})
