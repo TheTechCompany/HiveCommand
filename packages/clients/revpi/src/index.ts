@@ -599,6 +599,10 @@ export class CommandClient {
 			performOperation: this.requestOperation
 		})
 
+		this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
+			this.healthClient.emit('process:transition', {process, target})
+		})
+		
 		console.log(this.machine)
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		

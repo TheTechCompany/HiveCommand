@@ -69,8 +69,15 @@ export class CommandStateMachine extends EventEmitter {
 
 		this.processes = program.processes.map((x) => new IOProcess(x, this))
 
+		this.processes.forEach((process) => {
+			process.on('transition', (ev) => this.onProcessTransition(process, ev))
+		})
 		this.start = this.start.bind(this)
 		this.performOperation = this.performOperation.bind(this);
+	}
+
+	onProcessTransition(process: IOProcess, event: {target: string}){
+		this.emit('transition', {target: event.target, process: process.id})
 	}
 
 	get currentPosition(){
