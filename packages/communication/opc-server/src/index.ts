@@ -317,7 +317,7 @@ export default class Server {
                         if(!result) return callback(null, {statusCode: StatusCodes.BadInternalError})
                         
                         const [ err, output ] = result;
-                        callback(err, {statusCode: StatusCodes.Good, outputArguments: output})
+                        callback(null, {statusCode: err ? StatusCodes.Bad : StatusCodes.Good, outputArguments: output})
                     }catch(e: any){
                         callback(e, {statusCode: StatusCodes.BadInternalError})
                     }
