@@ -129,6 +129,21 @@ export class CommandClient {
 					}
 				},
 				actions: {
+					start: {
+						inputs: [
+
+						],
+						outputs: [
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
+						],
+						func: async (inputs) => {
+							await this.machine?.start()
+							return [null, [new Variant({dataType: DataType.Boolean, value: true})]];
+						}
+					},
 					shutdown: {
 						inputs: [
 							
@@ -658,7 +673,7 @@ export class CommandClient {
 		// this.machine.on('REQUEST:OPERATION', this.requestOperation)
 		
 		//TODO add manual/timer/stopped/auto states
-		this.machine.start()
+		// this.machine.start()
 
 
 		this.machine.on('TICK', async () => {
