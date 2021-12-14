@@ -129,6 +129,21 @@ export class CommandClient {
 					}
 				},
 				actions: {
+					shutdown: {
+						inputs: [
+							
+						],
+						outputs: [
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
+						],
+						func: async (inputs) => {
+							await this.machine?.shutdown()
+							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+						}
+					},
 					skipTo: {
 						inputs: [
 							{
@@ -509,6 +524,7 @@ export class CommandClient {
 		switch(type){
 			case 'Connect':
 				return 'sub-process';
+			case 'PowerShutdown':
 			case 'Trigger':
 			case 'Action':
 				return 'action';
@@ -537,7 +553,7 @@ export class CommandClient {
 			// }
 	
 			return {
-				id: action.type == "Trigger" ? "origin" : action.id,
+				id: action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
 				extras: {
 					blockType: this.getBlockType(action.type) || 'action',
 					["sub-process"]: action?.subprocess?.id || undefined,

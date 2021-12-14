@@ -202,6 +202,10 @@ export class CommandStateMachine extends EventEmitter {
 		// console.log(`Perform operation ${operation} on ${device}`)
 	}
 
+	async shutdown(){
+		
+	}
+
 	async start(mode?: CommandStateMachineMode){
 		console.debug(`Starting State Machine`)
 

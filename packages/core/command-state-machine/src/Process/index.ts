@@ -34,6 +34,17 @@ export class IOProcess extends EventEmitter{
         this.actions = this.action_nodes
     }
 
+    shutdown(){
+        this.stop()
+        this.current_state = 'shutdown'
+        this.reset()
+        this.start()
+    }
+
+    reset(){
+        this.current_hasRun = false;
+    }
+
     get parentId(){
         return this.parent_process?.id
     }
