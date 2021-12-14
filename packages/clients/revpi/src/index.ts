@@ -173,6 +173,25 @@ export class CommandClient {
 							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})	
 							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
+					},
+					changeMode: {
+						inputs: [
+							{
+								name: 'mode',
+								dataType: DataType.String
+							}
+						],
+						outputs: [
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
+						],
+						func: async (inputs) => {
+							const [ mode ] = inputs;
+							await this.machine?.changeMode((CommandStateMachineMode as any)[mode.value.toString().toUpperCase()])
+							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+						}
 					}
 				}
 
