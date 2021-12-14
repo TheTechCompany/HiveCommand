@@ -206,26 +206,26 @@ export class CommandStateMachine extends EventEmitter {
 		this.running = false
 		
 		this.mode = CommandStateMachineMode.DISABLED
-		await Promise.all(this.processes.map((x) => x.shutdown()))
+		// await Promise.all(this.processes.map((x) => x.shutdown()))
 
-		this.running = true;
-		while(this.running){
-			await this.checkInterlocks();
+		// this.running = true;
+		// while(this.running){
+		// 	await this.checkInterlocks();
 
-				try{
-					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-				}catch(e){
-					console.debug(e)
-				}
+		// 		try{
+		// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+		// 		}catch(e){
+		// 			console.debug(e)
+		// 		}
 
-				const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
+		// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
 			
 
-			this.emit('TICK')
+		// 	this.emit('TICK')
 
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
+		// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
 		
-		}
+		// }
 
 	}
 

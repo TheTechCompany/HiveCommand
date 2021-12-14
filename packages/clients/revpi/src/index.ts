@@ -155,6 +155,23 @@ export class CommandClient {
 							}
 						],
 						func: async (inputs) => {
+
+							await this.stop();
+			
+							console.log("State Machine stopped...");
+					
+							let pumps = this.deviceMap.getDeviceByType("pump")
+					
+							await Promise.all(pumps.map(async (pump) => {
+								this.requestOperation({device: pump.name, operation: "Stop"})
+							}))
+
+							// if(this.options.healthCheck) await sendSMS(this.options.healthCheck?.number, `HiveCommand Stopped ${signal} ${exitCode}`, this.options.healthCheck?.username, this.options.healthCheck?.password)
+					
+							console.log("All VSD Pumps stopped");
+					
+							console.timeEnd("Shutdown")
+
 							await this.machine?.shutdown()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
