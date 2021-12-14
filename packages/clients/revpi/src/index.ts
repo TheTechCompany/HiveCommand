@@ -167,12 +167,12 @@ export class CommandClient {
 								dataType: DataType.Boolean
 							},
 						],
-						func: async (inputs) => {{
+						func: async (inputs) => {
 							const [device, action] = inputs;
 
 							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})	
 							return [new Variant({dataType: DataType.Boolean, value: true})];
-						}}
+						}
 					}
 				}
 
