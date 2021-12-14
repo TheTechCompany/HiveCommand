@@ -113,7 +113,7 @@ export class CommandClient {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine?.isRunning})
+							return new Variant({dataType: DataType.Boolean, value: this.machine?.isRunning || false})
 						}
 					},
 					Mode: {
@@ -140,7 +140,7 @@ export class CommandClient {
 							const [value] = inputs;
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
-							return [new Variant({dataType: DataType.Boolean, value: result})]
+							return [new Variant({dataType: DataType.Boolean, value: result || false})]
 						}
 					},
 					command: {
@@ -155,7 +155,7 @@ export class CommandClient {
 							const [device, action] = inputs;
 
 							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})
-							return [new Variant({dataType: DataType.Boolean, value: result})];
+							return [new Variant({dataType: DataType.Boolean, value: result || false})];
 						}}
 					}
 				}
