@@ -146,8 +146,8 @@ export class CommandClient {
 							const [value] = inputs;
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
-							if(result) throw result;
-							return [new Variant({dataType: DataType.Boolean, value: true})]
+							// if(result) throw result;
+							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},
 					command: {
@@ -171,7 +171,7 @@ export class CommandClient {
 							const [device, action] = inputs;
 
 							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})	
-							return [new Variant({dataType: DataType.Boolean, value: true})];
+							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
 					}
 				}
@@ -361,7 +361,7 @@ export class CommandClient {
 		console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 		
-		if(!busPort?.bus || !busPort.port) throw new Error("No bus-port found");
+		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
 		let action = busPort.actions?.find((a) => a.key == event.operation)
 		console.log("Found action", action)

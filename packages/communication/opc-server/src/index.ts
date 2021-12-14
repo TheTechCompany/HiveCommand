@@ -32,7 +32,7 @@ export interface ServerOpts {
             [key: string]: {
                 inputs: ArgumentOptions[]
                 outputs: ArgumentOptions[]
-                func: (args: Variant[]) => Promise<Variant[]>
+                func: (args: Variant[]) => Promise<[Error | null, Variant[]]>
             }
         }
     }
@@ -314,7 +314,10 @@ export default class Server {
                 return await new Promise(async (resolve, reject) => {
                     try{
                         const result = await this.options.controller.actions?.[key].func(inputs)
-                        callback(null, {statusCode: StatusCodes.Good, outputArguments: result})
+                        if(!result) return callback(null, {statusCode: StatusCodes.BadInternalError})
+                        
+                        const [ err, output ] = result;
+                        callback(err, {statusCode: StatusCodes.Good, outputArguments: output})
                     }catch(e: any){
                         callback(e, {statusCode: StatusCodes.BadInternalError})
                     }

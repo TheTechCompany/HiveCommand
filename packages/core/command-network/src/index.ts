@@ -28,7 +28,7 @@ export interface CommandNetworkOptions{
 			[key: string]: {
 				inputs: ArgumentOptions[]
 				outputs: ArgumentOptions[]
-				func: (args: Variant[]) => Promise<Variant[]>
+				func: (args: Variant[]) => Promise<[Error | null, Variant[]]>
 			}
 		}
 	},
