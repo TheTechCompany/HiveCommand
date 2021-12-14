@@ -146,7 +146,8 @@ export class CommandClient {
 							const [value] = inputs;
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
-							return [new Variant({dataType: DataType.Boolean, value: result || false})]
+							if(result) throw result;
+							return [new Variant({dataType: DataType.Boolean, value: true})]
 						}
 					},
 					command: {
@@ -169,8 +170,9 @@ export class CommandClient {
 						func: async (inputs) => {{
 							const [device, action] = inputs;
 
-							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})
-							return [new Variant({dataType: DataType.Boolean, value: result || false})];
+							const result = await this.requestOperation({device: device.value.toString(), operation: action.value.toString()})	
+							if(result) throw result;
+							return [new Variant({dataType: DataType.Boolean, value: true})];
 						}}
 					}
 				}
