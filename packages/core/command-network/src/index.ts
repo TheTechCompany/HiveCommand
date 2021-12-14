@@ -1,6 +1,6 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
-import { DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
+import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
 import { AssignmentPayload, PayloadResponse } from './types';
 
 export * from './types'
@@ -26,8 +26,8 @@ export interface CommandNetworkOptions{
 		}
 		actions?: {
 			[key: string]: {
-				inputs: Variant[]
-				outputs: Variant[]
+				inputs: ArgumentOptions[]
+				outputs: ArgumentOptions[]
 				func: (args: Variant[]) => Promise<Variant[]>
 			}
 		}
@@ -180,8 +180,8 @@ export class CommandNetwork {
 			}, {
 				actions: {
 					changeMode: {
-						inputs: [{name: 'mode', type: DataType.String}],
-						outputs: [{name: 'success', type: DataType.Boolean}],
+						inputs: [{name: 'mode', dataType: DataType.String}],
+						outputs: [{name: 'success', dataType: DataType.Boolean}],
 						func: async (args: Variant[]) => {
 							await this.valueBank.setDeviceMode?.(layout.name, args[0].toString() == "Automatic" ? true : false)
 							return [new Variant({dataType: DataType.Boolean, value: true})];

@@ -131,10 +131,16 @@ export class CommandClient {
 				actions: {
 					skipTo: {
 						inputs: [
-							new Variant({dataType: DataType.String, value: 'process'}),
+							{
+								name: 'process',
+								dataType: DataType.String
+							},
 						],
 						outputs: [
-							new Variant({dataType: DataType.Boolean, value: false}),
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
 						],
 						func: async (inputs) => {
 							const [value] = inputs;
@@ -145,11 +151,20 @@ export class CommandClient {
 					},
 					command: {
 						inputs: [
-							new Variant({dataType: DataType.String, value: 'device'}),
-							new Variant({dataType: DataType.String, value: 'action'})
+							{
+								name: 'device',
+								dataType: DataType.String
+							},
+							{
+								name: 'action',
+								dataType: DataType.String
+							}
 						],
 						outputs: [
-							new Variant({dataType: DataType.Boolean, value: false}),
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							},
 						],
 						func: async (inputs) => {{
 							const [device, action] = inputs;

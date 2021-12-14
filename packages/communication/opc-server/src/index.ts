@@ -1,4 +1,5 @@
 import {
+    ArgumentOptions,
     BrowsePath,
     DataType,
     EUEngineeringUnit,
@@ -29,8 +30,8 @@ export interface ServerOpts {
         },
         actions?: {
             [key: string]: {
-                inputs: Variant[]
-                outputs: Variant[]
+                inputs: ArgumentOptions[]
+                outputs: ArgumentOptions[]
                 func: (args: Variant[]) => Promise<Variant[]>
             }
         }
@@ -151,8 +152,8 @@ export default class Server {
                 },
                 actions?: {
                     [key: string]: {
-                        inputs?: {name: string, type: DataType}[],
-                        outputs?: {name: string, type: DataType}[],
+                        inputs?: ArgumentOptions[],
+                        outputs?: ArgumentOptions[],
                         func: (args: Variant[]) => Promise<Variant[]>
                     }
                 }
@@ -178,14 +179,8 @@ export default class Server {
                     for(var key in definition.actions){
                         this.namespace?.addMethod(type, {
                             browseName: key,
-                            inputArguments: definition.actions[key].inputs?.map(input => ({
-                                name: input.name,
-                                dataType: input.type, 
-                            })),
-                            outputArguments: definition.actions[key].outputs?.map(output => ({
-                                name: output.name,
-                                dataType: output.type, 
-                            })),
+                            inputArguments: definition.actions[key].inputs,
+                            outputArguments: definition.actions[key].outputs,
                             modellingRule: "Mandatory"
                         })
                     }
