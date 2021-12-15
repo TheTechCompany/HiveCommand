@@ -1,9 +1,9 @@
 'use strict';
 
-const ifmCoreDiscovery = require('..');
+import { MasterDiscovery } from '../src'
 
 describe('ifm-core-discovery', () => {
     it('needs tests', () => {
-        
+
     });
 });
