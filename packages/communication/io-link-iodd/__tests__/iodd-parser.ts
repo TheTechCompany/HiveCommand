@@ -1,7 +1,7 @@
 'use strict';
 
 import { readFileSync } from 'fs';
-import { utils } from '../src';
+import { parseIODD, convertIODD } from '../src';
 import { IODD, IODDFilter } from '../src/types';
 import { createFilter, getBits } from '../src/utils';
 
@@ -10,13 +10,13 @@ let iodd_result: IODD;
 
 beforeAll(async () => {
     iodd = readFileSync(__dirname + '/iodd-ldl100.xml', 'utf-8')
-    const result = await utils.parseIODD(iodd)
-    iodd_result = await utils.convertIODD(result)
+    const result = await parseIODD(iodd)
+    iodd_result = await convertIODD(result)
 })
 
 describe('IODD Parser', () => {
     it('Retrieved fields', () => {
-        let names : any[] = iodd_result.function.features.map((x) => {
+        let names : any[] = iodd_result.function.inputs.map((x) => {
             return x.struct.map((y) => y.name)
         })
 
@@ -26,7 +26,7 @@ describe('IODD Parser', () => {
 
     it('Filter IO-Link Raw Output', async () => {
        
-        let filters : IODDFilter[] = iodd_result.function.features.map((x) => {
+        let filters : IODDFilter[] = iodd_result.function.inputs.map((x) => {
             return createFilter(x.struct.map((y) => ({name: y.name, ...y.bits})))
         })
 
