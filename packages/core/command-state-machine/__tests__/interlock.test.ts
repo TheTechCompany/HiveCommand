@@ -1,7 +1,6 @@
 'use strict';
 
 import { CommandStateMachine, CommandStateMachineMode } from '../src'
-import locks from 'locks';
 
 jest.setTimeout(20000);
 

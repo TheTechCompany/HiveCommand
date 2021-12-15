@@ -1,7 +1,6 @@
 'use strict';
 
 import {CommandStateMachine, CommandStateMachineMode} from '../src'
-import locks from 'locks'
 
 jest.setTimeout(20000);
 
@@ -27,13 +26,15 @@ describe('Conditional Paths', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
+						nodes: [
+							{
+								id: 'origin',
+								type: 'trigger'
 							},
-							"0.1": {
+							{
 								id: '0.1',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [
 										{
@@ -43,9 +44,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							"0.2": {
+							{
 								id: "0.2",
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'timer',
 									actions: [
 										{
@@ -55,9 +57,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							'0.2.2': {
+							{
 								id: '0.2.2',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [
 										{
@@ -67,9 +70,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							"0.3": {
+							{
 								id: '0.3',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'PMP201',
@@ -77,16 +81,16 @@ describe('Conditional Paths', () => {
 									}]
 								}
 							}
-						},
-						links: {
-							link: {
+						],
+						links: [
+							{
 								source: "origin",
 								target: "0.1"
 							},
-							link2: {
+							{
 								source: '0.1',
 								target: '0.2',
-								extras: {
+								options: {
 									conditions: [
 										{
 											input: 'CT301',
@@ -97,10 +101,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							link3: {
+							{
 								source: '0.1',
 								target: '0.2.2',
-								extras: {
+								options: {
 									conditions: [
 										{
 											input: 'CT301',
@@ -111,15 +115,15 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							link4: {
+							{
 								source: '0.2',
 								target: '0.3'
 							},
-							link5: {
+							{
 								source: '0.2.2',
 								target: '0.3'
 							}
-						}
+						]
 					}
 				]
 			}, {

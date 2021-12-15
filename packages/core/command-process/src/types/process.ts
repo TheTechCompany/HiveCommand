@@ -10,6 +10,7 @@ export interface CommandProcess {
 export interface CommandProcessEdge {
 	source: string;
 	target: string;
+	options?: any;
 }
 
 export interface CommandProcessNode {

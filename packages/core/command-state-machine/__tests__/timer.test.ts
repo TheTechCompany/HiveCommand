@@ -15,20 +15,22 @@ describe('State Machine Timers', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
-							},
-							"0.2": {
+						nodes: [{
+								id: 'origin',
+								type: 'trigger',
+
+							},{
 								id: "0.2",
-								extras: {
+								type: 'timer',
+
+								options: {
 									blockType: 'timer',
 									timer: 5 * 1000
 								}
-							},
-							"0.3": {
+							}, {
 								id: '0.3',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'AV101',
@@ -36,21 +38,18 @@ describe('State Machine Timers', () => {
 									}]
 								}
 							}
-						},
-						links: {
-							link: {
+						],
+						links: [{
 								source: "origin",
 								target: "0.2"
-							},
-							link3: {
+							},{
 								source: '0.2',
 								target: '0.3'
-							},
-							links4: {
+							}, {
 								source: '0.3',
 								target: 'origin'
 							}
-						}
+						]
 					}
 				]
 			}, {

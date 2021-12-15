@@ -21,14 +21,14 @@ describe('Oneshot Process Runs', () => {
 	// 						},
 	// 						"0.2": {
 	// 							id: "0.2",
-	// 							extras: {
+	// 							options: {
 	// 								blockType: 'timer',
 	// 								timer: 5 * 1000
 	// 							}
 	// 						},
 	// 						"0.3": {
 	// 							id: '0.3',
-	// 							extras: {
+	// 							options: {
 	// 								blockType: 'action',
 	// 								actions: [{
 	// 									device: 'AV101',
@@ -61,7 +61,7 @@ describe('Oneshot Process Runs', () => {
 	// 								},
 	// 								"0.1": {
 	// 									id: '0.1',
-	// 									extras: {
+	// 									options: {
 	// 										blockType: 'action',
 	// 										actions: [{
 	// 											device: 'AV101',
@@ -74,7 +74,7 @@ describe('Oneshot Process Runs', () => {
 	// 								},
 	// 								'0.2': {
 	// 									id: '0.2',
-	// 									extras: {
+	// 									options: {
 	// 										blockType: 'action'
 	// 									}
 	// 								}
@@ -132,122 +132,121 @@ describe('Oneshot Process Runs', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
-							},
-							"0.2": {
+						nodes: [{
+								id: 'origin',
+								type: 'trigger',
+							},{
 								id: "0.2",
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'permeate'
 								}
-							},
-							"0.3": {
+							}, {
 								id: '0.3',
-								extras: {
+								type: 'action',
+
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'AV101',
 										operation: 'open'
 									}]
 								}
-							},
-							'0.4': {
+							}, {
 								id: '0.4',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'flush'
 								}
 							},
 							
-						},
-						links: {
-							link: {
+						],
+						links: [
+							 {
 								source: "origin",
 								target: "0.2"
 							},
-							link3: {
+							{
 								source: '0.2',
 								target: '0.3'
 							},
-							links2: {
+							 {
 								source: '0.3',
 								target: '0.4'
 							},
-							links4: {
+							{
 								source: '0.4',
 								target: 'origin'
 							}
-						},
+						],
 						sub_processes: [
 							{
 								id: 'permeate',
 								name: 'Permeate',
-								nodes: {
-									'origin': {
+								nodes: [{
 										id: 'origin',
-									},
-									'0.1': {
+										type: 'trigger'
+									},{
 										id: '0.1',
-										extras: {
+										type: 'action',
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'PMP101',
 												operation: 'start',
 											}]
 										}
-									},
-									'0.2': {
+									},{
 										id: '0.2',
-										extras: {
+										type: 'action',
+										options: {
 											blockType: 'timer',
 											timer: 2000
 										}
-									},
-									'0.3': {
+									},{
 										id: '0.3',
-										extras: {
+										type: 'action',
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'PMP101',
 												operation: 'stop'
 											}]
 										}
-									},
-									'0.4': {
-										id: '0.3'
+									},{
+										id: '0.3',
+										type: 'action',
 									}
-								},
-								links: {
-									'origin': {
+								],
+								links: [{
 										source: 'origin',
 										target: '0.1'
-									},
-									'0.1': {
+									},{
 										source: '0.1',
 										target: '0.2'
-									},
-									'0.2': {
+									},{
 										source: '0.2',
 										target: '0.3'
-									},
-									'0.3': {
+									},{
 										source: '0.3',
 										target: '0.4'
 									}
-								}
+								]
 							},
 							{
 								id: 'flush',
 								name: 'Flush',
-								nodes: {
-									"origin": {
-										id: 'origin'
-									},
-									"0.1": {
+								nodes: [{
+										id: 'origin',
+										type: 'trigger',
+
+									},{
 										id: '0.1',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'AV101',
@@ -257,92 +256,91 @@ describe('Oneshot Process Runs', () => {
 												operation: 'start'
 											}]
 										}
-									},
-									'0.2': {
+									},{
 										id: '0.2',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'timer',
 											timer: 1000,
 										}
-									},
-									'0.3': {
-										id: '0.3'
+									},{
+										id: '0.3',
+										type: 'action',
+
 									}
-								},
-								links: {
-									'0.0': {
+								],
+								links: [{
 										source: 'origin',
 										target: '0.1'
-									},
-									'0.1': {
+									},{
 										source: '0.1',
 										target: '0.2'
-									},
-									'0.2': {
+									},{
 										source: '0.2',
 										target: '0.3'
 									}
-								}
+								]
 							}
 						]
 					},
 					{
 						id: 'sibling',
 						name: 'Sibling',
-						nodes: {
-							'origin': {
-								id: 'origin'
-							},
-							'0.1': {
+						nodes: [{
+								id: 'origin',
+								type: 'trigger',
+
+							}, {
 								id: '0.1',
-								extras: {
+								type: 'action',
+
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'AV301',
 										operation: 'open'
 									}]
 								}
-							},
-							'0.2': {
+							}, {
 								id: '0.2',
-								extras: {
+								type: 'action',
+
+								options: {
 									blockType: 'timer',
 									timer: 2000
 								}
-							},
-							'0.3': {
+							},{
 								id :'0.3',
-								extras: {
+								type: 'action',
+
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'AV301',
 										operation: 'close'
 									}]
 								}
-							},
-							'0.4': {
+							},{
 								id: '0.4',
+								type: 'action',
 							
 							}
-						},
-						links: {
-							'origin': {
+						],
+						links: [{
 								source: 'origin',
 								target: '0.1'
-							},
-							'0.1': {
+							},{
 								source: '0.1',
 								target: '0.2'
-							},
-							'0.2': {
+							},{
 								source: '0.2',
 								target: '0.3'
-							},
-							'0.3': {
+							}, {
 								source: '0.3',
 								target: '0.4'
 							}
-						}
+						]
 					}
 				]
 			}, {
@@ -415,122 +413,122 @@ describe('Oneshot Process Runs', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
-							},
-							"0.2": {
+						nodes: [{
+								id: 'origin',
+								type: 'trigger',
+
+							},{
 								id: "0.2",
-								extras: {
+								type: 'sub-process',
+
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'permeate'
 								}
-							},
-							"0.3": {
+							},{
 								id: '0.3',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'AV101',
 										operation: 'open'
 									}]
 								}
-							},
-							'0.4': {
+							},{
 								id: '0.4',
-								extras: {
+								type: 'sub-process',
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'flush'
 								}
 							},
 							
-						},
-						links: {
-							link: {
+						],
+						links: [{
 								source: "origin",
 								target: "0.2"
-							},
-							link3: {
+							}, {
 								source: '0.2',
 								target: '0.3'
-							},
-							links2: {
+							}, {
 								source: '0.3',
 								target: '0.4'
-							},
-							links4: {
+							},{
 								source: '0.4',
 								target: 'origin'
 							}
-						},
+						],
 						sub_processes: [
 							{
 								id: 'permeate',
 								name: 'Permeate',
-								nodes: {
-									'origin': {
+								nodes: [ {
 										id: 'origin',
-									},
-									'0.1': {
+										type: 'trigger',
+
+									}, {
 										id: '0.1',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'PMP101',
 												operation: 'start',
 											}]
 										}
-									},
-									'0.2': {
+									},{
 										id: '0.2',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'timer',
 											timer: 2000
 										}
-									},
-									'0.3': {
+									},{
 										id: '0.3',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'PMP101',
 												operation: 'stop'
 											}]
 										}
-									},
-									'0.4': {
-										id: '0.3'
+									}, {
+										id: '0.3',
+										type: 'action',
+
 									}
-								},
-								links: {
-									'origin': {
+								],
+								links: [{
 										source: 'origin',
 										target: '0.1'
-									},
-									'0.1': {
+									},{
 										source: '0.1',
 										target: '0.2'
-									},
-									'0.2': {
+									},{
 										source: '0.2',
 										target: '0.3'
-									},
-									'0.3': {
+									},{
 										source: '0.3',
 										target: '0.4'
 									}
-								}
+								]
 							},
 							{
 								id: 'flush',
 								name: 'Flush',
-								nodes: {
-									"origin": {
-										id: 'origin'
-									},
-									"0.1": {
+								nodes: [{
+										id: 'origin',
+										type: 'trigger',
+
+									},{
 										id: '0.1',
-										extras: {
+										type: 'action',
+										options: {
 											blockType: 'action',
 											actions: [{
 												device: 'AV101',
@@ -540,32 +538,31 @@ describe('Oneshot Process Runs', () => {
 												operation: 'start'
 											}]
 										}
-									},
-									'0.2': {
+									},{
 										id: '0.2',
-										extras: {
+										type: 'action',
+
+										options: {
 											blockType: 'timer',
 											timer: 1000,
 										}
-									},
-									'0.3': {
-										id: '0.3'
+									}, {
+										id: '0.3',
+										type: 'action',
+
 									}
-								},
-								links: {
-									'0.0': {
+								],
+								links: [{
 										source: 'origin',
 										target: '0.1'
-									},
-									'0.1': {
+									}, {
 										source: '0.1',
 										target: '0.2'
-									},
-									'0.2': {
+									},{
 										source: '0.2',
 										target: '0.3'
 									}
-								}
+								]
 							}
 						]
 					}

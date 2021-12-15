@@ -131,13 +131,15 @@ describe('Subprocess as a blockType', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
-							},
-							"0.2": {
+						nodes: [{
+								id: 'origin',
+								type: 'trigger',
+
+							},{
 								id: '0.2',
-								extras: {
+								type: 'sub-process',
+
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'sub1'
 								}
@@ -149,16 +151,17 @@ describe('Subprocess as a blockType', () => {
 							// 		timer: 1 * 1000
 							// 	}
 							// },
-							'0.4': {
+							{
 								id: '0.4',
-								extras: {
+								type: 'sub-process',
+								options: {
 									blockType: 'sub-process',
 									"sub-process": 'sub2'
 								}
-							},
-							"0.5": {
+							},{
 								id: "0.5",
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: "AV101",
@@ -167,108 +170,106 @@ describe('Subprocess as a blockType', () => {
 								}
 							},
 							
-						},
+						],
 						sub_processes: [{
 							id: 'sub1',
 							name: 'Sub1',
-							nodes: {
-								origin: {
+							nodes: [{
 									id: 'origin',
+									type: 'trigger',
 									
-								},
-								"0.1": {
+								}, {
 									id: '0.1',
-									extras: {
+									type: 'action',
+
+									options: {
 										blockType: 'action',
 										actions: [{device: "AV101", operation: "open"}]
 									}
-								},
-								"0.2": {
+								}, {
 									id: '0.2',
-									extras: {
+									type: 'action',
+
+									options: {
 										blockType: 'timer',
 										timer: 2 * 1000
 									}
-								},
-								'0.3': {
-									id: '0.3'
+								},{
+									id: '0.3',
+									type: 'action',
+
 								}
-							},
-							links: {
-								'0.1': {
+							],
+							links: [ {
 									source: 'origin',
 									target: '0.1'
-								},
-								'0.2': {
+								},{
 									source: '0.1',
 									target: '0.2'
-								},
-								'0.3': {
+								},{
 									source: '0.2',
 									target: '0.3'
 								}
 								
-							}
+							]
 						}, {
 							id: 'sub2',
 							name: 'Sub2',
-							nodes: {
-								origin: {
+							nodes: [ {
 									id: 'origin',
+									type: 'trigger',
+
 									
-								},
-								"0.1": {
+								},{
 									id: '0.1',
-									extras: {
+									type: 'action',
+
+									options: {
 										blockType: 'action',
 										actions: [{device: "AV201", operation: "open"}]
 									}
-								},
-								"0.2": {
+								},{
 									id: '0.2',
-									extras: {
+									type: 'action',
+
+									options: {
 										blockType: 'timer',
 										timer: 3 * 1000
 									}
-								},
-								'0.3': {
-									id: '0.3'
+								}, {
+									id: '0.3',
+									type: 'action',
+
 								}
-							},
-							links: {
-								'0.1': {
+							],
+							links: [ {
 									source: 'origin',
 									target: '0.1'
-								},
-								'0.2': {
+								},{
 									source: '0.1',
 									target: '0.2'
-								},
-								'0.3': {
+								},{
 									source: '0.2',
 									target: '0.3'
 								},
 								
-							}
+							]
 						}],
-						links: {
-							link: {
+						links: [{
 								source: "origin",
 								target: "0.2",
 								
-							},
-							link3: {
+							},{
 								source: '0.2',
 								target: '0.4',
-								extras: {
+								options: {
 									conditions: []
 								}
-							},
-							link4: {
+							},{
 								source: '0.4',
 								target: '0.2'
 							}
-						}
+						]
 					}
 				]
 			}, {
