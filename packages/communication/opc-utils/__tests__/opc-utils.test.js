@@ -3,5 +3,7 @@
 const opcUtils = require('..');
 
 describe('opc-utils', () => {
-    it('needs tests');
+    it('needs tests', () => {
+        
+    });
 });
