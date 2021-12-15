@@ -1,9 +1,9 @@
 'use strict';
 
-const opcUtils = require('..');
+import {getNodeId} from '../src'
 
 describe('opc-utils', () => {
     it('needs tests', () => {
-        
+
     });
 });
