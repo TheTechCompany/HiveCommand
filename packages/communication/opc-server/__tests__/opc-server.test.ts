@@ -1,5 +1,5 @@
 'use strict';
-import OPCServer from '..';
+import OPCServer from '../src';
 
 const server = new OPCServer({productName: 'Sudbuster'});
 
