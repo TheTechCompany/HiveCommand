@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         yarn
-        CI=false npx lerna bootstrap
+        npx lerna bootstrap --no-ci
 
     - name: Run tests # Run tests of all packages
       run: npx lerna exec npm run test
