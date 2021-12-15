@@ -1,4 +1,4 @@
-import {DiagnosticsApi} from '..'
+import {DiagnosticsApi} from '../src'
 
 const client = new DiagnosticsApi(undefined, 'http://localhost')
 
