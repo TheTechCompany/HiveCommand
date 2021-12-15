@@ -3,5 +3,7 @@
 const ifmCoreDiscovery = require('..');
 
 describe('ifm-core-discovery', () => {
-    it('needs tests');
+    it('needs tests', () => {
+        
+    });
 });
