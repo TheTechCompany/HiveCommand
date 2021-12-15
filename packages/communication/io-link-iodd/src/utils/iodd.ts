@@ -115,13 +115,6 @@ export const createGulper = (iodd: IODDBits[]) : IODDFilter => {
 }
 
 
-const gulp = createGulper([{name: 'Test', offset: '16', type: "IntegerT", subindex: '1', length: '16'}, {name: 'Test2', type: "IntegerT", subindex: '2', offset: '0', length: '16'}])
-const gulped = gulp({
-    Test: 123,
-    Test2: 124
-})
-
-console.log(gulped)
 export const getBits = (input: string, bitOffset: number, bitLength: number) => {
     let binary = toBinString(Buffer.from(input, 'hex'))
     let substring = binary.substring(binary.length - bitOffset, binary.length - (bitOffset + bitLength))
