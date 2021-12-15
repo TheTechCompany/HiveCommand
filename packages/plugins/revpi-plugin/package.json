@@ -1,0 +1,22 @@
+{
+  "name": "@hive-command/plugin-revpi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "@hive-command/plugin-base": "^1.0.0",
+    "@revpi/node": "^1.0.9"
+  }
+}

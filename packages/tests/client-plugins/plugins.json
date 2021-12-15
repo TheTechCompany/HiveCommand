@@ -1,0 +1,4 @@
+{
+	"plugins": ["@hive-command/plugin-revpi", "@hive-command/plugin-iolink"],
+	"ignorePlugins": ["REVPI", "IO-LINK"]
+}

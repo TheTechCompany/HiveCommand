@@ -1,6 +1,12 @@
-78 error Error: Command failed with exit code 128: git tag v1.3.6-alpha.15 -m v1.3.6-alpha.15
-78 error fatal: tag 'v1.3.6-alpha.15' already exists
-78 error     at makeError (/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/execa/lib/error.js:60:11)
-78 error     at handlePromise (/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/execa/index.js:118:26)
-78 error     at processTicksAndRejections (node:internal/process/task_queues:96:5)
-78 error     at async Promise.all (index 0)
+0 silly argv {
+0 silly argv   _: [ 'add' ],
+0 silly argv   scope: '@hive-command/plugin-iolink',
+0 silly argv   globs: [],
+0 silly argv   lernaVersion: '4.0.0',
+0 silly argv   '$0': '/Users/the-kid/work/contract-work/HiveCommandClient/node_modules/.bin/lerna',
+0 silly argv   pkg: '@hive-command/plugin-base'
+0 silly argv }
+1 notice cli v4.0.0
+2 verbose rootPath /Users/the-kid/work/contract-work/HiveCommandClient
+3 error HttpErrorGeneral: 404 Not Found - GET https://registry.npmjs.org/@hive-command%2fplugin-base - Not found
+3 error     at /Users/the-kid/work/contract-work/HiveCommandClient/node_modules/npm-registry-fetch/check-response.js:95:15

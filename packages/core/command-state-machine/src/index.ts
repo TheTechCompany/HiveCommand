@@ -1,11 +1,10 @@
-import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
 import { State } from "./State";
 import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-
+import { Process } from '@hive-command/process'
 export * from './types'
 
 export interface CommandClient { 
@@ -27,7 +26,7 @@ export class CommandStateMachine extends EventEmitter {
 
 	private running : boolean = true;
 
-	private processes : IOProcess[] = [];
+	private processes : Process[] = [];
 
 	private process_state: any = {};
 
@@ -67,27 +66,28 @@ export class CommandStateMachine extends EventEmitter {
 
 		console.debug(`Initializing State Machine`)
 
-		this.processes = program.processes.map((x) => new IOProcess(x, this))
+		this.processes = program.processes.map((x) => new Process(x))
 
-		this.processes.forEach((process) => {
-			process.on('transition', (ev) => this.onProcessTransition(process, ev))
-		})
+		// this.processes.forEach((process) => {
+		// 	process.on('transition', (ev) => this.onProcessTransition(process, ev))
+		// })
+
 		this.start = this.start.bind(this)
 		this.performOperation = this.performOperation.bind(this);
 	}
 
-	onProcessTransition(process: IOProcess, event: {target: string}){
+	onProcessTransition(process: Process, event: {target: string}){
 		this.emit('transition', {target: event.target, process: process.id})
 	}
 
-	get currentPosition(){
-		return this.processes.map((x) => x.currentPosition)
-	}
+	// get currentPosition(){
+	// 	return this.processes.map((x) => x.currentPosition)
+	// }
 
-	getProcessPosition(name: string){
-		let position = this.processes.find((x) => x.name == name)?.currentPosition
-		return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
-	}
+	// getProcessPosition(name: string){
+	// 	let position = this.processes.find((x) => x.name == name)?.currentPosition
+	// 	return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
+	// }
 
 	getDeviceControl(deviceName: string){
 		return this.devices?.find((a) => a.name == deviceName)?.isControlled
@@ -124,8 +124,8 @@ export class CommandStateMachine extends EventEmitter {
 		}else{
 			//Run process in seperate loop
 
-			let cleanProcess = new IOProcess(process, this)
-			const result = await cleanProcess.runOnce()
+			let cleanProcess = new Process(process)
+			// const result = await cleanProcess.runOnce()
 
 		}
 
@@ -209,7 +209,7 @@ export class CommandStateMachine extends EventEmitter {
 		// await Promise.all(this.processes.map((x) => x.shutdown()))
 
 		// this.running = true;
-		// while(this.running){
+		// while(this.running){op
 		// 	await this.checkInterlocks();
 
 		// 		try{
@@ -232,35 +232,39 @@ export class CommandStateMachine extends EventEmitter {
 	async start(mode?: CommandStateMachineMode){
 		console.debug(`Starting State Machine`)
 
-		this.mode = mode || CommandStateMachineMode.AUTO
-		// if(mode != undefined) {
-		// 	console.log(`Changing mode to ${mode}`)
-		// 	this.mode = mode;
+
+		await Promise.all(this.processes.map(async (x) => await x.start()))
+
+		// this.mode = mode || CommandStateMachineMode.AUTO
+		// // if(mode != undefined) {
+		// // 	console.log(`Changing mode to ${mode}`)
+		// // 	this.mode = mode;
+		// // }
+
+		// this.running = true;
+
+		// while(this.running){
+		// 	//Run all actions in current stage of execution
+		// 	await this.checkInterlocks();
+
+		// 	if(this.mode == CommandStateMachineMode.AUTO){
+		// 		try{
+		// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+		// 		}catch(e){
+		// 			console.debug(e)
+		// 		}
+
+		// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
+		// 	}
+
+		// 	this.emit('TICK')
+
+		// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
 		// }
-
-		this.running = true;
-
-		while(this.running){
-			//Run all actions in current stage of execution
-			await this.checkInterlocks();
-
-			if(this.mode == CommandStateMachineMode.AUTO){
-				try{
-					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-				}catch(e){
-					console.debug(e)
-				}
-
-				const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
-			}
-
-			this.emit('TICK')
-
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
-		}
 	}
 
 	async stop(){
-		this.running = false;
+		await Promise.all(this.processes.map(async (x) => await x.stop()))
+		// this.running = false;
 	}
 }
