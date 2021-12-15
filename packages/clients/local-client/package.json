@@ -13,7 +13,7 @@
     "build": "tsc -b",
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "package": "pkg ./package.json --targets latest-linux-armv7",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
