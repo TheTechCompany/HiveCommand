@@ -13,7 +13,7 @@ export interface ProgramProcess {
 	id: string;
 	name: string;
 	nodes: CommandProcessNode[]
-	links?: CommandProcessEdge[]
+	edges?: CommandProcessEdge[]
 	sub_processes?: ProgramProcess[],
 
 }

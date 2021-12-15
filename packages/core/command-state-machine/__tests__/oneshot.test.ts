@@ -163,7 +163,7 @@ describe('Oneshot Process Runs', () => {
 							},
 							
 						],
-						links: [
+						edges: [
 							 {
 								source: "origin",
 								target: "0.2"
@@ -220,7 +220,7 @@ describe('Oneshot Process Runs', () => {
 										type: 'action',
 									}
 								],
-								links: [{
+								edges: [{
 										source: 'origin',
 										target: '0.1'
 									},{
@@ -270,7 +270,7 @@ describe('Oneshot Process Runs', () => {
 
 									}
 								],
-								links: [{
+								edges: [{
 										source: 'origin',
 										target: '0.1'
 									},{
@@ -327,7 +327,7 @@ describe('Oneshot Process Runs', () => {
 							
 							}
 						],
-						links: [{
+						edges: [{
 								source: 'origin',
 								target: '0.1'
 							},{
@@ -445,7 +445,7 @@ describe('Oneshot Process Runs', () => {
 							},
 							
 						],
-						links: [{
+						edges: [{
 								source: "origin",
 								target: "0.2"
 							}, {
@@ -503,7 +503,7 @@ describe('Oneshot Process Runs', () => {
 
 									}
 								],
-								links: [{
+								edges: [{
 										source: 'origin',
 										target: '0.1'
 									},{
@@ -552,7 +552,7 @@ describe('Oneshot Process Runs', () => {
 
 									}
 								],
-								links: [{
+								edges: [{
 										source: 'origin',
 										target: '0.1'
 									}, {

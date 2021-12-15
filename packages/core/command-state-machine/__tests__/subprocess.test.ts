@@ -200,7 +200,7 @@ describe('Subprocess as a blockType', () => {
 
 								}
 							],
-							links: [ {
+							edges: [ {
 									source: 'origin',
 									target: '0.1'
 								},{
@@ -242,7 +242,7 @@ describe('Subprocess as a blockType', () => {
 
 								}
 							],
-							links: [ {
+							edges: [ {
 									source: 'origin',
 									target: '0.1'
 								},{
@@ -255,7 +255,7 @@ describe('Subprocess as a blockType', () => {
 								
 							]
 						}],
-						links: [{
+						edges: [{
 								source: "origin",
 								target: "0.2",
 								

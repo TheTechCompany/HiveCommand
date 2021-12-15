@@ -25,7 +25,7 @@ describe('State Machine Timers', () => {
 
 								options: {
 									blockType: 'timer',
-									timer: 5 * 1000
+									timer: 1 * 1000
 								}
 							}, {
 								id: '0.3',
@@ -39,7 +39,7 @@ describe('State Machine Timers', () => {
 								}
 							}
 						],
-						links: [{
+						edges: [{
 								source: "origin",
 								target: "0.2"
 							},{
@@ -54,6 +54,7 @@ describe('State Machine Timers', () => {
 				]
 			}, {
 				performOperation: async (event) => {
+					console.log(event)
 					if(event.device == "AV101" && event.operation == "open") {
 						await machine.stop();
 						resolve(true)
@@ -62,7 +63,10 @@ describe('State Machine Timers', () => {
 			});
 	
 			machine.start(CommandStateMachineMode.AUTO);
-			setTimeout(() => reject(new Error('Timer did not fire')), 10 * 1000)
+			setTimeout(() => {
+				machine.stop()
+				reject(new Error('Timer did not fire'))
+			}, 10 * 1000)
 		})
 		expect(result).toBe(true)
 

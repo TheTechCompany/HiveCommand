@@ -18,6 +18,27 @@ export enum CommandStateMachineMode {
 	DISABLED
 }
 
+import * as actions from './base-plugins'
+
+const base_actions = [
+	{
+		id: 'action',
+		onEnter: actions.action
+	},
+	{
+		id: 'sub-process',
+		onEnter: actions.sub_process
+	},
+	{
+		id: 'timer',
+		onEnter: actions.timer
+	},
+	{
+		id: 'trigger',
+		onEnter: actions.trigger
+	}
+]
+
 export class CommandStateMachine extends EventEmitter {
 
 	public state : State;
@@ -54,6 +75,10 @@ export class CommandStateMachine extends EventEmitter {
 	}, client: CommandClient){
 		super();
 
+		this.start = this.start.bind(this)
+		this.performOperation = this.performOperation.bind(this);
+		this.getByKey = this.getByKey.bind(this);
+
 		this.tickRate = program.tickRate || 1000;
 
 		this.program = program;
@@ -66,14 +91,17 @@ export class CommandStateMachine extends EventEmitter {
 
 		console.debug(`Initializing State Machine`)
 
-		this.processes = program.processes.map((x) => new Process(x))
+		this.processes = program.processes.map((x) => new Process(x, base_actions as any, this.performOperation, this.getByKey))
 
 		// this.processes.forEach((process) => {
 		// 	process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		// })
 
-		this.start = this.start.bind(this)
-		this.performOperation = this.performOperation.bind(this);
+
+	}
+
+	getByKey(key: string){
+		return this.state.get(key)
 	}
 
 	onProcessTransition(process: Process, event: {target: string}){
@@ -124,7 +152,7 @@ export class CommandStateMachine extends EventEmitter {
 		}else{
 			//Run process in seperate loop
 
-			let cleanProcess = new Process(process)
+			let cleanProcess = new Process(process, base_actions as any, this.performOperation, this.state.get)
 			// const result = await cleanProcess.runOnce()
 
 		}
@@ -230,7 +258,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	async start(mode?: CommandStateMachineMode){
-		console.debug(`Starting State Machine`)
+		console.debug(`Starting State Machine with ${this.processes.length} processes`)
 
 
 		await Promise.all(this.processes.map(async (x) => await x.start()))

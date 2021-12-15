@@ -82,7 +82,7 @@ describe('Conditional Paths', () => {
 								}
 							}
 						],
-						links: [
+						edges: [
 							{
 								source: "origin",
 								target: "0.1"

@@ -2,9 +2,13 @@
 // import doT from 'dot';
 import EventEmitter from "events";
 import { ProcessChain } from './chain';
-import { CommandProcess } from './types';
+import { CommandAction, CommandProcess } from './types';
 
 export * from './types'
+
+export {
+    ProcessChain
+}
 
 export class Process extends EventEmitter{
     private process : CommandProcess;
@@ -27,21 +31,45 @@ export class Process extends EventEmitter{
 		shutdown: []
 	}
 
-    constructor(process: CommandProcess, parent?: CommandProcess){
+    private perform: (device: string, release: boolean, operation: string) => Promise<any>
+
+    public getState: any;
+
+    private actions : CommandAction[];
+
+    constructor(
+        process: CommandProcess, 
+        actions: CommandAction[], 
+        performOperation: (device: string, release: boolean, operation: string) => Promise<any>, 
+        getState: any,
+        parent?: CommandProcess
+    ){
         super();
+
+        this.getState = getState
+
+        this.perform = performOperation
+        this.actions = actions;
+
         this.parent = parent
 
         this.process = process
         this.current_state = 'origin';
 
 		this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == 'trigger').map((node) => {
-			return new ProcessChain(process, node.id)
+			return new ProcessChain(this, process, node.id, actions)
 		}) || []
 
 		this.chains.shutdown = this.process.nodes?.filter((a) => a.type == 'shutdown').map((node) => {
-			return new ProcessChain(process, node.id)
+			return new ProcessChain(this, process, node.id, actions)
 		}) || []
+
+        this.performOperation = this.performOperation.bind(this)
         // this.actions = this.action_nodes
+    }
+
+    async performOperation(device: string, release: boolean, operation: string){
+        await this.perform(device, release, operation)
     }
 
 
@@ -58,7 +86,7 @@ export class Process extends EventEmitter{
     }
     
 	get sub_processes() : Process[]{
-		return this.process?.sub_processes?.map((x) => new Process(x, this)) || []
+		return this.process?.sub_processes?.map((x) => new Process(x, this.actions, this.perform, this)) || []
 	}
     // get sub_processes(){
     //     return this.process.sub_processes
@@ -146,8 +174,12 @@ export class Process extends EventEmitter{
 
 		let hasNext = this.chains.entrypoints.map((x) => x.hasNext()).indexOf(true) > -1
 
-        while(hasNext && this.running){
+        // console.log(hasNext, this.running)
+
+        while(this.running){
+            // console.log({hasNext})
 			hasNext = this.chains.entrypoints.map((x) => x.hasNext()).indexOf(true) > -1
+            // console.log({hasNext})
 
 			Promise.all(this.chains.entrypoints.map(async (chain) => await chain.run()));
 

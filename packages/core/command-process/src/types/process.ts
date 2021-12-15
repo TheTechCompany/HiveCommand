@@ -18,3 +18,15 @@ export interface CommandProcessNode {
 	type: string;
 	options?: any;
 }
+
+export interface CommandAction {
+	id: string;
+	onEnter?: (options: any, hub: {performOperation: any, actions?: CommandAction[], getState: any}) => any
+	onExit?: (options: any, hub: {performOperation: any, actions?: CommandAction[], getState: any}) => any
+}
+
+export interface ProgramAction {
+	device: string;
+	release?: boolean;
+	operation?: string;
+}
