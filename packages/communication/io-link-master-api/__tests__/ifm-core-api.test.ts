@@ -9,4 +9,6 @@ describe('IFM-core-api', () => {
 
     //     expect(temperature).toBe(null)
     // });
+
+    it('needs test')
 });
