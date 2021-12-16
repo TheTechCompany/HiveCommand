@@ -57,13 +57,15 @@ describe('State Machine Timers', () => {
 					console.log(event)
 					if(event.device == "AV101" && event.operation == "open") {
 						await machine.stop();
+						clearTimeout(timeout)
+						// machine.stop()
 						resolve(true)
 					}
 				}
 			});
 	
 			machine.start(CommandStateMachineMode.AUTO);
-			setTimeout(() => {
+			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))
 			}, 10 * 1000)

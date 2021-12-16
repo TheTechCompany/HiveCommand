@@ -281,14 +281,15 @@ describe('Subprocess as a blockType', () => {
 					}
 
 					if(subTime && interruptTime){
-						machine.stop()
+						await machine.stop()
+						clearTimeout(timeout)
 						resolve(subTime < interruptTime)
 					}
 				}
 			});
 	
 			machine.start(CommandStateMachineMode.AUTO);
-			setTimeout(() => {
+			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))
 			}, 10 * 1000)
