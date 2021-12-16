@@ -188,11 +188,11 @@ describe('Subprocess as a blockType', () => {
 									}
 								}, {
 									id: '0.2',
-									type: 'action',
+									type: 'timer',
 
 									options: {
 										blockType: 'timer',
-										timer: 2 * 1000
+										timer: 1 * 1000
 									}
 								},{
 									id: '0.3',
@@ -226,15 +226,15 @@ describe('Subprocess as a blockType', () => {
 
 									options: {
 										blockType: 'action',
-										actions: [{device: "AV201", operation: "open"}]
+										actions: [{device: "AV101", operation: "open"}]
 									}
 								},{
 									id: '0.2',
-									type: 'action',
+									type: 'timer',
 
 									options: {
 										blockType: 'timer',
-										timer: 3 * 1000
+										timer: 1 * 1000
 									}
 								}, {
 									id: '0.3',
@@ -261,13 +261,10 @@ describe('Subprocess as a blockType', () => {
 								
 							},{
 								source: '0.2',
-								target: '0.4',
-								options: {
-									conditions: []
-								}
+								target: '0.4'
 							},{
 								source: '0.4',
-								target: '0.2'
+								target: '0.5'
 							}
 						]
 					}

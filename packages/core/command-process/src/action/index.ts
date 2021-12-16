@@ -53,24 +53,22 @@ export class ProcessAction {
     }
 
     async onEnter(priority?: string){
-        console.log(`Entering node ${this.node.type} ${this.node.id} ${this.process}`)
+        // console.log(`Entering node ${this.node.type} ${this.node.id} ${this.process}`)
 
 		this.isRunning = true;
-		
+
         let isPrioritized = priority != undefined; //&& priority == this.node.id;
 
         // console.log("isPrioritize", isPrioritized, priority)
 
 		let action = this.actions.find((a) => a.id == this.blockType)
 
-		console.log("action", {action}, this.actions)
 		await action?.onEnter?.(this.node.options, {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
 			actions: this.actions
-		})
-
-		console.log("Action run", this.node.id)
+		}, this.process._process)
+		
 		this.hasRun = true;
 		this.isRunning = false;
 
@@ -138,7 +136,7 @@ export class ProcessAction {
     }
 
     async onExit(){
-        console.log(`Exiting node ${this.node.type} ${this.node.id}`)
+        // console.log(`Exiting node ${this.node.type} ${this.node.id}`)
 
 
 		let action = this.actions.find((a) => a.id == this.blockType)
@@ -147,7 +145,7 @@ export class ProcessAction {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
 			actions: this.actions
-		})
+		}, this.process._process)
 
 		this.hasRun = false;
 

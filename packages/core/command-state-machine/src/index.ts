@@ -131,18 +131,18 @@ export class CommandStateMachine extends EventEmitter {
 
 	async runOneshot(processId: string){
 		// console.log(this.processes)
-		console.log("ONESHOT")
+		// console.log("ONESHOT")
 		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
 		let process = allProcesses?.find((a) => a.id == processId)
 
 		if(!process) return new Error("No process found")
 
 		// if(process.parent){}
-		console.log(this.mode)
+		// console.log(this.mode)
 		if(this.mode == CommandStateMachineMode.AUTO){
 			//Request priority for this process
-			console.log("VIP Incoming... Requesting priority")
-			console.log(process)
+			// console.log("VIP Incoming... Requesting priority")
+			// console.log(process)
 			
 			if((process as any).parent){
 				this.processes.find((a) => a.id == (process as any).parent.id)?.requestPriority(process.id)
@@ -153,7 +153,7 @@ export class CommandStateMachine extends EventEmitter {
 			//Run process in seperate loop
 
 			let cleanProcess = new Process(process, base_actions as any, this.performOperation, this.state.get)
-			// const result = await cleanProcess.runOnce()
+			const result = await cleanProcess.start()
 
 		}
 
@@ -200,7 +200,7 @@ export class CommandStateMachine extends EventEmitter {
 			let {locked, lock} = await device.checkInterlock(this.state)
 			// console.log("Checked", {locked, lock})
 			if(locked){
-				console.log("Reacting to lock");
+				// console.log("Reacting to lock");
 				await device.doFallback(lock, this.performOperation)
 			}
 			// console.log("DEVICE", device.name, "LOCKED", locked)
@@ -210,24 +210,29 @@ export class CommandStateMachine extends EventEmitter {
 	async performOperation(deviceName: string, release?: boolean, operation?: string){
 		let device =  this.devices?.find((a) => a.name == deviceName)
 
-		if(device?.requiresMutex){
-			console.log("Requires mutex", {deviceName}, {operation},{ release})
-			if(!release){
-				await device?.lock()
-				console.log("Mutext acquired")
+		return await new Promise(async (resolve) => {
+			if(device?.requiresMutex){
+				// console.log("Requires mutex", {deviceName}, {operation},{ release})
+				if(!release){
+					await device?.lock()
+					// console.log("Mutext acquired")
 
-			}else{
-				await device?.unlock()
-				console.log("Mutext released")
+				}else{
+					// console.log("Mutext waiting")
+					await device?.unlock()
+					// console.log("Mutext released")
 
+				}
 			}
-		}
 
-		if(operation){
-			await this.client.performOperation({device: deviceName, operation})
-		}
-		// this.emit('REQUEST:OPERATION', {device, operation})
-		// console.log(`Perform operation ${operation} on ${device}`)
+			// console.log({operation})
+			if(operation){
+				await this.client.performOperation({device: deviceName, operation})
+				resolve(true)
+			}
+			// this.emit('REQUEST:OPERATION', {device, operation})
+			// console.log(`Perform operation ${operation} on ${device}`)
+		});
 	}
 
 	async shutdown(){
@@ -260,9 +265,16 @@ export class CommandStateMachine extends EventEmitter {
 	async start(mode?: CommandStateMachineMode){
 		console.debug(`Starting State Machine with ${this.processes.length} processes`)
 
+		this.running = true;
 
 		await Promise.all(this.processes.map(async (x) => await x.start()))
 
+		while(this.running){
+			await this.checkInterlocks();
+
+			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
+
+		}
 		// this.mode = mode || CommandStateMachineMode.AUTO
 		// // if(mode != undefined) {
 		// // 	console.log(`Changing mode to ${mode}`)

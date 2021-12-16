@@ -1,23 +1,21 @@
 import { CommandAction, Process, ProcessChain } from "@hive-command/process";
+import { ProgramProcess } from "../../types";
 
-export const handler = async (options: any, hub: {actions: CommandAction[], performOperation: any, getState: any}) => {
+export const handler = async (
+	options: any, 
+	hub: {actions: CommandAction[], performOperation: any, getState: any},
+	node: ProgramProcess
+) => {
 
-	let process = new Process(options?.["sub-process"], hub.actions, hub.performOperation, hub.getState)
+	let sub_process = node.sub_processes?.find((a) => a.id == options?.["sub-process"])
+	if(sub_process){
 
-	await process.start()
+		// console.log("Start sub process", sub_process)
+		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
 
-	// this.isRunning = true;
-                
-	// let sub_process = this.process.sub_processes?.find((a) => a.id == this.node?.extras?.["sub-process"]);
-	// if(sub_process){
-	// 	let sub = new Process(sub_process, this.process)
-		
-	// 	if(priority) sub.requestPriority(priority);
+		await process.start()
+		// console.log("End sub process", sub_process)
+	
+	}
 
-	// 	const result = await sub.runOnce();
-		
-	// 	this.hasRun = true;
-	// 	this.isRunning = false;
-	// 	return result;
-	// }
 }

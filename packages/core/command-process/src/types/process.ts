@@ -21,8 +21,16 @@ export interface CommandProcessNode {
 
 export interface CommandAction {
 	id: string;
-	onEnter?: (options: any, hub: {performOperation: any, actions?: CommandAction[], getState: any}) => any
-	onExit?: (options: any, hub: {performOperation: any, actions?: CommandAction[], getState: any}) => any
+	onEnter?: (
+		options: any, 
+		hub: {performOperation: any, actions?: CommandAction[], getState: any}, 
+		node: CommandProcess
+	) => Promise<any>
+	onExit?: (
+		options: any, 
+		hub: {performOperation: any, actions?: CommandAction[], getState: any}, 
+		node: CommandProcess
+	) => Promise<any>
 }
 
 export interface ProgramAction {

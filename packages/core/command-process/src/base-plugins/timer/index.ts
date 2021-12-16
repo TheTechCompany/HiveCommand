@@ -5,7 +5,7 @@ export const handler = async (options: {timer: string}) => {
 	
 	let id = nanoid();
 
-	console.log("TIMER", id)
+	// console.log("TIMER", id)
 	let timeout = parseInt(options.timer)
 
 	

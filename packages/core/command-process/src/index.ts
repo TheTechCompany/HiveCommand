@@ -56,6 +56,7 @@ export class Process extends EventEmitter{
         this.process = process
         this.current_state = 'origin';
 
+        // console.log({nodes: this.process})
 		this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == 'trigger').map((node) => {
 			return new ProcessChain(this, process, node.id, actions)
 		}) || []
@@ -85,8 +86,9 @@ export class Process extends EventEmitter{
         return this.process.id
     }
     
-	get sub_processes() : Process[]{
-		return this.process?.sub_processes?.map((x) => new Process(x, this.actions, this.perform, this)) || []
+    //: Process[]
+	get sub_processes() {
+		return this.process?.sub_processes //?.map((x) => new Process(x, this.actions, this.perform, this)) || []
 	}
     // get sub_processes(){
     //     return this.process.sub_processes
@@ -172,13 +174,13 @@ export class Process extends EventEmitter{
 
         this.running = true;
 
-		let hasNext = this.chains.entrypoints.map((x) => x.hasNext()).indexOf(true) > -1
+		let hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
 
         // console.log(hasNext, this.running)
-
-        while(this.running){
+        // console.log(this.chains)
+        while(hasNext && this.running){
             // console.log({hasNext})
-			hasNext = this.chains.entrypoints.map((x) => x.hasNext()).indexOf(true) > -1
+			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
             // console.log({hasNext})
 
 			Promise.all(this.chains.entrypoints.map(async (chain) => await chain.run()));
@@ -197,6 +199,7 @@ export class Process extends EventEmitter{
 
            
         }
+        // console.log()
     }
 
     // async runOnce(){
