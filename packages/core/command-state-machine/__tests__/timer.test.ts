@@ -9,7 +9,7 @@ describe('State Machine Timers', () => {
 
 	test('Timer runs and blocks until completion', async () => {
 
-		const result = await new Promise((resolve, reject) => {
+		const result = await new Promise(async (resolve, reject) => {
 			const machine = new CommandStateMachine({
 				processes: [
 					{
@@ -64,7 +64,7 @@ describe('State Machine Timers', () => {
 				}
 			});
 	
-			machine.start(CommandStateMachineMode.AUTO);
+			await machine.start(CommandStateMachineMode.AUTO);
 			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))

@@ -304,7 +304,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	async stop(){
-		await Promise.all(this.processes.map(async (x) => await x.stop()))
-		// this.running = false;
+		// await Promise.all(this.processes.map(async (x) => await x.stop()))
+		this.running = false;
 	}
 }
