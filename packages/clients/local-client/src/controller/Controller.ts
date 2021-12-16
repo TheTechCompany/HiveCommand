@@ -21,6 +21,8 @@ export class Controller {
 
 	private healthCheck : Socket;
 
+	private healthTimer?: NodeJS.Timeout
+
 	constructor(opts: {
 		commandCenter: string,
 		machine: Machine,
@@ -166,6 +168,14 @@ export class Controller {
 		await this.network.start(credentials, layout)
 	}
 
+	async stop(){
+		if(this.healthTimer){
+			clearTimeout(this.healthTimer)
+		}
+		await this.network.stop()
+		await this.healthCheck.disconnect()
+	}
+
 	becomeSelf(self: any){
 		this.network.becomeSelf(self)
 	}
@@ -178,7 +188,7 @@ export class Controller {
 
 	async liveHeartbeat(){
 		this.healthCheck.emit('identity:heartbeat')
-		setTimeout(() => this.liveHeartbeat(), 5 * 1000)
+		this.healthTimer = setTimeout(() => this.liveHeartbeat(), 5 * 1000)
 	}
 
 	// async hearbeat(){

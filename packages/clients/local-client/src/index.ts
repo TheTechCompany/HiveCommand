@@ -90,6 +90,13 @@ export class CommandClient {
 		});
 	}
 
+	async kill(){
+
+		await this.machine?.shutdown()
+		await this.controller.stop();
+		
+	}
+
 
 	shutdown(exitCode: number | null, signal: string | null) : boolean | void | undefined {
 		new Promise(async (resolve) => {
@@ -120,9 +127,12 @@ export class CommandClient {
 		return false;
 	}
 
+	load(payload: any){
+		this.machine?.load(payload)
+	}
+
 	async stop(){
 		await this.machine?.shutdown()
-
 	}
 
 	// Load the state machine and run

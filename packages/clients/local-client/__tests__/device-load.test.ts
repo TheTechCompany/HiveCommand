@@ -20,10 +20,17 @@ describe('Load device-map from definitions', () => {
 		expect(value).toBe(7200);
 	})
 
-	it('Loads', () => {
+	it('Loads', async () => {
 		let client = new CommandClient({});
 
-		client.loadMachine({payload: sudbuster as any});
+		client.load({payload: sudbuster as any});
+
+		try{
+			await client.kill()
+			
+		}catch(err){
+			console.error(err)
+		}
 	})
 	// it('Pump write produces a rectified drive value', () => {
 

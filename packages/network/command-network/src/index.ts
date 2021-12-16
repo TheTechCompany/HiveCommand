@@ -206,4 +206,7 @@ export class CommandNetwork {
 
 	}
 
+	async stop(){
+		await this.opc?.stop()
+	}
 }
