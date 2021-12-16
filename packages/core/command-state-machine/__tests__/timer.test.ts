@@ -56,7 +56,7 @@ describe('State Machine Timers', () => {
 				performOperation: async (event) => {
 					console.log(event)
 					if(event.device == "AV101" && event.operation == "open") {
-						await machine.stop();
+						await machine.shutdown();
 						clearTimeout(timeout)
 						// machine.stop()
 						resolve(true)
@@ -64,7 +64,7 @@ describe('State Machine Timers', () => {
 				}
 			});
 	
-			await machine.start(CommandStateMachineMode.AUTO);
+			 machine.start(CommandStateMachineMode.AUTO);
 			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))

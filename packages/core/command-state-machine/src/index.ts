@@ -192,9 +192,11 @@ export class CommandStateMachine extends EventEmitter {
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
 
-		await this.devices?.filter((a) => a.hasInterlock).filter((device) => {
+		let interlocks = (this.devices?.filter((a) => a.hasInterlock).filter((device) => {
 			return device.checkInterlockNeeded(this.state.get(device.name))
-		}).map(async (device) => {	
+		})) || []
+		
+		await Promise.all(interlocks.map(async (device) => {	
 			// console.log("Checking")
 
 			let {locked, lock} = await device.checkInterlock(this.state)
@@ -204,7 +206,7 @@ export class CommandStateMachine extends EventEmitter {
 				await device.doFallback(lock, this.performOperation)
 			}
 			// console.log("DEVICE", device.name, "LOCKED", locked)
-		})	
+		}))
 	}
 
 	async performOperation(deviceName: string, release?: boolean, operation?: string){

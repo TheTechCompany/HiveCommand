@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "author": "",
   "license": "ISC",
