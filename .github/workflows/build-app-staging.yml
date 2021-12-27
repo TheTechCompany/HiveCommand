@@ -4,7 +4,9 @@ on:
     branches:
       - staging
 
-build_coreapps:
+jobs: 
+
+  build_coreapps:
     runs-on: ubuntu-latest
     strategy: 
       matrix:
