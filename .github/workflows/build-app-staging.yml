@@ -40,5 +40,5 @@ jobs:
 
       - name: Upload new web-build
         run: |
-          aws s3 sync packages/app/hivecommand-${{ matrix.apps }}/dist/ s3://${{ secrets.STAGING_APP_BUCKET }}/${{matrix.apps}} --delete
+          aws s3 sync packages/app/hivecommand-${{ matrix.apps }}/dist/ s3://${{ secrets.STAGING_APP_BUCKET }}/hivecommand-${{matrix.apps}} --delete
 
