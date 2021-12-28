@@ -1,0 +1,14 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "outDir": "dist/",
+    "rootDir": "src/"
+  },
+  "include": ["src/**/*", "node_modules/@types"],
+  "exclude": ["src/**/*.test*"],
+  "references": [
+    {"path": "../hivecommand-api"}
+  ]
+}

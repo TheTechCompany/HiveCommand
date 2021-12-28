@@ -1,7 +1,6 @@
 'use strict';
 
 import {CommandStateMachine, CommandStateMachineMode} from '../src'
-import locks from 'locks'
 
 jest.setTimeout(20000);
 
@@ -27,13 +26,15 @@ describe('Conditional Paths', () => {
 					{
 						id: 'raw-water',
 						name: 'Feed',
-						nodes: {
-							"origin": {
-								id: 'origin'
+						nodes: [
+							{
+								id: 'origin',
+								type: 'trigger'
 							},
-							"0.1": {
+							{
 								id: '0.1',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [
 										{
@@ -43,9 +44,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							"0.2": {
+							{
 								id: "0.2",
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'timer',
 									actions: [
 										{
@@ -55,9 +57,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							'0.2.2': {
+							{
 								id: '0.2.2',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [
 										{
@@ -67,9 +70,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							"0.3": {
+							{
 								id: '0.3',
-								extras: {
+								type: 'action',
+								options: {
 									blockType: 'action',
 									actions: [{
 										device: 'PMP201',
@@ -77,16 +81,16 @@ describe('Conditional Paths', () => {
 									}]
 								}
 							}
-						},
-						links: {
-							link: {
+						],
+						edges: [
+							{
 								source: "origin",
 								target: "0.1"
 							},
-							link2: {
+							{
 								source: '0.1',
 								target: '0.2',
-								extras: {
+								options: {
 									conditions: [
 										{
 											input: 'CT301',
@@ -97,10 +101,10 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							link3: {
+							{
 								source: '0.1',
 								target: '0.2.2',
-								extras: {
+								options: {
 									conditions: [
 										{
 											input: 'CT301',
@@ -111,15 +115,15 @@ describe('Conditional Paths', () => {
 									]
 								}
 							},
-							link4: {
+							{
 								source: '0.2',
 								target: '0.3'
 							},
-							link5: {
+							{
 								source: '0.2.2',
 								target: '0.3'
 							}
-						}
+						]
 					}
 				]
 			}, {
@@ -135,8 +139,9 @@ describe('Conditional Paths', () => {
 					}
 
 					if(event.device == "PMP101" && event.operation == 'stop'){
-						
+						await machine.stop()
 						// machine.state.update('PMP101', {on: false})
+						clearTimeout(timeout)
 						setTimeout(() => resolve(true), 3000);
 					}
 				}
@@ -145,7 +150,7 @@ describe('Conditional Paths', () => {
 			machine.start(CommandStateMachineMode.AUTO);
 			// setTimeout(() => machine.state.update('LT201', {level: 1200}), 5 * 1000)
 
-			setTimeout(() => reject(new Error('Timer did not fire')), 10 * 1000)
+			const timeout = setTimeout(() => reject(new Error('Timer did not fire')), 10 * 1000)
 		})
 		
 		expect(result).toBe(true)

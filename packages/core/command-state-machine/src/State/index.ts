@@ -11,7 +11,7 @@ export class State {
 	}
 
 	public get(key: string): any {
-		return this.internalState[key]
+		return this.internalState?.[key]
 	}	
 
 	public getByKey(key: string, subKey: string): any {
