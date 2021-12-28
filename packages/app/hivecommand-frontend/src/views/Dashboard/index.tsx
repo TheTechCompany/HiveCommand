@@ -89,11 +89,11 @@ const Dashboard : React.FC<any> = (props) => {
                             {pages.map((x, ix) => (
                                 <Route path={`${x.path}`} element={x.component} />
                             ))}
-                            <Route path={`devices/:id`} element={<DeviceControl/>} />
+                            <Route path={`devices/:id/*`} element={<DeviceControl/>} />
                             {/* <Route path={`/devices/:id/graphs`} component={DeviceControlGraph} />
                             <Route path={`/devices/:id/devices`} component={DeviceDevices} /> */}
                             {/* <Route path={`/devices/:id`} component={DeviceSingle} /> */}
-                            <Route path={`programs/:id`} element={<EditorPage/>} />
+                            <Route path={`programs/:id/*`} element={<EditorPage/>} />
                             <Route path={`plugins/:id/editor`} element={<PluginEditor/>} />
                             <Route path={`plugins/:id`} element={<PluginSingle/>} />
                         </Routes>
