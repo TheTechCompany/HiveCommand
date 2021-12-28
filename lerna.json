@@ -3,7 +3,12 @@
     "packages/*",
     "packages/core/*",
     "packages/communication/*",
-    "packages/clients/*"
+    "packages/clients/*",
+    "packages/network/*",
+    "packages/plugins/*",
+    "packages/tests/*",
+    "packages/app/*"
   ],
+  "npmClient": "yarn",
   "version": "1.3.6-alpha.36"
 }

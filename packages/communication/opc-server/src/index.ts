@@ -20,7 +20,7 @@ export interface ServerOpts {
     hostname?: string;
     discoveryServer?: string;
 
-    controller: {
+    controller?: {
         state?: {
             [key: string]: {
                 type: DataType;
@@ -94,10 +94,10 @@ export default class Server {
             const controller = this.controller;
 
             //Init state vars
-            Object.keys(this.options.controller.state || {}).forEach((key) => {
+            Object.keys(this.options.controller?.state || {}).forEach((key) => {
                 this.namespace?.addVariable({
                     browseName: key,
-                    dataType: this.options.controller.state?.[key].type,
+                    dataType: this.options.controller?.state?.[key].type,
                     componentOf: this.controller,
                     minimumSamplingInterval: 500,
                     modellingRule: "Mandatory"
@@ -105,11 +105,11 @@ export default class Server {
             })
 
             //Init actions
-            Object.keys(this.options.controller.actions || {}).forEach((key) => {
+            Object.keys(this.options.controller?.actions || {}).forEach((key) => {
                 this.namespace?.addMethod(controller, {
                     browseName: key,
-                    inputArguments: this.options.controller.actions?.[key].inputs,
-                    outputArguments: this.options.controller.actions?.[key].outputs,
+                    inputArguments: this.options.controller?.actions?.[key].inputs,
+                    outputArguments: this.options.controller?.actions?.[key].outputs,
                     modellingRule: "Mandatory"
                 })
             })
@@ -142,7 +142,7 @@ export default class Server {
 
     async addDevice(
             device: {name: string, type: string}, 
-            definition: {
+            definition?: {
                 state: {
                     [key: string]: {
                         type: DataType, 
@@ -176,11 +176,11 @@ export default class Server {
                     if(!type) return;
 
                     //Initialize actions
-                    for(var key in definition.actions){
+                    for(var key in definition?.actions){
                         this.namespace?.addMethod(type, {
                             browseName: key,
-                            inputArguments: definition.actions[key].inputs,
-                            outputArguments: definition.actions[key].outputs,
+                            inputArguments: definition?.actions[key].inputs,
+                            outputArguments: definition?.actions[key].outputs,
                             modellingRule: "Mandatory"
                         })
                     }
@@ -207,11 +207,11 @@ export default class Server {
                 })
                 
            
-                for(var key in definition.actions){
+                for(var key in definition?.actions){
                    (obj?.getMethodByName(key) as UAMethod)?.bindMethod(async (inputs, context, callback) => {
                         //   callback()
                         try{
-                            const outputs = await definition.actions?.[key].func(inputs)
+                            const outputs = await definition?.actions?.[key].func(inputs)
                             callback(null, {statusCode: StatusCodes.Good, outputArguments: outputs})
                         }catch(err : any){
                             callback(err, {statusCode: StatusCodes.BadInternalError})
@@ -229,7 +229,7 @@ export default class Server {
                     (obj?.getComponentByName(k) as UAVariable).bindVariable({
                         get: function (this: UAVariable){
                             // const parts = this.parent?.displayName.toString().split('_')
-                            return getter(key)
+                            return getter?.(key)
                         },
                         set: function (this: UAVariable, value: Variant){
                             
@@ -301,19 +301,19 @@ export default class Server {
         const that = this;
 
         //Bind controller state vars
-        Object.keys(this.options.controller.state || {}).forEach((key) => {
+        Object.keys(this.options.controller?.state || {}).forEach((key) => {
             (controller?.getComponentByName(key) as UAVariable).bindVariable({
-                get: this.options.controller.state?.[key].get || (() => {return  new Variant({dataType: DataType.Double, value: 0})}),
-                set: this.options.controller.state?.[key].set
+                get: this.options.controller?.state?.[key].get || (() => {return  new Variant({dataType: DataType.Double, value: 0})}),
+                set: this.options.controller?.state?.[key].set
             }, true)
         });
 
         //Bind controller actions
-        Object.keys(this.options.controller.actions || {}).forEach((key) => {
+        Object.keys(this.options.controller?.actions || {}).forEach((key) => {
             (controller?.getMethodByName(key) as UAMethod).bindMethod(async (inputs, context, callback) => {
                 return await new Promise(async (resolve, reject) => {
                     try{
-                        const result = await this.options.controller.actions?.[key].func(inputs)
+                        const result = await this.options.controller?.actions?.[key].func(inputs)
                         if(!result) return callback(null, {statusCode: StatusCodes.BadInternalError})
                         
                         const [ err, output ] = result;

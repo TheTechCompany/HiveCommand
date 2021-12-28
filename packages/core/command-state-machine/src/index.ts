@@ -1,11 +1,10 @@
-import { IOProcess } from "./Process";
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
 import { State } from "./State";
 import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-
+import { Process } from '@hive-command/process'
 export * from './types'
 
 export interface CommandClient { 
@@ -19,6 +18,27 @@ export enum CommandStateMachineMode {
 	DISABLED
 }
 
+import * as actions from './base-plugins'
+
+const base_actions = [
+	{
+		id: 'action',
+		onEnter: actions.action
+	},
+	{
+		id: 'sub-process',
+		onEnter: actions.sub_process
+	},
+	{
+		id: 'timer',
+		onEnter: actions.timer
+	},
+	{
+		id: 'trigger',
+		onEnter: actions.trigger
+	}
+]
+
 export class CommandStateMachine extends EventEmitter {
 
 	public state : State;
@@ -27,7 +47,7 @@ export class CommandStateMachine extends EventEmitter {
 
 	private running : boolean = true;
 
-	private processes : IOProcess[] = [];
+	private processes : Process[] = [];
 
 	private process_state: any = {};
 
@@ -55,6 +75,10 @@ export class CommandStateMachine extends EventEmitter {
 	}, client: CommandClient){
 		super();
 
+		this.start = this.start.bind(this)
+		this.performOperation = this.performOperation.bind(this);
+		this.getByKey = this.getByKey.bind(this);
+
 		this.tickRate = program.tickRate || 1000;
 
 		this.program = program;
@@ -67,27 +91,31 @@ export class CommandStateMachine extends EventEmitter {
 
 		console.debug(`Initializing State Machine`)
 
-		this.processes = program.processes.map((x) => new IOProcess(x, this))
+		this.processes = program.processes.map((x) => new Process(x, base_actions as any, this.performOperation, this.getByKey))
 
-		this.processes.forEach((process) => {
-			process.on('transition', (ev) => this.onProcessTransition(process, ev))
-		})
-		this.start = this.start.bind(this)
-		this.performOperation = this.performOperation.bind(this);
+		// this.processes.forEach((process) => {
+		// 	process.on('transition', (ev) => this.onProcessTransition(process, ev))
+		// })
+
+
 	}
 
-	onProcessTransition(process: IOProcess, event: {target: string}){
+	getByKey(key: string){
+		return this.state.get(key)
+	}
+
+	onProcessTransition(process: Process, event: {target: string}){
 		this.emit('transition', {target: event.target, process: process.id})
 	}
 
-	get currentPosition(){
-		return this.processes.map((x) => x.currentPosition)
-	}
+	// get currentPosition(){
+	// 	return this.processes.map((x) => x.currentPosition)
+	// }
 
-	getProcessPosition(name: string){
-		let position = this.processes.find((x) => x.name == name)?.currentPosition
-		return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
-	}
+	// getProcessPosition(name: string){
+	// 	let position = this.processes.find((x) => x.name == name)?.currentPosition
+	// 	return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
+	// }
 
 	getDeviceControl(deviceName: string){
 		return this.devices?.find((a) => a.name == deviceName)?.isControlled
@@ -103,18 +131,18 @@ export class CommandStateMachine extends EventEmitter {
 
 	async runOneshot(processId: string){
 		// console.log(this.processes)
-		console.log("ONESHOT")
+		// console.log("ONESHOT")
 		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
 		let process = allProcesses?.find((a) => a.id == processId)
 
 		if(!process) return new Error("No process found")
 
 		// if(process.parent){}
-		console.log(this.mode)
+		// console.log(this.mode)
 		if(this.mode == CommandStateMachineMode.AUTO){
 			//Request priority for this process
-			console.log("VIP Incoming... Requesting priority")
-			console.log(process)
+			// console.log("VIP Incoming... Requesting priority")
+			// console.log(process)
 			
 			if((process as any).parent){
 				this.processes.find((a) => a.id == (process as any).parent.id)?.requestPriority(process.id)
@@ -124,8 +152,8 @@ export class CommandStateMachine extends EventEmitter {
 		}else{
 			//Run process in seperate loop
 
-			let cleanProcess = new IOProcess(process, this)
-			const result = await cleanProcess.runOnce()
+			let cleanProcess = new Process(process, base_actions as any, this.performOperation, this.state.get)
+			const result = await cleanProcess.start()
 
 		}
 
@@ -164,42 +192,49 @@ export class CommandStateMachine extends EventEmitter {
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
 
-		await this.devices?.filter((a) => a.hasInterlock).filter((device) => {
+		let interlocks = (this.devices?.filter((a) => a.hasInterlock).filter((device) => {
 			return device.checkInterlockNeeded(this.state.get(device.name))
-		}).map(async (device) => {	
+		})) || []
+		
+		await Promise.all(interlocks.map(async (device) => {	
 			// console.log("Checking")
 
 			let {locked, lock} = await device.checkInterlock(this.state)
 			// console.log("Checked", {locked, lock})
 			if(locked){
-				console.log("Reacting to lock");
+				// console.log("Reacting to lock");
 				await device.doFallback(lock, this.performOperation)
 			}
 			// console.log("DEVICE", device.name, "LOCKED", locked)
-		})	
+		}))
 	}
 
 	async performOperation(deviceName: string, release?: boolean, operation?: string){
 		let device =  this.devices?.find((a) => a.name == deviceName)
 
-		if(device?.requiresMutex){
-			console.log("Requires mutex", {deviceName}, {operation},{ release})
-			if(!release){
-				await device?.lock()
-				console.log("Mutext acquired")
+		return await new Promise(async (resolve) => {
+			if(device?.requiresMutex){
+				// console.log("Requires mutex", {deviceName}, {operation},{ release})
+				if(!release){
+					await device?.lock()
+					// console.log("Mutext acquired")
 
-			}else{
-				await device?.unlock()
-				console.log("Mutext released")
+				}else{
+					// console.log("Mutext waiting")
+					await device?.unlock()
+					// console.log("Mutext released")
 
+				}
 			}
-		}
 
-		if(operation){
-			await this.client.performOperation({device: deviceName, operation})
-		}
-		// this.emit('REQUEST:OPERATION', {device, operation})
-		// console.log(`Perform operation ${operation} on ${device}`)
+			// console.log({operation})
+			if(operation){
+				await this.client.performOperation({device: deviceName, operation})
+				resolve(true)
+			}
+			// this.emit('REQUEST:OPERATION', {device, operation})
+			// console.log(`Perform operation ${operation} on ${device}`)
+		});
 	}
 
 	async shutdown(){
@@ -209,7 +244,7 @@ export class CommandStateMachine extends EventEmitter {
 		// await Promise.all(this.processes.map((x) => x.shutdown()))
 
 		// this.running = true;
-		// while(this.running){
+		// while(this.running){op
 		// 	await this.checkInterlocks();
 
 		// 		try{
@@ -230,37 +265,48 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	async start(mode?: CommandStateMachineMode){
-		console.debug(`Starting State Machine`)
-
-		this.mode = mode || CommandStateMachineMode.AUTO
-		// if(mode != undefined) {
-		// 	console.log(`Changing mode to ${mode}`)
-		// 	this.mode = mode;
-		// }
+		console.debug(`Starting State Machine with ${this.processes.length} processes`)
 
 		this.running = true;
 
+		await Promise.all(this.processes.map(async (x) => await x.start()))
+
 		while(this.running){
-			//Run all actions in current stage of execution
 			await this.checkInterlocks();
 
-			if(this.mode == CommandStateMachineMode.AUTO){
-				try{
-					const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-				}catch(e){
-					console.debug(e)
-				}
+			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
 
-				const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
-			}
-
-			this.emit('TICK')
-
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
 		}
+		// this.mode = mode || CommandStateMachineMode.AUTO
+		// // if(mode != undefined) {
+		// // 	console.log(`Changing mode to ${mode}`)
+		// // 	this.mode = mode;
+		// // }
+
+		// this.running = true;
+
+		// while(this.running){
+		// 	//Run all actions in current stage of execution
+		// 	await this.checkInterlocks();
+
+		// 	if(this.mode == CommandStateMachineMode.AUTO){
+		// 		try{
+		// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+		// 		}catch(e){
+		// 			console.debug(e)
+		// 		}
+
+		// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
+		// 	}
+
+		// 	this.emit('TICK')
+
+		// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
+		// }
 	}
 
 	async stop(){
+		// await Promise.all(this.processes.map(async (x) => await x.stop()))
 		this.running = false;
 	}
 }
