@@ -3,6 +3,7 @@ import { Session } from 'neo4j-driver';
 import { Channel } from 'amqplib';
 import { Pool } from 'pg';
 import { getDeviceActions } from '../data';
+import { DeviceValue } from '@hexhive/types'
 
 export default async (session: Session, pool: Pool, channel: Channel) => {
 
@@ -80,7 +81,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				port: string
 			}) => {
 
-				// const values = await DeviceValue.find({device: args.device});
+				const values = await DeviceValue.find({device: args.device});
 
 				// const client = await pgClient.connect()
 
@@ -114,7 +115,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 				// await client.release()
 				
-				return {};
+				return values;
 			}
 		},
 		Mutation: {
