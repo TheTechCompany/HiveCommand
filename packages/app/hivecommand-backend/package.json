@@ -19,6 +19,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@hexhive/graphql-server": "^0.0.6-alpha.2",
     "@hexhive/types": "^0.0.6-alpha.0",
     "@neo4j/graphql": "^2.5.4",
     "amqplib": "^0.8.0",
