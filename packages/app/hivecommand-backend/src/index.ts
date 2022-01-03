@@ -1,6 +1,8 @@
 import { config } from 'dotenv'
 config()
 
+import { HiveGraph } from '@hexhive/graphql-server'
+
 import amqp from 'amqplib'
 
 import express from 'express';
@@ -13,6 +15,8 @@ import resolvers from './resolvers';
 import { Pool } from 'pg';
 
 (async () => {
+
+
 	await connect_data()
 	
 	const driver = neo4j.driver(
@@ -45,12 +49,16 @@ import { Pool } from 'pg';
 
 	const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
 
+	const graphServer = new HiveGraph({
+		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
+		schema: neoSchema.schema
+	})
+
+	await graphServer.init()
+
 	const app = express()
 
-	app.use("/graphql", graphqlHTTP({
-		schema: neoSchema.schema,
-		graphiql: true,
-	}))
+	app.use(graphServer.middleware)
 
 	app.listen('9010')
 
