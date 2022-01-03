@@ -55,6 +55,15 @@
     camel-case "4.1.2"
     tslib "~2.2.0"
 
+"@hexhive/graphql-server@^0.0.6-alpha.2":
+  version "0.0.6-alpha.2"
+  resolved "https://registry.yarnpkg.com/@hexhive/graphql-server/-/graphql-server-0.0.6-alpha.2.tgz#503167aad21bcebbddceb7feea499a9368918acd"
+  integrity sha512-kKU4+MoV/OX8TxJgs/4dZZaP42TdL1DFgMzP6GcnwBeLkRpme9usJxAWyfdhLTZfY2OJABqC84o533TtDc4SNA==
+  dependencies:
+    express-graphql "^0.12.0"
+    jsonwebtoken "^8.5.1"
+    jwks-rsa "^2.0.5"
+
 "@hexhive/types@^0.0.6-alpha.0":
   version "0.0.6-alpha.0"
   resolved "https://registry.yarnpkg.com/@hexhive/types/-/types-0.0.6-alpha.0.tgz#55321b2dab355fbc63707755ee229161cc2bcfab"
