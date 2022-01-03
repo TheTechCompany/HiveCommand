@@ -7,12 +7,14 @@ import express from 'express';
 import neo4j from "neo4j-driver"
 import { Neo4jGraphQL } from "@neo4j/graphql"
 import { graphqlHTTP } from "express-graphql"
-
+import { connect_data } from '@hexhive/types';
 import typeDefs from './schema'
 import resolvers from './resolvers';
 import { Pool } from 'pg';
 
 (async () => {
+	await connect_data()
+	
 	const driver = neo4j.driver(
 		process.env.NEO4J_URI || "localhost",
 		neo4j.auth.basic(process.env.NEO4J_USER || "neo4j", process.env.NEO4J_PASSWORD || "test")
@@ -40,7 +42,7 @@ import { Pool } from 'pg';
 
 
 	const resolved = await resolvers(driver.session(), pool, mqChannel)
-	
+
 	const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
 
 	const app = express()
