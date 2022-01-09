@@ -15,7 +15,7 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { assignHMINode, connectHMINode, createHMIAction, createHMIGroup, createHMINode, updateHMIGroup, updateHMINode, updateHMINodeRotation, updateHMINodeScale } from '@hive-command/api';
+import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useUpdateHMIGroup, useUpdateHMINode } from '@hive-command/api';
 
 export const Controls = (props) => {
     
@@ -451,6 +451,17 @@ export const Controls = (props) => {
         client.refetchQueries({include: ['Q']})
     }
 
+    const createHMINode = useCreateHMINode(id, props.activeProgram)
+    const updateHMINode = useUpdateHMINode(id, props.activeProgram)
+
+    const createHMIGroup = useCreateHMIGroup(id, props.activeProgram)
+    const updateHMIGroup = useUpdateHMIGroup()
+
+    const connectHMINode = useConnectHMINode(id, props.activeProgram)
+    const assignHMINode = useAssignHMINode(id, props.activeProgram)
+
+    const createHMIAction = useCreateHMIAction(id, props.activeProgram)
+    
     // const [ addHMINode, addHMIInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
     //     const program = mutation.updateCommandPrograms({
     //         where: {id: id},
@@ -953,7 +964,7 @@ export const Controls = (props) => {
                             labelKey="name"
                             value={item?.extras?.devicePlaceholder?.id}
                             onChange={({value}) => {
-                                assignHMINode(props.activeProgram, selected.id, value).then(() => {
+                                assignHMINode(selected.id, value).then(() => {
                                     refetch()
                                 })
                             }}
@@ -983,24 +994,22 @@ export const Controls = (props) => {
                             rightIcon={<RotateRight size="small" />}
                             value={item?.extras?.rotation}
                             onLeftClick={() => {
-                                updateHMINodeRotation(props.activeProgram, selected.id, (item?.extras?.rotation || 0) - 90).then(() => {
+                                updateHMINode(selected.id, {rotation: (item?.extras?.rotation || 0) - 90}).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                    updateHMINodeRotation(
-                                        props.activeProgram,
+                                    updateHMINode(
                                         selected.id,
-                                        (item?.extras?.rotation || 0) + 90
+                                        {rotation: (item?.extras?.rotation || 0) + 90}
                                     ).then(() => {
                                         refetch()
                                     })
                             }}
                             onChange={(e) => {
-                                updateHMINodeRotation(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    parseFloat(e)
+                                    {rotation: parseFloat(e)}
                                 ).then(() => {
                                     refetch()
                                 })
@@ -1015,28 +1024,33 @@ export const Controls = (props) => {
                             rightIcon={<Add size="small" />}
                             value={item?.extras?.scaleX}
                             onLeftClick={() => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {x: parseFloat(item?.extras?.scaleX || 0) - 1}
+                                    {
+                                        scale: {
+                                            x: parseFloat(item?.extras?.scaleX || 0) - 1
+                                        }
+                                    }
                                 ).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {x: parseFloat(item?.extras?.scaleX || 0) + 1}
+                                    {
+                                        scale: {
+                                            x: parseFloat(item?.extras?.scaleX || 0) + 1
+                                        }
+                                    }
                                 ).then(() => {
                                     refetch()
                                 })
                             }}
                             onChange={(e) => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {x: parseFloat(e)}
+                                    {scale: {x: parseFloat(e)}}
                                 ).then(() => {
                                     refetch()
                                 })
@@ -1050,28 +1064,25 @@ export const Controls = (props) => {
                             rightIcon={<Add size="small" />}
                             value={item?.extras?.scaleY}
                             onLeftClick={() => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {y: parseFloat(item?.extras?.scaleY || 0) - 1}
+                                    {scale: {y: parseFloat(item?.extras?.scaleY || 0) - 1}}
                                 ).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {y: parseFloat(item?.extras?.scaleY || 0) + 1}
+                                    {scale: {y: parseFloat(item?.extras?.scaleY || 0) + 1}}
                                 ).then(() => {
                                         refetch()
                                     })
                             }}
                             onChange={(e) => {
-                                updateHMINodeScale(
-                                    props.activeProgram,
+                                updateHMINode(
                                     selected.id,
-                                    {y: parseFloat(e)}
+                                    {scale: {y: parseFloat(e)}}
                                 ).then(() => {
                                     refetch()
                                 })
@@ -1114,7 +1125,6 @@ export const Controls = (props) => {
                 onClose={() => openAssignModal(false)}
                 onSubmit={(assignment) => {
                     createHMIAction(
-                        props.activeProgram,
                         assignment.name,
                         assignment.flow, 
                     ).then(() => {
@@ -1206,7 +1216,6 @@ export const Controls = (props) => {
                         debounce((path: any) => {
               
                             connectHMINode(
-                                props.activeProgram,
                                 (path as any).draft ? undefined : path.id,
                                 path.source,
                                 path.sourceHandle,
@@ -1242,10 +1251,11 @@ export const Controls = (props) => {
                 
 
                         updateHMINode(
-                            props.activeProgram,
                             node.id,
-                            node.x, 
-                            node.y
+                            {
+                                x: node.x, 
+                                y: node.y
+                            }
                         ).then(() => {
                             refetch()
                         })
@@ -1262,7 +1272,6 @@ export const Controls = (props) => {
                     //     }})
                     // }else{
                         createHMINode(
-                            props.activeProgram,
                             data.extras.icon,
                             position.x,
                             position.y,

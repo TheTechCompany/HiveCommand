@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, List, Text } from 'grommet';
-import { connectProgramNode, createProgramNode, deleteProgramNodes, disconnectProgramNode, updateProgramNode } from '@hive-command/api';
+import { useConnectProgramNode, useCreateProgramNode, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramNode } from '@hive-command/api';
+
 import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
@@ -215,6 +216,12 @@ export const Program = (props) => {
     let program = data?.commandProgramFlows?.[0]
 
 
+    const createProgramNode = useCreateProgramNode(id, props.activeProgram)
+    const updateProgramNode = useUpdateProgramNode(id, props.activeProgram)
+    const deleteProgramNodes = useDeleteProgramNodes(id, props.activeProgram)
+    const connectProgramNode = useConnectProgramNode(id, props.activeProgram)
+    const disconnectProgramNode = useDisconnectProgramNode(id, props.activeProgram)
+
     useEffect(() => {
         if (program && props.activeProgram) {
             setNodes(program.nodes.map((x) => ({
@@ -329,7 +336,7 @@ export const Program = (props) => {
             let path = paths.find((a) => a.id == _paths[0]);
 
             queries.push(
-                disconnectProgramNode(props.activeProgram, path.source, path.sourceHandle, path.target, path.targetHandle)
+                disconnectProgramNode(path.source, path.sourceHandle, path.target, path.targetHandle)
             )
     
             // return {
@@ -344,7 +351,7 @@ export const Program = (props) => {
             }
 
             queries.push(
-                deleteProgramNodes(props.activeProgram, nodes)
+                deleteProgramNodes(nodes)
             )
 
         }
@@ -515,7 +522,6 @@ export const Program = (props) => {
                         // }})
 
                         createProgramNode(
-                            props.activeProgram, 
                             node.extras.icon, 
                             position.x, 
                             position.y, 
@@ -526,7 +532,6 @@ export const Program = (props) => {
                     }}
                     onNodeUpdate={(node) => {
                         updateProgramNode(
-                            props.activeProgram,
                             node.id,
                             node.x,
                             node.y
@@ -538,7 +543,6 @@ export const Program = (props) => {
                     onPathCreate={(path) => {
 
                         connectProgramNode(
-                            props.activeProgram,
                             path.source,
                             path.sourceHandle,
                             path.target,

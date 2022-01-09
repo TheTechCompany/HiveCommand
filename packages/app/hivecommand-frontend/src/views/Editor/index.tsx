@@ -2,7 +2,7 @@ import { gql, useApolloClient, useQuery } from '@apollo/client';
 import React, { Suspense, lazy, useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Text, Spinner, Button, Collapsible, List } from 'grommet';
 import qs from 'qs';
-import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { ZoomControls } from '../../components/zoom-controls';
@@ -21,7 +21,8 @@ import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 import { Documentation } from './pages/documentation';
 import { ObjectTypeDefinitionNode } from 'graphql'
-import { createProgramFlow, createProgramHMI } from '@hive-command/api';
+import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
+import { RoutedTabs } from '../../components/routed-tabs';
 export interface EditorProps {
 
 }
@@ -31,6 +32,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const navigate = useNavigate()
     const location = useLocation()
 
+
+    const match = useMatch(`*/:path`)
+    console.log({location, match})
+
+    // const match = useMatch()
+    // alert(match)
+    
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
     const [ selectedItem, setSelectedItem ] = useState<any>(undefined);
@@ -78,6 +86,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             id: id
         }
     })
+
+    const createProgramFlow = useCreateProgramFlow(id)
+    const createProgramHMI = useCreateProgramHMI(id)
 
     // const [ addProgramNode, addInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
     //     const program = mutation.updateCommandPrograms({
@@ -233,10 +244,15 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     useEffect(() => {
 
         menu.forEach((item, ix) => {
-            const match =  matchPath(window.location.pathname, `${item.toLowerCase()}`)
-            if(match){
-                setView(item as any)
-            }
+            console.log(item, window.location.pathname)
+            // const resolvedPath = useResolvedPath(item.toLowerCase())
+
+            // // const match =  matchPath(resolvedPath.pathname, location.pathname)
+
+            // console.log(match)
+            // if(match){
+            //     setView(item as any)
+            // }
 
         })
 
@@ -289,7 +305,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     align="center"
                     overflow="hidden"
                     direction="row">
-                    {menu.map((menu_item) => (
+                    <RoutedTabs 
+                        tabs={menu.map((x) => ({
+                            path: x.toLowerCase(),
+                            label: x,
+                            default: x == "Program"
+                        }))} />
+                    {/* {menu.map((menu_item) => (
                         <Button 
                         
                             hoverIndicator
@@ -303,7 +325,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                             plain 
                             label={menu_item} />
                     ))}
-                   
+                    */}
                     
                 </Box>
             </Box>
@@ -313,11 +335,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 onSubmit={(item) => {
                     if(view == "Program"){
                         let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                        createProgramFlow(activeProgram, item.name, parent).then(() => {
+                        createProgramFlow(item.name, parent).then(() => {
                             refetch()
                         })
                     }else{
-                        createProgramHMI(activeProgram, item.name, selectedItem.id).then(() => {
+                        createProgramHMI(item.name, selectedItem.id).then(() => {
                             refetch()
                         })
                     }
@@ -396,13 +418,15 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 </Collapsible>
                 <Box flex>
                     <Routes>
-                        <Route path={`/`} element={<Program activeProgram={activeProgram} />} />
-                        <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
-                        <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
-                        <Route path={`devices`} element={<Devices/>} />
-                        <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
-                        <Route path={`alarms`} element={<Alarms/>} />
-                        <Route path={`documentation`} element={<Documentation/>} />
+                        <Route path={`/`} element={<Outlet />}>
+                            <Route path={""} element={<Program activeProgram={activeProgram} />} />
+                            <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
+                            <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
+                            <Route path={`devices`} element={<Devices/>} />
+                            <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
+                            <Route path={`alarms`} element={<Alarms/>} />
+                            <Route path={`documentation`} element={<Documentation/>} />
+                        </Route>
                     </Routes>
                 </Box>
                 

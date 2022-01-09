@@ -10,7 +10,7 @@ import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
 import { DeviceControlContext } from '../device-control/context';
-import { mapPort } from '@hive-command/api';
+import { useMapPort } from '@hive-command/api';
 export interface DeviceSingleProps {
     match?: any;
     history?: any;
@@ -122,6 +122,8 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
         }
     })
 
+    const mapPort = useMapPort(controlId)
+
     const refetch = () => {
         client.refetchQueries({
             include: ["Q"]
@@ -155,12 +157,10 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                     openModal(false);
                 }}
                 onSubmit={(connections) => {
-                    mapPort( props.match.params.id,
-                            selectedPort.bus,
-                            selectedPort.port,
-                            device,
-                            connections
-                        
+                    mapPort(
+                        selectedPort.bus,
+                        selectedPort.port,
+                        connections
                     ).then(() => {
                         refetch()
                     })

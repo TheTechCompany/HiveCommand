@@ -1,309 +1,449 @@
-import { gql, useMutation } from "@apollo/client"
+import { mutate, mutation, useMutation } from "../gqty";
 
+export const useCreateHMIAction = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        name: string;
+        flow: string[];
+      }
+    ) => {
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                node: {
+                  actions: [
+                    {
+                      create: [
+                        {
+                          node: {
+                            name: args.name,
+                            flow: {
+                              connect: args.flow.map((f) => ({
+                                where: { node: { id: f } },
+                              })),
+                            },
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
 
-export const createHMIAction = async (
-	program: string,
-	name: string,
-	flow: string[]
-) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation ($program: ID, $hmi_id: ID, $name: String, $flow: [String]) {
-			updateCommandPrograms(
-				where: {node: {id: $program}},
-				update: {
-					hmi: [{
-						where: {id: $hmi_id},
-						update: {
-							actions: [{
-								create: [{
-									node: {
-										name: $name,
-										flow: {
-											connect: [${flow.map((f) => `{where: {id: "${f}"}}`).join(",")}]
-										}
-									}
-								}]
-							}]
-						}
-					}]
-				}
-			)
-		}
-	`)
+      return {
+        item: {
+          ...item.commandPrograms?.[0],
+        },
+      };
+    }
+  );
+  return async (name: string, flow: string[]) => {
+    return await mutateFn({
+      args: {
+        name,
+        flow,
+      },
+    });
+  };
+};
 
-	return await mutateFn({
-		variables: {
-			program,
-			name,
-			flow,
-		}
-	})
-}
+export interface HMIGroupNode {
+	x: number,
+	y: number,
+	rotation: number,
+	scaleX: number,
+	scaleY: number,
+	showTotalizer: boolean,
+	type: string
+ }
 
-
-export const createHMIGroup = async (nodes: any[], ports: any[]) => {
-
-}
-
-export const updateHMIGroup = async (id: string, x: number, y: number) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation updateHMIGroup (id: ID, x: Float, y: Float) {
-			updateCommandHMIGroups({
-				where: {id: $id},
-				update: {
-					x: $x,
-					y: $y,
-				}
-			}){
-				id
-			}
-		}
-	`)
-
-	return await mutateFn({
-		variables: {
-			id,
-			x,
-			y
-		}
-	})
-}
-
-export const createHMINode = async (
-	program: string,
-	type: string,
+ export interface HMIGroupPort {
+	key: string,
+	rotation: number,
+	length: number,
 	x: number,
 	y: number
-) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation createHMINode($program: ID!, $type: String!, $x: Float!, $y: Float!) {
-			updateCommandPrograms({
-				where: {id: $program},
-				update: {
-					hmi: [{
-						where: {node: {id: $activeProgram}},
-						update: {
-							node: {
-								nodes: {
-									nodes: [{
-										create: [{
-											node: {
-												type: {
-													connect: {where: {node: {name: $type}}},
-													x: $x,
-													y: $y
-												}
-											}
-										}]
-									}]
-								}
-							}
-						}
-					}]			
-				}
-			}){
-				id
-				name
-				nodes {
-					id
-				}
-			}
-		}
-	`)
+ }
 
-	return await mutateFn({
-		variables: {
-			program,
-			type,
-			x,
-			y
-		}
-	})
-}
+export const useCreateHMIGroup = (programId: string, hmiId: string) => {
 
-export const updateHMINode = async (program: string, node_id: string, x: number, y: number) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation updateHMINode($program: ID!, $node_id: ID!, $x: Float!, $y: Float!) {
-			updateCommandPrograms({
-				where: {id: $program},
-				update: {
-					hmi: [{
-						where: {node: {id: $activeProgram}},
-						update: {
-							nodes: [{
-								where: {id: $node_id},
-								update: {
-									x: $x,
-									y: $y
-								}
-							}]
-						}
-					}]
-				}
-			}){
-				id
-			}
-		}
-	`)
-
-	return await mutateFn({
-		variables: {
-			program,
-			node_id,
-			x,
-			y
-
-		}
-	})
-}
-
-export const updateHMINodeScale = async (program: string, node_id: string, scale: {x?: number, y?: number}) => {
-	let query = []
+	const [ mutateFn ] = useMutation((mutation, args: {
+		nodes: HMIGroupNode[]
+		ports: HMIGroupPort[]
+	}) => {
 	
-	if(scale.x) query.push(`scaleX: $scaleX`)
-	if(scale.y) query.push(`scaleY: $scaleY`)
-	const [ mutateFn, info ] = useMutation(gql`
-			mutation updateHMINodeRotation($program: ID!, $node_id: ID!, $scale: Float!) {
-				updateCommandPrograms({
-					where: {id: $program},
+		const item = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				hmi: [{
+					where: {node: {id: hmiId}},
 					update: {
-						hmi: [{
-							where: {node: {id: $hmi_id}},
-							update: {
-								nodes: [{
-									where: {node: {id: $node_id}},
-									${query.join(', ')}
-								}]
-							}
-						}]
-					}
-				}){
-					id
-				}
-			}
-		`)
-	
-		return await mutateFn({
-			variables: {
-				program,
-				node_id,
-				scale
-			}
-		})
-}
-
-export const updateHMINodeRotation = async (program: string, node_id: string, rotation: number) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation updateHMINodeRotation($program: ID!, $node_id: ID!, $rotation: Float!) {
-			updateCommandPrograms({
-				where: {id: $program},
-				update: {
-					hmi: [{
-						where: {node: {id: $hmi_id}},
-						update: {
-							nodes: [{
-								where: {node: {id: $node_id}},
-								rotation: $rotation
-							}]
-						}
-					}]
-				}
-			}){
-				id
-			}
-		}
-	`)
-
-	return await mutateFn({
-		variables: {
-			program,
-			node_id,
-			rotation
-		}
-	})
-}
-
-export const connectHMINode = async (
-	program: string,
-	node_id: string,
-	source: string,
-	sourceHandle: string,
-	target: string,
-	targetHandle: string,
-	points: {x: number, y: number}[]
-) => {
-	let path_query = ``;
-
-	// if()
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation ($program: ID) {
-			updateCommandPrograms(
-				where: {id: $program},
-				update: {
-					hmi: [{
-						where: {node: {id: $activeProgram}},
-						update: {
-							paths: [${path_query}]
-						}
-					}]
-				}
-			)
-		}
-	`)
-
-	return await mutateFn({
-		variables: {
-			program,
-			node_id,
-			source,
-			sourceHandle,
-			target,
-			targetHandle,
-			points
-		}
-	})
-}
-
-export const assignHMINode = async (program: string, node_id: string, device_id: string) => {
-	const [ mutateFn, info ] = useMutation(gql`
-		mutation assignHMINode($program: ID!, $node_id: ID!, $device_id: ID!) {
-			updateCommandPrograms(
-				where: {id: $program},
-				update: {
-					hmi: [{
-						where: {node: {id: $activeProgram}},
-						update: {
-							node: {
-								nodes: [{
-									where: {id: $node_id},
-									update: {
-										devicePlaceholder: {
-											connect: {
-												where: {
-													node: {id: $device_id},
+						node: {
+							groups: [{
+								create: [{
+									node: {
+										ports: {
+											create: args.ports.map((p) => ({
+												node: {
+													...p
 												}
-											}
+											}))
+										},
+										nodes: {
+											create: args.nodes.map((node) => ({
+												node: {
+													x: node.x,
+													y: node.y,
+													rotation: node.rotation,
+													scaleX: node.scaleX,
+													scaleY: node.scaleY,
+													showTotalizer: node.showTotalizer,
+													type: {connect: {where: {node: {name: node.type}}}}
+												}
+											}))
 										}
 									}
 								}]
-							}
+							}]
 						}
-					}]
-			
-				}
-			){
-				id
-				name
+					}
+				}]
+			}
+		})
+
+		return {
+			item: {
+				...item.commandPrograms?.[0]
 			}
 		}
-	`)
+	})
 
-	return await mutateFn({
-		variables: {
-			program,
-			node_id,
-			device_id,
-			activeProgram: program
+	return async (nodes: HMIGroupNode[], ports: HMIGroupPort[]) => {
+		return await mutateFn({
+			args: {
+				nodes,
+				ports
+			}
+		})	
+	}
+
+};
+
+export const useUpdateHMIGroup = () => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {
+		id: string,
+		x: number,
+		y: number
+	}) => {
+		const item = mutation.updateCommandHMIGroups({
+			where: {id: args.id},
+			update: {
+				x: args.x,
+				y: args.y
+			}
+		})
+		return {
+			item: {
+				...item.commandHmiGroups?.[0]
+			}
 		}
 	})
-}
+	return async (id: string, x: number, y: number) => {
+
+		return await mutateFn({args: {id, x, y}})
+	}
+};
+
+export const useCreateHMINode = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        type: string;
+        x: number;
+        y: number;
+      }
+    ) => {
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                node: {
+                  nodes: [
+                    {
+                      create: [
+                        {
+                          node: {
+                            type: {
+                              connect: { where: { node: { name: args.type } } },
+                            },
+                            x: args.x,
+                            y: args.y,
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+      return {
+        item: {
+          ...item.commandPrograms?.[0],
+        },
+      };
+    }
+  );
+  return async (type: string, x: number, y: number) => {
+    return await mutateFn({
+      args: {
+        type,
+        x,
+        y,
+      },
+    });
+  };
+};
+
+export const useUpdateHMINode = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        nodeId: string;
+        x?: number;
+        y?: number;
+        scale?: { x?: number; y?: number };
+        rotation?: number;
+      }
+    ) => {
+      let hmiUpdate: any = {};
+      if (args.x) hmiUpdate.x = args.x;
+      if (args.y) hmiUpdate.y = args.y;
+      if (args.scale) {
+        if (args.scale.x) hmiUpdate.scaleX = args.scale.x;
+        if (args.scale.y) hmiUpdate.scaleY = args.scale.y;
+      }
+
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                node: {
+                  nodes: [
+                    {
+                      where: { node: { id: args.nodeId } },
+                      update: {
+                        node: hmiUpdate,
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+      return {
+        item: {
+          ...item.commandPrograms?.[0],
+        },
+      };
+    }
+  );
+
+  return async (node_id: string, update: {
+		x?: number,
+		y?: number,
+		scale?: { x?: number; y?: number };
+		rotation?: number;
+	}) => {
+    return await mutateFn({
+      args: {
+        nodeId: node_id,
+        x: update.x,
+        y: update.y,
+		scale: update.scale,
+		rotation: update.rotation,
+      },
+    });
+  };
+};
+
+export const useConnectHMINode = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        id?: string;
+        source: string;
+        sourceHandle: string;
+        target: string;
+        targetHandle: string;
+        points: { x: number; y: number }[];
+      }
+    ) => {
+      let paths = [
+        !args.id
+          ? {
+              create: [
+                {
+                  node: {
+                    source: {
+                      CommandHMIGroup: {
+                        connect: { where: { node: { id: args.source } } },
+                      },
+                      CommandHMINode: {
+                        connect: { where: { node: { id: args.source } } },
+                      },
+                    },
+                    target: {
+                      CommandHMIGroup: {
+                        connect: { where: { node: { id: args.target } } },
+                      },
+                      CommandHMINode: {
+                        connect: { where: { node: { id: args.target } } },
+                      },
+                    },
+                    sourceHandle: args.sourceHandle,
+                    targetHandle: args.targetHandle,
+                    points: args.points,
+                  },
+                },
+              ],
+            }
+          : {
+              where: { node: { id: args.id } },
+              update: {
+                node: {
+                  source: {
+                    CommandHMIGroup: {
+                      connect: { where: { node: { id: args.source } } },
+                    },
+                    CommandHMINode: {
+                      connect: { where: { node: { id: args.source } } },
+                    },
+                  },
+                  target: {
+                    CommandHMIGroup: {
+                      connect: { where: { node: { id: args.target } } },
+                    },
+                    CommandHMINode: {
+                      connect: { where: { node: { id: args.target } } },
+                    },
+                  },
+                  sourceHandle: args.sourceHandle,
+                  targetHandle: args.targetHandle,
+                  points: args.points,
+                },
+              },
+            },
+      ];
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                node: {
+					paths: paths
+				}
+              },
+            },
+          ],
+        },
+      });
+
+	  return {
+		  item: {
+			  ...item.commandPrograms?.[0]
+		  }
+	  }
+    }
+  );
+
+  return async (
+    node_id: string,
+    source: string,
+    sourceHandle: string,
+    target: string,
+    targetHandle: string,
+    points: { x: number; y: number }[]
+  ) => {
+    return await mutateFn({
+      args: {
+        id: node_id,
+        source,
+        sourceHandle,
+        target,
+        targetHandle,
+        points,
+      },
+    });
+  };
+};
+
+export const useAssignHMINode = (programId: string, hmiId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {nodeId: string, deviceId: string}) => {
+		const item = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				hmi: [{
+					where: {node: {id: hmiId}},
+					update: {
+						node: {
+							nodes: [{
+								where: {node: {id: args.nodeId}},
+								update: {
+									node: {
+										devicePlaceholder: {
+											connect: {where: {node: {id: args.deviceId}}}
+										}
+									}
+								}
+							}]
+						}
+					}
+				}]
+			}
+		})
+		return {
+			item: {
+				...item.commandPrograms?.[0]
+			}
+		}
+	})
+
+	return async (
+		node_id: string,
+		device_id: string
+	) => {
+		return await mutateFn({
+			args: {
+				nodeId: node_id,
+				deviceId: device_id
+			}
+		})
+	}
+};
