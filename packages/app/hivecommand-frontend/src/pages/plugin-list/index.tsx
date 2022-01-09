@@ -1,11 +1,13 @@
 import { Add } from 'grommet-icons';
 import { StackModal } from '../../components/modals/stacks';
 import React, {Suspense, useEffect, useState} from 'react';
-import { useQuery, useMutation } from '@hive-command/api'
 import styled from 'styled-components'
 import { Box, Button, CheckBox, TextInput, Text } from 'grommet'
 import { PluginStore } from '../../components/plugin-store/PluginStore'
 import { NestedList } from '../../components/ui/nested-list';
+import { useQuery, gql } from '@apollo/client';
+import { createPlugin } from '@hive-command/api';
+
 export interface StackListProps {
     className? :string;
     history?: any;
@@ -14,43 +16,21 @@ export interface StackListProps {
 
 export const BaseStackList : React.FC<StackListProps> = (props) => {
 
-
-    const query = useQuery({
-        suspense: false,
-        staleWhileRevalidate: false
-    })
-
-    const plugins = query.commandPlugins()
-
-    
-    const [ createStack, {isLoading, data, error }] =  useMutation((mutation, args: {name: string}) => {
-        const result = mutation.createCommandPlugins({input: [{name: args.name}]})
-       
-        if(result){
-            return {
-                item: {
-                    ...result.commandPlugins[0]
-                },
-                error: null
+    const { data } = useQuery(gql`
+        query Q {
+            commandPlugins {
+                id
+                name
             }
         }
-        return {
-            error: "no access"
-        }
-        
-    }, {
-        
-            onCompleted(data) {},
-            onError(error) {},
-            refetchQueries: [query.commandPlugins()],
-            awaitRefetchQueries: true,
-            suspense: false,
-          
-    })
+    `)
+    const plugins = data?.commandPlugins //query.commandPlugins()
+
+    
     
     const [ modalOpen, openModal ] = useState<boolean>(false)
     
-    return query.$state.isLoading  ? (<div>Loading...</div>) : (
+    return  (
         <Box
             overflow="hidden"
              background="neutral-1"
@@ -64,8 +44,7 @@ export const BaseStackList : React.FC<StackListProps> = (props) => {
                     console.log(stack)
                     if(stack.name){
                         
-                        createStack({args: {name: stack.name}}).then(({item, error}) => {
-                           console.log(item, error)
+                        createPlugin(stack.name).then(() => {
                             // if(item){
                             //     let s : any[] = _stacks.slice()
                             //     s.push(item)

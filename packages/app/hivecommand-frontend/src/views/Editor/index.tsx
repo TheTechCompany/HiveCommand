@@ -1,17 +1,14 @@
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import React, { Suspense, lazy, useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Text, Spinner, Button, Collapsible, List } from 'grommet';
-import { useQuery as useQLess} from '@hive-command/api';
 import qs from 'qs';
 import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
-import { IFlowShardPaths } from '@hexhive/types/dist/interfaces';
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { ZoomControls } from '../../components/zoom-controls';
 import { NodeDropdown } from '../../components/node-dropdown';
 import { nanoid } from 'nanoid';
 import { Action, Add, Trigger, Menu } from 'grommet-icons'
-import { useMutation } from '@hive-command/api';
 import { BallValve, Blower, Conductivity, DiaphragmValve, Filter, FlowSensor, PressureSensor, Pump, SpeedController, Tank } from '../../assets/hmi-elements';
 import * as HMIIcons from '../../assets/hmi-elements'
 import { HMINodeFactory } from '../../components/hmi-node/HMINodeFactory';
@@ -24,6 +21,7 @@ import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 import { Documentation } from './pages/documentation';
 import { ObjectTypeDefinitionNode } from 'graphql'
+import { createProgramFlow, createProgramHMI } from '@hive-command/api';
 export interface EditorProps {
 
 }
@@ -81,106 +79,106 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         }
     })
 
-    const [ addProgramNode, addInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
-        const program = mutation.updateCommandPrograms({
-            where: {id: id},
-            update: {
-                program: [{
-                    where: {node: {id: activeProgram}},
-                    update: {
-                        node: {
-                            nodes: [{create: [{node: {
-                                type: args.type,
-                                x: args.x,
-                                y: args.y
-                            }}]}]
-                        }
-                    }
-                }]
-            }
-        })
-        return {
-            item: {
-                ...program.commandPrograms[0]
-            }
-        }
-    })
+    // const [ addProgramNode, addInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
+    //     const program = mutation.updateCommandPrograms({
+    //         where: {id: id},
+    //         update: {
+    //             program: [{
+    //                 where: {node: {id: activeProgram}},
+    //                 update: {
+    //                     node: {
+    //                         nodes: [{create: [{node: {
+    //                             type: args.type,
+    //                             x: args.x,
+    //                             y: args.y
+    //                         }}]}]
+    //                     }
+    //                 }
+    //             }]
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...program.commandPrograms[0]
+    //         }
+    //     }
+    // })
 
 
-    const [ addProgram, addProgramInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
-       let update : any = {};
+    // const [ addProgram, addProgramInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
+    //    let update : any = {};
 
-       if(!args.parent){
-        update = {
-            program: [{
-                create: [{node: {
-                    name: args.name || "Default"
-                }}]
-            }]
-        }
-       }else{
-           update = {
-            program: [{
-                where: {node: {id: args.parent}},
-                update: {
-                    node: {
-                        children: [{
-                            create: [{node: {
-                                name: args.name || "Default"
-                            }}]
-                        }]
-                    }
-                }
-            }]
-           }
-       }
-        const program = mutation.updateCommandPrograms({
-            where: {id: id},
-            update: update
-        })
-        return {
-            item: {
-                ...program.commandPrograms[0]
-            }
-        }
-    })
+    //    if(!args.parent){
+    //     update = {
+    //         program: [{
+    //             create: [{node: {
+    //                 name: args.name || "Default"
+    //             }}]
+    //         }]
+    //     }
+    //    }else{
+    //        update = {
+    //         program: [{
+    //             where: {node: {id: args.parent}},
+    //             update: {
+    //                 node: {
+    //                     children: [{
+    //                         create: [{node: {
+    //                             name: args.name || "Default"
+    //                         }}]
+    //                     }]
+    //                 }
+    //             }
+    //         }]
+    //        }
+    //    }
+    //     const program = mutation.updateCommandPrograms({
+    //         where: {id: id},
+    //         update: update
+    //     })
+    //     return {
+    //         item: {
+    //             ...program.commandPrograms[0]
+    //         }
+    //     }
+    // })
 
 
-    const [ addHMI, addHMIParentInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
-        let update : any = {};
+    // const [ addHMI, addHMIParentInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
+    //     let update : any = {};
 
-        if(!args.parent || args.parent === "root"){
-            update = {
-                hmi: [{create: [{node: {
-                    name: args.name || "Default"
-                }}]}]
-            }
-        }else{
-            // update = {
-            //     hmi: [{
-            //         where: {node: {id: args.parent}},
-            //         update: {
-            //             node: {
-            //                 children: [{
-            //                     create: [{node: {
-            //                         name: args.name || "Default"
-            //                     }}]
-            //                 }]
-            //             }
-            //         }
-            //     }]
-            // }
-        }
-        const program = mutation.updateCommandPrograms({
-            where: {id: id},
-            update: update
-        })
-        return {
-            item: {
-                ...program.commandPrograms[0]
-            }
-        }
-    })
+    //     if(!args.parent || args.parent === "root"){
+    //         update = {
+    //             hmi: [{create: [{node: {
+    //                 name: args.name || "Default"
+    //             }}]}]
+    //         }
+    //     }else{
+    //         // update = {
+    //         //     hmi: [{
+    //         //         where: {node: {id: args.parent}},
+    //         //         update: {
+    //         //             node: {
+    //         //                 children: [{
+    //         //                     create: [{node: {
+    //         //                         name: args.name || "Default"
+    //         //                     }}]
+    //         //                 }]
+    //         //             }
+    //         //         }
+    //         //     }]
+    //         // }
+    //     }
+    //     const program = mutation.updateCommandPrograms({
+    //         where: {id: id},
+    //         update: update
+    //     })
+    //     return {
+    //         item: {
+    //             ...program.commandPrograms[0]
+    //         }
+    //     }
+    // })
 
 
     // useEffect(() => {
@@ -213,7 +211,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     // const programQuery = useQuery(GET_PROGRAM, { variables: { id: props.match.params.id } })
     // const stackQuery = useQuery(GET_STACKS)
     
-    const gqless = useQLess({suspense: false, staleWhileRevalidate: true})
+    // const gqless = useQLess({suspense: false, staleWhileRevalidate: true})
 
     // const Processes = (shardQuery.data || {}).FlowShardMany || []
     // const program_root = (programQuery.data || {}).ProgramOne;
@@ -315,11 +313,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 onSubmit={(item) => {
                     if(view == "Program"){
                         let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                        addProgram({args: {name: item.name, parent: parent}}).then(() => {
+                        createProgramFlow(activeProgram, item.name, parent).then(() => {
                             refetch()
                         })
                     }else{
-                        addHMI({args: {name: item.name, parent: selectedItem.id}}).then(() => {
+                        createProgramHMI(activeProgram, item.name, selectedItem.id).then(() => {
                             refetch()
                         })
                     }
@@ -398,8 +396,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 </Collapsible>
                 <Box flex>
                     <Routes>
-                        <Route path={`program`} element={(props) => <Program {...props} activeProgram={activeProgram} />} />
-                        <Route path={`controls`} element={(props) => <Controls {...props} activeProgram={activeProgram} />} />
+                        <Route path={`/`} element={<Program activeProgram={activeProgram} />} />
+                        <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
+                        <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
                         <Route path={`devices`} element={<Devices/>} />
                         <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
                         <Route path={`alarms`} element={<Alarms/>} />

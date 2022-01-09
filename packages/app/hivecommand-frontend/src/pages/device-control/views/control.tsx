@@ -5,8 +5,7 @@ import { Checkmark } from 'grommet-icons';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
-import { BaseStyle } from '@hexhive/styles';
-import { useMutation } from '@hive-command/api';
+import { requestFlow } from '@hive-command/api';
 
 const ActionButton = (props) => {
 	console.log(props)
@@ -37,21 +36,21 @@ export default () => {
 
 	console.log({operatingMode, waitingForActions, actions})
 
-	const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
-		deviceId: string,
-		actionId: string
-	}) => {
-		const item = mutation.requestFlow({
-			deviceId: args.deviceId,
-			actionId: args.actionId
-		})
+	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
+	// 	deviceId: string,
+	// 	actionId: string
+	// }) => {
+	// 	const item = mutation.requestFlow({
+	// 		deviceId: args.deviceId,
+	// 		actionId: args.actionId
+	// 	})
 
-		return {
-			item: {
-				success: item.success
-			}
-		}
-	})
+	// 	return {
+	// 		item: {
+	// 			success: item.success
+	// 		}
+	// 	}
+	// })
 
     const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
         //Find map between P&ID tag and bus-port
@@ -218,10 +217,10 @@ export default () => {
     }, [selected])
 
 	const controlAction = (action) => {
-		requestFlow({args: {
-			deviceId: controlId,
-			actionId: action.id
-		}}).then(() => {
+		requestFlow(
+			controlId,
+			action.id
+		).then(() => {
 			
 		})
 	}

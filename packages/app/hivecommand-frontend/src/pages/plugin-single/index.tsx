@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import { gql, useQuery as useApollo } from '@apollo/client'
-import { CommandPlugin, useQuery } from '@hive-command/api'
 // import { GridList, LiveComponent, Paper } from '@thetechcompany/live-ui'
 import { Box, Text, Button  } from 'grommet';
 import { StackItemModal } from '../../components/modals/stacks/item';
@@ -17,10 +16,6 @@ export interface PluginSingleProps {
 export const PluginSingle = styled((props: any) => {
     const [ modalOpen, openModal ] = useState<boolean>(false)
 
-    const query = useQuery({
-        suspense: false,
-        staleWhileRevalidate: true
-    })
 
     const { data } = useApollo(gql`
         query Q ($id: ID){
@@ -51,7 +46,7 @@ export const PluginSingle = styled((props: any) => {
  
     // const [ createStackItem, {isLoading, data}] = stackActions.useCreateStackItem(props.match.params.id)
 
-    return query.$state.isLoading? null:  (
+    return  (
         <Box 
             flex 
             pad="xsmall"
