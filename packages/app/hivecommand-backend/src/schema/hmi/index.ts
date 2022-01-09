@@ -2,6 +2,20 @@ import gql from "graphql-tag";
 
 export default gql`
 
+
+type CommandProgramHMI {
+	id: ID! @id
+	name: String
+
+	actions: [CommandProgramAction] @relationship(type: "HAS_ACTION", direction: OUT)
+
+	paths: [CommandHMIPath] @relationship(type: "USES_PATH", direction: OUT)
+	groups: [CommandHMIGroup] @relationship(type: "USES_GROUP", direction: OUT)
+	nodes: [CommandHMINode] @relationship(type: "USES_NODE", direction: OUT)
+	programs: [CommandProgram] @relationship(type: "USES_HMI", direction: IN)
+}
+
+
 union CommandHMINodes = CommandHMINode | CommandHMIGroup
 
 type CommandHMIGroup {
@@ -71,4 +85,24 @@ interface CommandHMINodeFlow @relationshipProperties {
 	targetHandle: String
 	points: [CartesianPoint]
 }
+
+
+type CommandHMIDevice {
+	id: ID! @id
+	name: String
+
+	width: Float
+	height: Float
+
+	ports: [CommandHMIDevicePort] @relationship(type: "HAS_PORT", direction: OUT)
+}
+
+type CommandHMIDevicePort {
+	id: ID! @id
+	x: Float
+	y: Float
+	key: String
+	rotation: Float
+}
+
 `

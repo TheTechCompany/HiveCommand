@@ -12,11 +12,13 @@ export default gql`
 	}
 
 	type Mutation {
-		performDeviceAction(deviceId: String, deviceName: String, action: String): CommandDeviceResponse
-		changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): CommandDeviceResponse
-		changeMode(deviceId: String, mode: String): CommandDeviceResponse
-		changeDeviceMode(deviceId: String, deviceName: String, mode: String): CommandDeviceResponse
-		requestFlow(deviceId: String, actionId: String): CommandDeviceResponse
+		performDeviceAction(deviceId: String, deviceName: String, action: String): Boolean
+		changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): Boolean
+		changeMode(deviceId: String, mode: String): Boolean
+		changeDeviceMode(deviceId: String, deviceName: String, mode: String): Boolean
+		requestFlow(deviceId: String, actionId: String): Boolean
+
+		createCommandProgram(name: String): CreateCommandProgramsMutationResponse
 	}
 
 	type CommandDeviceTimeseriesTotal @exclude {
@@ -31,6 +33,14 @@ export default gql`
 		timestamp: DateTime
 	}
 
+	type CommandDeviceValue @exclude{
+		device: String
+		deviceId: String
+		value: String
+		valueKey: String
+	}
+
+
 	type CommandKeyValue {
 		id: ID @id
 		key: String
@@ -38,17 +48,6 @@ export default gql`
 	}
 
 ${devices}
-
-	type CommandDeviceResponse {
-		success: Boolean
-	}
-
-	type CommandDeviceValue {
-		device: String
-		deviceId: String
-		value: String
-		valueKey: String
-	}
 
 
 	type CommandInterlockAssertion {
@@ -117,24 +116,6 @@ ${devices}
 		key: String
 	}
 
-	type CommandHMIDevice {
-		id: ID! @id
-		name: String
-
-		width: Float
-		height: Float
-
-		ports: [CommandHMIDevicePort] @relationship(type: "HAS_PORT", direction: OUT)
-	}
-
-	type CommandHMIDevicePort {
-		id: ID! @id
-		x: Float
-		y: Float
-		key: String
-		rotation: Float
-	}
-
 	type CommandProgramDevice {
 		id: ID! @id
 		name: String
@@ -190,39 +171,12 @@ ${devices}
 		programs: [CommandProgram] @relationship(type: "USES_FLOW", direction: IN)
 	}
 
-	type CommandProgramHMI {
-		id: ID! @id
-		name: String
-
-		actions: [CommandProgramAction] @relationship(type: "HAS_ACTION", direction: OUT)
-
-		paths: [CommandHMIPath] @relationship(type: "USES_PATH", direction: OUT)
-		groups: [CommandHMIGroup] @relationship(type: "USES_GROUP", direction: OUT)
-		nodes: [CommandHMINode] @relationship(type: "USES_NODE", direction: OUT)
-		programs: [CommandProgram] @relationship(type: "USES_HMI", direction: IN)
-	}
-
 	type CommandActionItem {
 		id: ID! @id
 		device: CommandProgramDevicePlaceholder @relationship(type: "ACTIONS", direction: OUT)
 		request: CommandProgramDeviceAction @relationship(type: "USES_ACTION", direction: OUT)
 		release: Boolean
 	}
-
-	type PIDTarget {
-		value: String
-		device: [CommandProgramDevicePlaceholder] @relationship(type: "TARGET", direction: OUT)
-		ratio: String
-	}
-
-	type PIDConfiguration {
-		p: String
-		i: String
-		d: String
-		actuator: [CommandProgramDevicePlaceholder] @relationship(type: "ACTUATOR", direction: OUT)
-		target: [PIDTarget] @relationship(type: "TARGET", direction: OUT)
-	}
-	
 
 
 	type CommandPlugin {

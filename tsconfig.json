@@ -2,6 +2,12 @@
 	"compilerOptions": {
 	  "baseUrl": "./packages",
 	  "paths": {
+		"@apollo/client": ["../node_modules/@apollo/client"],
+		"graphql": ["../node_modules/graphql"],
+		"react": ["../node_modules/react"],
+		"react-dom": ["../node_modules/react-dom"],
+		"@types/react-dom": ["../node_modules/@types/react-dom"],
+		"@types/react": ["../node_modules/@types/react"],
 		"node-opcua": ["../node_modules/node-opcua"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],

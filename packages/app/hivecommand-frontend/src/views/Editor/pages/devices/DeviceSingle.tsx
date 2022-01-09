@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Text, List, Button } from 'grommet'
 import { useParams } from 'react-router-dom';
-import { refetch, useMutation, useQuery } from '@hive-command/api';
 import { gql, useQuery as useApollo, useApolloClient } from '@apollo/client'
 import { Add, MoreVertical } from 'grommet-icons';
 import { DevicePluginModal } from '../../../../components/modals/device-plugin';
@@ -10,6 +9,7 @@ import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 import { DeviceInterlock } from '../../../../components/modals/device-interlock';
 import { DeviceSetpointModal } from '../../../../components/modals/device-setpoint';
 import { ListBox } from '../../../../components/ListBox';
+import { createPlaceholderInterlock, createPlaceholderSetpoint, updatePlaceholderInterlock, updatePlaceholderSetpoint } from '@hive-command/api';
 
 export interface DeviceSingleProps {
 	program?: string;
@@ -41,234 +41,235 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	const [modalOpen, openModal] = useState<boolean>(false);
 	const [interlockModalOpen, openInterlockModal] = useState<boolean>(false);
 	const [ setpointModalOpen, openSetpointModal ] = useState<boolean>(false);
-	const query = useQuery({ suspense: false, staleWhileRevalidate: true })
 
 	const selectPlugin = (plugin: any) => {
 		openModal(true);
 		setSelected(plugin)
 	}
 
-	const [ updateSetpoint, updateSetpointInfo ] = useMutation((mutation, args: {
-		id: string,
-		name: string,
-		type: 'ratio' | 'value',
-		key: string,
-		value: string
-	}) => {
-		const item = mutation.updateCommandProgramDevicePlaceholders({
-			where: {id: deviceId},
-			update: {
-				setpoints: [{
-					where: {node: {id: args.id}},
-					update: {
-						node: {
-							name: args.name,
-							key: {connect: {where: {node: {id: args.key}}}},
-							type: args.type,
-							value: args.value
-						}
-					}
-				}]
-			}
-		})
+	// const [ updateSetpoint, updateSetpointInfo ] = useMutation((mutation, args: {
+	// 	id: string,
+	// 	name: string,
+	// 	type: 'ratio' | 'value',
+	// 	key: string,
+	// 	value: string
+	// }) => {
+	// 	const item = mutation.updateCommandProgramDevicePlaceholders({
+	// 		where: {id: deviceId},
+	// 		update: {
+	// 			setpoints: [{
+	// 				where: {node: {id: args.id}},
+	// 				update: {
+	// 					node: {
+	// 						name: args.name,
+	// 						key: {connect: {where: {node: {id: args.key}}}},
+	// 						type: args.type,
+	// 						value: args.value
+	// 					}
+	// 				}
+	// 			}]
+	// 		}
+	// 	})
 
-		return {
-			item: {
-				...item?.commandProgramDevicePlaceholders?.[0]
-			}
-		}
-	})
-	const [ addSetpoint, addSetpointInfo ] = useMutation((mutation, args: {
-		name: string,
-		type: "ratio" | "value",
-		key: string,
-		value: string
-	}) => {
-		const item = mutation.updateCommandProgramDevicePlaceholders({
-			where: {id: deviceId},
-			update: {
-				setpoints: [{
-					create: [{
-						node: {
-							name: args.name,
-							key: {connect: {where: {node: {id: args.key}}}},
-							type: args.type,
-							value: args.value
-						}
-					}]
-				}]
-			}
-		})
-		return {
-			item: {
-				...item.commandProgramDevicePlaceholders?.[0]
-			}
-		}
-	})
+	// 	return {
+	// 		item: {
+	// 			...item?.commandProgramDevicePlaceholders?.[0]
+	// 		}
+	// 	}
+	// })
 
-	const [ addDeviceInterlock, addInterlockInfo ] = useMutation((mutation, args: {
-		inputDeviceId: string,
-		inputDeviceKeyId: string,
-		type: string,
-		comparator: string,
-		assertion: string;
-		action: string
-	}) => {
-		let assertionValue = {};
-		if(args.type == "setpoint"){
-			assertionValue = {
-				setpoint: {connect: {where: {node: {id: args.assertion}}}}
-			}
-		}else if(args.type == "value"){
-			assertionValue = {
-				value: args.assertion
-			}
-		}
-		const item = mutation.updateCommandProgramDevicePlaceholders({
-			where: {id: deviceId},
-			update: {
-				interlocks: [{
-					create: [{
-						node: {
-							inputDevice: {connect: {where: {node: {id: args.inputDeviceId}}}},
-							inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKeyId}}}},
-							comparator: args.comparator,
-							assertion: {create: {node: {type: args.type, ...assertionValue}}},
-							action: {connect: {where: {node: {id: args.action}}}}
-						}
-					}]
-				}]
-			}
-		})
+	// const [ addSetpoint, addSetpointInfo ] = useMutation((mutation, args: {
+	// 	name: string,
+	// 	type: "ratio" | "value",
+	// 	key: string,
+	// 	value: string
+	// }) => {
+	// 	const item = mutation.updateCommandProgramDevicePlaceholders({
+	// 		where: {id: deviceId},
+	// 		update: {
+	// 			setpoints: [{
+	// 				create: [{
+	// 					node: {
+	// 						name: args.name,
+	// 						key: {connect: {where: {node: {id: args.key}}}},
+	// 						type: args.type,
+	// 						value: args.value
+	// 					}
+	// 				}]
+	// 			}]
+	// 		}
+	// 	})
+	// 	return {
+	// 		item: {
+	// 			...item.commandProgramDevicePlaceholders?.[0]
+	// 		}
+	// 	}
+	// })
 
-		return {
-			item: {
-				...item.commandProgramDevicePlaceholders?.[0]
-			}
-		}
-	})
+	// const [ addDeviceInterlock, addInterlockInfo ] = useMutation((mutation, args: {
+	// 	inputDeviceId: string,
+	// 	inputDeviceKeyId: string,
+	// 	type: string,
+	// 	comparator: string,
+	// 	assertion: string;
+	// 	action: string
+	// }) => {
+	// 	let assertionValue = {};
+	// 	if(args.type == "setpoint"){
+	// 		assertionValue = {
+	// 			setpoint: {connect: {where: {node: {id: args.assertion}}}}
+	// 		}
+	// 	}else if(args.type == "value"){
+	// 		assertionValue = {
+	// 			value: args.assertion
+	// 		}
+	// 	}
+	// 	const item = mutation.updateCommandProgramDevicePlaceholders({
+	// 		where: {id: deviceId},
+	// 		update: {
+	// 			interlocks: [{
+	// 				create: [{
+	// 					node: {
+	// 						inputDevice: {connect: {where: {node: {id: args.inputDeviceId}}}},
+	// 						inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKeyId}}}},
+	// 						comparator: args.comparator,
+	// 						assertion: {create: {node: {type: args.type, ...assertionValue}}},
+	// 						action: {connect: {where: {node: {id: args.action}}}}
+	// 					}
+	// 				}]
+	// 			}]
+	// 		}
+	// 	})
 
-	const [ updateDeviceInterlock, updateInterlockInfo ] = useMutation((mutation, args: {
-		id: string;
-		inputDeviceId: string,
-		inputDeviceKeyId: string,
-		type: string,
-		comparator: string,
-		assertion: string;
-		action: string
-	}) => {
-		let assertionUpdate = {};
-		if(args.type == "setpoint"){
-			assertionUpdate = {
-				setpoint: {connect: {where: {node: {id: args.assertion}}}}
-			}
-		}else if(args.type == "value"){
-			assertionUpdate = {
-				value: args.assertion
-			}
-		}
-		const item = mutation.updateCommandProgramDevicePlaceholders({
-			where: {id: deviceId},
-			update: {
-				interlocks: [{
-					where: {node: {id: args.id}},
-					update: {
-						node: {
-							inputDevice: {connect: {where: {node: {id: args.inputDeviceId}}}},
-							inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKeyId}}}},
-							comparator: args.comparator,
-							assertion: {create: {node: {type: args.type, ...assertionUpdate}}},
-							action: {connect: {where: {node: {id: args.action}}}}
-						}
-					}
-				}]
-			}
-		})
+	// 	return {
+	// 		item: {
+	// 			...item.commandProgramDevicePlaceholders?.[0]
+	// 		}
+	// 	}
+	// })
 
-		return {
-			item: {
-				...item.commandProgramDevicePlaceholders?.[0]
-			}
-		}
-	})
+	// const [ updateDeviceInterlock, updateInterlockInfo ] = useMutation((mutation, args: {
+	// 	id: string;
+	// 	inputDeviceId: string,
+	// 	inputDeviceKeyId: string,
+	// 	type: string,
+	// 	comparator: string,
+	// 	assertion: string;
+	// 	action: string
+	// }) => {
+	// 	let assertionUpdate = {};
+	// 	if(args.type == "setpoint"){
+	// 		assertionUpdate = {
+	// 			setpoint: {connect: {where: {node: {id: args.assertion}}}}
+	// 		}
+	// 	}else if(args.type == "value"){
+	// 		assertionUpdate = {
+	// 			value: args.assertion
+	// 		}
+	// 	}
+	// 	const item = mutation.updateCommandProgramDevicePlaceholders({
+	// 		where: {id: deviceId},
+	// 		update: {
+	// 			interlocks: [{
+	// 				where: {node: {id: args.id}},
+	// 				update: {
+	// 					node: {
+	// 						inputDevice: {connect: {where: {node: {id: args.inputDeviceId}}}},
+	// 						inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKeyId}}}},
+	// 						comparator: args.comparator,
+	// 						assertion: {create: {node: {type: args.type, ...assertionUpdate}}},
+	// 						action: {connect: {where: {node: {id: args.action}}}}
+	// 					}
+	// 				}
+	// 			}]
+	// 		}
+	// 	})
 
-	const [addDevicePlugin, addPluginInfo] = useMutation((mutation, args: { id: string, rules: string, plugin: string, configuration: any }) => {
-		let conf = [];
+	// 	return {
+	// 		item: {
+	// 			...item.commandProgramDevicePlaceholders?.[0]
+	// 		}
+	// 	}
+	// })
 
-		if (args.configuration) {
-			for (var k in args.configuration) {
-				conf.push({ id: nanoid(), key: k, value: args.configuration[k] })
-			}
-		}
+	// const [addDevicePlugin, addPluginInfo] = useMutation((mutation, args: { id: string, rules: string, plugin: string, configuration: any }) => {
+	// 	let conf = [];
 
-		console.log({args})
-		let ruleUpdate = {};
+	// 	if (args.configuration) {
+	// 		for (var k in args.configuration) {
+	// 			conf.push({ id: nanoid(), key: k, value: args.configuration[k] })
+	// 		}
+	// 	}
 
-		if(args.rules){
-			ruleUpdate = {
-				rules: {connect: {where: {node: {id: args.rules}}}}
-			}
+	// 	console.log({args})
+	// 	let ruleUpdate = {};
+
+	// 	if(args.rules){
+	// 		ruleUpdate = {
+	// 			rules: {connect: {where: {node: {id: args.rules}}}}
+	// 		}
 			
-		}
+	// 	}
 
 
-		let pluginUpdate = {};
+	// 	let pluginUpdate = {};
 
-		if(args.id){
-			pluginUpdate = {
-				plugins: [{
-					where: {node: {id: args.id}},
-					update: {
-						node: {
-							plugin: {connect: {where: {node: {id: args.plugin}}}},
-							...ruleUpdate,
-							configuration: conf.map((c) => ({
-								where: {node: {key: c.key}},
-								update: {
-									node: {
-										key: c.key,
-										value: c.value
-									}
-								}
-							}))
-						}
-					}
-				}]
-			}
-		}else{
-			pluginUpdate = {
-				plugins: [{
-					create: {
-						node: {
-							plugin: {connect: {where: {node: {id: args.plugin}}}},
-							...ruleUpdate,
-							configuration: {
-								create: conf.map((c) => ({
-									node: {
-										key: c.key,
-										value: c.value
-									}
-								}))
-							}
-						}
-					}
-				}]
-			}
-		}
+	// 	if(args.id){
+	// 		pluginUpdate = {
+	// 			plugins: [{
+	// 				where: {node: {id: args.id}},
+	// 				update: {
+	// 					node: {
+	// 						plugin: {connect: {where: {node: {id: args.plugin}}}},
+	// 						...ruleUpdate,
+	// 						configuration: conf.map((c) => ({
+	// 							where: {node: {key: c.key}},
+	// 							update: {
+	// 								node: {
+	// 									key: c.key,
+	// 									value: c.value
+	// 								}
+	// 							}
+	// 						}))
+	// 					}
+	// 				}
+	// 			}]
+	// 		}
+	// 	}else{
+	// 		pluginUpdate = {
+	// 			plugins: [{
+	// 				create: {
+	// 					node: {
+	// 						plugin: {connect: {where: {node: {id: args.plugin}}}},
+	// 						...ruleUpdate,
+	// 						configuration: {
+	// 							create: conf.map((c) => ({
+	// 								node: {
+	// 									key: c.key,
+	// 									value: c.value
+	// 								}
+	// 							}))
+	// 						}
+	// 					}
+	// 				}
+	// 			}]
+	// 		}
+	// 	}
 
-		const item = mutation.updateCommandProgramDevicePlaceholders({
-			where: { id: deviceId },
-			update: {
-				...pluginUpdate,
-			}
-		})
+	// 	const item = mutation.updateCommandProgramDevicePlaceholders({
+	// 		where: { id: deviceId },
+	// 		update: {
+	// 			...pluginUpdate,
+	// 		}
+	// 	})
 
-		return {
-			item: {
-				...item.commandProgramDevicePlaceholders?.[0]
-			}
-		}
-	})
+	// 	return {
+	// 		item: {
+	// 			...item.commandProgramDevicePlaceholders?.[0]
+	// 		}
+	// 	}
+	// })
+
 	const { data } = useApollo(gql`
 		query Q ($id: ID!, $programId: ID) {
 			commandProgramDevicePlugins {
@@ -424,30 +425,28 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				onSubmit={(lock) => {
 					console.log(lock)
 					if(lock.id){
-						updateDeviceInterlock({
-							args: {
-								id: lock.id,
-								inputDeviceId: lock.inputDevice,
-								inputDeviceKeyId: lock.inputDeviceKey,
-								comparator: lock.comparator,
-								type: lock.valueType,
-								assertion: lock.assertion,
-								action: lock.action
-							}
-						}).then(() => {
+						updatePlaceholderInterlock(
+							props.program,
+								lock.id,
+								lock.inputDevice,
+								lock.inputDeviceKey,
+								lock.comparator,
+								lock.valueType,
+								lock.assertion,
+								lock.action
+						).then(() => {
 							refetch()
 						})
 					}else{
-						addDeviceInterlock({
-							args: {
-								inputDeviceId: lock.inputDevice,
-								inputDeviceKeyId: lock.inputDeviceKey,
-								comparator: lock.comparator,
-								type: lock.valueType,
-								assertion: lock.assertion,
-								action: lock.action
-							}
-						}).then(() => {
+						createPlaceholderInterlock(
+							props.program,
+								lock.inputDevice,
+								lock.inputDeviceKey,
+								lock.comparator,
+								lock.valueType,
+								lock.assertion,
+								lock.action
+						).then(() => {
 							refetch();
 						})
 					}
@@ -458,21 +457,27 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				onSubmit={(setpoint) => {
 
 					if(setpoint.id){
-						updateSetpoint({
-							args: {
-								id: setpoint.id,
-								...setpoint
-							}
-						}).then(() => {
+						updatePlaceholderSetpoint(
+							'program-id',
+							selected.id,
+							setpoint.id,
+							setpoint.name,
+							setpoint.type,
+							setpoint.key,
+							setpoint.value
+						).then(() => {
 							openSetpointModal(false)
 							refetch()
 						})
 					}else{
-					addSetpoint({
-						args: {
-							...setpoint
-						}
-					}).then(() => {
+					createPlaceholderSetpoint(
+						'program-id',
+						selected.id,
+						setpoint.name,
+						setpoint.type,
+						setpoint.key,
+						setpoint.value	
+					).then(() => {
 						openSetpointModal(false)
 						refetch()
 					})
@@ -488,9 +493,9 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				open={modalOpen}
 				onSubmit={(config) => {
 
-					addDevicePlugin({ args: config }).then(() => {
-						refetch()
-					})
+					// addDevicePlugin({ args: config }).then(() => {
+					// 	refetch()
+					// })
 				}}
 				onClose={() => openModal(false)}
 				devices={devices}

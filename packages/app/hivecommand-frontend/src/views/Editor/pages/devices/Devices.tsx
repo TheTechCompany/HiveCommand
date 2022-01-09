@@ -3,10 +3,10 @@ import { Add, Action, MoreVertical } from 'grommet-icons';
 import { Box, List, Text, Button } from 'grommet';
 
 import { ProgramDeviceModal } from '../../../../components/modals/program-device';
-import { mutation, refetch, useMutation } from '@hive-command/api';
 
 import { useQuery as useApollo , gql, useApolloClient} from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
+import { createProgramPlaceholder, updateProgramPlaceholder } from '@hive-command/api';
 export const Devices = (props) => {
 
 	const navigate = useNavigate()
@@ -51,50 +51,50 @@ export const Devices = (props) => {
 	const [ modalOpen, openModal ] = useState<boolean>(false);
 	const [ selected, setSelected ] = useState<any>();
 
-	const [ updateDevicePlaceholder, updateInfo ] =useMutation((mutation, args: {id: string, requiresMutex: boolean, name: string, type: string}) => {
-		const updated = mutation.updateCommandPrograms({
-			where: {id: id},
-			update: {
-				devices: [{
-					where: {node: {id: args.id}},
-					update: {
+	// const [ updateDevicePlaceholder, updateInfo ] = useMutation((mutation, args: {id: string, requiresMutex: boolean, name: string, type: string}) => {
+	// 	const updated = mutation.updateCommandPrograms({
+	// 		where: {id: id},
+	// 		update: {
+	// 			devices: [{
+	// 				where: {node: {id: args.id}},
+	// 				update: {
 							
-						node: {
-							requiresMutex: args.requiresMutex,
-							name: args.name,
-							type: {connect: {where: {node: {id: args.type}}}}
-						}
-					}
-				}]
-			}
-		})
-		return {
-			item: {
-				...updated.commandPrograms[0]
-			}
-		}
-	})
+	// 					node: {
+	// 						requiresMutex: args.requiresMutex,
+	// 						name: args.name,
+	// 						type: {connect: {where: {node: {id: args.type}}}}
+	// 					}
+	// 				}
+	// 			}]
+	// 		}
+	// 	})
+	// 	return {
+	// 		item: {
+	// 			...updated.commandPrograms[0]
+	// 		}
+	// 	}
+	// })
 
 
-	const [ addDevicePlaceholder, addInfo ] = useMutation((mutation, args: {requiresMutex: boolean, name: string, type: string}) => {
-		const newdevice = mutation.updateCommandPrograms({
-			where: {id: id},
-			update: {
-				devices: [{
-					create: [{node: {
-						requiresMutex: args.requiresMutex,
-						name: args.name,
-						type: {connect: {where: {node: {id: args.type}}}}
-					}}]
-				}]
-			}
-		})
-		return {
-			item: {
-				...newdevice.commandPrograms[0]
-			}
-		}
-	})
+	// const [ addDevicePlaceholder, addInfo ] = useMutation((mutation, args: {requiresMutex: boolean, name: string, type: string}) => {
+	// 	const newdevice = mutation.updateCommandPrograms({
+	// 		where: {id: id},
+	// 		update: {
+	// 			devices: [{
+	// 				create: [{node: {
+	// 					requiresMutex: args.requiresMutex,
+	// 					name: args.name,
+	// 					type: {connect: {where: {node: {id: args.type}}}}
+	// 				}}]
+	// 			}]
+	// 		}
+	// 	})
+	// 	return {
+	// 		item: {
+	// 			...newdevice.commandPrograms[0]
+	// 		}
+	// 	}
+	// })
 
 	const refetch = () => {
 		client.refetchQueries({include: ["Q"]})
@@ -118,18 +118,19 @@ export const Devices = (props) => {
 				}}
 				onSubmit={(device) => {
 					if(device.id){
-						updateDevicePlaceholder({args: {
-							id: device.id,
-							requiresMutex: device.requiresMutex,
-							name: device.name,
-							type: device.type,
-						}})
+						updateProgramPlaceholder(
+							props.program,
+							device.id,
+							device.name,
+							device.type,
+							device.requiresMutex,
+						)
 					}else{
-						addDevicePlaceholder({args: {
-							requiresMutex: device.requiresMutex,
-							name: device.name,
-							type: device.type
-						}}).then(() => {
+						createProgramPlaceholder(
+							device.name,
+							device.type,
+							device.requiresMutex,
+						).then(() => {
 							openModal(false)
 							refetch()
 						})

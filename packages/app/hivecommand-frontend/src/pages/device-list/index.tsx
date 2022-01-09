@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DeviceModal } from '../../components/modals/device';
-import { useMutation, CommandDevice, useQuery } from '@hive-command/api'
+import { useCreateDevice, useUpdateDevice } from '@hive-command/api'
 import { DeploymentList, DeploymentInfo } from '../../components/deployment-list';
 import { Box, TextInput, Button } from 'grommet';
 import * as Icons from 'grommet-icons';
@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
 
 import { useQuery as useApollo, gql } from '@apollo/client'
+import { useAuth } from '@hexhive/auth-ui';
 export interface DevicePageProps {
     match?: any;
     history?: any;
@@ -18,12 +19,15 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
 
     const [ selectedDevice, setSelectedDevice ] = useState<any>();
     const [ editDevice, setEditDevice ] = useState<any>();
+
+    const { activeUser } = useAuth()
+
     // const [ _devices, setDevices ] = useState<CommandDevice[]>([])
 
-    const query = useQuery({
-        staleWhileRevalidate: true,
-        suspense: false
-    })
+    // const query = useQuery({
+    //     staleWhileRevalidate: true,
+    //     suspense: false
+    // })
 
     const { data } = useApollo(gql`
         query Q {
@@ -52,6 +56,9 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
     const devices = data?.commandDevices || [];
     const programs = data?.commandPrograms || []
 
+    const createDevice = useCreateDevice(activeUser?.id)
+    const updateDevice = useUpdateDevice()
+
     // useEffect(() => {
     //     if(devices){
     //         setDevices(devices)
@@ -60,91 +67,83 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
 
 
 
-    const [ createDevice, {isLoading}] = useMutation((mutation, args: {
-        name: string, 
-        network_name: string, 
-        program?: string
-    }) => {
-        let program = {};
-        if(args.program){
-            program = {
-                activeProgram: {connect: {where: {node: {id: args.program}}}}
-            }
-        }
-        const result = mutation.createCommandDevices({input: [{
-            name: args.name,
-            network_name: args.network_name,
-            ...program
-        }]})
+//     const [ createDevice, {isLoading}] = useMutation((mutation, args: {
+//         name: string, 
+//         network_name: string, 
+//         program?: string
+//     }) => {
+//         let program = {};
+//         if(args.program){
+//             program = {
+//                 activeProgram: {connect: {where: {node: {id: args.program}}}}
+//             }
+//         }
+//         const result = mutation.createCommandDevices({input: [{
+//             name: args.name,
+//             network_name: args.network_name,
+//             ...program,
+            
+//         }]})
 
-        return {
-            item: {
-                ...result?.commandDevices[0]
-            },
-            error: null
-        }
-    }, {
-        onCompleted(data) {},
-        onError(error) {},
-        refetchQueries: [],
-        awaitRefetchQueries: true,
-        suspense: false, 
-})
-    const [ updateDevice, info ] =  useMutation((mutation, args: { 
-        id: string, 
-        name: string, 
-        network_name: string, 
-        program?: string
-    }) => {
-        let programUpdate = {};
-        if(args.program){
-            programUpdate = {
-                activeProgram: {connect: {where: {node: {id: args.program}}}}
-            }
-        }
-        const result = mutation.updateCommandDevices({
-            where: {id: args.id},
-            update: {
-                name: args.name,
-                network_name: args.network_name,
-                ...programUpdate
-            }
-            // program: args.program
-        })
+//         return {
+//             item: {
+//                 ...result?.commandDevices[0]
+//             },
+//             error: null
+//         }
+//     }, {
+//         onCompleted(data) {},
+//         onError(error) {},
+//         refetchQueries: [],
+//         awaitRefetchQueries: true,
+//         suspense: false, 
+// })
+//     const [ updateDevice, info ] =  useMutation((mutation, args: { 
+//         id: string, 
+//         name: string, 
+//         network_name: string, 
+//         program?: string
+//     }) => {
+//         let programUpdate = {};
+//         if(args.program){
+//             programUpdate = {
+//                 activeProgram: {connect: {where: {node: {id: args.program}}}}
+//             }
+//         }
+//         const result = mutation.updateCommandDevices({
+//             where: {id: args.id},
+//             update: {
+//                 name: args.name,
+//                 network_name: args.network_name,
+//                 ...programUpdate
+//             }
+//             // program: args.program
+//         })
 
-        return {
-            item: {
-                ...result?.commandDevices[0]
-            },
-            error: null
-        }
-    })
+//         return {
+//             item: {
+//                 ...result?.commandDevices[0]
+//             },
+//             error: null
+//         }
+//     })
 
 
 
-    const onSubmit = (device: CommandDevice & any) => {
+    const onSubmit = (device: any) => {
         console.log("Submit", device)
         if(device.id){
-            updateDevice({args: {
-                id: device.id, 
-                name: device.name || '', 
-                network_name: device.network_name || nanoid().substring(0, 8),
-                program: device.activeProgram?.id
-            }}).then((updated) => {
+            updateDevice(device.id, device.name, device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((updated) => {
                 console.log("Update result", updated)
             })
         }else{
-            createDevice({args: {
-                name: device.name || '', 
-                network_name: device.network_name || nanoid().substring(0, 8),
-                program: device.activeProgram?.id
-            }}).then((new_device) => {
-                if(new_device.item){
-                    let d: any[] = devices.slice()
-                    d.push(new_device.item)
-                    // setDevices(d)
-                    return true;
-                }
+            createDevice(device.name || '', device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((new_device) => {
+                // if(new_device.item){
+                //     let d: any[] = devices.slice()
+                //     d.push(new_device.item)
+                //     // setDevices(d)
+                //     return true;
+                // }
             })
         }
     }
@@ -153,7 +152,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
         props.history.push(`${props.match.url}/${id}`)
     }
 
-    return query.$state.isLoading ? <>Loading... </>: (
+    return (
         <Box
         round="xsmall"
         overflow="hidden"

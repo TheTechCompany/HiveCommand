@@ -8,17 +8,14 @@ import { matchPath, Navigate, Route, Routes, useNavigate, useParams } from 'reac
 // import program from 'shared/hexhive-types/src/models/program';
 import * as HMINodes from '../../assets/hmi-elements'
 
-import { useMutation } from '@hive-command/api';
-import { HMICanvas } from '../../components/hmi-canvas/HMICanvas';
-import { Bubble } from '../../components/Bubble/Bubble';
-import { getDevicesForNode } from './utils';
-import { Play, Stop, Checkmark, Services, Cycle, Analytics, Info, Technology } from 'grommet-icons';
+import { Services, Cycle, Analytics, Info, Technology } from 'grommet-icons';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import Controls from './views/control'
 import { DeviceControlGraph } from './views/graph'
 import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
+import { changeDeviceMode, changeDeviceValue, changeRootMode, performDeviceAction } from '@hive-command/api';
 
 export interface DeviceControlProps {
 
@@ -294,57 +291,57 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         }
     })
 
-    const [performAction, performInfo] = useMutation((mutation, args: {
-        deviceId: string,
-        deviceName: string,
-        action: string
-    }) => {
+    // const [performAction, performInfo] = useMutation((mutation, args: {
+    //     deviceId: string,
+    //     deviceName: string,
+    //     action: string
+    // }) => {
 
-        // console.log({args})
-        const item = mutation.performDeviceAction({ deviceId: args.deviceId, deviceName: args.deviceName, action: args.action })
+    //     // console.log({args})
+    //     const item = mutation.performDeviceAction({ deviceId: args.deviceId, deviceName: args.deviceName, action: args.action })
 
-        return {
-            item: {
-                ...item
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item
+    //         }
+    //     }
+    // })
 
-    const [changeDeviceMode, changeDeviceModeInfo] = useMutation((mutation, args: {
-        deviceId: string,
-        deviceName: string,
-        mode: string
-    }) => {
-        const item = mutation.changeDeviceMode({ deviceId: args.deviceId, deviceName: args.deviceName, mode: args.mode })
+    // const [changeDeviceMode, changeDeviceModeInfo] = useMutation((mutation, args: {
+    //     deviceId: string,
+    //     deviceName: string,
+    //     mode: string
+    // }) => {
+    //     const item = mutation.changeDeviceMode({ deviceId: args.deviceId, deviceName: args.deviceName, mode: args.mode })
 
-        return {
-            item: {
-                ...item
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item
+    //         }
+    //     }
+    // })
 
 
-    const [changeDeviceValue, changeDeviceInfo] = useMutation((mutation, args: {
-        deviceName: string,
-        key: string,
-        value: any
-    }) => {
+    // const [changeDeviceValue, changeDeviceInfo] = useMutation((mutation, args: {
+    //     deviceName: string,
+    //     key: string,
+    //     value: any
+    // }) => {
 
-        const result = mutation.changeDeviceValue({
-            deviceId: id,
-            deviceName: args.deviceName,
-            key: args.key,
-            value: `${args.value}`
-        })
+    //     const result = mutation.changeDeviceValue({
+    //         deviceId: id,
+    //         deviceName: args.deviceName,
+    //         key: args.key,
+    //         value: `${args.value}`
+    //     })
 
-        return {
-            item: {
-                ...result
-            }
-        }
-        // mutation.
-    })
+    //     return {
+    //         item: {
+    //             ...result
+    //         }
+    //     }
+    //     // mutation.
+    // })
 
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
@@ -422,37 +419,33 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
 
 
-    const [changeRootMode, changeModeInfo] = useMutation((mutation, args: { deviceId: string, mode: string }) => {
-        const item = mutation.changeMode({
-            deviceId: args.deviceId,
-            mode: args.mode
-        })
+    // const [changeRootMode, changeModeInfo] = useMutation((mutation, args: { deviceId: string, mode: string }) => {
+    //     const item = mutation.changeMode({
+    //         deviceId: args.deviceId,
+    //         mode: args.mode
+    //     })
 
-        return {
-            item: {
-                ...item
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item
+    //         }
+    //     }
+    // })
 
     const toggleOperatingMode = () => {
         if (rootDevice?.operatingMode == "AUTO") {
-            changeRootMode({
-                args: {
-                    deviceId: id,
-                    mode: "DISABLED"
-                }
-            }).then(() => {
+            changeRootMode(
+                id,
+                "DISABLED"    
+            ).then(() => {
                 refetch()
             })
             //   setRootDevice({...rootDevice, operatingMode: "Manual"})
         } else {
-            changeRootMode({
-                args: {
-                    deviceId: id,
-                    mode: "AUTO"
-                }
-            }).then(() => {
+            changeRootMode(
+                id,
+                "AUTO"
+            ).then(() => {
                 refetch()
             })
         }
@@ -473,7 +466,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             groups,
             changeDeviceMode,
             changeDeviceValue,
-            performAction
+            performAction: performDeviceAction
         }}>
             <Box
                 round="xsmall"

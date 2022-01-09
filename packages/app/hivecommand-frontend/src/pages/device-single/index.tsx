@@ -3,15 +3,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Box, List, Text, Button, Select, Collapsible } from 'grommet';
 //import { Map } from '@thetechcompany/live-ui'
 import { Graph } from '../../components/ui/graph';
-import { useMutation, useQuery } from '@hive-command/api'
 
 import MarkerIcon from 'leaflet/dist/images/marker-icon.png';
 import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
-import { connection } from 'mongoose';
 import { DeviceControlContext } from '../device-control/context';
+import { mapPort } from '@hive-command/api';
 export interface DeviceSingleProps {
     match?: any;
     history?: any;
@@ -29,10 +28,6 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
     // const [ selectedBus, setSelectedBus ] = useState<{id?: string, name: string}>({})
     const [ modalOpen, openModal ] = useState<boolean>(false);
     
-    const query = useQuery({
-        suspense: false,
-        staleWhileRevalidate: true
-    })
 
     const { data } = useApollo(gql`
         query Q ($id: ID) {
@@ -133,180 +128,6 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
         })
     }
 
-    const [ mapPort, mapInfo ] = useMutation((mutation, args: {
-        id: string, 
-        port: string, 
-        peripheralId: string, 
-
-        mapping: {id?: string, key: string, device: string, value: string}[],
-        deviceId: string[],
-
-    }) => {
-
-
-        
-
-        // if(!args.deviceId){
-        //     mapUpdate = {
-        //         disconnect: [{
-        //             where: {edge: {port: args.port}}
-        //         }]
-        //     }
-        // }else if(args.deviceId){
-        //     mapUpdate = {
-        //         disconnect: [{
-        //             where: {
-        //                 edge: {port: args.port},
-        //                 node: {id_NOT_IN: args.deviceId}
-        //             }
-        //         }],
-        //         connect: [{
-        //             where: {node: {id_IN: args.deviceId}}, 
-        //             edge: {port: args.port} 
-        //         }]
-        //     }
-        // }
-
-        const device = mutation.updateCommandDevices({
-            where: {id: args.id},
-            update: {
-                peripherals: [{
-                    where: {
-                        node: {
-                            id: args.peripheralId
-                        }
-                    },
-                    update: {
-                        node: {
-                            mappedDevices: [{
-                                create: args.mapping.filter((a) => !a.id).map((map) => {
-                                    let keyConnect = map.key ? {  
-                                        key: {
-                                            connect: {
-                                                where: {
-                                                    node: {
-                                                        key: map.key, 
-                                                        product: {peripheral: {id: args.peripheralId}, peripheralConnection: {edge: {port: args.port}}}
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } : {};
-
-                                    let deviceConnect = map.device ? 
-                                    {
-                                        device: {
-                                            connect: {
-                                                where: {
-                                                    node: {
-                                                        id: map.device
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } : {}
-
-                                    let valueConnect = map.value ? {
-                                        value: {
-                                            connect: {
-                                                where: {
-                                                    node: {
-                                                        device: {
-                                                            usedIn: {
-                                                                id_IN: [map.device]
-                                                            }
-                                                        }, 
-                                                        key: map.value
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } : {}
-                                    return {
-                                        node: {
-                                            ...keyConnect,
-                                            ...deviceConnect,
-                                            ...valueConnect
-                                        },
-                                        edge: {
-                                            port: args.port
-                                        }
-                                    }
-                                }),
-                         
-                            }, ...(args.mapping || []).filter((a) => a.id).map((item) => {
-
-                                return {
-                                    where: {node: {id: item.id}},
-                                    update: {
-                                        node: {
-                                            key: {
-                                              
-                                                connect: {
-                                                    where: {
-                                                        node: {
-                                                            key: item.key, 
-                                                            product: {peripheral: {id: args.peripheralId}, peripheralConnection: {edge: {port: args.port}}}
-                                                        }
-                                                    }
-                                                }
-                                            },
-                                            device: {
-                                                disconnect: {
-                                                    where: {
-                                                        node: {
-                                                            id_NOT: item.device
-                                                        }
-                                                    }
-                                                },
-                                                connect: {
-                                                    where: {
-                                                        node: {
-                                                            id: item.device
-                                                        }
-                                                    }
-                                                }
-                                            },  
-                                            value: {
-                                                disconnect: {
-                                                    where: {
-                                                        node: {
-                                                            device: {
-                                                                id_NOT_IN: [item.device]
-                                                            },
-                                                            key_NOT: item.value
-                                                        }
-                                                    }
-                                                },
-                                                connect: {
-                                                    where: {
-                                                        node: {
-                                                            device: {
-                                                                usedIn: {
-                                                                    id_IN: [item.device]
-                                                                }
-                                                            }, 
-                                                            key: item.value
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                      
-                                    }
-                                }
-                            })]
-                        }
-                    }
-                }]
-            }
-        })
-        return {
-            item: {
-                ...device.commandDevices?.[0]
-            },
-        }
-    })
     const device = data?.commandDevices?.[0] || {}
     // const programs = query.ProgramMany();
 
@@ -315,7 +136,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
     }
 
     console.log(device)
-    return  query.$state.isLoading ? null : (
+    return (
         <Box 
             elevation="small"
             round="xsmall"
@@ -334,15 +155,13 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                     openModal(false);
                 }}
                 onSubmit={(connections) => {
-                    mapPort({
-                        args: {
-                            id: props.match.params.id,
-                            peripheralId: selectedPort.bus,
-                            port: selectedPort.port,
-                            deviceId: device,
-                            mapping: connections
-                        }
-                    }).then(() => {
+                    mapPort( props.match.params.id,
+                            selectedPort.bus,
+                            selectedPort.port,
+                            device,
+                            connections
+                        
+                    ).then(() => {
                         refetch()
                     })
                     console.log(connections)

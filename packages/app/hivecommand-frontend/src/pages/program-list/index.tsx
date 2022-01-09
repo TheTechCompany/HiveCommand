@@ -1,56 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import { ProgramModal } from '../../components/modals/program';
-import { useQuery, CommandProgram, useMutation } from '@hive-command/api'
 import { Box } from 'grommet';
 import { NestedList } from '../../components/ui/nested-list';
 import { useNavigate } from 'react-router-dom';
+import { useCreateProgram } from '@hive-command/api';
+import { gql, useQuery, useApolloClient } from '@apollo/client';
+import { useAuth } from '@hexhive/auth-ui';
+
 export interface ProgramListProps  {
 }
 
 export const ProgramList: React.FC<ProgramListProps> = (props) => {
 
+    const {activeUser} = useAuth()
+    
     const navigate = useNavigate()
+
+
+    const createProgram = useCreateProgram(activeUser?.id)//(activeUser as any)?._json?.organisation)
     
     const [ modalOpen, openModal ] = useState(false)
     const [ selectedProgram, setSelectedProgram ] = useState<any>()
 
-    
-    
-    const [ programs, setPrograms ] = useState<Array<CommandProgram>>([])
+    const client = useApolloClient()
 
-    const query = useQuery({
-        suspense: false,
-        staleWhileRevalidate: true
-    })
-    
-    const [ addProgram, { isLoading, data}] =  useMutation((mutation, args: {
-        record: any
-    }) => {
-        const result = mutation.createCommandPrograms({
-            input: [args.record]
-        })
+    const { data } = useQuery(gql`
+        query Programs {
+            commandPrograms {
+                id
+                name
+            }
+        }
+    `)
 
-        return {
-            item: {
-                ...result?.commandPrograms[0]
-            },
-            error: null
-        }
-    }, {
-        onCompleted(data) {},
-        onError(error) {},
-        refetchQueries: [query.commandPrograms()],
-        suspense: false,
-        awaitRefetchQueries: true,
-    })
-    const _programs = query.commandPrograms()
     
-    useEffect(() => {
-        if(_programs){
-            setPrograms(_programs)
-        }
-    }, [_programs])
-    return query.$state.isLoading ? <>Loading...</> : (
+    const programs = data?.commandPrograms; 
+    
+
+    return (
         <Box flex className="program-list">
           <ProgramModal 
             selected={selectedProgram}
@@ -61,19 +48,20 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
             }}
             onSubmit={(program: {name: string, item: any}) => {
                 if(program.name){
-                    addProgram({args: {record: {
-                        name: program.name,
-                        
-                        program:[],
-                        hmi: []
-                    }}}).then((program) => {
+
+                    // alert(program.name)
+                    createProgram(
+                        program.name
+                    ).then((program) => {
                         openModal(false)
-                        if(program?.item){
-                            let p : any[] = programs.slice()
-                            p.push(program?.item)
-                            setPrograms(p)
-                        }
-                    })
+
+                        client.refetchQueries({include: ['Programs']})
+                        // if(program?.item){
+                        //     let p : any[] = programs.slice()
+                        //     p.push(program?.item)
+                        //     setPrograms(p)
+                        // }
+                    });
                 }
 
             }}/>

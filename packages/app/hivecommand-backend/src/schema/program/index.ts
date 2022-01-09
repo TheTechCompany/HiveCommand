@@ -2,7 +2,14 @@ import gql from "graphql-tag";
 
 export default gql`
 
-type CommandProgram {
+extend type HiveOrganisation {
+	commandPrograms: [CommandProgram] @relationship(type: "HAS_COMMAND_PROGRAM", direction: OUT)
+}
+
+type CommandProgram @auth(rules: [
+	{operations: [READ], where: {organisation: {id: "$jwt.organisation"}}},
+	{operations: [UPDATE], bind: {organisation: {id: "$jwt.organisation"}}}
+]){
 	id: ID! @id
 	name: String
 
@@ -15,6 +22,8 @@ type CommandProgram {
 	createdAt: DateTime @timestamp(operations: [CREATE])
 
 	usedOn: CommandDevice @relationship(type: "RUNNING_PROGRAM", direction: IN)
+
+	organisation: HiveOrganisation @relationship(type: "HAS_COMMAND_PROGRAM", direction: IN)
 }
 
 
