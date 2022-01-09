@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import { Box, List, Text } from 'grommet'
 import { useQuery, gql } from '@apollo/client';
+import { updateDeviceCalibrations  } from '@hive-command/api';
 import { ProgramDeviceModal } from '../../components/modals/program-device';
-import { useMutation } from '@hive-command/api';
+import { useParams } from 'react-router-dom';
 
 export const DeviceDevices : React.FC<any> = (props) => {
 	
+	const { id } = useParams()
+
 	const [ modalOpen, openModal ] = useState<boolean>(false);
 
 	const [ selected, setSelected ] = useState<any>()
@@ -61,47 +64,47 @@ export const DeviceDevices : React.FC<any> = (props) => {
 		}
 	})
 
-	const [ updateDeviceConfiguration, updateInfo ] = useMutation((mutation, args: {
-		conf: {
-			id?: string;
-			device: string,
-			deviceKey: string,
-			min: string
-			max: string
-		}[]
-	}) => {
-		const peripheralUpdate = mutation.updateCommandDevices({
-			where: {id: props.match.params.id},
-			update: {
-				calibrations: [
-					...args.conf.filter((a) => a.id).map((x) => ({
-						where: {node: {id: x.id}},
-						update: {
-							node: {
-								min: x.min,
-								max: x.max
-							}
-						}
-					})),
-					{
-						create: args.conf.filter((a) => !a.id).map((x) => ({
-							node: {
-								device: {connect: {where: {node: {id: x.device}}}},
-								deviceKey: {connect: {where: {node: {key: x.deviceKey, device: {usedIn: {id_IN: [x.device]}}}}}},
-								min: x.min,
-								max: x.max
-							}
-						}))
-					}
-				]
-			}
-		})
-		return {
-			item: {
-				...peripheralUpdate.commandDevices?.[0]
-			}
-		}
-	})
+	// const [ updateDeviceConfiguration, updateInfo ] = useMutation((mutation, args: {
+	// 	conf: {
+	// 		id?: string;
+	// 		device: string,
+	// 		deviceKey: string,
+	// 		min: string
+	// 		max: string
+	// 	}[]
+	// }) => {
+	// 	const peripheralUpdate = mutation.updateCommandDevices({
+	// 		where: {id: props.match.params.id},
+	// 		update: {
+	// 			calibrations: [
+	// 				...args.conf.filter((a) => a.id).map((x) => ({
+	// 					where: {node: {id: x.id}},
+	// 					update: {
+	// 						node: {
+	// 							min: x.min,
+	// 							max: x.max
+	// 						}
+	// 					}
+	// 				})),
+	// 				{
+	// 					create: args.conf.filter((a) => !a.id).map((x) => ({
+	// 						node: {
+	// 							device: {connect: {where: {node: {id: x.device}}}},
+	// 							deviceKey: {connect: {where: {node: {key: x.deviceKey, device: {usedIn: {id_IN: [x.device]}}}}}},
+	// 							min: x.min,
+	// 							max: x.max
+	// 						}
+	// 					}))
+	// 				}
+	// 			]
+	// 		}
+	// 	})
+	// 	return {
+	// 		item: {
+	// 			...peripheralUpdate.commandDevices?.[0]
+	// 		}
+	// 	}
+	// })
 
 	const device = data?.commandDevices?.[0];
 
@@ -122,17 +125,17 @@ export const DeviceDevices : React.FC<any> = (props) => {
 					console.log("DEVICE", device)
 					if(device.calibrated){
 						console.log("CALIBRATED", device.calibrated)
-						updateDeviceConfiguration({
-							args: {
-								conf: device.calibrated.map((x) => ({
+						updateDeviceCalibrations(
+							id,
+							device.calibrated.map((x) => ({
 									id: x.id,
 									device: device.id,
 									deviceKey: x.key,
 									min: x.min,
 									max: x.max
 								}))
-							}
-						})
+							
+						)
 
 					}
 					// if(device.configuration){

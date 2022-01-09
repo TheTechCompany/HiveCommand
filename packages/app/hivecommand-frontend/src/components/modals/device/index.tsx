@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { BaseModal } from '../base';
-import { CommandDevice, CommandProgram } from '@hive-command/api'
 import { TextInput, Text, Box, Select } from 'grommet';
 import { nanoid } from 'nanoid';
 
@@ -8,16 +7,16 @@ export interface DeviceModalProps {
     open: boolean;
     
     onClose?: () => void;
-    onSubmit?: (data: CommandDevice) => void;
+    onSubmit?: (data: any) => void;
     selected?: any; // change to device interface
 
-    programs?: CommandProgram[]
+    programs?: any[]
 
 }
 
 export const DeviceModal : React.FC<DeviceModalProps> = (props) => {
 
-    const [ device, setDevice ] = useState<any & CommandDevice>({
+    const [ device, setDevice ] = useState<any>({
         name: '',
         program: '',
         network_name: nanoid().substring(0, 8)

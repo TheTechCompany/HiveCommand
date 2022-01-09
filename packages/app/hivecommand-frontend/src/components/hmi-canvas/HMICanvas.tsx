@@ -4,9 +4,6 @@ import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, Infi
 import { HMINodeFactory } from '../hmi-node/HMINodeFactory';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../assets/hmi-elements'
-import { Nodes } from 'grommet-icons'
-import { nanoid } from 'nanoid';
-import { useMutation } from '@hive-command/api';
 import { HMICanvasProvider } from './HMICanvasContext';
 
 export interface HMICanvasProps {

@@ -4,7 +4,7 @@ config()
 import { HiveGraph } from '@hexhive/graphql-server'
 
 import amqp from 'amqplib'
-
+import cors from 'cors';
 import express from 'express';
 import neo4j from "neo4j-driver"
 import { Neo4jGraphQL } from "@neo4j/graphql"
@@ -44,22 +44,36 @@ import { Pool } from 'pg';
 	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
+	//TODO figure out the race condition to get the OGM with merged models from hive-graph
 
 	const resolved = await resolvers(driver.session(), pool, mqChannel)
 
-	const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
+	// const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
 
 	const graphServer = new HiveGraph({
+		dev: false,
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
-		schema: neoSchema.schema
+		schema: {
+			typeDefs: typeDefs,
+			resolvers: resolved,
+			driver
+		}
 	})
 
 	await graphServer.init()
 
 	const app = express()
 
+	
+	app.use(cors())
+
 	app.use(graphServer.middleware)
 
+	app.use((req, res) => {
+		console.log((req as any).user, (req as any).jwt)
+	})
+
+	
 	app.listen('9010')
 
 })()

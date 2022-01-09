@@ -4,18 +4,15 @@ import { PluginEditorMenu } from './menu';
 import { Box, Text } from 'grommet';
 import { UIEditor } from './editors/ui-editor';
 import { ProgramCanvasModal } from '../../components/modals/program-canvas';
-import {useQuery, useMutation } from '@hive-command/api';
 import { ObjectTypeDefinitionNode } from 'graphql';
+import { createPluginItem } from '@hive-command/api';
+import { useParams } from 'react-router-dom';
 
 export const PluginEditorPage : React.FC<any> = (props) => {
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
-    const query = useQuery({
-        staleWhileRevalidate: false,
-        suspense: false,
-        
-    })
-
+    const { id } = useParams()
+    
     const client = useApolloClient()
 
     const [ selected, setSelected ] = useState<any>()
@@ -45,23 +42,7 @@ export const PluginEditorPage : React.FC<any> = (props) => {
         })
     }
 
-    const [ createPluginItem, createInfo ] = useMutation((mutation, args: {name: string}) => {
-        const resp = mutation.updateCommandPlugins({
-            where: {id: props.match.params.id},
-            update: {
-                items: [{create: [{
-                  node: {
-                      name: args.name
-                  } 
-                }]}]
-            }
-        })
-        return {
-            item: {
-                ...resp.commandPlugins?.[0]
-            }
-        }
-    })
+ 
 
     const plugin = data?.commandPlugins?.[0];
 
@@ -91,14 +72,15 @@ export const PluginEditorPage : React.FC<any> = (props) => {
 
     // const [ updateStack, updateInfo ] = stackActions.useUpdateStack(props.match.params.id)
 
-    return query.$state.isLoading ? null : (
+    return  (
         <Box flex round="xsmall" background="neutral-1" overflow="hidden">
             <ProgramCanvasModal 
                 open={modalOpen}
                 onSubmit={(item) => {
-                    createPluginItem({args: {
-                        name: item.name
-                    }}).then(() => {
+                    createPluginItem(
+                        id,
+                        item.name
+                    ).then(() => {
                         refetch()
                     })
                 }}

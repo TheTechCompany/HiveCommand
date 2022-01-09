@@ -2,7 +2,14 @@ import gql from "graphql-tag";
 
 export default gql`
 
-type CommandDevice {
+extend type HiveOrganisation {
+	commandDevices: [CommandDevice] @relationship(type: "HAS_COMMAND_DEVICE", direction: OUT)
+}
+
+type CommandDevice @auth(rules: [
+	{operations: [READ, UPDATE], where: {organisation: {id: "$jwt.organisation"}}},
+	{operations: [UPDATE], where: {organisation: {id: "$jwt.organisation"}}}
+]) {
 	id: ID! @id
 	name: String
 
@@ -21,7 +28,7 @@ type CommandDevice {
 	online: Boolean
 	lastOnline: DateTime
 
-
+	organisation: HiveOrganisation @relationship(type: "HAS_COMMAND_DEVICE", direction: IN)
 }
 
 type CommandDevicePeripheral {

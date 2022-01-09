@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Box, Button, List, Text } from 'grommet';
-import { useMutation } from '@hive-command/api';
+import { connectProgramNode, createProgramNode, deleteProgramNodes, disconnectProgramNode, updateProgramNode } from '@hive-command/api';
 import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
@@ -255,96 +255,83 @@ export const Program = (props) => {
     }, [program, props.activeProgram])
 
 
-    const [addNode, addInfo] = useMutation((mutation, args: { type: string, x: number, y: number, subprocess?: string}) => {
-        let createNode : any = {
+    // const [addNode, addInfo] = useMutation((mutation, args: { type: string, x: number, y: number, subprocess?: string}) => {
+    //     let createNode : any = {
        
-                type: args.type,
-                x: args.x,
-                y: args.y,
+    //             type: args.type,
+    //             x: args.x,
+    //             y: args.y,
             
-        }
+    //     }
 
-        if(args.type == "Connect" && args.subprocess){
-            console.log("CoNFIG")
-            createNode.subprocess = {
-                connect: {where: {node: {id: args.subprocess}}}
-            }
-        }
-        const program = mutation.updateCommandProgramFlows({
-            where: { id: props.activeProgram },
-            update: {
-                    nodes: [{
-                        create: [{
-                           node: createNode
-                        }]
-                    }]
-            }
+    //     if(args.type == "Connect" && args.subprocess){
+    //         console.log("CoNFIG")
+    //         createNode.subprocess = {
+    //             connect: {where: {node: {id: args.subprocess}}}
+    //         }
+    //     }
+    //     const program = mutation.updateCommandProgramFlows({
+    //         where: { id: props.activeProgram },
+    //         update: {
+    //                 nodes: [{
+    //                     create: [{
+    //                        node: createNode
+    //                     }]
+    //                 }]
+    //         }
 
-        })
-        return {
-            item: {
-                ...program.commandProgramFlows[0]
-            }
-        }
-    })
-
-
-    const [updateNode, updateInfo] = useMutation((mutation, args: {
-        id: string,
-        x?: number,
-        y?: number
-    }) => {
-
-        let update: any = {};
-
-        if (args.x) update.x = args.x;
-        if (args.y) update.y = args.y;
-
-        const updated = mutation.updateCommandProgramNodes({
-            where: { id: args.id },
-            update: {
-                x: args.x,
-                y: args.y
-            }
-        })
-        return {
-            item: {
-                ...updated.commandProgramNodes[0]
-            }
-        }
-    });
+    //     })
+    //     return {
+    //         item: {
+    //             ...program.commandProgramFlows[0]
+    //         }
+    //     }
+    // })
 
 
-    const [deleteSelected, deleteInfo] = useMutation((mutation, args: {
-        selected: { type: "node" | "path", id: string }[]
-    }) => {
+    // const [updateNode, updateInfo] = useMutation((mutation, args: {
+    //     id: string,
+    //     x?: number,
+    //     y?: number
+    // }) => {
+
+    //     let update: any = {};
+
+    //     if (args.x) update.x = args.x;
+    //     if (args.y) update.y = args.y;
+
+    //     const updated = mutation.updateCommandProgramNodes({
+    //         where: { id: args.id },
+    //         update: {
+    //             x: args.x,
+    //             y: args.y
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...updated.commandProgramNodes[0]
+    //         }
+    //     }
+    // });
+
+
+    const deleteSelected = async (selected: { type: "node" | "path", id: string }[]) => {
+
+        let queries = [];
 
         let query: any = {};
-        let nodes = args.selected.filter((a) => a.type == "node").map((x) => x.id)
-        let _paths = args.selected.filter((a) => a.type == "path").map((x) => x.id)
+        let nodes = selected.filter((a) => a.type == "node").map((x) => x.id)
+        let _paths = selected.filter((a) => a.type == "path").map((x) => x.id)
 
         let disconnectInfo: any = {};
         let deleteInfo: any = {};
         if (_paths.length > 0) {
             let path = paths.find((a) => a.id == _paths[0]);
-            disconnectInfo = mutation.updateCommandProgramNodes({
-                where: { id: path.source },
-                update: {
-                    next: [{
-                        disconnect: [{
-                            where: {
-                                edge: {
-                                    sourceHandle: path.sourceHandle,
-                                    targetHandle: path.targetHandle
-                                },
-                                node: {
-                                    id: path.target
-                                }
-                            }
-                        }]
-                    }]
-                }
-            })
+
+            queries.push(
+                disconnectProgramNode(props.activeProgram, path.source, path.sourceHandle, path.target, path.targetHandle)
+            )
+    
             // return {
             //     item: {
             //         ...disconnectInfo.commandProgramNodes?.[0]
@@ -356,50 +343,45 @@ export const Program = (props) => {
                 id_IN: nodes,
             }
 
-            deleteInfo = mutation.deleteCommandProgramNodes({
-                where: query
-            })
+            queries.push(
+                deleteProgramNodes(props.activeProgram, nodes)
+            )
 
         }
-        return {
-            item: {
-                ...(deleteInfo || {}),
-                ...(disconnectInfo?.commandProgramNodes?.[0] || {})
-            }
-        }
-    })
+        return await Promise.all(queries)
+    }
 
-    const [connectNodes, connectInfo] = useMutation((mutation, args: {
-        source: string,
-        sourceHandle: string,
-        target: string,
-        targetHandle: string,
-        points?: { x: number, y: number }[]
-    }) => {
-        const updated = mutation.updateCommandProgramNodes({
-            where: { id: args.source },
-            update: {
-                next: [{
-                    connect: [{
-                        where: {
-                            node: {
-                                id: args.target
-                            }
-                        }, edge: {
-                            sourceHandle: args.sourceHandle,
-                            targetHandle: args.targetHandle,
-                            points: args.points.map((x) => pick(x, ['x', 'y']))
-                        }
-                    }]
-                }]
-            }
-        })
-        return {
-            item: {
-                ...updated.commandProgramNodes[0]
-            }
-        }
-    })
+    // const [connectNodes, connectInfo] = useMutation((mutation, args: {
+    //     source: string,
+    //     sourceHandle: string,
+    //     target: string,
+    //     targetHandle: string,
+    //     points?: { x: number, y: number }[]
+    // }) => {
+    //     const updated = mutation.updateCommandProgramNodes({
+    //         where: { id: args.source },
+    //         update: {
+    //             next: [{
+    //                 connect: [{
+    //                     where: {
+    //                         node: {
+    //                             id: args.target
+    //                         }
+    //                     }, edge: {
+    //                         sourceHandle: args.sourceHandle,
+    //                         targetHandle: args.targetHandle,
+    //                         points: args.points.map((x) => pick(x, ['x', 'y']))
+    //                     }
+    //                 }]
+    //             }]
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...updated.commandProgramNodes[0]
+    //         }
+    //     }
+    // })
 
     const renderSelectedSettings = () => {
         if (!selected || selected.key != 'node') return;
@@ -456,14 +438,11 @@ export const Program = (props) => {
 
     const watchEditorKeys = () => {
         if (selectedRef.current.selected.id) {
-            deleteSelected({
-                args: {
-                    selected: [selectedRef.current.selected].map((x) => ({
+            deleteSelected([selectedRef.current.selected].map((x) => ({
                         type: x.key,
                         id: x.id
                     }))
-                }
-            }).then(() => {
+            ).then(() => {
                 refetch()
             })
         }
@@ -535,39 +514,37 @@ export const Program = (props) => {
                         //     type: node.extras.icon
                         // }})
 
-                        addNode({
-                            args: {
-                                x: position.x,
-                                y: position.y,
-                                type: node.extras.icon,
-                                subprocess: node.extras.subprocess
-                            }
-                        }).then(() => {
+                        createProgramNode(
+                            props.activeProgram, 
+                            node.extras.icon, 
+                            position.x, 
+                            position.y, 
+                            node.extras.subprocess
+                        ).then(() => {
                             refetch()
                         })
                     }}
                     onNodeUpdate={(node) => {
-                        updateNode({
-                            args: {
-                                id: node.id,
-                                x: node.x,
-                                y: node.y
-                            }
-                        }).then(() => {
+                        updateProgramNode(
+                            props.activeProgram,
+                            node.id,
+                            node.x,
+                            node.y
+                        ).then(() => {
                             refetch()
                         })
                     }}
 
                     onPathCreate={(path) => {
-                        connectNodes({
-                            args: {
-                                source: path.source,
-                                sourceHandle: path.sourceHandle,
-                                target: path.target,
-                                targetHandle: path.targetHandle,
-                                points: path.points
-                            }
-                        }).then(() => {
+
+                        connectProgramNode(
+                            props.activeProgram,
+                            path.source,
+                            path.sourceHandle,
+                            path.target,
+                            path.targetHandle,
+                            path.points
+                        ).then(() => {
                             refetch()
                         })
                     }}

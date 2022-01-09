@@ -9,13 +9,13 @@ import * as HMIIcons from '../../../../assets/hmi-elements'
 import { Nodes, Action, Add, Aggregate, Subtract, RotateLeft, RotateRight } from 'grommet-icons'
 import Settings from './Settings'
 import { nanoid } from 'nanoid';
-import { useMutation } from '@hive-command/api';
 import { pick } from 'lodash';
 import { throttle } from 'lodash';
 import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
+import { assignHMINode, connectHMINode, createHMIAction, createHMIGroup, createHMINode, updateHMIGroup, updateHMINode, updateHMINodeRotation, updateHMINodeScale } from '@hive-command/api';
 
 export const Controls = (props) => {
     
@@ -451,295 +451,291 @@ export const Controls = (props) => {
         client.refetchQueries({include: ['Q']})
     }
 
-    const [ addHMINode, addHMIInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
-        const program = mutation.updateCommandPrograms({
-            where: {id: id},
-            update: {
-                hmi: [{
-                    where: {node: {id: props.activeProgram}},
-                    update: {
-                        node: {
-                            nodes: [{
-                                    create: [{node: {
-                                            type: {connect: {where: {node: {name: args.type}}}},
-                                            x: args.x,
-                                            y: args.y
-                                        }}]
-                                }]
-                        }
-                    }
-                }]
-            }
-        })
-        return {
-            item: {
-                ...program.commandPrograms[0]
-            }
-        }
-    })
+    // const [ addHMINode, addHMIInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
+    //     const program = mutation.updateCommandPrograms({
+    //         where: {id: id},
+    //         update: {
+    //             hmi: [{
+    //                 where: {node: {id: props.activeProgram}},
+    //                 update: {
+    //                     node: {
+    //                         nodes: [{
+    //                                 create: [{node: {
+    //                                         type: {connect: {where: {node: {name: args.type}}}},
+    //                                         x: args.x,
+    //                                         y: args.y
+    //                                     }}]
+    //                             }]
+    //                     }
+    //                 }
+    //             }]
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...program.commandPrograms[0]
+    //         }
+    //     }
+    // })
 
-    const [ assignHMINode, assignInfo ] = useMutation((mutation, args: {
-        id: string,
-        placeholder: string
-    }) => {
-        const updated = mutation.updateCommandHMINodes({
-            where: {id: args.id},
-            update: {
-                devicePlaceholder: {connect: {where: {node: {id: args.placeholder}}}}
-            }
-        })
-        return {
-            item: {
-                ...updated.commandHmiNodes[0]
-            }
-        }
-    })
+    // const [ assignHMINode, assignInfo ] = useMutation((mutation, args: {
+    //     id: string,
+    //     placeholder: string
+    // }) => {
+    //     const updated = mutation.updateCommandHMINodes({
+    //         where: {id: args.id},
+    //         update: {
+    //             devicePlaceholder: {connect: {where: {node: {id: args.placeholder}}}}
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...updated.commandHmiNodes[0]
+    //         }
+    //     }
+    // })
 
-    const [ updateHMIGroup, updateGroup ] = useMutation((mutation, args: {
-        id: string,
-        x: number
-        y: number
-    }) => {
-        const item = mutation.updateCommandHMIGroups({
-            where: {id: args.id},
-            update: {
-                x: args.x,
-                y: args.y
-            }
-        })
-        return {
-            item: {
-                ...item.commandHmiGroups?.[0]
-            }
-        }
-    })
+    // const [ updateHMIGroup, updateGroup ] = useMutation((mutation, args: {
+    //     id: string,
+    //     x: number
+    //     y: number
+    // }) => {
+    //     const item = mutation.updateCommandHMIGroups({
+    //         where: {id: args.id},
+    //         update: {
+    //             x: args.x,
+    //             y: args.y
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...item.commandHmiGroups?.[0]
+    //         }
+    //     }
+    // })
 
-    const [ updateHMINodeRotation, updateRotation ] = useMutation((mutation, args: {
-        id: string,
-        rotation: number
-    }) => {
-        const item = mutation.updateCommandHMINodes({
-            where: {id: args.id},
-            update: {
-                rotation: args.rotation
-            }
-        })
+    // const [ updateHMINodeRotation, updateRotation ] = useMutation((mutation, args: {
+    //     id: string,
+    //     rotation: number
+    // }) => {
+    //     const item = mutation.updateCommandHMINodes({
+    //         where: {id: args.id},
+    //         update: {
+    //             rotation: args.rotation
+    //         }
+    //     })
 
-        return {
-            item: {
-                ...item.commandHmiNodes[0]
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item.commandHmiNodes[0]
+    //         }
+    //     }
+    // })
 
-    const [ updateHMINodeTotalizer, updateTotalizer ] = useMutation((mutation, args: {
-        id: string,
-        totalize: boolean
-    }) => {
-        const item = mutation.updateCommandHMINodes({
-            where: {id: args.id},
-            update: {
-                showTotalizer: args.totalize,
-            }
-        })
+    // const [ updateHMINodeTotalizer, updateTotalizer ] = useMutation((mutation, args: {
+    //     id: string,
+    //     totalize: boolean
+    // }) => {
+    //     const item = mutation.updateCommandHMINodes({
+    //         where: {id: args.id},
+    //         update: {
+    //             showTotalizer: args.totalize,
+    //         }
+    //     })
 
-        return {
-            item: {
-                ...item.commandHmiNodes[0]
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item.commandHmiNodes[0]
+    //         }
+    //     }
+    // })
 
 
-    const [ updateHMINodeScale, updateScale ] = useMutation((mutation, args: {
-        id: string,
-        scale: {x?: number, y?: number}
-    }) => {
+    // const [ updateHMINodeScale, updateScale ] = useMutation((mutation, args: {
+    //     id: string,
+    //     scale: {x?: number, y?: number}
+    // }) => {
 
-        let update : any = {};
-        if(args.scale.x) update.scaleX = args.scale.x;
-        if(args.scale.y) update.scaleY = args.scale.y;
+    //     let update : any = {};
+    //     if(args.scale.x) update.scaleX = args.scale.x;
+    //     if(args.scale.y) update.scaleY = args.scale.y;
 
-        const item = mutation.updateCommandHMINodes({
-            where: {id: args.id},
-            update: update
-        })
+    //     const item = mutation.updateCommandHMINodes({
+    //         where: {id: args.id},
+    //         update: update
+    //     })
 
-        return {
-            item: {
-                ...item.commandHmiNodes[0]
-            }
-        }
-    })
+    //     return {
+    //         item: {
+    //             ...item.commandHmiNodes[0]
+    //         }
+    //     }
+    // })
 
-    const [ updateHMINode, updateInfo ] = useMutation((mutation, args: {
-        id: string,
-        x: number,
-        y: number
-    }) => {
-        const updated = mutation.updateCommandHMINodes({
-            where: {id: args.id},
-            update: {
-                x: args.x,
-                y: args.y
-            }
-        })
-        return {
-            item: {
-                ...updated.commandHmiNodes[0]
-            }
-        }
-    })
+    // const [ updateHMINode, updateInfo ] = useMutation((mutation, args: {
+    //     id: string,
+    //     x: number,
+    //     y: number
+    // }) => {
+    //     const updated = mutation.updateCommandHMINodes({
+    //         where: {id: args.id},
+    //         update: {
+    //             x: args.x,
+    //             y: args.y
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...updated.commandHmiNodes[0]
+    //         }
+    //     }
+    // })
 
-    const [ createHMIGroup, createGroupInfo ] = useMutation((mutation, args: {
-        ports: {
-            key: string;
-            rotation: number;
-            length: number;
-            x: number;
-            y: number;
-        }[]
-        nodes: {
-            x: number;
-            y: number;
-            rotation: number;
-            scaleX: number;
-            scaleY: number;
-            showTotalizer: boolean;
-            type: {connect: {where: {node: {name: string}}}};
-        }[]
-    }) => {
-        const item = mutation.updateCommandPrograms({
-            where: {id: id},
-            update: {
-                hmi: [{
-                    where: {node: {id: props.activeProgram}},
-                    update: {
-                        node: {
-                            groups: [{
-                                create: [{
-                                    node: {
-                                        ports: {
-                                            create: args.ports.map((port) => ({node: port}))
-                                        },
-                                        nodes: {
-                                            create: args.nodes.map((node) => ({node: node}))
-                                        }
-                                    }
-                                }]
-                            }]
-                        }
-                    }
-                }]
-            }
-        })
-        return {
-            item: {
-                ...item.commandPrograms?.[0]
-            }
-        }
-    })
+    // const [ createHMIGroup, createGroupInfo ] = useMutation((mutation, args: {
+    //     ports: {
+    //         key: string;
+    //         rotation: number;
+    //         length: number;
+    //         x: number;
+    //         y: number;
+    //     }[]
+    //     nodes: {
+    //         x: number;
+    //         y: number;
+    //         rotation: number;
+    //         scaleX: number;
+    //         scaleY: number;
+    //         showTotalizer: boolean;
+    //         type: {connect: {where: {node: {name: string}}}};
+    //     }[]
+    // }) => {
+    //     const item = mutation.updateCommandPrograms({
+    //         where: {id: id},
+    //         update: {
+    //             hmi: [{
+    //                 where: {node: {id: props.activeProgram}},
+    //                 update: {
+    //                     node: {
+    //                         groups: [{
+    //                             create: [{
+    //                                 node: {
+    //                                     ports: {
+    //                                         create: args.ports.map((port) => ({node: port}))
+    //                                     },
+    //                                     nodes: {
+    //                                         create: args.nodes.map((node) => ({node: node}))
+    //                                     }
+    //                                 }
+    //                             }]
+    //                         }]
+    //                     }
+    //                 }
+    //             }]
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...item.commandPrograms?.[0]
+    //         }
+    //     }
+    // })
 
-    const [ deleteSelected, deleteInfo ] = useMutation((mutation, args: {
-        selected: {type: "node" | "path", id: string}[]
-    }) => {
+    // const [ deleteSelected, deleteInfo ] = useMutation((mutation, args: {
+    //     selected: {type: "node" | "path", id: string}[]
+    // }) => {
 
-        let query : any = {};
-        let nodes = args.selected.filter((a) => a.type == "node").map((x) => x.id)
-        let _paths = args.selected.filter((a) => a.type == "path").map((x) => x.id)
+    //     let query : any = {};
+    //     let nodes = args.selected.filter((a) => a.type == "node").map((x) => x.id)
+    //     let _paths = args.selected.filter((a) => a.type == "path").map((x) => x.id)
 
-        // let disconnectInfo : any = {};
-        let deleteInfo : any = {};
-        if(_paths.length > 0){
-            let path = paths.find((a) => a.id == _paths?.[0]);
-            let disconnectInfo = mutation.updateCommandProgramHMIS({
-                where: {id: props.activeProgram},
-                update: {
-                    paths: [
-                        {
-                            delete: [{
-                                where: {node: {id: path.id}}
-                            }]
-                        }
-                    ]
+    //     // let disconnectInfo : any = {};
+    //     let deleteInfo : any = {};
+    //     if(_paths.length > 0){
+    //         let path = paths.find((a) => a.id == _paths?.[0]);
+    //         let disconnectInfo = mutation.updateCommandProgramHMIS({
+    //             where: {id: props.activeProgram},
+    //             update: {
+    //                 paths: [
+    //                     {
+    //                         delete: [{
+    //                             where: {node: {id: path.id}}
+    //                         }]
+    //                     }
+    //                 ]
            
-                }
-            })
-            return {
-                item: {
-                    ...disconnectInfo.commandProgramHmis?.[0]
-                }
-            }
-        }
-        if(nodes.length > 0){
-            query = {
-                id_IN: nodes,
-            }
+    //             }
+    //         })
+    //         return {
+    //             item: {
+    //                 ...disconnectInfo.commandProgramHmis?.[0]
+    //             }
+    //         }
+    //     }
+    //     if(nodes.length > 0){
+    //         query = {
+    //             id_IN: nodes,
+    //         }
 
-            let connected_to =  paths.filter((a) => nodes.indexOf(a.target) > -1).map((x) => x.id)
+    //         let connected_to =  paths.filter((a) => nodes.indexOf(a.target) > -1).map((x) => x.id)
         
-            deleteInfo = mutation.updateCommandProgramHMIS({
-                where: {id: props.activeProgram},
-                delete: {
-                    paths: [{
-                        where: {
-                            node:  {id_IN: connected_to}
-                        }
-                    }],
-                    nodes: [{
-                        where: {
-                           node: query
-                        } 
-                    }]
-                }
-            })
-            // deleteInfo = mutation.deleteCommandHMINodes({
-            //     where: query
-            // })
+    //         deleteInfo = mutation.updateCommandProgramHMIS({
+    //             where: {id: props.activeProgram},
+    //             delete: {
+    //                 paths: [{
+    //                     where: {
+    //                         node:  {id_IN: connected_to}
+    //                     }
+    //                 }],
+    //                 nodes: [{
+    //                     where: {
+    //                        node: query
+    //                     } 
+    //                 }]
+    //             }
+    //         })
+    //         // deleteInfo = mutation.deleteCommandHMINodes({
+    //         //     where: query
+    //         // })
           
-        }
-          return {
-                item: {
-                    ...(deleteInfo.commandProgramHmis?.[0] || {}),
-                    // ...(disconnectInfo?.commandProgramHmis?.[0] || {})
-                }
-            }
-    })
+    //     }
+    //       return {
+    //             item: {
+    //                 ...(deleteInfo.commandProgramHmis?.[0] || {}),
+    //                 // ...(disconnectInfo?.commandProgramHmis?.[0] || {})
+    //             }
+    //         }
+    // })
 
-    const [ createHMIAction, createActionInfo ] = useMutation((mutation, args: {
-        name: string;
-        flow: string[];
-    }) => {
-        const item = mutation.updateCommandProgramHMIS({
-            where: {id: props.activeProgram},
-            update: {
-                actions: [{
-                    create: [{
-                        node: {
-                            name: args.name,
-                            flow: {
-                                connect: args.flow.map((flow) => ({
-                                    where: {node: {id: flow}}
-                                }))
-                            }
-                        }
-                    }]
+    // const [ createHMIAction, createActionInfo ] = useMutation((mutation, args: {
+    //     name: string;
+    //     flow: string[];
+    // }) => {
+    //     const item = mutation.updateCommandProgramHMIS({
+    //         where: {id: props.activeProgram},
+    //         update: {
+    //             actions: [{
+    //                 create: [{
+    //                     node: {
+    //                         name: args.name,
+    //                         flow: {
+    //                             connect: args.flow.map((flow) => ({
+    //                                 where: {node: {id: flow}}
+    //                             }))
+    //                         }
+    //                     }
+    //                 }]
                     
-                }]
-            }
-        })
-        return {
-            item: {
-                ...item.commandProgramHmis?.[0]
-            }
-        }
-    })
+    //             }]
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...item.commandProgramHmis?.[0]
+    //         }
+    //     }
+    // })
 
-    const [ updateHMIAction, updateActionInfo ] = useMutation((mutation, args: {
 
-    }) => {
-        
-    })
     // const [ updateConnection ] = useMutation((mutation, args : {
     //     id: string,
     //     source: string,
@@ -774,48 +770,48 @@ export const Controls = (props) => {
 
     // const throttledUpdateConnection = throttle(updateConnection, 500)
 
-    const [ createConnection, connectInfo ] = useMutation((mutation, args: {
-        id: string,
-        source: string,
-        sourceHandle: string,
-        target?: string,
-        targetHandle?: string,
-        points?: {x: number, y: number}[]
-    }) => {
-        console.log(args.points)
-        const updated = mutation.updateCommandProgramHMIS({
-            where: {id: props.activeProgram},
-            update: {
-                paths: [!args.id ? {
-                    create: [{
-                        node: {
-                            source: {CommandHMIGroup: { connect: {where: {node: {id: args.source}}}}, CommandHMINode: {connect: {where: {node: {id: args.source}}}}},
-                            target: {CommandHMIGroup: { connect: {where: {node: {id: args.target}}}}, CommandHMINode: {connect: {where: {node: {id: args.target}}}}},
-                            sourceHandle: args.sourceHandle,
-                            targetHandle: args.targetHandle,
-                            points: args.points
-                        }
-                    }]
-                } : {
-                    where: {node: {id: args.id}},
-                    update: {
-                        node: {
-                            source: {CommandHMIGroup: { connect: {where: {node: {id: args.source}}}}, CommandHMINode: {connect: {where: {node: {id: args.source}}}}},
-                            target: {CommandHMIGroup: { connect: {where: {node: {id: args.target}}}}, CommandHMINode: {connect: {where: {node: {id: args.target}}}}},
-                            sourceHandle: args.sourceHandle,
-                            targetHandle: args.targetHandle,
-                            points: args.points
-                        }
-                    }
-                }]     
-            }
-        })
-        return {
-            item: {
-                ...updated.commandProgramHmis[0]
-            }
-        }
-    })
+    // const [ createConnection, connectInfo ] = useMutation((mutation, args: {
+    //     id: string,
+    //     source: string,
+    //     sourceHandle: string,
+    //     target?: string,
+    //     targetHandle?: string,
+    //     points?: {x: number, y: number}[]
+    // }) => {
+    //     console.log(args.points)
+    //     const updated = mutation.updateCommandProgramHMIS({
+    //         where: {id: props.activeProgram},
+    //         update: {
+    //             paths: [!args.id ? {
+    //                 create: [{
+    //                     node: {
+    //                         source: {CommandHMIGroup: { connect: {where: {node: {id: args.source}}}}, CommandHMINode: {connect: {where: {node: {id: args.source}}}}},
+    //                         target: {CommandHMIGroup: { connect: {where: {node: {id: args.target}}}}, CommandHMINode: {connect: {where: {node: {id: args.target}}}}},
+    //                         sourceHandle: args.sourceHandle,
+    //                         targetHandle: args.targetHandle,
+    //                         points: args.points
+    //                     }
+    //                 }]
+    //             } : {
+    //                 where: {node: {id: args.id}},
+    //                 update: {
+    //                     node: {
+    //                         source: {CommandHMIGroup: { connect: {where: {node: {id: args.source}}}}, CommandHMINode: {connect: {where: {node: {id: args.source}}}}},
+    //                         target: {CommandHMIGroup: { connect: {where: {node: {id: args.target}}}}, CommandHMINode: {connect: {where: {node: {id: args.target}}}}},
+    //                         sourceHandle: args.sourceHandle,
+    //                         targetHandle: args.targetHandle,
+    //                         points: args.points
+    //                     }
+    //                 }
+    //             }]     
+    //         }
+    //     })
+    //     return {
+    //         item: {
+    //             ...updated.commandProgramHmis[0]
+    //         }
+    //     }
+    // })
 
     const devices = data?.commandPrograms?.[0]?.devices
     const flows = data?.commandPrograms?.[0]?.program;
@@ -957,10 +953,7 @@ export const Controls = (props) => {
                             labelKey="name"
                             value={item?.extras?.devicePlaceholder?.id}
                             onChange={({value}) => {
-                                assignHMINode({args: {
-                                    id: selected.id,
-                                    placeholder: value
-                                }}).then(() => {
+                                assignHMINode(props.activeProgram, selected.id, value).then(() => {
                                     refetch()
                                 })
                             }}
@@ -971,14 +964,14 @@ export const Controls = (props) => {
                             <CheckBox  
                                 checked={item?.extras?.showTotalizer} 
                                 onChange={(e) => {
-                                    updateHMINodeTotalizer({
-                                        args: {
-                                            id: selected.id,
-                                            totalize: e.target.checked
-                                        }
-                                    }).then(() => {
-                                        refetch()
-                                    })
+                                    // updateHMINodeTotalizer({
+                                    //     args: {
+                                    //         id: selected.id,
+                                    //         totalize: e.target.checked
+                                    //     }
+                                    // }).then(() => {
+                                    //     refetch()
+                                    // })
                                 }}
                                 reverse 
                                 label="Show Totalizer" />
@@ -990,32 +983,25 @@ export const Controls = (props) => {
                             rightIcon={<RotateRight size="small" />}
                             value={item?.extras?.rotation}
                             onLeftClick={() => {
-                                updateHMINodeRotation({
-                                    args: {
-                                        id: selected.id,
-                                        rotation: (item?.extras?.rotation || 0) - 90
-                                    }
-                                }).then(() => {
+                                updateHMINodeRotation(props.activeProgram, selected.id, (item?.extras?.rotation || 0) - 90).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                               updateHMINodeRotation({
-                                        args: {
-                                            id: selected.id,
-                                            rotation: (item?.extras?.rotation || 0) + 90
-                                        }
-                                    }).then(() => {
+                                    updateHMINodeRotation(
+                                        props.activeProgram,
+                                        selected.id,
+                                        (item?.extras?.rotation || 0) + 90
+                                    ).then(() => {
                                         refetch()
                                     })
                             }}
                             onChange={(e) => {
-                                updateHMINodeRotation({
-                                    args: {
-                                        id: selected.id,
-                                        rotation: parseFloat(e)
-                                    }
-                                }).then(() => {
+                                updateHMINodeRotation(
+                                    props.activeProgram,
+                                    selected.id,
+                                    parseFloat(e)
+                                ).then(() => {
                                     refetch()
                                 })
 
@@ -1029,32 +1015,29 @@ export const Controls = (props) => {
                             rightIcon={<Add size="small" />}
                             value={item?.extras?.scaleX}
                             onLeftClick={() => {
-                                updateHMINodeScale({
-                                    args: {
-                                        id: selected.id,
-                                        scale: {x: parseFloat(item?.extras?.scaleX || 0) - 1}
-                                    }
-                                }).then(() => {
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {x: parseFloat(item?.extras?.scaleX || 0) - 1}
+                                ).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                updateHMINodeScale({
-                                        args: {
-                                            id: selected.id,
-                                            scale: {x: parseFloat(item?.extras?.scaleX || 0) + 1}
-                                        }
-                                    }).then(() => {
-                                        refetch()
-                                    })
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {x: parseFloat(item?.extras?.scaleX || 0) + 1}
+                                ).then(() => {
+                                    refetch()
+                                })
                             }}
                             onChange={(e) => {
-                                updateHMINodeScale({
-                                    args: {
-                                        id: selected.id,
-                                        scale: {x: parseFloat(e)}
-                                    }
-                                }).then(() => {
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {x: parseFloat(e)}
+                                ).then(() => {
                                     refetch()
                                 })
 
@@ -1067,32 +1050,29 @@ export const Controls = (props) => {
                             rightIcon={<Add size="small" />}
                             value={item?.extras?.scaleY}
                             onLeftClick={() => {
-                                updateHMINodeScale({
-                                    args: {
-                                        id: selected.id,
-                                        scale: {y: parseFloat(item?.extras?.scaleY || 0) - 1}
-                                    }
-                                }).then(() => {
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {y: parseFloat(item?.extras?.scaleY || 0) - 1}
+                                ).then(() => {
                                     refetch()
                                 })
                             }}
                             onRightClick={() => {
-                                updateHMINodeScale({
-                                        args: {
-                                            id: selected.id,
-                                            scale: {y: parseFloat(item?.extras?.scaleY || 0) + 1}
-                                        }
-                                    }).then(() => {
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {y: parseFloat(item?.extras?.scaleY || 0) + 1}
+                                ).then(() => {
                                         refetch()
                                     })
                             }}
                             onChange={(e) => {
-                                updateHMINodeScale({
-                                    args: {
-                                        id: selected.id,
-                                        scale: {y: parseFloat(e)}
-                                    }
-                                }).then(() => {
+                                updateHMINodeScale(
+                                    props.activeProgram,
+                                    selected.id,
+                                    {y: parseFloat(e)}
+                                ).then(() => {
                                     refetch()
                                 })
 
@@ -1111,16 +1091,16 @@ export const Controls = (props) => {
     const watchEditorKeys = () => {
         
             if(selectedRef.current?.selected?.id){
-                deleteSelected({
-                    args: {
-                        selected: [selectedRef.current.selected].map((x) => ({
-                            type: x?.key,
-                            id: x?.id
-                        }))
-                    }
-                }).then(() => {
-                    refetch()
-                })
+                // deleteSelected({
+                //     args: {
+                //         selected: [selectedRef.current.selected].map((x) => ({
+                //             type: x?.key,
+                //             id: x?.id
+                //         }))
+                //     }
+                // }).then(() => {
+                //     refetch()
+                // })
             }
      
     }
@@ -1133,12 +1113,11 @@ export const Controls = (props) => {
                 flows={flows}
                 onClose={() => openAssignModal(false)}
                 onSubmit={(assignment) => {
-                    createHMIAction({
-                        args: {
-                            name: assignment.name,
-                            flow: assignment.flow, 
-                        }
-                    }).then(() => {
+                    createHMIAction(
+                        props.activeProgram,
+                        assignment.name,
+                        assignment.flow, 
+                    ).then(() => {
                         openAssignModal(false);
 
                     })
@@ -1149,17 +1128,16 @@ export const Controls = (props) => {
                 open={modalOpen}
                 onSubmit={(item) => {
                     console.log(item)
-                    createHMIGroup({
-                        args: {
-                            nodes: item.nodes.map((x) => ({
+                    createHMIGroup(
+                        item.nodes.map((x) => ({
                                 x: x.x,
                                 y: x.y,
                                 rotation: x.extras?.rotation || 0,
                                 scaleX: x.extras?.scaleX || 1,
                                 scaleY: x.extras?.scaleY || 1,
                                 type: {connect: {where: {node: {name: x.extras.iconStr}}}}
-                            })),
-                            ports: item.ports.map((port) => ({
+                        })),
+                            item.ports.map((port) => ({
                                 key: port.key,
                                 x: port.x,
                                 y: port.y,
@@ -1167,8 +1145,7 @@ export const Controls = (props) => {
                                 length: port.height
 
                             }))
-                        }
-                    }).then(()=> {
+                    ).then(()=> {
                         openModal(false);
                     })
                 }}
@@ -1228,17 +1205,15 @@ export const Controls = (props) => {
 
                         debounce((path: any) => {
               
-                            createConnection({
-                                args: {
-                                    id: (path as any).draft ? undefined : path.id,
-                                    source: path.source,
-                                    sourceHandle: path.sourceHandle,
-                                    target: path.target,
-                                    targetHandle: path.targetHandle,
-                                    points: path.points
-                                }
-    
-                            }).then(() => {
+                            connectHMINode(
+                                props.activeProgram,
+                                (path as any).draft ? undefined : path.id,
+                                path.source,
+                                path.sourceHandle,
+                                path.target,
+                                path.targetHandle,
+                                path.points
+                            ).then(() => {
              
                                 refetch()
                             })
@@ -1256,13 +1231,22 @@ export const Controls = (props) => {
 
                     console.log("UPDATE", node)
                     if(node.extras?.nodes){
-                        updateHMIGroup({args: {id: node.id, x: node.x, y: node.y}}).then(() => {
+                        updateHMIGroup(
+                            node.id, 
+                            node.x, 
+                            node.y
+                        ).then(() => {
                             refetch()
                         })
                     }else{
                 
 
-                        updateHMINode({args: {id: node.id, x: node.x, y: node.y}}).then(() => {
+                        updateHMINode(
+                            props.activeProgram,
+                            node.id,
+                            node.x, 
+                            node.y
+                        ).then(() => {
                             refetch()
                         })
                     }
@@ -1277,11 +1261,12 @@ export const Controls = (props) => {
                     //         type: data.extras.icon
                     //     }})
                     // }else{
-                        addHMINode({args: {
-                            x: position.x,
-                            y: position.y,
-                            type: data.extras.icon
-                        }})
+                        createHMINode(
+                            props.activeProgram,
+                            data.extras.icon,
+                            position.x,
+                            position.y,
+                        )
                     // }
                     // console.log(position, data)
                     

@@ -4,7 +4,6 @@ import { Add, MoreVertical, Save } from 'grommet-icons';
 import { FormInput, FormControl, InfiniteCanvasNode, InfiniteCanvasPath } from '@hexhive/ui';
 import { ActionModal } from '../../../../components/modals/action';
 import { useProgramEditor } from './context';
-import { useMutation } from '@hive-command/api';
 import { gql, operationName } from '@apollo/client'
 import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 import { ProgramCanvasModal } from '../../../../components/modals/program-canvas';
@@ -147,351 +146,351 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 	}, [selected, selectedType, conditions]);
 
 
-	const [ updatePathConditions, updatePathConditionInfo ] = useMutation((mutation, args: {
-		id: string,
-		conditions: {
-			id?: string;
-			inputDevice: string | {id?: string},
-			inputDeviceKey: string | {id?: string},
-			comparator: string,
-			assertion: string
-		}[]
-	}) => {
+	// const [ updatePathConditions, updatePathConditionInfo ] = useMutation((mutation, args: {
+	// 	id: string,
+	// 	conditions: {
+	// 		id?: string;
+	// 		inputDevice: string | {id?: string},
+	// 		inputDeviceKey: string | {id?: string},
+	// 		comparator: string,
+	// 		assertion: string
+	// 	}[]
+	// }) => {
 
-		let newIds = args.conditions.filter((a) => !a.id).map((x) => nanoid())
-		let totalIds = args.conditions.filter((a) => a.id).map((x) => x.id).concat(newIds);
+	// 	let newIds = args.conditions.filter((a) => !a.id).map((x) => nanoid())
+	// 	let totalIds = args.conditions.filter((a) => a.id).map((x) => x.id).concat(newIds);
 
-		const res = mutation.updateCommandProgramFlows({
-			where: {id: args.id},
-			update: {
-				nodes: [{
-					where: {
-						node: {
-							id: (selected as InfiniteCanvasPath).source
-						}
-					},
-					update: {
-						node: {
-							next: [{
-								where: {
-									edge: {
-										id: selected.id
-									}
-								},
-								update: {
-									edge: {
-										conditions: totalIds
-									}
-								}
-							}]
-						}
-					}
-				}],
-				conditions: [{
-					create: args.conditions.filter((a) => !a.id).map((condition, ix) => ({
+	// 	const res = mutation.updateCommandProgramFlows({
+	// 		where: {id: args.id},
+	// 		update: {
+	// 			nodes: [{
+	// 				where: {
+	// 					node: {
+	// 						id: (selected as InfiniteCanvasPath).source
+	// 					}
+	// 				},
+	// 				update: {
+	// 					node: {
+	// 						next: [{
+	// 							where: {
+	// 								edge: {
+	// 									id: selected.id
+	// 								}
+	// 							},
+	// 							update: {
+	// 								edge: {
+	// 									conditions: totalIds
+	// 								}
+	// 							}
+	// 						}]
+	// 					}
+	// 				}
+	// 			}],
+	// 			conditions: [{
+	// 				create: args.conditions.filter((a) => !a.id).map((condition, ix) => ({
 					
-							node: {
-								id: newIds[ix],
-								inputDevice: {
-									connect: {
-										where: {
-											node: {
-												 id: (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id : condition.inputDevice 
-											}
-										},
+	// 						node: {
+	// 							id: newIds[ix],
+	// 							inputDevice: {
+	// 								connect: {
+	// 									where: {
+	// 										node: {
+	// 											 id: (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id : condition.inputDevice 
+	// 										}
+	// 									},
 
-									},
-									disconnect: {
-										where: {
-											node: {
-												id_NOT: (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id : condition.inputDevice 
-											}
-										}
-									}
-								},
-								inputDeviceKey: {
-									connect: {
-										where: {
-											node: {
-												id: (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey
-											}
-										}
-									},
-									disconnect: {
-										where: {
-											node: {
-												id_NOT:  (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey
-											}
-										}
-									}
-								},
-								comparator: condition.comparator,
-								assertion: condition.assertion
-							}
+	// 								},
+	// 								disconnect: {
+	// 									where: {
+	// 										node: {
+	// 											id_NOT: (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id : condition.inputDevice 
+	// 										}
+	// 									}
+	// 								}
+	// 							},
+	// 							inputDeviceKey: {
+	// 								connect: {
+	// 									where: {
+	// 										node: {
+	// 											id: (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey
+	// 										}
+	// 									}
+	// 								},
+	// 								disconnect: {
+	// 									where: {
+	// 										node: {
+	// 											id_NOT:  (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey
+	// 										}
+	// 									}
+	// 								}
+	// 							},
+	// 							comparator: condition.comparator,
+	// 							assertion: condition.assertion
+	// 						}
 						
-					})),		 
-				},
-					...args.conditions.filter((a) => a.id).map((condition) => ({
-						where: {
-							node: {id: condition.id}
-						},
-						update: {
-							node: {
-								inputDevice: {connect: {where: {node: {id:  (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id :condition.inputDevice}}}},
-								inputDeviceKey: {connect: {where: {node: {id: (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey}}}},
-								comparator: condition.comparator,
-								assertion: condition.assertion
-							}
-						}
-					}))
+	// 				})),		 
+	// 			},
+	// 				...args.conditions.filter((a) => a.id).map((condition) => ({
+	// 					where: {
+	// 						node: {id: condition.id}
+	// 					},
+	// 					update: {
+	// 						node: {
+	// 							inputDevice: {connect: {where: {node: {id:  (typeof(condition.inputDevice) == "object") ? condition.inputDevice.id :condition.inputDevice}}}},
+	// 							inputDeviceKey: {connect: {where: {node: {id: (typeof(condition.inputDeviceKey) == "object") ? condition.inputDeviceKey.id : condition.inputDeviceKey}}}},
+	// 							comparator: condition.comparator,
+	// 							assertion: condition.assertion
+	// 						}
+	// 					}
+	// 				}))
 				
-				]
-			}
-		})
+	// 			]
+	// 		}
+	// 	})
 
-		// mutation.updateCommandProgramFlows({
-		// 	where: {n}
-		// })
-		return {
-			item: {
-				...res.commandProgramFlows?.[0]
-			}
-		}
-	})
+	// 	// mutation.updateCommandProgramFlows({
+	// 	// 	where: {n}
+	// 	// })
+	// 	return {
+	// 		item: {
+	// 			...res.commandProgramFlows?.[0]
+	// 		}
+	// 	}
+	// })
 
-	const [ removeNodeAction, removeNodeInfo ] = useMutation((mutation, args: {nodeId: string, id: string}) => {
-		const removeResult = mutation.updateCommandProgramNodes({
-			where: {id: args.nodeId},
-			update: {
-				actions: [{
-					delete: [{where: {node: {id: args.id}}}]
-				}]
-			}
-		})
+	// const [ removeNodeAction, removeNodeInfo ] = useMutation((mutation, args: {nodeId: string, id: string}) => {
+	// 	const removeResult = mutation.updateCommandProgramNodes({
+	// 		where: {id: args.nodeId},
+	// 		update: {
+	// 			actions: [{
+	// 				delete: [{where: {node: {id: args.id}}}]
+	// 			}]
+	// 		}
+	// 	})
 
-		return {
-			item: {
-				...removeResult.commandProgramNodes[0]
-			}
-		}
-	})
+	// 	return {
+	// 		item: {
+	// 			...removeResult.commandProgramNodes[0]
+	// 		}
+	// 	}
+	// })
 
-	const [ removePathConditions, removeInfo ] = useMutation((mutation, args: {id: string}) => {
-		const removeResult = mutation.updateCommandProgramFlows({
-			where: {id: activeProgram},
-			update: {
-				conditions: [{
-					delete: [{
-						where: {
-							node: {
-								id: args.id
-							}
-						}
-					}]
-				}]
-			}
-		})
-		return {
-			item: {
-				...removeResult?.commandProgramFlows?.[0]
-			}
-		}
-	})
+	// const [ removePathConditions, removeInfo ] = useMutation((mutation, args: {id: string}) => {
+	// 	const removeResult = mutation.updateCommandProgramFlows({
+	// 		where: {id: activeProgram},
+	// 		update: {
+	// 			conditions: [{
+	// 				delete: [{
+	// 					where: {
+	// 						node: {
+	// 							id: args.id
+	// 						}
+	// 					}
+	// 				}]
+	// 			}]
+	// 		}
+	// 	})
+	// 	return {
+	// 		item: {
+	// 			...removeResult?.commandProgramFlows?.[0]
+	// 		}
+	// 	}
+	// })
 
-	const [ updateNodeConfiguration, updateConfigurationInfo ] = useMutation((mutation, args: {
-		id: string,
-		actions?: {
-			id?: string;
-			device: {id: string} | string;
-			request: {id: string} | string;
-			release: boolean;
-		}[]
-		configuration?: {id?: string, key: string, value: string}[]
-	}) => {
+	// const [ updateNodeConfiguration, updateConfigurationInfo ] = useMutation((mutation, args: {
+	// 	id: string,
+	// 	actions?: {
+	// 		id?: string;
+	// 		device: {id: string} | string;
+	// 		request: {id: string} | string;
+	// 		release: boolean;
+	// 	}[]
+	// 	configuration?: {id?: string, key: string, value: string}[]
+	// }) => {
 
-		console.log(args.configuration)
+	// 	console.log(args.configuration)
 
-		let mutationElem = {}
+	// 	let mutationElem = {}
 
-		let actionMutation = {}
+	// 	let actionMutation = {}
 
-		if(args.actions){
-			actionMutation = {
-				actions: [{
-					create: args.actions.filter((a) => !a.id).map((action) => ({
-							node: {
-								release: action.release,
-								device: {connect: {where: {node: {id: typeof(action.device) == "object" ? action.device.id : action.device}}}},
-								request: {connect: {where: {node: {id: typeof(action.request) == "object" ? action.request.id : action.request, device: {usedIn: {id: typeof(action.device) == "object" ? action.device.id : action.device}}}}}}
-							}
-						}))
-					},
-					...args.actions.filter((a) => a.id).map((action) => ({
-						where: {node: {id: action.id}},
-						update: {	
-							node: {
-									release: action.release,
-									request: {
-										connect: {
-											where: {
-												node: {
-													id: typeof(action.request) == "object" ? action.request.id : action.request, 
-													device: {
-														usedIn: {
-															id: typeof(action.device) == "object" ? action.device.id : action.device
-														}
-													}
-												}
-											}
-										},
-										disconnect: {
-											where: {
-												node: {
-													id_NOT: typeof(action.request) == "object" ? action.request.id : action.request, 
-												}
-											}
-										}
-									},
-									device: {
-										connect: {
-											where: {
-												node: {
-													id: typeof(action.device) == "object" ? action.device.id : action.device
-												}
-											}
-										},
-										disconnect: {
-											where: {
-												node: {
-													id_NOT: typeof(action.device) == "object" ? action.device.id : action.device
-												}
-											}
-										}
-									}
-								}
-							}
-						}))
+	// 	if(args.actions){
+	// 		actionMutation = {
+	// 			actions: [{
+	// 				create: args.actions.filter((a) => !a.id).map((action) => ({
+	// 						node: {
+	// 							release: action.release,
+	// 							device: {connect: {where: {node: {id: typeof(action.device) == "object" ? action.device.id : action.device}}}},
+	// 							request: {connect: {where: {node: {id: typeof(action.request) == "object" ? action.request.id : action.request, device: {usedIn: {id: typeof(action.device) == "object" ? action.device.id : action.device}}}}}}
+	// 						}
+	// 					}))
+	// 				},
+	// 				...args.actions.filter((a) => a.id).map((action) => ({
+	// 					where: {node: {id: action.id}},
+	// 					update: {	
+	// 						node: {
+	// 								release: action.release,
+	// 								request: {
+	// 									connect: {
+	// 										where: {
+	// 											node: {
+	// 												id: typeof(action.request) == "object" ? action.request.id : action.request, 
+	// 												device: {
+	// 													usedIn: {
+	// 														id: typeof(action.device) == "object" ? action.device.id : action.device
+	// 													}
+	// 												}
+	// 											}
+	// 										}
+	// 									},
+	// 									disconnect: {
+	// 										where: {
+	// 											node: {
+	// 												id_NOT: typeof(action.request) == "object" ? action.request.id : action.request, 
+	// 											}
+	// 										}
+	// 									}
+	// 								},
+	// 								device: {
+	// 									connect: {
+	// 										where: {
+	// 											node: {
+	// 												id: typeof(action.device) == "object" ? action.device.id : action.device
+	// 											}
+	// 										}
+	// 									},
+	// 									disconnect: {
+	// 										where: {
+	// 											node: {
+	// 												id_NOT: typeof(action.device) == "object" ? action.device.id : action.device
+	// 											}
+	// 										}
+	// 									}
+	// 								}
+	// 							}
+	// 						}
+	// 					}))
 					
-				]
-			}
-		}
+	// 			]
+	// 		}
+	// 	}
 
-		if(args.configuration){
-			mutationElem = {
-				configuration: [{
-					create: args.configuration.filter((a) => !a.id).map((conf) => ({
-						node: {
-							key: conf.key,
-							value: conf.value
-						}
-					}))
-				}, ...args.configuration.filter((a) => a.id).map((conf) => ({
-					where: {
-						node: {id: conf.id}
-					},
-					update: {
-						node: {
-							key: conf.key,
-							value: conf.value
-						}
-					}
-				}))]
-			}
-		}
+	// 	if(args.configuration){
+	// 		mutationElem = {
+	// 			configuration: [{
+	// 				create: args.configuration.filter((a) => !a.id).map((conf) => ({
+	// 					node: {
+	// 						key: conf.key,
+	// 						value: conf.value
+	// 					}
+	// 				}))
+	// 			}, ...args.configuration.filter((a) => a.id).map((conf) => ({
+	// 				where: {
+	// 					node: {id: conf.id}
+	// 				},
+	// 				update: {
+	// 					node: {
+	// 						key: conf.key,
+	// 						value: conf.value
+	// 					}
+	// 				}
+	// 			}))]
+	// 		}
+	// 	}
 
-		const addActions = mutation.updateCommandProgramNodes({
+	// 	const addActions = mutation.updateCommandProgramNodes({
 
-			where: {id: args.id},
-			update: {
-				...mutationElem,
-				...actionMutation,
-				// actions: [{
-				// 	create: [{
-				// 		node: {
-				// 			request: {connect: {
-				// 				where: {
-				// 					node: {
-				// 						device: {
-				// 							usedIn: {
-				// 								id: 
-				// 							}
-				// 						}
-				// 					}
-				// 				}
-				// 			}}
-				// 		}
-				// 	}]
-				// }]
-			}
-		})
-		// if(!args.configuration.id){
-		// 	mutationElem = {
-		// 		create: [{
-		// 			node: {
-		// 				timer: args.configuration.timer,
-		// 				actions: args.configuration.actions.map((action) => ({
-		// 					node: {
-		// 						request: action.operation,
-		// 						device: {
-		// 							connect: {
-		// 								where: {node: {id: action.device}}
-		// 							}
-		// 						}
-		// 					}
-		// 				}))
-		// 			}
-		// 		}]
-		// 	}
-		// }else{
-		// 	mutationElem = {
-		// 		where: {
-		// 			node: {
-		// 				id: args.configuration.id
-		// 			}
-		// 		},
-		// 		update: {
-		// 			node: {
-		// 				timer: args.configuration.timer,
-		// 				actions: [{
-		// 					update: args.configuration.actions.map((action) => ({
-		// 						node: 	{
-		// 							request: action.operation, 
-		// 							device: {
-		// 								connect: {
-		// 									where: {node: {id: action.device}}
-		// 								}
-		// 							}
-		// 						}
-		// 					}))
-		// 				}]
-		// 			}
-		// 		},
+	// 		where: {id: args.id},
+	// 		update: {
+	// 			...mutationElem,
+	// 			...actionMutation,
+	// 			// actions: [{
+	// 			// 	create: [{
+	// 			// 		node: {
+	// 			// 			request: {connect: {
+	// 			// 				where: {
+	// 			// 					node: {
+	// 			// 						device: {
+	// 			// 							usedIn: {
+	// 			// 								id: 
+	// 			// 							}
+	// 			// 						}
+	// 			// 					}
+	// 			// 				}
+	// 			// 			}}
+	// 			// 		}
+	// 			// 	}]
+	// 			// }]
+	// 		}
+	// 	})
+	// 	// if(!args.configuration.id){
+	// 	// 	mutationElem = {
+	// 	// 		create: [{
+	// 	// 			node: {
+	// 	// 				timer: args.configuration.timer,
+	// 	// 				actions: args.configuration.actions.map((action) => ({
+	// 	// 					node: {
+	// 	// 						request: action.operation,
+	// 	// 						device: {
+	// 	// 							connect: {
+	// 	// 								where: {node: {id: action.device}}
+	// 	// 							}
+	// 	// 						}
+	// 	// 					}
+	// 	// 				}))
+	// 	// 			}
+	// 	// 		}]
+	// 	// 	}
+	// 	// }else{
+	// 	// 	mutationElem = {
+	// 	// 		where: {
+	// 	// 			node: {
+	// 	// 				id: args.configuration.id
+	// 	// 			}
+	// 	// 		},
+	// 	// 		update: {
+	// 	// 			node: {
+	// 	// 				timer: args.configuration.timer,
+	// 	// 				actions: [{
+	// 	// 					update: args.configuration.actions.map((action) => ({
+	// 	// 						node: 	{
+	// 	// 							request: action.operation, 
+	// 	// 							device: {
+	// 	// 								connect: {
+	// 	// 									where: {node: {id: action.device}}
+	// 	// 								}
+	// 	// 							}
+	// 	// 						}
+	// 	// 					}))
+	// 	// 				}]
+	// 	// 			}
+	// 	// 		},
 				
-		// 	}
-		// }
-		// const addAction = mutation.updateCommandProgramNodes({
-		// 	where: {id: args.id},
-		// 	update: {
-		// 		configuration: [{
-		// 			...mutationElem
-		// 			// create: args.configuration.filter((a) =)
-		// 			// [{
-		// 			// 	node: {
-		// 			// 		timer: 
-		// 			// 	}
-		// 			// }],
+	// 	// 	}
+	// 	// }
+	// 	// const addAction = mutation.updateCommandProgramNodes({
+	// 	// 	where: {id: args.id},
+	// 	// 	update: {
+	// 	// 		configuration: [{
+	// 	// 			...mutationElem
+	// 	// 			// create: args.configuration.filter((a) =)
+	// 	// 			// [{
+	// 	// 			// 	node: {
+	// 	// 			// 		timer: 
+	// 	// 			// 	}
+	// 	// 			// }],
 					 
-		// 		}]
-		// 	}
-		// })
+	// 	// 		}]
+	// 	// 	}
+	// 	// })
 
-		return {
-			item: {
-				...addActions.commandProgramNodes[0]
-			},
-			err: null
-		}
-	})
+	// 	return {
+	// 		item: {
+	// 			...addActions.commandProgramNodes[0]
+	// 		},
+	// 		err: null
+	// 	}
+	// })
 
 	const updateNodeConf = () => {
 		console.log(info);
@@ -504,14 +503,14 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 				value: info.conf[k]?.value
 			})
 		}
-		updateNodeConfiguration({
-			args: {
-				id: selected.id,
-				configuration: conf
-			}
-		}).then(() => {
-			// refetch()
-		})
+		// updateNodeConfiguration({
+		// 	args: {
+		// 		id: selected.id,
+		// 		configuration: conf
+		// 	}
+		// }).then(() => {
+		// 	// refetch()
+		// })
 	}
 
 
@@ -619,26 +618,28 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 											// if(item.id){
 												
 											// })
-											updateNodeConfiguration({
-												args: {
-													id: selected.id,
-													actions: [item],
-													configuration: []
-												}
 
-											}).then(() => {
-												refresh()
-											})
+
+											// updateNodeConfiguration({
+											// 	args: {
+											// 		id: selected.id,
+											// 		actions: [item],
+											// 		configuration: []
+											// 	}
+
+											// }).then(() => {
+											// 	refresh()
+											// })
 										}else{
 
-											updatePathConditions({
-												args: {
-													id: activeProgram,
-													conditions: [...(info[field.key].value || []), item],
-												}
-											}).then(() => {
-												refresh()
-											})
+											// updatePathConditions({
+											// 	args: {
+											// 		id: activeProgram,
+											// 		conditions: [...(info[field.key].value || []), item],
+											// 	}
+											// }).then(() => {
+											// 	refresh()
+											// })
 										}
 									}}
 									onDelete={() => {
@@ -647,25 +648,25 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 											setCreateSchema(undefined)
 											setSelected(undefined)
 
-											removeNodeAction({
-												args: {
-													nodeId: selected.id,
-													id: existingItem.id
-												}
-											}).then(() => {
-												refresh()
-											})
+											// removeNodeAction({
+											// 	args: {
+											// 		nodeId: selected.id,
+											// 		id: existingItem.id
+											// 	}
+											// }).then(() => {
+											// 	refresh()
+											// })
 										}else{
 											openModal(false)
 											setCreateSchema(undefined)
 											setSelected(undefined)
-											removePathConditions({
-												args: {
-													id: existingItem.id
-												}
-											}).then(() => {
-												refresh()
-											})
+											// removePathConditions({
+											// 	args: {
+											// 		id: existingItem.id
+											// 	}
+											// }).then(() => {
+											// 	refresh()
+											// })
 										}
 
 									}}

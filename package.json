@@ -18,13 +18,20 @@
   "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
   "devDependencies": {
     "@types/jest": "^27.0.3",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
     "jest": "^27.3.1",
     "lerna": "^4.0.0",
+    "process": "^0.11.10",
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.4"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.6",
+    "graphql": "15.x",
     "nanoid": "^3.1.30",
-    "node-opcua": "^2.50.0"
+    "node-opcua": "^2.50.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   }
 }

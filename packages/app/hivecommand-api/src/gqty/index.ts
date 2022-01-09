@@ -27,6 +27,7 @@ const queryFetcher: QueryFetcher = async function (query, variables) {
       variables,
     }),
     mode: "cors",
+    credentials: 'include'
   });
 
   const json = await response.json();
