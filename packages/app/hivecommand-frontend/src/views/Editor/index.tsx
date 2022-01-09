@@ -4,7 +4,6 @@ import { Box, Text, Spinner, Button, Collapsible, List } from 'grommet';
 import qs from 'qs';
 import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
-import { IFlowShardPaths } from '@hexhive/types/dist/interfaces';
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { ZoomControls } from '../../components/zoom-controls';
 import { NodeDropdown } from '../../components/node-dropdown';

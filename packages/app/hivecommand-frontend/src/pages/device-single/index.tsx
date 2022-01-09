@@ -9,7 +9,6 @@ import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
-import { connection } from 'mongoose';
 import { DeviceControlContext } from '../device-control/context';
 import { mapPort } from '@hive-command/api';
 export interface DeviceSingleProps {
