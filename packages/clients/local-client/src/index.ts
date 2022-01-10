@@ -8,6 +8,7 @@ import cleanup from 'node-cleanup'
 import { Controller } from './controller'
 import { Machine } from './machine'
 import path from 'path/posix';
+import { TerminalDisplay } from './display'
 
 export interface CommandEnvironment {
 	id: string;
@@ -36,6 +37,8 @@ export interface CommandClientOptions {
 	ignorePlugins?: string[];
 
 	pluginDir? : string;
+
+	blessed?: boolean;
 }
 
 export class CommandClient { 
@@ -51,6 +54,8 @@ export class CommandClient {
 	private identity : CommandIdentity;
 
 	private options : CommandClientOptions;
+
+	private display?: TerminalDisplay;
 
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
@@ -81,6 +86,10 @@ export class CommandClient {
 			machine: this.machine,
 		})
 		
+
+		if(opts.blessed){
+			this.display = new TerminalDisplay(this.machine)
+		}
 
 		cleanup(this.shutdown.bind(this))
 
@@ -133,7 +142,9 @@ export class CommandClient {
 
 	async stop(){
 		await this.machine?.shutdown()
+		this.display?.stop()
 	}
+
 
 	// Load the state machine and run
 	async start(){
@@ -173,6 +184,7 @@ export class CommandClient {
 
 		await this.machine?.start()
 
+		this.display?.start()
 		//Start network and share context with the mothership
 		// await this.network.start({
 		// 	hostname: self.identity?.named,

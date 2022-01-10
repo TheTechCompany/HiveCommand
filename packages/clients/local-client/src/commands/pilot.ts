@@ -4,6 +4,7 @@ import { CommandClient } from '../';
 const pkg = require('../../package.json')
 
 type Options = {
+	blessed: boolean;
 	storagePath: string | undefined;
 	privateKey?: string;
 	networkInterface: string | undefined;
@@ -20,6 +21,7 @@ type Options = {
   export const builder: CommandBuilder<Options, Options> = (yargs) =>
 	yargs
 	  .options({
+		  blessed: {type: 'boolean', default: true},
 		privateKey: {type: 'string'},
 		commander: { type: 'string' },
 		storagePath: {type: 'string'},
@@ -32,7 +34,7 @@ type Options = {
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { commander, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
+	const { commander, blessed, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
 
 	console.info(`Starting HiveCommand Pilot v${pkg.version}`);
 	
@@ -48,7 +50,8 @@ type Options = {
 		privateKey: key,
 		ignorePlugins: ignorePlugins ? ignorePlugins.split(',').map((x) => x.trim()) : [],
 		networkInterface: networkInterface,
-		discoveryServer
+		discoveryServer,
+		blessed
 	})
 
 	hostCommander.start().then(() => {
