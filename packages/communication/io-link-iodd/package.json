@@ -1,6 +1,6 @@
 {
   "name": "@io-link/iodd",
-  "version": "1.3.6-y.0",
+  "version": "1.4.0",
   "description": "",
   "main": "dist/index.js",
   "files": [
