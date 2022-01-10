@@ -20,7 +20,7 @@
     "ts-jest": "^27.0.7",
     "typescript": "^4.4.4"
   },
-  "gitHead": "5e230290b58b6c5b8530a7b534c58e13683119f6",
+  "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b",
   "dependencies": {
     "@hive-command/process": "^1.3.6-alpha.38",
     "dot": "^1.1.3",
