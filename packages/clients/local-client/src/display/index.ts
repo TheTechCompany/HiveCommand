@@ -5,7 +5,7 @@ export class TerminalDisplay {
 	private machine: Machine;
 
 	private screen: blessed.Widgets.Screen;
-
+	
 	private renderInterval?: NodeJS.Timer;
 
 	constructor(machine: Machine){
@@ -13,6 +13,33 @@ export class TerminalDisplay {
 	
 		this.screen = blessed.screen({
 			smartCSR: true
+		})
+
+		this.initDisplay()
+	}
+
+	initDisplay(){
+		blessed.box({
+			parent: this.screen,
+			top: 'top',
+			left: 'center',
+			width: '50%',
+			height: '2',
+			content: '{center}Command Center{/center}',
+			border: {
+				type: 'line'
+			}
+		})
+
+		blessed.box({
+			parent: this.screen,
+			top: 'center',
+			left: 'center',
+			width: '50%',
+			height: '50%',
+			border: {
+				type: 'line'
+			}
 		})
 	}
 
