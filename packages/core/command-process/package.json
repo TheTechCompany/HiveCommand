@@ -3,6 +3,9 @@
   "version": "1.3.6-alpha.37",
   "description": "",
   "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/"
   ],
@@ -17,5 +20,6 @@
     "jest": "^27.4.5",
     "ts-jest": "^27.1.1",
     "typescript": "^4.5.4"
-  }
+  },
+  "gitHead": "5e230290b58b6c5b8530a7b534c58e13683119f6"
 }
