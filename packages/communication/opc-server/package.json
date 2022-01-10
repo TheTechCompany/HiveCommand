@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-server",
-  "version": "1.3.6-alpha.38",
+  "version": "1.3.6-y.0",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
@@ -26,7 +26,7 @@
     "url": "https://github.com/TheTechCompany/sudbuster/issues"
   },
   "dependencies": {
-    "@hive-command/opcua-utils": "^1.3.6-alpha.38",
+    "@hive-command/opcua-utils": "^1.3.6-y.0",
     "node-opcua": "2.42.0"
   },
   "devDependencies": {
