@@ -42,7 +42,7 @@ type Options = {
 	if(privateKey){
 		key = readFileSync(privateKey, 'utf8')
 	}
-
+ 
 	const hostCommander = new CommandClient({
 		storagePath,
 		commandCenter,
