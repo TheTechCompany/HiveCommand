@@ -180,11 +180,13 @@ export class CommandClient {
 			}
 			await this.machine?.load(commandPayload)
 		}
+		
+		console.log("Starting display")
+		this.display?.start()
 
 
 		await this.machine?.start()
 
-		this.display?.start()
 		//Start network and share context with the mothership
 		// await this.network.start({
 		// 	hostname: self.identity?.named,
