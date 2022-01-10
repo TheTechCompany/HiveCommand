@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/plugin-base",
-  "version": "1.3.6-alpha.37",
+  "version": "1.3.6-alpha.38",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
