@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/subscription-lock",
-  "version": "1.3.5",
+  "version": "1.3.6-alpha.37",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
