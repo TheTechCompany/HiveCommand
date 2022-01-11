@@ -1,9 +1,11 @@
 import { readFileSync } from 'fs';
+import log from 'loglevel';
 import type { Arguments, CommandBuilder } from 'yargs';
 import { CommandClient } from '../';
 const pkg = require('../../package.json')
 
 type Options = {
+	logLevel?: string;
 	blessed: boolean;
 	storagePath: string | undefined;
 	privateKey?: string;
@@ -21,6 +23,7 @@ type Options = {
   export const builder: CommandBuilder<Options, Options> = (yargs) =>
 	yargs
 	  .options({
+		  logLevel: {type: 'string', default: 'info'},
 		  blessed: {type: 'boolean', default: true},
 		privateKey: {type: 'string'},
 		commander: { type: 'string' },
@@ -34,9 +37,9 @@ type Options = {
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { commander, blessed, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
+	const { commander, logLevel, blessed, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
 
-	console.info(`Starting HiveCommand Pilot v${pkg.version}`);
+	// console.info(`Starting HiveCommand Pilot v${pkg.version}`);
 	
 	let key = undefined;
 	if(privateKey){
@@ -45,6 +48,7 @@ type Options = {
  
 	const hostCommander = new CommandClient({
 		storagePath,
+		logLevel: logLevel ? (log.levels as any)[logLevel.toUpperCase()] : log.levels.INFO,
 		commandCenter,
 		healthCenter: healthCenter,
 		privateKey: key,
@@ -57,7 +61,7 @@ type Options = {
 	hostCommander.start().then(() => {
 		// process.exit(0);
 	}).catch((err) => {
-		console.log(err)
+		// console.log(err)
 	})
 
   };

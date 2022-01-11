@@ -14,7 +14,6 @@ export interface CommandClient {
 export enum CommandStateMachineMode {
 	AUTO,
 	MANUAL,
-	TIMER,
 	DISABLED
 }
 
@@ -89,7 +88,7 @@ export class CommandStateMachine extends EventEmitter {
 
 		this.client = client;
 
-		console.debug(`Initializing State Machine`)
+		// console.debug(`Initializing State Machine`)
 
 		this.processes = program.processes.map((x) => new Process(x, base_actions as any, this.performOperation, this.getByKey))
 

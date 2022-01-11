@@ -13,7 +13,7 @@ export const DeviceControlContext = React.createContext<{
 	performAction?: any;
 	actions?: any[],
 	operatingMode?: string,
-	toggleOperatingMode?: any,
+	changeOperationMode?: (mode: string) => void,
 }>({
 
 })

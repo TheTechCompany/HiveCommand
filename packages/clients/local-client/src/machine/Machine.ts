@@ -78,7 +78,7 @@ export class Machine {
 
 
 		let paths = flow?.nodes.map((action) => {
-			console.log(action.next)
+
 			return action.next?.map((next) => {
 				return {
 					id: nanoid(),
@@ -146,8 +146,8 @@ export class Machine {
 		}).filter((a) => a != undefined)
 
 		
-		console.log("FLOWS", flows)
-		console.log(`Received command payload, starting state machine`)
+		// console.log("FLOWS", flows)
+		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
 			devices: layout?.map((x) => ({
 				name: x.name, 
@@ -316,15 +316,12 @@ export class Machine {
 
 			writeOp = {};
 			for(var k in event.value){
-				// console.log(k, busPort.state)
 				let stateItem = busPort?.state?.find((a) => a.key == k)
-				console.log({stateItem})
+
 				if(!stateItem) continue;
 				let value = event.value[k];
 				if(stateItem.max && stateItem.min){
-					// console.log("Min max", stateItem.min, stateItem.max, value)
 					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
-					// console.log("Min max", stateItem.min, stateItem.max, value)
 
 					if(value > stateItem.max) value = stateItem.max
 					if(value < stateItem.min) value = stateItem.min
@@ -342,7 +339,6 @@ export class Machine {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		// if(Object.keys(changes).length > 0)console.log("Changes", changes)
 		if(Object.keys(changes).length < 1) return;
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
@@ -366,31 +362,7 @@ export class Machine {
 						writeOp[k] = port.value[k];
 					}
 				}
-				// 	console.log("PREV STATE", prevState)
-				// 	// let prevState = this.valueBank.get(event.bus, event.port)
-		
-				// 	// event.value = {
-				// 	// 	...prevState,
-				// 	// 	...event.value
-				// 	// }
-		
-				// 	writeOp = {...prevState};
-				// 	for(var k in event.value){
-				// 		let stateItem = busPort?.state?.find((a) => a.key == k)
-				// 		if(!stateItem) continue;
-				// 		writeOp[stateItem?.foreignKey] = event.value[k];
-				// 	}
-		
-				// }else{
-				// 	writeOp = event.value;
-				// }
-		
-				// //An object value is a partial state to merge before sending else its a value
-				// if(typeof(event.value) == "object"){
 				
-				// }
-		
-				// console.log("WRITE", port, writeOp)
 				
 				await plugin?.write(bus, port.port, writeOp);
 			}))
@@ -400,8 +372,6 @@ export class Machine {
 
 	setState(device: string, state: any){
 		// const busPort = this.deviceMap.getDeviceBusPort(device)
-
-		console.log("UPDATE DEV STATE", device, state)
 		this.fsm?.state.update(device, {
 			...state
 		})
@@ -423,20 +393,19 @@ export class Machine {
 				device: device,
 				value: operation
 			})
-			console.log("OP", operation)
-
 		
 	}
 
 	//Request state + translator for name
 	async requestOperation(event: {device: string, operation: string}){
-		console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
+		// console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
+	
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 		
 		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
 		let action = busPort.actions?.find((a) => a.key == event.operation)
-		console.log("Found action", action)
+
 		if(!action?.func) return;
 
 		let driverFunction = getDeviceFunction(action?.func)

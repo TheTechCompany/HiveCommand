@@ -77,13 +77,14 @@ export const useCreateDevice = (user: string) => {
 	@param {string} network_name - DNS prefix for the device
 	@param {string} program - program id to connect to
 */
-export const useUpdateDevice = () => {
+export const useUpdateDevice = (user: string) => {
   const [mutateFn] = useMutation(
     (
       mutation,
       args: { id: string; name: string; program?: string; network_name: string }
     ) => {
       let programUpdate = {};
+
       if (args.program) {
         programUpdate = {
           activeProgram: {
@@ -104,13 +105,35 @@ export const useUpdateDevice = () => {
           },
         };
       }
-      mutation.updateCommandDevices({
-        where: { id: args.id },
-        update: {
-          name: args.name,
-          network_name: args.network_name,
-        },
-      });
+
+	  const item = mutation.updateHiveOrganisations({
+		  where: { members: { id: user } },
+		  update: {
+			  commandDevices: [{
+				  where: {node: {id: args.id}},
+				  update: {
+					  node: {
+						  name: args.name,
+						  network_name: args.network_name,
+						  ...programUpdate
+					  }
+				  }
+			  }]
+		  }
+		})
+
+		return {
+			item: {
+				...item.hiveOrganisations?.[0]
+			}
+		}
+    //   mutation.updateCommandDevices({
+    //     where: { id: args.id },
+    //     update: {
+    //       name: args.name,
+    //       network_name: args.network_name,
+    //     },
+    //   });
     }
   );
   return async (

@@ -30,7 +30,7 @@ module.exports = (webpackConfigEnv, argv) => {
       }),
       new webpack.EnvironmentPlugin({
         ...process.env,
-        PUBLIC_URL: '/dashboard/command'
+        PUBLIC_URL: '/dashboard/hive-command'
       }), 
     ]
   });

@@ -12,13 +12,13 @@ export default gql`
 	}
 
 	type Mutation {
+		changeMode(deviceId: String, mode: String): Boolean
+
 		performDeviceAction(deviceId: String, deviceName: String, action: String): Boolean
 		changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): Boolean
-		changeMode(deviceId: String, mode: String): Boolean
+		
 		changeDeviceMode(deviceId: String, deviceName: String, mode: String): Boolean
 		requestFlow(deviceId: String, actionId: String): Boolean
-
-		createCommandProgram(name: String): CreateCommandProgramsMutationResponse
 	}
 
 	type CommandDeviceTimeseriesTotal @exclude {

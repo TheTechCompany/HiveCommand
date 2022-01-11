@@ -141,23 +141,6 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 			}
 		},
 		Mutation: {
-			createCommandProgram: async (root: any, args: {
-				name: string,
-			}, context: {ogm: OGM, jwt: any}, selectionSet: any) => {
-				const { ogm } = context
-				const CommandProgram = ogm.model("CommandProgram")
-			
-				console.log(CommandProgram)
-				// console.log(getProjection(selectionSet))
-				return await CommandProgram.create({
-					input: [{
-						name: args.name,
-						organisation: {
-							connect: {where: {node: {id: context.jwt.organisation}}}
-						}
-					}]
-				})	
-			},
 			requestFlow: async (root: any, args: any, context: any) => {
 				console.log(args)
 				const waitingId = nanoid()

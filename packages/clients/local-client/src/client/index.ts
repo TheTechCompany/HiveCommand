@@ -39,27 +39,28 @@ export class RevPiCommandClient {
 	}
 
 	async preStart(){
-		console.log("Pre Start. Fetching Identity");
+		// console.log("Pre Start. Fetching Identity");
 
 		return await whoami()
 	}
 
 	async start(){
 
-		console.log("Starting...")		
+		// console.log("Starting...")		
 
 		const identity = await this.preStart();
 		if(identity.error) return new Error(identity.error)
 		if(!identity.identity) return new Error("No identity/Identity Crisis");
 
-		console.log("Starting network...")
+		// console.log("Starting network...")
+
 		// await this.ioBus.start();
 		// await this.network.start(identity.identity?.named);
 
-		console.log("[Commander] Started")
+		// console.log("[Commander] Started")
 
-		console.log("[Commander] Hardware Info", JSON.stringify(this.hardwareInfo))
-		console.log("[Commander] Identity Info", JSON.stringify(this.identityManager.identity))
+		// console.log("[Commander] Hardware Info", JSON.stringify(this.hardwareInfo))
+		// console.log("[Commander] Identity Info", JSON.stringify(this.identityManager.identity))
 
 	}
 }

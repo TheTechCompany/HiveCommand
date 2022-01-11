@@ -15,7 +15,7 @@ import Controls from './views/control'
 import { DeviceControlGraph } from './views/graph'
 import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
-import { changeDeviceMode, changeDeviceValue, changeRootMode, performDeviceAction } from '@hive-command/api';
+import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, usePerformDeviceAction } from '@hive-command/api';
 
 export interface DeviceControlProps {
 
@@ -291,6 +291,12 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         }
     })
 
+    const changeMode = useChangeMode(id)
+
+    const changeDeviceMode = useChangeDeviceMode(id)
+    const changeDeviceValue = useChangeDeviceValue(id)
+    const performDeviceAction = usePerformDeviceAction(id)
+
     // const [performAction, performInfo] = useMutation((mutation, args: {
     //     deviceId: string,
     //     deviceName: string,
@@ -357,13 +363,13 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     }
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            client.refetchQueries({ include: ['DeviceValues'] })
-        }, 1 * 1000)
+        // const timer = setInterval(() => {
+        //     client.refetchQueries({ include: ['DeviceValues'] })
+        // }, 1 * 1000)
 
-        return () => {
-            clearInterval(timer)
-        }
+        // return () => {
+        //     clearInterval(timer)
+        // }
     }, [])
 
 
@@ -419,36 +425,25 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
 
 
-    // const [changeRootMode, changeModeInfo] = useMutation((mutation, args: { deviceId: string, mode: string }) => {
-    //     const item = mutation.changeMode({
-    //         deviceId: args.deviceId,
-    //         mode: args.mode
-    //     })
 
-    //     return {
-    //         item: {
-    //             ...item
-    //         }
-    //     }
-    // })
-
-    const toggleOperatingMode = () => {
-        if (rootDevice?.operatingMode == "AUTO") {
-            changeRootMode(
-                id,
-                "DISABLED"    
-            ).then(() => {
-                refetch()
-            })
-            //   setRootDevice({...rootDevice, operatingMode: "Manual"})
-        } else {
-            changeRootMode(
-                id,
-                "AUTO"
-            ).then(() => {
-                refetch()
-            })
-        }
+    const changeOperationMode = (mode: string) => {
+        changeMode(mode).then(() => {
+            refetch()
+        })
+        // if (rootDevice?.operatingMode == "AUTO") {
+        //     changeMode(
+        //         "DISABLED"    
+        //     ).then(() => {
+        //         refetch()
+        //     })
+        //     //   setRootDevice({...rootDevice, operatingMode: "Manual"})
+        // } else {
+        //     changeMode(
+        //         "AUTO"
+        //     ).then(() => {
+        //         refetch()
+        //     })
+        // }
     }
 
 
@@ -456,7 +451,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         <DeviceControlProvider value={{
             actions,
             waitingForActions,
-            toggleOperatingMode,
+            changeOperationMode,
             operatingMode: rootDevice?.operatingMode,
             controlId: id,
             program,

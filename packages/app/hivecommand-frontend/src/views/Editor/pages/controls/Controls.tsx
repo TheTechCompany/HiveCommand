@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Text, List, Button, Collapsible, TextInput, Select, CheckBox } from 'grommet'
-import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput } from '@hexhive/ui';
+import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { NodeDropdown  } from '../../../../components/node-dropdown';
 import { BallValve, Blower, Conductivity, Sump,  DiaphragmValve, UfMembrane, Filter, FlowSensor, PressureSensor, Pump, SpeedController, Tank, BlowerSparge, NfMembrane, DosingTank } from '../../../../assets/hmi-elements';
@@ -15,11 +15,23 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useUpdateHMIGroup, useUpdateHMINode } from '@hive-command/api';
+import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useUpdateHMINode } from '@hive-command/api';
+import { useCommandEditor } from '../../context';
+import { cleanTree } from '../../utils';
+import { ObjectTypeDefinitionNode } from 'graphql';
+import { ProgramCanvasModal } from '../../../../components/modals/program-canvas';
+import { EmptyView } from '../../components/empty-view';
 
 export const Controls = (props) => {
     
     const { id } = useParams()
+
+    const { sidebarOpen } = useCommandEditor()
+
+    const createProgramHMI = useCreateProgramHMI(id)
+
+    const [ activeView, setActiveView ] = useState<string>(undefined)
+    const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
 
@@ -451,16 +463,16 @@ export const Controls = (props) => {
         client.refetchQueries({include: ['Q']})
     }
 
-    const createHMINode = useCreateHMINode(id, props.activeProgram)
-    const updateHMINode = useUpdateHMINode(id, props.activeProgram)
+    const createHMINode = useCreateHMINode(id, activeView)
+    const updateHMINode = useUpdateHMINode(id, activeView)
 
-    const createHMIGroup = useCreateHMIGroup(id, props.activeProgram)
+    const createHMIGroup = useCreateHMIGroup(id, activeView)
     const updateHMIGroup = useUpdateHMIGroup()
 
-    const connectHMINode = useConnectHMINode(id, props.activeProgram)
-    const assignHMINode = useAssignHMINode(id, props.activeProgram)
+    const connectHMINode = useConnectHMINode(id, activeView)
+    const assignHMINode = useAssignHMINode(id, activeView)
 
-    const createHMIAction = useCreateHMIAction(id, props.activeProgram)
+    const createHMIAction = useCreateHMIAction(id, activeView)
     
 
 
@@ -468,16 +480,17 @@ export const Controls = (props) => {
     const flows = data?.commandPrograms?.[0]?.program;
     let program = data?.commandPrograms?.[0]
 
-    let activeProgram = (program?.hmi)?.find((a) => a.id == props.activeProgram)
+    let activeProgram = (program?.hmi)?.find((a) => a.id == activeView)
 
     console.log({flows})
     
     useEffect(() => {
         let program = data?.commandPrograms?.[0]
-        if(program && props.activeProgram){
+        if(program && activeView){
 
-            console.log("GROUPS", (program.hmi).find((a) => a.id == props.activeProgram).groups)
-           let activeProgram = (program.hmi).find((a) => a.id == props.activeProgram)
+            // console.log("GROUPS", (program.hmi).find((a) => a.id == activeView)?.groups)
+
+           let activeProgram = (program.hmi).find((a) => a.id == activeView)
             let nodes = activeProgram?.nodes || []
             let groups = activeProgram?.groups || []
             setNodes(nodes.map((x) => ({
@@ -525,7 +538,7 @@ export const Controls = (props) => {
                 }
             }))))
 
-            setPaths((program.hmi).find((a) => a.id == props.activeProgram).paths.map((x) => {
+            setPaths((program.hmi).find((a) => a.id == activeView).paths.map((x) => {
                 return {
                     id: x.id,
                     source: x?.source?.id,
@@ -538,7 +551,7 @@ export const Controls = (props) => {
                 return prev.concat(curr)
             }, []))
         }
-    }, [data?.commandPrograms?.[0], props.activeProgram])
+    }, [data?.commandPrograms?.[0], activeView])
 
   
     const changeMenu = (view: string) => {
@@ -727,8 +740,7 @@ export const Controls = (props) => {
                                     refetch()
                                 })
 
-                            }}
-                            />
+                            }} />
                       
                         <Box>
                  
@@ -760,6 +772,86 @@ export const Controls = (props) => {
 		<Box 
             direction="row"
             flex>
+
+                <Collapsible    
+                    direction="horizontal"
+                    open={sidebarOpen}>
+                    <Box 
+                        elevation='small'
+                        flex
+                        width="small">
+                        {/* <Box 
+                            pad="xsmall"
+                            border={{side: 'bottom', size: 'small'}}
+                            direction="row" 
+                            align="center" 
+                            justify="between">
+                            <Text size="small">{view}</Text>
+                            <Button
+                                onClick={() => {
+                                    if(view == "Program"){
+                                        addProgram().then(() => {
+                                            refetch()
+                                        })
+                                    }else{
+                                        addHMI().then(() => {
+                                            refetch()
+                                        })
+                                    }
+                                 
+                                }}
+                                hoverIndicator
+                                plain
+                                style={{padding: 6, borderRadius: 3}}
+                                icon={<Add size="small" />} />
+                        </Box> */}
+                
+                <ProgramCanvasModal
+                    open={modalOpen}
+                    onSubmit={(item) => {
+                            let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
+                            createProgramHMI(item.name, parent).then(() => {
+                                refetch()
+                            })
+          
+                        
+                        openModal(false)
+                    }}
+                    onClose={() => {
+                        setSelectedItem(undefined)
+                        openModal(false)
+                    }}
+                    modal={(gql`
+                        type Project {
+                            name: String
+                        }
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "Project") as ObjectTypeDefinitionNode} />
+                        <HyperTree 
+                            id="editor-menu"
+                            onCreate={(node) => {
+                                console.log("CREATE", node)
+                                setSelectedItem(node.data)
+                                openModal(true)
+                            }}
+                            onSelect={(node) => {
+                                if(node.data.id !== 'root'){
+                                    setActiveView(node.data.id)
+                                }
+                            }}
+                            data={[{
+                                id: 'root',
+                                name: "HMI",
+                                children: cleanTree(program?.hmi) || []
+                            }]} />
+                        {/* <List 
+                            onClickItem={({item}) => {
+                                console.log(item)
+                                setActiveProgram(item.id)
+                            }}
+                            primaryKey="name"
+                            data={view == "Program" ? program.program : program.hmi} /> */}
+                    </Box>
+                </Collapsible>
             <AssignFlowModal   
                 flows={flows}
                 onClose={() => openAssignModal(false)}
@@ -801,7 +893,7 @@ export const Controls = (props) => {
                 }}
                 onClose={() => openModal(false)}
                 nodeMenu={nodeMenu} />
-			<InfiniteCanvas
+			{activeView != undefined ?  (<InfiniteCanvas
                 snapToGrid={false}
                 onDelete={watchEditorKeys}
                 onSelect={(key, id) => {
@@ -939,7 +1031,9 @@ export const Controls = (props) => {
                 >
   
                 <ZoomControls anchor={{vertical: 'bottom', horizontal: 'right'}} />
-            </InfiniteCanvas>
+            </InfiniteCanvas>) : (
+                <EmptyView label="HMI" />
+            )}
            
             <Box background="accent-1" >
                 <Button

@@ -1,4 +1,7 @@
 import process from 'process'
+
+import log, { LogLevelDesc} from 'loglevel'
+
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandLogging } from '@hive-command/logging'
 
@@ -9,6 +12,8 @@ import { Controller } from './controller'
 import { Machine } from './machine'
 import path from 'path/posix';
 import { TerminalDisplay } from './display'
+
+const pkg = require('../package.json')
 
 export interface CommandEnvironment {
 	id: string;
@@ -39,6 +44,8 @@ export interface CommandClientOptions {
 	pluginDir? : string;
 
 	blessed?: boolean;
+
+	logLevel?: LogLevelDesc
 }
 
 export class CommandClient { 
@@ -55,14 +62,16 @@ export class CommandClient {
 
 	private options : CommandClientOptions;
 
-	private display?: TerminalDisplay;
 
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
 		this.logs = new CommandLogging();
 
-		this.logs.log(`Starting Command Client...`);
+		log.setLevel(opts.logLevel || 'info')
+
+		log.info(`Starting HiveCommand Client: v${pkg.version}`)
+		// this.logs.log(`Starting Command Client...`);
 
 		this.identity = new CommandIdentity({
 			identityServer: opts.commandCenter || 'http://localhost:8080',
@@ -87,9 +96,6 @@ export class CommandClient {
 		})
 		
 
-		if(opts.blessed){
-			this.display = new TerminalDisplay(this.machine)
-		}
 
 		cleanup(this.shutdown.bind(this))
 
@@ -142,7 +148,6 @@ export class CommandClient {
 
 	async stop(){
 		await this.machine?.shutdown()
-		this.display?.stop()
 	}
 
 
@@ -151,7 +156,7 @@ export class CommandClient {
 		//Find IO-Buses and Connected Devices
 		this.environment = await this.machine?.discoverEnvironment() || []
 
-		this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
+		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
 		const self = await this.identity.whoami()
@@ -160,15 +165,16 @@ export class CommandClient {
 
 		await this.identity.provideContext(this.environment, this.identity.identity)
 
-		this.logs.log(`Found self ${JSON.stringify(self)}`)
+		// this.logs.log(`Found self ${JSON.stringify(self)}`)
 
 		const credentials = await this.controller.becomeSelf(self)
 
-		this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
+		// this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 
 		//Get our command payload
 
 		const commandPayload = await this.identity.getPurpose()
+
 		if(commandPayload.payload){
 
 			if(commandPayload.payload.layout){
@@ -181,9 +187,9 @@ export class CommandClient {
 			await this.machine?.load(commandPayload)
 		}
 		
-		console.log("Starting display")
-		this.display?.start()
+		// this.display?.start()
 
+		// this.display?.render()
 
 		await this.machine?.start()
 

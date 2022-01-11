@@ -20410,7 +20410,7 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   SortDirection: true,
   String: true,
 };
-export const generatedSchema: any = {
+export const generatedSchema : any = {
   CartesianPoint: {
     __typename: { __type: "String!" },
     crs: { __type: "String!" },

@@ -25,13 +25,13 @@ export class PluginBank {
 			}
 		}
 
-		console.log(this.config.plugins)
+		// console.log(this.config.plugins)
 
 		let plugins = this.config.plugins?.map((plugin) => {
 			const path = require.resolve(plugin, {
 				paths: [opts.pluginDir]
 			})
-			console.log(path)
+			// console.log(path)
 			if(path) return require(path).default
 		}).filter((a) => a != undefined);
 
@@ -41,7 +41,7 @@ export class PluginBank {
 
 		// this.plugins = plugins?.map((plugin) => new plugin()) || []
 
-		console.log("Loaded Plugins", this.plugins);
+		// console.log("Loaded Plugins", this.plugins);
 		
 	}
 
@@ -54,7 +54,7 @@ export class PluginBank {
 		let environment = await Promise.all(this.plugins.filter((a) => (this.config.ignorePlugins || []).indexOf(a.TAG) < 0).map(async (plugin) => {
 			const discovered = await plugin.discover()
 
-			console.log("Discovered Plugin Environment", discovered);
+			// console.log("Discovered Plugin Environment", discovered);
 			return {
 				plugin: plugin.TAG,
 				discovered

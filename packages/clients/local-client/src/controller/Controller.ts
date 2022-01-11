@@ -7,6 +7,8 @@
 
 	SyncClient -> OPCUA -> Controller -> Machine
 */
+import log from 'loglevel'
+
 import { AssignmentPayload, CommandNetwork, ValueBankInterface } from "@hive-command/network";
 import { CommandStateMachineMode } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
@@ -47,11 +49,6 @@ export class Controller {
 						type: DataType.String,
 						get: () => {
 							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
-						},
-						set: (value) => {
-							this.machine?.changeMode((CommandStateMachineMode as any)[value.value.toString().toUpperCase()])
-							return StatusCodes.Good;
-	
 						}
 					}
 				},
@@ -147,7 +144,13 @@ export class Controller {
 						],
 						func: async (inputs) => {
 							const [ mode ] = inputs;
-							await this.machine?.changeMode((CommandStateMachineMode as any)[mode.value.toString().toUpperCase()])
+
+							let newMode = (CommandStateMachineMode as any)[mode.value.toString().toUpperCase()]
+
+							log.info(`Changing machine mode to ${newMode}`)
+							
+							await this.machine?.changeMode(newMode)
+
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					}

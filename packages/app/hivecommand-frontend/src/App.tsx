@@ -12,9 +12,9 @@ const authServer = process.env.REACT_APP_API
   : "http://localhost:7000";
 
 const client = new ApolloClient({
-  uri: process.env.REACT_APP_API
+  uri: `${process.env.REACT_APP_API
     ? `${process.env.REACT_APP_API}/graphql`
-    : "http://localhost:7000/graphql",
+    : "http://localhost:7000/graphql"}?appliance=HiveCommand`,
   cache: new InMemoryCache(),
   credentials: "include",
 });

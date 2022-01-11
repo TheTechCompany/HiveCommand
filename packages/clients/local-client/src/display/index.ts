@@ -19,20 +19,23 @@ export class TerminalDisplay {
 	}
 
 	initDisplay(){
-		blessed.box({
-			parent: this.screen,
+		const header = blessed.box({
+			// parent: this.screen,
 			top: 'top',
 			left: 'center',
 			width: '50%',
-			height: '2',
+			height: '10%',
+			tags: true,
 			content: '{center}Command Center{/center}',
 			border: {
 				type: 'line'
 			}
 		})
 
-		blessed.box({
-			parent: this.screen,
+		this.screen.append(header)
+
+		const content = blessed.box({
+			// parent: this.screen,
 			top: 'center',
 			left: 'center',
 			width: '50%',
@@ -41,12 +44,16 @@ export class TerminalDisplay {
 				type: 'line'
 			}
 		})
+
+		this.screen.append(content)
 	}
 
 	start(){
 		this.renderInterval = setInterval(() => {
 			this.render()
 		}, 100)
+		this.render()
+		this.screen.program.emit('resize')
 	}
 
 	stop(){

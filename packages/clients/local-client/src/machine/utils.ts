@@ -1,6 +1,5 @@
 
 	export const getBlockType = (type: string) => {
-		console.log("Get TYpe", type)
 		switch(type){
 			case 'Connect':
 				return 'sub-process';
