@@ -54,7 +54,7 @@
     "@hexhive/auth-ui": "0.0.6-alpha.10",
     "@hexhive/styles": "^0.0.6-alpha.0",
     "@hexhive/ui": "^0.0.6-alpha.11",
-    "@hive-command/api": "^1.0.0",
+    "@hive-command/api": "^1.4.1-alpha.2",
     "@neo4j/graphql-ogm": "^2.5.5",
     "@svgr/core": "^6.1.2",
     "@types/jest": "^26.0.23",
