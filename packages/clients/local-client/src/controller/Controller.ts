@@ -65,6 +65,7 @@ export class Controller {
 							}
 						],
 						func: async (inputs) => {
+							log.debug('Controller:start')
 							await this.machine?.start()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
@@ -80,6 +81,7 @@ export class Controller {
 							}
 						],
 						func: async (inputs) => {
+							log.debug('Controller:shutdown')
 
 							await this.machine?.shutdown()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
@@ -96,7 +98,7 @@ export class Controller {
 							}
 						],
 						func: async (inputs) => {
-
+							log.debug('Controller:standby')
 							await this.machine?.standby()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
