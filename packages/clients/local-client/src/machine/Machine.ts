@@ -15,6 +15,7 @@ import { DeviceMap } from "./DeviceMap";
 import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
+import log from "loglevel";
 
 export class Machine {
 
@@ -272,11 +273,18 @@ export class Machine {
 	}
 
 	async start(){
+		log.info("Starting state machine")
 		await this.fsm.start();
 	}
 
 	async shutdown(){
+		log.info("Stopping state machine")
 		await this.fsm.stop();
+	}
+
+	async standby(){
+		log.info("Pausing state machine")
+		await this.fsm.standby()
 	}
 
 	async runOneshot(processId: string){

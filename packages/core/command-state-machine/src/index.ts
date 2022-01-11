@@ -304,6 +304,10 @@ export class CommandStateMachine extends EventEmitter {
 		// }
 	}
 
+	async standby(){
+		
+	}
+
 	async stop(){
 		// await Promise.all(this.processes.map(async (x) => await x.stop()))
 		this.running = false;

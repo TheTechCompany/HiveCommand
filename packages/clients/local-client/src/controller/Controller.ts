@@ -85,6 +85,22 @@ export class Controller {
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},
+					standby: {
+						inputs: [
+
+						],
+						outputs: [
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
+						],
+						func: async (inputs) => {
+
+							await this.machine?.standby()
+							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+						}
+					},
 					skipTo: {
 						inputs: [
 							{

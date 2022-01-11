@@ -288,6 +288,42 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 				return await channel.sendToQueue(`COMMAND:MODE`, Buffer.from(JSON.stringify(actionRequest)))
 			},
+			changeState: async (root: any, args: {deviceId: string, state: string}) => {
+				if(args.state != "on" && args.state != "off" && args.state != "standby"){
+					throw new Error("Invalid state")
+				} 
+
+				const device = await session.readTransaction(async (tx) => {
+
+					const res = await tx.run(`
+						MATCH (device:CommandDevice {id: $id})
+						RETURN device{.*}
+					`, {
+						id: args.deviceId
+					})
+					return res.records?.[0]?.get(0)
+				})
+
+				let actionRequest = {
+					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
+					deviceId: args.deviceId,
+					mode: args.state
+				}
+
+				await session.writeTransaction(async (tx) => {
+					await tx.run(`
+						MATCH (device:CommandDevice {id: $id})
+						SET device.operatingState = $state
+						RETURN device
+					`, {
+						id: args.deviceId,
+						state: args.state
+					})
+				})
+
+				return await channel.sendToQueue(`COMMAND:STATE`, Buffer.from(JSON.stringify(actionRequest)))
+
+			},
 			changeDeviceMode: async (root: any, args: {
 				deviceId: string,
 				deviceName: string,

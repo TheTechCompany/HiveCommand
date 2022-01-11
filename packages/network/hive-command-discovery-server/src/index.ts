@@ -135,6 +135,7 @@ export class DiscoveryServer {
         channel.assertQueue(`COMMAND:DEVICE:VALUE`);
         channel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
         channel.assertQueue(`COMMAND:MODE`)
+        channel.assertQueue(`COMMAND:STATE`)
 
         this.requestConsumer = channel;
 
@@ -198,6 +199,28 @@ export class DiscoveryServer {
 
             await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:changeMode`, [stateUpdate.mode])
          
+        }, {
+            noAck: true
+        })
+
+        channel.consume(`COMMAND:STATE`, async (msg) => {
+            let stateUpdate: {
+                address: string,
+                state: string,
+            } = JSON.parse(msg?.content.toString() || '{}')
+
+            if(!stateUpdate.address) return console.error(`No address in value event`)
+
+            switch(stateUpdate.state){
+                case 'on':
+                    await this.syncClient.callMethod(stateUpdate.address, `/Object/1:Controller/1:Machine`, `/1:start`, [])
+                case 'off':
+                    await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:shutdown`, [])
+                case 'standby':
+                    await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:standby`, [])
+                default:
+                    console.error(`Unknown state ${stateUpdate.state}`)
+            }
         }, {
             noAck: true
         })
