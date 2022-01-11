@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { Machine } from "."
 import { BasePlugin } from "@hive-command/plugin-base"
-
+import log from 'loglevel'
 
 export class PluginBank {
 	private machine: Machine;
@@ -39,6 +39,7 @@ export class PluginBank {
 
 		this.plugins = plugins?.map((x) => new x()) || [];
 
+		log.info(`Loaded ${this.plugins.length} plugins`)
 		// this.plugins = plugins?.map((plugin) => new plugin()) || []
 
 		// console.log("Loaded Plugins", this.plugins);
