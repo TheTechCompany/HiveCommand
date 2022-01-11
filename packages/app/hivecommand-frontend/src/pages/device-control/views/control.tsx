@@ -47,14 +47,30 @@ export default () => {
 		// }
 	]
 
-	const [operating, setOperating] = useState<string>('disabled')
+	// const [operating, setOperating] = useState<string>('disabled')
 
     const [ infoTarget, setInfoTarget ] = useState<{x?: number, y?: number}>(undefined);
     const [ selected, setSelected ] = useState<{key?: string, id?: string}>(undefined)
 
     const [ workingState, setWorkingState ] = useState<any>({})
 
-	const { waitingForActions, changeOperationMode, operatingMode, program, actions, values, hmi, hmiNodes, groups, changeDeviceMode, changeDeviceValue, performAction, controlId } = useContext(DeviceControlContext)
+	const { 
+		waitingForActions, 
+		changeOperationMode,
+		changeOperationState, 
+		operatingMode, 
+		operatingState,
+		program, 
+		actions, 
+		values, 
+		hmi, 
+		hmiNodes, 
+		groups, 
+		changeDeviceMode, 
+		changeDeviceValue, 
+		performAction, 
+		controlId 
+	} = useContext(DeviceControlContext)
 
 	console.log({operatingMode, waitingForActions, actions})
 
@@ -284,23 +300,25 @@ export default () => {
 
 						<Box direction='row' align="center">
 							<FormControl
-								value={operating}
+								value={operatingMode}
 								valueKey='key'
 								onChange={(value) => {
 									changeOperationMode(value)
 									// console.log(value)
-									setOperating(value)
+									// setOperating(value)
 								}}
 								placeholder='Mode'
 								labelKey='label'
 								options={operatingModes} />
 						</Box>
 						<ActionButton 
-							disabled={operating == 'disabled'}
-							onClick={() => alert("LINK TOGGLE TO CONTROLS")}
-							label={operatingMode == "DISABLED" ? "Start" : "Shutdown"} />
+							disabled={operatingMode == 'disabled'}
+							onClick={() =>  {
+								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
+							}}
+							label={(!operatingState || operatingState == "off") ? "Start" : "Shutdown"} />
 					</Box>
-					{operating == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
+					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
 						<Text>Commands</Text>
 						<Box gap="xsmall">
 							{actions.map((action) => (

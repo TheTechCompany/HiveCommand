@@ -13,6 +13,8 @@ export default gql`
 
 	type Mutation {
 		changeMode(deviceId: String, mode: String): Boolean
+		changeState(deviceId: String, state: String): Boolean
+		
 
 		performDeviceAction(deviceId: String, deviceName: String, action: String): Boolean
 		changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): Boolean

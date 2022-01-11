@@ -15,7 +15,7 @@ import Controls from './views/control'
 import { DeviceControlGraph } from './views/graph'
 import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
-import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, usePerformDeviceAction } from '@hive-command/api';
+import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, usePerformDeviceAction } from '@hive-command/api';
 
 export interface DeviceControlProps {
 
@@ -68,6 +68,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             commandDevices(where: {id: $id}){
                 name
                 operatingMode
+                operatingState
 
                 online
                 calibrations {
@@ -292,6 +293,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     })
 
     const changeMode = useChangeMode(id)
+    const changeState = useChangeState(id)
 
     const changeDeviceMode = useChangeDeviceMode(id)
     const changeDeviceValue = useChangeDeviceValue(id)
@@ -432,13 +434,20 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         })
     }
 
+    const changeOperationState = (state: "on" | "off" | "standby") => {
+        changeState(state).then(() => {
+            refetch()
+        })
+    }
 
     return (
         <DeviceControlProvider value={{
             actions,
             waitingForActions,
             changeOperationMode,
+            changeOperationState,
             operatingMode: rootDevice?.operatingMode,
+            operatingState: rootDevice?.operatingState,
             controlId: id,
             program,
             values,

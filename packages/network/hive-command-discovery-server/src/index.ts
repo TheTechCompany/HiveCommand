@@ -116,6 +116,7 @@ export class DiscoveryServer {
 
     async onSocketDisconnect(socket: Socket){
         await this.data.updateLiveness((socket as any)?.networkName, false)
+        await this.data.updateMode((socket as any)?.networkName, 'disabled')
         // await Device.updateOne({_id: (socket as any)?.machine_info.id}, {$set: {connected: false}})
         socket.removeAllListeners();
     }
@@ -196,11 +197,7 @@ export class DiscoveryServer {
             }
 
             await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:changeMode`, [stateUpdate.mode])
-            //else if(stateUpdate.mode == "AUTO"){
-            //     await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:start`, [])
-            // }
-
-            // await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:changeMode`, [stateUpdate.mode])
+         
         }, {
             noAck: true
         })

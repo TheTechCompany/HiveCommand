@@ -35,6 +35,23 @@ export class HiveCommandData {
 
 	}
 
+	async updateMode(network_name: string, mode: string){
+		const session = this.driver.session()
+		
+		await session.writeTransaction(async (tx) => {
+			await tx.run(`
+				MATCH (device:CommandDevice {network_name: $network_name})
+				SET device.operatingMode = $mode
+				RETURN device
+			`, {
+				network_name: network_name,
+				mode: mode
+			})
+		})
+
+		await session.close()
+	}
+
 	async updateLiveness(id: string, live?: boolean){
 		const session = this.driver.session()
 		console.log("Update liveness")

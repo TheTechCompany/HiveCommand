@@ -22,6 +22,7 @@ type CommandDevice @auth(rules: [
 	peripherals: [CommandDevicePeripheral] @relationship(type: "HAS_PERIPHERAL", direction: OUT)
 	
 	operatingMode: String
+	operatingState: String
 
 	waitingForActions: [CommandProgramAction] @relationship(type: "WAITING_FOR", direction: OUT)
 

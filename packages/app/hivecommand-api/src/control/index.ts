@@ -56,6 +56,9 @@ export const useChangeDeviceValue = (deviceId: string) => {
 	}
 }
 
+/*
+	Perform action on controlled device
+*/
 export const usePerformDeviceAction = (deviceId: string) => {
 	const [ mutateFn ] = useMutation((mutation, args: {action: string, deviceName: string}) => {
 		const item = mutation.performDeviceAction({
@@ -81,6 +84,10 @@ export const usePerformDeviceAction = (deviceId: string) => {
 	}
 }
 
+
+/* 
+	Change the operating mode for the controller.
+*/
 export const useChangeMode = (deviceId: string) => {
 	const [ mutateFn ] = useMutation((mutation, args: {mode: string}) => {
 		const item = mutation.changeMode({
@@ -101,8 +108,36 @@ export const useChangeMode = (deviceId: string) => {
 	}
 }
 
+/*
+	Change the state of the controller.
 
+	@param state {string} - The state to set. Valid values are: "on", "off", "standby"
+*/
+export const useChangeState = (deviceId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {state: string}) => {
 
+		const item = mutation.changeState({
+			deviceId,
+			state: args.state
+		})
+
+		return {
+			item
+		}
+	})
+
+	return async (state: "on" | "off" | "standby") => {
+		return await mutateFn({
+			args: {
+				state
+			}
+		})
+	}
+}
+
+/*
+	Request flow to run
+*/
 export const useRequestFlow = (deviceId: string) => {
 	const [ mutateFn ] = useMutation((mutation, args: {actionId: string}) => {
 		const item = mutation.requestFlow({

@@ -584,6 +584,7 @@ export interface CommandDeviceCreateInput {
   network_name?: InputMaybe<Scalars["String"]>;
   online?: InputMaybe<Scalars["Boolean"]>;
   operatingMode?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationFieldInput>;
   peripherals?: InputMaybe<CommandDevicePeripheralsFieldInput>;
   waitingForActions?: InputMaybe<CommandDeviceWaitingForActionsFieldInput>;
@@ -1099,6 +1100,26 @@ export interface CommandDevicePeripheralDeviceNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandDevicePeripheralDeviceUpdateConnectionInput {
@@ -3295,6 +3316,7 @@ export interface CommandDeviceSort {
   network_name?: InputMaybe<SortDirection>;
   online?: InputMaybe<SortDirection>;
   operatingMode?: InputMaybe<SortDirection>;
+  operatingState?: InputMaybe<SortDirection>;
 }
 
 export interface CommandDeviceUniqueWhere {
@@ -3309,6 +3331,7 @@ export interface CommandDeviceUpdateInput {
   network_name?: InputMaybe<Scalars["String"]>;
   online?: InputMaybe<Scalars["Boolean"]>;
   operatingMode?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationUpdateFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsUpdateFieldInput>>;
   waitingForActions?: InputMaybe<
@@ -3485,6 +3508,16 @@ export interface CommandDeviceWhere {
   operatingMode_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
   operatingMode_NOT_STARTS_WITH?: InputMaybe<Scalars["String"]>;
   operatingMode_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
+  operatingState_CONTAINS?: InputMaybe<Scalars["String"]>;
+  operatingState_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  operatingState_NOT?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_CONTAINS?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  operatingState_NOT_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_STARTS_WITH?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<HiveOrganisationWhere>;
   organisationAggregate?: InputMaybe<CommandDeviceOrganisationAggregateInput>;
   organisationConnection?: InputMaybe<CommandDeviceOrganisationConnectionWhere>;
@@ -9749,6 +9782,26 @@ export interface CommandProgramDeviceCalibrationRootDeviceNodeAggregationWhereIn
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandProgramDeviceCalibrationRootDeviceUpdateConnectionInput {
@@ -16388,6 +16441,26 @@ export interface CommandProgramUsedOnNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandProgramUsedOnUpdateConnectionInput {
@@ -18231,6 +18304,26 @@ export interface HiveOrganisationCommandDevicesNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface HiveOrganisationCommandDevicesUpdateConnectionInput {
@@ -20826,6 +20919,7 @@ export const generatedSchema : any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: {
       __type: "HiveOrganisation",
       __args: {
@@ -21012,6 +21106,7 @@ export const generatedSchema : any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandDeviceCalibrationsAggregateInput: {
     AND: { __type: "[CommandDeviceCalibrationsAggregateInput!]" },
@@ -21228,6 +21323,7 @@ export const generatedSchema : any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationFieldInput" },
     peripherals: { __type: "CommandDevicePeripheralsFieldInput" },
     waitingForActions: { __type: "CommandDeviceWaitingForActionsFieldInput" },
@@ -21458,6 +21554,7 @@ export const generatedSchema : any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandDevicePeripheralCommandDevicePeripheralMapMappedDevicesAggregationSelection:
     {
@@ -21904,6 +22001,26 @@ export const generatedSchema : any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandDevicePeripheralDeviceRelationship: {
     __typename: { __type: "String!" },
@@ -24565,6 +24682,7 @@ export const generatedSchema : any = {
     network_name: { __type: "SortDirection" },
     online: { __type: "SortDirection" },
     operatingMode: { __type: "SortDirection" },
+    operatingState: { __type: "SortDirection" },
   },
   CommandDeviceTimeseriesData: {
     __typename: { __type: "String!" },
@@ -24587,6 +24705,7 @@ export const generatedSchema : any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationUpdateFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsUpdateFieldInput!]" },
     waitingForActions: {
@@ -24782,6 +24901,16 @@ export const generatedSchema : any = {
     operatingMode_NOT_IN: { __type: "[String]" },
     operatingMode_NOT_STARTS_WITH: { __type: "String" },
     operatingMode_STARTS_WITH: { __type: "String" },
+    operatingState: { __type: "String" },
+    operatingState_CONTAINS: { __type: "String" },
+    operatingState_ENDS_WITH: { __type: "String" },
+    operatingState_IN: { __type: "[String]" },
+    operatingState_NOT: { __type: "String" },
+    operatingState_NOT_CONTAINS: { __type: "String" },
+    operatingState_NOT_ENDS_WITH: { __type: "String" },
+    operatingState_NOT_IN: { __type: "[String]" },
+    operatingState_NOT_STARTS_WITH: { __type: "String" },
+    operatingState_STARTS_WITH: { __type: "String" },
     organisation: { __type: "HiveOrganisationWhere" },
     organisationAggregate: {
       __type: "CommandDeviceOrganisationAggregateInput",
@@ -31306,6 +31435,7 @@ export const generatedSchema : any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandProgramCommandProgramAlarmAlarmsAggregationSelection: {
     __typename: { __type: "String!" },
@@ -31936,6 +32066,7 @@ export const generatedSchema : any = {
       name: { __type: "StringAggregateSelection!" },
       network_name: { __type: "StringAggregateSelection!" },
       operatingMode: { __type: "StringAggregateSelection!" },
+      operatingState: { __type: "StringAggregateSelection!" },
     },
   CommandProgramDeviceCalibrationCommandProgramDevicePlaceholderDeviceAggregationSelection:
     {
@@ -32566,6 +32697,26 @@ export const generatedSchema : any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandProgramDeviceCalibrationRootDeviceRelationship: {
     __typename: { __type: "String!" },
@@ -40771,6 +40922,26 @@ export const generatedSchema : any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandProgramUsedOnRelationship: {
     __typename: { __type: "String!" },
@@ -43233,6 +43404,7 @@ export const generatedSchema : any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   HiveOrganisationCommandDevicesAggregateInput: {
     AND: { __type: "[HiveOrganisationCommandDevicesAggregateInput!]" },
@@ -43374,6 +43546,26 @@ export const generatedSchema : any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   HiveOrganisationCommandDevicesRelationship: {
     __typename: { __type: "String!" },
@@ -46065,6 +46257,10 @@ export const generatedSchema : any = {
       __type: "Boolean",
       __args: { deviceId: "String", mode: "String" },
     },
+    changeState: {
+      __type: "Boolean",
+      __args: { deviceId: "String", state: "String" },
+    },
     createCommandActionItems: {
       __type: "CreateCommandActionItemsMutationResponse!",
       __args: { input: "[CommandActionItemCreateInput!]!" },
@@ -46140,10 +46336,6 @@ export const generatedSchema : any = {
     createCommandPlugins: {
       __type: "CreateCommandPluginsMutationResponse!",
       __args: { input: "[CommandPluginCreateInput!]!" },
-    },
-    createCommandProgram: {
-      __type: "CreateCommandProgramsMutationResponse",
-      __args: { name: "String" },
     },
     createCommandProgramActions: {
       __type: "CreateCommandProgramActionsMutationResponse!",
@@ -47958,6 +48150,7 @@ export interface CommandDevice {
   network_name?: Maybe<ScalarsEnums["String"]>;
   online?: Maybe<ScalarsEnums["Boolean"]>;
   operatingMode?: Maybe<ScalarsEnums["String"]>;
+  operatingState?: Maybe<ScalarsEnums["String"]>;
   organisation: (args?: {
     options?: Maybe<HiveOrganisationOptions>;
     where?: Maybe<HiveOrganisationWhere>;
@@ -48020,6 +48213,7 @@ export interface CommandDeviceAggregateSelection {
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandDeviceCalibrationsConnection {
@@ -48181,6 +48375,7 @@ export interface CommandDevicePeripheralCommandDeviceDeviceNodeAggregateSelectio
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandDevicePeripheralCommandDevicePeripheralMapMappedDevicesAggregationSelection {
@@ -50023,6 +50218,7 @@ export interface CommandProgramCommandDeviceUsedOnNodeAggregateSelection {
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandProgramCommandProgramAlarmAlarmsAggregationSelection {
@@ -50274,6 +50470,7 @@ export interface CommandProgramDeviceCalibrationCommandDeviceRootDeviceNodeAggre
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandProgramDeviceCalibrationCommandProgramDevicePlaceholderDeviceAggregationSelection {
@@ -52691,6 +52888,7 @@ export interface HiveOrganisationCommandDeviceCommandDevicesNodeAggregateSelecti
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface HiveOrganisationCommandDevicesConnection {
@@ -53568,6 +53766,10 @@ export interface Mutation {
     deviceId?: Maybe<Scalars["String"]>;
     mode?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
+  changeState: (args?: {
+    deviceId?: Maybe<Scalars["String"]>;
+    state?: Maybe<Scalars["String"]>;
+  }) => Maybe<ScalarsEnums["Boolean"]>;
   createCommandActionItems: (args: {
     input: Array<CommandActionItemCreateInput>;
   }) => CreateCommandActionItemsMutationResponse;
@@ -53625,9 +53827,6 @@ export interface Mutation {
   createCommandPlugins: (args: {
     input: Array<CommandPluginCreateInput>;
   }) => CreateCommandPluginsMutationResponse;
-  createCommandProgram: (args?: {
-    name?: Maybe<Scalars["String"]>;
-  }) => Maybe<CreateCommandProgramsMutationResponse>;
   createCommandProgramActions: (args: {
     input: Array<CommandProgramActionCreateInput>;
   }) => CreateCommandProgramActionsMutationResponse;
