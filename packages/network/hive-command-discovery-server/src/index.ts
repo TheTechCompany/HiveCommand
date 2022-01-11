@@ -215,10 +215,13 @@ export class DiscoveryServer {
             switch(stateUpdate.state){
                 case 'on':
                     await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:start`, [])
+                    break;
                 case 'off':
                     await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:shutdown`, [])
+                    break;
                 case 'standby':
                     await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:standby`, [])
+                    break;
                 default:
                     console.error(`Unknown state ${stateUpdate.state}`)
             }
