@@ -430,20 +430,6 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         changeMode(mode).then(() => {
             refetch()
         })
-        // if (rootDevice?.operatingMode == "AUTO") {
-        //     changeMode(
-        //         "DISABLED"    
-        //     ).then(() => {
-        //         refetch()
-        //     })
-        //     //   setRootDevice({...rootDevice, operatingMode: "Manual"})
-        // } else {
-        //     changeMode(
-        //         "AUTO"
-        //     ).then(() => {
-        //         refetch()
-        //     })
-        // }
     }
 
 

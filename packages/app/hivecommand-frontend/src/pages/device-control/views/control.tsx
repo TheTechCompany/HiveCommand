@@ -287,9 +287,9 @@ export default () => {
 								value={operating}
 								valueKey='key'
 								onChange={(value) => {
-									changeOperationMode(value.key)
+									changeOperationMode(value)
 									// console.log(value)
-									setOperating(value.key)
+									setOperating(value)
 								}}
 								placeholder='Mode'
 								labelKey='label'

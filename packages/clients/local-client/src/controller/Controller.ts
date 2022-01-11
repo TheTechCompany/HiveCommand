@@ -14,6 +14,7 @@ import { CommandStateMachineMode } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
+import e from 'express';
 
 export class Controller {
 
@@ -145,13 +146,18 @@ export class Controller {
 						func: async (inputs) => {
 							const [ mode ] = inputs;
 
-							let newMode = (CommandStateMachineMode as any)[mode.value.toString().toUpperCase()]
+							const modeString = mode.value.toString().toUpperCase()
+							let newMode = (CommandStateMachineMode as any)?.[modeString]
+							if(newMode != undefined){
+								log.info(`Changing machine mode to ${modeString}`)
 
-							log.info(`Changing machine mode to ${newMode}`)
-							
-							await this.machine?.changeMode(newMode)
+								await this.machine?.changeMode(newMode)
 
-							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+							}else{
+								log.error(`Invalid mode ${modeString}`)
+								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+							}
 						}
 					}
 				}
