@@ -214,7 +214,7 @@ export class DiscoveryServer {
 
             switch(stateUpdate.state){
                 case 'on':
-                    await this.syncClient.callMethod(stateUpdate.address, `/Object/1:Controller/1:Machine`, `/1:start`, [])
+                    await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:start`, [])
                 case 'off':
                     await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:shutdown`, [])
                 case 'standby':

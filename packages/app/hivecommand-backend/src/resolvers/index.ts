@@ -307,7 +307,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				let actionRequest = {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
-					mode: args.state
+					state: args.state
 				}
 
 				await session.writeTransaction(async (tx) => {
