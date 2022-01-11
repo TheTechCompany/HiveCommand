@@ -140,6 +140,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
     console.log(device)
     return (
         <Box 
+            flex
             elevation="small"
             round="xsmall"
             overflow="hidden"
@@ -184,7 +185,10 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                     <BusMap
                         add
                         onPortSelect={(bus, port) => {
+                            console.log(bus, port)
+
                             setSelectedPort({bus, port})
+                            
                             let connected = device?.peripherals?.find((a) => a.id == bus)?.connectedDevicesConnection?.edges?.find((a) => a.port == port);
                             
                             let mapped = device?.peripherals?.find((a) => a.id == bus)?.mappedDevicesConnection?.edges?.filter((a) => a.port == port);
@@ -199,7 +203,13 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             console.log(connected.node.connections)
                         }}
                         onMapChanged={(bus, port, device) => {
-                                // mapPort({
+                                // mapPort(
+                                //     bus,
+                                //     port,
+                                //     device
+                                // )
+                                    
+                                //     {
                                 //     args: {
                                 //         id: props.match.params.id,
                                 //         peripheralId: bus,
@@ -221,7 +231,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                                 name: x.name,
                                 connectedDevices: x.connectedDevicesConnection.edges.map((connection) => ({...connection.node, port: connection.port})),
                                 mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevicesConnection.edges[ix].port})),
-                                ports: x.type == "IO-LINK" ? 8 : {inputs: 14, outputs: 14} 
+                                ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevicesConnection.edges.length : {inputs: 14, outputs: 14})
                             }
                         })}/>
                 </Box>

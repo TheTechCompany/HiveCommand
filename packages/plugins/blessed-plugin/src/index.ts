@@ -31,9 +31,13 @@ export default class BlessedPlugin extends BasePlugin {
 
 		for(var colIndex = 0; colIndex < cols; colIndex++){
 			for(var rowIndex = 0; rowIndex < rows; rowIndex++){
+
+				//get the port number from the col and row
+				let port = colIndex + (rowIndex * cols) + 1;
+
 				devices.push({
 					...port_template,
-					port: `O_${colIndex + 1}:${rowIndex + 1}`,
+					port: port,
 					serial: `O_${colIndex + 1}:${rowIndex + 1}`,
 				})
 			}
