@@ -209,6 +209,7 @@ export class DiscoveryServer {
                 state: string,
             } = JSON.parse(msg?.content.toString() || '{}')
 
+            console.log(`Changing controller ${stateUpdate.address} state ${stateUpdate.state}`)
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
             switch(stateUpdate.state){
