@@ -37,8 +37,8 @@ export default class BlessedPlugin extends BasePlugin {
 
 				devices.push({
 					...port_template,
-					port: port,
-					serial: port,
+					port: `${port}`,
+					serial: `${port}`,
 				})
 			}
 		}
