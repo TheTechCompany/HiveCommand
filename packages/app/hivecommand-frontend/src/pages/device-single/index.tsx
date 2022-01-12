@@ -165,7 +165,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                     ).then(() => {
                         refetch()
                     })
-                    console.log(connections)
+                    console.log({connections})
                 }}
                 open={modalOpen} />
            
@@ -188,7 +188,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             console.log(bus, port)
 
                             setSelectedPort({bus, port})
-                            
+
                             let connected = device?.peripherals?.find((a) => a.id == bus)?.connectedDevicesConnection?.edges?.find((a) => a.port == port);
                             
                             let mapped = device?.peripherals?.find((a) => a.id == bus)?.mappedDevicesConnection?.edges?.filter((a) => a.port == port);
@@ -198,6 +198,8 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             // connected.peripheral = bus
                             // connected.node.peripheral = bus;
                             setSelected(connected);
+
+                            console.log({connected, mapped, bus, port})
                             openModal(true)
 
                             console.log(connected.node.connections)

@@ -6,7 +6,7 @@ import { ProgramDeviceModal } from '../../../../components/modals/program-device
 
 import { useQuery as useApollo , gql, useApolloClient} from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createProgramPlaceholder, updateProgramPlaceholder } from '@hive-command/api';
+import { useCreateProgramPlaceholder, useUpdateProgramPlaceholder } from '@hive-command/api';
 export const Devices = (props) => {
 
 	const navigate = useNavigate()
@@ -50,6 +50,9 @@ export const Devices = (props) => {
 
 	const [ modalOpen, openModal ] = useState<boolean>(false);
 	const [ selected, setSelected ] = useState<any>();
+
+	const updateDevice = useUpdateProgramPlaceholder(id)
+	const createDevice = useCreateProgramPlaceholder(id)
 
 	// const [ updateDevicePlaceholder, updateInfo ] = useMutation((mutation, args: {id: string, requiresMutex: boolean, name: string, type: string}) => {
 	// 	const updated = mutation.updateCommandPrograms({
@@ -118,15 +121,14 @@ export const Devices = (props) => {
 				}}
 				onSubmit={(device) => {
 					if(device.id){
-						updateProgramPlaceholder(
-							props.program,
+						updateDevice(
 							device.id,
 							device.name,
 							device.type,
 							device.requiresMutex,
 						)
 					}else{
-						createProgramPlaceholder(
+						createDevice(
 							device.name,
 							device.type,
 							device.requiresMutex,

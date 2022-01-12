@@ -38,7 +38,7 @@ export default class BlessedPlugin extends BasePlugin {
 				devices.push({
 					...port_template,
 					port: port,
-					serial: `O_${colIndex + 1}:${rowIndex + 1}`,
+					serial: port,
 				})
 			}
 		}
@@ -52,9 +52,10 @@ export default class BlessedPlugin extends BasePlugin {
 
 	async write(bus: string | null, port: string, value: any){
 		log.info(`Writing ${value} to ${port}`)
+		
+		
 		await axios.post(`http://localhost:8765/update`, {
-			col: parseInt(port.split(':')[0]),
-			row: parseInt(port.split(':')[1]),
+			port: parseInt(port) - 1,
 			value
 		})
 	}

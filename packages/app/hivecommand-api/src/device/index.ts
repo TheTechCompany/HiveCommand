@@ -172,9 +172,174 @@ export const useMapPort = (deviceId: string) => {
         connections: { id?: string, key: string; device: string; value: string }[];
       }
     ) => {
-      let deviceMapping: any[] = [
+
+    //   let deviceMapping: any[] = [
+    //     {
+    //       create: args.connections
+    //         .filter((a) => !a.id)
+    //         .map((map) => {
+    //           let keyConnect = map.key
+    //             ? {
+    //                 key: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         key: map.key,
+    //                         product: {
+    //                           peripheral: { id: args.peripheralId },
+    //                           peripheralConnection: {
+    //                             edge: { port: args.port },
+    //                           },
+    //                         },
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
+
+    //           let deviceConnect = map.device
+    //             ? {
+    //                 device: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         id: map.device,
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
+
+    //           let valueConnect = map.value
+    //             ? {
+    //                 value: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         device: {
+    //                           usedIn: {
+    //                             id_IN: [map.device],
+    //                           },
+    //                         },
+    //                         key: map.value,
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
+    //           return {
+    //             node: {
+    //               ...keyConnect,
+    //               ...deviceConnect,
+    //               ...valueConnect,
+    //             },
+    //             edge: {
+    //               port: args.port,
+    //             },
+    //           };
+    //         }),
+    //     },
+    //     ...(args.connections || [])
+    //       .filter((a) => a.id)
+    //       .map((item) => {
+    //         return {
+    //           where: { node: { id: item.id } },
+    //           update: {
+    //             node: {
+    //               key: {
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       key: item.key,
+    //                       product: {
+    //                         peripheral: { id: args.peripheralId },
+    //                         peripheralConnection: { edge: { port: args.port } },
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //               device: {
+    //                 disconnect: {
+    //                   where: {
+    //                     node: {
+    //                       id_NOT: item.device,
+    //                     },
+    //                   },
+    //                 },
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       id: item.device,
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //               value: {
+    //                 disconnect: {
+    //                   where: {
+    //                     node: {
+    //                       device: {
+    //                         id_NOT_IN: [item.device],
+    //                       },
+    //                       key_NOT: item.value,
+    //                     },
+    //                   },
+    //                 },
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       device: {
+    //                         usedIn: {
+    //                           id_IN: [item.device],
+    //                         },
+    //                       },
+    //                       key: item.value,
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         };
+    //       }),
+    //   ];
+
+    //   const item = mutation.updateCommandDevices({
+    //     where: { id: deviceId },
+    //     update: {
+    //       peripherals: [
+    //         {
+    //           where: { node: { id: args.peripheralId } },
+    //           update: {
+    //             node: {
+    //               mappedDevices: deviceMapping,
+    //             },
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   });
+	  // return {
+		//   item: {
+		// 	  ...item.commandDevices?.[0]
+		//   }
+	  // }
+    }
+  );
+
+  return async (
+    peripheralId: string,
+    port: string,
+    connections: { id?: string, key: string; device: string; value: string }[]
+  ) => {
+
+        let deviceMapping: any[] = [
         {
-          create: args.connections
+          create: connections
             .filter((a) => !a.id)
             .map((map) => {
               let keyConnect = map.key
@@ -185,9 +350,9 @@ export const useMapPort = (deviceId: string) => {
                           node: {
                             key: map.key,
                             product: {
-                              peripheral: { id: args.peripheralId },
+                              peripheral: { id: peripheralId },
                               peripheralConnection: {
-                                edge: { port: args.port },
+                                edge: { port: port },
                               },
                             },
                           },
@@ -196,151 +361,19 @@ export const useMapPort = (deviceId: string) => {
                     },
                   }
                 : {};
+                return keyConnect
+            })
+        }
+      ]
 
-              let deviceConnect = map.device
-                ? {
-                    device: {
-                      connect: {
-                        where: {
-                          node: {
-                            id: map.device,
-                          },
-                        },
-                      },
-                    },
-                  }
-                : {};
+      console.log({deviceMapping})
 
-              let valueConnect = map.value
-                ? {
-                    value: {
-                      connect: {
-                        where: {
-                          node: {
-                            device: {
-                              usedIn: {
-                                id_IN: [map.device],
-                              },
-                            },
-                            key: map.value,
-                          },
-                        },
-                      },
-                    },
-                  }
-                : {};
-              return {
-                node: {
-                  ...keyConnect,
-                  ...deviceConnect,
-                  ...valueConnect,
-                },
-                edge: {
-                  port: args.port,
-                },
-              };
-            }),
-        },
-        ...(args.connections || [])
-          .filter((a) => a.id)
-          .map((item) => {
-            return {
-              where: { node: { id: item.id } },
-              update: {
-                node: {
-                  key: {
-                    connect: {
-                      where: {
-                        node: {
-                          key: item.key,
-                          product: {
-                            peripheral: { id: args.peripheralId },
-                            peripheralConnection: { edge: { port: args.port } },
-                          },
-                        },
-                      },
-                    },
-                  },
-                  device: {
-                    disconnect: {
-                      where: {
-                        node: {
-                          id_NOT: item.device,
-                        },
-                      },
-                    },
-                    connect: {
-                      where: {
-                        node: {
-                          id: item.device,
-                        },
-                      },
-                    },
-                  },
-                  value: {
-                    disconnect: {
-                      where: {
-                        node: {
-                          device: {
-                            id_NOT_IN: [item.device],
-                          },
-                          key_NOT: item.value,
-                        },
-                      },
-                    },
-                    connect: {
-                      where: {
-                        node: {
-                          device: {
-                            usedIn: {
-                              id_IN: [item.device],
-                            },
-                          },
-                          key: item.value,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            };
-          }),
-      ];
-
-      const item = mutation.updateCommandDevices({
-        where: { id: deviceId },
-        update: {
-          peripherals: [
-            {
-              where: { node: { id: args.peripheralId } },
-              update: {
-                node: {
-                  mappedDevices: deviceMapping,
-                },
-              },
-            },
-          ],
-        },
-      });
-	  return {
-		  item: {
-			  ...item.commandDevices?.[0]
-		  }
-	  }
-    }
-  );
-
-  return async (
-    peripheralId: string,
-    port: string,
-    connections: { key: string; device: string; value: string }[]
-  ) => {
 	  return await mutateFn({
-		args: {
-			peripheralId,
-			port,
-			connections
-		}
+      args: {
+        peripheralId,
+        port,
+        connections
+      }
 	  })
   };
 };
