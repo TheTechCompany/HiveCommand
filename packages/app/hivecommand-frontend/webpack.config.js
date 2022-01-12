@@ -13,6 +13,11 @@ module.exports = (webpackConfigEnv, argv) => {
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
+    resolve: {
+      plugins: [
+        new TsconfigPathsPlugin(),
+      ]
+    },
     module: {
       rules: [
         {
@@ -24,7 +29,6 @@ module.exports = (webpackConfigEnv, argv) => {
       ]
     },
     plugins: [
-      new TsconfigPathsPlugin(),
       new webpack.ProvidePlugin({
         process: 'process/browser',
       }),

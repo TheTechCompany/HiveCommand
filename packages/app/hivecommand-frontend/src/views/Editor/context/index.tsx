@@ -4,6 +4,7 @@ export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
 
 	program?: {
+		id?: string;
 		program?: any[];
 		hmi?: any[]
 	}

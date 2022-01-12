@@ -2,7 +2,7 @@ import { InfiniteCanvasNode, InfiniteCanvasPath } from '@hexhive/ui';
 import React from 'react';
 
 export const ProgramEditorContext = React.createContext<{
-	program?: any, 
+	program?: {id: string}, 
 	devices?: any[],
 	conditions?: {id?: string, input: string, comparator: string, assertion: string}[]
 	activeProgram?: string;
