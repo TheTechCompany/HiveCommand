@@ -5,6 +5,7 @@ import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
 import { Process } from '@hive-command/process'
+import log from 'loglevel'
 export * from './types'
 
 export interface CommandClient { 
@@ -14,7 +15,24 @@ export interface CommandClient {
 export enum CommandStateMachineMode {
 	AUTO,
 	MANUAL,
+	TIMER,
 	DISABLED
+}
+
+export enum CommandStateMachineStatus {
+	OFF,
+	STOPPING,
+	ON,
+	STARTING,
+	PAUSING,
+	STANDBY
+}
+
+export interface StateProgram {
+	
+		initialState?: any;
+		devices?: ProgramDevice[]
+		processes: ProgramProcess[],	
 }
 
 import * as actions from './base-plugins'
@@ -40,11 +58,10 @@ const base_actions = [
 
 export class CommandStateMachine extends EventEmitter {
 
-	public state : State;
-	
-	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED;
+	public state? : State;
 
-	private running : boolean = true;
+	private status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
+	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED; //Determines available actions
 
 	private processes : Process[] = [];
 
@@ -52,11 +69,9 @@ export class CommandStateMachine extends EventEmitter {
 
 	private devices? : StateDevice[] = [];
 
-	private program? : {
-		initialState?: any;
-		devices?: ProgramDevice[]
-		processes?: ProgramProcess[]
-	} = {}
+	private program? : StateProgram;
+
+	private running_processes: {[key: string]: Process} = {};
 
     public timers: any = {
 
@@ -64,33 +79,18 @@ export class CommandStateMachine extends EventEmitter {
 
 	private client : CommandClient;
 
-	private tickRate: number = 1000;
-
-	constructor(program: {
-		initialState?: any;
-		devices?: ProgramDevice[]
-		processes: ProgramProcess[],
-		tickRate?: number
-	}, client: CommandClient){
+	constructor(program: StateProgram, client: CommandClient){
 		super();
-
-		this.start = this.start.bind(this)
-		this.performOperation = this.performOperation.bind(this);
-		this.getByKey = this.getByKey.bind(this);
-
-		this.tickRate = program.tickRate || 1000;
-
-		this.program = program;
-
-		this.devices = program.devices?.map((x) => new StateDevice(x));
-
-		this.state = new State(program.initialState);
 
 		this.client = client;
 
-		// console.debug(`Initializing State Machine`)
 
-		this.processes = program.processes.map((x) => new Process(x, base_actions as any, this.performOperation, this.getByKey))
+		this.start = this.start.bind(this)
+		this.performOperation = this.performOperation.bind(this);
+
+		this.load(program)
+
+		// console.debug(`Initializing State Machine`)
 
 		// this.processes.forEach((process) => {
 		// 	process.on('transition', (ev) => this.onProcessTransition(process, ev))
@@ -99,23 +99,33 @@ export class CommandStateMachine extends EventEmitter {
 
 	}
 
-	getByKey(key: string){
-		return this.state.get(key)
+	load(program: StateProgram){
+		log.debug("Loading new program")
+		this.program = program;
+
+		this.processes = program.processes.map((process) => {
+			return new Process(process, base_actions as any, this.performOperation, (key: string) => {
+				return this.state?.get(key)
+			})
+		})
+
+		this.devices = program.devices?.map((x) => new StateDevice(x));
+
+		this.processes.map((process) => {
+			//Flow moves a step
+			process.on('transition', (ev) => this.onProcessTransition(process, ev))
+		})
+
+		if(program.initialState) this.state = new State(program.initialState);
+
 	}
 
-	onProcessTransition(process: Process, event: {target: string}){
-		this.emit('transition', {target: event.target, process: process.id})
+
+	onProcessTransition(process: Process, event: any){
+		this.emit('transition', event)
 	}
 
-	// get currentPosition(){
-	// 	return this.processes.map((x) => x.currentPosition)
-	// }
-
-	// getProcessPosition(name: string){
-	// 	let position = this.processes.find((x) => x.name == name)?.currentPosition
-	// 	return this.processes.find((x) => x.name == name)?.sub_processes?.find((a) => a.id == position)?.name
-	// }
-
+	
 	getDeviceControl(deviceName: string){
 		return this.devices?.find((a) => a.name == deviceName)?.isControlled
 	}
@@ -128,71 +138,13 @@ export class CommandStateMachine extends EventEmitter {
 		// this.devices?.find((x) => x.name == deviceName)?.control = control;
 	}
 
-	async runOneshot(processId: string){
-		// console.log(this.processes)
-		// console.log("ONESHOT")
-		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
-		let process = allProcesses?.find((a) => a.id == processId)
 
-		if(!process) return new Error("No process found")
-
-		// if(process.parent){}
-		// console.log(this.mode)
-		if(this.mode == CommandStateMachineMode.AUTO){
-			//Request priority for this process
-			// console.log("VIP Incoming... Requesting priority")
-			// console.log(process)
-			
-			if((process as any).parent){
-				this.processes.find((a) => a.id == (process as any).parent.id)?.requestPriority(process.id)
-			}else{
-				// this.processes.find((a) => a.id == process.id).requestPriority()
-			}
-		}else{
-			//Run process in seperate loop
-
-			let cleanProcess = new Process(process, base_actions as any, this.performOperation, this.state.get)
-			const result = await cleanProcess.start()
-
-		}
-
-		// console.log(process)
-
-		// return process.doCurrent()
-	}
-
-	changeMode(mode: CommandStateMachineMode){
-		this.mode = mode;
-	}
-
-	get isRunning (){
-		return this.running
-	}
-
-	updateState(proc_id: string, new_state: string, parent_proc?: string){
-        this.process_state[parent_proc || proc_id] = parent_proc ? proc_id : new_state
-    }
-
-	// registerValue(key: string, value: any){
-	// 	this.values[key] = value;
-	// }
-
-	// getState(key: string){
-	// 	return this.values[key]
-	// }
-
-	// checkCondition(device: string, deviceKey: string, comparator: string, value: any){
-	// 	let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
-	// 	let state = this.state.get(device);
-	// 	let input = state?.[deviceKey]
-	// 	return cond.check(input, value)
-	// }
 
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
 
 		let interlocks = (this.devices?.filter((a) => a.hasInterlock).filter((device) => {
-			return device.checkInterlockNeeded(this.state.get(device.name))
+			return device.checkInterlockNeeded(this.state?.get(device.name))
 		})) || []
 		
 		await Promise.all(interlocks.map(async (device) => {	
@@ -226,55 +178,91 @@ export class CommandStateMachine extends EventEmitter {
 				}
 			}
 
-			// console.log({operation})
 			if(operation){
 				await this.client.performOperation({device: deviceName, operation})
 				resolve(true)
 			}
-			// this.emit('REQUEST:OPERATION', {device, operation})
-			// console.log(`Perform operation ${operation} on ${device}`)
 		});
 	}
 
-	async shutdown(){
-		this.running = false
-		
-		this.mode = CommandStateMachineMode.DISABLED
-		// await Promise.all(this.processes.map((x) => x.shutdown()))
 
-		// this.running = true;
-		// while(this.running){op
-		// 	await this.checkInterlocks();
-
-		// 		try{
-		// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-		// 		}catch(e){
-		// 			console.debug(e)
-		// 		}
-
-		// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
-			
-
-		// 	this.emit('TICK')
-
-		// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
-		
-		// }
-
+	get isRunning (){
+		return this.status == CommandStateMachineStatus.ON || Object.keys(this.running_processes).length > 0
 	}
 
-	async start(mode?: CommandStateMachineMode){
-		console.debug(`Starting State Machine with ${this.processes.length} processes`)
+	get getMode(){
+		return CommandStateMachineMode[this.mode]
+	}
 
-		this.running = true;
+	get getStatus(){
+		return CommandStateMachineStatus[this.status]
+	}
+	
 
-		await Promise.all(this.processes.map(async (x) => await x.start()))
+	async runFlow(flowId: string){
+		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
+		let process = allProcesses?.find((a) => a.id == flowId)
 
-		while(this.running){
-			await this.checkInterlocks();
+		if(!process) return new Error("No process found")
 
-			await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
+		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
+			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
+			const result =  await this.running_processes[flowId].start()
+			delete this.running_processes[flowId]
+			return result
+		}
+	}
 
+	async stopFlow(flowId: string){
+		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && this.running_processes[flowId]){
+			const result = await this.running_processes[flowId].stop()
+			delete this.running_processes[flowId]
+			return result;
+		}
+	}
+
+	changeMode(mode: CommandStateMachineMode){
+		let canChange = false;
+		let reason = "";
+		switch(mode){
+			case CommandStateMachineMode.AUTO:
+				reason = "Ensure no running processes"
+				canChange = Object.keys(this.running_processes).length == 0
+				break;
+			case CommandStateMachineMode.MANUAL:
+				reason = "Ensure machine is off"
+				canChange =  this.status == CommandStateMachineStatus.OFF
+				break;
+			case CommandStateMachineMode.DISABLED:
+				reason = "Ensure machine is off and there are no running processes"
+				canChange = this.status == CommandStateMachineStatus.OFF && Object.keys(this.running_processes).length == 0
+			break;
+		}
+		if(canChange){
+			this.mode = mode;
+		}else{
+			return new Error(reason)
+		}
+	}
+
+	async start(){
+		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.ON && this.status != CommandStateMachineStatus.STARTING){
+			
+			console.debug(`Starting State Machine with ${this.processes.length} processes`)
+			this.status = CommandStateMachineStatus.STARTING;
+
+			await Promise.all(this.processes.map(async (x) => await x.start()))
+
+			this.status = CommandStateMachineStatus.ON;
+
+			while(this.status == CommandStateMachineStatus.ON){
+				await this.checkInterlocks();
+
+				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
+			}
+
+		}else{
+			log.warn(`FSM: START - No processes will be started because starting conditions are not met.`)
 		}
 		// this.mode = mode || CommandStateMachineMode.AUTO
 		// // if(mode != undefined) {
@@ -304,12 +292,46 @@ export class CommandStateMachine extends EventEmitter {
 		// }
 	}
 
-	async standby(){
-		
+	async stop(){
+		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.OFF && this.status != CommandStateMachineStatus.STOPPING){
+			this.status = CommandStateMachineStatus.STOPPING;
+
+			await Promise.all(this.processes.map(async (process) => await process.stop()))
+
+			this.mode = CommandStateMachineMode.DISABLED
+			// await Promise.all(this.processes.map((x) => x.shutdown()))
+
+			// this.running = true;
+			// while(this.running){op
+			// 	await this.checkInterlocks();
+
+			// 		try{
+			// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
+			// 		}catch(e){
+			// 			console.debug(e)
+			// 		}
+
+			// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
+				
+
+			// 	this.emit('TICK')
+
+			// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
+			
+			// }
+			this.status = CommandStateMachineStatus.OFF
+		}else{
+			log.warn(`FSM: STOP - No processes will be started because starting conditions are not met.`)
+		}
+
 	}
 
-	async stop(){
-		// await Promise.all(this.processes.map(async (x) => await x.stop()))
-		this.running = false;
+	async pause(){
+		this.status = CommandStateMachineStatus.PAUSING
+
+		await Promise.all(this.processes.map(async (process) => await process.pause()))
+
+		this.status = CommandStateMachineStatus.STANDBY;
 	}
+
 }

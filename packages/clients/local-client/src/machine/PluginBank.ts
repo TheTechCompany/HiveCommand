@@ -108,7 +108,7 @@ export class PluginBank {
 	
 					}
 	
-					this.machine?.state.update(device?.name, cleanState)
+					this.machine?.state?.update(device?.name, cleanState)
 				})
 				
 				this.machine.busMap.set(event.bus, event.port, event.value);

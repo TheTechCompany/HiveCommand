@@ -129,7 +129,7 @@ describe('Conditional Paths', () => {
 			}, {
 				performOperation: async (event) => {
 					if(event.device == "PMP101" && event.operation == "start") {
-						machine.state.update('PMP101', {on: true})
+						machine.state?.update('PMP101', {on: true})
 						// await machine.stop();
 						// resolve(true)
 					}
@@ -147,7 +147,8 @@ describe('Conditional Paths', () => {
 				}
 			});
 	
-			machine.start(CommandStateMachineMode.AUTO);
+			machine.changeMode(CommandStateMachineMode.AUTO)
+			machine.start();
 			// setTimeout(() => machine.state.update('LT201', {level: 1200}), 5 * 1000)
 
 			const timeout = setTimeout(() => reject(new Error('Timer did not fire')), 10 * 1000)

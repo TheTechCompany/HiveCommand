@@ -288,7 +288,9 @@ describe('Subprocess as a blockType', () => {
 				}
 			});
 	
-			machine.start(CommandStateMachineMode.AUTO);
+			machine.changeMode(CommandStateMachineMode.AUTO)
+			machine.start();
+			
 			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))

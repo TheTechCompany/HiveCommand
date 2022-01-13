@@ -310,7 +310,7 @@ describe('Interlock Machine', () => {
 							await new Promise((resolve, reject) => {
 								interlock.lock(() => {
 									console.log("Locked")
-									machine.state.update('IL-AV101', { available: false });
+									machine.state?.update('IL-AV101', { available: false });
 
 									resolve(true)
 
@@ -324,7 +324,7 @@ describe('Interlock Machine', () => {
 								interlock.unlock()
 								console.log('released');
 								resolve(true);
-								machine.state.update('IL-AV101', { available: true });
+								machine.state?.update('IL-AV101', { available: true });
 							})
 						}
 					}
@@ -337,7 +337,8 @@ describe('Interlock Machine', () => {
 				machine.stop()
 			}, 10 * 1000)
 
-			await machine.start(CommandStateMachineMode.AUTO);
+			machine.changeMode(CommandStateMachineMode.AUTO)
+			await machine.start();
 
 			
 		

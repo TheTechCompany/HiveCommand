@@ -284,7 +284,7 @@ export class Machine {
 
 	async standby(){
 		log.info("Pausing state machine")
-		await this.fsm.standby()
+		await this.fsm.pause()
 	}
 
 	async runOneshot(processId: string){
@@ -293,7 +293,7 @@ export class Machine {
 
 
 	getByKey(dev: string, key: string){
-		return this.fsm?.state.getByKey(dev, key)
+		return this.fsm?.state?.getByKey(dev, key)
 	}
 
 	
@@ -371,7 +371,7 @@ export class Machine {
 					}
 				}
 				
-				
+				log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
 				await plugin?.write(bus, port.port, writeOp);
 			}))
 		}))
@@ -380,7 +380,7 @@ export class Machine {
 
 	setState(device: string, state: any){
 		// const busPort = this.deviceMap.getDeviceBusPort(device)
-		this.fsm?.state.update(device, {
+		this.fsm?.state?.update(device, {
 			...state
 		})
 	}
