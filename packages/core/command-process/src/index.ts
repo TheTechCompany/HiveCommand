@@ -211,7 +211,7 @@ export class Process extends EventEmitter{
     }
 
     async start(){
-        log.debug(`CommandProcess - START: ${this.process?.name}`)
+        log.debug(`CommandProcess - START: ${this.process?.name} - (${this.chains.entrypoints.length} entrypoints)`)
 
         this.running = true;
 
@@ -245,6 +245,7 @@ export class Process extends EventEmitter{
     }
 
     async stop(){
+        log.debug(`CommandProcess - STOP: ${this.process?.name} - (${this.chains.shutdown.length} exitpoints)`)
         this.emit('stopping')
 
         this.running = false;
