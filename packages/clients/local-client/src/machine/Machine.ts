@@ -66,7 +66,7 @@ export class Machine {
 			// }
 	
 			return {
-				id: action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
+				id: action.id, //action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
 				type: getBlockType(action.type) || 'action',
 				options: {
 					blockType: getBlockType(action.type) || 'action',
