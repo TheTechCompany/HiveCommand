@@ -11,6 +11,39 @@ export {
     ProcessChain
 }
 
+export interface ChainTransition {
+    from: string;
+    to: string;
+}
+
+
+export interface ProcessTransition {
+    chain?: string;
+    txid: string,
+    direction: 'entry' | 'exit',
+    transition: ChainTransition
+}
+
+export interface ProcessEvents {
+    'transition': (transition: ProcessTransition) => void;
+
+     'started': () => void;
+     'finished': () => void;
+     'stopping': () => void;
+     'stopped': () => void;
+}
+
+export declare interface Process {
+    on<U extends keyof ProcessEvents>(
+        event: U,
+        listener: ProcessEvents[U]
+    ): this;
+
+    emit<U extends keyof ProcessEvents>(
+        event: U, ...args: Parameters<ProcessEvents[U]>
+    ): boolean;
+}
+
 export class Process extends EventEmitter{
     private process? : CommandProcess;
     

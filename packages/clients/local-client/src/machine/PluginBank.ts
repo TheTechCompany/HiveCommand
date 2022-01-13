@@ -78,10 +78,7 @@ export class PluginBank {
 				//TODO device(s) instead of device
 				//TODO add to bus port value bank
 
-				// console.log(event)
-
 				let devices = this.machine.deviceMap.getDevicesByBusPort(event.bus, event.port)
-				// console.log(device?.name, event.bus, event.port);
 				if(!devices) return;
 
 

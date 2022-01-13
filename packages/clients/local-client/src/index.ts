@@ -83,6 +83,7 @@ export class CommandClient {
 			pluginDir: opts.pluginDir || path.join(__dirname, `../../../plugins`)
 		})
 
+
 		this.controller = new Controller({
 			commandCenter: opts.commandCenter || '',
 			valueBank: {

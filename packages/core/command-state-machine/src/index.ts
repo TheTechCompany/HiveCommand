@@ -4,7 +4,7 @@ import { State } from "./State";
 import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-import { Process } from '@hive-command/process'
+import { Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'
 export * from './types'
 
@@ -55,6 +55,21 @@ const base_actions = [
 		onEnter: actions.trigger
 	}
 ]
+
+export interface CommandStateMachineEvents{
+	'transition': (transition: ProcessTransition) => void;
+}
+
+export declare interface CommandStateMachine {
+	on<U extends keyof CommandStateMachineEvents>(
+		event: U, listener: CommandStateMachineEvents[U]
+	): this;
+
+	emit<U extends keyof CommandStateMachineEvents>(
+		event: U,
+		...args: Parameters<CommandStateMachineEvents[U]>
+	): boolean;
+}
 
 export class CommandStateMachine extends EventEmitter {
 
@@ -121,7 +136,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 
-	onProcessTransition(process: Process, event: any){
+	onProcessTransition(process: Process, event: ProcessTransition){
 		this.emit('transition', event)
 	}
 

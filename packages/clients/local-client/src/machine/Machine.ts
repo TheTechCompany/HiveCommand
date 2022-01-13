@@ -171,6 +171,10 @@ export class Machine {
 			performOperation: this.requestOperation
 		})
 
+		this.fsm.on('transition', (event) => {
+			log.info(`Transitioning on chain (${event.chain}) from ${event.transition.from} to ${event.transition.to}`)
+		})
+
 		// this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
 		// 	this.healthClient.emit('process:transition', {process, target})
 		// })
@@ -181,82 +185,82 @@ export class Machine {
 		// this.machine.start()
 
 
-		this.fsm.on('TICK', async () => {
-			// let activeStages = this.machine?.currentPosition;
+		// this.fsm.on('TICK', async () => {
+		// 	// let activeStages = this.machine?.currentPosition;
 
-			// // console.log("ACTIVE STAGES", activeStages)
+		// 	// // console.log("ACTIVE STAGES", activeStages)
 
-			// await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
-			// 	// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-			// 	// console.log(device.plugins?.map((a) => a.rules))
-			// 	await Promise.all((device?.plugins || []).filter((a) => !a.rules || ((activeStages || [])?.indexOf(a.rules.id) > -1) ).map(async (plugin) => {
+		// 	// await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
+		// 	// 	// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
+		// 	// 	// console.log(device.plugins?.map((a) => a.rules))
+		// 	// 	await Promise.all((device?.plugins || []).filter((a) => !a.rules || ((activeStages || [])?.indexOf(a.rules.id) > -1) ).map(async (plugin) => {
 
-			// 		let pluginObject = plugin.configuration.reduce<{
-			// 			targetDevice?: string;
-			// 			targetDeviceField?: string;
-			// 			actuator?: string;
-			// 			actuatorField?: string;
-			// 		}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
-			// 		// console.log("Plugin tick");
+		// 	// 		let pluginObject = plugin.configuration.reduce<{
+		// 	// 			targetDevice?: string;
+		// 	// 			targetDeviceField?: string;
+		// 	// 			actuator?: string;
+		// 	// 			actuatorField?: string;
+		// 	// 		}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+		// 	// 		// console.log("Plugin tick");
 
-			// 		if(plugin.instance){
-			// 			const pluginTick = getPluginFunction(plugin.plugin?.tick)
-			// 			if(!pluginObject.targetDevice || !pluginObject.actuator) return;
+		// 	// 		if(plugin.instance){
+		// 	// 			const pluginTick = getPluginFunction(plugin.plugin?.tick)
+		// 	// 			if(!pluginObject.targetDevice || !pluginObject.actuator) return;
 
-			// 			let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
-			// 			let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
-			// 			if(!targetDevice || !actuatorDevice) return;
+		// 	// 			let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
+		// 	// 			let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
+		// 	// 			if(!targetDevice || !actuatorDevice) return;
 						
-			// 			let actuatorKey = actuatorDevice.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
-			// 			let targetKey = targetDevice.state?.find((a) => a.id == pluginObject.targetDeviceField || a.key == pluginObject.targetDeviceField)
+		// 	// 			let actuatorKey = actuatorDevice.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
+		// 	// 			let targetKey = targetDevice.state?.find((a) => a.id == pluginObject.targetDeviceField || a.key == pluginObject.targetDeviceField)
 
-			// 			if(!actuatorKey || !targetKey){
-			// 				console.error("No actuator or target");
-			// 				return;
-			// 			} 
+		// 	// 			if(!actuatorKey || !targetKey){
+		// 	// 				console.error("No actuator or target");
+		// 	// 				return;
+		// 	// 			} 
 
-			// 			let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
-			// 			let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
+		// 	// 			let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
+		// 	// 			let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
-			// 			let state = {
-			// 				actuatorValue: actuatorValue || 0,
-			// 				targetValue:  targetValue || 0,
-			// 				__host: {
-			// 					...this.machine?.state.get(device.name)
-			// 				}
-			// 			}
+		// 	// 			let state = {
+		// 	// 				actuatorValue: actuatorValue || 0,
+		// 	// 				targetValue:  targetValue || 0,
+		// 	// 				__host: {
+		// 	// 					...this.machine?.state.get(device.name)
+		// 	// 				}
+		// 	// 			}
 
-			// 			// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
+		// 	// 			// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
-			// 			pluginTick(plugin.instance, state, async (state) => {
+		// 	// 			pluginTick(plugin.instance, state, async (state) => {
 
-			// 				// console.log("REQUEST STATE", state)
+		// 	// 				// console.log("REQUEST STATE", state)
 
-			// 				let value = state.actuatorValue;
-			// 				let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
+		// 	// 				let value = state.actuatorValue;
+		// 	// 				let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
 
-			// 				// console.log("KV", key, value)
-			// 				if(!key) return;
-			// 				let writeOp: any = {
-			// 					[key?.key]: value
-			// 				};
+		// 	// 				// console.log("KV", key, value)
+		// 	// 				if(!key) return;
+		// 	// 				let writeOp: any = {
+		// 	// 					[key?.key]: value
+		// 	// 				};
 
-			// 				// console.log("WRITE", writeOp)
-			// 				await this.requestState({
-			// 					device: device?.name,
-			// 					value: writeOp
-			// 				})
+		// 	// 				// console.log("WRITE", writeOp)
+		// 	// 				await this.requestState({
+		// 	// 					device: device?.name,
+		// 	// 					value: writeOp
+		// 	// 				})
 
-			// 			})
-			// 		}else{
-			// 			console.log("PLUGIN NOT INSTANTIATED", plugin.id, plugin.plugin.name)
-			// 		}
-			// 		// console.log("PLugin tick ", plugin.name)
-			// 	}))
-			// }))
+		// 	// 			})
+		// 	// 		}else{
+		// 	// 			console.log("PLUGIN NOT INSTANTIATED", plugin.id, plugin.plugin.name)
+		// 	// 		}
+		// 	// 		// console.log("PLugin tick ", plugin.name)
+		// 	// 	}))
+		// 	// }))
 
-			// await this.writeState()
-		})
+		// 	// await this.writeState()
+		// })
 
 	}
 
