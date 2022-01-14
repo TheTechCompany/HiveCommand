@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/state-machine",
-  "version": "1.4.1-alpha.19",
+  "version": "1.4.1-alpha.21",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -22,7 +22,7 @@
   },
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b",
   "dependencies": {
-    "@hive-command/process": "^1.4.1-alpha.19",
+    "@hive-command/process": "^1.4.1-alpha.21",
     "dot": "^1.1.3",
     "locks": "^0.2.2"
   }
