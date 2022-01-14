@@ -268,7 +268,7 @@ export class CommandStateMachine extends EventEmitter {
 			console.debug(`Starting State Machine with ${this.processes.length} processes`)
 			this.status = CommandStateMachineStatus.STARTING;
 
-			await Promise.all(this.processes.map(async (x) => await x.start()))
+			Promise.all(this.processes.map(async (x) => await x.start()))
 
 			this.status = CommandStateMachineStatus.ON;
 
@@ -276,7 +276,7 @@ export class CommandStateMachine extends EventEmitter {
 				await this.checkInterlocks();
 
 				this.emit('event_loop')
-				
+
 				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
 			}
 
