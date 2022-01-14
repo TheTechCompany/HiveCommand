@@ -56,7 +56,7 @@ export default class BlessedPlugin extends BasePlugin {
 		
 		await axios.post(`http://localhost:8765/update`, {
 			port: parseInt(port) - 1,
-			value
+			value: `${value}`
 		})
 	}
 }
