@@ -3,6 +3,7 @@ import { Process } from "..";
 import { EventEmitter } from 'events'
 import { CommandProgramAction, ProcessAction } from "../action";
 import { Transition } from "../transition";
+import log from 'loglevel'
 import {
   CommandAction,
   CommandProcess,
@@ -43,6 +44,8 @@ export class ProcessChain extends EventEmitter {
     this.program = chain;
     this.process = process;
 
+    console.log(JSON.stringify(this.program.edges))
+
     this.action_types = actions || [];
 
     // console.log(this.program, {process: this.process})
@@ -76,6 +79,10 @@ export class ProcessChain extends EventEmitter {
 
   get getProcess(){
 	  return this.process
+  }
+
+  get currentActions(){
+    return this.current
   }
 
   async performOperation(device: string, release: boolean, operation: string) {
@@ -121,22 +128,26 @@ export class ProcessChain extends EventEmitter {
     let status = this.current.forEach((x, ix) => {
       const next = this.checkNext(x.id);
 
+      // log.debug({next})
       let priority = next
         .filter((a) => a.value)
         .sort((a, b) => b.conds - a.conds);
 
       let hasRun = x.hasRun;
       let isRunning = x.isRunning;
+      // log.debug("NEW ITEM PRE", {hasRun, isRunning, priority});
 
       if (hasRun && !isRunning && priority.length > 0) {
+        // log.debug("NEW ITEM PRE");
+
         // console.log({priority})
         this.current = this.current.filter((a) => a.id != x.id);
         // this.current.splice(ix, 1)
 
         let newItem = this.actions.find((a) => a.id == priority[0].target);
         if (newItem) {
-          // console.log("NEW ITEM");
-		  this.emit('transition', {from: x.id, to: newItem.id})
+          // log.debug("NEW ITEM");
+		      this.emit('transition', {from: x.id, to: newItem.id})
 
           this.current.push(newItem);
         }
@@ -152,13 +163,14 @@ export class ProcessChain extends EventEmitter {
     let next = this.getNext(id);
 
     let results = next.map((next_id: string) => {
-      let transition = this.transitions.find((a) => a.target == next_id);
+      let transition = this.transitions.find((a) => a.source == id && a.target == next_id);
 
       let conds = transition?.conditions || [];
 
       let output_conds: any[] = [];
 
       let truthy = true;
+
       conds.forEach((cond) => {
         //Get input value from value bank valueBank[input][inputKey]
         // console.log(this.parent.state.get(cond.input_id), cond.input_key)
@@ -184,6 +196,7 @@ export class ProcessChain extends EventEmitter {
           value_id: cond.value_id,
         });
       });
+
       return {
         target: transition?.target,
         value: truthy,
@@ -222,16 +235,11 @@ export class ProcessChain extends EventEmitter {
     const isRunning = this.isRunning();
     const hasRun = this.hasRun();
 
-    // console.log({isRunning, hasRun})
-
     const runs = this.current.map((x) => {
-      let hasNext = (this.getNext(x.id) || []).length > 0;
+      let next = (this.getNext(x.id) || [])
+      let hasNext = next.length > 0;
 
-      // console.log({hasNext, hasRun: !hasRun, isRunning: isRunning})
-
-      // console.log(x, hasNext)
       return hasNext || !hasRun || isRunning;
-      // return this.current.map((x) => ( || !this.hasRun() || this.isRunning()).indexOf(true) > -1;
     });
 
     return runs.indexOf(true) > -1;

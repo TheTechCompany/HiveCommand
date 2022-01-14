@@ -5,6 +5,8 @@ import { ProcessChain } from './chain';
 import { CommandAction, CommandProcess } from './types';
 import log from 'loglevel'
 
+log.setLevel('debug')
+
 export * from './types'
 
 export {
@@ -104,27 +106,33 @@ export class Process extends EventEmitter{
             return new ProcessChain(this, process, node.id, this.actions)
         }) || []
 
-        this.chains.entrypoints.map((entrypoint) => {
-            entrypoint.on('transition', (ev) => this.emit('transition', {
-                chain: entrypoint.pid, 
-                txid: entrypoint.getId, 
-                direction: 'entry',
-                transition: ev
-            }))
+        this.chains.entrypoints.forEach((entrypoint) => {
+            entrypoint.on('transition', (ev) => {
+                this.emit('transition', {
+                    chain: entrypoint.pid, 
+                    txid: entrypoint.getId, 
+                    direction: 'entry',
+                    transition: ev
+                })
+            })
         })
 
         this.chains.shutdown.map((exitpoint) => {
-            exitpoint.on('transition', (ev) => this.emit('transition', {
-                chain: exitpoint.pid, 
-                txid: exitpoint.getId, 
-                direction: 'exit',
-                transition: ev
-            }))
+            exitpoint.on('transition', (ev) => {
+
+                this.emit('transition', {
+                    chain: exitpoint.pid, 
+                    txid: exitpoint.getId, 
+                    direction: 'exit',
+                    transition: ev
+                })
+            })
         })
 
     }
 
     async performOperation(device: string, release: boolean, operation: string){
+        // log.debug(`Perform op ${operation} on ${device}`)
         await this.perform(device, release, operation)
     }
 
@@ -222,7 +230,8 @@ export class Process extends EventEmitter{
         // console.log(this.chains)
         while(hasNext && this.running){
 			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
-    
+            
+            // log.debug({hasNext}, this.chains.entrypoints.map((x) => x.currentActions))
 			Promise.all(this.chains.entrypoints.map(async (chain) => await chain.run()));
 
 			await Promise.all(this.chains.entrypoints.map((chain) => chain.next()));

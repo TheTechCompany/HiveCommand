@@ -115,7 +115,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	load(program: StateProgram){
-		log.debug("Loading new program")
+		log.debug(`Loading new program ${program.processes.length} processes`)
 		this.program = program;
 
 		this.processes = program.processes.map((process) => {
@@ -126,17 +126,19 @@ export class CommandStateMachine extends EventEmitter {
 
 		this.devices = program.devices?.map((x) => new StateDevice(x));
 
-		this.processes.map((process) => {
+		this.processes.forEach((process) => {
 			//Flow moves a step
+			log.debug('Listening to process')
 			process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		})
 
-		if(program.initialState) this.state = new State(program.initialState);
+		this.state = new State(program.initialState || {});
 
 	}
 
 
 	onProcessTransition(process: Process, event: ProcessTransition){
+		// log.debug('emit trans')/
 		this.emit('transition', event)
 	}
 

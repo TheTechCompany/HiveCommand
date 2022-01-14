@@ -46,6 +46,9 @@ export class Machine {
 			machine: this,
 			pluginDir: opts.pluginDir || '/tmp/plugins'
 		})
+
+		this.requestState = this.requestState.bind(this)
+		this.requestOperation = this.requestOperation.bind(this)
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) => {
@@ -83,9 +86,9 @@ export class Machine {
 			return action.next?.map((next) => {
 				return {
 					id: nanoid(),
-					source: action.type == "Trigger" ? 'origin' : action.id,
+					source: action.id, //action.type == "Trigger" ? 'origin' : action.id,
 					target: next.target,
-					extras: {
+					options: {
 						conditions: next.conditions?.map((cond) => ({
 							input: cond.input,
 							inputKey: cond.inputKey,
@@ -110,7 +113,7 @@ export class Machine {
 			id: flow?.id || '',
 			name: flow?.name || '',
 			nodes: nodes || [],
-			links: paths || [],
+			edges: paths || [],
 			sub_processes: subprocs || []
 		}
 	}
@@ -146,6 +149,7 @@ export class Machine {
 
 		}).filter((a) => a != undefined)
 
+		console.log(flows, payload)
 		
 		// console.log("FLOWS", flows)
 		// console.log(`Received command payload, starting state machine`)
@@ -384,6 +388,7 @@ export class Machine {
 
 	setState(device: string, state: any){
 		// const busPort = this.deviceMap.getDeviceBusPort(device)
+		log.debug(`Set State: (${device})`, {state})
 		this.fsm?.state?.update(device, {
 			...state
 		})
@@ -410,6 +415,7 @@ export class Machine {
 
 	//Request state + translator for name
 	async requestOperation(event: {device: string, operation: string}){
+		log.debug(`Requesting operation ${event.operation} on ${event.device}`)
 		// console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
 	
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
