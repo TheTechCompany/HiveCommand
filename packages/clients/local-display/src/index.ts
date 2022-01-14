@@ -1,4 +1,5 @@
 import blessed from 'blessed'
+import log from 'loglevel';
 
 export interface LocalDisplayOptions {
 	cols?: number;
@@ -24,6 +25,8 @@ export class LocalDisplay {
 		this.cols = options.cols || 4 
 
 		this.init()
+
+		this.updateCell = this.updateCell.bind(this);
 	}
 
 	get cell_width(){
@@ -52,6 +55,7 @@ export class LocalDisplay {
 	}
 
 	updateCell(col: number, row: number, value: any){
+		log.debug(`Updating cell ${col}:${row} to ${value}`)
 		this.cells[`${col}:${row}`].setContent(value)
 	}
 

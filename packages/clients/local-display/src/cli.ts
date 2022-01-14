@@ -44,6 +44,7 @@ const argv = yargs(process.argv.slice(2)).options({
 			const row = Math.floor(port / cols)
 
 			display.updateCell(col, row, value)
+			
 			res.send({
 				success: true
 			})
