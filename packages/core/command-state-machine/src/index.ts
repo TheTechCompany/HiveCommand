@@ -29,10 +29,9 @@ export enum CommandStateMachineStatus {
 }
 
 export interface StateProgram {
-	
-		initialState?: any;
-		devices?: ProgramDevice[]
-		processes: ProgramProcess[],	
+	initialState?: any;
+	devices?: ProgramDevice[]
+	processes: ProgramProcess[],	
 }
 
 import * as actions from './base-plugins'
@@ -58,6 +57,7 @@ const base_actions = [
 
 export interface CommandStateMachineEvents{
 	'transition': (transition: ProcessTransition) => void;
+	'event_loop': () => void;
 }
 
 export declare interface CommandStateMachine {
@@ -275,6 +275,8 @@ export class CommandStateMachine extends EventEmitter {
 			while(this.status == CommandStateMachineStatus.ON){
 				await this.checkInterlocks();
 
+				this.emit('event_loop')
+				
 				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
 			}
 

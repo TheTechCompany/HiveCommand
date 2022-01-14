@@ -179,6 +179,12 @@ export class Machine {
 			log.info(`Transitioning on chain (${event.chain}) from ${event.transition.from} to ${event.transition.to}`)
 		})
 
+		//TODO - this is a hack to get a consistent loop event
+		this.fsm.on('event_loop', async () => {
+
+			await this.writeState()
+		})
+
 		// this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
 		// 	this.healthClient.emit('process:transition', {process, target})
 		// })
