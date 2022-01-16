@@ -124,7 +124,7 @@ export default () => {
     const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
         let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
 
-        if(state.writable && deviceMode == "Manual"){
+        if(state.writable && operatingMode == "manual"){
             return (
                 <TextInput 
                     style={{padding: "none"}}

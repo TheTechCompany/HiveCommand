@@ -233,9 +233,11 @@ export class CommandStateMachine extends EventEmitter {
 		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
 		let process = allProcesses?.find((a) => a.id == flowId)
 
+		console.log("RUn Flow", {process, flowId, allProcesses})
 		if(!process) return new Error("No process found")
 
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
+			console.log("Starting process", {process})
 			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
