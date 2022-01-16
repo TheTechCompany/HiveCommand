@@ -329,7 +329,7 @@ export class Machine {
 	async runLoop(){
 		while(this.running){
 			await this.writeState()
-			await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
+			await new Promise((resolve) => setTimeout(() => resolve(true), 500));
 		}
 	}
 
@@ -416,7 +416,7 @@ export class Machine {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		console.log("write state - (LC Machine)", changes)
+		// console.log("write state - (LC Machine)", changes)
 
 		if(Object.keys(changes).length < 1) return;
 
