@@ -54,6 +54,7 @@ console.log(connectionValues)
 								</Box>
 								<Box flex>
 									<Select 
+										clear
 										labelKey="name"
 										valueKey={{reduce: true, key: 'id'}}
 										placeholder="Device"
@@ -63,6 +64,7 @@ console.log(connectionValues)
 								</Box>
 								<Box direction="row" flex>
 									<Select
+										clear
 										labelKey="key"
 										valueKey={{reduce: true, key: 'key'}}
 										value={connectionValues?.find((a) => a.key == connection.key)?.value}

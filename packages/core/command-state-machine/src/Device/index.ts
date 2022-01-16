@@ -139,10 +139,12 @@ export class StateDevice {
 	}
 
 	async setState(state: any){
+		console.log("DEVICE - setState", {state})
 		await this.fsm.state?.update(this.device.name, state)
 	}
 
 	async requestState(state: any){
+		console.log("DEVICE - requestState", {state})
 		await this.client.requestState({device: this.device.name, state})
 	}
 
