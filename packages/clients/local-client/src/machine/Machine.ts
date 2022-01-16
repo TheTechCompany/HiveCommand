@@ -29,6 +29,8 @@ export class Machine {
 
 	private env: CommandEnvironment[] = [];
 
+	private running : boolean = false;
+
 	constructor(opts: {
 		pluginDir: string
 	}){
@@ -203,10 +205,10 @@ export class Machine {
 		})
 
 		//TODO - this is a hack to get a consistent loop event
-		this.fsm.on('event_loop', async () => {
+		// this.fsm.on('event_loop', async () => {
 
-			await this.writeState()
-		})
+		// 	await this.writeState()
+		// })
 
 		// this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
 		// 	this.healthClient.emit('process:transition', {process, target})
@@ -301,23 +303,47 @@ export class Machine {
 		return this.fsm.state
 	}
 
-	get isRunning(){
-		return this.fsm.isRunning
-	}
 
 	get mode(){
 		return this.fsm.mode || CommandStateMachineMode.DISABLED
 	}
 
-	async start(){
-		log.info("Starting state machine")
-		await this.fsm.start();
+
+	get isProgramRunning(){
+		return this.fsm.isRunning
 	}
 
-	async shutdown(){
-		log.info("Stopping state machine")
-		await this.fsm.stop();
+	async startProgram(){
+		await this.fsm.start()
 	}
+
+	async stopProgram(){
+		await this.fsm.stop()
+	}
+
+	async start(){
+		this.running = true;
+
+		while(this.running){
+			await this.writeState()
+
+			await new Promise((resolve) => setTimeout(() => resolve, 1000));
+		}
+	}
+
+	stop(){
+		this.running = false;
+	}
+
+	// async start(){
+	// 	log.info("Starting state machine")
+	// 	// await this.fsm.start();
+	// }
+
+	// async shutdown(){
+	// 	log.info("Stopping state machine")
+	// 	// await this.fsm.stop();
+	// }
 
 	async standby(){
 		log.info("Pausing state machine")

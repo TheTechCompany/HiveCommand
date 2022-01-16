@@ -107,8 +107,8 @@ export class CommandClient {
 	}
 
 	async kill(){
-
-		await this.machine?.shutdown()
+		await this.machine?.stopProgram()
+		await this.machine?.stop()
 		await this.controller.stop();
 		
 	}
@@ -124,7 +124,8 @@ export class CommandClient {
 			
 			console.log("State Machine stopped...");
 	
-			await this.machine?.shutdown()
+			await this.machine?.stopProgram()
+			await this.machine?.stop()
 			// let pumps = this.deviceMap.getDeviceByType("pump")
 	
 			// await Promise.all(pumps.map(async (pump) => {
@@ -183,7 +184,7 @@ export class CommandClient {
 	}
 
 	async stop(){
-		await this.machine?.shutdown()
+		await this.machine?.stop()
 	}
 
 

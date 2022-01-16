@@ -43,7 +43,7 @@ export class Controller {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine?.isRunning || false})
+							return new Variant({dataType: DataType.Boolean, value: this.machine?.isProgramRunning || false})
 						}
 					},
 					Mode: {
@@ -66,7 +66,7 @@ export class Controller {
 						],
 						func: async (inputs) => {
 							log.debug('Controller:start')
-							this.machine?.start()
+							this.machine?.startProgram()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
 					},
@@ -83,7 +83,7 @@ export class Controller {
 						func: async (inputs) => {
 							log.debug('Controller:shutdown')
 
-							this.machine?.shutdown()
+							this.machine?.stopProgram()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},

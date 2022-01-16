@@ -60,6 +60,9 @@ type Options = {
 
 	hostCommander.setup().then(() => {
 		log.info(`Pilot setup`)
+		hostCommander.start().then(() => {
+			log.info(`Pilot started`)
+		});
 	}).catch((err) => {
 		log.error(err)
 	})
