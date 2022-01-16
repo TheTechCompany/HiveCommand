@@ -414,8 +414,9 @@ export class Machine {
 	}
 
 	async writeState(){
-		console.log("write state - (LC Machine)", this.busMap.getChanged())
 		const changes = this.busMap.getChanged()
+
+		console.log("write state - (LC Machine)", changes)
 
 		if(Object.keys(changes).length < 1) return;
 
