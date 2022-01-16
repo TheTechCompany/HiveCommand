@@ -58,10 +58,15 @@ type Options = {
 		discoveryServer
 	})
 
-	hostCommander.start().then(() => {
-		// process.exit(0);
+	hostCommander.setup().then(() => {
+		log.info(`Pilot setup`)
 	}).catch((err) => {
-		// console.log(err)
+		log.error(err)
 	})
+	// hostCommander.start().then(() => {
+	// 	// process.exit(0);
+	// }).catch((err) => {
+	// 	// console.log(err)
+	// })
 
   };

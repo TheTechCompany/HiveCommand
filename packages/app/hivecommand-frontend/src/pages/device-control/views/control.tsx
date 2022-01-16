@@ -212,14 +212,10 @@ export default () => {
 						  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
 						  hoverIndicator={'accent-1'}
 						  onClick={() => {
-							  performAction({
-								  args: {
-									  deviceId: controlId, 
-									  deviceName: deviceName,
-									  action: action.key
-								  }
-									  
-							  })
+							  performAction(
+									deviceName,
+									action.key		  
+							  	)
 						  }}
 						  label={action.key} />
 				  ))}

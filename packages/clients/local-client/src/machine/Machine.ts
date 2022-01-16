@@ -325,7 +325,8 @@ export class Machine {
 	}
 
 	async runOneshot(processId: string){
-		return new Error("Not implemented");
+		return await this.fsm.runFlow(processId)
+		// return new Error("Not implemented");
 	}
 
 
@@ -378,6 +379,7 @@ export class Machine {
 	}
 
 	async requestOperation(ev : {device: string, operation: string}){
+		console.log("request operation - (LC Machine)", ev)
 		await this.fsm.performOperation(ev.device, undefined, ev.operation)
 	}
 

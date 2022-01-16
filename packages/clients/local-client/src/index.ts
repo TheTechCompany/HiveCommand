@@ -147,14 +147,7 @@ export class CommandClient {
 		this.machine?.load(payload)
 	}
 
-	async stop(){
-		await this.machine?.shutdown()
-	}
-
-
-	// Load the state machine and run
-	async start(){
-		//Find IO-Buses and Connected Devices
+	async setup(){
 		this.environment = await this.machine?.discoverEnvironment() || []
 
 		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
@@ -187,6 +180,17 @@ export class CommandClient {
 			}
 			await this.machine?.load(commandPayload)
 		}
+	}
+
+	async stop(){
+		await this.machine?.shutdown()
+	}
+
+
+	// Load the state machine and run
+	async start(){
+		//Find IO-Buses and Connected Devices
+		
 		
 		// this.display?.start()
 

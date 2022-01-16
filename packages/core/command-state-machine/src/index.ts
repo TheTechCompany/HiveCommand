@@ -206,6 +206,7 @@ export class CommandStateMachine extends EventEmitter {
 				}
 			}
 
+			console.log("perform op - fsm", deviceName, operation)
 			if(operation){
 				await device?.performOperation(operation);
 				// await this.client.performOperation({device: deviceName, operation})
@@ -307,6 +308,8 @@ export class CommandStateMachine extends EventEmitter {
 			this.mode = CommandStateMachineMode.DISABLED
 		
 			this.status = CommandStateMachineStatus.OFF
+
+			log.info('State Machine - Stopped')
 		}else{
 			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
 		}

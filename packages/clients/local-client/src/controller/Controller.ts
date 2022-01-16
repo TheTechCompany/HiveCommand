@@ -118,6 +118,8 @@ export class Controller {
 						],
 						func: async (inputs) => {
 							const [value] = inputs;
+
+							console.log({value}, "skipTo")
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
 							// if(result) throw result;
@@ -144,6 +146,7 @@ export class Controller {
 						func: async (inputs) => {
 							const [device, action] = inputs;
 
+							console.log({device, action}, "Controller")
 							const result = await this.valueBank.requestAction?.(device.value.toString(), action.value.toString())	
 							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
