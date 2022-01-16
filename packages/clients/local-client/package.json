@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-client",
-  "version": "1.4.1-alpha.38",
+  "version": "1.4.1-alpha.39",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -43,7 +43,7 @@
     "@hive-command/sms": "^1.4.0",
     "@hive-command/state-machine": "^1.4.1-alpha.38",
     "@hive-command/subscription-lock": "^1.4.0",
-    "@io-link/core": "^1.4.1-alpha.21",
+    "@io-link/core": "^1.4.1-alpha.39",
     "@io-link/iodd": "^1.4.0",
     "@revpi/node": "1.0.9",
     "axios": "^0.22.0",
