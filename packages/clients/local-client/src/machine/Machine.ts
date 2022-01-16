@@ -372,6 +372,8 @@ export class Machine {
 
 
 	async requestState(event: {device: string, state: any | {[key: string]: any}}){
+		console.log("request state - (LC Machine)", event)
+
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 
 		let busDevice = this.env.find((a) => a.id == busPort?.bus)
@@ -410,6 +412,7 @@ export class Machine {
 	}
 
 	async writeState(){
+		console.log("write state - (LC Machine)", this.busMap.getChanged())
 		const changes = this.busMap.getChanged()
 
 		if(Object.keys(changes).length < 1) return;
