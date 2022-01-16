@@ -422,6 +422,8 @@ export class Machine {
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
 
+			console.log(busDevice, this.env, changes[bus])
+
 			// console.log("Change bus", bus)
 			await Promise.all(changes[bus].map(async (port) => {
 
