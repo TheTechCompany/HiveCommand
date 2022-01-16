@@ -54,6 +54,7 @@ export class ProcessChain extends EventEmitter {
       chain.nodes?.map((node) => {
         return new ProcessAction(node, this, this.action_types);
       }) || [];
+
     this.transitions =
       chain.edges?.map((edge) => {
         return new Transition(edge);
@@ -70,7 +71,7 @@ export class ProcessChain extends EventEmitter {
   }
   
   get getId(){
-	return this.id
+	  return this.id
   }
 
   get pid() {

@@ -354,6 +354,25 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				}
 				interlocks {
 					id
+
+					state {
+						
+						deviceKey {
+							id
+							key
+						}
+
+						deviceValue {
+							type
+							value
+							setpoint {
+								id
+								name
+							}
+						}
+
+					}
+
 					inputDevice {
 						id 
 						name
@@ -418,7 +437,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	const plugins = data?.commandProgramDevicePlugins || [];
 
 	return (
-		<Box flex>
+		<Box flex background={"#dfdfdf"}>
 			<DeviceInterlock
 				devices={devices}
 				device={device}
@@ -506,7 +525,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				<Text size="medium">{device?.name}</Text>
 			</Box>
 			
-			<Box flex gap="xsmall" direction="column">
+			<Box pad="xsmall" flex gap="xsmall" direction="column">
 			<Box gap="xsmall" direction="row" flex>
 				<ListBox 
 					label="Interlocks" 

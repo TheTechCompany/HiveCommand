@@ -92,6 +92,7 @@ export default () => {
 	// 	}
 	// })
 
+	// alert(operatingMode)
     const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
         //Find map between P&ID tag and bus-port
 
@@ -204,8 +205,8 @@ export default () => {
   {/* 
   
 				  {deviceValues(node?.devicePlaceholder?.name)} */}
-				  {/* <Box align="center" justify="around" direction="row">
-				  	{operating == "manual" && deviceInfo?.actions?.map((action) => (
+				  <Box align="center" justify="around" direction="row">
+				  	{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
 					  <Button
 						  plain
 						  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
@@ -222,7 +223,7 @@ export default () => {
 						  }}
 						  label={action.key} />
 				  ))}
-				  </Box> */}
+				  </Box>
   
 			  </Box>
 		 )

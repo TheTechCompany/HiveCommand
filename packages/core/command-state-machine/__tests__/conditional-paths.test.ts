@@ -1,6 +1,7 @@
 'use strict';
 
 import {CommandStateMachine, CommandStateMachineMode} from '../src'
+import pidPlugin from './pid-plugin';
 
 jest.setTimeout(20000);
 
@@ -19,9 +20,50 @@ describe('Conditional Paths', () => {
 			const machine = new CommandStateMachine({
 				initialState: {
 					CT301: {conductivity: 1900},
-					PMP101: {on: false},
-					PMP201: {on: false}
+					PMP101: {on: false, speed: 0},
+					PMP201: {on: false, speed: 0}
 				},
+				devices: [
+					{
+						name: 'PMP101',
+						plugins: [
+							{
+								classString: pidPlugin,
+								imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+								options: {
+									p: 0.5,
+									i: 0.01,
+									d: 0.01,
+									targetDevice: 'CT301',
+									targetDeviceField: 'conductivity',
+									target: 1700
+								},
+								actions: [{key: 'start', func: 'start'}, {key: 'stop', func: 'stop'}]
+							}
+						]
+					},
+					{
+						name: 'PMP201',
+						plugins: [
+							{
+								classString: pidPlugin,
+								imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+								options: {
+									p: 0.5,
+									i: 0.01,
+									d: 0.01,
+									targetDevice: 'CT301',
+									targetDeviceField: 'conductivity',
+									target: 1700
+								},
+								actions: [{key: 'start', func: 'start'}, {key: 'stop', func: 'stop'}]
+							}
+						]
+					},
+					{
+						name: "CT301"
+					}
+				],
 				processes: [
 					{
 						id: 'raw-water',
@@ -127,18 +169,20 @@ describe('Conditional Paths', () => {
 					}
 				]
 			}, {
-				performOperation: async (event) => {
-					if(event.device == "PMP101" && event.operation == "start") {
-						machine.state?.update('PMP101', {on: true})
+				requestState: async (event) => {
+					console.log({event})
+
+					if(event.device == "PMP101") {
+						machine.state?.update('PMP101', event.state)
 						// await machine.stop();
 						// resolve(true)
 					}
 					
-					if(event.device == "PMP201" && event.operation == "stop") {
+					if(event.device == "PMP201") {
 						resolve(false);
 					}
 
-					if(event.device == "PMP101" && event.operation == 'stop'){
+					if(event.device == "PMP101" && event.state.speed == 0){
 						await machine.stop()
 						// machine.state.update('PMP101', {on: false})
 						clearTimeout(timeout)

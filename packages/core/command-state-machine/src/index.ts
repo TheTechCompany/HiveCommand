@@ -9,7 +9,7 @@ import log from 'loglevel'
 export * from './types'
 
 export interface CommandClient { 
-	performOperation: (ev: {device: string, operation: string}) => Promise<any>;
+	requestState: (ev: { device: string, state: any | {[key: string]: any} }) => Promise<any>;
 }
 
 export enum CommandStateMachineMode {
@@ -124,7 +124,7 @@ export class CommandStateMachine extends EventEmitter {
 			})
 		})
 
-		this.devices = program.devices?.map((x) => new StateDevice(x));
+		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client));
 
 		this.processes.forEach((process) => {
 			//Flow moves a step
@@ -155,15 +155,25 @@ export class CommandStateMachine extends EventEmitter {
 		// this.devices?.find((x) => x.name == deviceName)?.control = control;
 	}
 
+	isActive(flowId: string){
+		let running_proc = this.running_processes[flowId]
+
+		let active_proc = this.processes.find((a) => a.id == flowId || a.isActive(flowId))
+
+		return (active_proc || running_proc)
+	}
 
 
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
 
-		let interlocks = (this.devices?.filter((a) => a.hasInterlock).filter((device) => {
+		let deviceInterlocks = (this.devices || []).filter((a) => a.hasInterlock == true)
+		// console.log({deviceInterlocks})
+		let interlocks = deviceInterlocks?.filter((device) => {
 			return device.checkInterlockNeeded(this.state?.get(device.name))
-		})) || []
+		}) || []
 		
+		// console.log({interlocks})
 		await Promise.all(interlocks.map(async (device) => {	
 			// console.log("Checking")
 
@@ -171,7 +181,8 @@ export class CommandStateMachine extends EventEmitter {
 			// console.log("Checked", {locked, lock})
 			if(locked){
 				// console.log("Reacting to lock");
-				await device.doFallback(lock, this.performOperation)
+				log.info(`Interlock ${lock.device} ${device.name} locked`)
+				await device.doFallback(lock)
 			}
 			// console.log("DEVICE", device.name, "LOCKED", locked)
 		}))
@@ -196,7 +207,8 @@ export class CommandStateMachine extends EventEmitter {
 			}
 
 			if(operation){
-				await this.client.performOperation({device: deviceName, operation})
+				await device?.performOperation(operation);
+				// await this.client.performOperation({device: deviceName, operation})
 				resolve(true)
 			}
 		});
@@ -283,32 +295,7 @@ export class CommandStateMachine extends EventEmitter {
 		}else{
 			log.warn(`FSM: START - No processes will be started because starting conditions are not met.`)
 		}
-		// this.mode = mode || CommandStateMachineMode.AUTO
-		// // if(mode != undefined) {
-		// // 	console.log(`Changing mode to ${mode}`)
-		// // 	this.mode = mode;
-		// // }
-
-		// this.running = true;
-
-		// while(this.running){
-		// 	//Run all actions in current stage of execution
-		// 	await this.checkInterlocks();
-
-		// 	if(this.mode == CommandStateMachineMode.AUTO){
-		// 		try{
-		// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-		// 		}catch(e){
-		// 			console.debug(e)
-		// 		}
-
-		// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
-		// 	}
-
-		// 	this.emit('TICK')
-
-		// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
-		// }
+	
 	}
 
 	async stop(){
@@ -318,29 +305,10 @@ export class CommandStateMachine extends EventEmitter {
 			await Promise.all(this.processes.map(async (process) => await process.stop()))
 
 			this.mode = CommandStateMachineMode.DISABLED
-			// await Promise.all(this.processes.map((x) => x.shutdown()))
-
-			// this.running = true;
-			// while(this.running){op
-			// 	await this.checkInterlocks();
-
-			// 		try{
-			// 			const actions = Promise.all(this.processes.map(async (x) => await x.doCurrent()))
-			// 		}catch(e){
-			// 			console.debug(e)
-			// 		}
-
-			// 		const next = await Promise.all(this.processes.map(async (x) => x.moveNext()))
-				
-
-			// 	this.emit('TICK')
-
-			// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), this.tickRate))
-			
-			// }
+		
 			this.status = CommandStateMachineStatus.OFF
 		}else{
-			log.warn(`FSM: STOP - No processes will be started because starting conditions are not met.`)
+			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
 		}
 
 	}

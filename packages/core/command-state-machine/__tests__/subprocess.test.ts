@@ -270,12 +270,12 @@ describe('Subprocess as a blockType', () => {
 					}
 				]
 			}, {
-				performOperation: async (event) => {
+				requestState: async (event) => {
 					console.log(event)
 					if(event.device == "AV101"){
-						if(event.operation == "open"){
+						if(event.state == true){
 							subTime = Date.now()
-						}else if(event.operation == "close"){
+						}else if(event.state == false){
 							interruptTime = Date.now()
 						}
 					}

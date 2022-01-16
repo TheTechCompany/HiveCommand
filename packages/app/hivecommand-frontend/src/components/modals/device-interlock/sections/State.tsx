@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import { Box } from 'grommet';
+import { Box, CheckBox, TextInput } from 'grommet';
 import QueryBuilder, {Field, formatQuery, RuleGroupType, RuleType} from 'react-querybuilder';
 import { DeviceInterlockContext } from '../context';
 import {Query, Builder, BasicConfig, Config, Utils as QbUtils, ImmutableTree} from 'react-awesome-query-builder';
@@ -7,6 +7,7 @@ import AntdConfig from 'react-awesome-query-builder/lib/config/antd';
 
 import 'antd/dist/antd.css'; // or import "react-awesome-query-builder/css/antd.less";
 import 'react-awesome-query-builder/lib/css/styles.css';
+import { FormInput } from '@hexhive/ui';
 // import 'react-awesome-query-builder/lib/css/compact_styles.css'; //optional, for more compact styles
 
 
@@ -87,48 +88,51 @@ export const StateSection = (props) => {
 		// console.log("Config udpate")
 	}, [device])
 
-	const query = useMemo(() => {
-		// if(interlock.state) {
-		// console.log("Update tree", interlock)
-		console.log({state: interlock.state})
-		let tree = interlock.state || {id: QbUtils.uuid(), type: 'group'}
-		console.log({tree})
+	// const query = useMemo(() => {
+	// 	// if(interlock.state) {
+	// 	// console.log("Update tree", interlock)
+	// 	console.log({state: interlock.state})
+	// 	let tree = interlock.state || {id: QbUtils.uuid(), type: 'group'}
+	// 	console.log({tree})
 
-		const imTree = QbUtils.loadTree(tree)
-		console.log({imTree})
+	// 	const imTree = QbUtils.loadTree(tree)
+	// 	console.log({imTree})
 
-		return QbUtils.checkTree(QbUtils.loadTree(tree), config)
+	// 	return QbUtils.checkTree(QbUtils.loadTree(tree), config)
 
-			// }
-	}, [interlock.state])
+	// 		// }
+	// }, [interlock.state])
 	console.log(device?.type)
 
+	const changeState = (key: string, value: string) => {
+		let oldState = interlock?.state?.slice()
+		let ix = oldState.map((x) => x.deviceKey).indexOf(key)
+		if(ix > -1){
+			oldState[ix].deviceValue = value
+		}else{
+			oldState.push({deviceKey: key, deviceValue: value})
+		}
+		console.log({oldState})
+		setInterlock({...interlock, state: oldState})
+	}
+
 	return (
-		<Box>
-			<Query
-				{...config}
-				value={query}
-				onChange={(tree, config) => {
-				
-					setInterlock({...interlock, state: QbUtils.getTree(tree)})
-					// setQuery(tree)
-					// console.log(QbUtils.getTree(tree))
-				}}
-				renderBuilder={(props) => (
-					<Builder {...props} />
-				)} />
-			{/* <QueryBuilder 
-				query={query}
-				fields={device?.type?.state?.map((stateItem) : Field => ({
-					name: stateItem.key,
-					label: stateItem.key,
-					valueEditorType: stateItem.type == "BooleanT" ? 'select' : 'text',
-					values: stateItem.type == "BooleanT" ? ['true', 'false'].map((x) => ({name: x, label: x})) : undefined,
-				}))}
-				onQueryChange={(query) => {
-					console.log(formatQuery(query, 'json'))
-					setQuery(query)
-				}}/> */}
+		<Box flex gap="xsmall">
+			{Object.keys(config?.fields)?.map((x) => config?.fields[x]).map((field) => field.type == 'number' ? (
+				<FormInput 
+					value={interlock.state?.find((a) => a.deviceKey == field.label)?.deviceValue}
+					onChange={(value) => changeState(field.label, value)}
+					placeholder={field?.label} 
+					type={'number'}/>
+			) : (
+				<Box direction='row' align='center' justify='end'>
+					<CheckBox 
+						checked={interlock.state?.find((a) => a.deviceKey == field.label)?.deviceValue == "true"}
+						onChange={(e) => changeState(field.label, `${e.target.checked}`)}
+						reverse 
+						label={field?.label} />
+				</Box>
+			))}
 		</Box>
 	)
 }

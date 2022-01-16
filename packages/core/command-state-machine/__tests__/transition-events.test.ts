@@ -71,7 +71,7 @@ describe('Transition Events', () => {
 					}
 				]
 			}, {
-				performOperation: async (event) => {
+				requestState: async (event) => {
 					
 				}
 			});

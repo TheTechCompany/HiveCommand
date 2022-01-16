@@ -4,7 +4,7 @@ import { FormControl } from '@hexhive/ui';
 import { DeviceInterlockContext } from '../context';
 
 export const ActionSection = (props) => {
-	const { interlock, setInterlock } = useContext(DeviceInterlockContext)
+	const { interlock, actions, setInterlock } = useContext(DeviceInterlockContext)
 
 	return (
 		<Box>
@@ -13,7 +13,7 @@ export const ActionSection = (props) => {
 				valueKey={"id"}
 				value={interlock.action}
 				onChange={(value) => setInterlock({ ...interlock, action: value })}
-				options={props.actions || []}
+				options={actions || []}
 				placeholder="Action" />
 		</Box>
 	)

@@ -24,6 +24,7 @@
   "dependencies": {
     "@hive-command/process": "^1.4.1-alpha.21",
     "dot": "^1.1.3",
-    "locks": "^0.2.2"
+    "locks": "^0.2.2",
+    "node-pid-controller": "^1.0.1"
   }
 }

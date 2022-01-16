@@ -16,6 +16,7 @@ import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
 import log from "loglevel";
+import PID from "../plugins/PID";
 
 export class Machine {
 
@@ -34,8 +35,8 @@ export class Machine {
 		this.fsm = new CommandStateMachine({
 			processes: []
 		}, {
-			performOperation: async (operation) => {
-
+			requestState: async (operation) => {
+				log.info("Requesting state to mock resolver", operation)
 			}
 		});
 
@@ -48,7 +49,7 @@ export class Machine {
 		})
 
 		this.requestState = this.requestState.bind(this)
-		this.requestOperation = this.requestOperation.bind(this)
+		// this.requestOperation = this.requestOperation.bind(this)
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) => {
@@ -154,25 +155,47 @@ export class Machine {
 		// console.log("FLOWS", flows)
 		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
-			devices: layout?.map((x) => ({
-				name: x.name, 
-				requiresMutex: x.requiresMutex,
-				interlock: {
-					state: {on: 'true'},
-					// state: {on: true},
-					locks: (x.interlocks || []).map((lock) => ({
-						device: lock.input.name,
-						deviceKey: lock.inputKey.key,
-						comparator: lock.comparator,
-						value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
+			devices: layout?.map((x) => {
 
-						fallback: lock.action.key
-					}))
+				let plugins = x.plugins?.map((plugin) => {
+					let configuration = plugin.configuration.reduce((prev, curr) => {
+						return {
+							...prev,
+							[curr.key]: curr.value
+						}
+					}, {})
+
+					return {
+						classString: PID, //plugin.classString,
+						imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+						options: configuration,
+						actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
+						activeWhen: plugin.rules?.id
+					}
+				});
+
+				return {
+					name: x.name, 
+					requiresMutex: x.requiresMutex,
+					actions: x.actions,
+					plugins,
+					interlock: {
+						state: {on: 'true'},
+						// state: {on: true},
+						locks: (x.interlocks || []).map((lock) => ({
+							device: lock.input.name,
+							deviceKey: lock.inputKey.key,
+							comparator: lock.comparator,
+							value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
+
+							fallback: lock.action.key
+						}))
+					}
 				}
-			})),
+			}),
 			processes: flows || []
 		}, {
-			performOperation: this.requestOperation
+			requestState: this.requestState
 		})
 
 		this.fsm.on('transition', (event) => {
@@ -321,27 +344,23 @@ export class Machine {
 	}
 
 
-	async requestState(event: {device: string, value: any}){
+	async requestState(event: {device: string, state: any | {[key: string]: any}}){
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 
 		let busDevice = this.env.find((a) => a.id == busPort?.bus)
 		if(!busDevice) return;
-		let plugin = this.pluginBank.getByTag(busDevice?.type) //find((a) => a.TAG == busDevice?.type)
-		// console.log("REQUESTING STATE FROM ", busPort?.bus, busPort?.port, event.value)
-		
+	
 		if(!busPort?.bus) return;
 		
-		let prevState = this.busMap.get(busPort.bus, busPort.port)
-
 		let writeOp: any;
-		if(typeof(event.value) == 'object'){
+		if(typeof(event.state) == 'object'){
 
 			writeOp = {};
-			for(var k in event.value){
+			for(var k in event.state){
 				let stateItem = busPort?.state?.find((a) => a.key == k)
 
 				if(!stateItem) continue;
-				let value = event.value[k];
+				let value = event.state[k];
 				if(stateItem.max && stateItem.min){
 					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
 
@@ -351,11 +370,15 @@ export class Machine {
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
 			}
 		}else{
-			writeOp = event.value;
+			writeOp = event.state;
 		}
 
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
 		this.busMap.request(busPort.bus, busPort.port, writeOp)
+	}
+
+	async requestOperation(ev : {device: string, operation: string}){
+		await this.fsm.performOperation(ev.device, undefined, ev.operation)
 	}
 
 	async writeState(){
@@ -400,54 +423,54 @@ export class Machine {
 		})
 	}
 
-	async useAction(device: string, operation: any){
-		const busPort = this.deviceMap.getDeviceBusPort(device)
+	// async useAction(device: string, operation: any){
+	// 	const busPort = this.deviceMap.getDeviceBusPort(device)
 
-		// if(busPort?.bus && busPort?.port){
-			/*
-				Test the operation value for object type
-				if object remap keys to busmap keys
-				if value write directly
-			*/
+	// 	// if(busPort?.bus && busPort?.port){
+	// 		/*
+	// 			Test the operation value for object type
+	// 			if object remap keys to busmap keys
+	// 			if value write directly
+	// 		*/
 			
 		
 
-			await this.requestState({
-				device: device,
-				value: operation
-			})
+	// 		await this.requestState({
+	// 			device: device,
+	// 			state: operation
+	// 		})
 		
-	}
+	// }
 
 	//Request state + translator for name
-	async requestOperation(event: {device: string, operation: string}){
-		log.debug(`Requesting operation ${event.operation} on ${event.device}`)
-		// console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
+	// async requestOperation(event: {device: string, operation: string}){
+	// 	log.debug(`Requesting operation ${event.operation} on ${event.device}`)
+	// 	// console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
 	
-		let busPort = this.deviceMap.getDeviceBusPort(event.device)
+	// 	let busPort = this.deviceMap.getDeviceBusPort(event.device)
 		
-		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
+	// 	if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
-		let action = busPort.actions?.find((a) => a.key == event.operation)
+	// 	let action = busPort.actions?.find((a) => a.key == event.operation)
 
-		if(!action?.func) return;
+	// 	if(!action?.func) return;
 
-		let driverFunction = getDeviceFunction(action?.func)
+	// 	let driverFunction = getDeviceFunction(action?.func)
 		
-		let id = nanoid();
-		console.time(`${id}-${action.key}`)
+	// 	let id = nanoid();
+	// 	console.time(`${id}-${action.key}`)
 		
-		await driverFunction(
-			{},
-			(state: any) => this.setState(event.device, state),
-			(operation: any) => {
-				// console.log(operation);
-				this.useAction(event.device, operation)	
-			}
-		)
+	// 	await driverFunction(
+	// 		{},
+	// 		(state: any) => this.setState(event.device, state),
+	// 		(operation: any) => {
+	// 			// console.log(operation);
+	// 			this.useAction(event.device, operation)	
+	// 		}
+	// 	)
 
-		console.timeEnd(`${id}-${action.key}`)
-	}
+	// 	console.timeEnd(`${id}-${action.key}`)
+	// }
 
 
 
