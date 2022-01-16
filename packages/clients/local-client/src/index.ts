@@ -90,7 +90,7 @@ export class CommandClient {
 				get: this.machine.getByKey.bind(this),
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
 				setDeviceMode: this.machine.setDeviceMode.bind(this), 
-				requestState: async (device, key, value) => await this.machine?.requestState({device: device, value: {[key]: value}}),
+				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
 				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action})
 			},
 			machine: this.machine,
