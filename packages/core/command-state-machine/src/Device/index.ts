@@ -128,6 +128,8 @@ export class StateDevice {
 			...pluginActions
 		}
 
+		console.log("Device actions", {actions})
+
 		if(actions[operation]){
 			return await actions[operation](this.state, this.setState, this.requestState)
 		}else {

@@ -206,7 +206,7 @@ export class CommandStateMachine extends EventEmitter {
 				}
 			}
 
-			console.log("perform op - fsm", deviceName, operation)
+			console.log("perform op - fsm", deviceName, operation, {device, operation})
 			if(operation){
 				await device?.performOperation(operation);
 				// await this.client.performOperation({device: deviceName, operation})
