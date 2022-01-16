@@ -21,6 +21,7 @@ export class PluginBank {
 			this.config = JSON.parse(config);
 		}else{
 			this.config = {
+				plugins: [],
 				ignorePlugins: []
 			}
 		}

@@ -328,10 +328,8 @@ export class Machine {
 
 	async runLoop(){
 		while(this.running){
-			console.log("R|UN LOOP")
 			await this.writeState()
-
-			await new Promise((resolve) => setTimeout(() => resolve, 1000));
+			await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
 		}
 	}
 
