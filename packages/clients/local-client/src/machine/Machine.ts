@@ -323,6 +323,7 @@ export class Machine {
 
 	async start(){
 		this.running = true;
+		await this.pluginBank.subscribeToBusSystem(this.env)
 		this.runLoop()
 	}
 
