@@ -114,6 +114,8 @@ export class ProcessChain extends EventEmitter {
 
 			//   this.emit('transition', {from: action.id, to: act.id})
               await act.onEnter();
+
+              await act.onExit()
             }
           })
         );

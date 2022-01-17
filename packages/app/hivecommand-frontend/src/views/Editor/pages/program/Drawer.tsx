@@ -95,7 +95,7 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 
 	const [ modalOpen, openModal ] = useState<boolean>(false);
 
-	const { devices, refresh, selected: node } = useProgramEditor()
+	const { devices, refresh, selected: node, flow } = useProgramEditor()
 
 	const { program } = useCommandEditor()
 
@@ -103,12 +103,12 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 
 	const { selected, conditions, activeProgram, selectedType } = useProgramEditor()
 
-	const updateNodeConfiguration = useUpdateNodeConfiguration(program?.id, activeProgram)
+	const updateNodeConfiguration = useUpdateNodeConfiguration(program?.id, activeProgram, flow?.parent?.id)
 
-	const removeNodeAction = useRemoveNodeAction(program?.id, activeProgram)
+	const removeNodeAction = useRemoveNodeAction(program?.id, activeProgram, flow?.parent?.id)
 
-	const updatePathConditions = useUpdatePathConditions(program?.id, activeProgram)
-	const removePathConditions = useRemovePathConditions(program?.id, activeProgram)
+	const updatePathConditions = useUpdatePathConditions(program?.id, activeProgram, flow?.parent?.id)
+	const removePathConditions = useRemovePathConditions(program?.id, activeProgram, flow?.parent?.id)
 
 	useEffect(() => {
 		let newConf : any = {};

@@ -148,6 +148,10 @@ export const Program = (props) => {
                     name
                 }
 
+                parent {
+                    id
+                }
+
                 conditions {
                     id
                     inputDevice {
@@ -229,11 +233,11 @@ export const Program = (props) => {
     let flow = data?.commandProgramFlows?.[0]
 
 
-    const createProgramNode = useCreateProgramNode(id, activeProgram)
-    const updateProgramNode = useUpdateProgramNode(id, activeProgram)
-    const deleteProgramNodes = useDeleteProgramNodes(id, activeProgram)
-    const connectProgramNode = useConnectProgramNode(id, activeProgram)
-    const disconnectProgramNode = useDisconnectProgramNode(id, activeProgram)
+    const createProgramNode = useCreateProgramNode(id, activeProgram, flow?.parent?.id)
+    const updateProgramNode = useUpdateProgramNode(id, activeProgram, flow?.parent?.id)
+    const deleteProgramNodes = useDeleteProgramNodes(id, activeProgram, flow?.parent?.id)
+    const connectProgramNode = useConnectProgramNode(id, activeProgram, flow?.parent?.id)
+    const disconnectProgramNode = useDisconnectProgramNode(id, activeProgram, flow?.parent?.id)
 
     useEffect(() => {
         if (flow && activeProgram) {
@@ -481,6 +485,7 @@ export const Program = (props) => {
     return (
         <ProgramEditorProvider
             value={{
+                flow,
                 refresh: refetch,
                 devices,
                 conditions: conditions,

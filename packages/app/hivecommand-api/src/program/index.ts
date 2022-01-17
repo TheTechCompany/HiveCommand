@@ -158,7 +158,25 @@ export const updateProgram = () => {
 	// `)
 }
 
-export const useCreateProgramNode = (program: string, flow: string) => {
+export const getProgramSelector = (query: any, flow: string, parent?: string) => {
+
+	return parent ? {
+		where: {node: {id: parent}},
+		update: {
+			node: {
+				children: [{
+					where: {node: {id: flow}},
+					update: query
+				}]
+			}
+		}
+	} : {
+		where: {node: {id: flow}},
+		update: query
+	}
+}	
+
+export const useCreateProgramNode = (program: string, flow: string, parent?: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
 		type: string,
@@ -183,21 +201,23 @@ export const useCreateProgramNode = (program: string, flow: string) => {
 			}
 		}
 
+
+		let update = {
+			node: {
+				nodes: [{
+					create: [{
+						node: query
+					}]
+				}]
+			}
+		}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
 		const item = mutation.updateCommandPrograms({
 			where: {id: program},
 			update: {
-				program: [{
-					where: {node: {id: flow}},
-					update: {
-						node: {
-							nodes: [{
-								create: [{
-									node: query
-								}]
-							}]
-						}
-					}
-				}]
+				program: [updateQuery]
 			}
 		})
 		return {
@@ -220,34 +240,37 @@ export const useCreateProgramNode = (program: string, flow: string) => {
 
 }
 
-export const useUpdateProgramNode = (program: string, flow: string) => {
+export const useUpdateProgramNode = (program: string, flow: string, parent?: string) => {
 	
+
 	const [ mutateFn ] = useMutation((mutation, args: {node_id: string, x: number, y: number}) => {
-		const item = mutation.updateCommandPrograms({
-			where: {id: program},
-			update: {
-				program: [{
-					where: {node: {id:flow}},
+
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.node_id}},
 					update: {
 						node: {
-							nodes: [{
-								where: {node: {id: args.node_id}},
-								update: {
-									node: {
-										x: args.x,
-										y: args.y
-									}
-								}
-							}]
+							x: args.x,
+							y: args.y
 						}
-					}	
+					}
 				}]
-			}
+			// }
+		}
+
+		let where = parent ? { id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, //{id: program},
+			update: update
 		})
 
 		return {
 			item: {
-				...item.commandPrograms?.[0]
+				...item.commandProgramFlows?.[0]
 			}
 		}
 	})
@@ -263,27 +286,28 @@ export const useUpdateProgramNode = (program: string, flow: string) => {
 	}
 }
 
-export const useDeleteProgramNodes = (program: string, flow: string) => {
+export const useDeleteProgramNodes = (program: string, flow: string, parent?: string) => {
 	
 	const [ mutateFn ] = useMutation((mutation, args: {node_ids: string[]}) => {
-		const item = mutation.updateCommandPrograms({
-			where: {id: program},
-			update: {
-				program: [{
-					where: {node: {id: flow}},
-					update: {
-						node: {
-							nodes: [{
-								delete: [{where: {node: {id_IN: args.node_ids}}}]
-							}]
-						}
-					}
+
+		let update = {
+			// node: {
+				nodes: [{
+					delete: [{where: {node: {id_IN: args.node_ids}}}]
 				}]
-			}
+			// }
+		}
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		let where = parent ? {id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, // {id: program},
+			update:  update
 		})
 		return {
 			item: {
-				...item.commandPrograms?.[0]
+				...item.commandProgramFlows?.[0]
 			}
 		}
 	})
@@ -297,7 +321,7 @@ export const useDeleteProgramNodes = (program: string, flow: string) => {
 	}
 }
 
-export const useConnectProgramNode = (program: string, flow: string) => {
+export const useConnectProgramNode = (program: string, flow: string, parent?: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
 		source: string, 
@@ -306,38 +330,40 @@ export const useConnectProgramNode = (program: string, flow: string) => {
 		targetHandle: string,
 		points: {x: number, y: number}[]
 	}) => {
-		const item = mutation.updateCommandPrograms({
-			where: {id: program},
-			update: {
-				program: [{
-					where: {node: {id: flow}},
+
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.source}},
 					update: {
 						node: {
-							nodes: [{
-								where: {node: {id: args.source}},
-								update: {
-									node: {
-										next: [{
-											connect: [{
-												where: {node: {id: args.target}},
-												edge: {
-													sourceHandle: args.sourceHandle,
-													targetHandle: args.targetHandle,
-													points: args.points
-												}
-											}]
-										}]
+							next: [{
+								connect: [{
+									where: {node: {id: args.target}},
+									edge: {
+										sourceHandle: args.sourceHandle,
+										targetHandle: args.targetHandle,
+										points: args.points
 									}
-								}
+								}]
 							}]
 						}
 					}
 				}]
-			}
+			// }
+		}
+
+		let where = parent ? { id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, //{id: program},
+			update: update
 		})
 		return {
 			item: {
-				...item.commandPrograms?.[0]
+				...item.commandProgramFlows?.[0]
 			}
 		}
 	})
@@ -360,7 +386,7 @@ export const useConnectProgramNode = (program: string, flow: string) => {
 	}
 }
 
-export const useDisconnectProgramNode = (program: string, flow: string) => {
+export const useDisconnectProgramNode = (program: string, flow: string, parent?: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
 		source: string,
@@ -368,41 +394,43 @@ export const useDisconnectProgramNode = (program: string, flow: string) => {
 		target: string, 
 		targetHandle: string
 	}) => {
-		const item = mutation.updateCommandPrograms({
-			where: {id: program},
-			update: {
-				program: [{
-					where: {node: {id: flow}},
+
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.source}},
 					update: {
 						node: {
-							nodes: [{
-								where: {node: {id: args.source}},
-								update: {
-									node: {
-										next: [{
-											disconnect: [{
-												where: {
-													edge: {
-														sourceHandle: args.sourceHandle,
-														targetHandle: args.targetHandle
-													},
-													node: {
-														id: args.target
-													}
-												}
-											}]
-										}]
+							next: [{
+								disconnect: [{
+									where: {
+										edge: {
+											sourceHandle: args.sourceHandle,
+											targetHandle: args.targetHandle
+										},
+										node: {
+											id: args.target
+										}
 									}
-								}
+								}]
 							}]
 						}
 					}
 				}]
-			}
+			// }
+		}
+
+		let where = parent ? {id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, // {id: program},
+			update: update
 		})
 		return {
 			item: {
-				...item.commandPrograms?.[0]
+				...item.commandProgramFlows?.[0]
 			}
 		}
 	})

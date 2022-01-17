@@ -1,27 +1,30 @@
+import { getProgramSelector } from ".."
 import { useMutation } from "../../gqty"
 
-export const useRemoveNodeAction = (programId: string, flowId: string) => {
+export const useRemoveNodeAction = (programId: string, flowId: string, parent?: string) => {
 	const [ mutateFn ] = useMutation((mutation, args: {nodeId: string, id: string}) => {
-		const removeResult = mutation.updateCommandPrograms({
-			where: {id: programId},
-			update: {
-				program: [{
-					where: {node: {id: flowId}},
+
+		let update = {
+			node: {
+				nodes: [{
+					where: {node: { id: args.nodeId }},
 					update: {
 						node: {
-							nodes: [{
-								where: {node: { id: args.nodeId }},
-								update: {
-									node: {
-										actions: [{
-											delete: [{where: {node: {id: args.id}}}]
-										}]
-									}
-								}
+							actions: [{
+								delete: [{where: {node: {id: args.id}}}]
 							}]
 						}
 					}
 				}]
+			}
+		}
+
+		let updateQuery = getProgramSelector(update, flowId, parent)
+
+		const removeResult = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				program: [updateQuery]
 			}
 		})
 
@@ -42,7 +45,7 @@ export const useRemoveNodeAction = (programId: string, flowId: string) => {
 	}
 }
 
-export const useUpdateNodeConfiguration = (programId: string, flowId: string) => {
+export const useUpdateNodeConfiguration = (programId: string, flowId: string, parent?: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
 		id: string,
@@ -143,32 +146,33 @@ export const useUpdateNodeConfiguration = (programId: string, flowId: string) =>
 			}
 		}
 
-		const addActions = mutation.updateCommandPrograms({
-			where: {id: programId},
-			update: {
-				program: [{
-					where: {node: {id: flowId}},
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.id}},
 					update: {
 						node: {
-							nodes: [{
-								where: {node: {id: args.id}},
-								update: {
-									node: {
-										...mutationElem,
-										...actionMutation,
-									}
-								}
-							}]
+							...mutationElem,
+							...actionMutation,
 						}
 					}
 				}]
-			}
+			// }
+		}
+
+		let where = parent ? { id: flowId, parent: {id: parent, programs: {id: programId}} } : { id: flowId, programs: {id: programId}}
+
+		let updateQuery = getProgramSelector(update, flowId, parent)
+
+		const addActions = mutation.updateCommandProgramFlows({
+			where:  where, //{id: programId},
+			update: update
 	
 		})
 	
 		return {
 			item: {
-				...addActions.commandPrograms?.[0]
+				...addActions.commandProgramFlows?.[0]
 			},
 		}
 	})

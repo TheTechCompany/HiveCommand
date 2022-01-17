@@ -150,7 +150,7 @@ export class CommandNetwork {
 								type: this.getDataType(curr.type),
 								get: () => {
 									let value = this.valueBank.get?.(layout.name, curr.key);
-									log.info(`Get ${layout.name} ${curr.key} ${value}`)
+									// log.info(`Get ${layout.name} ${curr.key} ${value}`)
 									return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
 								}
 								

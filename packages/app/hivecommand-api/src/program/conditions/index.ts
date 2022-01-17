@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid";
+import { getProgramSelector } from "..";
 import { useMutation } from "../../gqty";
 
-export const useUpdatePathConditions = (programId: string, flowId: string) => {
+export const useUpdatePathConditions = (programId: string, flowId: string, parent?: string) => {
 
 	console.log({programId}, {flowId})
 	const [ mutateFn ] = useMutation((mutation, args: {
@@ -20,9 +21,11 @@ export const useUpdatePathConditions = (programId: string, flowId: string) => {
 		let totalIds = args.conditions.filter((a) => a.id).map((x) => x.id || '').concat(newIds);
 
 		console.log({totalIds})
+		
+		let where = parent ? {id: flowId, parent: {id: parent, programs: {id: programId}}} : {id: flowId, programs: {id: programId}}
 
 		const item = mutation.updateCommandProgramFlows({
-			where: {id: flowId, programs: {id: programId}},
+			where: where, //.{id: flowId, programs: {id: programId}},
 			update: {
 				nodes: [{
 					where: {node: {id: args.sourceNode}},
@@ -190,29 +193,31 @@ export const useUpdatePathConditions = (programId: string, flowId: string) => {
 }
 
 
-export const useRemovePathConditions = (programId: string, flowId: string) => {
+export const useRemovePathConditions = (programId: string, flowId: string, parent?: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {id: string}) => {
+
+		let update = {
+
+			node: {
+				conditions: [{
+					delete: [{
+						where: {
+							node: {
+								id: args.id
+							}
+						}
+					}]
+				}]
+			}
+		
+		}
+		let updateQuery = getProgramSelector(update, flowId, parent)
 
 		const removeResult = mutation.updateCommandPrograms({
 			where: {id: programId},
 			update: {
-				program: [{
-					where: {node: {id: flowId}},
-					update: {
-						node: {
-							conditions: [{
-								delete: [{
-									where: {
-										node: {
-											id: args.id
-										}
-									}
-								}]
-							}]
-						}
-					}
-				}]
+				program: [updateQuery]
 			}
 		})
 		return {
