@@ -106,7 +106,7 @@ export class PluginBank {
 	
 					}
 					
-					log.info(`Updating device ${device.name} with value ${JSON.stringify(cleanState)}`)
+					// log.info(`Updating device ${device.name} with value ${JSON.stringify(cleanState)}`)
 					this.machine?.state?.update(device?.name, cleanState)
 				})
 				

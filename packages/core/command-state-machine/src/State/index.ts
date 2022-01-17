@@ -8,6 +8,10 @@ export class State {
 
 	constructor(state?: {[key: string]: any}) {
 		this.internalState = state || {};
+		
+		this.update = this.update.bind(this);
+		this.get = this.get.bind(this);
+		this.getByKey = this.getByKey.bind(this);
 	}
 
 	public get(key: string): any {
@@ -15,11 +19,12 @@ export class State {
 	}	
 
 	public getByKey(key: string, subKey: string): any {
-		// console.log("GET BY KEY", key, subKey, this.internalState[key]);
+		console.log("GET BY KEY", key, subKey, this.internalState);
 		return this.internalState?.[key]?.[subKey];
 	}	
 
 	public update(key: string, value: any): void {
+		console.log("UPdate BY KEY", key, value, this.internalState)
 		if(typeof(value) == "object"){
 			this.internalState[key] = {
 				...this.internalState[key],
