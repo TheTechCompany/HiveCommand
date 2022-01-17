@@ -9,6 +9,7 @@ import { Pool, PoolClient } from "pg";
 import { publishToILP } from '../data/ilp';
 
 import net from "net"
+import { Data } from '../data';
 
 const { DeviceValue } = Models;
 
@@ -26,11 +27,15 @@ export class SyncClient {
 
 	private influxClient? : PoolClient;
 
+	private dataBroker: Data;
+
 	private client = new net.Socket();
 
-	constructor(opts: {discoveryServer: DiscoveryService}){
+	constructor(opts: {discoveryServer: DiscoveryService, broker: Data}){
 		// this.client = new Client(opts.discoveryServer)
 		this.discoveryServer = opts.discoveryServer
+
+		this.dataBroker = opts.broker;
 
 		this.discover = this.discover.bind(this);
 
@@ -63,6 +68,13 @@ export class SyncClient {
 				if(!this.clients[serverUri] && serverUrl){
 					
 					console.log("new server ", serverUri, server)
+
+					//Match networkName to device id 
+					let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
+
+					if(!networkName) return console.error("Could not find network name for server", serverUrl)
+					const controlDevice = await this.dataBroker.getDevice(networkName)
+
 					//New server
 					this.clients[serverUri] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
 					await this.clients[serverUri].connect(serverUrl)
@@ -109,7 +121,7 @@ export class SyncClient {
 							try{
 								const key = monitor.unwrap(index)
 								// console.log("CHANGED", key, index, value, value.value)
-								await this.createLogEntry(key, value.value)
+								await this.createLogEntry(controlDevice.id, key, value.value)
 	
 							}catch(e){
 								console.log("Error during log creation", e)
@@ -166,7 +178,7 @@ export class SyncClient {
 	// }
 
 
-	async createLogEntry(key: string, value: Variant){
+	async createLogEntry(device: string, key: string, value: Variant){
 		if(!this.influxClient){
 			this.influxClient = await this.influxPool.connect()
 		}
@@ -192,7 +204,10 @@ export class SyncClient {
 
 		// console.log("Key ", key, bus, port, valueKey, value.value)
 
-		let device = 'd49bd954-51da-44ac-ab5a-1e9d0000e7ae'
+		//OLD Hardcode for sudbustermk1
+		// let device = 'd49bd954-51da-44ac-ab5a-1e9d0000e7ae'
+
+
 
 		// let query = `(systimestamp(), $1, $2, $3, $4, $5)`
 		// await client.query(

@@ -51,7 +51,7 @@ export class DiscoveryServer {
             applicationName: "HexHive OPCUA Global Discovery Service"
         })
         
-        this.syncClient = new SyncClient({discoveryServer: this.opcuaDiscovery})
+        this.syncClient = new SyncClient({discoveryServer: this.opcuaDiscovery, broker: this.dataBroker})
 
         this.app = express();
         this.server = createServer(this.app);
