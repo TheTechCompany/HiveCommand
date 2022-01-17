@@ -24,7 +24,7 @@ export class State {
 	}	
 
 	public update(key: string, value: any): void {
-		console.log("UPdate BY KEY", key, value, this.internalState)
+		// console.log("UPdate BY KEY", key, value, this.internalState)
 		if(typeof(value) == "object"){
 			this.internalState[key] = {
 				...this.internalState[key],

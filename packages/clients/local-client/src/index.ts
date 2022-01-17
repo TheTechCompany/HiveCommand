@@ -87,7 +87,7 @@ export class CommandClient {
 		this.controller = new Controller({
 			commandCenter: opts.commandCenter || '',
 			valueBank: {
-				get: this.machine.getByKey.bind(this),
+				get: (dev, key) => this.machine?.getByKey(dev, key),
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
 				setDeviceMode: this.machine.setDeviceMode.bind(this), 
 				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
