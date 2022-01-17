@@ -231,7 +231,8 @@ CALL {
 	
 	RETURN nodes{.*, next: collect(next), actions: _actions, configuration: _configuration, subprocess: _subflow} as flowNodes
 }
-			OPTIONAL MATCH (flow)<-[:USES_SUBFLOW]-()<-[:USES_NODE]-(parent:CommandProgramFlow)
+
+OPTIONAL MATCH (flow)<-[:HAS_SUBFLOW]-(parent:CommandProgramFlow)
 
 RETURN flow{
 	.*,
