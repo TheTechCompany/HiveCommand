@@ -2,6 +2,7 @@ import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
 import { AssignmentPayload, PayloadResponse } from './types';
+import log from 'loglevel'
 
 export * from './types'
 
@@ -149,6 +150,7 @@ export class CommandNetwork {
 								type: this.getDataType(curr.type),
 								get: () => {
 									let value = this.valueBank.get?.(layout.name, curr.key);
+									log.info(`Get ${layout.name} ${curr.key} ${value}`)
 									return new Variant({dataType: this.getDataType(curr.type), value: this.getDataValue(curr.type, value)})
 								}
 								
