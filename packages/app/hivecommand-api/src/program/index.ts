@@ -1,7 +1,10 @@
 import { gql } from "@apollo/client"
 
-import { useMutation } from "../gqty"
+import { mutation, useMutation } from "../gqty"
+
 export * from './placeholders'
+export * from './conditions'
+export * from './actions'
 
 export const useCreateProgram = (organisation: string) => {
 
@@ -50,115 +53,101 @@ export const useCreateProgram = (organisation: string) => {
 	}
 }
 
-export const createProgramFlow = async (programId: string, name: string, parent?: string) => {
+export const useCreateProgramFlow = (programId: string) => {
 	
-	let query = '';
-	if(parent){
-		query = `
-		program: [{
-			where: {node: {id: $parent}},
-			update: {
-				node: {
-					children: [{
-						create: [{
-							node: {
-								name: $name
-							}
+	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string}) => {
+
+		let query = {};
+		if(args.parent){
+			query = {
+				where: {node: {id: args.parent}},
+				update: {
+					node: {
+						children: [{
+							create: [{
+								node: {
+									name: args.name
+								}
+							}]
 						}]
-					}]
+					}
 				}
 			}
-		}]
-		`
-	}else{
-		query = `
-		program: [{
-			create: [{node: {name: $name}}]
-		}]
-		`
+		}else{
+			query = {
+				create: [{node: {name: args.name}}]
+			}
+		}
+
+		const item = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				program: [query]
+			}
+		})
+		return {
+			item: {
+				...item.commandPrograms?.[0]
+			}
+		}
+	})
+
+	return async (name: string, parent?: string) => {
+		return await mutateFn({
+			args: {
+				name,
+				parent
+			}
+		})
 	}
-
-
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation addProgramFlow($programId: ID!, name: String!, parent: ID) {
-	// 		updateCommandPrograms(
-	// 			where: {id: $programId},
-	// 			update: {
-	// 				${query}
-	// 			}
-	// 		){
-	// 			id
-	// 		}
-	// 	}
-	// `)
-
-	// // update = {
-	// // 	//         program: [{
-	// // 	//             where: {node: {id: args.parent}},
-	// // 	//             update: {
-	// // 	//                 node: {
-	// // 	//                     children: [{
-	// // 	//                         create: [{node: {
-	// // 	//                             name: args.name || "Default"
-	// // 	//                         }}]
-	// // 	//                     }]
-	// // 	//                 }
-	// // 	//             }
-	// // 	//         }]
-	// // 	//        }
-	// return await mutateFn({
-	// 	variables: {
-	// 		programId,
-	// 		name,
-	// 		parent
-	// 	}
-	// })
 }
 
-export const createProgramHMI = async (programId: string, name: string, parent?: string) => {
-	let query = ''
-	if(parent){
-		query = `
-		hmi: [{
-			where: {node: {id: $parent}},
-			update: {
-				node: {
-					children: [{
-						create: [{
-							node: {
-								name: $name
-							}
-						}]
-					}]
-				}
-			}
-		}]
-		`
-	}else{
-		query = `
-		hmi: [{
-			create: [{node: {name: $name}}]
-		}]
-		`
-	}
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation addProgramHMI($programId: ID!, name: String!, parent: ID) {
-	// 		updateCommandPrograms(
-	// 			where: {id: $programId},
-	// 			update: {
-	// 				${query}
-	// 			}
-	// 		){
-	// 			id
-	// 		}
-	// 	}
-	// `)
+export const useCreateProgramHMI = (programId: string) => {
 
-	// return await mutateFn({variables: {
-	// 	programId,
-	// 	name,
-	// 	parent
-	// }})
+	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string}) => {
+		
+		let query = {};
+		// if(args.parent){
+		// 	query = {
+		// 		where: {node: {id: args.parent}},
+		// 		update: {
+		// 			node: {
+		// 				children: [{
+		// 					create: [{
+		// 						node: {
+		// 							name: args.name
+		// 						}
+		// 					}]
+		// 				}]
+		// 			}
+		// 		}
+		// 	}
+		// }else{
+			query = {
+				create: [{node: {name: args.name}}]
+			}
+		// }
+
+		const item = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				hmi: [query]
+			}
+		})
+		return {
+			item: {
+				...item.commandPrograms?.[0]
+			}
+		}
+	})
+	return async (name: string, parent?: string) => {
+		return await mutateFn({
+			args: {
+				name,
+				parent
+			}
+		})
+	}
 }
 
 export const updateProgram = () => {
@@ -169,230 +158,294 @@ export const updateProgram = () => {
 	// `)
 }
 
-export const createProgramNode = async (program: string, type: string, x: number, y: number, subprocess: string) => {
-	let query = ``;
+export const getProgramSelector = (query: any, flow: string, parent?: string) => {
 
-	if(type == "Connect" && subprocess){
-		query = `
-			{
-				type: $type,
-				x: $x,
-				y: $y,
-				subprocess: {connect: {where: {id: $subprocess}}}
+	return parent ? {
+		where: {node: {id: parent}},
+		update: {
+			node: {
+				children: [{
+					where: {node: {id: flow}},
+					update: query
+				}]
 			}
-		`
-	}else{
-		query = `
-			{
-				type: $type,
-				x: $x,
-				y: $y
-			}
-		`
+		}
+	} : {
+		where: {node: {id: flow}},
+		update: query
 	}
-	// let node : any = {
-	// 	type: type,
-	// 	x: x,
-	// 	y: y,
-	// }
+}	
 
-	// if(type == "Connect" && subprocess){
-	// 	node.subprocess = {
-	// 		connect: {where: {node: {id: subprocess}}}
-	// 	}
-	// }
+export const useCreateProgramNode = (program: string, flow: string, parent?: string) => {
 
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation createProgramNode($program: ID!) {
-	// 		updateCommandProgramFlows({
-	// 			where: {id: $program},
-	// 			update: {
-	// 				nodes: [{
-	// 					create: [${query}]
-	// 				}]
-	// 			}
-	// 		}){
-	// 			id
-	// 			name
-	// 			nodes {
-	// 				id
-	// 			}
-	// 		}
-	// 	}
-	// `)
+	const [ mutateFn ] = useMutation((mutation, args: {
+		type: string,
+		x: number,
+		y: number,
+		subprocess?: string
+	}) => {
+		
+		let query = {};
+		if(args.type == "Connect" && args.subprocess){
+			query = {
+				type: args.type,
+				x: args.x,
+				y: args.y,
+				subprocess: { connect: {where: {id: args.subprocess}}}
+			}
+		}else{
+			query = {
+				type: args.type,
+				x: args.x,
+				y: args.y
+			}
+		}
 
-	// return await mutateFn({
-	// 	variables: {
-	// 		program: program,
-	// 		type,
-	// 		x,
-	// 		y,
-	// 		subprocess
-	// 	}
-	// })
+
+		let update = {
+			node: {
+				nodes: [{
+					create: [{
+						node: query
+					}]
+				}]
+			}
+		}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandPrograms({
+			where: {id: program},
+			update: {
+				program: [updateQuery]
+			}
+		})
+		return {
+			item: {
+				...item.commandPrograms?.[0]
+			}
+		}
+	})
+
+	return async (type: string, x: number, y: number, subprocess: string) => {
+		return await mutateFn({
+			args: {
+				type,
+				x,
+				y,
+				subprocess
+			}
+		})
+	}
 
 }
 
-export const updateProgramNode = async (program: string, node_id: string, x: number, y: number) => {
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation updateProgramNode($program: ID!, $node_id: ID!, $x: Float!, $y: Float!) {
-	// 		updateCommandProgramFlows({
-	// 			where: {id: $program},
-	// 			update: {
-	// 				nodes: [{
-	// 					where: {id: $node_id},
-	// 					update: {
-	// 						x: $x,
-	// 						y: $y
-	// 					}
-	// 				}]
-	// 			}
-	// 		}){
-	// 			id
-	// 			name
-	// 			nodes {
-	// 				id
-	// 			}
-	// 		}
-	// 	}
-	// `)
+export const useUpdateProgramNode = (program: string, flow: string, parent?: string) => {
+	
 
-	// return await mutateFn({
-	// 	variables: {
-	// 		program: program,
-	// 		node_id,
-	// 		x,
-	// 		y
-	// 	}
-	// })
+	const [ mutateFn ] = useMutation((mutation, args: {node_id: string, x: number, y: number}) => {
+
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.node_id}},
+					update: {
+						node: {
+							x: args.x,
+							y: args.y
+						}
+					}
+				}]
+			// }
+		}
+
+		let where = parent ? { id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, //{id: program},
+			update: update
+		})
+
+		return {
+			item: {
+				...item.commandProgramFlows?.[0]
+			}
+		}
+	})
+	return async (node_id: string, x: number, y: number) => {
+
+		return await mutateFn({
+			args: {
+				node_id,
+				x,
+				y
+			}
+		})
+	}
 }
 
-export const deleteProgramNodes = async (program: string, nodes: string[]) => {
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation deleteProgramNode($program: ID!, $node_id: [ID]!) {
-	// 		updateCommandProgramFlows({
-	// 			where: {id: $program},
-	// 			update: {
-	// 				nodes: [{
-	// 					delete: [{id_IN: $node_id}]
-	// 				}]
-	// 			}
-	// 		}){
-	// 			id
-	// 			name
-	// 			nodes {
-	// 				id
-	// 			}
-	// 		}
-	// 	}
-	// `)
+export const useDeleteProgramNodes = (program: string, flow: string, parent?: string) => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {node_ids: string[]}) => {
 
-	// return await mutateFn({
-	// 	variables: {
-	// 		program: program,
-	// 		node_id: nodes
-	// 	}
-	// })
+		let update = {
+			// node: {
+				nodes: [{
+					delete: [{where: {node: {id_IN: args.node_ids}}}]
+				}]
+			// }
+		}
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		let where = parent ? {id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, // {id: program},
+			update:  update
+		})
+		return {
+			item: {
+				...item.commandProgramFlows?.[0]
+			}
+		}
+	})
+	return async (nodes: string[]) => {
+
+		return await mutateFn({
+			args: {
+				node_ids: nodes
+			}
+		})
+	}
 }
 
-export const connectProgramNode = async (
-	program: string, 
-	source: string, 
-	sourceHandle: string, 
-	target: string, 
-	targetHandle: string,
-	points: {x: number, y: number}[]
-) => {
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation connectProgramNode($program: ID!, $source: ID!, $sourceHandle: String!, $target: ID!, $targetHandle: String!, $points: [CartesianPointInput]!) {
-	// 		updateCommandProgramFlows({
-	// 			where: {id: $program},
-	// 			update: {
-	// 				nodes: [{
-	// 					where: {id: $source},
-	// 					update: {
-	// 						next: [{
-	// 							connect: [{
-	// 								where: {
-	// 									node: {id: $target}
-	// 								},
-	// 								edge: {
-	// 									sourceHandle: $sourceHandle,
-	// 									targetHandle: $targetHandle,
-	// 									points: $points
-	// 								}
-	// 							}]
-	// 						}]
-	// 					}
-	// 				}]
-	// 			}
-	// 		}){
-	// 			id
-	// 			name
-	// 			nodes {
-	// 				id
-	// 			}
-	// 		}
+export const useConnectProgramNode = (program: string, flow: string, parent?: string) => {
 
-	// 	}
-	// `)
+	const [ mutateFn ] = useMutation((mutation, args: {
+		source: string, 
+		sourceHandle: string,
+		target: string,
+		targetHandle: string,
+		points: {x: number, y: number}[]
+	}) => {
 
-	// return await mutateFn({
-	// 	variables: {
-	// 		program: program,
-	// 		source,
-	// 		sourceHandle,
-	// 		target,
-	// 		targetHandle,
-	// 		points
-	// 	}
-	// })
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.source}},
+					update: {
+						node: {
+							next: [{
+								connect: [{
+									where: {node: {id: args.target}},
+									edge: {
+										sourceHandle: args.sourceHandle,
+										targetHandle: args.targetHandle,
+										points: args.points
+									}
+								}]
+							}]
+						}
+					}
+				}]
+			// }
+		}
+
+		let where = parent ? { id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, //{id: program},
+			update: update
+		})
+		return {
+			item: {
+				...item.commandProgramFlows?.[0]
+			}
+		}
+	})
+	return  async (
+		source: string, 
+		sourceHandle: string, 
+		target: string, 
+		targetHandle: string,
+		points: {x: number, y: number}[]
+	) => {
+		return await mutateFn({
+			args: {
+				source,
+				sourceHandle,
+				target,
+				targetHandle,
+				points
+			}
+		})
+	}
 }
 
-export const disconnectProgramNode = async (program: string, source: string, sourceHandle: string, target: string, targetHandle: string) => {
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation disconnectProgramNode($program: ID!, $source: ID!, $sourceHandle: String!, $target: ID!, $targetHandle: String!) {
-	// 		updateCommandProgramFlows({
-	// 			where: {id: $program},
-	// 			update: {
-	// 				nodes: [{
-	// 					where: {id: $source},
-	// 					update: {
-	// 						next: [{
-	// 							disconnect: [{
-	// 								where: {
-	// 									edge: {
-	// 										sourceHandle: $sourceHandle,
-	// 										targetHandle: $targetHandle
-	// 									},
-	// 									node: {
-	// 										id: $target
-	// 									}
-	// 								}
-	// 							}]
-	// 						}]
-	// 					}
-	// 				}]
-	// 			}
-	// 		}){
-	// 			id
-	// 			name
-	// 			nodes {
-	// 				id
-	// 			}
-	// 		}
-	// 	}
-	// `)
+export const useDisconnectProgramNode = (program: string, flow: string, parent?: string) => {
 
-	// return await mutateFn({
-	// 	variables: {
-	// 		program: program,
-	// 		source,
-	// 		sourceHandle,
-	// 		target,
-	// 		targetHandle
-	// 	}
-	// })
+	const [ mutateFn ] = useMutation((mutation, args: {
+		source: string,
+		sourceHandle: string,
+		target: string, 
+		targetHandle: string
+	}) => {
+
+		let update = {
+			// node: {
+				nodes: [{
+					where: {node: {id: args.source}},
+					update: {
+						node: {
+							next: [{
+								disconnect: [{
+									where: {
+										edge: {
+											sourceHandle: args.sourceHandle,
+											targetHandle: args.targetHandle
+										},
+										node: {
+											id: args.target
+										}
+									}
+								}]
+							}]
+						}
+					}
+				}]
+			// }
+		}
+
+		let where = parent ? {id: flow, parent: {id: parent, programs: {id: program}}} : {id: flow, programs: {id: program}}
+
+		let updateQuery = getProgramSelector(update, flow, parent)
+
+		const item = mutation.updateCommandProgramFlows({
+			where: where, // {id: program},
+			update: update
+		})
+		return {
+			item: {
+				...item.commandProgramFlows?.[0]
+			}
+		}
+	})
+	return async (source: string, sourceHandle: string, target: string, targetHandle: string) => {
+		return await mutateFn({
+			args: {
+				source,
+				sourceHandle,
+				target,
+				targetHandle
+
+			}
+		})
+
+	}
 }
 
 export const removeProgramEdge = () => {

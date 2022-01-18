@@ -1,18 +1,19 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
 import React, {useContext, useEffect, useState} from 'react';
-import { Box, Text, TextInput, CheckBox, Button, Spinner } from 'grommet';
+import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
 import { Checkmark } from 'grommet-icons';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
-import { requestFlow } from '@hive-command/api';
+import { useRequestFlow } from '@hive-command/api';
+import { FormControl } from '@hexhive/ui';
 
 const ActionButton = (props) => {
 	console.log(props)
 	return (
 		<Box background="accent-1" direction='row' round="xsmall" width={'100%'} align='center' justify='center' elevation="small">
 			<Button 
-				disabled={props.waiting}
+				disabled={props.waiting || props.disabled}
 				plain
 				hoverIndicator={'accent-2'}
 				onClick={props.onClick}
@@ -27,14 +28,53 @@ const ActionButton = (props) => {
 }
 export default () => {
 
+	const operatingModes = [
+		{
+			label: 'Disabled',
+			key: 'disabled'
+		},
+		{
+			label: 'Auto',
+			key: 'auto'
+		},
+		{
+			label: 'Manual',
+			key: 'manual'
+		},
+		// {
+		// 	label: 'Timer',
+		// 	key: 'timer'
+		// }
+	]
+
+	// const [operating, setOperating] = useState<string>('disabled')
+
     const [ infoTarget, setInfoTarget ] = useState<{x?: number, y?: number}>(undefined);
     const [ selected, setSelected ] = useState<{key?: string, id?: string}>(undefined)
 
     const [ workingState, setWorkingState ] = useState<any>({})
 
-	const { waitingForActions, toggleOperatingMode, operatingMode, program, actions, values, hmi, hmiNodes, groups, changeDeviceMode, changeDeviceValue, performAction, controlId } = useContext(DeviceControlContext)
+	const { 
+		waitingForActions, 
+		changeOperationMode,
+		changeOperationState, 
+		operatingMode, 
+		operatingState,
+		program, 
+		actions, 
+		values, 
+		hmi, 
+		hmiNodes, 
+		groups, 
+		changeDeviceMode, 
+		changeDeviceValue, 
+		performAction, 
+		controlId 
+	} = useContext(DeviceControlContext)
 
 	console.log({operatingMode, waitingForActions, actions})
+
+	const requestFlow = useRequestFlow(controlId)
 
 	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
 	// 	deviceId: string,
@@ -52,6 +92,7 @@ export default () => {
 	// 	}
 	// })
 
+	// alert(operatingMode)
     const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
         //Find map between P&ID tag and bus-port
 
@@ -83,7 +124,7 @@ export default () => {
     const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
         let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
 
-        if(state.writable && deviceMode == "Manual"){
+        if(state.writable && operatingMode == "manual"){
             return (
                 <TextInput 
                     style={{padding: "none"}}
@@ -165,20 +206,16 @@ export default () => {
   
 				  {deviceValues(node?.devicePlaceholder?.name)} */}
 				  <Box align="center" justify="around" direction="row">
-				  {deviceInfo?.actions?.map((action) => (
+				  	{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
 					  <Button
 						  plain
 						  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
 						  hoverIndicator={'accent-1'}
 						  onClick={() => {
-							  performAction({
-								  args: {
-									  deviceId: controlId, 
-									  deviceName: deviceName,
-									  action: action.key
-								  }
-									  
-							  })
+							  performAction(
+									deviceName,
+									action.key		  
+							  	)
 						  }}
 						  label={action.key} />
 				  ))}
@@ -218,7 +255,6 @@ export default () => {
 
 	const controlAction = (action) => {
 		requestFlow(
-			controlId,
 			action.id
 		).then(() => {
 			
@@ -229,27 +265,27 @@ export default () => {
 		<Box flex direction="row">
 			<Box flex>
 		<HMICanvas 
-		id={program.id}
-		program={program}
-		deviceValues={hmiNodes}
-		modes={deviceModes}
-		information={infoTarget != undefined ? (
-			<Bubble style={{position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y}}>
-				{renderActions()}
-			</Bubble>
-		) : null}
-		onBackdropClick={() => {
-			setSelected(undefined)
-			setInfoTarget(undefined)
-		}}
-		onSelect={(select) => {
-			let node = program.hmi?.[0]?.nodes?.concat(program?.hmi?.[0]?.groups).find((a) => a.id == select.id)
+			id={program.id}
+			program={program}
+			deviceValues={hmiNodes}
+			modes={deviceModes}
+			information={infoTarget != undefined ? (
+				<Bubble style={{position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y}}>
+					{renderActions()}
+				</Bubble>
+			) : null}
+			onBackdropClick={() => {
+				setSelected(undefined)
+				setInfoTarget(undefined)
+			}}
+			onSelect={(select) => {
+				let node = program.hmi?.[0]?.nodes?.concat(program?.hmi?.[0]?.groups).find((a) => a.id == select.id)
 
-			const { x, y, scaleX, scaleY} = node;
-			setInfoTarget({x: x + (node.width || node?.type?.width), y: y})
-			
-			setSelected(select)
-		}}
+				const { x, y, scaleX, scaleY} = node;
+				setInfoTarget({x: x + (node.width || node?.type?.width), y: y})
+				
+				setSelected(select)
+			}}
 		/>
 		</Box>
 			<Box elevation="small" background="light-1">
@@ -257,17 +293,31 @@ export default () => {
 					<Text>Controls</Text>
 				</Box>
 				<Box pad="small"flex>
-					<Box border={{side: 'bottom', size: 'small'}}>
-						<Text>Current State</Text>
+					<Box gap="xsmall" pad={{bottom: 'small'}} border={{side: 'bottom', size: 'small'}}>
 
-						<Text size="small">Mode: Running</Text>
+						<Box direction='row' align="center">
+							<FormControl
+								value={operatingMode}
+								valueKey='key'
+								onChange={(value) => {
+									changeOperationMode(value)
+									// console.log(value)
+									// setOperating(value)
+								}}
+								placeholder='Mode'
+								labelKey='label'
+								options={operatingModes} />
+						</Box>
+						<ActionButton 
+							disabled={operatingMode == 'disabled'}
+							onClick={() =>  {
+								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
+							}}
+							label={(!operatingState || operatingState == "off") ? "Start" : "Shutdown"} />
 					</Box>
-					<Box  border={{side: 'bottom', size: 'small'}}>
+					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
 						<Text>Commands</Text>
 						<Box gap="xsmall">
-							<ActionButton 
-								onClick={() => toggleOperatingMode()}
-								label={operatingMode == "DISABLED" ? "Start" : "Shutdown"} />
 							{actions.map((action) => (
 								<ActionButton
 									waiting={waitingForActions.map((x) => x.id).includes(action.id)}
@@ -275,7 +325,7 @@ export default () => {
 									label={action.name} />
 							))}
 						</Box>
-					</Box>
+					</Box>}
 				</Box>
 			</Box>
 		</Box>

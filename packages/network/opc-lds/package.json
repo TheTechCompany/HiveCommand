@@ -1,0 +1,29 @@
+{
+  "name": "@hive-command/opcua-lds",
+  "version": "1.4.1-alpha.4",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
+  "bin": {
+    "hive-lds": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/vorpal": "^1.12.2",
+    "@types/yargs": "^17.0.3",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "node-opcua": "^2.50.0",
+    "vorpal": "^1.12.0",
+    "vorpal-repl": "^1.1.8",
+    "yargs": "^17.2.1"
+  }
+}

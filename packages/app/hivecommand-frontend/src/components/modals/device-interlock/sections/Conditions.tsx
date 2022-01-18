@@ -1,7 +1,8 @@
 import React, {useContext, useMemo} from 'react';
-import { Box, Text } from 'grommet';
+import { Box, Button, Text } from 'grommet';
 import { FormControl, FormInput } from '@hexhive/ui';
 import { DeviceInterlockContext } from '../context';
+import { Add } from 'grommet-icons';
 import AntdWidgets from 'react-awesome-query-builder/lib/components/widgets/antd';
 import AntdConfig from 'react-awesome-query-builder/lib/config/antd';
 
@@ -41,6 +42,15 @@ const types : Types = {
 		}
 	}
 }
+
+const COMPARATORS = [
+	">",
+	">=",
+	"<",
+	"<=",
+	"==",
+	"!="
+].map((x) => ({key: x}))
 export const ConditionSection = (props) => {
 	const { interlock, devices, setInterlock } = useContext(DeviceInterlockContext)
 
@@ -111,50 +121,46 @@ export const ConditionSection = (props) => {
 
 	return (
 		<Box>
-			<Query
-				{...config}
-				value={query}
-				onChange={(tree, config) => {
-				
-					setInterlock({...interlock, state: QbUtils.getTree(tree)})
-					// setQuery(tree)
-					// console.log(QbUtils.getTree(tree))
-				}}
-				renderBuilder={(props) => (
-					<Builder {...props} />
-				)} />
-			{/* <FormControl 
-					value={interlock.inputDevice}
-					onChange={(value) => setInterlock({...interlock, inputDevice: value})}
-					options={props.devices || []}
-					placeholder="Input Device" />
+			{/* <Box direction="row" justify="end">
+				<Button hoverIndicator plain style={{padding: 6, borderRadius: 3}} icon={<Add size="small" />} />
+			</Box> */}
+			<Box direction='row' align='center'>
 				<FormControl 
-					value={interlock.inputDeviceKey}
-					labelKey="key"
-					onChange={(value) => setInterlock({...interlock, inputDeviceKey: value})}
-					options={props.devices?.find((a) => a.id == interlock?.inputDevice)?.type?.state || []}
-					placeholder="Input Device State Key" />
-				<FormInput 
-					value={interlock.comparator}
-					onChange={(value) => setInterlock({...interlock, comparator: value})}
-					placeholder="Comparison Operator" />
-				<FormControl 
-					placeholder="Value Type"
-					labelKey="label"
-					value={interlock.valueType || 'value'}
-					onChange={(value) => setInterlock({...interlock, valueType: value})}
-					options={[{id: 'value', label: "Value"} , {id: 'setpoint', label: "Setpoint"}]} />
-				{(interlock.valueType && interlock.valueType == "setpoint") ?  (
-					<FormControl
-						labelKey="name"
-						placeholder="Input Device Setpoint"
+						value={interlock.inputDevice}
+						onChange={(value) => setInterlock({...interlock, inputDevice: value})}
+						options={devices || []}
+						placeholder="Input Device" />
+					<FormControl 
+						value={interlock.inputDeviceKey}
+						labelKey="key"
+						onChange={(value) => setInterlock({...interlock, inputDeviceKey: value})}
+						options={devices?.find((a) => a.id == interlock?.inputDevice)?.type?.state || []}
+						placeholder="State Key" />
+					<FormControl 
+						value={interlock.comparator}
+						options={COMPARATORS}
+						labelKey='key'
+						valueKey='key'
+						onChange={(value) => setInterlock({...interlock, comparator: value})}
+						placeholder="Comparison" />
+					<FormControl 
+						placeholder="Value Type"
+						labelKey="label"
+						value={interlock.valueType || 'value'}
+						onChange={(value) => setInterlock({...interlock, valueType: value})}
+						options={[{id: 'value', label: "Value"} , {id: 'setpoint', label: "Setpoint"}]} />
+					{(interlock.valueType && interlock.valueType == "setpoint") ?  (
+						<FormControl
+							labelKey="name"
+							placeholder="Input Device Setpoint"
+							value={interlock.assertion}
+							onChange={(value) => setInterlock({...interlock, assertion: value})}
+							options={devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
+					) : <FormInput 
 						value={interlock.assertion}
 						onChange={(value) => setInterlock({...interlock, assertion: value})}
-						options={props.devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
-				) : <FormInput 
-					value={interlock.assertion}
-					onChange={(value) => setInterlock({...interlock, assertion: value})}
-					placeholder="Input Device State Value" /> } */}
+						placeholder="Input Device State Value" /> }
+				</Box>
 		</Box>
 	)
 }

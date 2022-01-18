@@ -45,7 +45,7 @@ export class DeviceMap {
 				this.assignment[portIx].plugins = plugins
 			}
 
-			console.log("PLugin init ", plugin.plugin?.name, pluginObject)
+			// console.log("PLugin init ", plugin.plugin?.name, pluginObject)
 		}))
 	}
 
@@ -56,7 +56,7 @@ export class DeviceMap {
 
 	//Set device mode
 	public setDeviceModeByName(name: string, mode: string){
-		console.log("SET BY NAME", this.modeSet, name, mode)
+		// console.log("SET BY NAME", this.modeSet, name, mode)
 		let ix = this.modeSet.map((x) => x.name).indexOf(name);
 		if(ix > -1){
 			this.modeSet[ix].mode = mode

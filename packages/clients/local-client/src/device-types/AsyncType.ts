@@ -34,15 +34,4 @@ import vm from 'vm';
 		return func;
 	}
 
-	// const driver = getDriverFunction(`
-	// 	setState({opening: true});
-	// 	requestState(false);
-	// 	await new Promise((resolve, reject) => setTimeout(() => resolve(true), 11 * 1000));
-	// 	setState({opening: false, open: false});
-	// 	`)
-	// console.log(driver)
-
-	// driver({open: true, opening: false}, (obj: any) => console.log("Set ", obj), (state: any) => console.log("request", state)).then(() => {
-	// 	console.log("Done")
-	// })
 

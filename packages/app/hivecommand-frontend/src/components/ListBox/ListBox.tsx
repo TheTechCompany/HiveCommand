@@ -13,6 +13,7 @@ export interface ListBoxProps {
 export const ListBox : React.FC<ListBoxProps> = (props) => {
 	return (
 		<Box 
+			background={'neutral-1'}
 			flex
 			elevation="small"
 			pad="xsmall" 

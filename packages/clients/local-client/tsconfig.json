@@ -108,7 +108,7 @@
     {"path": "../../core/command-logging"},
     {"path": "../../core/command-subscription-lock"},
     {"path": "../../communication/sms-utils"},
-    {"path": "../../network/command-network"},
+    {"path": "../../core/command-network"},
     {"path": "../../plugins/base-plugin"},
 
   ]

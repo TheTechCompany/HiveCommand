@@ -39,7 +39,7 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 	useEffect(() => {
 		if(props.selected){
 			console.log(props.selected)
-			let conf = props.selected.configuration.reduce((prev, curr) => ({
+			let conf = props.selected.configuration?.reduce((prev, curr) => ({
 					...prev,
 					[curr.key]: curr.value
 				}), {})

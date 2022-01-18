@@ -1,0 +1,21 @@
+{
+  "name": "@hive-command/data",
+  "version": "1.4.1-alpha.5",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "neo4j-driver": "^4.3.3"
+  }
+}

@@ -101,5 +101,5 @@
   "references": [
     {"path": "../command-process"}
   ],
-  "exclude": ["example/", "dist/", "**/*.test.ts"]
+  "exclude": ["example/", "dist/", "**/*.test.ts", "__tests__/*"]
 }

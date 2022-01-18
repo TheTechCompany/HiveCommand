@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/identity",
-  "version": "1.3.5",
+  "version": "1.4.0",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -19,5 +19,5 @@
   "dependencies": {
     "axios": "^0.23.0"
   },
-  "gitHead": "d334b1f9c8bd95c581fa8e1655712792df414d56"
+  "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b"
 }

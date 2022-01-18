@@ -40,8 +40,13 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 
 	useEffect(() => {
 		if(props.selected) {
+			console.log({selected: props.selected})
 			setInterlock({
 				...props.selected,
+				state: props.selected.state.map(state => ({
+					deviceKey: state.deviceKey?.id,
+					deviceValue: state?.deviceValue?.type == 'setpoint' ? state?.deviceValue?.setpoint?.id : state?.deviceValue?.value
+				})),
 				valueType: props.selected?.assertion?.type || 'value',
 				inputDevice: props.selected?.inputDevice?.id,
 				inputDeviceKey: props.selected?.inputDeviceKey?.id,
@@ -93,6 +98,7 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 				setInterlock,
 				devices: props.devices,
 				device: props.device,
+				actions: props.actions
 			}}>
 			<BaseModal
 				noClick={true}

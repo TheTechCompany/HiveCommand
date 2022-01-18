@@ -15,5 +15,4 @@ export interface ProgramProcess {
 	nodes: CommandProcessNode[]
 	edges?: CommandProcessEdge[]
 	sub_processes?: ProgramProcess[],
-
 }

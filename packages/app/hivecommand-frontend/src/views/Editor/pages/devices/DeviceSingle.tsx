@@ -9,7 +9,7 @@ import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 import { DeviceInterlock } from '../../../../components/modals/device-interlock';
 import { DeviceSetpointModal } from '../../../../components/modals/device-setpoint';
 import { ListBox } from '../../../../components/ListBox';
-import { createPlaceholderInterlock, createPlaceholderSetpoint, updatePlaceholderInterlock, updatePlaceholderSetpoint } from '@hive-command/api';
+import { useCreatePlaceholderInterlock, useCreatePlaceholderSetpoint, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
 
 export interface DeviceSingleProps {
 	program?: string;
@@ -46,6 +46,12 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 		openModal(true);
 		setSelected(plugin)
 	}
+
+	const createPlaceholderInterlock = useCreatePlaceholderInterlock(props.program, deviceId)
+	const updatePlaceholderInterlock = useUpdatePlaceholderInterlock(props.program, deviceId)
+	
+	const createPlaceholderSetpoint = useCreatePlaceholderSetpoint(props.program, deviceId)
+	const updatePlaceholderSetpoint = useUpdatePlaceholderSetpoint(props.program, deviceId)
 
 	// const [ updateSetpoint, updateSetpointInfo ] = useMutation((mutation, args: {
 	// 	id: string,
@@ -348,6 +354,25 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				}
 				interlocks {
 					id
+
+					state {
+						
+						deviceKey {
+							id
+							key
+						}
+
+						deviceValue {
+							type
+							value
+							setpoint {
+								id
+								name
+							}
+						}
+
+					}
+
 					inputDevice {
 						id 
 						name
@@ -412,7 +437,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	const plugins = data?.commandProgramDevicePlugins || [];
 
 	return (
-		<Box flex>
+		<Box flex background={"#dfdfdf"}>
 			<DeviceInterlock
 				devices={devices}
 				device={device}
@@ -426,7 +451,6 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 					console.log(lock)
 					if(lock.id){
 						updatePlaceholderInterlock(
-							props.program,
 								lock.id,
 								lock.inputDevice,
 								lock.inputDeviceKey,
@@ -439,7 +463,6 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 						})
 					}else{
 						createPlaceholderInterlock(
-							props.program,
 								lock.inputDevice,
 								lock.inputDeviceKey,
 								lock.comparator,
@@ -458,8 +481,6 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 
 					if(setpoint.id){
 						updatePlaceholderSetpoint(
-							'program-id',
-							selected.id,
 							setpoint.id,
 							setpoint.name,
 							setpoint.type,
@@ -470,18 +491,16 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 							refetch()
 						})
 					}else{
-					createPlaceholderSetpoint(
-						'program-id',
-						selected.id,
-						setpoint.name,
-						setpoint.type,
-						setpoint.key,
-						setpoint.value	
-					).then(() => {
-						openSetpointModal(false)
-						refetch()
-					})
-					}	
+						createPlaceholderSetpoint(
+							setpoint.name,
+							setpoint.type,
+							setpoint.key,
+							setpoint.value	
+						).then(() => {
+							openSetpointModal(false)
+							refetch()
+						})
+					}
 				}}
 				onClose={() => {
 					openSetpointModal(false)
@@ -506,7 +525,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				<Text size="medium">{device?.name}</Text>
 			</Box>
 			
-			<Box flex gap="xsmall" direction="column">
+			<Box pad="xsmall" flex gap="xsmall" direction="column">
 			<Box gap="xsmall" direction="row" flex>
 				<ListBox 
 					label="Interlocks" 

@@ -57,7 +57,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
     const programs = data?.commandPrograms || []
 
     const createDevice = useCreateDevice(activeUser?.id)
-    const updateDevice = useUpdateDevice()
+    const updateDevice = useUpdateDevice(activeUser?.id)
 
     // useEffect(() => {
     //     if(devices){
@@ -189,7 +189,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
             <DeploymentList
                 devices={devices}
                 programs={programs}
-                selected={[selectedDevice?._id]}
+                selected={[selectedDevice?.id]}
                 onClickRow={({datum}) => {
                     console.log(datum)
                    

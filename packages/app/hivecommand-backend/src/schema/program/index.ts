@@ -41,14 +41,26 @@ type CommandProgramAlarm {
 
 type CommandInterlock {
 	id: ID! @id
+
+	state: [CommandInterlockState] @relationship(type: "USES_INTERLOCK_STATE", direction: OUT)
+
 	inputDevice: CommandProgramDevicePlaceholder @relationship(type: "HAS_INPUT", direction: OUT)
 	inputDeviceKey: CommandProgramDeviceState @relationship(type: "HAS_INPUT_KEY", direction: OUT)
 	comparator: String
 
 	assertion: CommandInterlockAssertion @relationship(type: "HAS_ASSERTION", direction: OUT)
+	
 	action: CommandProgramDeviceAction @relationship(type: "USE_SAFETY_ACTION", direction: OUT)
 
 	device: CommandProgramDevicePlaceholder @relationship(type: "HAS_INTERLOCK", direction: IN)
+}
+
+type CommandInterlockState {
+	id: ID! @id
+	deviceKey: CommandProgramDeviceState @relationship(type: "HAS_INTERLOCK_STATE", direction: OUT)
+	deviceValue: CommandInterlockAssertion @relationship(type: "HAS_ASSERTION", direction: OUT)
+
+	interlock: CommandInterlock @relationship(type: "USES_INTERLOCK_STATE", direction: IN)
 }
 
 type CommandProgramNodeConfiguration {

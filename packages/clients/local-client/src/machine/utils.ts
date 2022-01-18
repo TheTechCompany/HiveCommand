@@ -1,11 +1,12 @@
 
 	export const getBlockType = (type: string) => {
-		console.log("Get TYpe", type)
 		switch(type){
 			case 'Connect':
 				return 'sub-process';
 			case 'PowerShutdown':
+				return 'shutdown';
 			case 'Trigger':
+				return 'trigger';
 			case 'Action':
 				return 'action';
 			case 'Clock':

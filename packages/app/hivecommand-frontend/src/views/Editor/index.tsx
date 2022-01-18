@@ -2,7 +2,7 @@ import { gql, useApolloClient, useQuery } from '@apollo/client';
 import React, { Suspense, lazy, useEffect, useRef, useState, useCallback } from 'react';
 import { Box, Text, Spinner, Button, Collapsible, List } from 'grommet';
 import qs from 'qs';
-import { matchPath, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { ZoomControls } from '../../components/zoom-controls';
@@ -21,7 +21,9 @@ import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 import { Documentation } from './pages/documentation';
 import { ObjectTypeDefinitionNode } from 'graphql'
-import { createProgramFlow, createProgramHMI } from '@hive-command/api';
+import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
+import { RoutedTabs } from '../../components/routed-tabs';
+import { CommandEditorProvider } from './context';
 export interface EditorProps {
 
 }
@@ -31,6 +33,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const navigate = useNavigate()
     const location = useLocation()
 
+
+    const match = useMatch(`*/:path`)
+    console.log({location, match})
+
+    // const match = useMatch()
+    // alert(match)
+    
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
     const [ selectedItem, setSelectedItem ] = useState<any>(undefined);
@@ -78,6 +87,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             id: id
         }
     })
+
+    const createProgramFlow = useCreateProgramFlow(id)
+    const createProgramHMI = useCreateProgramHMI(id)
 
     // const [ addProgramNode, addInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
     //     const program = mutation.updateCommandPrograms({
@@ -233,181 +245,113 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     useEffect(() => {
 
         menu.forEach((item, ix) => {
-            const match =  matchPath(window.location.pathname, `${item.toLowerCase()}`)
-            if(match){
-                setView(item as any)
-            }
+            console.log(item, window.location.pathname)
+            // const resolvedPath = useResolvedPath(item.toLowerCase())
+
+            // // const match =  matchPath(resolvedPath.pathname, location.pathname)
+
+            // console.log(match)
+            // if(match){
+            //     setView(item as any)
+            // }
 
         })
 
     }, [window.location.pathname])
 
-    const cleanTree = (nodes: any[]) => {
-        return (nodes || []).map((node) => ({
-            ...node,
-            children: cleanTree(node.children)
-        }))
-    }
 
     return (
-        <Suspense fallback={(
+        <CommandEditorProvider value={{
+            sidebarOpen: sidebarOpen,
+            program
+        }}>
+            <Suspense fallback={(
+                <Box 
+                    direction="column"
+                    align="center"
+                    justify="center"
+                    flex>
+                    <Spinner size="medium"/>
+                    <Text>Loading Editor ...</Text>
+                </Box>)}>
             <Box 
-                direction="column"
-                align="center"
-                justify="center"
-                flex>
-                <Spinner size="medium"/>
-                <Text>Loading Editor ...</Text>
-            </Box>)}>
-        <Box 
-            overflow="hidden"
-            flex
-            round="xsmall" 
-            background="neutral-1">
-            <Box
-                align="center"
-                justify="between" 
-                pad="xsmall" 
-                direction="row" 
-                background="accent-2">
-                <Box 
-                    align="center"
-                    direction="row">
-                    <Button 
-                        onClick={() => {
-                            openSidebar(!sidebarOpen)
-                        }}
-                        plain 
-                        hoverIndicator 
-                        style={{padding: 6, borderRadius: 3}} 
-                        icon={<Menu size="small" />} />
-                    <Text>{program.name}</Text>
-                </Box>
-
-                <Box 
-                    justify="between"
-                    align="center"
-                    overflow="hidden"
-                    direction="row">
-                    {menu.map((menu_item) => (
-                        <Button 
-                        
-                            hoverIndicator
-                            onClick={() => {
-                                setActiveProgram(undefined)
-                                setView(menu_item as any)
-                                navigate(`${menu_item.toLowerCase()}`)
-                            }}
-                            style={{padding: 6, borderRadius: 3}} 
-                            active={view == menu_item} 
-                            plain 
-                            label={menu_item} />
-                    ))}
-                   
-                    
-                </Box>
-            </Box>
-
-            <ProgramCanvasModal
-                open={modalOpen}
-                onSubmit={(item) => {
-                    if(view == "Program"){
-                        let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                        createProgramFlow(activeProgram, item.name, parent).then(() => {
-                            refetch()
-                        })
-                    }else{
-                        createProgramHMI(activeProgram, item.name, selectedItem.id).then(() => {
-                            refetch()
-                        })
-                    }
-                    
-                    openModal(false)
-                }}
-                onClose={() => {
-                    setSelectedItem(undefined)
-                    openModal(false)
-                }}
-                modal={(gql`
-                    type ${view} {
-                        name: String
-                    }
-                `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == view) as ObjectTypeDefinitionNode} />
-            <Box
+                elevation='small'
+                overflow="hidden"
                 flex
-                direction="row">
-                <Collapsible    
-                    direction="horizontal"
-                    open={sidebarOpen}>
+                round="xsmall" 
+                background="neutral-1">
+                <Box
+                    align="center"
+                    justify="between" 
+                    pad="xsmall" 
+                    direction="row" 
+                    background="accent-2">
                     <Box 
-                        flex
-                        width="small">
-                        {/* <Box 
-                            pad="xsmall"
-                            border={{side: 'bottom', size: 'small'}}
-                            direction="row" 
-                            align="center" 
-                            justify="between">
-                            <Text size="small">{view}</Text>
-                            <Button
-                                onClick={() => {
-                                    if(view == "Program"){
-                                        addProgram().then(() => {
-                                            refetch()
-                                        })
-                                    }else{
-                                        addHMI().then(() => {
-                                            refetch()
-                                        })
-                                    }
-                                 
-                                }}
-                                hoverIndicator
-                                plain
-                                style={{padding: 6, borderRadius: 3}}
-                                icon={<Add size="small" />} />
-                        </Box> */}
-
-                        <HyperTree 
-                            id="editor-menu"
-                            onCreate={(node) => {
-                                console.log("CREATE", node)
-                                setSelectedItem(node.data)
-                                openModal(true)
+                        align="center"
+                        direction="row">
+                        <Button 
+                            onClick={() => {
+                                openSidebar(!sidebarOpen)
                             }}
-                            onSelect={(node) => {
-                                if(node.data.id !== 'root'){
-                                    setActiveProgram(node.data.id)
-                                }
-                            }}
-                            data={[{
-                                id: 'root',
-                                name: view,
-                                children: (program.program || program.hmi) ? view == "Program" ? cleanTree(program.program) : cleanTree(program.hmi) : []
-                            }]} />
-                        {/* <List 
-                            onClickItem={({item}) => {
-                                console.log(item)
-                                setActiveProgram(item.id)
-                            }}
-                            primaryKey="name"
-                            data={view == "Program" ? program.program : program.hmi} /> */}
+                            plain 
+                            hoverIndicator 
+                            style={{padding: 6, borderRadius: 3}} 
+                            icon={<Menu size="small" />} />
+                        <Text>{program.name}</Text>
                     </Box>
-                </Collapsible>
-                <Box flex>
-                    <Routes>
-                        <Route path={`/`} element={<Program activeProgram={activeProgram} />} />
-                        <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
-                        <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
-                        <Route path={`devices`} element={<Devices/>} />
-                        <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
-                        <Route path={`alarms`} element={<Alarms/>} />
-                        <Route path={`documentation`} element={<Documentation/>} />
-                    </Routes>
+
+                    <Box 
+                        justify="between"
+                        align="center"
+                        overflow="hidden"
+                        direction="row">
+                        <RoutedTabs 
+                            tabs={menu.map((x) => ({
+                                path: x.toLowerCase(),
+                                label: x,
+                                default: x == "Program"
+                            }))} />
+                        {/* {menu.map((menu_item) => (
+                            <Button 
+                            
+                                hoverIndicator
+                                onClick={() => {
+                                    setActiveProgram(undefined)
+                                    setView(menu_item as any)
+                                    navigate(`${menu_item.toLowerCase()}`)
+                                }}
+                                style={{padding: 6, borderRadius: 3}} 
+                                active={view == menu_item} 
+                                plain 
+                                label={menu_item} />
+                        ))}
+                        */}
+                        
+                    </Box>
                 </Box>
-                
+
+              
+                <Box
+                    flex
+                    direction="row">
+                    
+                    <Box flex>
+                        <Routes>
+                            <Route path={`/`} element={<Outlet />}>
+                                <Route path={""} element={<Program activeProgram={activeProgram} />} />
+                                <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
+                                <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
+                                <Route path={`devices`} element={<Devices/>} />
+                                <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
+                                <Route path={`alarms`} element={<Alarms/>} />
+                                <Route path={`documentation`} element={<Documentation/>} />
+                            </Route>
+                        </Routes>
+                    </Box>
+                    
+                </Box>
             </Box>
-        </Box>
-        </Suspense>
+            </Suspense>
+        </CommandEditorProvider>
     )
 }

@@ -1,0 +1,26 @@
+{
+  "name": "@hive-command/plugin-blessed",
+  "version": "1.4.1-alpha.26",
+  "description": "",
+  "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  },
+  "dependencies": {
+    "@hive-command/plugin-base": "^1.4.0",
+    "axios": "^0.24.0",
+    "loglevel": "^1.8.0"
+  }
+}
