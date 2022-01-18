@@ -145,6 +145,10 @@ export class ProcessChain extends EventEmitter {
         // log.debug("NEW ITEM PRE");
 
         // console.log({priority})
+        let old = this.current.filter((a) => a.id == x.id)
+
+        Promise.all(old.map(async (old_item) => await old_item.onExit()))
+
         this.current = this.current.filter((a) => a.id != x.id);
         // this.current.splice(ix, 1)
 
