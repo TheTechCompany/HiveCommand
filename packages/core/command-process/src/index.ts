@@ -236,7 +236,7 @@ export class Process extends EventEmitter{
         // console.log(this.chains)
         while(hasNext && this.running){
 			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
-            console.log({hasNext})
+            // console.log({hasNext})
             // log.debug({hasNext}, this.chains.entrypoints.map((x) => x.currentActions))
 			Promise.all(this.chains.entrypoints.map(async (chain) => await chain.run()));
 
