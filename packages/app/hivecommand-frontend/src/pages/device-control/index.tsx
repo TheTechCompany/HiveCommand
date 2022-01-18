@@ -365,13 +365,13 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     }
 
     useEffect(() => {
-        // const timer = setInterval(() => {
-        //     client.refetchQueries({ include: ['DeviceValues'] })
-        // }, 1 * 1000)
+        const timer = setInterval(() => {
+            client.refetchQueries({ include: ['DeviceValues'] })
+        }, 2 * 1000)
 
-        // return () => {
-        //     clearInterval(timer)
-        // }
+        return () => {
+            clearInterval(timer)
+        }
     }, [])
 
 
