@@ -428,7 +428,7 @@ export class Machine {
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
 
-			console.log(busDevice, this.env, changes[bus])
+			// console.log(busDevice, this.env, changes[bus])
 
 			// console.log("Change bus", bus)
 			await Promise.all(changes[bus].map(async (port) => {
@@ -449,7 +449,7 @@ export class Machine {
 					}
 				}
 				
-				log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
+				// log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
 				await plugin?.write(bus, port.port, writeOp);
 			}))
 		}))
