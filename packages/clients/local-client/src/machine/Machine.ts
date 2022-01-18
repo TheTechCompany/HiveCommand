@@ -107,10 +107,14 @@ export class Machine {
 			return prev.concat(curr)
 		}, []).filter((a) => a)
 
-		let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
-			if(!subproc.subprocess?.id) return;
-			return {...this.loadFlow(payload, subproc.subprocess?.id)}
+		let subprocs : any = payload.filter((a) => a.parent?.id == id).map((proc) => {
+			return {...this.loadFlow(payload, proc.id)}
 		})
+
+		// let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
+		// 	if(!subproc.subprocess?.id) return;
+		// 	return {...this.loadFlow(payload, subproc.subprocess?.id)}
+		// })
 
 		return {
 			id: flow?.id || '',
