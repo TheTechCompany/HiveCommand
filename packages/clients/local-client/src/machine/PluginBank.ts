@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "fs";
 import path from "path";
 import { Machine } from "."
 import { BasePlugin } from "@hive-command/plugin-base"
-
+import log from 'loglevel'
 
 export class PluginBank {
 	private machine: Machine;
@@ -21,17 +21,18 @@ export class PluginBank {
 			this.config = JSON.parse(config);
 		}else{
 			this.config = {
+				plugins: [],
 				ignorePlugins: []
 			}
 		}
 
-		console.log(this.config.plugins)
+		// console.log(this.config.plugins)
 
 		let plugins = this.config.plugins?.map((plugin) => {
 			const path = require.resolve(plugin, {
 				paths: [opts.pluginDir]
 			})
-			console.log(path)
+			// console.log(path)
 			if(path) return require(path).default
 		}).filter((a) => a != undefined);
 
@@ -39,9 +40,10 @@ export class PluginBank {
 
 		this.plugins = plugins?.map((x) => new x()) || [];
 
+		log.info(`Loaded ${this.plugins.length} plugins`)
 		// this.plugins = plugins?.map((plugin) => new plugin()) || []
 
-		console.log("Loaded Plugins", this.plugins);
+		// console.log("Loaded Plugins", this.plugins);
 		
 	}
 
@@ -54,7 +56,7 @@ export class PluginBank {
 		let environment = await Promise.all(this.plugins.filter((a) => (this.config.ignorePlugins || []).indexOf(a.TAG) < 0).map(async (plugin) => {
 			const discovered = await plugin.discover()
 
-			console.log("Discovered Plugin Environment", discovered);
+			// console.log("Discovered Plugin Environment", discovered);
 			return {
 				plugin: plugin.TAG,
 				discovered
@@ -77,10 +79,7 @@ export class PluginBank {
 				//TODO device(s) instead of device
 				//TODO add to bus port value bank
 
-				// console.log(event)
-
 				let devices = this.machine.deviceMap.getDevicesByBusPort(event.bus, event.port)
-				// console.log(device?.name, event.bus, event.port);
 				if(!devices) return;
 
 
@@ -106,8 +105,9 @@ export class PluginBank {
 						}, {})
 	
 					}
-	
-					this.machine?.state.update(device?.name, cleanState)
+					
+					// log.info(`Updating device ${device.name} with value ${JSON.stringify(cleanState)}`)
+					this.machine?.state?.update(device?.name, cleanState)
 				})
 				
 				this.machine.busMap.set(event.bus, event.port, event.value);

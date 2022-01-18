@@ -91,7 +91,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     useEffect(() => {
         let program = props.program
         if(program){
-            let hmi = program.hmi?.find((a) => a.name == "Default")
+            let hmi = program.hmi?.[0] //TODO change to a default flag on the HMI
             console.log("Loading HMI", program)
             setNodes(hmi?.nodes?.map((x) => {
                 // console.log( "VAL", x.devicePlaceholder, props.deviceValues, props.deviceValues.find((a) => a.device == x.devicePlaceholder))
@@ -146,7 +146,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 }
             }))))
 
-            setPaths((program?.hmi)?.find((a) => a.name == "Default")?.paths?.map((x) => {
+            setPaths(hmi?.paths?.map((x) => {
                 return {
                     id: x.id,
                     source: x?.source?.id,

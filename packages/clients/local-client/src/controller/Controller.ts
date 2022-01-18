@@ -7,11 +7,14 @@
 
 	SyncClient -> OPCUA -> Controller -> Machine
 */
+import log from 'loglevel'
+
 import { AssignmentPayload, CommandNetwork, ValueBankInterface } from "@hive-command/network";
 import { CommandStateMachineMode } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
+import e from 'express';
 
 export class Controller {
 
@@ -40,18 +43,13 @@ export class Controller {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine?.isRunning || false})
+							return new Variant({dataType: DataType.Boolean, value: this.machine?.isProgramRunning || false})
 						}
 					},
 					Mode: {
 						type: DataType.String,
 						get: () => {
 							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
-						},
-						set: (value) => {
-							this.machine?.changeMode((CommandStateMachineMode as any)[value.value.toString().toUpperCase()])
-							return StatusCodes.Good;
-	
 						}
 					}
 				},
@@ -67,7 +65,8 @@ export class Controller {
 							}
 						],
 						func: async (inputs) => {
-							await this.machine?.start()
+							log.debug('Controller:start')
+							this.machine?.startProgram()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
 					},
@@ -82,8 +81,25 @@ export class Controller {
 							}
 						],
 						func: async (inputs) => {
+							log.debug('Controller:shutdown')
 
-							await this.machine?.shutdown()
+							this.machine?.stopProgram()
+							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+						}
+					},
+					standby: {
+						inputs: [
+
+						],
+						outputs: [
+							{
+								name: 'success',
+								dataType: DataType.Boolean
+							}
+						],
+						func: async (inputs) => {
+							log.debug('Controller:standby')
+							this.machine?.standby()
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},
@@ -102,6 +118,8 @@ export class Controller {
 						],
 						func: async (inputs) => {
 							const [value] = inputs;
+
+							// console.log({value}, "skipTo")
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
 							// if(result) throw result;
@@ -128,6 +146,7 @@ export class Controller {
 						func: async (inputs) => {
 							const [device, action] = inputs;
 
+							console.log({device, action}, "Controller")
 							const result = await this.valueBank.requestAction?.(device.value.toString(), action.value.toString())	
 							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
@@ -147,8 +166,19 @@ export class Controller {
 						],
 						func: async (inputs) => {
 							const [ mode ] = inputs;
-							await this.machine?.changeMode((CommandStateMachineMode as any)[mode.value.toString().toUpperCase()])
-							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+
+							const modeString = mode.value.toString().toUpperCase()
+							let newMode = (CommandStateMachineMode as any)?.[modeString]
+							if(newMode != undefined){
+								log.info(`Changing machine mode to ${modeString}`)
+
+								await this.machine?.changeMode(newMode)
+
+								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+							}else{
+								log.error(`Invalid mode ${modeString}`)
+								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
+							}
 						}
 					}
 				}

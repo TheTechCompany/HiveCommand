@@ -1,3 +1,4 @@
+import log from "loglevel";
 import { TransitionCondition } from "../types";
 
 export class Condition {

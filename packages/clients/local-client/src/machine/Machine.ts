@@ -15,6 +15,8 @@ import { DeviceMap } from "./DeviceMap";
 import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
+import log from "loglevel";
+import PID from "../plugins/PID";
 
 export class Machine {
 
@@ -27,14 +29,16 @@ export class Machine {
 
 	private env: CommandEnvironment[] = [];
 
+	private running : boolean = false;
+
 	constructor(opts: {
 		pluginDir: string
 	}){
 		this.fsm = new CommandStateMachine({
 			processes: []
 		}, {
-			performOperation: async (operation) => {
-
+			requestState: async (operation) => {
+				log.info("Requesting state to mock resolver", operation)
 			}
 		});
 
@@ -45,6 +49,9 @@ export class Machine {
 			machine: this,
 			pluginDir: opts.pluginDir || '/tmp/plugins'
 		})
+
+		this.requestState = this.requestState.bind(this)
+		// this.requestOperation = this.requestOperation.bind(this)
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) => {
@@ -65,7 +72,7 @@ export class Machine {
 			// }
 	
 			return {
-				id: action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
+				id: action.id, //action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
 				type: getBlockType(action.type) || 'action',
 				options: {
 					blockType: getBlockType(action.type) || 'action',
@@ -78,13 +85,13 @@ export class Machine {
 
 
 		let paths = flow?.nodes.map((action) => {
-			console.log(action.next)
+
 			return action.next?.map((next) => {
 				return {
 					id: nanoid(),
-					source: action.type == "Trigger" ? 'origin' : action.id,
+					source: action.id, //action.type == "Trigger" ? 'origin' : action.id,
 					target: next.target,
-					extras: {
+					options: {
 						conditions: next.conditions?.map((cond) => ({
 							input: cond.input,
 							inputKey: cond.inputKey,
@@ -100,16 +107,20 @@ export class Machine {
 			return prev.concat(curr)
 		}, []).filter((a) => a)
 
-		let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
-			if(!subproc.subprocess?.id) return;
-			return {...this.loadFlow(payload, subproc.subprocess?.id)}
+		let subprocs : any = payload.filter((a) => a.parent?.id == id).map((proc) => {
+			return {...this.loadFlow(payload, proc.id)}
 		})
+
+		// let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
+		// 	if(!subproc.subprocess?.id) return;
+		// 	return {...this.loadFlow(payload, subproc.subprocess?.id)}
+		// })
 
 		return {
 			id: flow?.id || '',
 			name: flow?.name || '',
 			nodes: nodes || [],
-			links: paths || [],
+			edges: paths || [],
 			sub_processes: subprocs || []
 		}
 	}
@@ -145,30 +156,63 @@ export class Machine {
 
 		}).filter((a) => a != undefined)
 
+		console.log(flows, payload)
 		
-		console.log("FLOWS", flows)
-		console.log(`Received command payload, starting state machine`)
+		// console.log("FLOWS", flows)
+		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
-			devices: layout?.map((x) => ({
-				name: x.name, 
-				requiresMutex: x.requiresMutex,
-				interlock: {
-					state: {on: 'true'},
-					// state: {on: true},
-					locks: (x.interlocks || []).map((lock) => ({
-						device: lock.input.name,
-						deviceKey: lock.inputKey.key,
-						comparator: lock.comparator,
-						value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
+			devices: layout?.map((x) => {
 
-						fallback: lock.action.key
-					}))
+				let plugins = x.plugins?.map((plugin) => {
+					let configuration = plugin.configuration.reduce((prev, curr) => {
+						return {
+							...prev,
+							[curr.key]: curr.value
+						}
+					}, {})
+
+					return {
+						classString: PID, //plugin.classString,
+						imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+						options: configuration,
+						actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
+						activeWhen: plugin.rules?.id
+					}
+				});
+
+				return {
+					name: x.name, 
+					requiresMutex: x.requiresMutex,
+					actions: x.actions,
+					plugins,
+					interlock: {
+						state: {on: 'true'},
+						// state: {on: true},
+						locks: (x.interlocks || []).map((lock) => ({
+							device: lock.input.name,
+							deviceKey: lock.inputKey.key,
+							comparator: lock.comparator,
+							value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
+
+							fallback: lock.action.key
+						}))
+					}
 				}
-			})),
+			}),
 			processes: flows || []
 		}, {
-			performOperation: this.requestOperation
+			requestState: this.requestState
 		})
+
+		this.fsm.on('transition', (event) => {
+			log.info(`Transitioning on chain (${event.chain}) from ${event.transition.from} to ${event.transition.to}`)
+		})
+
+		//TODO - this is a hack to get a consistent loop event
+		// this.fsm.on('event_loop', async () => {
+
+		// 	await this.writeState()
+		// })
 
 		// this.machine.on('transition', ({target, process}: {target: string, process: string}) => {
 		// 	this.healthClient.emit('process:transition', {process, target})
@@ -180,82 +224,82 @@ export class Machine {
 		// this.machine.start()
 
 
-		this.fsm.on('TICK', async () => {
-			// let activeStages = this.machine?.currentPosition;
+		// this.fsm.on('TICK', async () => {
+		// 	// let activeStages = this.machine?.currentPosition;
 
-			// // console.log("ACTIVE STAGES", activeStages)
+		// 	// // console.log("ACTIVE STAGES", activeStages)
 
-			// await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
-			// 	// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
-			// 	// console.log(device.plugins?.map((a) => a.rules))
-			// 	await Promise.all((device?.plugins || []).filter((a) => !a.rules || ((activeStages || [])?.indexOf(a.rules.id) > -1) ).map(async (plugin) => {
+		// 	// await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
+		// 	// 	// console.log("P TICK", device.name, device.plugins, this.machine?.state.get(device.name))
+		// 	// 	// console.log(device.plugins?.map((a) => a.rules))
+		// 	// 	await Promise.all((device?.plugins || []).filter((a) => !a.rules || ((activeStages || [])?.indexOf(a.rules.id) > -1) ).map(async (plugin) => {
 
-			// 		let pluginObject = plugin.configuration.reduce<{
-			// 			targetDevice?: string;
-			// 			targetDeviceField?: string;
-			// 			actuator?: string;
-			// 			actuatorField?: string;
-			// 		}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
-			// 		// console.log("Plugin tick");
+		// 	// 		let pluginObject = plugin.configuration.reduce<{
+		// 	// 			targetDevice?: string;
+		// 	// 			targetDeviceField?: string;
+		// 	// 			actuator?: string;
+		// 	// 			actuatorField?: string;
+		// 	// 		}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+		// 	// 		// console.log("Plugin tick");
 
-			// 		if(plugin.instance){
-			// 			const pluginTick = getPluginFunction(plugin.plugin?.tick)
-			// 			if(!pluginObject.targetDevice || !pluginObject.actuator) return;
+		// 	// 		if(plugin.instance){
+		// 	// 			const pluginTick = getPluginFunction(plugin.plugin?.tick)
+		// 	// 			if(!pluginObject.targetDevice || !pluginObject.actuator) return;
 
-			// 			let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
-			// 			let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
-			// 			if(!targetDevice || !actuatorDevice) return;
+		// 	// 			let targetDevice = this.deviceMap.getDeviceById(pluginObject.targetDevice)
+		// 	// 			let actuatorDevice = this.deviceMap.getDeviceById(pluginObject.actuator)
+		// 	// 			if(!targetDevice || !actuatorDevice) return;
 						
-			// 			let actuatorKey = actuatorDevice.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
-			// 			let targetKey = targetDevice.state?.find((a) => a.id == pluginObject.targetDeviceField || a.key == pluginObject.targetDeviceField)
+		// 	// 			let actuatorKey = actuatorDevice.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
+		// 	// 			let targetKey = targetDevice.state?.find((a) => a.id == pluginObject.targetDeviceField || a.key == pluginObject.targetDeviceField)
 
-			// 			if(!actuatorKey || !targetKey){
-			// 				console.error("No actuator or target");
-			// 				return;
-			// 			} 
+		// 	// 			if(!actuatorKey || !targetKey){
+		// 	// 				console.error("No actuator or target");
+		// 	// 				return;
+		// 	// 			} 
 
-			// 			let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
-			// 			let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
+		// 	// 			let actuatorValue = this.machine?.state.getByKey(actuatorDevice.name, actuatorKey?.key)
+		// 	// 			let targetValue = this.machine?.state.getByKey(targetDevice.name, targetKey?.key)
 
-			// 			let state = {
-			// 				actuatorValue: actuatorValue || 0,
-			// 				targetValue:  targetValue || 0,
-			// 				__host: {
-			// 					...this.machine?.state.get(device.name)
-			// 				}
-			// 			}
+		// 	// 			let state = {
+		// 	// 				actuatorValue: actuatorValue || 0,
+		// 	// 				targetValue:  targetValue || 0,
+		// 	// 				__host: {
+		// 	// 					...this.machine?.state.get(device.name)
+		// 	// 				}
+		// 	// 			}
 
-			// 			// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
+		// 	// 			// console.log("PLUGIN STATE", state, actuatorValue, targetValue)
 
-			// 			pluginTick(plugin.instance, state, async (state) => {
+		// 	// 			pluginTick(plugin.instance, state, async (state) => {
 
-			// 				// console.log("REQUEST STATE", state)
+		// 	// 				// console.log("REQUEST STATE", state)
 
-			// 				let value = state.actuatorValue;
-			// 				let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
+		// 	// 				let value = state.actuatorValue;
+		// 	// 				let key = device.state?.find((a) => a.id == pluginObject.actuatorField || a.key == pluginObject.actuatorField)
 
-			// 				// console.log("KV", key, value)
-			// 				if(!key) return;
-			// 				let writeOp: any = {
-			// 					[key?.key]: value
-			// 				};
+		// 	// 				// console.log("KV", key, value)
+		// 	// 				if(!key) return;
+		// 	// 				let writeOp: any = {
+		// 	// 					[key?.key]: value
+		// 	// 				};
 
-			// 				// console.log("WRITE", writeOp)
-			// 				await this.requestState({
-			// 					device: device?.name,
-			// 					value: writeOp
-			// 				})
+		// 	// 				// console.log("WRITE", writeOp)
+		// 	// 				await this.requestState({
+		// 	// 					device: device?.name,
+		// 	// 					value: writeOp
+		// 	// 				})
 
-			// 			})
-			// 		}else{
-			// 			console.log("PLUGIN NOT INSTANTIATED", plugin.id, plugin.plugin.name)
-			// 		}
-			// 		// console.log("PLugin tick ", plugin.name)
-			// 	}))
-			// }))
+		// 	// 			})
+		// 	// 		}else{
+		// 	// 			console.log("PLUGIN NOT INSTANTIATED", plugin.id, plugin.plugin.name)
+		// 	// 		}
+		// 	// 		// console.log("PLugin tick ", plugin.name)
+		// 	// 	}))
+		// 	// }))
 
-			// await this.writeState()
-		})
+		// 	// await this.writeState()
+		// })
 
 	}
 
@@ -263,29 +307,64 @@ export class Machine {
 		return this.fsm.state
 	}
 
-	get isRunning(){
-		return this.fsm.isRunning
-	}
 
 	get mode(){
 		return this.fsm.mode || CommandStateMachineMode.DISABLED
 	}
 
-	async start(){
-		await this.fsm.start();
+
+	get isProgramRunning(){
+		return this.fsm.isRunning
 	}
 
-	async shutdown(){
-		await this.fsm.stop();
+	async startProgram(){
+		await this.fsm.start()
+	}
+
+	async stopProgram(){
+		await this.fsm.stop()
+	}
+
+	async start(){
+		this.running = true;
+		await this.pluginBank.subscribeToBusSystem(this.env)
+		this.runLoop()
+	}
+
+	async runLoop(){
+		while(this.running){
+			await this.writeState()
+			await new Promise((resolve) => setTimeout(() => resolve(true), 500));
+		}
+	}
+
+	stop(){
+		this.running = false;
+	}
+
+	// async start(){
+	// 	log.info("Starting state machine")
+	// 	// await this.fsm.start();
+	// }
+
+	// async shutdown(){
+	// 	log.info("Stopping state machine")
+	// 	// await this.fsm.stop();
+	// }
+
+	async standby(){
+		log.info("Pausing state machine")
+		await this.fsm.pause()
 	}
 
 	async runOneshot(processId: string){
-		return new Error("Not implemented");
+		return await this.fsm.runFlow(processId)
+		// return new Error("Not implemented");
 	}
 
 
 	getByKey(dev: string, key: string){
-		return this.fsm?.state.getByKey(dev, key)
+		return this.fsm?.state?.getByKey(dev, key)
 	}
 
 	
@@ -299,32 +378,27 @@ export class Machine {
 	}
 
 
-	async requestState(event: {device: string, value: any}){
+	async requestState(event: {device: string, state: any | {[key: string]: any}}){
+		console.log("request state - (LC Machine)", event)
+
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 
 		let busDevice = this.env.find((a) => a.id == busPort?.bus)
 		if(!busDevice) return;
-		let plugin = this.pluginBank.getByTag(busDevice?.type) //find((a) => a.TAG == busDevice?.type)
-		// console.log("REQUESTING STATE FROM ", busPort?.bus, busPort?.port, event.value)
-		
+	
 		if(!busPort?.bus) return;
 		
-		let prevState = this.busMap.get(busPort.bus, busPort.port)
-
 		let writeOp: any;
-		if(typeof(event.value) == 'object'){
+		if(typeof(event.state) == 'object'){
 
 			writeOp = {};
-			for(var k in event.value){
-				// console.log(k, busPort.state)
+			for(var k in event.state){
 				let stateItem = busPort?.state?.find((a) => a.key == k)
-				console.log({stateItem})
+
 				if(!stateItem) continue;
-				let value = event.value[k];
+				let value = event.state[k];
 				if(stateItem.max && stateItem.min){
-					// console.log("Min max", stateItem.min, stateItem.max, value)
 					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
-					// console.log("Min max", stateItem.min, stateItem.max, value)
 
 					if(value > stateItem.max) value = stateItem.max
 					if(value < stateItem.min) value = stateItem.min
@@ -332,21 +406,29 @@ export class Machine {
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
 			}
 		}else{
-			writeOp = event.value;
+			writeOp = event.state;
 		}
 
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
 		this.busMap.request(busPort.bus, busPort.port, writeOp)
 	}
 
+	async requestOperation(ev : {device: string, operation: string}){
+		console.log("request operation - (LC Machine)", ev)
+		await this.fsm.performOperation(ev.device, undefined, ev.operation)
+	}
+
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		// if(Object.keys(changes).length > 0)console.log("Changes", changes)
+		// console.log("write state - (LC Machine)", changes)
+
 		if(Object.keys(changes).length < 1) return;
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
+
+			// console.log(busDevice, this.env, changes[bus])
 
 			// console.log("Change bus", bus)
 			await Promise.all(changes[bus].map(async (port) => {
@@ -366,32 +448,8 @@ export class Machine {
 						writeOp[k] = port.value[k];
 					}
 				}
-				// 	console.log("PREV STATE", prevState)
-				// 	// let prevState = this.valueBank.get(event.bus, event.port)
-		
-				// 	// event.value = {
-				// 	// 	...prevState,
-				// 	// 	...event.value
-				// 	// }
-		
-				// 	writeOp = {...prevState};
-				// 	for(var k in event.value){
-				// 		let stateItem = busPort?.state?.find((a) => a.key == k)
-				// 		if(!stateItem) continue;
-				// 		writeOp[stateItem?.foreignKey] = event.value[k];
-				// 	}
-		
-				// }else{
-				// 	writeOp = event.value;
-				// }
-		
-				// //An object value is a partial state to merge before sending else its a value
-				// if(typeof(event.value) == "object"){
 				
-				// }
-		
-				// console.log("WRITE", port, writeOp)
-				
+				// log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
 				await plugin?.write(bus, port.port, writeOp);
 			}))
 		}))
@@ -400,61 +458,60 @@ export class Machine {
 
 	setState(device: string, state: any){
 		// const busPort = this.deviceMap.getDeviceBusPort(device)
-
-		console.log("UPDATE DEV STATE", device, state)
-		this.fsm?.state.update(device, {
+		log.debug(`Set State: (${device})`, {state})
+		this.fsm?.state?.update(device, {
 			...state
 		})
 	}
 
-	async useAction(device: string, operation: any){
-		const busPort = this.deviceMap.getDeviceBusPort(device)
+	// async useAction(device: string, operation: any){
+	// 	const busPort = this.deviceMap.getDeviceBusPort(device)
 
-		// if(busPort?.bus && busPort?.port){
-			/*
-				Test the operation value for object type
-				if object remap keys to busmap keys
-				if value write directly
-			*/
+	// 	// if(busPort?.bus && busPort?.port){
+	// 		/*
+	// 			Test the operation value for object type
+	// 			if object remap keys to busmap keys
+	// 			if value write directly
+	// 		*/
 			
 		
 
-			await this.requestState({
-				device: device,
-				value: operation
-			})
-			console.log("OP", operation)
-
+	// 		await this.requestState({
+	// 			device: device,
+	// 			state: operation
+	// 		})
 		
-	}
+	// }
 
 	//Request state + translator for name
-	async requestOperation(event: {device: string, operation: string}){
-		console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
-		let busPort = this.deviceMap.getDeviceBusPort(event.device)
+	// async requestOperation(event: {device: string, operation: string}){
+	// 	log.debug(`Requesting operation ${event.operation} on ${event.device}`)
+	// 	// console.log(`Requesting operation with device name ${event.device} ${event.operation}- StateMachine`)
+	
+	// 	let busPort = this.deviceMap.getDeviceBusPort(event.device)
 		
-		if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
+	// 	if(!busPort?.bus || !busPort.port) return new Error("No bus-port found");
 
-		let action = busPort.actions?.find((a) => a.key == event.operation)
-		console.log("Found action", action)
-		if(!action?.func) return;
+	// 	let action = busPort.actions?.find((a) => a.key == event.operation)
 
-		let driverFunction = getDeviceFunction(action?.func)
+	// 	if(!action?.func) return;
+
+	// 	let driverFunction = getDeviceFunction(action?.func)
 		
-		let id = nanoid();
-		console.time(`${id}-${action.key}`)
+	// 	let id = nanoid();
+	// 	console.time(`${id}-${action.key}`)
 		
-		await driverFunction(
-			{},
-			(state: any) => this.setState(event.device, state),
-			(operation: any) => {
-				// console.log(operation);
-				this.useAction(event.device, operation)	
-			}
-		)
+	// 	await driverFunction(
+	// 		{},
+	// 		(state: any) => this.setState(event.device, state),
+	// 		(operation: any) => {
+	// 			// console.log(operation);
+	// 			this.useAction(event.device, operation)	
+	// 		}
+	// 	)
 
-		console.timeEnd(`${id}-${action.key}`)
-	}
+	// 	console.timeEnd(`${id}-${action.key}`)
+	// }
 
 
 

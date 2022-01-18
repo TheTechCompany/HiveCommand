@@ -60,7 +60,7 @@ export const DeviceDevices : React.FC<any> = (props) => {
 		}
 	`, {
 		variables: {
-			id: props.match.params.id
+			id: id
 		}
 	})
 

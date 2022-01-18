@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Route, Routes, matchPath, useNavigate } from 'react-router-dom';
+import { Route, Routes, matchPath, useNavigate, Outlet } from 'react-router-dom';
 
 import { Box, List, Spinner } from 'grommet';
 import { Header } from '../../components/ui/header'
@@ -29,7 +29,16 @@ const pages = [
         icon: <Tools color="neutral-1" />,
         label: "Programs",
         path: 'programs',
-        component: <ProgramList/>
+        component: <Outlet />,
+        children: [
+        {
+            path: '',
+            component: <ProgramList/>    
+        },
+        {
+            path: ':id/*',
+            component: <EditorPage />
+        }]
     }, {
         icon: <Plug  color="neutral-1" />,
         label: "Plugins",
@@ -87,13 +96,19 @@ const Dashboard : React.FC<any> = (props) => {
 
                         <Routes>
                             {pages.map((x, ix) => (
-                                <Route path={`${x.path}`} element={x.component} />
+                                <Route path={`${x.path}`} element={x.component}>
+                                    {x.children && x.children.map((y, iy) => (
+                                        <Route path={`${y.path}`} element={y.component} />
+                                    ))}
+                                </Route>
                             ))}
                             <Route path={`devices/:id/*`} element={<DeviceControl/>} />
                             {/* <Route path={`/devices/:id/graphs`} component={DeviceControlGraph} />
                             <Route path={`/devices/:id/devices`} component={DeviceDevices} /> */}
                             {/* <Route path={`/devices/:id`} component={DeviceSingle} /> */}
-                            <Route path={`programs/:id/*`} element={<EditorPage/>} />
+                        
+                        
+                            {/* <Route path={`programs/:id/*`} element={<EditorPage/>} /> */}
                             <Route path={`plugins/:id/editor`} element={<PluginEditor/>} />
                             <Route path={`plugins/:id`} element={<PluginSingle/>} />
                         </Routes>

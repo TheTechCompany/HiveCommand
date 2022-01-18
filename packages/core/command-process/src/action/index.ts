@@ -67,7 +67,7 @@ export class ProcessAction {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
 			actions: this.actions
-		}, this.process._process)
+		}, this.process.getProcess)
 		
 		this.hasRun = true;
 		this.isRunning = false;
@@ -145,7 +145,7 @@ export class ProcessAction {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
 			actions: this.actions
-		}, this.process._process)
+		}, this.process.getProcess)
 
 		this.hasRun = false;
 

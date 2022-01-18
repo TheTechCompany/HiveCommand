@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, List, Text } from 'grommet';
-import { connectProgramNode, createProgramNode, deleteProgramNodes, disconnectProgramNode, updateProgramNode } from '@hive-command/api';
-import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
+import { Box, Button, Collapsible, List, Text } from 'grommet';
+import { useConnectProgramNode, useCreateProgramFlow, useCreateProgramNode, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramNode } from '@hive-command/api';
+
+import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath, HyperTree } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
 import { NodeDropdown } from '../../../../components/node-dropdown';
@@ -15,6 +16,11 @@ import { ProgramDrawer } from './Drawer';
 import { useEditor } from './store';
 import { debounce, pick } from 'lodash';
 import { useParams } from 'react-router-dom';
+import { useCommandEditor } from '../../context';
+import { ProgramCanvasModal } from '../../../../components/modals/program-canvas';
+import { ObjectTypeDefinitionNode } from 'graphql';
+import { cleanTree } from '../../utils';
+import { EmptyView } from '../../components/empty-view';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -32,6 +38,14 @@ const reducer = (state, action) => {
 export const Program = (props) => {
 
     const { id } = useParams()
+
+    const { sidebarOpen, program } = useCommandEditor()
+
+    const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
+    const [ activeProgram, setActiveProgram ] = useState<string>(undefined)
+
+
+    const createProgramFlow = useCreateProgramFlow(id)
 
     const [state, dispatch] = useEditor(reducer, {
         nodes: [],
@@ -98,7 +112,7 @@ export const Program = (props) => {
     ]
 
     const { data } = useQuery(gql`
-    query Q ($id: ID, $program: ID){
+    query Q ($id: ID, $program: ID!){
         commandPrograms(where: {id: $id}){
             id
             name
@@ -132,6 +146,10 @@ export const Program = (props) => {
                 children {
                     id
                     name
+                }
+
+                parent {
+                    id
                 }
 
                 conditions {
@@ -204,7 +222,7 @@ export const Program = (props) => {
 `, {
         variables: {
             id: id,
-            program: props.activeProgram
+            program: activeProgram
         }
     })
 
@@ -212,12 +230,18 @@ export const Program = (props) => {
         client.refetchQueries({ include: ['Q'] })
     }
 
-    let program = data?.commandProgramFlows?.[0]
+    let flow = data?.commandProgramFlows?.[0]
 
+
+    const createProgramNode = useCreateProgramNode(id, activeProgram, flow?.parent?.id)
+    const updateProgramNode = useUpdateProgramNode(id, activeProgram, flow?.parent?.id)
+    const deleteProgramNodes = useDeleteProgramNodes(id, activeProgram, flow?.parent?.id)
+    const connectProgramNode = useConnectProgramNode(id, activeProgram, flow?.parent?.id)
+    const disconnectProgramNode = useDisconnectProgramNode(id, activeProgram, flow?.parent?.id)
 
     useEffect(() => {
-        if (program && props.activeProgram) {
-            setNodes(program.nodes.map((x) => ({
+        if (flow && activeProgram) {
+            setNodes(flow.nodes.map((x) => ({
                 id: x.id,
                 x: x.x,
                 y: x.y,
@@ -235,7 +259,7 @@ export const Program = (props) => {
             })))
 
             
-            setPaths(program.nodes.map((x) => {
+            setPaths(flow.nodes.map((x) => {
                 console.log("NEXT", x)
                 return x.nextConnection.edges.map((conn) => ({
                     id: conn.id,
@@ -252,7 +276,7 @@ export const Program = (props) => {
                 }))
             }).reduce((prev, curr) => prev.concat(curr), []))
         }
-    }, [program, props.activeProgram])
+    }, [flow, activeProgram])
 
 
     // const [addNode, addInfo] = useMutation((mutation, args: { type: string, x: number, y: number, subprocess?: string}) => {
@@ -271,7 +295,7 @@ export const Program = (props) => {
     //         }
     //     }
     //     const program = mutation.updateCommandProgramFlows({
-    //         where: { id: props.activeProgram },
+    //         where: { id: activeProgram },
     //         update: {
     //                 nodes: [{
     //                     create: [{
@@ -329,7 +353,7 @@ export const Program = (props) => {
             let path = paths.find((a) => a.id == _paths[0]);
 
             queries.push(
-                disconnectProgramNode(props.activeProgram, path.source, path.sourceHandle, path.target, path.targetHandle)
+                disconnectProgramNode(path.source, path.sourceHandle, path.target, path.targetHandle)
             )
     
             // return {
@@ -344,7 +368,7 @@ export const Program = (props) => {
             }
 
             queries.push(
-                deleteProgramNodes(props.activeProgram, nodes)
+                deleteProgramNodes(nodes)
             )
 
         }
@@ -453,25 +477,106 @@ export const Program = (props) => {
     const devices = data?.commandPrograms?.[0].devices || []
 
     useEffect(() => {
-        setConditions(program?.conditions)
-    }, [program])
+        setConditions(flow?.conditions)
+    }, [flow])
 
     console.log("Conditions", conditions)
 
     return (
         <ProgramEditorProvider
             value={{
+                flow,
                 refresh: refetch,
                 devices,
                 conditions: conditions,
                 program,
-                activeProgram: props.activeProgram,
+                activeProgram: activeProgram,
                 selectedType: selected.key,
                 selected: selected.key == 'node' ? nodes.find((a) => a.id == selected.id) : paths.find((a) => a.id == selected.id)
             }}
         >
-            <Box flex>
+            <Box flex direction='row'>
+                <Collapsible    
+                    direction="horizontal"
+                    open={sidebarOpen}>
+                    <Box 
+                        elevation='small'
+                        flex
+                        width="small">
+                        {/* <Box 
+                            pad="xsmall"
+                            border={{side: 'bottom', size: 'small'}}
+                            direction="row" 
+                            align="center" 
+                            justify="between">
+                            <Text size="small">{view}</Text>
+                            <Button
+                                onClick={() => {
+                                    if(view == "Program"){
+                                        addProgram().then(() => {
+                                            refetch()
+                                        })
+                                    }else{
+                                        addHMI().then(() => {
+                                            refetch()
+                                        })
+                                    }
+                                 
+                                }}
+                                hoverIndicator
+                                plain
+                                style={{padding: 6, borderRadius: 3}}
+                                icon={<Add size="small" />} />
+                        </Box> */}
 
+                <ProgramCanvasModal
+                    open={modalOpen}
+                    onSubmit={(item) => {
+                            let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
+                            createProgramFlow(item.name, parent).then(() => {
+                                refetch()
+                            })
+          
+                        
+                        openModal(false)
+                    }}
+                    onClose={() => {
+                        setSelectedItem(undefined)
+                        openModal(false)
+                    }}
+                    modal={(gql`
+                        type Project {
+                            name: String
+                        }
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "Project") as ObjectTypeDefinitionNode} />
+                        <HyperTree 
+                            id="editor-menu"
+                            onCreate={(node) => {
+                                console.log("CREATE", node)
+                                setSelectedItem(node.data)
+                                openModal(true)
+                            }}
+                            onSelect={(node) => {
+                                if(node.data.id !== 'root'){
+                                    setActiveProgram(node.data.id)
+                                }
+                            }}
+                            data={[{
+                                id: 'root',
+                                name: `Program`,
+                                children: cleanTree(program?.program) || []
+                            }]} />
+                        {/* <List 
+                            onClickItem={({item}) => {
+                                console.log(item)
+                                setActiveProgram(item.id)
+                            }}
+                            primaryKey="name"
+                            data={view == "Program" ? program.program : program.hmi} /> */}
+                    </Box>
+                </Collapsible>
+                
+                {activeProgram != undefined ? (
                 <ProgramCanvas
                     onDelete={watchEditorKeys}
                     menu={[
@@ -480,7 +585,7 @@ export const Program = (props) => {
                             icon: <Action />,
                             panel: (
                                 <NodeDropdown
-                                    items={nodeMenu.concat((program?.children || []).map((x) => ({
+                                    items={nodeMenu.concat((flow?.children || []).map((x) => ({
                                         icon: <Connect />,
                                         label: x.name,
                                         
@@ -515,7 +620,6 @@ export const Program = (props) => {
                         // }})
 
                         createProgramNode(
-                            props.activeProgram, 
                             node.extras.icon, 
                             position.x, 
                             position.y, 
@@ -526,7 +630,6 @@ export const Program = (props) => {
                     }}
                     onNodeUpdate={(node) => {
                         updateProgramNode(
-                            props.activeProgram,
                             node.id,
                             node.x,
                             node.y
@@ -538,7 +641,6 @@ export const Program = (props) => {
                     onPathCreate={(path) => {
 
                         connectProgramNode(
-                            props.activeProgram,
                             path.source,
                             path.sourceHandle,
                             path.target,
@@ -551,7 +653,9 @@ export const Program = (props) => {
 
                     nodes={nodes}
                     paths={paths}
-                />
+                />) : (
+                    <EmptyView label={"program"} />
+                )}
             </Box>
         </ProgramEditorProvider>
 

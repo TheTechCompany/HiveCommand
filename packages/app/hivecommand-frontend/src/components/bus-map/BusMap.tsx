@@ -27,6 +27,7 @@ export const BusMap : React.FC<BusMapProps> = (props) => {
 
 	return (
 		<Box
+			flex
 			pad={'xsmall'}
 			height={{min: "min-content"}}
 			width="100%"

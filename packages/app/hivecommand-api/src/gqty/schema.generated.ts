@@ -584,6 +584,7 @@ export interface CommandDeviceCreateInput {
   network_name?: InputMaybe<Scalars["String"]>;
   online?: InputMaybe<Scalars["Boolean"]>;
   operatingMode?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationFieldInput>;
   peripherals?: InputMaybe<CommandDevicePeripheralsFieldInput>;
   waitingForActions?: InputMaybe<CommandDeviceWaitingForActionsFieldInput>;
@@ -1099,6 +1100,26 @@ export interface CommandDevicePeripheralDeviceNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandDevicePeripheralDeviceUpdateConnectionInput {
@@ -3295,6 +3316,7 @@ export interface CommandDeviceSort {
   network_name?: InputMaybe<SortDirection>;
   online?: InputMaybe<SortDirection>;
   operatingMode?: InputMaybe<SortDirection>;
+  operatingState?: InputMaybe<SortDirection>;
 }
 
 export interface CommandDeviceUniqueWhere {
@@ -3309,6 +3331,7 @@ export interface CommandDeviceUpdateInput {
   network_name?: InputMaybe<Scalars["String"]>;
   online?: InputMaybe<Scalars["Boolean"]>;
   operatingMode?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationUpdateFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsUpdateFieldInput>>;
   waitingForActions?: InputMaybe<
@@ -3485,6 +3508,16 @@ export interface CommandDeviceWhere {
   operatingMode_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
   operatingMode_NOT_STARTS_WITH?: InputMaybe<Scalars["String"]>;
   operatingMode_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState?: InputMaybe<Scalars["String"]>;
+  operatingState_CONTAINS?: InputMaybe<Scalars["String"]>;
+  operatingState_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  operatingState_NOT?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_CONTAINS?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  operatingState_NOT_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  operatingState_STARTS_WITH?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<HiveOrganisationWhere>;
   organisationAggregate?: InputMaybe<CommandDeviceOrganisationAggregateInput>;
   organisationConnection?: InputMaybe<CommandDeviceOrganisationConnectionWhere>;
@@ -7240,6 +7273,7 @@ export interface CommandInterlockConnectInput {
   device?: InputMaybe<CommandInterlockDeviceConnectFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceConnectFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyConnectFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateConnectFieldInput>>;
 }
 
 export interface CommandInterlockConnectOrCreateInput {
@@ -7248,6 +7282,7 @@ export interface CommandInterlockConnectOrCreateInput {
   device?: InputMaybe<CommandInterlockDeviceConnectOrCreateFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceConnectOrCreateFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyConnectOrCreateFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateConnectOrCreateFieldInput>>;
 }
 
 export interface CommandInterlockConnectOrCreateWhere {
@@ -7265,6 +7300,7 @@ export interface CommandInterlockCreateInput {
   device?: InputMaybe<CommandInterlockDeviceFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyFieldInput>;
+  state?: InputMaybe<CommandInterlockStateFieldInput>;
 }
 
 export interface CommandInterlockDeleteInput {
@@ -7273,6 +7309,7 @@ export interface CommandInterlockDeleteInput {
   device?: InputMaybe<CommandInterlockDeviceDeleteFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceDeleteFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyDeleteFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateDeleteFieldInput>>;
 }
 
 export interface CommandInterlockDeviceAggregateInput {
@@ -7377,6 +7414,7 @@ export interface CommandInterlockDisconnectInput {
   device?: InputMaybe<CommandInterlockDeviceDisconnectFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceDisconnectFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyDisconnectFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateDisconnectFieldInput>>;
 }
 
 export interface CommandInterlockInputDeviceAggregateInput {
@@ -7688,12 +7726,609 @@ export interface CommandInterlockRelationInput {
   device?: InputMaybe<CommandInterlockDeviceCreateFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceCreateFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyCreateFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateCreateFieldInput>>;
 }
 
 /** Fields to sort CommandInterlocks by. The order in which sorts are applied is not guaranteed when specifying many fields in one CommandInterlockSort object. */
 export interface CommandInterlockSort {
   comparator?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
+}
+
+export interface CommandInterlockStateAggregateInput {
+  AND?: InputMaybe<Array<CommandInterlockStateAggregateInput>>;
+  OR?: InputMaybe<Array<CommandInterlockStateAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandInterlockStateNodeAggregationWhereInput>;
+}
+
+export interface CommandInterlockStateConnectFieldInput {
+  connect?: InputMaybe<Array<CommandInterlockStateConnectInput>>;
+  where?: InputMaybe<CommandInterlockStateConnectWhere>;
+}
+
+export interface CommandInterlockStateConnectInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyConnectFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueConnectFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockConnectFieldInput>;
+}
+
+export interface CommandInterlockStateConnectOrCreateFieldInput {
+  onCreate: CommandInterlockStateConnectOrCreateFieldInputOnCreate;
+  where: CommandInterlockStateConnectOrCreateWhere;
+}
+
+export interface CommandInterlockStateConnectOrCreateFieldInputOnCreate {
+  node: CommandInterlockStateCreateInput;
+}
+
+export interface CommandInterlockStateConnectOrCreateInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyConnectOrCreateFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueConnectOrCreateFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockConnectOrCreateFieldInput>;
+}
+
+export interface CommandInterlockStateConnectOrCreateWhere {
+  node: CommandInterlockStateUniqueWhere;
+}
+
+export interface CommandInterlockStateConnectWhere {
+  node: CommandInterlockStateWhere;
+}
+
+export interface CommandInterlockStateConnectionSort {
+  node?: InputMaybe<CommandInterlockStateSort>;
+}
+
+export interface CommandInterlockStateConnectionWhere {
+  AND?: InputMaybe<Array<CommandInterlockStateConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandInterlockStateConnectionWhere>>;
+  node?: InputMaybe<CommandInterlockStateWhere>;
+  node_NOT?: InputMaybe<CommandInterlockStateWhere>;
+}
+
+export interface CommandInterlockStateCreateFieldInput {
+  node: CommandInterlockStateCreateInput;
+}
+
+export interface CommandInterlockStateCreateInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockFieldInput>;
+}
+
+export interface CommandInterlockStateDeleteFieldInput {
+  delete?: InputMaybe<CommandInterlockStateDeleteInput>;
+  where?: InputMaybe<CommandInterlockStateConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeleteInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyDeleteFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueDeleteFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockDeleteFieldInput>;
+}
+
+export interface CommandInterlockStateDeviceKeyAggregateInput {
+  AND?: InputMaybe<Array<CommandInterlockStateDeviceKeyAggregateInput>>;
+  OR?: InputMaybe<Array<CommandInterlockStateDeviceKeyAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandInterlockStateDeviceKeyNodeAggregationWhereInput>;
+}
+
+export interface CommandInterlockStateDeviceKeyConnectFieldInput {
+  connect?: InputMaybe<CommandProgramDeviceStateConnectInput>;
+  where?: InputMaybe<CommandProgramDeviceStateConnectWhere>;
+}
+
+export interface CommandInterlockStateDeviceKeyConnectOrCreateFieldInput {
+  onCreate: CommandInterlockStateDeviceKeyConnectOrCreateFieldInputOnCreate;
+  where: CommandProgramDeviceStateConnectOrCreateWhere;
+}
+
+export interface CommandInterlockStateDeviceKeyConnectOrCreateFieldInputOnCreate {
+  node: CommandProgramDeviceStateCreateInput;
+}
+
+export interface CommandInterlockStateDeviceKeyConnectionSort {
+  node?: InputMaybe<CommandProgramDeviceStateSort>;
+}
+
+export interface CommandInterlockStateDeviceKeyConnectionWhere {
+  AND?: InputMaybe<Array<CommandInterlockStateDeviceKeyConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandInterlockStateDeviceKeyConnectionWhere>>;
+  node?: InputMaybe<CommandProgramDeviceStateWhere>;
+  node_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
+}
+
+export interface CommandInterlockStateDeviceKeyCreateFieldInput {
+  node: CommandProgramDeviceStateCreateInput;
+}
+
+export interface CommandInterlockStateDeviceKeyDeleteFieldInput {
+  delete?: InputMaybe<CommandProgramDeviceStateDeleteInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeviceKeyDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandProgramDeviceStateDisconnectInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeviceKeyFieldInput {
+  connect?: InputMaybe<CommandInterlockStateDeviceKeyConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateDeviceKeyConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateDeviceKeyCreateFieldInput>;
+}
+
+export interface CommandInterlockStateDeviceKeyNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandInterlockStateDeviceKeyNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandInterlockStateDeviceKeyNodeAggregationWhereInput>
+  >;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  inputUnits_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  inputUnits_EQUAL?: InputMaybe<Scalars["String"]>;
+  inputUnits_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  key_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  key_EQUAL?: InputMaybe<Scalars["String"]>;
+  key_GT?: InputMaybe<Scalars["Int"]>;
+  key_GTE?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  key_LT?: InputMaybe<Scalars["Int"]>;
+  key_LTE?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  max_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  max_EQUAL?: InputMaybe<Scalars["String"]>;
+  max_GT?: InputMaybe<Scalars["Int"]>;
+  max_GTE?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  max_LT?: InputMaybe<Scalars["Int"]>;
+  max_LTE?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  min_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  min_EQUAL?: InputMaybe<Scalars["String"]>;
+  min_GT?: InputMaybe<Scalars["Int"]>;
+  min_GTE?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  min_LT?: InputMaybe<Scalars["Int"]>;
+  min_LTE?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  type_EQUAL?: InputMaybe<Scalars["String"]>;
+  type_GT?: InputMaybe<Scalars["Int"]>;
+  type_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_LT?: InputMaybe<Scalars["Int"]>;
+  type_LTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  units_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  units_EQUAL?: InputMaybe<Scalars["String"]>;
+  units_GT?: InputMaybe<Scalars["Int"]>;
+  units_GTE?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  units_LT?: InputMaybe<Scalars["Int"]>;
+  units_LTE?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandInterlockStateDeviceKeyUpdateConnectionInput {
+  node?: InputMaybe<CommandProgramDeviceStateUpdateInput>;
+}
+
+export interface CommandInterlockStateDeviceKeyUpdateFieldInput {
+  connect?: InputMaybe<CommandInterlockStateDeviceKeyConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateDeviceKeyConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateDeviceKeyCreateFieldInput>;
+  delete?: InputMaybe<CommandInterlockStateDeviceKeyDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandInterlockStateDeviceKeyDisconnectFieldInput>;
+  update?: InputMaybe<CommandInterlockStateDeviceKeyUpdateConnectionInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeviceValueAggregateInput {
+  AND?: InputMaybe<Array<CommandInterlockStateDeviceValueAggregateInput>>;
+  OR?: InputMaybe<Array<CommandInterlockStateDeviceValueAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandInterlockStateDeviceValueNodeAggregationWhereInput>;
+}
+
+export interface CommandInterlockStateDeviceValueConnectFieldInput {
+  connect?: InputMaybe<CommandInterlockAssertionConnectInput>;
+  where?: InputMaybe<CommandInterlockAssertionConnectWhere>;
+}
+
+export interface CommandInterlockStateDeviceValueConnectOrCreateFieldInput {
+  onCreate: CommandInterlockStateDeviceValueConnectOrCreateFieldInputOnCreate;
+  where: CommandInterlockAssertionConnectOrCreateWhere;
+}
+
+export interface CommandInterlockStateDeviceValueConnectOrCreateFieldInputOnCreate {
+  node: CommandInterlockAssertionCreateInput;
+}
+
+export interface CommandInterlockStateDeviceValueConnectionSort {
+  node?: InputMaybe<CommandInterlockAssertionSort>;
+}
+
+export interface CommandInterlockStateDeviceValueConnectionWhere {
+  AND?: InputMaybe<Array<CommandInterlockStateDeviceValueConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandInterlockStateDeviceValueConnectionWhere>>;
+  node?: InputMaybe<CommandInterlockAssertionWhere>;
+  node_NOT?: InputMaybe<CommandInterlockAssertionWhere>;
+}
+
+export interface CommandInterlockStateDeviceValueCreateFieldInput {
+  node: CommandInterlockAssertionCreateInput;
+}
+
+export interface CommandInterlockStateDeviceValueDeleteFieldInput {
+  delete?: InputMaybe<CommandInterlockAssertionDeleteInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceValueConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeviceValueDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandInterlockAssertionDisconnectInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceValueConnectionWhere>;
+}
+
+export interface CommandInterlockStateDeviceValueFieldInput {
+  connect?: InputMaybe<CommandInterlockStateDeviceValueConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateDeviceValueConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateDeviceValueCreateFieldInput>;
+}
+
+export interface CommandInterlockStateDeviceValueNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandInterlockStateDeviceValueNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandInterlockStateDeviceValueNodeAggregationWhereInput>
+  >;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  type_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  type_EQUAL?: InputMaybe<Scalars["String"]>;
+  type_GT?: InputMaybe<Scalars["Int"]>;
+  type_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_LT?: InputMaybe<Scalars["Int"]>;
+  type_LTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  value_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  value_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  value_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  value_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  value_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  value_EQUAL?: InputMaybe<Scalars["String"]>;
+  value_GT?: InputMaybe<Scalars["Int"]>;
+  value_GTE?: InputMaybe<Scalars["Int"]>;
+  value_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  value_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  value_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  value_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  value_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  value_LT?: InputMaybe<Scalars["Int"]>;
+  value_LTE?: InputMaybe<Scalars["Int"]>;
+  value_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  value_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  value_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  value_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  value_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandInterlockStateDeviceValueUpdateConnectionInput {
+  node?: InputMaybe<CommandInterlockAssertionUpdateInput>;
+}
+
+export interface CommandInterlockStateDeviceValueUpdateFieldInput {
+  connect?: InputMaybe<CommandInterlockStateDeviceValueConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateDeviceValueConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateDeviceValueCreateFieldInput>;
+  delete?: InputMaybe<CommandInterlockStateDeviceValueDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandInterlockStateDeviceValueDisconnectFieldInput>;
+  update?: InputMaybe<CommandInterlockStateDeviceValueUpdateConnectionInput>;
+  where?: InputMaybe<CommandInterlockStateDeviceValueConnectionWhere>;
+}
+
+export interface CommandInterlockStateDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandInterlockStateDisconnectInput>;
+  where?: InputMaybe<CommandInterlockStateConnectionWhere>;
+}
+
+export interface CommandInterlockStateDisconnectInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyDisconnectFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueDisconnectFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockDisconnectFieldInput>;
+}
+
+export interface CommandInterlockStateFieldInput {
+  connect?: InputMaybe<Array<CommandInterlockStateConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<
+    Array<CommandInterlockStateConnectOrCreateFieldInput>
+  >;
+  create?: InputMaybe<Array<CommandInterlockStateCreateFieldInput>>;
+}
+
+export interface CommandInterlockStateInterlockAggregateInput {
+  AND?: InputMaybe<Array<CommandInterlockStateInterlockAggregateInput>>;
+  OR?: InputMaybe<Array<CommandInterlockStateInterlockAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandInterlockStateInterlockNodeAggregationWhereInput>;
+}
+
+export interface CommandInterlockStateInterlockConnectFieldInput {
+  connect?: InputMaybe<CommandInterlockConnectInput>;
+  where?: InputMaybe<CommandInterlockConnectWhere>;
+}
+
+export interface CommandInterlockStateInterlockConnectOrCreateFieldInput {
+  onCreate: CommandInterlockStateInterlockConnectOrCreateFieldInputOnCreate;
+  where: CommandInterlockConnectOrCreateWhere;
+}
+
+export interface CommandInterlockStateInterlockConnectOrCreateFieldInputOnCreate {
+  node: CommandInterlockCreateInput;
+}
+
+export interface CommandInterlockStateInterlockConnectionSort {
+  node?: InputMaybe<CommandInterlockSort>;
+}
+
+export interface CommandInterlockStateInterlockConnectionWhere {
+  AND?: InputMaybe<Array<CommandInterlockStateInterlockConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandInterlockStateInterlockConnectionWhere>>;
+  node?: InputMaybe<CommandInterlockWhere>;
+  node_NOT?: InputMaybe<CommandInterlockWhere>;
+}
+
+export interface CommandInterlockStateInterlockCreateFieldInput {
+  node: CommandInterlockCreateInput;
+}
+
+export interface CommandInterlockStateInterlockDeleteFieldInput {
+  delete?: InputMaybe<CommandInterlockDeleteInput>;
+  where?: InputMaybe<CommandInterlockStateInterlockConnectionWhere>;
+}
+
+export interface CommandInterlockStateInterlockDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandInterlockDisconnectInput>;
+  where?: InputMaybe<CommandInterlockStateInterlockConnectionWhere>;
+}
+
+export interface CommandInterlockStateInterlockFieldInput {
+  connect?: InputMaybe<CommandInterlockStateInterlockConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateInterlockConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateInterlockCreateFieldInput>;
+}
+
+export interface CommandInterlockStateInterlockNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandInterlockStateInterlockNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandInterlockStateInterlockNodeAggregationWhereInput>
+  >;
+  comparator_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  comparator_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  comparator_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  comparator_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  comparator_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  comparator_EQUAL?: InputMaybe<Scalars["String"]>;
+  comparator_GT?: InputMaybe<Scalars["Int"]>;
+  comparator_GTE?: InputMaybe<Scalars["Int"]>;
+  comparator_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  comparator_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  comparator_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  comparator_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  comparator_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  comparator_LT?: InputMaybe<Scalars["Int"]>;
+  comparator_LTE?: InputMaybe<Scalars["Int"]>;
+  comparator_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  comparator_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  comparator_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  comparator_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  comparator_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+}
+
+export interface CommandInterlockStateInterlockUpdateConnectionInput {
+  node?: InputMaybe<CommandInterlockUpdateInput>;
+}
+
+export interface CommandInterlockStateInterlockUpdateFieldInput {
+  connect?: InputMaybe<CommandInterlockStateInterlockConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandInterlockStateInterlockConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandInterlockStateInterlockCreateFieldInput>;
+  delete?: InputMaybe<CommandInterlockStateInterlockDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandInterlockStateInterlockDisconnectFieldInput>;
+  update?: InputMaybe<CommandInterlockStateInterlockUpdateConnectionInput>;
+  where?: InputMaybe<CommandInterlockStateInterlockConnectionWhere>;
+}
+
+export interface CommandInterlockStateNodeAggregationWhereInput {
+  AND?: InputMaybe<Array<CommandInterlockStateNodeAggregationWhereInput>>;
+  OR?: InputMaybe<Array<CommandInterlockStateNodeAggregationWhereInput>>;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+}
+
+export interface CommandInterlockStateOptions {
+  limit?: InputMaybe<Scalars["Int"]>;
+  offset?: InputMaybe<Scalars["Int"]>;
+  /** Specify one or more CommandInterlockStateSort objects to sort CommandInterlockStates by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<InputMaybe<CommandInterlockStateSort>>>;
+}
+
+export interface CommandInterlockStateRelationInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyCreateFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueCreateFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockCreateFieldInput>;
+}
+
+/** Fields to sort CommandInterlockStates by. The order in which sorts are applied is not guaranteed when specifying many fields in one CommandInterlockStateSort object. */
+export interface CommandInterlockStateSort {
+  id?: InputMaybe<SortDirection>;
+}
+
+export interface CommandInterlockStateUniqueWhere {
+  id?: InputMaybe<Scalars["ID"]>;
+}
+
+export interface CommandInterlockStateUpdateConnectionInput {
+  node?: InputMaybe<CommandInterlockStateUpdateInput>;
+}
+
+export interface CommandInterlockStateUpdateFieldInput {
+  connect?: InputMaybe<Array<CommandInterlockStateConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<
+    Array<CommandInterlockStateConnectOrCreateFieldInput>
+  >;
+  create?: InputMaybe<Array<CommandInterlockStateCreateFieldInput>>;
+  delete?: InputMaybe<Array<CommandInterlockStateDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CommandInterlockStateDisconnectFieldInput>>;
+  update?: InputMaybe<CommandInterlockStateUpdateConnectionInput>;
+  where?: InputMaybe<CommandInterlockStateConnectionWhere>;
+}
+
+export interface CommandInterlockStateUpdateInput {
+  deviceKey?: InputMaybe<CommandInterlockStateDeviceKeyUpdateFieldInput>;
+  deviceValue?: InputMaybe<CommandInterlockStateDeviceValueUpdateFieldInput>;
+  interlock?: InputMaybe<CommandInterlockStateInterlockUpdateFieldInput>;
+}
+
+export interface CommandInterlockStateWhere {
+  AND?: InputMaybe<Array<CommandInterlockStateWhere>>;
+  OR?: InputMaybe<Array<CommandInterlockStateWhere>>;
+  deviceKey?: InputMaybe<CommandProgramDeviceStateWhere>;
+  deviceKeyAggregate?: InputMaybe<CommandInterlockStateDeviceKeyAggregateInput>;
+  deviceKeyConnection?: InputMaybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+  deviceKeyConnection_NOT?: InputMaybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+  deviceKey_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
+  deviceValue?: InputMaybe<CommandInterlockAssertionWhere>;
+  deviceValueAggregate?: InputMaybe<CommandInterlockStateDeviceValueAggregateInput>;
+  deviceValueConnection?: InputMaybe<CommandInterlockStateDeviceValueConnectionWhere>;
+  deviceValueConnection_NOT?: InputMaybe<CommandInterlockStateDeviceValueConnectionWhere>;
+  deviceValue_NOT?: InputMaybe<CommandInterlockAssertionWhere>;
+  id?: InputMaybe<Scalars["ID"]>;
+  id_CONTAINS?: InputMaybe<Scalars["ID"]>;
+  id_ENDS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_IN?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  id_NOT?: InputMaybe<Scalars["ID"]>;
+  id_NOT_CONTAINS?: InputMaybe<Scalars["ID"]>;
+  id_NOT_ENDS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  id_NOT_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
+  interlock?: InputMaybe<CommandInterlockWhere>;
+  interlockAggregate?: InputMaybe<CommandInterlockStateInterlockAggregateInput>;
+  interlockConnection?: InputMaybe<CommandInterlockStateInterlockConnectionWhere>;
+  interlockConnection_NOT?: InputMaybe<CommandInterlockStateInterlockConnectionWhere>;
+  interlock_NOT?: InputMaybe<CommandInterlockWhere>;
 }
 
 export interface CommandInterlockUniqueWhere {
@@ -7707,6 +8342,7 @@ export interface CommandInterlockUpdateInput {
   device?: InputMaybe<CommandInterlockDeviceUpdateFieldInput>;
   inputDevice?: InputMaybe<CommandInterlockInputDeviceUpdateFieldInput>;
   inputDeviceKey?: InputMaybe<CommandInterlockInputDeviceKeyUpdateFieldInput>;
+  state?: InputMaybe<Array<CommandInterlockStateUpdateFieldInput>>;
 }
 
 export interface CommandInterlockWhere {
@@ -7757,6 +8393,11 @@ export interface CommandInterlockWhere {
   inputDeviceKeyConnection_NOT?: InputMaybe<CommandInterlockInputDeviceKeyConnectionWhere>;
   inputDeviceKey_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
   inputDevice_NOT?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+  state?: InputMaybe<CommandInterlockStateWhere>;
+  stateAggregate?: InputMaybe<CommandInterlockStateAggregateInput>;
+  stateConnection?: InputMaybe<CommandInterlockStateConnectionWhere>;
+  stateConnection_NOT?: InputMaybe<CommandInterlockStateConnectionWhere>;
+  state_NOT?: InputMaybe<CommandInterlockStateWhere>;
 }
 
 export interface CommandKeyValueConnectOrCreateWhere {
@@ -9749,6 +10390,26 @@ export interface CommandProgramDeviceCalibrationRootDeviceNodeAggregationWhereIn
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandProgramDeviceCalibrationRootDeviceUpdateConnectionInput {
@@ -16388,6 +17049,26 @@ export interface CommandProgramUsedOnNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandProgramUsedOnUpdateConnectionInput {
@@ -18231,6 +18912,26 @@ export interface HiveOrganisationCommandDevicesNodeAggregationWhereInput {
   operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface HiveOrganisationCommandDevicesUpdateConnectionInput {
@@ -20410,7 +21111,7 @@ export const scalarsEnumsHash: import("gqty").ScalarsEnumsHash = {
   SortDirection: true,
   String: true,
 };
-export const generatedSchema: any = {
+export const generatedSchema : any = {
   CartesianPoint: {
     __typename: { __type: "String!" },
     crs: { __type: "String!" },
@@ -20826,6 +21527,7 @@ export const generatedSchema: any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: {
       __type: "HiveOrganisation",
       __args: {
@@ -21012,6 +21714,7 @@ export const generatedSchema: any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandDeviceCalibrationsAggregateInput: {
     AND: { __type: "[CommandDeviceCalibrationsAggregateInput!]" },
@@ -21228,6 +21931,7 @@ export const generatedSchema: any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationFieldInput" },
     peripherals: { __type: "CommandDevicePeripheralsFieldInput" },
     waitingForActions: { __type: "CommandDeviceWaitingForActionsFieldInput" },
@@ -21458,6 +22162,7 @@ export const generatedSchema: any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandDevicePeripheralCommandDevicePeripheralMapMappedDevicesAggregationSelection:
     {
@@ -21904,6 +22609,26 @@ export const generatedSchema: any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandDevicePeripheralDeviceRelationship: {
     __typename: { __type: "String!" },
@@ -24565,6 +25290,7 @@ export const generatedSchema: any = {
     network_name: { __type: "SortDirection" },
     online: { __type: "SortDirection" },
     operatingMode: { __type: "SortDirection" },
+    operatingState: { __type: "SortDirection" },
   },
   CommandDeviceTimeseriesData: {
     __typename: { __type: "String!" },
@@ -24587,6 +25313,7 @@ export const generatedSchema: any = {
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
     operatingMode: { __type: "String" },
+    operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationUpdateFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsUpdateFieldInput!]" },
     waitingForActions: {
@@ -24782,6 +25509,16 @@ export const generatedSchema: any = {
     operatingMode_NOT_IN: { __type: "[String]" },
     operatingMode_NOT_STARTS_WITH: { __type: "String" },
     operatingMode_STARTS_WITH: { __type: "String" },
+    operatingState: { __type: "String" },
+    operatingState_CONTAINS: { __type: "String" },
+    operatingState_ENDS_WITH: { __type: "String" },
+    operatingState_IN: { __type: "[String]" },
+    operatingState_NOT: { __type: "String" },
+    operatingState_NOT_CONTAINS: { __type: "String" },
+    operatingState_NOT_ENDS_WITH: { __type: "String" },
+    operatingState_NOT_IN: { __type: "[String]" },
+    operatingState_NOT_STARTS_WITH: { __type: "String" },
+    operatingState_STARTS_WITH: { __type: "String" },
     organisation: { __type: "HiveOrganisationWhere" },
     organisationAggregate: {
       __type: "CommandDeviceOrganisationAggregateInput",
@@ -28711,6 +29448,26 @@ export const generatedSchema: any = {
         where: "CommandInterlockInputDeviceKeyConnectionWhere",
       },
     },
+    state: {
+      __type: "[CommandInterlockState]",
+      __args: {
+        options: "CommandInterlockStateOptions",
+        where: "CommandInterlockStateWhere",
+      },
+    },
+    stateAggregate: {
+      __type: "CommandInterlockCommandInterlockStateStateAggregationSelection",
+      __args: { where: "CommandInterlockStateWhere" },
+    },
+    stateConnection: {
+      __type: "CommandInterlockStateConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandInterlockStateConnectionSort!]",
+        where: "CommandInterlockStateConnectionWhere",
+      },
+    },
   },
   CommandInterlockActionAggregateInput: {
     AND: { __type: "[CommandInterlockActionAggregateInput!]" },
@@ -29244,6 +30001,18 @@ export const generatedSchema: any = {
     type: { __type: "StringAggregateSelection!" },
     value: { __type: "StringAggregateSelection!" },
   },
+  CommandInterlockCommandInterlockStateStateAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type:
+        "CommandInterlockCommandInterlockStateStateNodeAggregateSelection",
+    },
+  },
+  CommandInterlockCommandInterlockStateStateNodeAggregateSelection: {
+    __typename: { __type: "String!" },
+    id: { __type: "IDAggregateSelection!" },
+  },
   CommandInterlockCommandProgramDeviceActionActionAggregationSelection: {
     __typename: { __type: "String!" },
     count: { __type: "Int!" },
@@ -29312,6 +30081,7 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyConnectFieldInput",
     },
+    state: { __type: "[CommandInterlockStateConnectFieldInput!]" },
   },
   CommandInterlockConnectOrCreateInput: {
     action: { __type: "CommandInterlockActionConnectOrCreateFieldInput" },
@@ -29323,6 +30093,7 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyConnectOrCreateFieldInput",
     },
+    state: { __type: "[CommandInterlockStateConnectOrCreateFieldInput!]" },
   },
   CommandInterlockConnectOrCreateWhere: {
     node: { __type: "CommandInterlockUniqueWhere!" },
@@ -29335,6 +30106,7 @@ export const generatedSchema: any = {
     device: { __type: "CommandInterlockDeviceFieldInput" },
     inputDevice: { __type: "CommandInterlockInputDeviceFieldInput" },
     inputDeviceKey: { __type: "CommandInterlockInputDeviceKeyFieldInput" },
+    state: { __type: "CommandInterlockStateFieldInput" },
   },
   CommandInterlockDeleteInput: {
     action: { __type: "CommandInterlockActionDeleteFieldInput" },
@@ -29344,6 +30116,7 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyDeleteFieldInput",
     },
+    state: { __type: "[CommandInterlockStateDeleteFieldInput!]" },
   },
   CommandInterlockDeviceAggregateInput: {
     AND: { __type: "[CommandInterlockDeviceAggregateInput!]" },
@@ -29453,6 +30226,7 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyDisconnectFieldInput",
     },
+    state: { __type: "[CommandInterlockStateDisconnectFieldInput!]" },
   },
   CommandInterlockInputDeviceAggregateInput: {
     AND: { __type: "[CommandInterlockInputDeviceAggregateInput!]" },
@@ -29774,10 +30548,759 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyCreateFieldInput",
     },
+    state: { __type: "[CommandInterlockStateCreateFieldInput!]" },
   },
   CommandInterlockSort: {
     comparator: { __type: "SortDirection" },
     id: { __type: "SortDirection" },
+  },
+  CommandInterlockState: {
+    __typename: { __type: "String!" },
+    deviceKey: {
+      __type: "CommandProgramDeviceState",
+      __args: {
+        options: "CommandProgramDeviceStateOptions",
+        where: "CommandProgramDeviceStateWhere",
+      },
+    },
+    deviceKeyAggregate: {
+      __type:
+        "CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection",
+      __args: { where: "CommandProgramDeviceStateWhere" },
+    },
+    deviceKeyConnection: {
+      __type: "CommandInterlockStateDeviceKeyConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandInterlockStateDeviceKeyConnectionSort!]",
+        where: "CommandInterlockStateDeviceKeyConnectionWhere",
+      },
+    },
+    deviceValue: {
+      __type: "CommandInterlockAssertion",
+      __args: {
+        options: "CommandInterlockAssertionOptions",
+        where: "CommandInterlockAssertionWhere",
+      },
+    },
+    deviceValueAggregate: {
+      __type:
+        "CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection",
+      __args: { where: "CommandInterlockAssertionWhere" },
+    },
+    deviceValueConnection: {
+      __type: "CommandInterlockStateDeviceValueConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandInterlockStateDeviceValueConnectionSort!]",
+        where: "CommandInterlockStateDeviceValueConnectionWhere",
+      },
+    },
+    id: { __type: "ID!" },
+    interlock: {
+      __type: "CommandInterlock",
+      __args: {
+        options: "CommandInterlockOptions",
+        where: "CommandInterlockWhere",
+      },
+    },
+    interlockAggregate: {
+      __type:
+        "CommandInterlockStateCommandInterlockInterlockAggregationSelection",
+      __args: { where: "CommandInterlockWhere" },
+    },
+    interlockConnection: {
+      __type: "CommandInterlockStateInterlockConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandInterlockStateInterlockConnectionSort!]",
+        where: "CommandInterlockStateInterlockConnectionWhere",
+      },
+    },
+  },
+  CommandInterlockStateAggregateInput: {
+    AND: { __type: "[CommandInterlockStateAggregateInput!]" },
+    OR: { __type: "[CommandInterlockStateAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandInterlockStateNodeAggregationWhereInput" },
+  },
+  CommandInterlockStateAggregateSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    id: { __type: "IDAggregateSelection!" },
+  },
+  CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection:
+    {
+      __typename: { __type: "String!" },
+      count: { __type: "Int!" },
+      node: {
+        __type:
+          "CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection",
+      },
+    },
+  CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection:
+    {
+      __typename: { __type: "String!" },
+      id: { __type: "IDAggregateSelection!" },
+      type: { __type: "StringAggregateSelection!" },
+      value: { __type: "StringAggregateSelection!" },
+    },
+  CommandInterlockStateCommandInterlockInterlockAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type:
+        "CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection",
+    },
+  },
+  CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection: {
+    __typename: { __type: "String!" },
+    comparator: { __type: "StringAggregateSelection!" },
+    id: { __type: "IDAggregateSelection!" },
+  },
+  CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type:
+        "CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection",
+    },
+  },
+  CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection:
+    {
+      __typename: { __type: "String!" },
+      id: { __type: "IDAggregateSelection!" },
+      inputUnits: { __type: "StringAggregateSelection!" },
+      key: { __type: "StringAggregateSelection!" },
+      max: { __type: "StringAggregateSelection!" },
+      min: { __type: "StringAggregateSelection!" },
+      type: { __type: "StringAggregateSelection!" },
+      units: { __type: "StringAggregateSelection!" },
+    },
+  CommandInterlockStateConnectFieldInput: {
+    connect: { __type: "[CommandInterlockStateConnectInput!]" },
+    where: { __type: "CommandInterlockStateConnectWhere" },
+  },
+  CommandInterlockStateConnectInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyConnectFieldInput" },
+    deviceValue: {
+      __type: "CommandInterlockStateDeviceValueConnectFieldInput",
+    },
+    interlock: { __type: "CommandInterlockStateInterlockConnectFieldInput" },
+  },
+  CommandInterlockStateConnectOrCreateFieldInput: {
+    onCreate: {
+      __type: "CommandInterlockStateConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandInterlockStateConnectOrCreateWhere!" },
+  },
+  CommandInterlockStateConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandInterlockStateCreateInput!" },
+  },
+  CommandInterlockStateConnectOrCreateInput: {
+    deviceKey: {
+      __type: "CommandInterlockStateDeviceKeyConnectOrCreateFieldInput",
+    },
+    deviceValue: {
+      __type: "CommandInterlockStateDeviceValueConnectOrCreateFieldInput",
+    },
+    interlock: {
+      __type: "CommandInterlockStateInterlockConnectOrCreateFieldInput",
+    },
+  },
+  CommandInterlockStateConnectOrCreateWhere: {
+    node: { __type: "CommandInterlockStateUniqueWhere!" },
+  },
+  CommandInterlockStateConnectWhere: {
+    node: { __type: "CommandInterlockStateWhere!" },
+  },
+  CommandInterlockStateConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandInterlockStateRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandInterlockStateConnectionSort: {
+    node: { __type: "CommandInterlockStateSort" },
+  },
+  CommandInterlockStateConnectionWhere: {
+    AND: { __type: "[CommandInterlockStateConnectionWhere!]" },
+    OR: { __type: "[CommandInterlockStateConnectionWhere!]" },
+    node: { __type: "CommandInterlockStateWhere" },
+    node_NOT: { __type: "CommandInterlockStateWhere" },
+  },
+  CommandInterlockStateCreateFieldInput: {
+    node: { __type: "CommandInterlockStateCreateInput!" },
+  },
+  CommandInterlockStateCreateInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyFieldInput" },
+    deviceValue: { __type: "CommandInterlockStateDeviceValueFieldInput" },
+    interlock: { __type: "CommandInterlockStateInterlockFieldInput" },
+  },
+  CommandInterlockStateDeleteFieldInput: {
+    delete: { __type: "CommandInterlockStateDeleteInput" },
+    where: { __type: "CommandInterlockStateConnectionWhere" },
+  },
+  CommandInterlockStateDeleteInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyDeleteFieldInput" },
+    deviceValue: { __type: "CommandInterlockStateDeviceValueDeleteFieldInput" },
+    interlock: { __type: "CommandInterlockStateInterlockDeleteFieldInput" },
+  },
+  CommandInterlockStateDeviceKeyAggregateInput: {
+    AND: { __type: "[CommandInterlockStateDeviceKeyAggregateInput!]" },
+    OR: { __type: "[CommandInterlockStateDeviceKeyAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandInterlockStateDeviceKeyNodeAggregationWhereInput" },
+  },
+  CommandInterlockStateDeviceKeyConnectFieldInput: {
+    connect: { __type: "CommandProgramDeviceStateConnectInput" },
+    where: { __type: "CommandProgramDeviceStateConnectWhere" },
+  },
+  CommandInterlockStateDeviceKeyConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandInterlockStateDeviceKeyConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandProgramDeviceStateConnectOrCreateWhere!" },
+  },
+  CommandInterlockStateDeviceKeyConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandProgramDeviceStateCreateInput!" },
+  },
+  CommandInterlockStateDeviceKeyConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandInterlockStateDeviceKeyRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandInterlockStateDeviceKeyConnectionSort: {
+    node: { __type: "CommandProgramDeviceStateSort" },
+  },
+  CommandInterlockStateDeviceKeyConnectionWhere: {
+    AND: { __type: "[CommandInterlockStateDeviceKeyConnectionWhere!]" },
+    OR: { __type: "[CommandInterlockStateDeviceKeyConnectionWhere!]" },
+    node: { __type: "CommandProgramDeviceStateWhere" },
+    node_NOT: { __type: "CommandProgramDeviceStateWhere" },
+  },
+  CommandInterlockStateDeviceKeyCreateFieldInput: {
+    node: { __type: "CommandProgramDeviceStateCreateInput!" },
+  },
+  CommandInterlockStateDeviceKeyDeleteFieldInput: {
+    delete: { __type: "CommandProgramDeviceStateDeleteInput" },
+    where: { __type: "CommandInterlockStateDeviceKeyConnectionWhere" },
+  },
+  CommandInterlockStateDeviceKeyDisconnectFieldInput: {
+    disconnect: { __type: "CommandProgramDeviceStateDisconnectInput" },
+    where: { __type: "CommandInterlockStateDeviceKeyConnectionWhere" },
+  },
+  CommandInterlockStateDeviceKeyFieldInput: {
+    connect: { __type: "CommandInterlockStateDeviceKeyConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateDeviceKeyConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateDeviceKeyCreateFieldInput" },
+  },
+  CommandInterlockStateDeviceKeyNodeAggregationWhereInput: {
+    AND: {
+      __type: "[CommandInterlockStateDeviceKeyNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type: "[CommandInterlockStateDeviceKeyNodeAggregationWhereInput!]",
+    },
+    id_EQUAL: { __type: "ID" },
+    inputUnits_AVERAGE_EQUAL: { __type: "Float" },
+    inputUnits_AVERAGE_GT: { __type: "Float" },
+    inputUnits_AVERAGE_GTE: { __type: "Float" },
+    inputUnits_AVERAGE_LT: { __type: "Float" },
+    inputUnits_AVERAGE_LTE: { __type: "Float" },
+    inputUnits_EQUAL: { __type: "String" },
+    inputUnits_GT: { __type: "Int" },
+    inputUnits_GTE: { __type: "Int" },
+    inputUnits_LONGEST_EQUAL: { __type: "Int" },
+    inputUnits_LONGEST_GT: { __type: "Int" },
+    inputUnits_LONGEST_GTE: { __type: "Int" },
+    inputUnits_LONGEST_LT: { __type: "Int" },
+    inputUnits_LONGEST_LTE: { __type: "Int" },
+    inputUnits_LT: { __type: "Int" },
+    inputUnits_LTE: { __type: "Int" },
+    inputUnits_SHORTEST_EQUAL: { __type: "Int" },
+    inputUnits_SHORTEST_GT: { __type: "Int" },
+    inputUnits_SHORTEST_GTE: { __type: "Int" },
+    inputUnits_SHORTEST_LT: { __type: "Int" },
+    inputUnits_SHORTEST_LTE: { __type: "Int" },
+    key_AVERAGE_EQUAL: { __type: "Float" },
+    key_AVERAGE_GT: { __type: "Float" },
+    key_AVERAGE_GTE: { __type: "Float" },
+    key_AVERAGE_LT: { __type: "Float" },
+    key_AVERAGE_LTE: { __type: "Float" },
+    key_EQUAL: { __type: "String" },
+    key_GT: { __type: "Int" },
+    key_GTE: { __type: "Int" },
+    key_LONGEST_EQUAL: { __type: "Int" },
+    key_LONGEST_GT: { __type: "Int" },
+    key_LONGEST_GTE: { __type: "Int" },
+    key_LONGEST_LT: { __type: "Int" },
+    key_LONGEST_LTE: { __type: "Int" },
+    key_LT: { __type: "Int" },
+    key_LTE: { __type: "Int" },
+    key_SHORTEST_EQUAL: { __type: "Int" },
+    key_SHORTEST_GT: { __type: "Int" },
+    key_SHORTEST_GTE: { __type: "Int" },
+    key_SHORTEST_LT: { __type: "Int" },
+    key_SHORTEST_LTE: { __type: "Int" },
+    max_AVERAGE_EQUAL: { __type: "Float" },
+    max_AVERAGE_GT: { __type: "Float" },
+    max_AVERAGE_GTE: { __type: "Float" },
+    max_AVERAGE_LT: { __type: "Float" },
+    max_AVERAGE_LTE: { __type: "Float" },
+    max_EQUAL: { __type: "String" },
+    max_GT: { __type: "Int" },
+    max_GTE: { __type: "Int" },
+    max_LONGEST_EQUAL: { __type: "Int" },
+    max_LONGEST_GT: { __type: "Int" },
+    max_LONGEST_GTE: { __type: "Int" },
+    max_LONGEST_LT: { __type: "Int" },
+    max_LONGEST_LTE: { __type: "Int" },
+    max_LT: { __type: "Int" },
+    max_LTE: { __type: "Int" },
+    max_SHORTEST_EQUAL: { __type: "Int" },
+    max_SHORTEST_GT: { __type: "Int" },
+    max_SHORTEST_GTE: { __type: "Int" },
+    max_SHORTEST_LT: { __type: "Int" },
+    max_SHORTEST_LTE: { __type: "Int" },
+    min_AVERAGE_EQUAL: { __type: "Float" },
+    min_AVERAGE_GT: { __type: "Float" },
+    min_AVERAGE_GTE: { __type: "Float" },
+    min_AVERAGE_LT: { __type: "Float" },
+    min_AVERAGE_LTE: { __type: "Float" },
+    min_EQUAL: { __type: "String" },
+    min_GT: { __type: "Int" },
+    min_GTE: { __type: "Int" },
+    min_LONGEST_EQUAL: { __type: "Int" },
+    min_LONGEST_GT: { __type: "Int" },
+    min_LONGEST_GTE: { __type: "Int" },
+    min_LONGEST_LT: { __type: "Int" },
+    min_LONGEST_LTE: { __type: "Int" },
+    min_LT: { __type: "Int" },
+    min_LTE: { __type: "Int" },
+    min_SHORTEST_EQUAL: { __type: "Int" },
+    min_SHORTEST_GT: { __type: "Int" },
+    min_SHORTEST_GTE: { __type: "Int" },
+    min_SHORTEST_LT: { __type: "Int" },
+    min_SHORTEST_LTE: { __type: "Int" },
+    type_AVERAGE_EQUAL: { __type: "Float" },
+    type_AVERAGE_GT: { __type: "Float" },
+    type_AVERAGE_GTE: { __type: "Float" },
+    type_AVERAGE_LT: { __type: "Float" },
+    type_AVERAGE_LTE: { __type: "Float" },
+    type_EQUAL: { __type: "String" },
+    type_GT: { __type: "Int" },
+    type_GTE: { __type: "Int" },
+    type_LONGEST_EQUAL: { __type: "Int" },
+    type_LONGEST_GT: { __type: "Int" },
+    type_LONGEST_GTE: { __type: "Int" },
+    type_LONGEST_LT: { __type: "Int" },
+    type_LONGEST_LTE: { __type: "Int" },
+    type_LT: { __type: "Int" },
+    type_LTE: { __type: "Int" },
+    type_SHORTEST_EQUAL: { __type: "Int" },
+    type_SHORTEST_GT: { __type: "Int" },
+    type_SHORTEST_GTE: { __type: "Int" },
+    type_SHORTEST_LT: { __type: "Int" },
+    type_SHORTEST_LTE: { __type: "Int" },
+    units_AVERAGE_EQUAL: { __type: "Float" },
+    units_AVERAGE_GT: { __type: "Float" },
+    units_AVERAGE_GTE: { __type: "Float" },
+    units_AVERAGE_LT: { __type: "Float" },
+    units_AVERAGE_LTE: { __type: "Float" },
+    units_EQUAL: { __type: "String" },
+    units_GT: { __type: "Int" },
+    units_GTE: { __type: "Int" },
+    units_LONGEST_EQUAL: { __type: "Int" },
+    units_LONGEST_GT: { __type: "Int" },
+    units_LONGEST_GTE: { __type: "Int" },
+    units_LONGEST_LT: { __type: "Int" },
+    units_LONGEST_LTE: { __type: "Int" },
+    units_LT: { __type: "Int" },
+    units_LTE: { __type: "Int" },
+    units_SHORTEST_EQUAL: { __type: "Int" },
+    units_SHORTEST_GT: { __type: "Int" },
+    units_SHORTEST_GTE: { __type: "Int" },
+    units_SHORTEST_LT: { __type: "Int" },
+    units_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandInterlockStateDeviceKeyRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandProgramDeviceState!" },
+  },
+  CommandInterlockStateDeviceKeyUpdateConnectionInput: {
+    node: { __type: "CommandProgramDeviceStateUpdateInput" },
+  },
+  CommandInterlockStateDeviceKeyUpdateFieldInput: {
+    connect: { __type: "CommandInterlockStateDeviceKeyConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateDeviceKeyConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateDeviceKeyCreateFieldInput" },
+    delete: { __type: "CommandInterlockStateDeviceKeyDeleteFieldInput" },
+    disconnect: {
+      __type: "CommandInterlockStateDeviceKeyDisconnectFieldInput",
+    },
+    update: { __type: "CommandInterlockStateDeviceKeyUpdateConnectionInput" },
+    where: { __type: "CommandInterlockStateDeviceKeyConnectionWhere" },
+  },
+  CommandInterlockStateDeviceValueAggregateInput: {
+    AND: { __type: "[CommandInterlockStateDeviceValueAggregateInput!]" },
+    OR: { __type: "[CommandInterlockStateDeviceValueAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: {
+      __type: "CommandInterlockStateDeviceValueNodeAggregationWhereInput",
+    },
+  },
+  CommandInterlockStateDeviceValueConnectFieldInput: {
+    connect: { __type: "CommandInterlockAssertionConnectInput" },
+    where: { __type: "CommandInterlockAssertionConnectWhere" },
+  },
+  CommandInterlockStateDeviceValueConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandInterlockStateDeviceValueConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandInterlockAssertionConnectOrCreateWhere!" },
+  },
+  CommandInterlockStateDeviceValueConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandInterlockAssertionCreateInput!" },
+  },
+  CommandInterlockStateDeviceValueConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandInterlockStateDeviceValueRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandInterlockStateDeviceValueConnectionSort: {
+    node: { __type: "CommandInterlockAssertionSort" },
+  },
+  CommandInterlockStateDeviceValueConnectionWhere: {
+    AND: { __type: "[CommandInterlockStateDeviceValueConnectionWhere!]" },
+    OR: { __type: "[CommandInterlockStateDeviceValueConnectionWhere!]" },
+    node: { __type: "CommandInterlockAssertionWhere" },
+    node_NOT: { __type: "CommandInterlockAssertionWhere" },
+  },
+  CommandInterlockStateDeviceValueCreateFieldInput: {
+    node: { __type: "CommandInterlockAssertionCreateInput!" },
+  },
+  CommandInterlockStateDeviceValueDeleteFieldInput: {
+    delete: { __type: "CommandInterlockAssertionDeleteInput" },
+    where: { __type: "CommandInterlockStateDeviceValueConnectionWhere" },
+  },
+  CommandInterlockStateDeviceValueDisconnectFieldInput: {
+    disconnect: { __type: "CommandInterlockAssertionDisconnectInput" },
+    where: { __type: "CommandInterlockStateDeviceValueConnectionWhere" },
+  },
+  CommandInterlockStateDeviceValueFieldInput: {
+    connect: { __type: "CommandInterlockStateDeviceValueConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateDeviceValueConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateDeviceValueCreateFieldInput" },
+  },
+  CommandInterlockStateDeviceValueNodeAggregationWhereInput: {
+    AND: {
+      __type: "[CommandInterlockStateDeviceValueNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type: "[CommandInterlockStateDeviceValueNodeAggregationWhereInput!]",
+    },
+    id_EQUAL: { __type: "ID" },
+    type_AVERAGE_EQUAL: { __type: "Float" },
+    type_AVERAGE_GT: { __type: "Float" },
+    type_AVERAGE_GTE: { __type: "Float" },
+    type_AVERAGE_LT: { __type: "Float" },
+    type_AVERAGE_LTE: { __type: "Float" },
+    type_EQUAL: { __type: "String" },
+    type_GT: { __type: "Int" },
+    type_GTE: { __type: "Int" },
+    type_LONGEST_EQUAL: { __type: "Int" },
+    type_LONGEST_GT: { __type: "Int" },
+    type_LONGEST_GTE: { __type: "Int" },
+    type_LONGEST_LT: { __type: "Int" },
+    type_LONGEST_LTE: { __type: "Int" },
+    type_LT: { __type: "Int" },
+    type_LTE: { __type: "Int" },
+    type_SHORTEST_EQUAL: { __type: "Int" },
+    type_SHORTEST_GT: { __type: "Int" },
+    type_SHORTEST_GTE: { __type: "Int" },
+    type_SHORTEST_LT: { __type: "Int" },
+    type_SHORTEST_LTE: { __type: "Int" },
+    value_AVERAGE_EQUAL: { __type: "Float" },
+    value_AVERAGE_GT: { __type: "Float" },
+    value_AVERAGE_GTE: { __type: "Float" },
+    value_AVERAGE_LT: { __type: "Float" },
+    value_AVERAGE_LTE: { __type: "Float" },
+    value_EQUAL: { __type: "String" },
+    value_GT: { __type: "Int" },
+    value_GTE: { __type: "Int" },
+    value_LONGEST_EQUAL: { __type: "Int" },
+    value_LONGEST_GT: { __type: "Int" },
+    value_LONGEST_GTE: { __type: "Int" },
+    value_LONGEST_LT: { __type: "Int" },
+    value_LONGEST_LTE: { __type: "Int" },
+    value_LT: { __type: "Int" },
+    value_LTE: { __type: "Int" },
+    value_SHORTEST_EQUAL: { __type: "Int" },
+    value_SHORTEST_GT: { __type: "Int" },
+    value_SHORTEST_GTE: { __type: "Int" },
+    value_SHORTEST_LT: { __type: "Int" },
+    value_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandInterlockStateDeviceValueRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandInterlockAssertion!" },
+  },
+  CommandInterlockStateDeviceValueUpdateConnectionInput: {
+    node: { __type: "CommandInterlockAssertionUpdateInput" },
+  },
+  CommandInterlockStateDeviceValueUpdateFieldInput: {
+    connect: { __type: "CommandInterlockStateDeviceValueConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateDeviceValueConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateDeviceValueCreateFieldInput" },
+    delete: { __type: "CommandInterlockStateDeviceValueDeleteFieldInput" },
+    disconnect: {
+      __type: "CommandInterlockStateDeviceValueDisconnectFieldInput",
+    },
+    update: { __type: "CommandInterlockStateDeviceValueUpdateConnectionInput" },
+    where: { __type: "CommandInterlockStateDeviceValueConnectionWhere" },
+  },
+  CommandInterlockStateDisconnectFieldInput: {
+    disconnect: { __type: "CommandInterlockStateDisconnectInput" },
+    where: { __type: "CommandInterlockStateConnectionWhere" },
+  },
+  CommandInterlockStateDisconnectInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyDisconnectFieldInput" },
+    deviceValue: {
+      __type: "CommandInterlockStateDeviceValueDisconnectFieldInput",
+    },
+    interlock: { __type: "CommandInterlockStateInterlockDisconnectFieldInput" },
+  },
+  CommandInterlockStateFieldInput: {
+    connect: { __type: "[CommandInterlockStateConnectFieldInput!]" },
+    connectOrCreate: {
+      __type: "[CommandInterlockStateConnectOrCreateFieldInput!]",
+    },
+    create: { __type: "[CommandInterlockStateCreateFieldInput!]" },
+  },
+  CommandInterlockStateInterlockAggregateInput: {
+    AND: { __type: "[CommandInterlockStateInterlockAggregateInput!]" },
+    OR: { __type: "[CommandInterlockStateInterlockAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandInterlockStateInterlockNodeAggregationWhereInput" },
+  },
+  CommandInterlockStateInterlockConnectFieldInput: {
+    connect: { __type: "CommandInterlockConnectInput" },
+    where: { __type: "CommandInterlockConnectWhere" },
+  },
+  CommandInterlockStateInterlockConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandInterlockStateInterlockConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandInterlockConnectOrCreateWhere!" },
+  },
+  CommandInterlockStateInterlockConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandInterlockCreateInput!" },
+  },
+  CommandInterlockStateInterlockConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandInterlockStateInterlockRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandInterlockStateInterlockConnectionSort: {
+    node: { __type: "CommandInterlockSort" },
+  },
+  CommandInterlockStateInterlockConnectionWhere: {
+    AND: { __type: "[CommandInterlockStateInterlockConnectionWhere!]" },
+    OR: { __type: "[CommandInterlockStateInterlockConnectionWhere!]" },
+    node: { __type: "CommandInterlockWhere" },
+    node_NOT: { __type: "CommandInterlockWhere" },
+  },
+  CommandInterlockStateInterlockCreateFieldInput: {
+    node: { __type: "CommandInterlockCreateInput!" },
+  },
+  CommandInterlockStateInterlockDeleteFieldInput: {
+    delete: { __type: "CommandInterlockDeleteInput" },
+    where: { __type: "CommandInterlockStateInterlockConnectionWhere" },
+  },
+  CommandInterlockStateInterlockDisconnectFieldInput: {
+    disconnect: { __type: "CommandInterlockDisconnectInput" },
+    where: { __type: "CommandInterlockStateInterlockConnectionWhere" },
+  },
+  CommandInterlockStateInterlockFieldInput: {
+    connect: { __type: "CommandInterlockStateInterlockConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateInterlockConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateInterlockCreateFieldInput" },
+  },
+  CommandInterlockStateInterlockNodeAggregationWhereInput: {
+    AND: {
+      __type: "[CommandInterlockStateInterlockNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type: "[CommandInterlockStateInterlockNodeAggregationWhereInput!]",
+    },
+    comparator_AVERAGE_EQUAL: { __type: "Float" },
+    comparator_AVERAGE_GT: { __type: "Float" },
+    comparator_AVERAGE_GTE: { __type: "Float" },
+    comparator_AVERAGE_LT: { __type: "Float" },
+    comparator_AVERAGE_LTE: { __type: "Float" },
+    comparator_EQUAL: { __type: "String" },
+    comparator_GT: { __type: "Int" },
+    comparator_GTE: { __type: "Int" },
+    comparator_LONGEST_EQUAL: { __type: "Int" },
+    comparator_LONGEST_GT: { __type: "Int" },
+    comparator_LONGEST_GTE: { __type: "Int" },
+    comparator_LONGEST_LT: { __type: "Int" },
+    comparator_LONGEST_LTE: { __type: "Int" },
+    comparator_LT: { __type: "Int" },
+    comparator_LTE: { __type: "Int" },
+    comparator_SHORTEST_EQUAL: { __type: "Int" },
+    comparator_SHORTEST_GT: { __type: "Int" },
+    comparator_SHORTEST_GTE: { __type: "Int" },
+    comparator_SHORTEST_LT: { __type: "Int" },
+    comparator_SHORTEST_LTE: { __type: "Int" },
+    id_EQUAL: { __type: "ID" },
+  },
+  CommandInterlockStateInterlockRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandInterlock!" },
+  },
+  CommandInterlockStateInterlockUpdateConnectionInput: {
+    node: { __type: "CommandInterlockUpdateInput" },
+  },
+  CommandInterlockStateInterlockUpdateFieldInput: {
+    connect: { __type: "CommandInterlockStateInterlockConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandInterlockStateInterlockConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandInterlockStateInterlockCreateFieldInput" },
+    delete: { __type: "CommandInterlockStateInterlockDeleteFieldInput" },
+    disconnect: {
+      __type: "CommandInterlockStateInterlockDisconnectFieldInput",
+    },
+    update: { __type: "CommandInterlockStateInterlockUpdateConnectionInput" },
+    where: { __type: "CommandInterlockStateInterlockConnectionWhere" },
+  },
+  CommandInterlockStateNodeAggregationWhereInput: {
+    AND: { __type: "[CommandInterlockStateNodeAggregationWhereInput!]" },
+    OR: { __type: "[CommandInterlockStateNodeAggregationWhereInput!]" },
+    id_EQUAL: { __type: "ID" },
+  },
+  CommandInterlockStateOptions: {
+    limit: { __type: "Int" },
+    offset: { __type: "Int" },
+    sort: { __type: "[CommandInterlockStateSort]" },
+  },
+  CommandInterlockStateRelationInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyCreateFieldInput" },
+    deviceValue: { __type: "CommandInterlockStateDeviceValueCreateFieldInput" },
+    interlock: { __type: "CommandInterlockStateInterlockCreateFieldInput" },
+  },
+  CommandInterlockStateRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandInterlockState!" },
+  },
+  CommandInterlockStateSort: { id: { __type: "SortDirection" } },
+  CommandInterlockStateUniqueWhere: { id: { __type: "ID" } },
+  CommandInterlockStateUpdateConnectionInput: {
+    node: { __type: "CommandInterlockStateUpdateInput" },
+  },
+  CommandInterlockStateUpdateFieldInput: {
+    connect: { __type: "[CommandInterlockStateConnectFieldInput!]" },
+    connectOrCreate: {
+      __type: "[CommandInterlockStateConnectOrCreateFieldInput!]",
+    },
+    create: { __type: "[CommandInterlockStateCreateFieldInput!]" },
+    delete: { __type: "[CommandInterlockStateDeleteFieldInput!]" },
+    disconnect: { __type: "[CommandInterlockStateDisconnectFieldInput!]" },
+    update: { __type: "CommandInterlockStateUpdateConnectionInput" },
+    where: { __type: "CommandInterlockStateConnectionWhere" },
+  },
+  CommandInterlockStateUpdateInput: {
+    deviceKey: { __type: "CommandInterlockStateDeviceKeyUpdateFieldInput" },
+    deviceValue: { __type: "CommandInterlockStateDeviceValueUpdateFieldInput" },
+    interlock: { __type: "CommandInterlockStateInterlockUpdateFieldInput" },
+  },
+  CommandInterlockStateWhere: {
+    AND: { __type: "[CommandInterlockStateWhere!]" },
+    OR: { __type: "[CommandInterlockStateWhere!]" },
+    deviceKey: { __type: "CommandProgramDeviceStateWhere" },
+    deviceKeyAggregate: {
+      __type: "CommandInterlockStateDeviceKeyAggregateInput",
+    },
+    deviceKeyConnection: {
+      __type: "CommandInterlockStateDeviceKeyConnectionWhere",
+    },
+    deviceKeyConnection_NOT: {
+      __type: "CommandInterlockStateDeviceKeyConnectionWhere",
+    },
+    deviceKey_NOT: { __type: "CommandProgramDeviceStateWhere" },
+    deviceValue: { __type: "CommandInterlockAssertionWhere" },
+    deviceValueAggregate: {
+      __type: "CommandInterlockStateDeviceValueAggregateInput",
+    },
+    deviceValueConnection: {
+      __type: "CommandInterlockStateDeviceValueConnectionWhere",
+    },
+    deviceValueConnection_NOT: {
+      __type: "CommandInterlockStateDeviceValueConnectionWhere",
+    },
+    deviceValue_NOT: { __type: "CommandInterlockAssertionWhere" },
+    id: { __type: "ID" },
+    id_CONTAINS: { __type: "ID" },
+    id_ENDS_WITH: { __type: "ID" },
+    id_IN: { __type: "[ID]" },
+    id_NOT: { __type: "ID" },
+    id_NOT_CONTAINS: { __type: "ID" },
+    id_NOT_ENDS_WITH: { __type: "ID" },
+    id_NOT_IN: { __type: "[ID]" },
+    id_NOT_STARTS_WITH: { __type: "ID" },
+    id_STARTS_WITH: { __type: "ID" },
+    interlock: { __type: "CommandInterlockWhere" },
+    interlockAggregate: {
+      __type: "CommandInterlockStateInterlockAggregateInput",
+    },
+    interlockConnection: {
+      __type: "CommandInterlockStateInterlockConnectionWhere",
+    },
+    interlockConnection_NOT: {
+      __type: "CommandInterlockStateInterlockConnectionWhere",
+    },
+    interlock_NOT: { __type: "CommandInterlockWhere" },
   },
   CommandInterlockUniqueWhere: { id: { __type: "ID" } },
   CommandInterlockUpdateInput: {
@@ -29789,6 +31312,7 @@ export const generatedSchema: any = {
     inputDeviceKey: {
       __type: "CommandInterlockInputDeviceKeyUpdateFieldInput",
     },
+    state: { __type: "[CommandInterlockStateUpdateFieldInput!]" },
   },
   CommandInterlockWhere: {
     AND: { __type: "[CommandInterlockWhere!]" },
@@ -29852,6 +31376,11 @@ export const generatedSchema: any = {
     },
     inputDeviceKey_NOT: { __type: "CommandProgramDeviceStateWhere" },
     inputDevice_NOT: { __type: "CommandProgramDevicePlaceholderWhere" },
+    state: { __type: "CommandInterlockStateWhere" },
+    stateAggregate: { __type: "CommandInterlockStateAggregateInput" },
+    stateConnection: { __type: "CommandInterlockStateConnectionWhere" },
+    stateConnection_NOT: { __type: "CommandInterlockStateConnectionWhere" },
+    state_NOT: { __type: "CommandInterlockStateWhere" },
   },
   CommandKeyValue: {
     __typename: { __type: "String!" },
@@ -31306,6 +32835,7 @@ export const generatedSchema: any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   CommandProgramCommandProgramAlarmAlarmsAggregationSelection: {
     __typename: { __type: "String!" },
@@ -31936,6 +33466,7 @@ export const generatedSchema: any = {
       name: { __type: "StringAggregateSelection!" },
       network_name: { __type: "StringAggregateSelection!" },
       operatingMode: { __type: "StringAggregateSelection!" },
+      operatingState: { __type: "StringAggregateSelection!" },
     },
   CommandProgramDeviceCalibrationCommandProgramDevicePlaceholderDeviceAggregationSelection:
     {
@@ -32566,6 +34097,26 @@ export const generatedSchema: any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandProgramDeviceCalibrationRootDeviceRelationship: {
     __typename: { __type: "String!" },
@@ -40771,6 +42322,26 @@ export const generatedSchema: any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   CommandProgramUsedOnRelationship: {
     __typename: { __type: "String!" },
@@ -40940,6 +42511,11 @@ export const generatedSchema: any = {
   CreateCommandInterlockAssertionsMutationResponse: {
     __typename: { __type: "String!" },
     commandInterlockAssertions: { __type: "[CommandInterlockAssertion!]!" },
+    info: { __type: "CreateInfo!" },
+  },
+  CreateCommandInterlockStatesMutationResponse: {
+    __typename: { __type: "String!" },
+    commandInterlockStates: { __type: "[CommandInterlockState!]!" },
     info: { __type: "CreateInfo!" },
   },
   CreateCommandInterlocksMutationResponse: {
@@ -43233,6 +44809,7 @@ export const generatedSchema: any = {
     name: { __type: "StringAggregateSelection!" },
     network_name: { __type: "StringAggregateSelection!" },
     operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
   },
   HiveOrganisationCommandDevicesAggregateInput: {
     AND: { __type: "[HiveOrganisationCommandDevicesAggregateInput!]" },
@@ -43374,6 +44951,26 @@ export const generatedSchema: any = {
     operatingMode_SHORTEST_GTE: { __type: "Int" },
     operatingMode_SHORTEST_LT: { __type: "Int" },
     operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
   },
   HiveOrganisationCommandDevicesRelationship: {
     __typename: { __type: "String!" },
@@ -45852,6 +47449,11 @@ export const generatedSchema: any = {
     commandInterlockAssertions: { __type: "[CommandInterlockAssertion!]!" },
     info: { __type: "UpdateInfo!" },
   },
+  UpdateCommandInterlockStatesMutationResponse: {
+    __typename: { __type: "String!" },
+    commandInterlockStates: { __type: "[CommandInterlockState!]!" },
+    info: { __type: "UpdateInfo!" },
+  },
   UpdateCommandInterlocksMutationResponse: {
     __typename: { __type: "String!" },
     commandInterlocks: { __type: "[CommandInterlock!]!" },
@@ -46065,6 +47667,10 @@ export const generatedSchema: any = {
       __type: "Boolean",
       __args: { deviceId: "String", mode: "String" },
     },
+    changeState: {
+      __type: "Boolean",
+      __args: { deviceId: "String", state: "String" },
+    },
     createCommandActionItems: {
       __type: "CreateCommandActionItemsMutationResponse!",
       __args: { input: "[CommandActionItemCreateInput!]!" },
@@ -46121,6 +47727,10 @@ export const generatedSchema: any = {
       __type: "CreateCommandInterlockAssertionsMutationResponse!",
       __args: { input: "[CommandInterlockAssertionCreateInput!]!" },
     },
+    createCommandInterlockStates: {
+      __type: "CreateCommandInterlockStatesMutationResponse!",
+      __args: { input: "[CommandInterlockStateCreateInput!]!" },
+    },
     createCommandInterlocks: {
       __type: "CreateCommandInterlocksMutationResponse!",
       __args: { input: "[CommandInterlockCreateInput!]!" },
@@ -46140,10 +47750,6 @@ export const generatedSchema: any = {
     createCommandPlugins: {
       __type: "CreateCommandPluginsMutationResponse!",
       __args: { input: "[CommandPluginCreateInput!]!" },
-    },
-    createCommandProgram: {
-      __type: "CreateCommandProgramsMutationResponse",
-      __args: { name: "String" },
     },
     createCommandProgramActions: {
       __type: "CreateCommandProgramActionsMutationResponse!",
@@ -46356,6 +47962,13 @@ export const generatedSchema: any = {
       __args: {
         delete: "CommandInterlockAssertionDeleteInput",
         where: "CommandInterlockAssertionWhere",
+      },
+    },
+    deleteCommandInterlockStates: {
+      __type: "DeleteInfo!",
+      __args: {
+        delete: "CommandInterlockStateDeleteInput",
+        where: "CommandInterlockStateWhere",
       },
     },
     deleteCommandInterlocks: {
@@ -46724,6 +48337,18 @@ export const generatedSchema: any = {
         disconnect: "CommandInterlockAssertionDisconnectInput",
         update: "CommandInterlockAssertionUpdateInput",
         where: "CommandInterlockAssertionWhere",
+      },
+    },
+    updateCommandInterlockStates: {
+      __type: "UpdateCommandInterlockStatesMutationResponse!",
+      __args: {
+        connect: "CommandInterlockStateConnectInput",
+        connectOrCreate: "CommandInterlockStateConnectOrCreateInput",
+        create: "CommandInterlockStateRelationInput",
+        delete: "CommandInterlockStateDeleteInput",
+        disconnect: "CommandInterlockStateDisconnectInput",
+        update: "CommandInterlockStateUpdateInput",
+        where: "CommandInterlockStateWhere",
       },
     },
     updateCommandInterlocks: {
@@ -47327,6 +48952,21 @@ export const generatedSchema: any = {
     commandInterlockAssertionsCount: {
       __type: "Int!",
       __args: { where: "CommandInterlockAssertionWhere" },
+    },
+    commandInterlockStates: {
+      __type: "[CommandInterlockState!]!",
+      __args: {
+        options: "CommandInterlockStateOptions",
+        where: "CommandInterlockStateWhere",
+      },
+    },
+    commandInterlockStatesAggregate: {
+      __type: "CommandInterlockStateAggregateSelection!",
+      __args: { where: "CommandInterlockStateWhere" },
+    },
+    commandInterlockStatesCount: {
+      __type: "Int!",
+      __args: { where: "CommandInterlockStateWhere" },
     },
     commandInterlocks: {
       __type: "[CommandInterlock!]!",
@@ -47958,6 +49598,7 @@ export interface CommandDevice {
   network_name?: Maybe<ScalarsEnums["String"]>;
   online?: Maybe<ScalarsEnums["Boolean"]>;
   operatingMode?: Maybe<ScalarsEnums["String"]>;
+  operatingState?: Maybe<ScalarsEnums["String"]>;
   organisation: (args?: {
     options?: Maybe<HiveOrganisationOptions>;
     where?: Maybe<HiveOrganisationWhere>;
@@ -48020,6 +49661,7 @@ export interface CommandDeviceAggregateSelection {
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandDeviceCalibrationsConnection {
@@ -48181,6 +49823,7 @@ export interface CommandDevicePeripheralCommandDeviceDeviceNodeAggregateSelectio
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandDevicePeripheralCommandDevicePeripheralMapMappedDevicesAggregationSelection {
@@ -49452,6 +51095,19 @@ export interface CommandInterlock {
     sort?: Maybe<Array<CommandInterlockInputDeviceKeyConnectionSort>>;
     where?: Maybe<CommandInterlockInputDeviceKeyConnectionWhere>;
   }) => CommandInterlockInputDeviceKeyConnection;
+  state: (args?: {
+    options?: Maybe<CommandInterlockStateOptions>;
+    where?: Maybe<CommandInterlockStateWhere>;
+  }) => Maybe<Array<Maybe<CommandInterlockState>>>;
+  stateAggregate: (args?: {
+    where?: Maybe<CommandInterlockStateWhere>;
+  }) => Maybe<CommandInterlockCommandInterlockStateStateAggregationSelection>;
+  stateConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandInterlockStateConnectionSort>>;
+    where?: Maybe<CommandInterlockStateConnectionWhere>;
+  }) => CommandInterlockStateConnection;
 }
 
 export interface CommandInterlockActionConnection {
@@ -49555,6 +51211,17 @@ export interface CommandInterlockCommandInterlockAssertionAssertionNodeAggregate
   value: StringAggregateSelection;
 }
 
+export interface CommandInterlockCommandInterlockStateStateAggregationSelection {
+  __typename?: "CommandInterlockCommandInterlockStateStateAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandInterlockCommandInterlockStateStateNodeAggregateSelection>;
+}
+
+export interface CommandInterlockCommandInterlockStateStateNodeAggregateSelection {
+  __typename?: "CommandInterlockCommandInterlockStateStateNodeAggregateSelection";
+  id: IDAggregateSelection;
+}
+
 export interface CommandInterlockCommandProgramDeviceActionActionAggregationSelection {
   __typename?: "CommandInterlockCommandProgramDeviceActionActionAggregationSelection";
   count: ScalarsEnums["Int"];
@@ -49645,6 +51312,150 @@ export interface CommandInterlockInputDeviceRelationship {
   __typename?: "CommandInterlockInputDeviceRelationship";
   cursor: ScalarsEnums["String"];
   node: CommandProgramDevicePlaceholder;
+}
+
+export interface CommandInterlockState {
+  __typename?: "CommandInterlockState";
+  deviceKey: (args?: {
+    options?: Maybe<CommandProgramDeviceStateOptions>;
+    where?: Maybe<CommandProgramDeviceStateWhere>;
+  }) => Maybe<CommandProgramDeviceState>;
+  deviceKeyAggregate: (args?: {
+    where?: Maybe<CommandProgramDeviceStateWhere>;
+  }) => Maybe<CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection>;
+  deviceKeyConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandInterlockStateDeviceKeyConnectionSort>>;
+    where?: Maybe<CommandInterlockStateDeviceKeyConnectionWhere>;
+  }) => CommandInterlockStateDeviceKeyConnection;
+  deviceValue: (args?: {
+    options?: Maybe<CommandInterlockAssertionOptions>;
+    where?: Maybe<CommandInterlockAssertionWhere>;
+  }) => Maybe<CommandInterlockAssertion>;
+  deviceValueAggregate: (args?: {
+    where?: Maybe<CommandInterlockAssertionWhere>;
+  }) => Maybe<CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection>;
+  deviceValueConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandInterlockStateDeviceValueConnectionSort>>;
+    where?: Maybe<CommandInterlockStateDeviceValueConnectionWhere>;
+  }) => CommandInterlockStateDeviceValueConnection;
+  id: ScalarsEnums["ID"];
+  interlock: (args?: {
+    options?: Maybe<CommandInterlockOptions>;
+    where?: Maybe<CommandInterlockWhere>;
+  }) => Maybe<CommandInterlock>;
+  interlockAggregate: (args?: {
+    where?: Maybe<CommandInterlockWhere>;
+  }) => Maybe<CommandInterlockStateCommandInterlockInterlockAggregationSelection>;
+  interlockConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandInterlockStateInterlockConnectionSort>>;
+    where?: Maybe<CommandInterlockStateInterlockConnectionWhere>;
+  }) => CommandInterlockStateInterlockConnection;
+}
+
+export interface CommandInterlockStateAggregateSelection {
+  __typename?: "CommandInterlockStateAggregateSelection";
+  count: ScalarsEnums["Int"];
+  id: IDAggregateSelection;
+}
+
+export interface CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection {
+  __typename?: "CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection>;
+}
+
+export interface CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection {
+  __typename?: "CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection";
+  id: IDAggregateSelection;
+  type: StringAggregateSelection;
+  value: StringAggregateSelection;
+}
+
+export interface CommandInterlockStateCommandInterlockInterlockAggregationSelection {
+  __typename?: "CommandInterlockStateCommandInterlockInterlockAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection>;
+}
+
+export interface CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection {
+  __typename?: "CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection";
+  comparator: StringAggregateSelection;
+  id: IDAggregateSelection;
+}
+
+export interface CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection {
+  __typename?: "CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection>;
+}
+
+export interface CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection {
+  __typename?: "CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection";
+  id: IDAggregateSelection;
+  inputUnits: StringAggregateSelection;
+  key: StringAggregateSelection;
+  max: StringAggregateSelection;
+  min: StringAggregateSelection;
+  type: StringAggregateSelection;
+  units: StringAggregateSelection;
+}
+
+export interface CommandInterlockStateConnection {
+  __typename?: "CommandInterlockStateConnection";
+  edges: Array<CommandInterlockStateRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandInterlockStateDeviceKeyConnection {
+  __typename?: "CommandInterlockStateDeviceKeyConnection";
+  edges: Array<CommandInterlockStateDeviceKeyRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandInterlockStateDeviceKeyRelationship {
+  __typename?: "CommandInterlockStateDeviceKeyRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandProgramDeviceState;
+}
+
+export interface CommandInterlockStateDeviceValueConnection {
+  __typename?: "CommandInterlockStateDeviceValueConnection";
+  edges: Array<CommandInterlockStateDeviceValueRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandInterlockStateDeviceValueRelationship {
+  __typename?: "CommandInterlockStateDeviceValueRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandInterlockAssertion;
+}
+
+export interface CommandInterlockStateInterlockConnection {
+  __typename?: "CommandInterlockStateInterlockConnection";
+  edges: Array<CommandInterlockStateInterlockRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandInterlockStateInterlockRelationship {
+  __typename?: "CommandInterlockStateInterlockRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandInterlock;
+}
+
+export interface CommandInterlockStateRelationship {
+  __typename?: "CommandInterlockStateRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandInterlockState;
 }
 
 export interface CommandKeyValue {
@@ -50023,6 +51834,7 @@ export interface CommandProgramCommandDeviceUsedOnNodeAggregateSelection {
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandProgramCommandProgramAlarmAlarmsAggregationSelection {
@@ -50274,6 +52086,7 @@ export interface CommandProgramDeviceCalibrationCommandDeviceRootDeviceNodeAggre
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface CommandProgramDeviceCalibrationCommandProgramDevicePlaceholderDeviceAggregationSelection {
@@ -51953,6 +53766,12 @@ export interface CreateCommandInterlockAssertionsMutationResponse {
   info: CreateInfo;
 }
 
+export interface CreateCommandInterlockStatesMutationResponse {
+  __typename?: "CreateCommandInterlockStatesMutationResponse";
+  commandInterlockStates: Array<CommandInterlockState>;
+  info: CreateInfo;
+}
+
 export interface CreateCommandInterlocksMutationResponse {
   __typename?: "CreateCommandInterlocksMutationResponse";
   commandInterlocks: Array<CommandInterlock>;
@@ -52691,6 +54510,7 @@ export interface HiveOrganisationCommandDeviceCommandDevicesNodeAggregateSelecti
   name: StringAggregateSelection;
   network_name: StringAggregateSelection;
   operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
 }
 
 export interface HiveOrganisationCommandDevicesConnection {
@@ -53338,6 +55158,12 @@ export interface UpdateCommandInterlockAssertionsMutationResponse {
   info: UpdateInfo;
 }
 
+export interface UpdateCommandInterlockStatesMutationResponse {
+  __typename?: "UpdateCommandInterlockStatesMutationResponse";
+  commandInterlockStates: Array<CommandInterlockState>;
+  info: UpdateInfo;
+}
+
 export interface UpdateCommandInterlocksMutationResponse {
   __typename?: "UpdateCommandInterlocksMutationResponse";
   commandInterlocks: Array<CommandInterlock>;
@@ -53568,6 +55394,10 @@ export interface Mutation {
     deviceId?: Maybe<Scalars["String"]>;
     mode?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
+  changeState: (args?: {
+    deviceId?: Maybe<Scalars["String"]>;
+    state?: Maybe<Scalars["String"]>;
+  }) => Maybe<ScalarsEnums["Boolean"]>;
   createCommandActionItems: (args: {
     input: Array<CommandActionItemCreateInput>;
   }) => CreateCommandActionItemsMutationResponse;
@@ -53610,6 +55440,9 @@ export interface Mutation {
   createCommandInterlockAssertions: (args: {
     input: Array<CommandInterlockAssertionCreateInput>;
   }) => CreateCommandInterlockAssertionsMutationResponse;
+  createCommandInterlockStates: (args: {
+    input: Array<CommandInterlockStateCreateInput>;
+  }) => CreateCommandInterlockStatesMutationResponse;
   createCommandInterlocks: (args: {
     input: Array<CommandInterlockCreateInput>;
   }) => CreateCommandInterlocksMutationResponse;
@@ -53625,9 +55458,6 @@ export interface Mutation {
   createCommandPlugins: (args: {
     input: Array<CommandPluginCreateInput>;
   }) => CreateCommandPluginsMutationResponse;
-  createCommandProgram: (args?: {
-    name?: Maybe<Scalars["String"]>;
-  }) => Maybe<CreateCommandProgramsMutationResponse>;
   createCommandProgramActions: (args: {
     input: Array<CommandProgramActionCreateInput>;
   }) => CreateCommandProgramActionsMutationResponse;
@@ -53768,6 +55598,10 @@ export interface Mutation {
   deleteCommandInterlockAssertions: (args?: {
     delete?: Maybe<CommandInterlockAssertionDeleteInput>;
     where?: Maybe<CommandInterlockAssertionWhere>;
+  }) => DeleteInfo;
+  deleteCommandInterlockStates: (args?: {
+    delete?: Maybe<CommandInterlockStateDeleteInput>;
+    where?: Maybe<CommandInterlockStateWhere>;
   }) => DeleteInfo;
   deleteCommandInterlocks: (args?: {
     delete?: Maybe<CommandInterlockDeleteInput>;
@@ -54022,6 +55856,15 @@ export interface Mutation {
     update?: Maybe<CommandInterlockAssertionUpdateInput>;
     where?: Maybe<CommandInterlockAssertionWhere>;
   }) => UpdateCommandInterlockAssertionsMutationResponse;
+  updateCommandInterlockStates: (args?: {
+    connect?: Maybe<CommandInterlockStateConnectInput>;
+    connectOrCreate?: Maybe<CommandInterlockStateConnectOrCreateInput>;
+    create?: Maybe<CommandInterlockStateRelationInput>;
+    delete?: Maybe<CommandInterlockStateDeleteInput>;
+    disconnect?: Maybe<CommandInterlockStateDisconnectInput>;
+    update?: Maybe<CommandInterlockStateUpdateInput>;
+    where?: Maybe<CommandInterlockStateWhere>;
+  }) => UpdateCommandInterlockStatesMutationResponse;
   updateCommandInterlocks: (args?: {
     connect?: Maybe<CommandInterlockConnectInput>;
     connectOrCreate?: Maybe<CommandInterlockConnectOrCreateInput>;
@@ -54449,6 +56292,16 @@ export interface Query {
   }) => CommandInterlockAssertionAggregateSelection;
   commandInterlockAssertionsCount: (args?: {
     where?: Maybe<CommandInterlockAssertionWhere>;
+  }) => ScalarsEnums["Int"];
+  commandInterlockStates: (args?: {
+    options?: Maybe<CommandInterlockStateOptions>;
+    where?: Maybe<CommandInterlockStateWhere>;
+  }) => Array<CommandInterlockState>;
+  commandInterlockStatesAggregate: (args?: {
+    where?: Maybe<CommandInterlockStateWhere>;
+  }) => CommandInterlockStateAggregateSelection;
+  commandInterlockStatesCount: (args?: {
+    where?: Maybe<CommandInterlockStateWhere>;
   }) => ScalarsEnums["Int"];
   commandInterlocks: (args?: {
     options?: Maybe<CommandInterlockOptions>;
@@ -54966,6 +56819,8 @@ export interface SchemaObjectTypes {
   CommandInterlockAssertionSetpointRelationship: CommandInterlockAssertionSetpointRelationship;
   CommandInterlockCommandInterlockAssertionAssertionAggregationSelection: CommandInterlockCommandInterlockAssertionAssertionAggregationSelection;
   CommandInterlockCommandInterlockAssertionAssertionNodeAggregateSelection: CommandInterlockCommandInterlockAssertionAssertionNodeAggregateSelection;
+  CommandInterlockCommandInterlockStateStateAggregationSelection: CommandInterlockCommandInterlockStateStateAggregationSelection;
+  CommandInterlockCommandInterlockStateStateNodeAggregateSelection: CommandInterlockCommandInterlockStateStateNodeAggregateSelection;
   CommandInterlockCommandProgramDeviceActionActionAggregationSelection: CommandInterlockCommandProgramDeviceActionActionAggregationSelection;
   CommandInterlockCommandProgramDeviceActionActionNodeAggregateSelection: CommandInterlockCommandProgramDeviceActionActionNodeAggregateSelection;
   CommandInterlockCommandProgramDevicePlaceholderDeviceAggregationSelection: CommandInterlockCommandProgramDevicePlaceholderDeviceAggregationSelection;
@@ -54980,6 +56835,22 @@ export interface SchemaObjectTypes {
   CommandInterlockInputDeviceKeyConnection: CommandInterlockInputDeviceKeyConnection;
   CommandInterlockInputDeviceKeyRelationship: CommandInterlockInputDeviceKeyRelationship;
   CommandInterlockInputDeviceRelationship: CommandInterlockInputDeviceRelationship;
+  CommandInterlockState: CommandInterlockState;
+  CommandInterlockStateAggregateSelection: CommandInterlockStateAggregateSelection;
+  CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection: CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection;
+  CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection: CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection;
+  CommandInterlockStateCommandInterlockInterlockAggregationSelection: CommandInterlockStateCommandInterlockInterlockAggregationSelection;
+  CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection: CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection;
+  CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection: CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection;
+  CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection: CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection;
+  CommandInterlockStateConnection: CommandInterlockStateConnection;
+  CommandInterlockStateDeviceKeyConnection: CommandInterlockStateDeviceKeyConnection;
+  CommandInterlockStateDeviceKeyRelationship: CommandInterlockStateDeviceKeyRelationship;
+  CommandInterlockStateDeviceValueConnection: CommandInterlockStateDeviceValueConnection;
+  CommandInterlockStateDeviceValueRelationship: CommandInterlockStateDeviceValueRelationship;
+  CommandInterlockStateInterlockConnection: CommandInterlockStateInterlockConnection;
+  CommandInterlockStateInterlockRelationship: CommandInterlockStateInterlockRelationship;
+  CommandInterlockStateRelationship: CommandInterlockStateRelationship;
   CommandKeyValue: CommandKeyValue;
   CommandKeyValueAggregateSelection: CommandKeyValueAggregateSelection;
   CommandPeripheralProductDatapoint: CommandPeripheralProductDatapoint;
@@ -55227,6 +57098,7 @@ export interface SchemaObjectTypes {
   CreateCommandHMIPathsMutationResponse: CreateCommandHMIPathsMutationResponse;
   CreateCommandHMIPortsMutationResponse: CreateCommandHMIPortsMutationResponse;
   CreateCommandInterlockAssertionsMutationResponse: CreateCommandInterlockAssertionsMutationResponse;
+  CreateCommandInterlockStatesMutationResponse: CreateCommandInterlockStatesMutationResponse;
   CreateCommandInterlocksMutationResponse: CreateCommandInterlocksMutationResponse;
   CreateCommandKeyValuesMutationResponse: CreateCommandKeyValuesMutationResponse;
   CreateCommandPeripheralProductDatapointsMutationResponse: CreateCommandPeripheralProductDatapointsMutationResponse;
@@ -55398,6 +57270,7 @@ export interface SchemaObjectTypes {
   UpdateCommandHMIPathsMutationResponse: UpdateCommandHMIPathsMutationResponse;
   UpdateCommandHMIPortsMutationResponse: UpdateCommandHMIPortsMutationResponse;
   UpdateCommandInterlockAssertionsMutationResponse: UpdateCommandInterlockAssertionsMutationResponse;
+  UpdateCommandInterlockStatesMutationResponse: UpdateCommandInterlockStatesMutationResponse;
   UpdateCommandInterlocksMutationResponse: UpdateCommandInterlocksMutationResponse;
   UpdateCommandKeyValuesMutationResponse: UpdateCommandKeyValuesMutationResponse;
   UpdateCommandPeripheralProductDatapointsMutationResponse: UpdateCommandPeripheralProductDatapointsMutationResponse;
@@ -55606,6 +57479,8 @@ export type SchemaObjectTypesNames =
   | "CommandInterlockAssertionSetpointRelationship"
   | "CommandInterlockCommandInterlockAssertionAssertionAggregationSelection"
   | "CommandInterlockCommandInterlockAssertionAssertionNodeAggregateSelection"
+  | "CommandInterlockCommandInterlockStateStateAggregationSelection"
+  | "CommandInterlockCommandInterlockStateStateNodeAggregateSelection"
   | "CommandInterlockCommandProgramDeviceActionActionAggregationSelection"
   | "CommandInterlockCommandProgramDeviceActionActionNodeAggregateSelection"
   | "CommandInterlockCommandProgramDevicePlaceholderDeviceAggregationSelection"
@@ -55620,6 +57495,22 @@ export type SchemaObjectTypesNames =
   | "CommandInterlockInputDeviceKeyConnection"
   | "CommandInterlockInputDeviceKeyRelationship"
   | "CommandInterlockInputDeviceRelationship"
+  | "CommandInterlockState"
+  | "CommandInterlockStateAggregateSelection"
+  | "CommandInterlockStateCommandInterlockAssertionDeviceValueAggregationSelection"
+  | "CommandInterlockStateCommandInterlockAssertionDeviceValueNodeAggregateSelection"
+  | "CommandInterlockStateCommandInterlockInterlockAggregationSelection"
+  | "CommandInterlockStateCommandInterlockInterlockNodeAggregateSelection"
+  | "CommandInterlockStateCommandProgramDeviceStateDeviceKeyAggregationSelection"
+  | "CommandInterlockStateCommandProgramDeviceStateDeviceKeyNodeAggregateSelection"
+  | "CommandInterlockStateConnection"
+  | "CommandInterlockStateDeviceKeyConnection"
+  | "CommandInterlockStateDeviceKeyRelationship"
+  | "CommandInterlockStateDeviceValueConnection"
+  | "CommandInterlockStateDeviceValueRelationship"
+  | "CommandInterlockStateInterlockConnection"
+  | "CommandInterlockStateInterlockRelationship"
+  | "CommandInterlockStateRelationship"
   | "CommandKeyValue"
   | "CommandKeyValueAggregateSelection"
   | "CommandPeripheralProductDatapoint"
@@ -55867,6 +57758,7 @@ export type SchemaObjectTypesNames =
   | "CreateCommandHMIPathsMutationResponse"
   | "CreateCommandHMIPortsMutationResponse"
   | "CreateCommandInterlockAssertionsMutationResponse"
+  | "CreateCommandInterlockStatesMutationResponse"
   | "CreateCommandInterlocksMutationResponse"
   | "CreateCommandKeyValuesMutationResponse"
   | "CreateCommandPeripheralProductDatapointsMutationResponse"
@@ -56038,6 +57930,7 @@ export type SchemaObjectTypesNames =
   | "UpdateCommandHMIPathsMutationResponse"
   | "UpdateCommandHMIPortsMutationResponse"
   | "UpdateCommandInterlockAssertionsMutationResponse"
+  | "UpdateCommandInterlockStatesMutationResponse"
   | "UpdateCommandInterlocksMutationResponse"
   | "UpdateCommandKeyValuesMutationResponse"
   | "UpdateCommandPeripheralProductDatapointsMutationResponse"

@@ -29,6 +29,7 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 	const [ type, setType ] = useState<string>('');
 
 	console.log(props.configuration)
+	
 	const onSubmit = () => {
 		props.onSubmit?.(device)
 	}

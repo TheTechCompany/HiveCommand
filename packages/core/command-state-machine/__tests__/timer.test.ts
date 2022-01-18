@@ -51,12 +51,34 @@ describe('State Machine Timers', () => {
 							}
 						]
 					}
-				]
+				],
+				devices: [{
+					name: 'AV101',
+					actions: [{
+						key: 'close',
+						func: `
+							setState({opening: true}); 
+							requestState(false); 
+							await new Promise((resolve, reject) => setTimeout(() => resolve(true), 11 * 1000)); 
+							setState({opening: false, open: false});
+						`
+					}, {
+						key: 'open',
+						func: `
+						setState({opening: true}); 
+						requestState(true); 
+						await new Promise((resolve, reject) => setTimeout(() => resolve(true), 11 * 1000)); 
+						setState({opening: false, open: true});
+						`
+					}]
+
+				}]
 			}, {
-				performOperation: async (event) => {
+				requestState: async (event) => {
 					console.log(event)
-					if(event.device == "AV101" && event.operation == "open") {
-						await machine.shutdown();
+					console.log(typeof(event.state))
+					if(event.device == "AV101" && event.state == true) {
+						await machine.stop();
 						clearTimeout(timeout)
 						// machine.stop()
 						resolve(true)
@@ -64,7 +86,8 @@ describe('State Machine Timers', () => {
 				}
 			});
 	
-			 machine.start(CommandStateMachineMode.AUTO);
+			machine.changeMode(CommandStateMachineMode.AUTO)
+			 machine.start();
 			const timeout = setTimeout(() => {
 				machine.stop()
 				reject(new Error('Timer did not fire'))

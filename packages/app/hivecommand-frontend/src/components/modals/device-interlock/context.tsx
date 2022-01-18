@@ -11,13 +11,14 @@ export interface DeviceInterlock {
 		setpoint?: string,
 		value?: string
 	},
-	state?: JsonTree,
+	state?: {id?: string, deviceKey: string, deviceValue: any }[],
 	valueType?: string,
 	action?: string
 }
 export const DeviceInterlockContext = React.createContext<{
 	device?: any,
 	devices?: any[],
+	actions?: any[]
 	interlock?: DeviceInterlock,
 	setInterlock?: (interlock: DeviceInterlock) => void
 }>({

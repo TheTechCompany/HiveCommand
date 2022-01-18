@@ -3,6 +3,9 @@
 import EventEmitter from "events";
 import { ProcessChain } from './chain';
 import { CommandAction, CommandProcess } from './types';
+import log from 'loglevel'
+
+log.setLevel('debug')
 
 export * from './types'
 
@@ -10,14 +13,45 @@ export {
     ProcessChain
 }
 
+export interface ChainTransition {
+    from: string;
+    to: string;
+}
+
+
+export interface ProcessTransition {
+    chain?: string;
+    txid: string,
+    direction: 'entry' | 'exit',
+    transition: ChainTransition
+}
+
+export interface ProcessEvents {
+    'transition': (transition: ProcessTransition) => void;
+
+     'started': () => void;
+     'finished': () => void;
+     'stopping': () => void;
+     'stopped': () => void;
+}
+
+export declare interface Process {
+    on<U extends keyof ProcessEvents>(
+        event: U,
+        listener: ProcessEvents[U]
+    ): this;
+
+    emit<U extends keyof ProcessEvents>(
+        event: U, ...args: Parameters<ProcessEvents[U]>
+    ): boolean;
+}
+
 export class Process extends EventEmitter{
-    private process : CommandProcess;
+    private process? : CommandProcess;
     
     private parent?: CommandProcess;
 
     // private actions : Action[] = [];
-
-    public current_state: string;
 
     public running: boolean = false;
 
@@ -53,62 +87,79 @@ export class Process extends EventEmitter{
 
         this.parent = parent
 
-        this.process = process
-        this.current_state = 'origin';
-
-        // console.log({nodes: this.process})
-		this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == 'trigger').map((node) => {
-			return new ProcessChain(this, process, node.id, actions)
-		}) || []
-
-		this.chains.shutdown = this.process.nodes?.filter((a) => a.type == 'shutdown').map((node) => {
-			return new ProcessChain(this, process, node.id, actions)
-		}) || []
+    
+        this.load(process)
 
         this.performOperation = this.performOperation.bind(this)
         // this.actions = this.action_nodes
     }
 
+    load(process: CommandProcess){
+        this.process = process
+
+        // console.log({nodes: this.process})
+        this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == 'trigger').map((node) => {
+            return new ProcessChain(this, process, node.id, this.actions)
+        }) || []
+
+        this.chains.shutdown = this.process.nodes?.filter((a) => a.type == 'shutdown').map((node) => {
+            return new ProcessChain(this, process, node.id, this.actions)
+        }) || []
+
+        this.chains.entrypoints.forEach((entrypoint) => {
+            entrypoint.on('transition', (ev) => {
+                this.emit('transition', {
+                    chain: entrypoint.pid, 
+                    txid: entrypoint.getId, 
+                    direction: 'entry',
+                    transition: ev
+                })
+            })
+        })
+
+        this.chains.shutdown.map((exitpoint) => {
+            exitpoint.on('transition', (ev) => {
+
+                this.emit('transition', {
+                    chain: exitpoint.pid, 
+                    txid: exitpoint.getId, 
+                    direction: 'exit',
+                    transition: ev
+                })
+            })
+        })
+
+    }
+
     async performOperation(device: string, release: boolean, operation: string){
+        // log.debug(`Perform op ${operation} on ${device}`)
         await this.perform(device, release, operation)
     }
 
 
-    get parentId(){
-        return this.parent?.id
-    }
-
     get id(){
-        return this.process.id
+        return this.process?.id
     }
 
-    get name(){
-        return this.process.id
-    }
     
     //: Process[]
 	get sub_processes() {
 		return this.process?.sub_processes //?.map((x) => new Process(x, this.actions, this.perform, this)) || []
 	}
+
+    get isRunning (){
+        return this.running
+    }
+
+    isActive(id: string){
+        let active = this.chains.entrypoints.concat(this.chains.shutdown).map((x) => x.currentActions.map((y) => y.actionId)).reduce((prev, curr) => prev.concat(curr), [])
+        console.log({active})
+        return active.indexOf(id) > -1;
+    }
     // get sub_processes(){
     //     return this.process.sub_processes
     // }
 
-	runOnce(){
-
-	}
-
-
-    requestPriority(id: string){
-        // if(this.current_state == id) return;
-        // console.log("Requesting priority: ", id)
-        // let current_action = this.actions.find((a) => a.id == this.current_state)
-        // if(current_action){
-        //     current_action.requestPriority(id)
-        // }   
-
-        // this.prioritize = id;
-    }
 
     // doCurrent() : Promise<boolean>{
     //     return new Promise((resolve, reject) => {
@@ -169,20 +220,24 @@ export class Process extends EventEmitter{
     //     return false;
     // }
 
+    runChain(){
+
+    }
+
     async start(){
-        console.info(`Process: ${this.process.name} start`)
+        log.debug(`CommandProcess - START: ${this.process?.name} - (${this.chains.entrypoints.length} entrypoints)`)
 
         this.running = true;
 
 		let hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
+        
+        this.emit('started')
 
-        // console.log(hasNext, this.running)
         // console.log(this.chains)
         while(hasNext && this.running){
-            // console.log({hasNext})
 			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
             // console.log({hasNext})
-
+            // log.debug({hasNext}, this.chains.entrypoints.map((x) => x.currentActions))
 			Promise.all(this.chains.entrypoints.map(async (chain) => await chain.run()));
 
 			await Promise.all(this.chains.entrypoints.map((chain) => chain.next()));
@@ -199,73 +254,21 @@ export class Process extends EventEmitter{
 
            
         }
+
+        this.emit('finished')
         // console.log()
     }
 
-    // async runOnce(){
-    //     let origin = this.startPoint;
-
-    //     let finish : any = () => {};
-    //     let finished = false;
-
-    //     let resolver = new Promise((resolve) => finish = resolve)
-
-    //     this.actions.forEach((action) => {
-
-    //         action.hasRun = false;
-    //     })
-
-    //     await new Promise((resolve) => {
-    //         this.parent.on('TICK', async () => {
-    //             if(this.hasNext() || !finished){
-
-    //                 await this.doCurrent();
-
-
-    //                 await this.moveNext();
-
-    //                 if(!this.hasNext()){
-    //                     resolve(true)
-    //                     finished = true;
-    //                 }
-
-    //                 // let action = this.actions.find((a) => a.id == this.current_state);
-    //                 // if(action){
-    //                 //     if(!action.hasRun && !action.isRunning){
-    //                 //         await action.onEnter();
-    //                 //     }
-    //                 // }
-        
-    //                 // let next = this.checkNext();
-        
-    //                 // let priority = next.filter((a) => a.value).sort((a, b) => b.conds - a.conds);
-    //                 // if((!action || action.hasRun) && priority.length > 0){
-    //                 //     await action?.onExit()
-        
-    //                 //     this.current_state = next[0].target
-        
-    //                 //     this.parent.updateState(this.process.id, this.current_state, this.parent_process?.process.id)
-        
-    //                 // }
-                    
-    //                 // if(priority.length == 0){
-    //                 //     resolve(true);
-    //                 //     finished = true;
-    //                 // }
-    //             }
-    //         })
-    //     })
-       
-    //     console.log("Done")
-    // }
-
     async stop(){
+        log.debug(`CommandProcess - STOP: ${this.process?.name} - (${this.chains.shutdown.length} exitpoints)`)
+        this.emit('stopping')
+
         this.running = false;
 
-		let hasNext = this.chains.shutdown.map((x) => x.hasNext()).indexOf(true) > -1
+		let hasNext = this.chains.shutdown.map((x) => x.shouldRun()).indexOf(true) > -1
 
-        while(hasNext && this.running){
-			hasNext = this.chains.shutdown.map((x) => x.hasNext()).indexOf(true) > -1
+        while(hasNext){
+			hasNext = this.chains.shutdown.map((x) => x.shouldRun()).indexOf(true) > -1
 
 			Promise.all(this.chains.shutdown.map(async (chain) => await chain.run()));
 
@@ -283,6 +286,11 @@ export class Process extends EventEmitter{
 
            
         }
+        this.emit('stopped')
+    }
+
+    async pause(){
+
     }
 
 

@@ -40,6 +40,9 @@ import { Pool } from 'pg';
 
 	const mqChannel = await mq.createChannel()
 
+	await mqChannel.assertQueue(`COMMAND:MODE`);
+	await mqChannel.assertQueue(`COMMAND:STATE`);
+
 	await mqChannel.assertQueue(`COMMAND:DEVICE:CONTROL`)
 	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);

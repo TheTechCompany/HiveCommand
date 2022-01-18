@@ -1,4 +1,7 @@
 import process from 'process'
+
+import log, { LogLevelDesc} from 'loglevel'
+
 import { CommandIdentity } from '@hive-command/identity'
 import { CommandLogging } from '@hive-command/logging'
 
@@ -8,6 +11,9 @@ import cleanup from 'node-cleanup'
 import { Controller } from './controller'
 import { Machine } from './machine'
 import path from 'path/posix';
+import { TerminalDisplay } from './display'
+
+const pkg = require('../package.json')
 
 export interface CommandEnvironment {
 	id: string;
@@ -36,6 +42,10 @@ export interface CommandClientOptions {
 	ignorePlugins?: string[];
 
 	pluginDir? : string;
+
+	blessed?: boolean;
+
+	logLevel?: LogLevelDesc
 }
 
 export class CommandClient { 
@@ -52,12 +62,16 @@ export class CommandClient {
 
 	private options : CommandClientOptions;
 
+
 	constructor(opts: CommandClientOptions){
 		this.options = opts;
 
 		this.logs = new CommandLogging();
 
-		this.logs.log(`Starting Command Client...`);
+		log.setLevel(opts.logLevel || 'info')
+
+		log.info(`Starting HiveCommand Client: v${pkg.version}`)
+		// this.logs.log(`Starting Command Client...`);
 
 		this.identity = new CommandIdentity({
 			identityServer: opts.commandCenter || 'http://localhost:8080',
@@ -69,18 +83,20 @@ export class CommandClient {
 			pluginDir: opts.pluginDir || path.join(__dirname, `../../../plugins`)
 		})
 
+
 		this.controller = new Controller({
 			commandCenter: opts.commandCenter || '',
 			valueBank: {
-				get: this.machine.getByKey.bind(this),
+				get: (dev, key) => this.machine?.getByKey(dev, key),
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
 				setDeviceMode: this.machine.setDeviceMode.bind(this), 
-				requestState: async (device, key, value) => await this.machine?.requestState({device: device, value: {[key]: value}}),
+				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
 				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action})
 			},
 			machine: this.machine,
 		})
 		
+
 
 		cleanup(this.shutdown.bind(this))
 
@@ -91,8 +107,8 @@ export class CommandClient {
 	}
 
 	async kill(){
-
-		await this.machine?.shutdown()
+		await this.machine?.stopProgram()
+		await this.machine?.stop()
 		await this.controller.stop();
 		
 	}
@@ -108,7 +124,8 @@ export class CommandClient {
 			
 			console.log("State Machine stopped...");
 	
-			await this.machine?.shutdown()
+			await this.machine?.stopProgram()
+			await this.machine?.stop()
 			// let pumps = this.deviceMap.getDeviceByType("pump")
 	
 			// await Promise.all(pumps.map(async (pump) => {
@@ -131,16 +148,10 @@ export class CommandClient {
 		this.machine?.load(payload)
 	}
 
-	async stop(){
-		await this.machine?.shutdown()
-	}
-
-	// Load the state machine and run
-	async start(){
-		//Find IO-Buses and Connected Devices
+	async setup(){
 		this.environment = await this.machine?.discoverEnvironment() || []
 
-		this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
+		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
 		const self = await this.identity.whoami()
@@ -149,15 +160,16 @@ export class CommandClient {
 
 		await this.identity.provideContext(this.environment, this.identity.identity)
 
-		this.logs.log(`Found self ${JSON.stringify(self)}`)
+		// this.logs.log(`Found self ${JSON.stringify(self)}`)
 
 		const credentials = await this.controller.becomeSelf(self)
 
-		this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
+		// this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 
 		//Get our command payload
 
 		const commandPayload = await this.identity.getPurpose()
+
 		if(commandPayload.payload){
 
 			if(commandPayload.payload.layout){
@@ -169,7 +181,21 @@ export class CommandClient {
 			}
 			await this.machine?.load(commandPayload)
 		}
+	}
 
+	async stop(){
+		await this.machine?.stop()
+	}
+
+
+	// Load the state machine and run
+	async start(){
+		//Find IO-Buses and Connected Devices
+		
+		
+		// this.display?.start()
+
+		// this.display?.render()
 
 		await this.machine?.start()
 

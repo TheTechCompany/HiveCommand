@@ -10,18 +10,32 @@
 		"@types/react": ["../node_modules/@types/react"],
 		"node-opcua": ["../node_modules/node-opcua"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
+
+		/* Runtime */
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],
-		"@hive-command/opcua-server": ["./communication/opc-server/src"],
-		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
 		"@hive-command/sms": ["./communication/sms-utils/src"],
 		"@hive-command/state-machine": ["./core/command-state-machine/src"],
 		"@hive-command/process": ["./core/command-process/src"],
-		"@hive-command/network": ["./network/command-network/src"],
+		"@hive-command/network": ["./core/command-network/src"],
 		"@hive-command/logging": ["./core/command-logging/src"],
 		"@hive-command/identity": ["./core/command-identity/src"],
+
+		/* Runtime plugins */
 		"@hive-command/plugin-iolink": ["./plugins/iolink-plugin/src"],
 		"@hive-command/plugin-revpi": ["./plugins/revpi-plugin/src"],
 		"@hive-command/plugin-base": ["./plugins/base-plugin/src"],
+
+		/* Discovery server */
+		"@hive-command/data-types": ["./network/hive-command-data-types/src"],
+		"@hive-command/data": ["./network/hive-command-data/src"],
+		"@hive-command/discovery-server": ["./network/hive-command-discovery-server/src"],
+	
+		/* OPCUA Libraries */
+		"@hive-command/opcua-lds": ["./network/opcua-lds/src"],
+		"@hive-command/opcua-server": ["./communication/opc-server/src"],
+		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
+		
+		/* IO-Link Libraries */
 		"@io-link/core": ["./communication/io-link-core/src"],
 		"@io-link/iodd": ["./communication/io-link-iodd/src"],
 		"@io-link/master-api": ["./communication/io-link-master-api/src"],
