@@ -44,6 +44,8 @@ export const Controls = (props) => {
 
     const [ assignModalOpen, openAssignModal ] = useState<boolean>(false);
 
+    const [ createModalOpen, openCreateModal ] = useState(false);
+
     const [ target, setTarget ] = useState<{x?: number, y?: number}>({})
 
     const [ menuOpen, openMenu ] = useState<string | undefined>(undefined);
@@ -807,7 +809,7 @@ export const Controls = (props) => {
                         </Box> */}
                 
                 <ProgramCanvasModal
-                    open={modalOpen}
+                    open={createModalOpen}
                     onSubmit={(item) => {
                             let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
                             createProgramHMI(item.name, parent).then(() => {
@@ -815,23 +817,23 @@ export const Controls = (props) => {
                             })
           
                         
-                        openModal(false)
+                        openCreateModal(false)
                     }}
                     onClose={() => {
                         setSelectedItem(undefined)
-                        openModal(false)
+                        openCreateModal(false)
                     }}
                     modal={(gql`
-                        type Project {
+                        type HMI {
                             name: String
                         }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "Project") as ObjectTypeDefinitionNode} />
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
                         <HyperTree 
                             id="editor-menu"
                             onCreate={(node) => {
                                 console.log("CREATE", node)
                                 setSelectedItem(node.data)
-                                openModal(true)
+                                openCreateModal(true)
                             }}
                             onSelect={(node) => {
                                 if(node.data.id !== 'root'){
