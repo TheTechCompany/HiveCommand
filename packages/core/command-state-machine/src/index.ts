@@ -193,11 +193,11 @@ export class CommandStateMachine extends EventEmitter {
 		let device =  this.devices?.find((a) => a.name == deviceName)
 
 		console.log({device})
-		
+
 		return await new Promise(async (resolve) => {
 			if(device?.requiresMutex){
 				// console.log("Requires mutex", {deviceName}, {operation},{ release})
-				if(!release){
+				if(release == false){
 					await device?.lock()
 					// console.log("Mutext acquired")
 

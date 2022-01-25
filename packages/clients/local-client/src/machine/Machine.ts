@@ -415,7 +415,7 @@ export class Machine {
 
 	async requestOperation(ev : {device: string, operation: string}){
 		console.log("request operation - (LC Machine)", ev)
-		await this.fsm.performOperation(ev.device, true, ev.operation)
+		await this.fsm.performOperation(ev.device, undefined, ev.operation)
 	}
 
 	async writeState(){
