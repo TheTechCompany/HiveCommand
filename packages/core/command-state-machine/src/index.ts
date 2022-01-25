@@ -192,6 +192,8 @@ export class CommandStateMachine extends EventEmitter {
 	async performOperation(deviceName: string, release?: boolean, operation?: string){
 		let device =  this.devices?.find((a) => a.name == deviceName)
 
+		console.log({device})
+		
 		return await new Promise(async (resolve) => {
 			if(device?.requiresMutex){
 				// console.log("Requires mutex", {deviceName}, {operation},{ release})
@@ -207,7 +209,7 @@ export class CommandStateMachine extends EventEmitter {
 				}
 			}
 
-			// console.log("perform op - fsm", deviceName, operation, {device, operation})
+			console.log("perform op - fsm", deviceName, operation, {device, operation})
 			if(operation){
 				await device?.performOperation(operation);
 				// await this.client.performOperation({device: deviceName, operation})
