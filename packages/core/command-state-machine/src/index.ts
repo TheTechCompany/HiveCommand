@@ -233,9 +233,10 @@ export class CommandStateMachine extends EventEmitter {
 	
 
 	async runFlow(flowId: string){
+		console.log({flowId})
 		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
 		let process = allProcesses?.find((a) => a.id == flowId)
-
+		console.log({procs: this.program?.processes, process})
 		if(!process) return new Error("No process found")
 
 		let runTag = `Run Flow - ${process.name} : ${nanoid()}`
