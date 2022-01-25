@@ -3,6 +3,9 @@
   "version": "1.4.1-alpha.53",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,5 +20,6 @@
     "dotenv": "^14.2.0",
     "pg": "^8.7.1",
     "telnet-client": "^2.0.1"
-  }
+  },
+  "gitHead": "7ca5a9fedb9943ab0994eef1179b39b33c02b655"
 }
