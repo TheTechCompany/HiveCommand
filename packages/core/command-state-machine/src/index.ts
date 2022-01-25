@@ -201,7 +201,7 @@ export class CommandStateMachine extends EventEmitter {
 					await device?.lock()
 					// console.log("Mutext acquired")
 
-				}else{
+				}else if(release == true){
 					// console.log("Mutext waiting")
 					await device?.unlock()
 					// console.log("Mutext released")
