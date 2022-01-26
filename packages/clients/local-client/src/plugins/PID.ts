@@ -51,7 +51,7 @@ export default `
 
 				console.log("Starting PID");
 
-				await this.device.requestState({on: true});
+				await this.device.setState({on: true});
 
 				(async () => {
 					while(this.running){
@@ -74,8 +74,10 @@ export default `
 			async stop(){
 				console.log("Stopping PID");
 				this.running = false;
+
+				await this.device.setState({on: false})
 				
-				await this.device.requestState({speed: 0, on: false});
+				await this.device.requestState({speed: 0});
 			}
 
 `
