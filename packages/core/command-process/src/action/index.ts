@@ -63,6 +63,8 @@ export class ProcessAction {
 
 		let action = this.actions.find((a) => a.id == this.blockType)
 
+        console.log("onEnter", action, this.node);
+
 		await action?.onEnter?.(this.node.options, {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,

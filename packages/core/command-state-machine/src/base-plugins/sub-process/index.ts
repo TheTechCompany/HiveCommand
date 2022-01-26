@@ -14,6 +14,10 @@ export const handler = async (
 		console.log("Start sub process")
 		// console.log("Start sub process", sub_process)
 		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
+		
+		process.on('transition', (transition) => {
+			console.log("Subprocess transition", transition)
+		})
 
 		await process.start()
 
