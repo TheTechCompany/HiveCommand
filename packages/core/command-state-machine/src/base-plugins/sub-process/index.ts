@@ -8,8 +8,10 @@ export const handler = async (
 ) => {
 
 	let sub_process = node.sub_processes?.find((a) => a.id == options?.["sub-process"])
-	if(sub_process){
+	console.log({sub_process, hub})
 
+	if(sub_process){
+		console.log("Start sub process")
 		// console.log("Start sub process", sub_process)
 		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
 
