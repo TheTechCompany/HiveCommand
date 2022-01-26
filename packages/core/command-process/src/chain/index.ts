@@ -101,7 +101,6 @@ export class ProcessChain extends EventEmitter {
   }
 
   async run() {
-    console.log("Run CHain", this.id)
     await new Promise(async (resolve, reject) => {
       let current_actions = this.current;
 
@@ -162,11 +161,11 @@ export class ProcessChain extends EventEmitter {
 
           this.current.push(newItem);
         }
-
         // if(priority[0].target) this.current[ix] = priority[0].target
 
         // this.process.updateState(this.id, x)
       }
+
     });
   }
 
@@ -215,6 +214,7 @@ export class ProcessChain extends EventEmitter {
         output_conds,
       };
     });
+    console.log(results)
     return results;
   }
 
