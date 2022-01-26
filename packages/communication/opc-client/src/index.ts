@@ -44,6 +44,7 @@ export default class Client {
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
             requestedSessionTimeout: 10 * 60 * 1000, //10 minutes
+            keepSessionAlive: true,
             connectionStrategy: {
                 maxRetry: 2,
                 initialDelay: 2000,
