@@ -1,13 +1,14 @@
 import React, {useMemo, useState, useContext} from 'react';
-import { Box, Text } from 'grommet';
+import { Box, Button, Text } from 'grommet';
 import { LineGraph } from '@hexhive/ui';
 import { useQuery, gql } from '@apollo/client';
 import moment from 'moment-timezone';
 import { DeviceControlContext } from '../context';
+import { ControlGraphModal } from '../../../components/modals/device-control-graph';
 
 const GraphBlock = (props) => {
 	return (
-		<Box background="neutral-1" flex elevation="small" round="xsmall">
+		<Box background="neutral-1" flex elevation="small" round="xsmall" width={{min: "medium"}}>
 			<Box direction="row" pad={{horizontal: 'small'}}><Text>{props.label}</Text></Box>
 			<LineGraph
 				data={props.data || []}
@@ -19,7 +20,7 @@ const GraphBlock = (props) => {
 
 export const DeviceControlGraph : React.FC<any> = (props) => {
 
-	const { controlId } = useContext(DeviceControlContext)
+	const { controlId, program } = useContext(DeviceControlContext)
 
 	const [ dayBefore, setDayBefore ] = useState<string>(new Date(Date.now() - (1000 * 60 * 60 * 24 * 2)).toISOString())
 
@@ -110,6 +111,8 @@ export const DeviceControlGraph : React.FC<any> = (props) => {
 			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: x.value}
 		}) 
 	}, [data?.commandDeviceTimeseries3])
+
+	const [modalOpen, openModal] = useState(false)
 	// const values = [];
 	// const query = useQuery({suspense: false, staleWhileRevalidate: true})
 
@@ -129,8 +132,15 @@ export const DeviceControlGraph : React.FC<any> = (props) => {
 			background="light-1" 
 			elevation="small" 
 			round="xsmall">
+			<ControlGraphModal open={modalOpen} 
+			devices={program.devices} 
+			onClose={()=>{openModal(false)}}
+			onSubmit={()=>{openModal(false)}
+			}/>
+			<Box>
+<Button onClick={()=> openModal(true)}/>			</Box>
 				
-			<Box gap="xsmall" flex direction="row">
+			<Box gap="xsmall" flex direction="row" wrap>
 				{/* Total Flows */}
 				<GraphBlock
 					label={`FIT301 - Last 7 days | Throughput: ${total?.toFixed(2)} Liters`}
@@ -143,8 +153,6 @@ export const DeviceControlGraph : React.FC<any> = (props) => {
 					data={values1}
 					xKey={'timestamp'}
 					yKey={'value'} />
-			</Box>
-			<Box gap="xsmall" flex direction="row">
 				{/* Membrane pressures */}
 				<GraphBlock
 					label={"PT201 - Pressure"}
