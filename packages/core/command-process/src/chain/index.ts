@@ -92,7 +92,7 @@ export class ProcessChain extends EventEmitter {
   }
 
   getState(key: string) {
-    console.log({prc: this.process})
+    // console.log({prc: this.process})
     this.process.getState(key);
   }
 
