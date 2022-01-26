@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid"
 import { mutation, useMutation } from "../../gqty"
 
 export const useCreateProgramPlaceholder = (programId: string) => {
@@ -341,4 +342,109 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 			}
 		})
 	}
+}
+
+export const useCreatePlaceholderPlugin = (programId: string, deviceId: string) => {
+
+	const [mutateFn] = useMutation((mutation, args: { 
+		id?: string, 
+		rules: string, 
+		plugin: string, 
+		configuration: any 
+	}) => {
+			let conf = [];
+
+			if (args.configuration) {
+				for (var k in args.configuration) {
+					conf.push({ id: nanoid(), key: k, value: args.configuration[k] })
+				}
+			}
+
+			console.log({args})
+			let ruleUpdate = {};
+
+			if(args.rules){
+				ruleUpdate = {
+					rules: {connect: {where: {node: {id: args.rules}}}}
+				}
+				
+			}
+
+
+			let pluginUpdate = {};
+
+			if(args.id){
+				pluginUpdate = {
+					plugins: [{
+						where: {node: {id: args.id}},
+						update: {
+							node: {
+								plugin: {connect: {where: {node: {id: args.plugin}}}},
+								...ruleUpdate,
+								configuration: conf.map((c) => ({
+									where: {node: {key: c.key}},
+									update: {
+										node: {
+											key: c.key,
+											value: c.value
+										}
+									}
+								}))
+							}
+						}
+					}]
+				}
+			}else{
+				pluginUpdate = {
+					plugins: [{
+						create: {
+							node: {
+								plugin: {connect: {where: {node: {id: args.plugin}}}},
+								...ruleUpdate,
+								configuration: {
+									create: conf.map((c) => ({
+										node: {
+											key: c.key,
+											value: c.value
+										}
+									}))
+								}
+							}
+						}
+					}]
+				}
+			}
+
+			const item = mutation.updateCommandProgramDevicePlaceholders({
+				where: {id: deviceId, program: {id: programId}},
+				update: {
+					...pluginUpdate
+				}
+			})
+
+			// const item = mutation.updateCommandProgramDevicePlaceholders({
+			// 	where: { id: deviceId },
+			// 	update: {
+			// 		...pluginUpdate,
+			// 	}
+			// })
+
+			return {
+				item: {
+					...item.commandProgramDevicePlaceholders?.[0]
+				}
+			}
+	})
+
+	return (plugin: string, rules: string, configuration: any, id?: string) => {
+		return mutateFn({
+			args: {
+				plugin,
+				configuration,
+				rules,
+				id
+			}
+		})
+	}
+
 }

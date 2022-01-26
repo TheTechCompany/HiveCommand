@@ -83,16 +83,16 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 				return( <Select
 					labelKey="name"	
 					value={plugin?.configuration?.[item.key]}
-					valueKey={{key: 'id', reduce: true}}
+					valueKey={{key: 'name', reduce: true}}
 					onChange={({value}) => onChangeConfiguration(item.key, value)}
 					options={props.devices || []} />)
 			case "DeviceState":
 				return (<Select 	
 						labelKey="key"
 						value={plugin?.configuration?.[item.key]}
-						valueKey={{key: 'id', reduce: true}}
+						valueKey={{key: 'key', reduce: true}}
 						onChange={({value}) => onChangeConfiguration(item.key, value)}
-						options={props.devices.find((a) =>  a.id == requirements?.device)?.type?.state} />)
+						options={props.devices.find((a) =>  a.name == requirements?.device)?.type?.state || []} />)
 			default: return;
 		}
 	}
