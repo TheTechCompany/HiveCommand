@@ -46,8 +46,10 @@ export default `
 
 			async start(){
 				this.running = true;
-				console.log({thisvalue: this.instance.setTarget, thissecond: this.instance.update})
+				// console.log({thisvalue: this.instance.setTarget, thissecond: this.instance.update})
 				this.instance.setTarget(this.target);
+
+				console.log("Starting PID");
 
 				(async () => {
 					while(this.running){
@@ -62,11 +64,13 @@ export default `
 						await new Promise(resolve => setTimeout(resolve, 1000));
 					}
 				})();
+				console.log("Started PID");
 				// console.log(this.device, this.device.fsm.state)
 
 			}
 
 			async stop(){
+				console.log("Stopping PID");
 				this.running = false;
 				
 				await this.device.requestState({speed: 0});
