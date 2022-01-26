@@ -17,6 +17,8 @@ export default `
 
 			device = null;
 
+			instance = null;
+
 			constructor(device, options){
 				this.device = device;
 				console.log({PIDController})
