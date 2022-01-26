@@ -52,7 +52,7 @@ export default `
 
 					const addValue = this.instance.update(targetValue); 
 
-					console.log({addValue, targetValue, actuatorValue})
+					console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 					await this.device.requestState({speed: actuatorValue += addValue}); 
 				
 					await new Promise(resolve => setTimeout(resolve, 1000));
