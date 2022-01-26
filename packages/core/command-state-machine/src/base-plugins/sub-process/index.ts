@@ -16,6 +16,8 @@ export const handler = async (
 		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
 
 		await process.start()
+
+		console.log("Stop sub process")
 		// console.log("End sub process", sub_process)
 	
 	}
