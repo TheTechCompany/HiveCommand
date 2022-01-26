@@ -43,7 +43,7 @@ export default `
 
 			async start(){
 				this.running = true;
-				console.log({this})
+				console.log({thisvalue: this})
 				this.instance.setTarget(this.target)
 
 				(async () => {
