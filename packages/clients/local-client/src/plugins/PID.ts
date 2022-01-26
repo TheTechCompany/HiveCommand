@@ -19,6 +19,7 @@ export default `
 
 			constructor(device, options){
 				this.device = device;
+				console.log({PIDController})
 				this.instance = new PIDController({
 					k_p: parseFloat(options.p),
 					k_i: parseFloat(options.i),
