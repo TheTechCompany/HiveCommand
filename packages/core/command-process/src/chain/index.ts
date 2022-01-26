@@ -44,7 +44,7 @@ export class ProcessChain extends EventEmitter {
     this.program = chain;
     this.process = process;
 
-    console.log(JSON.stringify(this.program.edges))
+    console.log("EDGES", JSON.stringify(this.program.edges))
 
     this.action_types = actions || [];
 
@@ -101,6 +101,7 @@ export class ProcessChain extends EventEmitter {
   }
 
   async run() {
+    console.log("Run CHain", this.id)
     await new Promise(async (resolve, reject) => {
       let current_actions = this.current;
 

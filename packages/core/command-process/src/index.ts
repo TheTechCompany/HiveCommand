@@ -233,7 +233,7 @@ export class Process extends EventEmitter{
 		let hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
         
         this.emit('started')
-
+        log.debug(`CommandProcess -`, {hasNext, running: this.running})
         // console.log(this.chains)
         while(hasNext && this.running){
 			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
