@@ -214,7 +214,7 @@ export class ProcessChain extends EventEmitter {
         output_conds,
       };
     });
-    console.log(results)
+    // console.log(results)
     return results;
   }
 
