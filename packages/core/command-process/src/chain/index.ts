@@ -67,6 +67,7 @@ export class ProcessChain extends EventEmitter {
     // this.current_running = []
     // this.current_run = [false]
 
+    this.getState = this.getState.bind(this);
     this.performOperation = this.performOperation.bind(this);
   }
   
@@ -91,6 +92,7 @@ export class ProcessChain extends EventEmitter {
   }
 
   getState(key: string) {
+    console.log({prc: this.process})
     this.process.getState(key);
   }
 

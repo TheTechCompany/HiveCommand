@@ -80,6 +80,7 @@ export class Process extends EventEmitter{
     ){
         super();
 
+        console.log({getState: this.getState})
         this.getState = getState
 
         this.perform = performOperation
