@@ -51,7 +51,7 @@ export default `
 
 				console.log("Starting PID");
 
-				await this.device.requestState({on: true})
+				await this.device.requestState({on: true});
 
 				(async () => {
 					while(this.running){
