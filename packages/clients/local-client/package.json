@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-client",
-  "version": "1.4.1-alpha.73",
+  "version": "1.4.1-alpha.74",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -41,7 +41,7 @@
     "@hive-command/plugin-base": "^1.4.0",
     "@hive-command/plugin-blessed": "^1.4.1-alpha.26",
     "@hive-command/sms": "^1.4.0",
-    "@hive-command/state-machine": "^1.4.1-alpha.73",
+    "@hive-command/state-machine": "^1.4.1-alpha.74",
     "@hive-command/subscription-lock": "^1.4.0",
     "@io-link/core": "^1.4.1-alpha.39",
     "@io-link/iodd": "^1.4.0",
