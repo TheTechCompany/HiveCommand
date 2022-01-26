@@ -244,6 +244,7 @@ export class CommandStateMachine extends EventEmitter {
 
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
+			if(!this.state) return;
 			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]

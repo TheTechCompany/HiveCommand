@@ -67,7 +67,7 @@ export class Process extends EventEmitter{
 
     private perform: (device: string, release: boolean, operation: string) => Promise<any>
 
-    public getState: any;
+    public getState: (key: string) => {[key: string]: any};
 
     private actions : CommandAction[];
 
@@ -75,7 +75,7 @@ export class Process extends EventEmitter{
         process: CommandProcess, 
         actions: CommandAction[], 
         performOperation: (device: string, release: boolean, operation: string) => Promise<any>, 
-        getState: any,
+        getState: ((key: string) => {[key: string]: any}),
         parent?: CommandProcess
     ){
         super();

@@ -192,7 +192,7 @@ export class ProcessChain extends EventEmitter {
 
         let checkValue = `${cond.value_id}`;
 
-        console.log(input, inputValue, cond.input_id)
+        console.log(this.process, this.pid, this.process.getState(cond.input_id), cond.input_key, cond.input_id)
 
         // console.log(input, inputValue, checkValue)
 
