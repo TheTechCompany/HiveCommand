@@ -50,8 +50,6 @@ export default class Client {
                 maxDelay: 10 * 1000
             }
         })
-
-        // this.client.connect()
     }
 
     async discoverOnNetwork(){
