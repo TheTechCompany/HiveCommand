@@ -45,13 +45,14 @@ export default `
 				this.running = true;
 				this.instance.setTarget(this.target)
 
-				console.log(this.device, this.device.fsm.state)
+				// console.log(this.device, this.device.fsm.state)
 				while(this.running){
 					let targetValue = this.device.fsm.state.getByKey(this.targetDevice, this.targetKey)
 					let actuatorValue = this.device.fsm.state.getByKey(this.device.name, 'speed') || 0
 
 					const addValue = this.instance.update(targetValue); 
-	
+
+					console.log({addValue, targetValue, actuatorValue})
 					await this.device.requestState({speed: actuatorValue += addValue}); 
 				
 					await new Promise(resolve => setTimeout(resolve, 1000));
