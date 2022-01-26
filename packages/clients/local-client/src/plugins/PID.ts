@@ -47,7 +47,7 @@ export default `
 			async start(){
 				this.running = true;
 				console.log({thisvalue: this.instance.setTarget, thissecond: this.instance.update})
-				this.instance.setTarget(this.target)
+				this.instance.setTarget(this.target);
 
 				(async () => {
 					while(this.running){
