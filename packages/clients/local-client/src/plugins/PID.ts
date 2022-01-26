@@ -51,6 +51,8 @@ export default `
 
 				console.log("Starting PID");
 
+				await this.device.requestState({on: true})
+
 				(async () => {
 					while(this.running){
 						let targetValue = this.device.fsm.state.getByKey(this.targetDevice, this.targetKey)
@@ -73,7 +75,7 @@ export default `
 				console.log("Stopping PID");
 				this.running = false;
 				
-				await this.device.requestState({speed: 0});
+				await this.device.requestState({speed: 0, on: false});
 			}
 
 `
