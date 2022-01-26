@@ -192,6 +192,8 @@ export class ProcessChain extends EventEmitter {
 
         let checkValue = `${cond.value_id}`;
 
+        console.log(input, inputValue, cond.input_id)
+
         // console.log(input, inputValue, checkValue)
 
         if (!cond.check(inputValue, checkValue)) {
