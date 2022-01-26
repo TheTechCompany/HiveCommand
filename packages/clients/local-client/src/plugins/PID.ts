@@ -45,6 +45,8 @@ export default `
 			}
 
 			async start(){
+				let runtimeId = nanoid();
+
 				this.running = true;
 				// console.log({thisvalue: this.instance.setTarget, thissecond: this.instance.update})
 				this.instance.setTarget(this.target);
@@ -59,8 +61,8 @@ export default `
 						let actuatorValue = this.device.fsm.state.getByKey(this.device.name, 'speed') || 0
 	
 						const addValue = this.instance.update(targetValue); 
-						
-						console.log({targetDevice: this.targetDevice, id: this.id});
+
+						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId});
 
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 						await this.device.requestState({speed: actuatorValue += addValue}); 
