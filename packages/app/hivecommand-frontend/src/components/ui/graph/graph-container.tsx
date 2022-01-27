@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Text } from "grommet";
+import { Box, Text, Button } from "grommet";
+import { Close } from "grommet-icons";
 import { Graph } from ".";
 
 export const GraphContainer = (props) => {
@@ -11,10 +12,17 @@ export const GraphContainer = (props) => {
       round="xsmall"
       width={{ min: "medium" }}
     >
-      <Box direction="row" pad={{ horizontal: "small" }} justify="between">
+      <Box direction="row" pad={"xsmall"} justify="between">
         <Text>{props.label}</Text>
+        <Button
+          onClick={props.onRemove}
+          icon={<Close size="small" />}
+          plain
+          style={{ padding: 6, borderRadius: 3 }}
+          hoverIndicator
+        />
       </Box>
-      {props.children}
+      <Box flex> {props.children}</Box>
     </Box>
   );
 };

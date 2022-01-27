@@ -6,7 +6,7 @@ import { useQuery, gql } from "@apollo/client";
 import moment from "moment-timezone";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../../../components/modals/device-control-graph";
-import { GraphContainer } from "../../../components/ui/graph";
+import { Graph, GraphContainer } from "../../../components/ui/graph";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { controlId, program } = useContext(DeviceControlContext);
@@ -104,13 +104,17 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       </Box>
 
       <Box gap="xsmall" flex direction="row" wrap>
-        {values.map((graph) => (
+        {values.map((graph, ix) => (
           <GraphContainer
+            onRemove={() => {
+              let arr = deviceList.slice();
+              arr.splice(ix, 1);
+              setDeviceList(arr);
+            }}
             label={`${graph.device.name} - ${graph.key}`}
-            data={graph.value}
-            xKey={"timestamp"}
-            yKey={"value"}
-          />
+          >
+            <Graph data={graph.value} xKey={"timestamp"} yKey={"value"} />
+          </GraphContainer>
         ))}
       </Box>
     </Box>
