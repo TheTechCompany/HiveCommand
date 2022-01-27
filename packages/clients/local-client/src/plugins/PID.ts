@@ -62,7 +62,7 @@ export default `
 	
 						const addValue = this.instance.update(targetValue); 
 
-						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId});
+						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId, actuatorValue});
 
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 						await this.device.requestState({speed: actuatorValue += addValue}); 
@@ -79,9 +79,9 @@ export default `
 				console.log("Stopping PID");
 				this.running = false;
 
-				await this.device.setState({on: false})
-				
 				await this.device.requestState({speed: 0});
+				await this.device.setState({on: false})
+
 			}
 
 `
