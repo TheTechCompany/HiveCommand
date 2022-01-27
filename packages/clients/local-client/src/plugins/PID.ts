@@ -80,7 +80,15 @@ export default `
 				this.running = false;
 
 				await this.device.requestState({speed: 0});
-				await this.device.setState({on: false})
+				await this.device.setState({speed: 0, on: false});
+
+				// await new Promise((resolve) => {
+
+				// 	setTimeout(() => {
+				// 		resolve(true)
+				// 	}, 500);
+				// })
+				// await this.device.setState({on: false, speed: 0});
 
 			}
 

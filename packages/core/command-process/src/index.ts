@@ -243,7 +243,7 @@ export class Process extends EventEmitter{
 
 			await Promise.all(this.chains.entrypoints.map((chain) => chain.next()));
 
-			await new Promise((res, rej) => setTimeout(() => res(true), 10))
+			await new Promise((res, rej) => setTimeout(() => res(true), 500))
             /*
                 Get current_state node
                 -> if hasRun == false : execute action
@@ -275,7 +275,7 @@ export class Process extends EventEmitter{
 
 			await Promise.all(this.chains.shutdown.map((chain) => chain.next()));
 
-			await new Promise((res, rej) => setTimeout(() => res(true), 10))
+			await new Promise((res, rej) => setTimeout(() => res(true), 500))
             /*
                 Get current_state node
                 -> if hasRun == false : execute action

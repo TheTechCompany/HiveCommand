@@ -300,7 +300,7 @@ export class CommandStateMachine extends EventEmitter {
 
 				this.emit('event_loop')
 
-				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
+				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 500))
 			}
 
 		}else{
