@@ -119,6 +119,8 @@ export class CommandStateMachine extends EventEmitter {
 		log.debug(`Loading new program ${program.processes.length} processes`)
 		this.program = program;
 
+		this.state = new State(program.initialState || {});
+
 		this.processes = program.processes.map((process) => {
 			return new Process(process, base_actions as any, this.performOperation, (key: string) => {
 				return this.state?.get(key)
@@ -133,7 +135,6 @@ export class CommandStateMachine extends EventEmitter {
 			process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		})
 
-		this.state = new State(program.initialState || {});
 
 	}
 
@@ -192,14 +193,16 @@ export class CommandStateMachine extends EventEmitter {
 	async performOperation(deviceName: string, release?: boolean, operation?: string){
 		let device =  this.devices?.find((a) => a.name == deviceName)
 
+		// console.log({device})
+
 		return await new Promise(async (resolve) => {
 			if(device?.requiresMutex){
 				// console.log("Requires mutex", {deviceName}, {operation},{ release})
-				if(!release){
+				if(release == false){
 					await device?.lock()
 					// console.log("Mutext acquired")
 
-				}else{
+				}else if(release == true){
 					// console.log("Mutext waiting")
 					await device?.unlock()
 					// console.log("Mutext released")
@@ -207,7 +210,7 @@ export class CommandStateMachine extends EventEmitter {
 				}
 			}
 
-			// console.log("perform op - fsm", deviceName, operation, {device, operation})
+			log.debug("perform op - fsm", deviceName, operation, {device, operation})
 			if(operation){
 				await device?.performOperation(operation);
 				// await this.client.performOperation({device: deviceName, operation})
@@ -231,15 +234,17 @@ export class CommandStateMachine extends EventEmitter {
 	
 
 	async runFlow(flowId: string){
+		console.log({flowId})
 		let allProcesses = this.program?.processes?.map((x) => [...(x.sub_processes || []).map((y) => ({...y, parent: x})), x]).reduce((prev, curr) => [...prev, ...curr], [])
 		let process = allProcesses?.find((a) => a.id == flowId)
-
+		console.log({procs: this.program?.processes, process})
 		if(!process) return new Error("No process found")
 
 		let runTag = `Run Flow - ${process.name} : ${nanoid()}`
 
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
+			if(!this.state) return;
 			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
@@ -295,7 +300,7 @@ export class CommandStateMachine extends EventEmitter {
 
 				this.emit('event_loop')
 
-				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 10))
+				await new Promise((resolve, reject) => setTimeout(() => resolve(true), 500))
 			}
 
 		}else{

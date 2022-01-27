@@ -290,6 +290,96 @@ export const useUpdateHMINode = (programId: string, hmiId: string) => {
   };
 };
 
+export const useDeleteHMINode = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        nodeId: string;
+      }
+    ) => {
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                node: {
+                  nodes: [
+                    {
+                      delete: [{
+                        where: { node: { id: args.nodeId } }
+                      }],
+                    },
+                  ],
+                },
+              },
+            },
+          ],
+        },
+      });
+      return {
+        item: {
+          ...item.commandPrograms?.[0],
+        },
+      };
+    }
+  );
+  return async (node_id: string) => {
+    return await mutateFn({
+      args: {
+        nodeId: node_id,
+      },
+    });
+  };
+}
+
+export const useDeleteHMIPath = (programId: string, hmiId: string) => {
+  const [mutateFn] = useMutation(
+    (
+      mutation,
+      args: {
+        pathId: string;
+      }
+    ) => {
+      const item = mutation.updateCommandPrograms({
+        where: { id: programId },
+        update: {
+          hmi: [
+            {
+              where: { node: { id: hmiId } },
+              update: {
+                
+                node: {
+                  paths: [{
+                    delete: [{
+                      where: { node: { id: args.pathId } }
+                    }]
+                  }]
+                },
+              },
+            },
+          ],
+        },
+      });
+      return {
+        item: {
+          ...item.commandPrograms?.[0],
+        },
+      };
+    }
+  );
+
+  return async (path_id: string) => {
+    return await mutateFn({
+      args: {
+        pathId: path_id,
+      },
+    });
+  };
+}
+
 export const useConnectHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
     (

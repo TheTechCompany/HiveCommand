@@ -9,7 +9,7 @@ import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 import { DeviceInterlock } from '../../../../components/modals/device-interlock';
 import { DeviceSetpointModal } from '../../../../components/modals/device-setpoint';
 import { ListBox } from '../../../../components/ListBox';
-import { useCreatePlaceholderInterlock, useCreatePlaceholderSetpoint, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
+import { useCreatePlaceholderInterlock, useCreatePlaceholderPlugin, useCreatePlaceholderSetpoint, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
 
 export interface DeviceSingleProps {
 	program?: string;
@@ -53,6 +53,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	const createPlaceholderSetpoint = useCreatePlaceholderSetpoint(props.program, deviceId)
 	const updatePlaceholderSetpoint = useUpdatePlaceholderSetpoint(props.program, deviceId)
 
+	const createPlaceholderPlugin = useCreatePlaceholderPlugin(props.program, deviceId)
 	// const [ updateSetpoint, updateSetpointInfo ] = useMutation((mutation, args: {
 	// 	id: string,
 	// 	name: string,
@@ -454,8 +455,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 								lock.id,
 								lock.inputDevice,
 								lock.inputDeviceKey,
-								lock.comparator,
 								lock.valueType,
+								lock.comparator,
 								lock.assertion,
 								lock.action
 						).then(() => {
@@ -465,8 +466,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 						createPlaceholderInterlock(
 								lock.inputDevice,
 								lock.inputDeviceKey,
-								lock.comparator,
 								lock.valueType,
+								lock.comparator,
 								lock.assertion,
 								lock.action
 						).then(() => {
@@ -512,9 +513,9 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				open={modalOpen}
 				onSubmit={(config) => {
 
-					// addDevicePlugin({ args: config }).then(() => {
-					// 	refetch()
-					// })
+					createPlaceholderPlugin(config.plugin, config.rules, config.configuration, config.id).then(() => {
+						refetch()
+					})
 				}}
 				onClose={() => openModal(false)}
 				devices={devices}

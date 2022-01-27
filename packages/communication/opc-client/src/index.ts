@@ -43,14 +43,14 @@ export default class Client {
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
+            requestedSessionTimeout: 10 * 60 * 1000, //10 minutes
+            keepSessionAlive: true,
             connectionStrategy: {
                 maxRetry: 2,
                 initialDelay: 2000,
                 maxDelay: 10 * 1000
             }
         })
-
-        // this.client.connect()
     }
 
     async discoverOnNetwork(){
@@ -200,7 +200,7 @@ export default class Client {
             this.session?.call({
                 objectId: nodeId,
                 methodId: methodId,
-                inputArguments: input_args
+                inputArguments: input_args,
             }, (err, result) => {
                 if(err) reject(err)
                 resolve(result)

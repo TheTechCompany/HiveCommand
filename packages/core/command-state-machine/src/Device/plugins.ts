@@ -1,3 +1,4 @@
+import { nanoid } from 'nanoid';
 import vm from 'vm';
 import { StateDevice } from '.';
 
@@ -25,7 +26,8 @@ export const getPluginClass = (classString: string, imports?: {key: string, modu
 		require: require,
 		setTimeout,
 		setInterval,
-		console
+		console,
+		nanoid
 	})
 
 	return classConstructor

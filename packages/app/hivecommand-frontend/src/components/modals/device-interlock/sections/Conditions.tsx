@@ -119,6 +119,8 @@ export const ConditionSection = (props) => {
 			// }
 	}, [interlock.state])
 
+	console.log(interlock)
+
 	return (
 		<Box>
 			{/* <Box direction="row" justify="end">
@@ -137,8 +139,8 @@ export const ConditionSection = (props) => {
 						options={devices?.find((a) => a.id == interlock?.inputDevice)?.type?.state || []}
 						placeholder="State Key" />
 					<FormControl 
-						value={interlock.comparator}
-						options={COMPARATORS}
+						value={interlock.comparator ||''}
+						options={COMPARATORS || []}
 						labelKey='key'
 						valueKey='key'
 						onChange={(value) => setInterlock({...interlock, comparator: value})}

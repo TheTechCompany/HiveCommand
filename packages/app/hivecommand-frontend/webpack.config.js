@@ -34,7 +34,7 @@ module.exports = (webpackConfigEnv, argv) => {
       }),
       new webpack.EnvironmentPlugin({
         ...process.env,
-        PUBLIC_URL: '/dashboard/command'
+        PUBLIC_URL: process.env.NODE_ENV == 'production' ? '/dashboard/command' : '/dashboard/hive-command'
       }), 
     ]
   });

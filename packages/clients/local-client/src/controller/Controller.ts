@@ -119,7 +119,7 @@ export class Controller {
 						func: async (inputs) => {
 							const [value] = inputs;
 
-							// console.log({value}, "skipTo")
+							console.log({value}, "skipTo")
 						
 							const result = await this.machine?.runOneshot(value.value.toString())
 							// if(result) throw result;
