@@ -1,172 +1,135 @@
-import React, {useMemo, useState, useContext} from 'react';
-import { Box, Button, Text } from 'grommet';
-import { LineGraph } from '@hexhive/ui';
-import { useQuery, gql } from '@apollo/client';
-import moment from 'moment-timezone';
-import { DeviceControlContext } from '../context';
-import { ControlGraphModal } from '../../../components/modals/device-control-graph';
+import React, { useMemo, useState, useContext } from "react";
+import { Box, Button, Text } from "grommet";
+import { LineGraph } from "@hexhive/ui";
+import { useQuery, gql } from "@apollo/client";
+import moment from "moment-timezone";
+import { DeviceControlContext } from "../context";
+import { ControlGraphModal } from "../../../components/modals/device-control-graph";
 
 const GraphBlock = (props) => {
-	return (
-		<Box background="neutral-1" flex elevation="small" round="xsmall" width={{min: "medium"}}>
-			<Box direction="row" pad={{horizontal: 'small'}}><Text>{props.label}</Text></Box>
-			<LineGraph
-				data={props.data || []}
-				xKey={props.xKey || 'timestamp'}
-				yKey={props.yKey || 'value'} />
-		</Box>
-	)
-}
+  return (
+    <Box
+      background="neutral-1"
+      flex
+      elevation="small"
+      round="xsmall"
+      width={{ min: "medium" }}
+    >
+      <Box direction="row" pad={{ horizontal: "small" }}>
+        <Text>{props.label}</Text>
+      </Box>
+      <LineGraph
+        data={props.data || []}
+        xKey={props.xKey || "timestamp"}
+        yKey={props.yKey || "value"}
+      />
+    </Box>
+  );
+};
 
-export const DeviceControlGraph : React.FC<any> = (props) => {
+export const DeviceControlGraph: React.FC<any> = (props) => {
+  const { controlId, program } = useContext(DeviceControlContext);
 
-	const { controlId, program } = useContext(DeviceControlContext)
+  const [dayBefore, setDayBefore] = useState<string>(
+    new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
+  );
 
-	const [ dayBefore, setDayBefore ] = useState<string>(new Date(Date.now() - (1000 * 60 * 60 * 24 * 2)).toISOString())
+  const [deviceList, setDeviceList] = useState([]);
 
-	const { data } = useQuery(gql`
-		query TimeSeriesData ($device: String, $device1: String, $device2: String, $device3: String, $deviceId: String, $startDate: String, $valueKey: String, $valueKey2: String){
-			commandDeviceTimeseriesTotal(deviceId: $deviceId, device: $device, startDate: $startDate, valueKey: $valueKey) {
-				total
-			}
+  const { data } = useQuery(
+    gql`
+      query TimeSeriesData(
+        $deviceId: String
+        $startDate: String
+      ) {
+	commandDevices{name}
 
-			commandDeviceTimeseriesTotal1:commandDeviceTimeseriesTotal(deviceId: $deviceId, device: $device1, startDate: $startDate, valueKey: $valueKey) {
-				total
-			}
+		${deviceList.map((graph) => {
+      const queryName = program.devices?.find(
+        (item) => graph.deviceID == item.id
+      )?.name;
 
-			commandDeviceTimeseries(deviceId: $deviceId, device: $device, startDate: $startDate, valueKey: $valueKey) {
+      const queryKey = program.devices
+        ?.find((item) => graph.deviceID == item.id)
+        ?.type.state.find((item) => graph.keyID == item.id)?.key;
+
+      return `${queryName}:commandDeviceTimeseries(deviceId:$deviceId, startDate:$startDate, device:"${queryName}", valueKey:"${queryKey}"){
 				timestamp
 				value
-			}
-			commandDeviceTimeseries1:commandDeviceTimeseries(deviceId: $deviceId, device: $device1, startDate: $startDate, valueKey: $valueKey) {
-				timestamp
-				value
-			}
 
-			commandDeviceTimeseries2:commandDeviceTimeseries(deviceId: $deviceId, device: $device2, startDate: $startDate, valueKey: $valueKey2) {
-				timestamp
-				value
-			}
+			}`;
+    })}
+	}
+       
+    `,
+    {
+      variables: {
+        deviceId: controlId,
+        startDate: dayBefore,
+      },
+    }
+  );
 
-			commandDeviceTimeseries3:commandDeviceTimeseries(deviceId: $deviceId, device: $device3, startDate: $startDate, valueKey: $valueKey2) {
-				timestamp
-				value
-			}
-		}
-	`, {
-		variables: {
-			device: 'FIT301',
-			device1: 'FIT101',
-			device2: 'PT201',
-			device3: 'PT301',
-			deviceId: controlId,
-			valueKey: 'flow',
-			valueKey2: 'pressure',
-			startDate: dayBefore
-		}
-	})
+  console.log("Render", data);
 
-	console.log("Render", data)
-	
-	const total = useMemo(() => {
-		return data?.commandDeviceTimeseriesTotal?.total;
-	}, [data?.commandDeviceTimeseriesTotal])
+  const values = useMemo(() => {
+    return deviceList.map((graph) => {
+      const device = program.devices?.find((item) => graph.deviceID == item.id);
 
-	const total1 = useMemo(() => {
-		return data?.commandDeviceTimeseriesTotal1?.total;
-	}, [data?.commandDeviceTimeseriesTotal1])
+      const key = device?.type.state.find(
+        (item) => graph.keyID == item.id
+      )?.key;
 
+      const value = data?.[device.name];
 
-	const values = useMemo(() => {
-		return data?.commandDeviceTimeseries?.map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).tz(Intl.DateTimeFormat().resolvedOptions().timeZone).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries])
+      return {
+        device,
+        key,
+        value,
+      };
+    });
+  }, [deviceList, program, data]);
 
+  const [modalOpen, openModal] = useState(false);
 
-	const values1 = useMemo(() => {
-		return data?.commandDeviceTimeseries1?.filter((a) => a.value != '0' && a.value != 0).map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime()) // + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: parseFloat(x.value)}
-		}) 
-	}, [data?.commandDeviceTimeseries1])
-	
-	const values2 = useMemo(() => {
-		return data?.commandDeviceTimeseries2?.filter((a) => a.value != '0' && a.value != 0).map((x) => {
-			let date = new Date(x.timestamp)
-			console.log(date.getTimezoneOffset() * 60000)
-			date = new Date(date.getTime()) //- (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries2])
+  return (
+    <Box
+      pad="xsmall"
+      flex
+      gap="xsmall"
+      background="light-1"
+      elevation="small"
+      round="xsmall"
+    >
+      <ControlGraphModal
+        open={modalOpen}
+        devices={program.devices}
+        onClose={() => {
+          openModal(false);
+        }}
+        onSubmit={(graph) => {
+          openModal(false);
+          setDeviceList([...deviceList, graph]);
+        }}
+      />
+      <Box>
+        <Button
+          onClick={() => openModal(true)}
+          style={{ padding: 6, borderRadius: 3 }}
+          hoverIndicator
+        />
+      </Box>
 
-
-	const values3 = useMemo(() => {
-		return data?.commandDeviceTimeseries3?.map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries3])
-
-	const [modalOpen, openModal] = useState(false)
-	// const values = [];
-	// const query = useQuery({suspense: false, staleWhileRevalidate: true})
-
-
-	// const values = query.commandDeviceTimeseries({
-	// 	device: 'FIT301', 
-	// 	valueKey: 'flow', 
-	// 	deviceId: props.match.params.id, 
-	// 	startDate: dayBefore
-	//  })
-
-	return (
-		<Box 
-			pad="xsmall"
-			flex
-			gap="xsmall"
-			background="light-1" 
-			elevation="small" 
-			round="xsmall">
-			<ControlGraphModal open={modalOpen} 
-			devices={program.devices} 
-			onClose={()=>{openModal(false)}}
-			onSubmit={()=>{openModal(false)}
-			}/>
-			<Box>
-<Button onClick={()=> openModal(true)}/>			</Box>
-				
-			<Box gap="xsmall" flex direction="row" wrap>
-				{/* Total Flows */}
-				<GraphBlock
-					label={`FIT301 - Last 7 days | Throughput: ${total?.toFixed(2)} Liters`}
-					data={values}
-					xKey={'timestamp'}
-					yKey={'value'} />
-			
-				<GraphBlock 
-					label={`FIT101 - Last 7 days | Throughput: ${total1?.toFixed(2)} Liters`}
-					data={values1}
-					xKey={'timestamp'}
-					yKey={'value'} />
-				{/* Membrane pressures */}
-				<GraphBlock
-					label={"PT201 - Pressure"}
-					xKey={'timestamp'}
-					yKey={'value'}
-					data={values2 || []}/>
-
-				<GraphBlock 
-					data={values3 || []}
-					label={"PT301 - Pressure"}
-					xKey={'timestamp'}
-					yKey={'value'} />
-				
-			</Box>
-		</Box>
-	)
-}
+      <Box gap="xsmall" flex direction="row" wrap>
+        {values.map((graph) => (
+          <GraphBlock
+            label={`${graph.device.name} - ${graph.key}`}
+            data={graph.value}
+            xKey={"timestamp"}
+            yKey={"value"}
+          />
+        ))}
+      </Box>
+    </Box>
+  );
+};
