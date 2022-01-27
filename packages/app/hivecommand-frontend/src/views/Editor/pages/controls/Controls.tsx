@@ -15,7 +15,7 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useUpdateHMINode } from '@hive-command/api';
+import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { cleanTree } from '../../utils';
 import { ObjectTypeDefinitionNode } from 'graphql';
@@ -467,10 +467,12 @@ export const Controls = (props) => {
 
     const createHMINode = useCreateHMINode(id, activeView)
     const updateHMINode = useUpdateHMINode(id, activeView)
+    const deleteHMINode = useDeleteHMINode(id, activeView)
 
     const createHMIGroup = useCreateHMIGroup(id, activeView)
     const updateHMIGroup = useUpdateHMIGroup()
 
+    const deleteHMIPath = useDeleteHMIPath(id, activeView)
     const connectHMINode = useConnectHMINode(id, activeView)
     const assignHMINode = useAssignHMINode(id, activeView)
 
@@ -756,16 +758,17 @@ export const Controls = (props) => {
     const watchEditorKeys = () => {
         
             if(selectedRef.current?.selected?.id){
-                // deleteSelected({
-                //     args: {
-                //         selected: [selectedRef.current.selected].map((x) => ({
-                //             type: x?.key,
-                //             id: x?.id
-                //         }))
-                //     }
-                // }).then(() => {
-                //     refetch()
-                // })
+                if(selected.key == "node"){
+                    deleteHMINode(selectedRef.current?.selected?.id).then(() => {
+                        refetch()
+                    })
+                }else{
+                    deleteHMIPath(selectedRef.current?.selected?.id).then(() => {
+                        refetch()
+                    })
+                }
+
+               
             }
      
     }

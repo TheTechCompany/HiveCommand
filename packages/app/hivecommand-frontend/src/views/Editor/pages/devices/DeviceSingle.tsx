@@ -455,8 +455,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 								lock.id,
 								lock.inputDevice,
 								lock.inputDeviceKey,
-								lock.comparator,
 								lock.valueType,
+								lock.comparator,
 								lock.assertion,
 								lock.action
 						).then(() => {
@@ -466,8 +466,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 						createPlaceholderInterlock(
 								lock.inputDevice,
 								lock.inputDeviceKey,
-								lock.comparator,
 								lock.valueType,
+								lock.comparator,
 								lock.assertion,
 								lock.action
 						).then(() => {

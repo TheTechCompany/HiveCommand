@@ -57,7 +57,14 @@ export const useUpdateProgramPlaceholder = (programId: string) => {
 			where: {id: programId},
 			update: {
 				devices: [{
-					where: {node: {id: args.deviceId}}
+					where: {node: {id: args.deviceId}},
+					update: {
+						node: {
+							name: args.name,
+							type: { connect: {where: {node: {id: args.type }}}, disconnect: {where: {node: {id_NOT: args.type}}}},
+							requiresMutex: args.requiresMutex
+						}
+					}
 				}]
 			}
 		})
@@ -85,6 +92,41 @@ export const useUpdateProgramPlaceholder = (programId: string) => {
 		})
 	}
 }
+
+
+
+export const useDeleteProgramPlaceholder = (programId: string) => {
+
+	const [ mutateFn ] = useMutation((mutation, args: {
+		deviceId: string
+	}) => {
+		const item = mutation.updateCommandPrograms({
+			where: {id: programId},
+			update: {
+				devices: [{
+					where: {node: {id: args.deviceId}}
+				}]
+			}
+		})
+
+		return {
+			item: {
+				...item.commandPrograms?.[0]
+			}
+		}
+	})
+
+	return async (
+		deviceId: string
+	) => {
+		return await mutateFn({
+			args: {
+				deviceId
+			}
+		})
+	}
+}
+
 
 export const useUpdatePlaceholderSetpoint = (programId: string, deviceId: string) => {
 
