@@ -1,48 +1,50 @@
-import React from 'react';
+import React from "react";
+
+import { Box } from "grommet";
 
 import {
-    Box
-} from 'grommet';
+  ResponsiveContainer,
+  LineChart,
+  XAxis,
+  YAxis,
+  Tooltip,
+  CartesianGrid,
+  Line,
+} from "recharts";
 
-import {
-    ResponsiveContainer,
-    LineChart,
-    XAxis,
-    YAxis,
-    Tooltip,
-    CartesianGrid,
-    Line
-} from 'recharts'
+import styled from "styled-components";
 
-import styled from 'styled-components'
+export * from "./graph-container";
 
 export interface BaseGraphProps {
-    className?: string;
+  className?: string;
 
-    data?: Array<any>;
+  data?: Array<any>;
 
-    xKey?: string;
-    yKey?: string;
+  xKey?: string;
+  yKey?: string;
 }
 
 const BaseGraph: React.FC<BaseGraphProps> = (props) => {
-    return (
-        <Box className={props.className}>
-            <ResponsiveContainer>
-                <LineChart
-                    margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
-                    data={props.data} >
-                    <XAxis dataKey={props.xKey} />
-                    <YAxis dataKey={props.yKey} />
-                    <Tooltip />
-                    <CartesianGrid stroke="#f5f5f5" />
-                    <Line type="monotone" dataKey={props.yKey} stroke="#ff7300" />
-                </LineChart>
-            </ResponsiveContainer>
-        </Box>
-    )
-}
+  return (
+    <ResponsiveContainer>
+      <LineChart
+        margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
+        data={props.data}
+      >
+        <XAxis dataKey={props.xKey} />
+        <YAxis dataKey={props.yKey} />
+        <Tooltip />
+        <CartesianGrid stroke="#f5f5f5" />
+        <Line
+          type="monotone"
+          dataKey={props.yKey}
+          stroke="#ff7300"
+          dot={false}
+        />
+      </LineChart>
+    </ResponsiveContainer>
+  );
+};
 
-export const Graph = styled(BaseGraph)`
-
-`
+export const Graph = styled(BaseGraph)``;

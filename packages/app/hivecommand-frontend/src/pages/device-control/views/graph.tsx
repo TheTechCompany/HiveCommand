@@ -1,31 +1,12 @@
 import React, { useMemo, useState, useContext } from "react";
 import { Box, Button, Text } from "grommet";
+import { Add } from "grommet-icons";
 import { LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
 import moment from "moment-timezone";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../../../components/modals/device-control-graph";
-
-const GraphBlock = (props) => {
-  return (
-    <Box
-      background="neutral-1"
-      flex
-      elevation="small"
-      round="xsmall"
-      width={{ min: "medium" }}
-    >
-      <Box direction="row" pad={{ horizontal: "small" }}>
-        <Text>{props.label}</Text>
-      </Box>
-      <LineGraph
-        data={props.data || []}
-        xKey={props.xKey || "timestamp"}
-        yKey={props.yKey || "value"}
-      />
-    </Box>
-  );
-};
+import { GraphContainer } from "../../../components/ui/graph";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { controlId, program } = useContext(DeviceControlContext);
@@ -112,9 +93,11 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           setDeviceList([...deviceList, graph]);
         }}
       />
-      <Box>
+      <Box justify="end" direction="row">
         <Button
           onClick={() => openModal(true)}
+          icon={<Add size="small" />}
+          plain
           style={{ padding: 6, borderRadius: 3 }}
           hoverIndicator
         />
@@ -122,7 +105,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
       <Box gap="xsmall" flex direction="row" wrap>
         {values.map((graph) => (
-          <GraphBlock
+          <GraphContainer
             label={`${graph.device.name} - ${graph.key}`}
             data={graph.value}
             xKey={"timestamp"}
