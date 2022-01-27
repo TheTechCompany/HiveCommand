@@ -26,7 +26,7 @@ export default `
 					k_p: parseFloat(options.p),
 					k_i: parseFloat(options.i),
 					k_d: parseFloat(options.d),
-					dt: 1
+					dt: 0.5
 				})
 
 				this.target = options.target ? parseFloat(options.target)  :  0;

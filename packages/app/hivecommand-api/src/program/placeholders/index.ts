@@ -322,15 +322,32 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 		assertion: string,
 		action: string
 	}) => {
+		if(!args.action) return;
+
 		let assertionValue = {};
+		let notAssertion = {
+			delete: {
+				// where: {node_NOT: {
+				// 	OR: [
+				// 		{setpoint: {id: args.assertion}},
+				// 		{value: args.assertion}
+				// 	]
+				// }}
+			}
+		};
 		if(args.type == "setpoint"){
 			assertionValue = {
-				setpoint: {connect: {where: {node: {id: args.assertion}}}}
+				setpoint: {
+					connect: {where: {node: {id: args.assertion}}},
+					// disconnect: {where: {node: {id_NOT: args.assertion}}}
+				}
 			}
+		
 		}else if(args.type == "value"){
 			assertionValue = {
 				value: args.assertion
 			}
+
 		}
 
 		const item = mutation.updateCommandPrograms({
@@ -344,11 +361,24 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 								where: {node: {id: args.interlockId}},
 								update: {
 									node: {
-										inputDevice: {connect: {where: {node: {id: args.inputDevice}}}},
-										inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKey}}}},
+										inputDevice: {
+											connect: {where: {node: {id: args.inputDevice}}},
+											disconnect: {where: {node: {id_NOT: args.inputDevice}}}
+										},
+										inputDeviceKey: {
+											connect: {where: {node: {id: args.inputDeviceKey}}},
+											disconnect: {where: {node: {id_NOT: args.inputDeviceKey}}}
+										},
 										comparator: args.comparator,
-										assertion: {create: {node: {type: args.type, ...assertionValue}}},
-										action: {connect: {where: {node: {id: args.action}}}}
+										assertion: {
+										
+											...notAssertion,
+											create: {node: {type: args.type, ...assertionValue}},
+										},
+										action: {
+											connect: {where: {node: {id: args.action}}}, 
+											disconnect: {where: {node: {id_NOT: args.action}}}
+										}
 									}
 								}
 							}]
