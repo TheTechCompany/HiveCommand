@@ -25,8 +25,8 @@ export interface CommandEnvironment {
 export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
-	commandCenter? : string
-	healthCenter?: string;
+	commandCenter? : string //Web server to connect to
+	// healthCenter?: string; //Health montior endpoint potentially same as commandCenter
 
 	privateKey?: string
 	discoveryServer?: string

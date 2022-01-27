@@ -379,7 +379,7 @@ export class Machine {
 
 
 	async requestState(event: {device: string, state: any | {[key: string]: any}}){
-		console.log("request state - (LC Machine)", event)
+		log.debug("request state - (LC Machine)", event)
 
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 

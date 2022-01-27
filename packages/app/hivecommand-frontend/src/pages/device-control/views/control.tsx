@@ -236,13 +236,11 @@ export default () => {
 
 
 	const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-        changeDeviceValue({
-            args: {
-                deviceName: deviceName,
-                key: stateKey,
-                value: stateValue
-            }
-        }).then(() => {
+        changeDeviceValue(
+            deviceName,
+            stateKey,
+            `${stateValue}`
+        ).then(() => {
             let ws = Object.assign({}, workingState);
             delete ws[stateKey] 
             setWorkingState(ws)

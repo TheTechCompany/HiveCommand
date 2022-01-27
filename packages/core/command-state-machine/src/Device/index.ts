@@ -1,4 +1,5 @@
 import { Mutex } from "locks";
+import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
 import { Condition } from "../Condition";
 import { State } from "../State";
@@ -41,6 +42,10 @@ export class StateDevice {
 		}, {})
 
 		// console.log(device.plugins)
+
+
+		console.log("Setting up plugins for ", device.name, this.state)
+
 		let plugins = (device.plugins || []).map((plugin) => {
 			const newClass = getPluginClass(plugin.classString, plugin.imports || [])
 			let instance = new newClass(this, plugin.options)
@@ -128,7 +133,7 @@ export class StateDevice {
 			...pluginActions
 		}
 
-		// console.log("Device actions", {actions})
+		log.debug("Device actions", {actions, action: actions[operation]})
 
 		if(actions[operation]){
 			return await actions[operation](this.state, this.setState, this.requestState)
@@ -139,12 +144,12 @@ export class StateDevice {
 	}
 
 	async setState(state: any){
-		console.log("DEVICE - setState", {state})
+		log.debug("DEVICE - setState", {state})
 		await this.fsm.state?.update(this.device.name, state)
 	}
 
 	async requestState(state: any){
-		console.log("DEVICE - requestState", {state})
+		log.debug("DEVICE - requestState", {state})
 		await this.client.requestState({device: this.device.name, state})
 	}
 

@@ -8,12 +8,23 @@ export const handler = async (
 ) => {
 
 	let sub_process = node.sub_processes?.find((a) => a.id == options?.["sub-process"])
-	if(sub_process){
+	console.log({sub_process, hub})
 
+	const val = hub.getState('TK201')
+	console.log({val})
+	
+	if(sub_process){
+		console.log("Start sub process")
 		// console.log("Start sub process", sub_process)
 		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
 
+		process.on('transition', (transition) => {
+			console.log("Subprocess transition", transition)
+		})
+
 		await process.start()
+
+		console.log("Stop sub process")
 		// console.log("End sub process", sub_process)
 	
 	}

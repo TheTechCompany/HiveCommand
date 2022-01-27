@@ -15,7 +15,7 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useUpdateHMINode } from '@hive-command/api';
+import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { cleanTree } from '../../utils';
 import { ObjectTypeDefinitionNode } from 'graphql';
@@ -43,6 +43,8 @@ export const Controls = (props) => {
     }
 
     const [ assignModalOpen, openAssignModal ] = useState<boolean>(false);
+
+    const [ createModalOpen, openCreateModal ] = useState(false);
 
     const [ target, setTarget ] = useState<{x?: number, y?: number}>({})
 
@@ -465,10 +467,12 @@ export const Controls = (props) => {
 
     const createHMINode = useCreateHMINode(id, activeView)
     const updateHMINode = useUpdateHMINode(id, activeView)
+    const deleteHMINode = useDeleteHMINode(id, activeView)
 
     const createHMIGroup = useCreateHMIGroup(id, activeView)
     const updateHMIGroup = useUpdateHMIGroup()
 
+    const deleteHMIPath = useDeleteHMIPath(id, activeView)
     const connectHMINode = useConnectHMINode(id, activeView)
     const assignHMINode = useAssignHMINode(id, activeView)
 
@@ -754,16 +758,17 @@ export const Controls = (props) => {
     const watchEditorKeys = () => {
         
             if(selectedRef.current?.selected?.id){
-                // deleteSelected({
-                //     args: {
-                //         selected: [selectedRef.current.selected].map((x) => ({
-                //             type: x?.key,
-                //             id: x?.id
-                //         }))
-                //     }
-                // }).then(() => {
-                //     refetch()
-                // })
+                if(selected.key == "node"){
+                    deleteHMINode(selectedRef.current?.selected?.id).then(() => {
+                        refetch()
+                    })
+                }else{
+                    deleteHMIPath(selectedRef.current?.selected?.id).then(() => {
+                        refetch()
+                    })
+                }
+
+               
             }
      
     }
@@ -807,7 +812,7 @@ export const Controls = (props) => {
                         </Box> */}
                 
                 <ProgramCanvasModal
-                    open={modalOpen}
+                    open={createModalOpen}
                     onSubmit={(item) => {
                             let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
                             createProgramHMI(item.name, parent).then(() => {
@@ -815,23 +820,23 @@ export const Controls = (props) => {
                             })
           
                         
-                        openModal(false)
+                        openCreateModal(false)
                     }}
                     onClose={() => {
                         setSelectedItem(undefined)
-                        openModal(false)
+                        openCreateModal(false)
                     }}
                     modal={(gql`
-                        type Project {
+                        type HMI {
                             name: String
                         }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "Project") as ObjectTypeDefinitionNode} />
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
                         <HyperTree 
                             id="editor-menu"
                             onCreate={(node) => {
                                 console.log("CREATE", node)
                                 setSelectedItem(node.data)
-                                openModal(true)
+                                openCreateModal(true)
                             }}
                             onSelect={(node) => {
                                 if(node.data.id !== 'root'){

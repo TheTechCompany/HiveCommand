@@ -70,6 +70,7 @@ ${devices}
 		setpoints: [CommandDeviceSetpoint] @relationship(type: "HAS_SETPOINT", direction: OUT)
 		plugins: [CommandDevicePlugin] @relationship(type: "HAS_PLUGIN", direction: OUT)
 
+		program: CommandProgram @relationship(type: "USES_DEVICE", direction: IN)
 	}
 
 	type CommandDeviceSetpoint {

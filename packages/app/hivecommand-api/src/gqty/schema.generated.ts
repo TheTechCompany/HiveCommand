@@ -10553,6 +10553,7 @@ export interface CommandProgramDevicePlaceholderConnectInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsConnectFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectFieldInput>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsConnectFieldInput>
   >;
@@ -10566,6 +10567,7 @@ export interface CommandProgramDevicePlaceholderConnectOrCreateInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsConnectOrCreateFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsConnectOrCreateFieldInput>
   >;
@@ -10584,6 +10586,7 @@ export interface CommandProgramDevicePlaceholderCreateInput {
   interlocks?: InputMaybe<CommandProgramDevicePlaceholderInterlocksFieldInput>;
   name?: InputMaybe<Scalars["String"]>;
   plugins?: InputMaybe<CommandProgramDevicePlaceholderPluginsFieldInput>;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramFieldInput>;
   requiresMutex?: InputMaybe<Scalars["Boolean"]>;
   setpoints?: InputMaybe<CommandProgramDevicePlaceholderSetpointsFieldInput>;
   type?: InputMaybe<CommandProgramDevicePlaceholderTypeFieldInput>;
@@ -10596,6 +10599,7 @@ export interface CommandProgramDevicePlaceholderDeleteInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsDeleteFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramDeleteFieldInput>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsDeleteFieldInput>
   >;
@@ -10609,6 +10613,7 @@ export interface CommandProgramDevicePlaceholderDisconnectInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsDisconnectFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramDisconnectFieldInput>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsDisconnectFieldInput>
   >;
@@ -10844,6 +10849,123 @@ export interface CommandProgramDevicePlaceholderPluginsUpdateFieldInput {
   where?: InputMaybe<CommandProgramDevicePlaceholderPluginsConnectionWhere>;
 }
 
+export interface CommandProgramDevicePlaceholderProgramAggregateInput {
+  AND?: InputMaybe<Array<CommandProgramDevicePlaceholderProgramAggregateInput>>;
+  OR?: InputMaybe<Array<CommandProgramDevicePlaceholderProgramAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnectFieldInput {
+  connect?: InputMaybe<CommandProgramConnectInput>;
+  where?: InputMaybe<CommandProgramConnectWhere>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput {
+  onCreate: CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInputOnCreate;
+  where: CommandProgramConnectOrCreateWhere;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInputOnCreate {
+  node: CommandProgramCreateInput;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnectionSort {
+  node?: InputMaybe<CommandProgramSort>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnectionWhere {
+  AND?: InputMaybe<
+    Array<CommandProgramDevicePlaceholderProgramConnectionWhere>
+  >;
+  OR?: InputMaybe<Array<CommandProgramDevicePlaceholderProgramConnectionWhere>>;
+  node?: InputMaybe<CommandProgramWhere>;
+  node_NOT?: InputMaybe<CommandProgramWhere>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramCreateFieldInput {
+  node: CommandProgramCreateInput;
+}
+
+export interface CommandProgramDevicePlaceholderProgramDeleteFieldInput {
+  delete?: InputMaybe<CommandProgramDeleteInput>;
+  where?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandProgramDisconnectInput>;
+  where?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramFieldInput {
+  connect?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandProgramDevicePlaceholderProgramCreateFieldInput>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput>
+  >;
+  createdAt_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_GT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_GTE?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_LT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_LTE?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MAX_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MAX_GT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MAX_GTE?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MAX_LT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MAX_LTE?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MIN_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MIN_GT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MIN_GTE?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MIN_LT?: InputMaybe<Scalars["DateTime"]>;
+  createdAt_MIN_LTE?: InputMaybe<Scalars["DateTime"]>;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  name_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  name_EQUAL?: InputMaybe<Scalars["String"]>;
+  name_GT?: InputMaybe<Scalars["Int"]>;
+  name_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  name_LT?: InputMaybe<Scalars["Int"]>;
+  name_LTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramUpdateConnectionInput {
+  node?: InputMaybe<CommandProgramUpdateInput>;
+}
+
+export interface CommandProgramDevicePlaceholderProgramUpdateFieldInput {
+  connect?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandProgramDevicePlaceholderProgramCreateFieldInput>;
+  delete?: InputMaybe<CommandProgramDevicePlaceholderProgramDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandProgramDevicePlaceholderProgramDisconnectFieldInput>;
+  update?: InputMaybe<CommandProgramDevicePlaceholderProgramUpdateConnectionInput>;
+  where?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+}
+
 export interface CommandProgramDevicePlaceholderRelationInput {
   interlocks?: InputMaybe<
     Array<CommandProgramDevicePlaceholderInterlocksCreateFieldInput>
@@ -10851,6 +10973,7 @@ export interface CommandProgramDevicePlaceholderRelationInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsCreateFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramCreateFieldInput>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsCreateFieldInput>
   >;
@@ -11160,6 +11283,7 @@ export interface CommandProgramDevicePlaceholderUpdateInput {
   plugins?: InputMaybe<
     Array<CommandProgramDevicePlaceholderPluginsUpdateFieldInput>
   >;
+  program?: InputMaybe<CommandProgramDevicePlaceholderProgramUpdateFieldInput>;
   requiresMutex?: InputMaybe<Scalars["Boolean"]>;
   setpoints?: InputMaybe<
     Array<CommandProgramDevicePlaceholderSetpointsUpdateFieldInput>
@@ -11200,6 +11324,11 @@ export interface CommandProgramDevicePlaceholderWhere {
   pluginsConnection?: InputMaybe<CommandProgramDevicePlaceholderPluginsConnectionWhere>;
   pluginsConnection_NOT?: InputMaybe<CommandProgramDevicePlaceholderPluginsConnectionWhere>;
   plugins_NOT?: InputMaybe<CommandDevicePluginWhere>;
+  program?: InputMaybe<CommandProgramWhere>;
+  programAggregate?: InputMaybe<CommandProgramDevicePlaceholderProgramAggregateInput>;
+  programConnection?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+  programConnection_NOT?: InputMaybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+  program_NOT?: InputMaybe<CommandProgramWhere>;
   requiresMutex?: InputMaybe<Scalars["Boolean"]>;
   requiresMutex_NOT?: InputMaybe<Scalars["Boolean"]>;
   setpoints?: InputMaybe<CommandDeviceSetpointWhere>;
@@ -34368,6 +34497,27 @@ export const generatedSchema : any = {
         where: "CommandProgramDevicePlaceholderPluginsConnectionWhere",
       },
     },
+    program: {
+      __type: "CommandProgram",
+      __args: {
+        options: "CommandProgramOptions",
+        where: "CommandProgramWhere",
+      },
+    },
+    programAggregate: {
+      __type:
+        "CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection",
+      __args: { where: "CommandProgramWhere" },
+    },
+    programConnection: {
+      __type: "CommandProgramDevicePlaceholderProgramConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandProgramDevicePlaceholderProgramConnectionSort!]",
+        where: "CommandProgramDevicePlaceholderProgramConnectionWhere",
+      },
+    },
     requiresMutex: { __type: "Boolean" },
     setpoints: {
       __type: "[CommandDeviceSetpoint]",
@@ -34479,12 +34629,29 @@ export const generatedSchema : any = {
       name: { __type: "StringAggregateSelection!" },
       type: { __type: "StringAggregateSelection!" },
     },
+  CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type:
+        "CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection",
+    },
+  },
+  CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection: {
+    __typename: { __type: "String!" },
+    createdAt: { __type: "DateTimeAggregateSelection!" },
+    id: { __type: "IDAggregateSelection!" },
+    name: { __type: "StringAggregateSelection!" },
+  },
   CommandProgramDevicePlaceholderConnectInput: {
     interlocks: {
       __type: "[CommandProgramDevicePlaceholderInterlocksConnectFieldInput!]",
     },
     plugins: {
       __type: "[CommandProgramDevicePlaceholderPluginsConnectFieldInput!]",
+    },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectFieldInput",
     },
     setpoints: {
       __type: "[CommandProgramDevicePlaceholderSetpointsConnectFieldInput!]",
@@ -34499,6 +34666,9 @@ export const generatedSchema : any = {
     plugins: {
       __type:
         "[CommandProgramDevicePlaceholderPluginsConnectOrCreateFieldInput!]",
+    },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput",
     },
     setpoints: {
       __type:
@@ -34520,6 +34690,7 @@ export const generatedSchema : any = {
     },
     name: { __type: "String" },
     plugins: { __type: "CommandProgramDevicePlaceholderPluginsFieldInput" },
+    program: { __type: "CommandProgramDevicePlaceholderProgramFieldInput" },
     requiresMutex: { __type: "Boolean" },
     setpoints: { __type: "CommandProgramDevicePlaceholderSetpointsFieldInput" },
     type: { __type: "CommandProgramDevicePlaceholderTypeFieldInput" },
@@ -34530,6 +34701,9 @@ export const generatedSchema : any = {
     },
     plugins: {
       __type: "[CommandProgramDevicePlaceholderPluginsDeleteFieldInput!]",
+    },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramDeleteFieldInput",
     },
     setpoints: {
       __type: "[CommandProgramDevicePlaceholderSetpointsDeleteFieldInput!]",
@@ -34543,6 +34717,9 @@ export const generatedSchema : any = {
     },
     plugins: {
       __type: "[CommandProgramDevicePlaceholderPluginsDisconnectFieldInput!]",
+    },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramDisconnectFieldInput",
     },
     setpoints: {
       __type: "[CommandProgramDevicePlaceholderSetpointsDisconnectFieldInput!]",
@@ -34802,12 +34979,153 @@ export const generatedSchema : any = {
     },
     where: { __type: "CommandProgramDevicePlaceholderPluginsConnectionWhere" },
   },
+  CommandProgramDevicePlaceholderProgramAggregateInput: {
+    AND: { __type: "[CommandProgramDevicePlaceholderProgramAggregateInput!]" },
+    OR: { __type: "[CommandProgramDevicePlaceholderProgramAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: {
+      __type: "CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput",
+    },
+  },
+  CommandProgramDevicePlaceholderProgramConnectFieldInput: {
+    connect: { __type: "CommandProgramConnectInput" },
+    where: { __type: "CommandProgramConnectWhere" },
+  },
+  CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandProgramConnectOrCreateWhere!" },
+  },
+  CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandProgramCreateInput!" },
+  },
+  CommandProgramDevicePlaceholderProgramConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandProgramDevicePlaceholderProgramRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandProgramDevicePlaceholderProgramConnectionSort: {
+    node: { __type: "CommandProgramSort" },
+  },
+  CommandProgramDevicePlaceholderProgramConnectionWhere: {
+    AND: { __type: "[CommandProgramDevicePlaceholderProgramConnectionWhere!]" },
+    OR: { __type: "[CommandProgramDevicePlaceholderProgramConnectionWhere!]" },
+    node: { __type: "CommandProgramWhere" },
+    node_NOT: { __type: "CommandProgramWhere" },
+  },
+  CommandProgramDevicePlaceholderProgramCreateFieldInput: {
+    node: { __type: "CommandProgramCreateInput!" },
+  },
+  CommandProgramDevicePlaceholderProgramDeleteFieldInput: {
+    delete: { __type: "CommandProgramDeleteInput" },
+    where: { __type: "CommandProgramDevicePlaceholderProgramConnectionWhere" },
+  },
+  CommandProgramDevicePlaceholderProgramDisconnectFieldInput: {
+    disconnect: { __type: "CommandProgramDisconnectInput" },
+    where: { __type: "CommandProgramDevicePlaceholderProgramConnectionWhere" },
+  },
+  CommandProgramDevicePlaceholderProgramFieldInput: {
+    connect: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectFieldInput",
+    },
+    connectOrCreate: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput",
+    },
+    create: {
+      __type: "CommandProgramDevicePlaceholderProgramCreateFieldInput",
+    },
+  },
+  CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput: {
+    AND: {
+      __type:
+        "[CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type:
+        "[CommandProgramDevicePlaceholderProgramNodeAggregationWhereInput!]",
+    },
+    createdAt_EQUAL: { __type: "DateTime" },
+    createdAt_GT: { __type: "DateTime" },
+    createdAt_GTE: { __type: "DateTime" },
+    createdAt_LT: { __type: "DateTime" },
+    createdAt_LTE: { __type: "DateTime" },
+    createdAt_MAX_EQUAL: { __type: "DateTime" },
+    createdAt_MAX_GT: { __type: "DateTime" },
+    createdAt_MAX_GTE: { __type: "DateTime" },
+    createdAt_MAX_LT: { __type: "DateTime" },
+    createdAt_MAX_LTE: { __type: "DateTime" },
+    createdAt_MIN_EQUAL: { __type: "DateTime" },
+    createdAt_MIN_GT: { __type: "DateTime" },
+    createdAt_MIN_GTE: { __type: "DateTime" },
+    createdAt_MIN_LT: { __type: "DateTime" },
+    createdAt_MIN_LTE: { __type: "DateTime" },
+    id_EQUAL: { __type: "ID" },
+    name_AVERAGE_EQUAL: { __type: "Float" },
+    name_AVERAGE_GT: { __type: "Float" },
+    name_AVERAGE_GTE: { __type: "Float" },
+    name_AVERAGE_LT: { __type: "Float" },
+    name_AVERAGE_LTE: { __type: "Float" },
+    name_EQUAL: { __type: "String" },
+    name_GT: { __type: "Int" },
+    name_GTE: { __type: "Int" },
+    name_LONGEST_EQUAL: { __type: "Int" },
+    name_LONGEST_GT: { __type: "Int" },
+    name_LONGEST_GTE: { __type: "Int" },
+    name_LONGEST_LT: { __type: "Int" },
+    name_LONGEST_LTE: { __type: "Int" },
+    name_LT: { __type: "Int" },
+    name_LTE: { __type: "Int" },
+    name_SHORTEST_EQUAL: { __type: "Int" },
+    name_SHORTEST_GT: { __type: "Int" },
+    name_SHORTEST_GTE: { __type: "Int" },
+    name_SHORTEST_LT: { __type: "Int" },
+    name_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandProgramDevicePlaceholderProgramRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandProgram!" },
+  },
+  CommandProgramDevicePlaceholderProgramUpdateConnectionInput: {
+    node: { __type: "CommandProgramUpdateInput" },
+  },
+  CommandProgramDevicePlaceholderProgramUpdateFieldInput: {
+    connect: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectFieldInput",
+    },
+    connectOrCreate: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectOrCreateFieldInput",
+    },
+    create: {
+      __type: "CommandProgramDevicePlaceholderProgramCreateFieldInput",
+    },
+    delete: {
+      __type: "CommandProgramDevicePlaceholderProgramDeleteFieldInput",
+    },
+    disconnect: {
+      __type: "CommandProgramDevicePlaceholderProgramDisconnectFieldInput",
+    },
+    update: {
+      __type: "CommandProgramDevicePlaceholderProgramUpdateConnectionInput",
+    },
+    where: { __type: "CommandProgramDevicePlaceholderProgramConnectionWhere" },
+  },
   CommandProgramDevicePlaceholderRelationInput: {
     interlocks: {
       __type: "[CommandProgramDevicePlaceholderInterlocksCreateFieldInput!]",
     },
     plugins: {
       __type: "[CommandProgramDevicePlaceholderPluginsCreateFieldInput!]",
+    },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramCreateFieldInput",
     },
     setpoints: {
       __type: "[CommandProgramDevicePlaceholderSetpointsCreateFieldInput!]",
@@ -35139,6 +35457,9 @@ export const generatedSchema : any = {
     plugins: {
       __type: "[CommandProgramDevicePlaceholderPluginsUpdateFieldInput!]",
     },
+    program: {
+      __type: "CommandProgramDevicePlaceholderProgramUpdateFieldInput",
+    },
     requiresMutex: { __type: "Boolean" },
     setpoints: {
       __type: "[CommandProgramDevicePlaceholderSetpointsUpdateFieldInput!]",
@@ -35190,6 +35511,17 @@ export const generatedSchema : any = {
       __type: "CommandProgramDevicePlaceholderPluginsConnectionWhere",
     },
     plugins_NOT: { __type: "CommandDevicePluginWhere" },
+    program: { __type: "CommandProgramWhere" },
+    programAggregate: {
+      __type: "CommandProgramDevicePlaceholderProgramAggregateInput",
+    },
+    programConnection: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectionWhere",
+    },
+    programConnection_NOT: {
+      __type: "CommandProgramDevicePlaceholderProgramConnectionWhere",
+    },
+    program_NOT: { __type: "CommandProgramWhere" },
     requiresMutex: { __type: "Boolean" },
     requiresMutex_NOT: { __type: "Boolean" },
     setpoints: { __type: "CommandDeviceSetpointWhere" },
@@ -52230,6 +52562,19 @@ export interface CommandProgramDevicePlaceholder {
     sort?: Maybe<Array<CommandProgramDevicePlaceholderPluginsConnectionSort>>;
     where?: Maybe<CommandProgramDevicePlaceholderPluginsConnectionWhere>;
   }) => CommandProgramDevicePlaceholderPluginsConnection;
+  program: (args?: {
+    options?: Maybe<CommandProgramOptions>;
+    where?: Maybe<CommandProgramWhere>;
+  }) => Maybe<CommandProgram>;
+  programAggregate: (args?: {
+    where?: Maybe<CommandProgramWhere>;
+  }) => Maybe<CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection>;
+  programConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandProgramDevicePlaceholderProgramConnectionSort>>;
+    where?: Maybe<CommandProgramDevicePlaceholderProgramConnectionWhere>;
+  }) => CommandProgramDevicePlaceholderProgramConnection;
   requiresMutex?: Maybe<ScalarsEnums["Boolean"]>;
   setpoints: (args?: {
     options?: Maybe<CommandDeviceSetpointOptions>;
@@ -52316,6 +52661,19 @@ export interface CommandProgramDevicePlaceholderCommandProgramDeviceTypeNodeAggr
   type: StringAggregateSelection;
 }
 
+export interface CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection {
+  __typename?: "CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection>;
+}
+
+export interface CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection {
+  __typename?: "CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection";
+  createdAt: DateTimeAggregateSelection;
+  id: IDAggregateSelection;
+  name: StringAggregateSelection;
+}
+
 export interface CommandProgramDevicePlaceholderInterlocksConnection {
   __typename?: "CommandProgramDevicePlaceholderInterlocksConnection";
   edges: Array<CommandProgramDevicePlaceholderInterlocksRelationship>;
@@ -52340,6 +52698,19 @@ export interface CommandProgramDevicePlaceholderPluginsRelationship {
   __typename?: "CommandProgramDevicePlaceholderPluginsRelationship";
   cursor: ScalarsEnums["String"];
   node: CommandDevicePlugin;
+}
+
+export interface CommandProgramDevicePlaceholderProgramConnection {
+  __typename?: "CommandProgramDevicePlaceholderProgramConnection";
+  edges: Array<CommandProgramDevicePlaceholderProgramRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandProgramDevicePlaceholderProgramRelationship {
+  __typename?: "CommandProgramDevicePlaceholderProgramRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandProgram;
 }
 
 export interface CommandProgramDevicePlaceholderSetpointsConnection {
@@ -56935,10 +57306,14 @@ export interface SchemaObjectTypes {
   CommandProgramDevicePlaceholderCommandInterlockInterlocksNodeAggregateSelection: CommandProgramDevicePlaceholderCommandInterlockInterlocksNodeAggregateSelection;
   CommandProgramDevicePlaceholderCommandProgramDeviceTypeAggregationSelection: CommandProgramDevicePlaceholderCommandProgramDeviceTypeAggregationSelection;
   CommandProgramDevicePlaceholderCommandProgramDeviceTypeNodeAggregateSelection: CommandProgramDevicePlaceholderCommandProgramDeviceTypeNodeAggregateSelection;
+  CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection: CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection;
+  CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection: CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection;
   CommandProgramDevicePlaceholderInterlocksConnection: CommandProgramDevicePlaceholderInterlocksConnection;
   CommandProgramDevicePlaceholderInterlocksRelationship: CommandProgramDevicePlaceholderInterlocksRelationship;
   CommandProgramDevicePlaceholderPluginsConnection: CommandProgramDevicePlaceholderPluginsConnection;
   CommandProgramDevicePlaceholderPluginsRelationship: CommandProgramDevicePlaceholderPluginsRelationship;
+  CommandProgramDevicePlaceholderProgramConnection: CommandProgramDevicePlaceholderProgramConnection;
+  CommandProgramDevicePlaceholderProgramRelationship: CommandProgramDevicePlaceholderProgramRelationship;
   CommandProgramDevicePlaceholderSetpointsConnection: CommandProgramDevicePlaceholderSetpointsConnection;
   CommandProgramDevicePlaceholderSetpointsRelationship: CommandProgramDevicePlaceholderSetpointsRelationship;
   CommandProgramDevicePlaceholderTypeConnection: CommandProgramDevicePlaceholderTypeConnection;
@@ -57595,10 +57970,14 @@ export type SchemaObjectTypesNames =
   | "CommandProgramDevicePlaceholderCommandInterlockInterlocksNodeAggregateSelection"
   | "CommandProgramDevicePlaceholderCommandProgramDeviceTypeAggregationSelection"
   | "CommandProgramDevicePlaceholderCommandProgramDeviceTypeNodeAggregateSelection"
+  | "CommandProgramDevicePlaceholderCommandProgramProgramAggregationSelection"
+  | "CommandProgramDevicePlaceholderCommandProgramProgramNodeAggregateSelection"
   | "CommandProgramDevicePlaceholderInterlocksConnection"
   | "CommandProgramDevicePlaceholderInterlocksRelationship"
   | "CommandProgramDevicePlaceholderPluginsConnection"
   | "CommandProgramDevicePlaceholderPluginsRelationship"
+  | "CommandProgramDevicePlaceholderProgramConnection"
+  | "CommandProgramDevicePlaceholderProgramRelationship"
   | "CommandProgramDevicePlaceholderSetpointsConnection"
   | "CommandProgramDevicePlaceholderSetpointsRelationship"
   | "CommandProgramDevicePlaceholderTypeConnection"

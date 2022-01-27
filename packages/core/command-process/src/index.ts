@@ -67,7 +67,7 @@ export class Process extends EventEmitter{
 
     private perform: (device: string, release: boolean, operation: string) => Promise<any>
 
-    public getState: any;
+    public getState: (key: string) => {[key: string]: any};
 
     private actions : CommandAction[];
 
@@ -75,11 +75,12 @@ export class Process extends EventEmitter{
         process: CommandProcess, 
         actions: CommandAction[], 
         performOperation: (device: string, release: boolean, operation: string) => Promise<any>, 
-        getState: any,
+        getState: ((key: string) => {[key: string]: any}),
         parent?: CommandProcess
     ){
         super();
 
+        console.log({getState: getState})
         this.getState = getState
 
         this.perform = performOperation
@@ -232,7 +233,7 @@ export class Process extends EventEmitter{
 		let hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
         
         this.emit('started')
-
+        log.debug(`CommandProcess -`, {hasNext, running: this.running})
         // console.log(this.chains)
         while(hasNext && this.running){
 			hasNext = this.chains.entrypoints.map((x) => x.shouldRun()).indexOf(true) > -1
@@ -242,7 +243,7 @@ export class Process extends EventEmitter{
 
 			await Promise.all(this.chains.entrypoints.map((chain) => chain.next()));
 
-			await new Promise((res, rej) => setTimeout(() => res(true), 10))
+			await new Promise((res, rej) => setTimeout(() => res(true), 500))
             /*
                 Get current_state node
                 -> if hasRun == false : execute action
@@ -274,7 +275,7 @@ export class Process extends EventEmitter{
 
 			await Promise.all(this.chains.shutdown.map((chain) => chain.next()));
 
-			await new Promise((res, rej) => setTimeout(() => res(true), 10))
+			await new Promise((res, rej) => setTimeout(() => res(true), 500))
             /*
                 Get current_state node
                 -> if hasRun == false : execute action

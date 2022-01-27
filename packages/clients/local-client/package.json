@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-client",
-  "version": "1.4.1-alpha.52",
+  "version": "1.4.1-alpha.93",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -36,12 +36,12 @@
   "dependencies": {
     "@hive-command/identity": "^1.4.0",
     "@hive-command/logging": "^1.4.0",
-    "@hive-command/network": "^1.4.1-alpha.45",
-    "@hive-command/opcua-server": "^1.4.1-alpha.21",
+    "@hive-command/network": "^1.4.1-alpha.63",
+    "@hive-command/opcua-server": "^1.4.1-alpha.63",
     "@hive-command/plugin-base": "^1.4.0",
     "@hive-command/plugin-blessed": "^1.4.1-alpha.26",
     "@hive-command/sms": "^1.4.0",
-    "@hive-command/state-machine": "^1.4.1-alpha.52",
+    "@hive-command/state-machine": "^1.4.1-alpha.93",
     "@hive-command/subscription-lock": "^1.4.0",
     "@io-link/core": "^1.4.1-alpha.39",
     "@io-link/iodd": "^1.4.0",
@@ -58,5 +58,5 @@
     "socket.io-client": "^4.2.0",
     "yargs": "^17.2.1"
   },
-  "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b"
+  "gitHead": "7ca5a9fedb9943ab0994eef1179b39b33c02b655"
 }

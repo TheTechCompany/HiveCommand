@@ -44,7 +44,7 @@ export class ProcessChain extends EventEmitter {
     this.program = chain;
     this.process = process;
 
-    console.log(JSON.stringify(this.program.edges))
+    console.log("EDGES", JSON.stringify(this.program.edges))
 
     this.action_types = actions || [];
 
@@ -67,6 +67,7 @@ export class ProcessChain extends EventEmitter {
     // this.current_running = []
     // this.current_run = [false]
 
+    this.getState = this.getState.bind(this);
     this.performOperation = this.performOperation.bind(this);
   }
   
@@ -91,7 +92,8 @@ export class ProcessChain extends EventEmitter {
   }
 
   getState(key: string) {
-    this.process.getState(key);
+    // console.log({prc: this.process})
+    return this.process.getState(key);
   }
 
   changePosition(current: string[]) {
@@ -159,11 +161,11 @@ export class ProcessChain extends EventEmitter {
 
           this.current.push(newItem);
         }
-
         // if(priority[0].target) this.current[ix] = priority[0].target
 
         // this.process.updateState(this.id, x)
       }
+
     });
   }
 
@@ -190,6 +192,8 @@ export class ProcessChain extends EventEmitter {
 
         let checkValue = `${cond.value_id}`;
 
+        // console.log(this.process, this.pid, this.process.getState(cond.input_id), cond.input_key, cond.input_id)
+
         // console.log(input, inputValue, checkValue)
 
         if (!cond.check(inputValue, checkValue)) {
@@ -212,6 +216,7 @@ export class ProcessChain extends EventEmitter {
         output_conds,
       };
     });
+    // console.log(results)
     return results;
   }
 

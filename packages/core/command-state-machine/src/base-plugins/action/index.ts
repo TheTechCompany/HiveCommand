@@ -10,7 +10,7 @@ export const handler = async (
 
 	let actions = options?.actions || [];
 
-	// console.log("Action in");
+	console.log("Action in", {hub});
 
 	let result = await Promise.all(actions.map(async (action: ProgramAction) => {
 		const id = nanoid()

@@ -6,6 +6,7 @@ export interface ProgramDeviceModalProps {
 	open: boolean;
 	onClose?: () => void;
 	onSubmit?: (item: any) => void;
+	onDelete?: () => void;
 
 	selected?: any;
 
@@ -119,6 +120,7 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 			title="Add Device"
 			onSubmit={onSubmit}
 			open={props.open}
+			onDelete={props.selected && props.onDelete}
 			onClose={props.onClose}>
 			<Box flex gap="xsmall">
 				<TextInput	

@@ -71,6 +71,7 @@ export default class Server {
         this.server = new OPCUAServer({
             hostname: opts.hostname || '0.0.0.0',
             port: 8440,
+        
             buildInfo: {
                 productName: opts.productName,
                 buildDate: new Date()
