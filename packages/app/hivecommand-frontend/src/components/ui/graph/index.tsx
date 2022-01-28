@@ -32,7 +32,7 @@ const BaseGraph: React.FC<BaseGraphProps> = (props) => {
         margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
         data={props.data}
       >
-        <XAxis dataKey={props.xKey} />
+        <XAxis dataKey={props.xKey} angle={-45} tickMargin={40} height={90} />
         <YAxis dataKey={props.yKey} />
         <Tooltip />
         <CartesianGrid stroke="#f5f5f5" />

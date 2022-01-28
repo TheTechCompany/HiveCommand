@@ -1,19 +1,23 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import { Box, Text, Button } from "grommet";
 import { Close } from "grommet-icons";
 import { Graph } from ".";
 
-export const GraphContainer = (props) => {
+export interface GraphContainerProps {
+  dataKey: string;
+  label: string;
+  total: string;
+  onRemove: () => void;
+}
+
+export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
   return (
-    <Box
-      background="neutral-1"
-      flex
-      elevation="small"
-      round="xsmall"
-      width={{ min: "medium" }}
-    >
+    <Box flex elevation="small" background={"neutral-1"}>
       <Box direction="row" pad={"xsmall"} justify="between">
-        <Text>{props.label}</Text>
+        <Box>
+          <Text>{props.label}</Text>
+          <Text size="small">{props.total && `total: ${props.total}`}</Text>
+        </Box>
         <Button
           onClick={props.onRemove}
           icon={<Close size="small" />}

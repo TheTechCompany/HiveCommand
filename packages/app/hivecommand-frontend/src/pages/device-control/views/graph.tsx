@@ -3,10 +3,11 @@ import { Box, Button, Text } from "grommet";
 import { Add } from "grommet-icons";
 import { LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
-import moment from "moment-timezone";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../../../components/modals/device-control-graph";
 import { Graph, GraphContainer } from "../../../components/ui/graph";
+import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
+import moment from "moment";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { controlId, program } = useContext(DeviceControlContext);
@@ -16,6 +17,8 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
   );
 
   const [deviceList, setDeviceList] = useState([]);
+
+  const [deviceLayout, setDeviceLayout] = useState([]);
 
   const { data } = useQuery(
     gql`
@@ -34,11 +37,24 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         ?.find((item) => graph.deviceID == item.id)
         ?.type.state.find((item) => graph.keyID == item.id)?.key;
 
-      return `${queryName}:commandDeviceTimeseries(deviceId:$deviceId, startDate:$startDate, device:"${queryName}", valueKey:"${queryKey}"){
-				timestamp
-				value
-
-			}`;
+      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:$deviceId, startDate:$startDate, device:"${queryName}", valueKey:"${queryKey}"){
+          timestamp
+          value
+  
+        }
+        `;
+      let deviceTotal = "";
+      if (graph.totalize) {
+        deviceTotal = `
+          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:$deviceId, startDate:$startDate, device:"${queryName}", valueKey:"${queryKey}"){
+            total
+          }
+          `;
+      }
+      return `
+      ${deviceTimeseries}
+      ${deviceTotal}
+      `;
     })}
 	}
        
@@ -61,17 +77,28 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         (item) => graph.keyID == item.id
       )?.key;
 
-      const value = data?.[device.name];
+      const value = data?.[device.name]?.map((item) => {
+        let d = new Date(item.timestamp);
+        return {
+          ...item,
+          timestamp: moment(d).add(13, "hours").format("dddd, hh:mma"),
+        };
+      });
+
+      const total = data?.[`${device.name}Total`]?.total;
 
       return {
         device,
         key,
         value,
+        total,
       };
     });
   }, [deviceList, program, data]);
 
   const [modalOpen, openModal] = useState(false);
+
+  console.log({ values, deviceLayout });
 
   return (
     <Box
@@ -89,8 +116,20 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           openModal(false);
         }}
         onSubmit={(graph) => {
+          const device = program.devices?.find(
+            (item) => graph.deviceID == item.id
+          );
+
+          const key = device?.type.state.find(
+            (item) => graph.keyID == item.id
+          )?.key;
+
           openModal(false);
           setDeviceList([...deviceList, graph]);
+          setDeviceLayout([
+            ...deviceLayout,
+            { i: `${device.name} - ${key}`, x: 0, y: 1, w: 8, h: 6 },
+          ]);
         }}
       />
       <Box justify="end" direction="row">
@@ -103,20 +142,32 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         />
       </Box>
 
-      <Box gap="xsmall" flex direction="row" wrap>
+      <GraphGridLayout
+        onLayoutChange={(layout) => {
+          setDeviceLayout(layout);
+        }}
+        layout={deviceLayout}
+      >
         {values.map((graph, ix) => (
-          <GraphContainer
-            onRemove={() => {
-              let arr = deviceList.slice();
-              arr.splice(ix, 1);
-              setDeviceList(arr);
-            }}
-            label={`${graph.device.name} - ${graph.key}`}
+          <div
+            key={`${graph.device.name} - ${graph.key}`}
+            style={{ display: "flex" }}
           >
-            <Graph data={graph.value} xKey={"timestamp"} yKey={"value"} />
-          </GraphContainer>
+            <GraphContainer
+              dataKey={`${graph.device.name} - ${graph.key}`}
+              total={graph.total}
+              onRemove={() => {
+                let arr = deviceList.slice();
+                arr.splice(ix, 1);
+                setDeviceList(arr);
+              }}
+              label={`${graph.device.name} - ${graph.key}`}
+            >
+              <Graph data={graph.value} xKey={"timestamp"} yKey={"value"} />
+            </GraphContainer>
+          </div>
         ))}
-      </Box>
+      </GraphGridLayout>
     </Box>
   );
 };
