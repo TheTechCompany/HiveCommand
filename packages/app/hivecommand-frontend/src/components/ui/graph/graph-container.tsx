@@ -12,8 +12,19 @@ export interface GraphContainerProps {
 
 export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
   return (
-    <Box flex elevation="small" background={"neutral-1"}>
-      <Box direction="row" pad={"xsmall"} justify="between">
+    <Box
+      flex
+      elevation="small"
+      background={"neutral-1"}
+      round="small"
+      overflow="hidden"
+    >
+      <Box
+        direction="row"
+        pad={"xsmall"}
+        justify="between"
+        background="accent-2"
+      >
         <Box>
           <Text>{props.label}</Text>
           <Text size="small">{props.total && `total: ${props.total}`}</Text>
