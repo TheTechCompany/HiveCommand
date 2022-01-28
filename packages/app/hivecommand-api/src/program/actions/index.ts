@@ -5,7 +5,6 @@ export const useRemoveNodeAction = (programId: string, flowId: string, parent?: 
 	const [ mutateFn ] = useMutation((mutation, args: {nodeId: string, id: string}) => {
 
 		let update = {
-			node: {
 				nodes: [{
 					where: {node: { id: args.nodeId }},
 					update: {
@@ -16,21 +15,21 @@ export const useRemoveNodeAction = (programId: string, flowId: string, parent?: 
 						}
 					}
 				}]
-			}
+			
 		}
 
 		let updateQuery = getProgramSelector(update, flowId, parent)
 
-		const removeResult = mutation.updateCommandPrograms({
-			where: {id: programId},
+		const removeResult = mutation.updateCommandProgramFlows({
+			where: {id: flowId}, //, programs: {id: programId}
 			update: {
-				program: [updateQuery]
+				...update,
 			}
 		})
 
 		return {
 			item: {
-				...removeResult.commandPrograms?.[0]
+				...removeResult.commandProgramFlows?.[0]
 			}
 		}
 	})
@@ -162,7 +161,7 @@ export const useUpdateNodeConfiguration = (programId: string, flowId: string, pa
 
 		let where = parent ? { id: flowId, parent: {id: parent, programs: {id: programId}} } : { id: flowId, programs: {id: programId}}
 
-		let updateQuery = getProgramSelector(update, flowId, parent)
+		// let updateQuery = getProgramSelector(update, flowId, parent)
 
 		const addActions = mutation.updateCommandProgramFlows({
 			where:  where, //{id: programId},
