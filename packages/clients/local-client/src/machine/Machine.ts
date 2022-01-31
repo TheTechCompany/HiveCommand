@@ -421,7 +421,7 @@ export class Machine {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		log.debug("write state - (LC Machine)", changes)
+		log.debug("write state - (LC Machine)", JSON.stringify(changes))
 
 		if(Object.keys(changes).length < 1) return;
 
@@ -449,8 +449,11 @@ export class Machine {
 					}
 				}
 				
+				console.log("WRITE PLUGIN", bus, port.port, {writeOp})
 				// log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
 				await plugin?.write(bus, port.port, writeOp);
+
+				this.busMap.set(bus, port.port, writeOp)
 			}))
 		}))
 		
