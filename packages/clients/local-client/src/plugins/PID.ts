@@ -45,6 +45,9 @@ export default `
 			}
 
 			async start(){
+				
+				this.instance.reset();
+
 				let runtimeId = nanoid();
 
 				this.running = true;
@@ -64,8 +67,10 @@ export default `
 
 						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId, actuatorValue});
 
+						if(this.device.fsm.state.getByKey(this.device.name, 'on')){
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
-						await this.device.requestState({speed: actuatorValue += addValue}); 
+							await this.device.requestState({speed: actuatorValue += addValue}); 
+						}
 					
 						await new Promise(resolve => setTimeout(resolve, 1000));
 					}
