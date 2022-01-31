@@ -68,6 +68,7 @@ export default `
 						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId, actuatorValue});
 
 						if(this.device.fsm.state.getByKey(this.device.name, 'on')){
+							console.log("WRITING PID STATE");
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 							await this.device.requestState({speed: actuatorValue += addValue}); 
 						}
@@ -84,8 +85,15 @@ export default `
 				console.log("Stopping PID");
 				this.running = false;
 
+
 				await this.device.requestState({speed: 0});
-				await this.device.setState({speed: 0, on: false});
+				
+				await new Promise((resolve) => {
+					setTimeout(() => resolve(true), 1000);
+				});
+
+				this.device.setState({speed: 0, on: false});
+
 
 				// await new Promise((resolve) => {
 
