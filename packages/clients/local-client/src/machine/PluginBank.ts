@@ -106,7 +106,8 @@ export class PluginBank {
 							}
 							return {
 								...prev,
-								[curr.key]: value //event.value[curr.foreignKey]
+								...update,
+								// [curr.key]: value //event.value[curr.foreignKey]
 							}
 						}, {})
 
