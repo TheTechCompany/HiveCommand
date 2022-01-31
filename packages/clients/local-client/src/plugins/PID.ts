@@ -85,13 +85,15 @@ export default `
 			}
 
 			async stop(){
-				console.log("Stopping PID");
+				console.log("Stopping PID", this.device.name);
 				this.running = false;
 				this.stopping = true;
 
 
 				await this.device.requestState({speed: 0});
 				
+				this.device.setState({speed: 0});
+
 				await new Promise((resolve) => {
 					setTimeout(() => resolve(true), 1000);
 				});
