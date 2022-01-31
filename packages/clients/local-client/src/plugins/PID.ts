@@ -11,6 +11,7 @@ export default `
 			
 			speed = 0;
 			running = false;
+			stopping = false;
 
 			state = null;
 			updateState = null
@@ -51,6 +52,8 @@ export default `
 				let runtimeId = nanoid();
 
 				this.running = true;
+				this.stopping = false;
+
 				// console.log({thisvalue: this.instance.setTarget, thissecond: this.instance.update})
 				this.instance.setTarget(this.target);
 
@@ -67,8 +70,8 @@ export default `
 
 						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId, actuatorValue});
 
-						if(this.device.fsm.state.getByKey(this.device.name, 'on')){
-							console.log("WRITING PID STATE");
+						if(this.device.fsm.state.getByKey(this.device.name, 'on') && !this.stopping){
+							console.log("WRITING PID STATE", this.device.name, {actuatorValue}, {addValue});
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 							await this.device.requestState({speed: actuatorValue += addValue}); 
 						}
@@ -84,6 +87,7 @@ export default `
 			async stop(){
 				console.log("Stopping PID");
 				this.running = false;
+				this.stopping = true;
 
 
 				await this.device.requestState({speed: 0});
