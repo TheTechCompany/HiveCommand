@@ -167,9 +167,9 @@ export class SyncClient {
 	}
 
 	async callMethod(serverUri: string, device: string, method: string, args: any[]){
-		console.log("Calling method", device, method, args)
+		// console.log("Calling method", device, method, args)
 		const result = await this.clients?.[serverUri]?.callMethod(device || `/Objects/1:Controller/1:Machine`, method || `/1:command`, args)
-		console.log(`Method called`, result)
+		// console.log(`Method called`, result)
 	}
 	// async writeAction(serverUri: string, deviceName: string, action: string, arg){
 	// 	await this.callMethod(serverUri, deviceName, action)

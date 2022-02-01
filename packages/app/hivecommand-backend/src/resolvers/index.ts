@@ -179,7 +179,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 						address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 						deviceId: args.deviceId,
 						flow: action.id,
-						authorizedBy: context.user.name
+						authorizedBy: context.jwt?.name
 					}
 					return await channel.sendToQueue(`COMMAND:FLOW:PRIORITIZE`, Buffer.from(JSON.stringify(actionRequest)))
 				}
@@ -236,7 +236,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 						deviceId: args.deviceId,
 						deviceName: args.deviceName,
 						action: action.key,
-						authorizedBy: context.user.name
+						authorizedBy: context.jwt?.name
 					}
 
 					// channel.
@@ -276,7 +276,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
 					mode: args.mode,
-					authorizedBy: context.user.name
+					authorizedBy: context.jwt?.name
 				}
 
 				await session.writeTransaction(async (tx) => {
@@ -312,7 +312,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
 					state: args.state,
-					authorizedBy: context.user.name
+					authorizedBy: context.jwt?.name
 
 				}
 
@@ -346,7 +346,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					deviceId: args.deviceId,
 					deviceName: args.deviceName,
 					mode: args.mode,
-					authorizedBy: context.user.name
+					authorizedBy: context.jwt?.name
 				}
 
 				return await channel.sendToQueue(`COMMAND:DEVICE:MODE`, Buffer.from(JSON.stringify(actionRequest)))
