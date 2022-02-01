@@ -549,6 +549,7 @@ export interface CommandDeviceConnectInput {
   calibrations?: InputMaybe<Array<CommandDeviceCalibrationsConnectFieldInput>>;
   organisation?: InputMaybe<CommandDeviceOrganisationConnectFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsConnectFieldInput>>;
+  reporting?: InputMaybe<Array<CommandDeviceReportingConnectFieldInput>>;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsConnectFieldInput>
   >;
@@ -562,6 +563,9 @@ export interface CommandDeviceConnectOrCreateInput {
   organisation?: InputMaybe<CommandDeviceOrganisationConnectOrCreateFieldInput>;
   peripherals?: InputMaybe<
     Array<CommandDevicePeripheralsConnectOrCreateFieldInput>
+  >;
+  reporting?: InputMaybe<
+    Array<CommandDeviceReportingConnectOrCreateFieldInput>
   >;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsConnectOrCreateFieldInput>
@@ -587,6 +591,7 @@ export interface CommandDeviceCreateInput {
   operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationFieldInput>;
   peripherals?: InputMaybe<CommandDevicePeripheralsFieldInput>;
+  reporting?: InputMaybe<CommandDeviceReportingFieldInput>;
   waitingForActions?: InputMaybe<CommandDeviceWaitingForActionsFieldInput>;
 }
 
@@ -595,6 +600,7 @@ export interface CommandDeviceDeleteInput {
   calibrations?: InputMaybe<Array<CommandDeviceCalibrationsDeleteFieldInput>>;
   organisation?: InputMaybe<CommandDeviceOrganisationDeleteFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsDeleteFieldInput>>;
+  reporting?: InputMaybe<Array<CommandDeviceReportingDeleteFieldInput>>;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsDeleteFieldInput>
   >;
@@ -607,6 +613,7 @@ export interface CommandDeviceDisconnectInput {
   >;
   organisation?: InputMaybe<CommandDeviceOrganisationDisconnectFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsDisconnectFieldInput>>;
+  reporting?: InputMaybe<Array<CommandDeviceReportingDisconnectFieldInput>>;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsDisconnectFieldInput>
   >;
@@ -2996,9 +3003,839 @@ export interface CommandDeviceRelationInput {
   calibrations?: InputMaybe<Array<CommandDeviceCalibrationsCreateFieldInput>>;
   organisation?: InputMaybe<CommandDeviceOrganisationCreateFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsCreateFieldInput>>;
+  reporting?: InputMaybe<Array<CommandDeviceReportingCreateFieldInput>>;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsCreateFieldInput>
   >;
+}
+
+export interface CommandDeviceReportConnectInput {
+  device?: InputMaybe<CommandDeviceReportDeviceConnectFieldInput>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceConnectFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyConnectFieldInput>;
+}
+
+export interface CommandDeviceReportConnectOrCreateInput {
+  device?: InputMaybe<CommandDeviceReportDeviceConnectOrCreateFieldInput>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyConnectOrCreateFieldInput>;
+}
+
+export interface CommandDeviceReportConnectOrCreateWhere {
+  node: CommandDeviceReportUniqueWhere;
+}
+
+export interface CommandDeviceReportConnectWhere {
+  node: CommandDeviceReportWhere;
+}
+
+export interface CommandDeviceReportCreateInput {
+  device?: InputMaybe<CommandDeviceReportDeviceFieldInput>;
+  h?: InputMaybe<Scalars["Int"]>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyFieldInput>;
+  total?: InputMaybe<Scalars["Boolean"]>;
+  type?: InputMaybe<Scalars["String"]>;
+  w?: InputMaybe<Scalars["Int"]>;
+  x?: InputMaybe<Scalars["Int"]>;
+  y?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportDeleteInput {
+  device?: InputMaybe<CommandDeviceReportDeviceDeleteFieldInput>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceDeleteFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyDeleteFieldInput>;
+}
+
+export interface CommandDeviceReportDeviceAggregateInput {
+  AND?: InputMaybe<Array<CommandDeviceReportDeviceAggregateInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportDeviceAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandDeviceReportDeviceNodeAggregationWhereInput>;
+}
+
+export interface CommandDeviceReportDeviceConnectFieldInput {
+  connect?: InputMaybe<CommandDeviceConnectInput>;
+  where?: InputMaybe<CommandDeviceConnectWhere>;
+}
+
+export interface CommandDeviceReportDeviceConnectOrCreateFieldInput {
+  onCreate: CommandDeviceReportDeviceConnectOrCreateFieldInputOnCreate;
+  where: CommandDeviceConnectOrCreateWhere;
+}
+
+export interface CommandDeviceReportDeviceConnectOrCreateFieldInputOnCreate {
+  node: CommandDeviceCreateInput;
+}
+
+export interface CommandDeviceReportDeviceConnectionSort {
+  node?: InputMaybe<CommandDeviceSort>;
+}
+
+export interface CommandDeviceReportDeviceConnectionWhere {
+  AND?: InputMaybe<Array<CommandDeviceReportDeviceConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandDeviceReportDeviceConnectionWhere>>;
+  node?: InputMaybe<CommandDeviceWhere>;
+  node_NOT?: InputMaybe<CommandDeviceWhere>;
+}
+
+export interface CommandDeviceReportDeviceCreateFieldInput {
+  node: CommandDeviceCreateInput;
+}
+
+export interface CommandDeviceReportDeviceDeleteFieldInput {
+  delete?: InputMaybe<CommandDeviceDeleteInput>;
+  where?: InputMaybe<CommandDeviceReportDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportDeviceDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandDeviceDisconnectInput>;
+  where?: InputMaybe<CommandDeviceReportDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportDeviceFieldInput {
+  connect?: InputMaybe<CommandDeviceReportDeviceConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportDeviceConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportDeviceCreateFieldInput>;
+}
+
+export interface CommandDeviceReportDeviceNodeAggregationWhereInput {
+  AND?: InputMaybe<Array<CommandDeviceReportDeviceNodeAggregationWhereInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportDeviceNodeAggregationWhereInput>>;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  lastOnline_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_GT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_GTE?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_LT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_LTE?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MAX_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MAX_GT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MAX_GTE?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MAX_LT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MAX_LTE?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MIN_EQUAL?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MIN_GT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MIN_GTE?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MIN_LT?: InputMaybe<Scalars["DateTime"]>;
+  lastOnline_MIN_LTE?: InputMaybe<Scalars["DateTime"]>;
+  name_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  name_EQUAL?: InputMaybe<Scalars["String"]>;
+  name_GT?: InputMaybe<Scalars["Int"]>;
+  name_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  name_LT?: InputMaybe<Scalars["Int"]>;
+  name_LTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  network_name_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  network_name_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  network_name_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  network_name_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  network_name_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  network_name_EQUAL?: InputMaybe<Scalars["String"]>;
+  network_name_GT?: InputMaybe<Scalars["Int"]>;
+  network_name_GTE?: InputMaybe<Scalars["Int"]>;
+  network_name_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  network_name_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  network_name_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  network_name_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  network_name_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  network_name_LT?: InputMaybe<Scalars["Int"]>;
+  network_name_LTE?: InputMaybe<Scalars["Int"]>;
+  network_name_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  network_name_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  network_name_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  network_name_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  network_name_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingMode_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingMode_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingMode_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingMode_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingMode_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingMode_GT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingMode_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingMode_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingMode_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  operatingState_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  operatingState_EQUAL?: InputMaybe<Scalars["String"]>;
+  operatingState_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_LTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  operatingState_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportDeviceUpdateConnectionInput {
+  node?: InputMaybe<CommandDeviceUpdateInput>;
+}
+
+export interface CommandDeviceReportDeviceUpdateFieldInput {
+  connect?: InputMaybe<CommandDeviceReportDeviceConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportDeviceConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportDeviceCreateFieldInput>;
+  delete?: InputMaybe<CommandDeviceReportDeviceDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandDeviceReportDeviceDisconnectFieldInput>;
+  update?: InputMaybe<CommandDeviceReportDeviceUpdateConnectionInput>;
+  where?: InputMaybe<CommandDeviceReportDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportDisconnectInput {
+  device?: InputMaybe<CommandDeviceReportDeviceDisconnectFieldInput>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceDisconnectFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyDisconnectFieldInput>;
+}
+
+export interface CommandDeviceReportOptions {
+  limit?: InputMaybe<Scalars["Int"]>;
+  offset?: InputMaybe<Scalars["Int"]>;
+  /** Specify one or more CommandDeviceReportSort objects to sort CommandDeviceReports by. The sorts will be applied in the order in which they are arranged in the array. */
+  sort?: InputMaybe<Array<InputMaybe<CommandDeviceReportSort>>>;
+}
+
+export interface CommandDeviceReportRelationInput {
+  device?: InputMaybe<CommandDeviceReportDeviceCreateFieldInput>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceCreateFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyCreateFieldInput>;
+}
+
+/** Fields to sort CommandDeviceReports by. The order in which sorts are applied is not guaranteed when specifying many fields in one CommandDeviceReportSort object. */
+export interface CommandDeviceReportSort {
+  h?: InputMaybe<SortDirection>;
+  id?: InputMaybe<SortDirection>;
+  total?: InputMaybe<SortDirection>;
+  type?: InputMaybe<SortDirection>;
+  w?: InputMaybe<SortDirection>;
+  x?: InputMaybe<SortDirection>;
+  y?: InputMaybe<SortDirection>;
+}
+
+export interface CommandDeviceReportTemplateDeviceAggregateInput {
+  AND?: InputMaybe<Array<CommandDeviceReportTemplateDeviceAggregateInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportTemplateDeviceAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandDeviceReportTemplateDeviceNodeAggregationWhereInput>;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnectFieldInput {
+  connect?: InputMaybe<CommandProgramDevicePlaceholderConnectInput>;
+  where?: InputMaybe<CommandProgramDevicePlaceholderConnectWhere>;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput {
+  onCreate: CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate;
+  where: CommandProgramDevicePlaceholderConnectOrCreateWhere;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate {
+  node: CommandProgramDevicePlaceholderCreateInput;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnectionSort {
+  node?: InputMaybe<CommandProgramDevicePlaceholderSort>;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnectionWhere {
+  AND?: InputMaybe<Array<CommandDeviceReportTemplateDeviceConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandDeviceReportTemplateDeviceConnectionWhere>>;
+  node?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+  node_NOT?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+}
+
+export interface CommandDeviceReportTemplateDeviceCreateFieldInput {
+  node: CommandProgramDevicePlaceholderCreateInput;
+}
+
+export interface CommandDeviceReportTemplateDeviceDeleteFieldInput {
+  delete?: InputMaybe<CommandProgramDevicePlaceholderDeleteInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportTemplateDeviceDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandProgramDevicePlaceholderDisconnectInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportTemplateDeviceFieldInput {
+  connect?: InputMaybe<CommandDeviceReportTemplateDeviceConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportTemplateDeviceCreateFieldInput>;
+}
+
+export interface CommandDeviceReportTemplateDeviceNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandDeviceReportTemplateDeviceNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandDeviceReportTemplateDeviceNodeAggregationWhereInput>
+  >;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  name_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  name_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  name_EQUAL?: InputMaybe<Scalars["String"]>;
+  name_GT?: InputMaybe<Scalars["Int"]>;
+  name_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  name_LT?: InputMaybe<Scalars["Int"]>;
+  name_LTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  name_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportTemplateDeviceUpdateConnectionInput {
+  node?: InputMaybe<CommandProgramDevicePlaceholderUpdateInput>;
+}
+
+export interface CommandDeviceReportTemplateDeviceUpdateFieldInput {
+  connect?: InputMaybe<CommandDeviceReportTemplateDeviceConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportTemplateDeviceCreateFieldInput>;
+  delete?: InputMaybe<CommandDeviceReportTemplateDeviceDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandDeviceReportTemplateDeviceDisconnectFieldInput>;
+  update?: InputMaybe<CommandDeviceReportTemplateDeviceUpdateConnectionInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+}
+
+export interface CommandDeviceReportTemplateKeyAggregateInput {
+  AND?: InputMaybe<Array<CommandDeviceReportTemplateKeyAggregateInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportTemplateKeyAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandDeviceReportTemplateKeyNodeAggregationWhereInput>;
+}
+
+export interface CommandDeviceReportTemplateKeyConnectFieldInput {
+  connect?: InputMaybe<CommandProgramDeviceStateConnectInput>;
+  where?: InputMaybe<CommandProgramDeviceStateConnectWhere>;
+}
+
+export interface CommandDeviceReportTemplateKeyConnectOrCreateFieldInput {
+  onCreate: CommandDeviceReportTemplateKeyConnectOrCreateFieldInputOnCreate;
+  where: CommandProgramDeviceStateConnectOrCreateWhere;
+}
+
+export interface CommandDeviceReportTemplateKeyConnectOrCreateFieldInputOnCreate {
+  node: CommandProgramDeviceStateCreateInput;
+}
+
+export interface CommandDeviceReportTemplateKeyConnectionSort {
+  node?: InputMaybe<CommandProgramDeviceStateSort>;
+}
+
+export interface CommandDeviceReportTemplateKeyConnectionWhere {
+  AND?: InputMaybe<Array<CommandDeviceReportTemplateKeyConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandDeviceReportTemplateKeyConnectionWhere>>;
+  node?: InputMaybe<CommandProgramDeviceStateWhere>;
+  node_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
+}
+
+export interface CommandDeviceReportTemplateKeyCreateFieldInput {
+  node: CommandProgramDeviceStateCreateInput;
+}
+
+export interface CommandDeviceReportTemplateKeyDeleteFieldInput {
+  delete?: InputMaybe<CommandProgramDeviceStateDeleteInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+}
+
+export interface CommandDeviceReportTemplateKeyDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandProgramDeviceStateDisconnectInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+}
+
+export interface CommandDeviceReportTemplateKeyFieldInput {
+  connect?: InputMaybe<CommandDeviceReportTemplateKeyConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportTemplateKeyConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportTemplateKeyCreateFieldInput>;
+}
+
+export interface CommandDeviceReportTemplateKeyNodeAggregationWhereInput {
+  AND?: InputMaybe<
+    Array<CommandDeviceReportTemplateKeyNodeAggregationWhereInput>
+  >;
+  OR?: InputMaybe<
+    Array<CommandDeviceReportTemplateKeyNodeAggregationWhereInput>
+  >;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  inputUnits_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  inputUnits_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  inputUnits_EQUAL?: InputMaybe<Scalars["String"]>;
+  inputUnits_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_LTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  inputUnits_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  key_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  key_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  key_EQUAL?: InputMaybe<Scalars["String"]>;
+  key_GT?: InputMaybe<Scalars["Int"]>;
+  key_GTE?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  key_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  key_LT?: InputMaybe<Scalars["Int"]>;
+  key_LTE?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  key_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  max_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  max_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  max_EQUAL?: InputMaybe<Scalars["String"]>;
+  max_GT?: InputMaybe<Scalars["Int"]>;
+  max_GTE?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  max_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  max_LT?: InputMaybe<Scalars["Int"]>;
+  max_LTE?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  max_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  min_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  min_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  min_EQUAL?: InputMaybe<Scalars["String"]>;
+  min_GT?: InputMaybe<Scalars["Int"]>;
+  min_GTE?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  min_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  min_LT?: InputMaybe<Scalars["Int"]>;
+  min_LTE?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  min_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  type_EQUAL?: InputMaybe<Scalars["String"]>;
+  type_GT?: InputMaybe<Scalars["Int"]>;
+  type_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_LT?: InputMaybe<Scalars["Int"]>;
+  type_LTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  units_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  units_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  units_EQUAL?: InputMaybe<Scalars["String"]>;
+  units_GT?: InputMaybe<Scalars["Int"]>;
+  units_GTE?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  units_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  units_LT?: InputMaybe<Scalars["Int"]>;
+  units_LTE?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  units_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportTemplateKeyUpdateConnectionInput {
+  node?: InputMaybe<CommandProgramDeviceStateUpdateInput>;
+}
+
+export interface CommandDeviceReportTemplateKeyUpdateFieldInput {
+  connect?: InputMaybe<CommandDeviceReportTemplateKeyConnectFieldInput>;
+  connectOrCreate?: InputMaybe<CommandDeviceReportTemplateKeyConnectOrCreateFieldInput>;
+  create?: InputMaybe<CommandDeviceReportTemplateKeyCreateFieldInput>;
+  delete?: InputMaybe<CommandDeviceReportTemplateKeyDeleteFieldInput>;
+  disconnect?: InputMaybe<CommandDeviceReportTemplateKeyDisconnectFieldInput>;
+  update?: InputMaybe<CommandDeviceReportTemplateKeyUpdateConnectionInput>;
+  where?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+}
+
+export interface CommandDeviceReportUniqueWhere {
+  id?: InputMaybe<Scalars["ID"]>;
+}
+
+export interface CommandDeviceReportUpdateInput {
+  device?: InputMaybe<CommandDeviceReportDeviceUpdateFieldInput>;
+  h?: InputMaybe<Scalars["Int"]>;
+  templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceUpdateFieldInput>;
+  templateKey?: InputMaybe<CommandDeviceReportTemplateKeyUpdateFieldInput>;
+  total?: InputMaybe<Scalars["Boolean"]>;
+  type?: InputMaybe<Scalars["String"]>;
+  w?: InputMaybe<Scalars["Int"]>;
+  x?: InputMaybe<Scalars["Int"]>;
+  y?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportWhere {
+  AND?: InputMaybe<Array<CommandDeviceReportWhere>>;
+  OR?: InputMaybe<Array<CommandDeviceReportWhere>>;
+  device?: InputMaybe<CommandDeviceWhere>;
+  deviceAggregate?: InputMaybe<CommandDeviceReportDeviceAggregateInput>;
+  deviceConnection?: InputMaybe<CommandDeviceReportDeviceConnectionWhere>;
+  deviceConnection_NOT?: InputMaybe<CommandDeviceReportDeviceConnectionWhere>;
+  device_NOT?: InputMaybe<CommandDeviceWhere>;
+  h?: InputMaybe<Scalars["Int"]>;
+  h_GT?: InputMaybe<Scalars["Int"]>;
+  h_GTE?: InputMaybe<Scalars["Int"]>;
+  h_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  h_LT?: InputMaybe<Scalars["Int"]>;
+  h_LTE?: InputMaybe<Scalars["Int"]>;
+  h_NOT?: InputMaybe<Scalars["Int"]>;
+  h_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  id?: InputMaybe<Scalars["ID"]>;
+  id_CONTAINS?: InputMaybe<Scalars["ID"]>;
+  id_ENDS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_IN?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  id_NOT?: InputMaybe<Scalars["ID"]>;
+  id_NOT_CONTAINS?: InputMaybe<Scalars["ID"]>;
+  id_NOT_ENDS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
+  id_NOT_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
+  id_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
+  templateDevice?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+  templateDeviceAggregate?: InputMaybe<CommandDeviceReportTemplateDeviceAggregateInput>;
+  templateDeviceConnection?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+  templateDeviceConnection_NOT?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+  templateDevice_NOT?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+  templateKey?: InputMaybe<CommandProgramDeviceStateWhere>;
+  templateKeyAggregate?: InputMaybe<CommandDeviceReportTemplateKeyAggregateInput>;
+  templateKeyConnection?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+  templateKeyConnection_NOT?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+  templateKey_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
+  total?: InputMaybe<Scalars["Boolean"]>;
+  total_NOT?: InputMaybe<Scalars["Boolean"]>;
+  type?: InputMaybe<Scalars["String"]>;
+  type_CONTAINS?: InputMaybe<Scalars["String"]>;
+  type_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  type_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  type_NOT?: InputMaybe<Scalars["String"]>;
+  type_NOT_CONTAINS?: InputMaybe<Scalars["String"]>;
+  type_NOT_ENDS_WITH?: InputMaybe<Scalars["String"]>;
+  type_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  type_NOT_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  type_STARTS_WITH?: InputMaybe<Scalars["String"]>;
+  w?: InputMaybe<Scalars["Int"]>;
+  w_GT?: InputMaybe<Scalars["Int"]>;
+  w_GTE?: InputMaybe<Scalars["Int"]>;
+  w_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  w_LT?: InputMaybe<Scalars["Int"]>;
+  w_LTE?: InputMaybe<Scalars["Int"]>;
+  w_NOT?: InputMaybe<Scalars["Int"]>;
+  w_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  x?: InputMaybe<Scalars["Int"]>;
+  x_GT?: InputMaybe<Scalars["Int"]>;
+  x_GTE?: InputMaybe<Scalars["Int"]>;
+  x_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  x_LT?: InputMaybe<Scalars["Int"]>;
+  x_LTE?: InputMaybe<Scalars["Int"]>;
+  x_NOT?: InputMaybe<Scalars["Int"]>;
+  x_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  y?: InputMaybe<Scalars["Int"]>;
+  y_GT?: InputMaybe<Scalars["Int"]>;
+  y_GTE?: InputMaybe<Scalars["Int"]>;
+  y_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+  y_LT?: InputMaybe<Scalars["Int"]>;
+  y_LTE?: InputMaybe<Scalars["Int"]>;
+  y_NOT?: InputMaybe<Scalars["Int"]>;
+  y_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["Int"]>>>;
+}
+
+export interface CommandDeviceReportingAggregateInput {
+  AND?: InputMaybe<Array<CommandDeviceReportingAggregateInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportingAggregateInput>>;
+  count?: InputMaybe<Scalars["Int"]>;
+  count_GT?: InputMaybe<Scalars["Int"]>;
+  count_GTE?: InputMaybe<Scalars["Int"]>;
+  count_LT?: InputMaybe<Scalars["Int"]>;
+  count_LTE?: InputMaybe<Scalars["Int"]>;
+  node?: InputMaybe<CommandDeviceReportingNodeAggregationWhereInput>;
+}
+
+export interface CommandDeviceReportingConnectFieldInput {
+  connect?: InputMaybe<Array<CommandDeviceReportConnectInput>>;
+  where?: InputMaybe<CommandDeviceReportConnectWhere>;
+}
+
+export interface CommandDeviceReportingConnectOrCreateFieldInput {
+  onCreate: CommandDeviceReportingConnectOrCreateFieldInputOnCreate;
+  where: CommandDeviceReportConnectOrCreateWhere;
+}
+
+export interface CommandDeviceReportingConnectOrCreateFieldInputOnCreate {
+  node: CommandDeviceReportCreateInput;
+}
+
+export interface CommandDeviceReportingConnectionSort {
+  node?: InputMaybe<CommandDeviceReportSort>;
+}
+
+export interface CommandDeviceReportingConnectionWhere {
+  AND?: InputMaybe<Array<CommandDeviceReportingConnectionWhere>>;
+  OR?: InputMaybe<Array<CommandDeviceReportingConnectionWhere>>;
+  node?: InputMaybe<CommandDeviceReportWhere>;
+  node_NOT?: InputMaybe<CommandDeviceReportWhere>;
+}
+
+export interface CommandDeviceReportingCreateFieldInput {
+  node: CommandDeviceReportCreateInput;
+}
+
+export interface CommandDeviceReportingDeleteFieldInput {
+  delete?: InputMaybe<CommandDeviceReportDeleteInput>;
+  where?: InputMaybe<CommandDeviceReportingConnectionWhere>;
+}
+
+export interface CommandDeviceReportingDisconnectFieldInput {
+  disconnect?: InputMaybe<CommandDeviceReportDisconnectInput>;
+  where?: InputMaybe<CommandDeviceReportingConnectionWhere>;
+}
+
+export interface CommandDeviceReportingFieldInput {
+  connect?: InputMaybe<Array<CommandDeviceReportingConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<
+    Array<CommandDeviceReportingConnectOrCreateFieldInput>
+  >;
+  create?: InputMaybe<Array<CommandDeviceReportingCreateFieldInput>>;
+}
+
+export interface CommandDeviceReportingNodeAggregationWhereInput {
+  AND?: InputMaybe<Array<CommandDeviceReportingNodeAggregationWhereInput>>;
+  OR?: InputMaybe<Array<CommandDeviceReportingNodeAggregationWhereInput>>;
+  h_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  h_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  h_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  h_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  h_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  h_EQUAL?: InputMaybe<Scalars["Int"]>;
+  h_GT?: InputMaybe<Scalars["Int"]>;
+  h_GTE?: InputMaybe<Scalars["Int"]>;
+  h_LT?: InputMaybe<Scalars["Int"]>;
+  h_LTE?: InputMaybe<Scalars["Int"]>;
+  h_MAX_EQUAL?: InputMaybe<Scalars["Int"]>;
+  h_MAX_GT?: InputMaybe<Scalars["Int"]>;
+  h_MAX_GTE?: InputMaybe<Scalars["Int"]>;
+  h_MAX_LT?: InputMaybe<Scalars["Int"]>;
+  h_MAX_LTE?: InputMaybe<Scalars["Int"]>;
+  h_MIN_EQUAL?: InputMaybe<Scalars["Int"]>;
+  h_MIN_GT?: InputMaybe<Scalars["Int"]>;
+  h_MIN_GTE?: InputMaybe<Scalars["Int"]>;
+  h_MIN_LT?: InputMaybe<Scalars["Int"]>;
+  h_MIN_LTE?: InputMaybe<Scalars["Int"]>;
+  h_SUM_EQUAL?: InputMaybe<Scalars["Int"]>;
+  h_SUM_GT?: InputMaybe<Scalars["Int"]>;
+  h_SUM_GTE?: InputMaybe<Scalars["Int"]>;
+  h_SUM_LT?: InputMaybe<Scalars["Int"]>;
+  h_SUM_LTE?: InputMaybe<Scalars["Int"]>;
+  id_EQUAL?: InputMaybe<Scalars["ID"]>;
+  type_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  type_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  type_EQUAL?: InputMaybe<Scalars["String"]>;
+  type_GT?: InputMaybe<Scalars["Int"]>;
+  type_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
+  type_LT?: InputMaybe<Scalars["Int"]>;
+  type_LTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
+  type_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
+  w_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  w_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  w_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  w_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  w_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  w_EQUAL?: InputMaybe<Scalars["Int"]>;
+  w_GT?: InputMaybe<Scalars["Int"]>;
+  w_GTE?: InputMaybe<Scalars["Int"]>;
+  w_LT?: InputMaybe<Scalars["Int"]>;
+  w_LTE?: InputMaybe<Scalars["Int"]>;
+  w_MAX_EQUAL?: InputMaybe<Scalars["Int"]>;
+  w_MAX_GT?: InputMaybe<Scalars["Int"]>;
+  w_MAX_GTE?: InputMaybe<Scalars["Int"]>;
+  w_MAX_LT?: InputMaybe<Scalars["Int"]>;
+  w_MAX_LTE?: InputMaybe<Scalars["Int"]>;
+  w_MIN_EQUAL?: InputMaybe<Scalars["Int"]>;
+  w_MIN_GT?: InputMaybe<Scalars["Int"]>;
+  w_MIN_GTE?: InputMaybe<Scalars["Int"]>;
+  w_MIN_LT?: InputMaybe<Scalars["Int"]>;
+  w_MIN_LTE?: InputMaybe<Scalars["Int"]>;
+  w_SUM_EQUAL?: InputMaybe<Scalars["Int"]>;
+  w_SUM_GT?: InputMaybe<Scalars["Int"]>;
+  w_SUM_GTE?: InputMaybe<Scalars["Int"]>;
+  w_SUM_LT?: InputMaybe<Scalars["Int"]>;
+  w_SUM_LTE?: InputMaybe<Scalars["Int"]>;
+  x_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  x_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  x_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  x_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  x_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  x_EQUAL?: InputMaybe<Scalars["Int"]>;
+  x_GT?: InputMaybe<Scalars["Int"]>;
+  x_GTE?: InputMaybe<Scalars["Int"]>;
+  x_LT?: InputMaybe<Scalars["Int"]>;
+  x_LTE?: InputMaybe<Scalars["Int"]>;
+  x_MAX_EQUAL?: InputMaybe<Scalars["Int"]>;
+  x_MAX_GT?: InputMaybe<Scalars["Int"]>;
+  x_MAX_GTE?: InputMaybe<Scalars["Int"]>;
+  x_MAX_LT?: InputMaybe<Scalars["Int"]>;
+  x_MAX_LTE?: InputMaybe<Scalars["Int"]>;
+  x_MIN_EQUAL?: InputMaybe<Scalars["Int"]>;
+  x_MIN_GT?: InputMaybe<Scalars["Int"]>;
+  x_MIN_GTE?: InputMaybe<Scalars["Int"]>;
+  x_MIN_LT?: InputMaybe<Scalars["Int"]>;
+  x_MIN_LTE?: InputMaybe<Scalars["Int"]>;
+  x_SUM_EQUAL?: InputMaybe<Scalars["Int"]>;
+  x_SUM_GT?: InputMaybe<Scalars["Int"]>;
+  x_SUM_GTE?: InputMaybe<Scalars["Int"]>;
+  x_SUM_LT?: InputMaybe<Scalars["Int"]>;
+  x_SUM_LTE?: InputMaybe<Scalars["Int"]>;
+  y_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
+  y_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
+  y_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
+  y_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
+  y_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
+  y_EQUAL?: InputMaybe<Scalars["Int"]>;
+  y_GT?: InputMaybe<Scalars["Int"]>;
+  y_GTE?: InputMaybe<Scalars["Int"]>;
+  y_LT?: InputMaybe<Scalars["Int"]>;
+  y_LTE?: InputMaybe<Scalars["Int"]>;
+  y_MAX_EQUAL?: InputMaybe<Scalars["Int"]>;
+  y_MAX_GT?: InputMaybe<Scalars["Int"]>;
+  y_MAX_GTE?: InputMaybe<Scalars["Int"]>;
+  y_MAX_LT?: InputMaybe<Scalars["Int"]>;
+  y_MAX_LTE?: InputMaybe<Scalars["Int"]>;
+  y_MIN_EQUAL?: InputMaybe<Scalars["Int"]>;
+  y_MIN_GT?: InputMaybe<Scalars["Int"]>;
+  y_MIN_GTE?: InputMaybe<Scalars["Int"]>;
+  y_MIN_LT?: InputMaybe<Scalars["Int"]>;
+  y_MIN_LTE?: InputMaybe<Scalars["Int"]>;
+  y_SUM_EQUAL?: InputMaybe<Scalars["Int"]>;
+  y_SUM_GT?: InputMaybe<Scalars["Int"]>;
+  y_SUM_GTE?: InputMaybe<Scalars["Int"]>;
+  y_SUM_LT?: InputMaybe<Scalars["Int"]>;
+  y_SUM_LTE?: InputMaybe<Scalars["Int"]>;
+}
+
+export interface CommandDeviceReportingUpdateConnectionInput {
+  node?: InputMaybe<CommandDeviceReportUpdateInput>;
+}
+
+export interface CommandDeviceReportingUpdateFieldInput {
+  connect?: InputMaybe<Array<CommandDeviceReportingConnectFieldInput>>;
+  connectOrCreate?: InputMaybe<
+    Array<CommandDeviceReportingConnectOrCreateFieldInput>
+  >;
+  create?: InputMaybe<Array<CommandDeviceReportingCreateFieldInput>>;
+  delete?: InputMaybe<Array<CommandDeviceReportingDeleteFieldInput>>;
+  disconnect?: InputMaybe<Array<CommandDeviceReportingDisconnectFieldInput>>;
+  update?: InputMaybe<CommandDeviceReportingUpdateConnectionInput>;
+  where?: InputMaybe<CommandDeviceReportingConnectionWhere>;
 }
 
 export interface CommandDeviceSetpointConnectInput {
@@ -3334,6 +4171,7 @@ export interface CommandDeviceUpdateInput {
   operatingState?: InputMaybe<Scalars["String"]>;
   organisation?: InputMaybe<CommandDeviceOrganisationUpdateFieldInput>;
   peripherals?: InputMaybe<Array<CommandDevicePeripheralsUpdateFieldInput>>;
+  reporting?: InputMaybe<Array<CommandDeviceReportingUpdateFieldInput>>;
   waitingForActions?: InputMaybe<
     Array<CommandDeviceWaitingForActionsUpdateFieldInput>
   >;
@@ -3528,6 +4366,11 @@ export interface CommandDeviceWhere {
   peripheralsConnection?: InputMaybe<CommandDevicePeripheralsConnectionWhere>;
   peripheralsConnection_NOT?: InputMaybe<CommandDevicePeripheralsConnectionWhere>;
   peripherals_NOT?: InputMaybe<CommandDevicePeripheralWhere>;
+  reporting?: InputMaybe<CommandDeviceReportWhere>;
+  reportingAggregate?: InputMaybe<CommandDeviceReportingAggregateInput>;
+  reportingConnection?: InputMaybe<CommandDeviceReportingConnectionWhere>;
+  reportingConnection_NOT?: InputMaybe<CommandDeviceReportingConnectionWhere>;
+  reporting_NOT?: InputMaybe<CommandDeviceReportWhere>;
   waitingForActions?: InputMaybe<CommandProgramActionWhere>;
   waitingForActionsAggregate?: InputMaybe<CommandDeviceWaitingForActionsAggregateInput>;
   waitingForActionsConnection?: InputMaybe<CommandDeviceWaitingForActionsConnectionWhere>;
@@ -21698,6 +22541,26 @@ export const generatedSchema : any = {
         where: "CommandDevicePeripheralsConnectionWhere",
       },
     },
+    reporting: {
+      __type: "[CommandDeviceReport]",
+      __args: {
+        options: "CommandDeviceReportOptions",
+        where: "CommandDeviceReportWhere",
+      },
+    },
+    reportingAggregate: {
+      __type: "CommandDeviceCommandDeviceReportReportingAggregationSelection",
+      __args: { where: "CommandDeviceReportWhere" },
+    },
+    reportingConnection: {
+      __type: "CommandDeviceReportingConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandDeviceReportingConnectionSort!]",
+        where: "CommandDeviceReportingConnectionWhere",
+      },
+    },
     waitingForActions: {
       __type: "[CommandProgramAction]",
       __args: {
@@ -21980,6 +22843,22 @@ export const generatedSchema : any = {
     ports: { __type: "IntAggregateSelection!" },
     type: { __type: "StringAggregateSelection!" },
   },
+  CommandDeviceCommandDeviceReportReportingAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type: "CommandDeviceCommandDeviceReportReportingNodeAggregateSelection",
+    },
+  },
+  CommandDeviceCommandDeviceReportReportingNodeAggregateSelection: {
+    __typename: { __type: "String!" },
+    h: { __type: "IntAggregateSelection!" },
+    id: { __type: "IDAggregateSelection!" },
+    type: { __type: "StringAggregateSelection!" },
+    w: { __type: "IntAggregateSelection!" },
+    x: { __type: "IntAggregateSelection!" },
+    y: { __type: "IntAggregateSelection!" },
+  },
   CommandDeviceCommandProgramActionWaitingForActionsAggregationSelection: {
     __typename: { __type: "String!" },
     count: { __type: "Int!" },
@@ -22027,6 +22906,7 @@ export const generatedSchema : any = {
     calibrations: { __type: "[CommandDeviceCalibrationsConnectFieldInput!]" },
     organisation: { __type: "CommandDeviceOrganisationConnectFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsConnectFieldInput!]" },
+    reporting: { __type: "[CommandDeviceReportingConnectFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsConnectFieldInput!]",
     },
@@ -22044,6 +22924,7 @@ export const generatedSchema : any = {
     peripherals: {
       __type: "[CommandDevicePeripheralsConnectOrCreateFieldInput!]",
     },
+    reporting: { __type: "[CommandDeviceReportingConnectOrCreateFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsConnectOrCreateFieldInput!]",
     },
@@ -22063,6 +22944,7 @@ export const generatedSchema : any = {
     operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationFieldInput" },
     peripherals: { __type: "CommandDevicePeripheralsFieldInput" },
+    reporting: { __type: "CommandDeviceReportingFieldInput" },
     waitingForActions: { __type: "CommandDeviceWaitingForActionsFieldInput" },
   },
   CommandDeviceDeleteInput: {
@@ -22070,6 +22952,7 @@ export const generatedSchema : any = {
     calibrations: { __type: "[CommandDeviceCalibrationsDeleteFieldInput!]" },
     organisation: { __type: "CommandDeviceOrganisationDeleteFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsDeleteFieldInput!]" },
+    reporting: { __type: "[CommandDeviceReportingDeleteFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsDeleteFieldInput!]",
     },
@@ -22081,6 +22964,7 @@ export const generatedSchema : any = {
     },
     organisation: { __type: "CommandDeviceOrganisationDisconnectFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsDisconnectFieldInput!]" },
+    reporting: { __type: "[CommandDeviceReportingDisconnectFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsDisconnectFieldInput!]",
     },
@@ -25060,9 +25944,1003 @@ export const generatedSchema : any = {
     calibrations: { __type: "[CommandDeviceCalibrationsCreateFieldInput!]" },
     organisation: { __type: "CommandDeviceOrganisationCreateFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsCreateFieldInput!]" },
+    reporting: { __type: "[CommandDeviceReportingCreateFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsCreateFieldInput!]",
     },
+  },
+  CommandDeviceReport: {
+    __typename: { __type: "String!" },
+    device: {
+      __type: "CommandDevice",
+      __args: { options: "CommandDeviceOptions", where: "CommandDeviceWhere" },
+    },
+    deviceAggregate: {
+      __type: "CommandDeviceReportCommandDeviceDeviceAggregationSelection",
+      __args: { where: "CommandDeviceWhere" },
+    },
+    deviceConnection: {
+      __type: "CommandDeviceReportDeviceConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandDeviceReportDeviceConnectionSort!]",
+        where: "CommandDeviceReportDeviceConnectionWhere",
+      },
+    },
+    h: { __type: "Int" },
+    id: { __type: "ID!" },
+    templateDevice: {
+      __type: "CommandProgramDevicePlaceholder",
+      __args: {
+        options: "CommandProgramDevicePlaceholderOptions",
+        where: "CommandProgramDevicePlaceholderWhere",
+      },
+    },
+    templateDeviceAggregate: {
+      __type:
+        "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection",
+      __args: { where: "CommandProgramDevicePlaceholderWhere" },
+    },
+    templateDeviceConnection: {
+      __type: "CommandDeviceReportTemplateDeviceConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandDeviceReportTemplateDeviceConnectionSort!]",
+        where: "CommandDeviceReportTemplateDeviceConnectionWhere",
+      },
+    },
+    templateKey: {
+      __type: "CommandProgramDeviceState",
+      __args: {
+        options: "CommandProgramDeviceStateOptions",
+        where: "CommandProgramDeviceStateWhere",
+      },
+    },
+    templateKeyAggregate: {
+      __type:
+        "CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection",
+      __args: { where: "CommandProgramDeviceStateWhere" },
+    },
+    templateKeyConnection: {
+      __type: "CommandDeviceReportTemplateKeyConnection!",
+      __args: {
+        after: "String",
+        first: "Int",
+        sort: "[CommandDeviceReportTemplateKeyConnectionSort!]",
+        where: "CommandDeviceReportTemplateKeyConnectionWhere",
+      },
+    },
+    total: { __type: "Boolean" },
+    type: { __type: "String" },
+    w: { __type: "Int" },
+    x: { __type: "Int" },
+    y: { __type: "Int" },
+  },
+  CommandDeviceReportAggregateSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    h: { __type: "IntAggregateSelection!" },
+    id: { __type: "IDAggregateSelection!" },
+    type: { __type: "StringAggregateSelection!" },
+    w: { __type: "IntAggregateSelection!" },
+    x: { __type: "IntAggregateSelection!" },
+    y: { __type: "IntAggregateSelection!" },
+  },
+  CommandDeviceReportCommandDeviceDeviceAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type: "CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection",
+    },
+  },
+  CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection: {
+    __typename: { __type: "String!" },
+    id: { __type: "IDAggregateSelection!" },
+    lastOnline: { __type: "DateTimeAggregateSelection!" },
+    name: { __type: "StringAggregateSelection!" },
+    network_name: { __type: "StringAggregateSelection!" },
+    operatingMode: { __type: "StringAggregateSelection!" },
+    operatingState: { __type: "StringAggregateSelection!" },
+  },
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection:
+    {
+      __typename: { __type: "String!" },
+      count: { __type: "Int!" },
+      node: {
+        __type:
+          "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection",
+      },
+    },
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection:
+    {
+      __typename: { __type: "String!" },
+      id: { __type: "IDAggregateSelection!" },
+      name: { __type: "StringAggregateSelection!" },
+    },
+  CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection: {
+    __typename: { __type: "String!" },
+    count: { __type: "Int!" },
+    node: {
+      __type:
+        "CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection",
+    },
+  },
+  CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection:
+    {
+      __typename: { __type: "String!" },
+      id: { __type: "IDAggregateSelection!" },
+      inputUnits: { __type: "StringAggregateSelection!" },
+      key: { __type: "StringAggregateSelection!" },
+      max: { __type: "StringAggregateSelection!" },
+      min: { __type: "StringAggregateSelection!" },
+      type: { __type: "StringAggregateSelection!" },
+      units: { __type: "StringAggregateSelection!" },
+    },
+  CommandDeviceReportConnectInput: {
+    device: { __type: "CommandDeviceReportDeviceConnectFieldInput" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceConnectFieldInput",
+    },
+    templateKey: { __type: "CommandDeviceReportTemplateKeyConnectFieldInput" },
+  },
+  CommandDeviceReportConnectOrCreateInput: {
+    device: { __type: "CommandDeviceReportDeviceConnectOrCreateFieldInput" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput",
+    },
+    templateKey: {
+      __type: "CommandDeviceReportTemplateKeyConnectOrCreateFieldInput",
+    },
+  },
+  CommandDeviceReportConnectOrCreateWhere: {
+    node: { __type: "CommandDeviceReportUniqueWhere!" },
+  },
+  CommandDeviceReportConnectWhere: {
+    node: { __type: "CommandDeviceReportWhere!" },
+  },
+  CommandDeviceReportCreateInput: {
+    device: { __type: "CommandDeviceReportDeviceFieldInput" },
+    h: { __type: "Int" },
+    templateDevice: { __type: "CommandDeviceReportTemplateDeviceFieldInput" },
+    templateKey: { __type: "CommandDeviceReportTemplateKeyFieldInput" },
+    total: { __type: "Boolean" },
+    type: { __type: "String" },
+    w: { __type: "Int" },
+    x: { __type: "Int" },
+    y: { __type: "Int" },
+  },
+  CommandDeviceReportDeleteInput: {
+    device: { __type: "CommandDeviceReportDeviceDeleteFieldInput" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceDeleteFieldInput",
+    },
+    templateKey: { __type: "CommandDeviceReportTemplateKeyDeleteFieldInput" },
+  },
+  CommandDeviceReportDeviceAggregateInput: {
+    AND: { __type: "[CommandDeviceReportDeviceAggregateInput!]" },
+    OR: { __type: "[CommandDeviceReportDeviceAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandDeviceReportDeviceNodeAggregationWhereInput" },
+  },
+  CommandDeviceReportDeviceConnectFieldInput: {
+    connect: { __type: "CommandDeviceConnectInput" },
+    where: { __type: "CommandDeviceConnectWhere" },
+  },
+  CommandDeviceReportDeviceConnectOrCreateFieldInput: {
+    onCreate: {
+      __type: "CommandDeviceReportDeviceConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandDeviceConnectOrCreateWhere!" },
+  },
+  CommandDeviceReportDeviceConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandDeviceCreateInput!" },
+  },
+  CommandDeviceReportDeviceConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandDeviceReportDeviceRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandDeviceReportDeviceConnectionSort: {
+    node: { __type: "CommandDeviceSort" },
+  },
+  CommandDeviceReportDeviceConnectionWhere: {
+    AND: { __type: "[CommandDeviceReportDeviceConnectionWhere!]" },
+    OR: { __type: "[CommandDeviceReportDeviceConnectionWhere!]" },
+    node: { __type: "CommandDeviceWhere" },
+    node_NOT: { __type: "CommandDeviceWhere" },
+  },
+  CommandDeviceReportDeviceCreateFieldInput: {
+    node: { __type: "CommandDeviceCreateInput!" },
+  },
+  CommandDeviceReportDeviceDeleteFieldInput: {
+    delete: { __type: "CommandDeviceDeleteInput" },
+    where: { __type: "CommandDeviceReportDeviceConnectionWhere" },
+  },
+  CommandDeviceReportDeviceDisconnectFieldInput: {
+    disconnect: { __type: "CommandDeviceDisconnectInput" },
+    where: { __type: "CommandDeviceReportDeviceConnectionWhere" },
+  },
+  CommandDeviceReportDeviceFieldInput: {
+    connect: { __type: "CommandDeviceReportDeviceConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportDeviceConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportDeviceCreateFieldInput" },
+  },
+  CommandDeviceReportDeviceNodeAggregationWhereInput: {
+    AND: { __type: "[CommandDeviceReportDeviceNodeAggregationWhereInput!]" },
+    OR: { __type: "[CommandDeviceReportDeviceNodeAggregationWhereInput!]" },
+    id_EQUAL: { __type: "ID" },
+    lastOnline_EQUAL: { __type: "DateTime" },
+    lastOnline_GT: { __type: "DateTime" },
+    lastOnline_GTE: { __type: "DateTime" },
+    lastOnline_LT: { __type: "DateTime" },
+    lastOnline_LTE: { __type: "DateTime" },
+    lastOnline_MAX_EQUAL: { __type: "DateTime" },
+    lastOnline_MAX_GT: { __type: "DateTime" },
+    lastOnline_MAX_GTE: { __type: "DateTime" },
+    lastOnline_MAX_LT: { __type: "DateTime" },
+    lastOnline_MAX_LTE: { __type: "DateTime" },
+    lastOnline_MIN_EQUAL: { __type: "DateTime" },
+    lastOnline_MIN_GT: { __type: "DateTime" },
+    lastOnline_MIN_GTE: { __type: "DateTime" },
+    lastOnline_MIN_LT: { __type: "DateTime" },
+    lastOnline_MIN_LTE: { __type: "DateTime" },
+    name_AVERAGE_EQUAL: { __type: "Float" },
+    name_AVERAGE_GT: { __type: "Float" },
+    name_AVERAGE_GTE: { __type: "Float" },
+    name_AVERAGE_LT: { __type: "Float" },
+    name_AVERAGE_LTE: { __type: "Float" },
+    name_EQUAL: { __type: "String" },
+    name_GT: { __type: "Int" },
+    name_GTE: { __type: "Int" },
+    name_LONGEST_EQUAL: { __type: "Int" },
+    name_LONGEST_GT: { __type: "Int" },
+    name_LONGEST_GTE: { __type: "Int" },
+    name_LONGEST_LT: { __type: "Int" },
+    name_LONGEST_LTE: { __type: "Int" },
+    name_LT: { __type: "Int" },
+    name_LTE: { __type: "Int" },
+    name_SHORTEST_EQUAL: { __type: "Int" },
+    name_SHORTEST_GT: { __type: "Int" },
+    name_SHORTEST_GTE: { __type: "Int" },
+    name_SHORTEST_LT: { __type: "Int" },
+    name_SHORTEST_LTE: { __type: "Int" },
+    network_name_AVERAGE_EQUAL: { __type: "Float" },
+    network_name_AVERAGE_GT: { __type: "Float" },
+    network_name_AVERAGE_GTE: { __type: "Float" },
+    network_name_AVERAGE_LT: { __type: "Float" },
+    network_name_AVERAGE_LTE: { __type: "Float" },
+    network_name_EQUAL: { __type: "String" },
+    network_name_GT: { __type: "Int" },
+    network_name_GTE: { __type: "Int" },
+    network_name_LONGEST_EQUAL: { __type: "Int" },
+    network_name_LONGEST_GT: { __type: "Int" },
+    network_name_LONGEST_GTE: { __type: "Int" },
+    network_name_LONGEST_LT: { __type: "Int" },
+    network_name_LONGEST_LTE: { __type: "Int" },
+    network_name_LT: { __type: "Int" },
+    network_name_LTE: { __type: "Int" },
+    network_name_SHORTEST_EQUAL: { __type: "Int" },
+    network_name_SHORTEST_GT: { __type: "Int" },
+    network_name_SHORTEST_GTE: { __type: "Int" },
+    network_name_SHORTEST_LT: { __type: "Int" },
+    network_name_SHORTEST_LTE: { __type: "Int" },
+    operatingMode_AVERAGE_EQUAL: { __type: "Float" },
+    operatingMode_AVERAGE_GT: { __type: "Float" },
+    operatingMode_AVERAGE_GTE: { __type: "Float" },
+    operatingMode_AVERAGE_LT: { __type: "Float" },
+    operatingMode_AVERAGE_LTE: { __type: "Float" },
+    operatingMode_EQUAL: { __type: "String" },
+    operatingMode_GT: { __type: "Int" },
+    operatingMode_GTE: { __type: "Int" },
+    operatingMode_LONGEST_EQUAL: { __type: "Int" },
+    operatingMode_LONGEST_GT: { __type: "Int" },
+    operatingMode_LONGEST_GTE: { __type: "Int" },
+    operatingMode_LONGEST_LT: { __type: "Int" },
+    operatingMode_LONGEST_LTE: { __type: "Int" },
+    operatingMode_LT: { __type: "Int" },
+    operatingMode_LTE: { __type: "Int" },
+    operatingMode_SHORTEST_EQUAL: { __type: "Int" },
+    operatingMode_SHORTEST_GT: { __type: "Int" },
+    operatingMode_SHORTEST_GTE: { __type: "Int" },
+    operatingMode_SHORTEST_LT: { __type: "Int" },
+    operatingMode_SHORTEST_LTE: { __type: "Int" },
+    operatingState_AVERAGE_EQUAL: { __type: "Float" },
+    operatingState_AVERAGE_GT: { __type: "Float" },
+    operatingState_AVERAGE_GTE: { __type: "Float" },
+    operatingState_AVERAGE_LT: { __type: "Float" },
+    operatingState_AVERAGE_LTE: { __type: "Float" },
+    operatingState_EQUAL: { __type: "String" },
+    operatingState_GT: { __type: "Int" },
+    operatingState_GTE: { __type: "Int" },
+    operatingState_LONGEST_EQUAL: { __type: "Int" },
+    operatingState_LONGEST_GT: { __type: "Int" },
+    operatingState_LONGEST_GTE: { __type: "Int" },
+    operatingState_LONGEST_LT: { __type: "Int" },
+    operatingState_LONGEST_LTE: { __type: "Int" },
+    operatingState_LT: { __type: "Int" },
+    operatingState_LTE: { __type: "Int" },
+    operatingState_SHORTEST_EQUAL: { __type: "Int" },
+    operatingState_SHORTEST_GT: { __type: "Int" },
+    operatingState_SHORTEST_GTE: { __type: "Int" },
+    operatingState_SHORTEST_LT: { __type: "Int" },
+    operatingState_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandDeviceReportDeviceRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandDevice!" },
+  },
+  CommandDeviceReportDeviceUpdateConnectionInput: {
+    node: { __type: "CommandDeviceUpdateInput" },
+  },
+  CommandDeviceReportDeviceUpdateFieldInput: {
+    connect: { __type: "CommandDeviceReportDeviceConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportDeviceConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportDeviceCreateFieldInput" },
+    delete: { __type: "CommandDeviceReportDeviceDeleteFieldInput" },
+    disconnect: { __type: "CommandDeviceReportDeviceDisconnectFieldInput" },
+    update: { __type: "CommandDeviceReportDeviceUpdateConnectionInput" },
+    where: { __type: "CommandDeviceReportDeviceConnectionWhere" },
+  },
+  CommandDeviceReportDisconnectInput: {
+    device: { __type: "CommandDeviceReportDeviceDisconnectFieldInput" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceDisconnectFieldInput",
+    },
+    templateKey: {
+      __type: "CommandDeviceReportTemplateKeyDisconnectFieldInput",
+    },
+  },
+  CommandDeviceReportOptions: {
+    limit: { __type: "Int" },
+    offset: { __type: "Int" },
+    sort: { __type: "[CommandDeviceReportSort]" },
+  },
+  CommandDeviceReportRelationInput: {
+    device: { __type: "CommandDeviceReportDeviceCreateFieldInput" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceCreateFieldInput",
+    },
+    templateKey: { __type: "CommandDeviceReportTemplateKeyCreateFieldInput" },
+  },
+  CommandDeviceReportSort: {
+    h: { __type: "SortDirection" },
+    id: { __type: "SortDirection" },
+    total: { __type: "SortDirection" },
+    type: { __type: "SortDirection" },
+    w: { __type: "SortDirection" },
+    x: { __type: "SortDirection" },
+    y: { __type: "SortDirection" },
+  },
+  CommandDeviceReportTemplateDeviceAggregateInput: {
+    AND: { __type: "[CommandDeviceReportTemplateDeviceAggregateInput!]" },
+    OR: { __type: "[CommandDeviceReportTemplateDeviceAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: {
+      __type: "CommandDeviceReportTemplateDeviceNodeAggregationWhereInput",
+    },
+  },
+  CommandDeviceReportTemplateDeviceConnectFieldInput: {
+    connect: { __type: "CommandProgramDevicePlaceholderConnectInput" },
+    where: { __type: "CommandProgramDevicePlaceholderConnectWhere" },
+  },
+  CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandProgramDevicePlaceholderConnectOrCreateWhere!" },
+  },
+  CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandProgramDevicePlaceholderCreateInput!" },
+  },
+  CommandDeviceReportTemplateDeviceConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandDeviceReportTemplateDeviceRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandDeviceReportTemplateDeviceConnectionSort: {
+    node: { __type: "CommandProgramDevicePlaceholderSort" },
+  },
+  CommandDeviceReportTemplateDeviceConnectionWhere: {
+    AND: { __type: "[CommandDeviceReportTemplateDeviceConnectionWhere!]" },
+    OR: { __type: "[CommandDeviceReportTemplateDeviceConnectionWhere!]" },
+    node: { __type: "CommandProgramDevicePlaceholderWhere" },
+    node_NOT: { __type: "CommandProgramDevicePlaceholderWhere" },
+  },
+  CommandDeviceReportTemplateDeviceCreateFieldInput: {
+    node: { __type: "CommandProgramDevicePlaceholderCreateInput!" },
+  },
+  CommandDeviceReportTemplateDeviceDeleteFieldInput: {
+    delete: { __type: "CommandProgramDevicePlaceholderDeleteInput" },
+    where: { __type: "CommandDeviceReportTemplateDeviceConnectionWhere" },
+  },
+  CommandDeviceReportTemplateDeviceDisconnectFieldInput: {
+    disconnect: { __type: "CommandProgramDevicePlaceholderDisconnectInput" },
+    where: { __type: "CommandDeviceReportTemplateDeviceConnectionWhere" },
+  },
+  CommandDeviceReportTemplateDeviceFieldInput: {
+    connect: { __type: "CommandDeviceReportTemplateDeviceConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportTemplateDeviceCreateFieldInput" },
+  },
+  CommandDeviceReportTemplateDeviceNodeAggregationWhereInput: {
+    AND: {
+      __type: "[CommandDeviceReportTemplateDeviceNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type: "[CommandDeviceReportTemplateDeviceNodeAggregationWhereInput!]",
+    },
+    id_EQUAL: { __type: "ID" },
+    name_AVERAGE_EQUAL: { __type: "Float" },
+    name_AVERAGE_GT: { __type: "Float" },
+    name_AVERAGE_GTE: { __type: "Float" },
+    name_AVERAGE_LT: { __type: "Float" },
+    name_AVERAGE_LTE: { __type: "Float" },
+    name_EQUAL: { __type: "String" },
+    name_GT: { __type: "Int" },
+    name_GTE: { __type: "Int" },
+    name_LONGEST_EQUAL: { __type: "Int" },
+    name_LONGEST_GT: { __type: "Int" },
+    name_LONGEST_GTE: { __type: "Int" },
+    name_LONGEST_LT: { __type: "Int" },
+    name_LONGEST_LTE: { __type: "Int" },
+    name_LT: { __type: "Int" },
+    name_LTE: { __type: "Int" },
+    name_SHORTEST_EQUAL: { __type: "Int" },
+    name_SHORTEST_GT: { __type: "Int" },
+    name_SHORTEST_GTE: { __type: "Int" },
+    name_SHORTEST_LT: { __type: "Int" },
+    name_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandDeviceReportTemplateDeviceRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandProgramDevicePlaceholder!" },
+  },
+  CommandDeviceReportTemplateDeviceUpdateConnectionInput: {
+    node: { __type: "CommandProgramDevicePlaceholderUpdateInput" },
+  },
+  CommandDeviceReportTemplateDeviceUpdateFieldInput: {
+    connect: { __type: "CommandDeviceReportTemplateDeviceConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportTemplateDeviceCreateFieldInput" },
+    delete: { __type: "CommandDeviceReportTemplateDeviceDeleteFieldInput" },
+    disconnect: {
+      __type: "CommandDeviceReportTemplateDeviceDisconnectFieldInput",
+    },
+    update: {
+      __type: "CommandDeviceReportTemplateDeviceUpdateConnectionInput",
+    },
+    where: { __type: "CommandDeviceReportTemplateDeviceConnectionWhere" },
+  },
+  CommandDeviceReportTemplateKeyAggregateInput: {
+    AND: { __type: "[CommandDeviceReportTemplateKeyAggregateInput!]" },
+    OR: { __type: "[CommandDeviceReportTemplateKeyAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandDeviceReportTemplateKeyNodeAggregationWhereInput" },
+  },
+  CommandDeviceReportTemplateKeyConnectFieldInput: {
+    connect: { __type: "CommandProgramDeviceStateConnectInput" },
+    where: { __type: "CommandProgramDeviceStateConnectWhere" },
+  },
+  CommandDeviceReportTemplateKeyConnectOrCreateFieldInput: {
+    onCreate: {
+      __type:
+        "CommandDeviceReportTemplateKeyConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandProgramDeviceStateConnectOrCreateWhere!" },
+  },
+  CommandDeviceReportTemplateKeyConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandProgramDeviceStateCreateInput!" },
+  },
+  CommandDeviceReportTemplateKeyConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandDeviceReportTemplateKeyRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandDeviceReportTemplateKeyConnectionSort: {
+    node: { __type: "CommandProgramDeviceStateSort" },
+  },
+  CommandDeviceReportTemplateKeyConnectionWhere: {
+    AND: { __type: "[CommandDeviceReportTemplateKeyConnectionWhere!]" },
+    OR: { __type: "[CommandDeviceReportTemplateKeyConnectionWhere!]" },
+    node: { __type: "CommandProgramDeviceStateWhere" },
+    node_NOT: { __type: "CommandProgramDeviceStateWhere" },
+  },
+  CommandDeviceReportTemplateKeyCreateFieldInput: {
+    node: { __type: "CommandProgramDeviceStateCreateInput!" },
+  },
+  CommandDeviceReportTemplateKeyDeleteFieldInput: {
+    delete: { __type: "CommandProgramDeviceStateDeleteInput" },
+    where: { __type: "CommandDeviceReportTemplateKeyConnectionWhere" },
+  },
+  CommandDeviceReportTemplateKeyDisconnectFieldInput: {
+    disconnect: { __type: "CommandProgramDeviceStateDisconnectInput" },
+    where: { __type: "CommandDeviceReportTemplateKeyConnectionWhere" },
+  },
+  CommandDeviceReportTemplateKeyFieldInput: {
+    connect: { __type: "CommandDeviceReportTemplateKeyConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportTemplateKeyConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportTemplateKeyCreateFieldInput" },
+  },
+  CommandDeviceReportTemplateKeyNodeAggregationWhereInput: {
+    AND: {
+      __type: "[CommandDeviceReportTemplateKeyNodeAggregationWhereInput!]",
+    },
+    OR: {
+      __type: "[CommandDeviceReportTemplateKeyNodeAggregationWhereInput!]",
+    },
+    id_EQUAL: { __type: "ID" },
+    inputUnits_AVERAGE_EQUAL: { __type: "Float" },
+    inputUnits_AVERAGE_GT: { __type: "Float" },
+    inputUnits_AVERAGE_GTE: { __type: "Float" },
+    inputUnits_AVERAGE_LT: { __type: "Float" },
+    inputUnits_AVERAGE_LTE: { __type: "Float" },
+    inputUnits_EQUAL: { __type: "String" },
+    inputUnits_GT: { __type: "Int" },
+    inputUnits_GTE: { __type: "Int" },
+    inputUnits_LONGEST_EQUAL: { __type: "Int" },
+    inputUnits_LONGEST_GT: { __type: "Int" },
+    inputUnits_LONGEST_GTE: { __type: "Int" },
+    inputUnits_LONGEST_LT: { __type: "Int" },
+    inputUnits_LONGEST_LTE: { __type: "Int" },
+    inputUnits_LT: { __type: "Int" },
+    inputUnits_LTE: { __type: "Int" },
+    inputUnits_SHORTEST_EQUAL: { __type: "Int" },
+    inputUnits_SHORTEST_GT: { __type: "Int" },
+    inputUnits_SHORTEST_GTE: { __type: "Int" },
+    inputUnits_SHORTEST_LT: { __type: "Int" },
+    inputUnits_SHORTEST_LTE: { __type: "Int" },
+    key_AVERAGE_EQUAL: { __type: "Float" },
+    key_AVERAGE_GT: { __type: "Float" },
+    key_AVERAGE_GTE: { __type: "Float" },
+    key_AVERAGE_LT: { __type: "Float" },
+    key_AVERAGE_LTE: { __type: "Float" },
+    key_EQUAL: { __type: "String" },
+    key_GT: { __type: "Int" },
+    key_GTE: { __type: "Int" },
+    key_LONGEST_EQUAL: { __type: "Int" },
+    key_LONGEST_GT: { __type: "Int" },
+    key_LONGEST_GTE: { __type: "Int" },
+    key_LONGEST_LT: { __type: "Int" },
+    key_LONGEST_LTE: { __type: "Int" },
+    key_LT: { __type: "Int" },
+    key_LTE: { __type: "Int" },
+    key_SHORTEST_EQUAL: { __type: "Int" },
+    key_SHORTEST_GT: { __type: "Int" },
+    key_SHORTEST_GTE: { __type: "Int" },
+    key_SHORTEST_LT: { __type: "Int" },
+    key_SHORTEST_LTE: { __type: "Int" },
+    max_AVERAGE_EQUAL: { __type: "Float" },
+    max_AVERAGE_GT: { __type: "Float" },
+    max_AVERAGE_GTE: { __type: "Float" },
+    max_AVERAGE_LT: { __type: "Float" },
+    max_AVERAGE_LTE: { __type: "Float" },
+    max_EQUAL: { __type: "String" },
+    max_GT: { __type: "Int" },
+    max_GTE: { __type: "Int" },
+    max_LONGEST_EQUAL: { __type: "Int" },
+    max_LONGEST_GT: { __type: "Int" },
+    max_LONGEST_GTE: { __type: "Int" },
+    max_LONGEST_LT: { __type: "Int" },
+    max_LONGEST_LTE: { __type: "Int" },
+    max_LT: { __type: "Int" },
+    max_LTE: { __type: "Int" },
+    max_SHORTEST_EQUAL: { __type: "Int" },
+    max_SHORTEST_GT: { __type: "Int" },
+    max_SHORTEST_GTE: { __type: "Int" },
+    max_SHORTEST_LT: { __type: "Int" },
+    max_SHORTEST_LTE: { __type: "Int" },
+    min_AVERAGE_EQUAL: { __type: "Float" },
+    min_AVERAGE_GT: { __type: "Float" },
+    min_AVERAGE_GTE: { __type: "Float" },
+    min_AVERAGE_LT: { __type: "Float" },
+    min_AVERAGE_LTE: { __type: "Float" },
+    min_EQUAL: { __type: "String" },
+    min_GT: { __type: "Int" },
+    min_GTE: { __type: "Int" },
+    min_LONGEST_EQUAL: { __type: "Int" },
+    min_LONGEST_GT: { __type: "Int" },
+    min_LONGEST_GTE: { __type: "Int" },
+    min_LONGEST_LT: { __type: "Int" },
+    min_LONGEST_LTE: { __type: "Int" },
+    min_LT: { __type: "Int" },
+    min_LTE: { __type: "Int" },
+    min_SHORTEST_EQUAL: { __type: "Int" },
+    min_SHORTEST_GT: { __type: "Int" },
+    min_SHORTEST_GTE: { __type: "Int" },
+    min_SHORTEST_LT: { __type: "Int" },
+    min_SHORTEST_LTE: { __type: "Int" },
+    type_AVERAGE_EQUAL: { __type: "Float" },
+    type_AVERAGE_GT: { __type: "Float" },
+    type_AVERAGE_GTE: { __type: "Float" },
+    type_AVERAGE_LT: { __type: "Float" },
+    type_AVERAGE_LTE: { __type: "Float" },
+    type_EQUAL: { __type: "String" },
+    type_GT: { __type: "Int" },
+    type_GTE: { __type: "Int" },
+    type_LONGEST_EQUAL: { __type: "Int" },
+    type_LONGEST_GT: { __type: "Int" },
+    type_LONGEST_GTE: { __type: "Int" },
+    type_LONGEST_LT: { __type: "Int" },
+    type_LONGEST_LTE: { __type: "Int" },
+    type_LT: { __type: "Int" },
+    type_LTE: { __type: "Int" },
+    type_SHORTEST_EQUAL: { __type: "Int" },
+    type_SHORTEST_GT: { __type: "Int" },
+    type_SHORTEST_GTE: { __type: "Int" },
+    type_SHORTEST_LT: { __type: "Int" },
+    type_SHORTEST_LTE: { __type: "Int" },
+    units_AVERAGE_EQUAL: { __type: "Float" },
+    units_AVERAGE_GT: { __type: "Float" },
+    units_AVERAGE_GTE: { __type: "Float" },
+    units_AVERAGE_LT: { __type: "Float" },
+    units_AVERAGE_LTE: { __type: "Float" },
+    units_EQUAL: { __type: "String" },
+    units_GT: { __type: "Int" },
+    units_GTE: { __type: "Int" },
+    units_LONGEST_EQUAL: { __type: "Int" },
+    units_LONGEST_GT: { __type: "Int" },
+    units_LONGEST_GTE: { __type: "Int" },
+    units_LONGEST_LT: { __type: "Int" },
+    units_LONGEST_LTE: { __type: "Int" },
+    units_LT: { __type: "Int" },
+    units_LTE: { __type: "Int" },
+    units_SHORTEST_EQUAL: { __type: "Int" },
+    units_SHORTEST_GT: { __type: "Int" },
+    units_SHORTEST_GTE: { __type: "Int" },
+    units_SHORTEST_LT: { __type: "Int" },
+    units_SHORTEST_LTE: { __type: "Int" },
+  },
+  CommandDeviceReportTemplateKeyRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandProgramDeviceState!" },
+  },
+  CommandDeviceReportTemplateKeyUpdateConnectionInput: {
+    node: { __type: "CommandProgramDeviceStateUpdateInput" },
+  },
+  CommandDeviceReportTemplateKeyUpdateFieldInput: {
+    connect: { __type: "CommandDeviceReportTemplateKeyConnectFieldInput" },
+    connectOrCreate: {
+      __type: "CommandDeviceReportTemplateKeyConnectOrCreateFieldInput",
+    },
+    create: { __type: "CommandDeviceReportTemplateKeyCreateFieldInput" },
+    delete: { __type: "CommandDeviceReportTemplateKeyDeleteFieldInput" },
+    disconnect: {
+      __type: "CommandDeviceReportTemplateKeyDisconnectFieldInput",
+    },
+    update: { __type: "CommandDeviceReportTemplateKeyUpdateConnectionInput" },
+    where: { __type: "CommandDeviceReportTemplateKeyConnectionWhere" },
+  },
+  CommandDeviceReportUniqueWhere: { id: { __type: "ID" } },
+  CommandDeviceReportUpdateInput: {
+    device: { __type: "CommandDeviceReportDeviceUpdateFieldInput" },
+    h: { __type: "Int" },
+    templateDevice: {
+      __type: "CommandDeviceReportTemplateDeviceUpdateFieldInput",
+    },
+    templateKey: { __type: "CommandDeviceReportTemplateKeyUpdateFieldInput" },
+    total: { __type: "Boolean" },
+    type: { __type: "String" },
+    w: { __type: "Int" },
+    x: { __type: "Int" },
+    y: { __type: "Int" },
+  },
+  CommandDeviceReportWhere: {
+    AND: { __type: "[CommandDeviceReportWhere!]" },
+    OR: { __type: "[CommandDeviceReportWhere!]" },
+    device: { __type: "CommandDeviceWhere" },
+    deviceAggregate: { __type: "CommandDeviceReportDeviceAggregateInput" },
+    deviceConnection: { __type: "CommandDeviceReportDeviceConnectionWhere" },
+    deviceConnection_NOT: {
+      __type: "CommandDeviceReportDeviceConnectionWhere",
+    },
+    device_NOT: { __type: "CommandDeviceWhere" },
+    h: { __type: "Int" },
+    h_GT: { __type: "Int" },
+    h_GTE: { __type: "Int" },
+    h_IN: { __type: "[Int]" },
+    h_LT: { __type: "Int" },
+    h_LTE: { __type: "Int" },
+    h_NOT: { __type: "Int" },
+    h_NOT_IN: { __type: "[Int]" },
+    id: { __type: "ID" },
+    id_CONTAINS: { __type: "ID" },
+    id_ENDS_WITH: { __type: "ID" },
+    id_IN: { __type: "[ID]" },
+    id_NOT: { __type: "ID" },
+    id_NOT_CONTAINS: { __type: "ID" },
+    id_NOT_ENDS_WITH: { __type: "ID" },
+    id_NOT_IN: { __type: "[ID]" },
+    id_NOT_STARTS_WITH: { __type: "ID" },
+    id_STARTS_WITH: { __type: "ID" },
+    templateDevice: { __type: "CommandProgramDevicePlaceholderWhere" },
+    templateDeviceAggregate: {
+      __type: "CommandDeviceReportTemplateDeviceAggregateInput",
+    },
+    templateDeviceConnection: {
+      __type: "CommandDeviceReportTemplateDeviceConnectionWhere",
+    },
+    templateDeviceConnection_NOT: {
+      __type: "CommandDeviceReportTemplateDeviceConnectionWhere",
+    },
+    templateDevice_NOT: { __type: "CommandProgramDevicePlaceholderWhere" },
+    templateKey: { __type: "CommandProgramDeviceStateWhere" },
+    templateKeyAggregate: {
+      __type: "CommandDeviceReportTemplateKeyAggregateInput",
+    },
+    templateKeyConnection: {
+      __type: "CommandDeviceReportTemplateKeyConnectionWhere",
+    },
+    templateKeyConnection_NOT: {
+      __type: "CommandDeviceReportTemplateKeyConnectionWhere",
+    },
+    templateKey_NOT: { __type: "CommandProgramDeviceStateWhere" },
+    total: { __type: "Boolean" },
+    total_NOT: { __type: "Boolean" },
+    type: { __type: "String" },
+    type_CONTAINS: { __type: "String" },
+    type_ENDS_WITH: { __type: "String" },
+    type_IN: { __type: "[String]" },
+    type_NOT: { __type: "String" },
+    type_NOT_CONTAINS: { __type: "String" },
+    type_NOT_ENDS_WITH: { __type: "String" },
+    type_NOT_IN: { __type: "[String]" },
+    type_NOT_STARTS_WITH: { __type: "String" },
+    type_STARTS_WITH: { __type: "String" },
+    w: { __type: "Int" },
+    w_GT: { __type: "Int" },
+    w_GTE: { __type: "Int" },
+    w_IN: { __type: "[Int]" },
+    w_LT: { __type: "Int" },
+    w_LTE: { __type: "Int" },
+    w_NOT: { __type: "Int" },
+    w_NOT_IN: { __type: "[Int]" },
+    x: { __type: "Int" },
+    x_GT: { __type: "Int" },
+    x_GTE: { __type: "Int" },
+    x_IN: { __type: "[Int]" },
+    x_LT: { __type: "Int" },
+    x_LTE: { __type: "Int" },
+    x_NOT: { __type: "Int" },
+    x_NOT_IN: { __type: "[Int]" },
+    y: { __type: "Int" },
+    y_GT: { __type: "Int" },
+    y_GTE: { __type: "Int" },
+    y_IN: { __type: "[Int]" },
+    y_LT: { __type: "Int" },
+    y_LTE: { __type: "Int" },
+    y_NOT: { __type: "Int" },
+    y_NOT_IN: { __type: "[Int]" },
+  },
+  CommandDeviceReportingAggregateInput: {
+    AND: { __type: "[CommandDeviceReportingAggregateInput!]" },
+    OR: { __type: "[CommandDeviceReportingAggregateInput!]" },
+    count: { __type: "Int" },
+    count_GT: { __type: "Int" },
+    count_GTE: { __type: "Int" },
+    count_LT: { __type: "Int" },
+    count_LTE: { __type: "Int" },
+    node: { __type: "CommandDeviceReportingNodeAggregationWhereInput" },
+  },
+  CommandDeviceReportingConnectFieldInput: {
+    connect: { __type: "[CommandDeviceReportConnectInput!]" },
+    where: { __type: "CommandDeviceReportConnectWhere" },
+  },
+  CommandDeviceReportingConnectOrCreateFieldInput: {
+    onCreate: {
+      __type: "CommandDeviceReportingConnectOrCreateFieldInputOnCreate!",
+    },
+    where: { __type: "CommandDeviceReportConnectOrCreateWhere!" },
+  },
+  CommandDeviceReportingConnectOrCreateFieldInputOnCreate: {
+    node: { __type: "CommandDeviceReportCreateInput!" },
+  },
+  CommandDeviceReportingConnection: {
+    __typename: { __type: "String!" },
+    edges: { __type: "[CommandDeviceReportingRelationship!]!" },
+    pageInfo: { __type: "PageInfo!" },
+    totalCount: { __type: "Int!" },
+  },
+  CommandDeviceReportingConnectionSort: {
+    node: { __type: "CommandDeviceReportSort" },
+  },
+  CommandDeviceReportingConnectionWhere: {
+    AND: { __type: "[CommandDeviceReportingConnectionWhere!]" },
+    OR: { __type: "[CommandDeviceReportingConnectionWhere!]" },
+    node: { __type: "CommandDeviceReportWhere" },
+    node_NOT: { __type: "CommandDeviceReportWhere" },
+  },
+  CommandDeviceReportingCreateFieldInput: {
+    node: { __type: "CommandDeviceReportCreateInput!" },
+  },
+  CommandDeviceReportingDeleteFieldInput: {
+    delete: { __type: "CommandDeviceReportDeleteInput" },
+    where: { __type: "CommandDeviceReportingConnectionWhere" },
+  },
+  CommandDeviceReportingDisconnectFieldInput: {
+    disconnect: { __type: "CommandDeviceReportDisconnectInput" },
+    where: { __type: "CommandDeviceReportingConnectionWhere" },
+  },
+  CommandDeviceReportingFieldInput: {
+    connect: { __type: "[CommandDeviceReportingConnectFieldInput!]" },
+    connectOrCreate: {
+      __type: "[CommandDeviceReportingConnectOrCreateFieldInput!]",
+    },
+    create: { __type: "[CommandDeviceReportingCreateFieldInput!]" },
+  },
+  CommandDeviceReportingNodeAggregationWhereInput: {
+    AND: { __type: "[CommandDeviceReportingNodeAggregationWhereInput!]" },
+    OR: { __type: "[CommandDeviceReportingNodeAggregationWhereInput!]" },
+    h_AVERAGE_EQUAL: { __type: "Float" },
+    h_AVERAGE_GT: { __type: "Float" },
+    h_AVERAGE_GTE: { __type: "Float" },
+    h_AVERAGE_LT: { __type: "Float" },
+    h_AVERAGE_LTE: { __type: "Float" },
+    h_EQUAL: { __type: "Int" },
+    h_GT: { __type: "Int" },
+    h_GTE: { __type: "Int" },
+    h_LT: { __type: "Int" },
+    h_LTE: { __type: "Int" },
+    h_MAX_EQUAL: { __type: "Int" },
+    h_MAX_GT: { __type: "Int" },
+    h_MAX_GTE: { __type: "Int" },
+    h_MAX_LT: { __type: "Int" },
+    h_MAX_LTE: { __type: "Int" },
+    h_MIN_EQUAL: { __type: "Int" },
+    h_MIN_GT: { __type: "Int" },
+    h_MIN_GTE: { __type: "Int" },
+    h_MIN_LT: { __type: "Int" },
+    h_MIN_LTE: { __type: "Int" },
+    h_SUM_EQUAL: { __type: "Int" },
+    h_SUM_GT: { __type: "Int" },
+    h_SUM_GTE: { __type: "Int" },
+    h_SUM_LT: { __type: "Int" },
+    h_SUM_LTE: { __type: "Int" },
+    id_EQUAL: { __type: "ID" },
+    type_AVERAGE_EQUAL: { __type: "Float" },
+    type_AVERAGE_GT: { __type: "Float" },
+    type_AVERAGE_GTE: { __type: "Float" },
+    type_AVERAGE_LT: { __type: "Float" },
+    type_AVERAGE_LTE: { __type: "Float" },
+    type_EQUAL: { __type: "String" },
+    type_GT: { __type: "Int" },
+    type_GTE: { __type: "Int" },
+    type_LONGEST_EQUAL: { __type: "Int" },
+    type_LONGEST_GT: { __type: "Int" },
+    type_LONGEST_GTE: { __type: "Int" },
+    type_LONGEST_LT: { __type: "Int" },
+    type_LONGEST_LTE: { __type: "Int" },
+    type_LT: { __type: "Int" },
+    type_LTE: { __type: "Int" },
+    type_SHORTEST_EQUAL: { __type: "Int" },
+    type_SHORTEST_GT: { __type: "Int" },
+    type_SHORTEST_GTE: { __type: "Int" },
+    type_SHORTEST_LT: { __type: "Int" },
+    type_SHORTEST_LTE: { __type: "Int" },
+    w_AVERAGE_EQUAL: { __type: "Float" },
+    w_AVERAGE_GT: { __type: "Float" },
+    w_AVERAGE_GTE: { __type: "Float" },
+    w_AVERAGE_LT: { __type: "Float" },
+    w_AVERAGE_LTE: { __type: "Float" },
+    w_EQUAL: { __type: "Int" },
+    w_GT: { __type: "Int" },
+    w_GTE: { __type: "Int" },
+    w_LT: { __type: "Int" },
+    w_LTE: { __type: "Int" },
+    w_MAX_EQUAL: { __type: "Int" },
+    w_MAX_GT: { __type: "Int" },
+    w_MAX_GTE: { __type: "Int" },
+    w_MAX_LT: { __type: "Int" },
+    w_MAX_LTE: { __type: "Int" },
+    w_MIN_EQUAL: { __type: "Int" },
+    w_MIN_GT: { __type: "Int" },
+    w_MIN_GTE: { __type: "Int" },
+    w_MIN_LT: { __type: "Int" },
+    w_MIN_LTE: { __type: "Int" },
+    w_SUM_EQUAL: { __type: "Int" },
+    w_SUM_GT: { __type: "Int" },
+    w_SUM_GTE: { __type: "Int" },
+    w_SUM_LT: { __type: "Int" },
+    w_SUM_LTE: { __type: "Int" },
+    x_AVERAGE_EQUAL: { __type: "Float" },
+    x_AVERAGE_GT: { __type: "Float" },
+    x_AVERAGE_GTE: { __type: "Float" },
+    x_AVERAGE_LT: { __type: "Float" },
+    x_AVERAGE_LTE: { __type: "Float" },
+    x_EQUAL: { __type: "Int" },
+    x_GT: { __type: "Int" },
+    x_GTE: { __type: "Int" },
+    x_LT: { __type: "Int" },
+    x_LTE: { __type: "Int" },
+    x_MAX_EQUAL: { __type: "Int" },
+    x_MAX_GT: { __type: "Int" },
+    x_MAX_GTE: { __type: "Int" },
+    x_MAX_LT: { __type: "Int" },
+    x_MAX_LTE: { __type: "Int" },
+    x_MIN_EQUAL: { __type: "Int" },
+    x_MIN_GT: { __type: "Int" },
+    x_MIN_GTE: { __type: "Int" },
+    x_MIN_LT: { __type: "Int" },
+    x_MIN_LTE: { __type: "Int" },
+    x_SUM_EQUAL: { __type: "Int" },
+    x_SUM_GT: { __type: "Int" },
+    x_SUM_GTE: { __type: "Int" },
+    x_SUM_LT: { __type: "Int" },
+    x_SUM_LTE: { __type: "Int" },
+    y_AVERAGE_EQUAL: { __type: "Float" },
+    y_AVERAGE_GT: { __type: "Float" },
+    y_AVERAGE_GTE: { __type: "Float" },
+    y_AVERAGE_LT: { __type: "Float" },
+    y_AVERAGE_LTE: { __type: "Float" },
+    y_EQUAL: { __type: "Int" },
+    y_GT: { __type: "Int" },
+    y_GTE: { __type: "Int" },
+    y_LT: { __type: "Int" },
+    y_LTE: { __type: "Int" },
+    y_MAX_EQUAL: { __type: "Int" },
+    y_MAX_GT: { __type: "Int" },
+    y_MAX_GTE: { __type: "Int" },
+    y_MAX_LT: { __type: "Int" },
+    y_MAX_LTE: { __type: "Int" },
+    y_MIN_EQUAL: { __type: "Int" },
+    y_MIN_GT: { __type: "Int" },
+    y_MIN_GTE: { __type: "Int" },
+    y_MIN_LT: { __type: "Int" },
+    y_MIN_LTE: { __type: "Int" },
+    y_SUM_EQUAL: { __type: "Int" },
+    y_SUM_GT: { __type: "Int" },
+    y_SUM_GTE: { __type: "Int" },
+    y_SUM_LT: { __type: "Int" },
+    y_SUM_LTE: { __type: "Int" },
+  },
+  CommandDeviceReportingRelationship: {
+    __typename: { __type: "String!" },
+    cursor: { __type: "String!" },
+    node: { __type: "CommandDeviceReport!" },
+  },
+  CommandDeviceReportingUpdateConnectionInput: {
+    node: { __type: "CommandDeviceReportUpdateInput" },
+  },
+  CommandDeviceReportingUpdateFieldInput: {
+    connect: { __type: "[CommandDeviceReportingConnectFieldInput!]" },
+    connectOrCreate: {
+      __type: "[CommandDeviceReportingConnectOrCreateFieldInput!]",
+    },
+    create: { __type: "[CommandDeviceReportingCreateFieldInput!]" },
+    delete: { __type: "[CommandDeviceReportingDeleteFieldInput!]" },
+    disconnect: { __type: "[CommandDeviceReportingDisconnectFieldInput!]" },
+    update: { __type: "CommandDeviceReportingUpdateConnectionInput" },
+    where: { __type: "CommandDeviceReportingConnectionWhere" },
   },
   CommandDeviceSetpoint: {
     __typename: { __type: "String!" },
@@ -25445,6 +27323,7 @@ export const generatedSchema : any = {
     operatingState: { __type: "String" },
     organisation: { __type: "CommandDeviceOrganisationUpdateFieldInput" },
     peripherals: { __type: "[CommandDevicePeripheralsUpdateFieldInput!]" },
+    reporting: { __type: "[CommandDeviceReportingUpdateFieldInput!]" },
     waitingForActions: {
       __type: "[CommandDeviceWaitingForActionsUpdateFieldInput!]",
     },
@@ -25668,6 +27547,13 @@ export const generatedSchema : any = {
       __type: "CommandDevicePeripheralsConnectionWhere",
     },
     peripherals_NOT: { __type: "CommandDevicePeripheralWhere" },
+    reporting: { __type: "CommandDeviceReportWhere" },
+    reportingAggregate: { __type: "CommandDeviceReportingAggregateInput" },
+    reportingConnection: { __type: "CommandDeviceReportingConnectionWhere" },
+    reportingConnection_NOT: {
+      __type: "CommandDeviceReportingConnectionWhere",
+    },
+    reporting_NOT: { __type: "CommandDeviceReportWhere" },
     waitingForActions: { __type: "CommandProgramActionWhere" },
     waitingForActionsAggregate: {
       __type: "CommandDeviceWaitingForActionsAggregateInput",
@@ -42800,6 +44686,11 @@ export const generatedSchema : any = {
     commandDevicePlugins: { __type: "[CommandDevicePlugin!]!" },
     info: { __type: "CreateInfo!" },
   },
+  CreateCommandDeviceReportsMutationResponse: {
+    __typename: { __type: "String!" },
+    commandDeviceReports: { __type: "[CommandDeviceReport!]!" },
+    info: { __type: "CreateInfo!" },
+  },
   CreateCommandDeviceSetpointsMutationResponse: {
     __typename: { __type: "String!" },
     commandDeviceSetpoints: { __type: "[CommandDeviceSetpoint!]!" },
@@ -47736,6 +49627,11 @@ export const generatedSchema : any = {
     commandDevicePlugins: { __type: "[CommandDevicePlugin!]!" },
     info: { __type: "UpdateInfo!" },
   },
+  UpdateCommandDeviceReportsMutationResponse: {
+    __typename: { __type: "String!" },
+    commandDeviceReports: { __type: "[CommandDeviceReport!]!" },
+    info: { __type: "UpdateInfo!" },
+  },
   UpdateCommandDeviceSetpointsMutationResponse: {
     __typename: { __type: "String!" },
     commandDeviceSetpoints: { __type: "[CommandDeviceSetpoint!]!" },
@@ -48023,6 +49919,10 @@ export const generatedSchema : any = {
       __type: "CreateCommandDevicePluginsMutationResponse!",
       __args: { input: "[CommandDevicePluginCreateInput!]!" },
     },
+    createCommandDeviceReports: {
+      __type: "CreateCommandDeviceReportsMutationResponse!",
+      __args: { input: "[CommandDeviceReportCreateInput!]!" },
+    },
     createCommandDeviceSetpoints: {
       __type: "CreateCommandDeviceSetpointsMutationResponse!",
       __args: { input: "[CommandDeviceSetpointCreateInput!]!" },
@@ -48237,6 +50137,13 @@ export const generatedSchema : any = {
       __args: {
         delete: "CommandDevicePluginDeleteInput",
         where: "CommandDevicePluginWhere",
+      },
+    },
+    deleteCommandDeviceReports: {
+      __type: "DeleteInfo!",
+      __args: {
+        delete: "CommandDeviceReportDeleteInput",
+        where: "CommandDeviceReportWhere",
       },
     },
     deleteCommandDeviceSetpoints: {
@@ -48571,6 +50478,18 @@ export const generatedSchema : any = {
         disconnect: "CommandDevicePluginDisconnectInput",
         update: "CommandDevicePluginUpdateInput",
         where: "CommandDevicePluginWhere",
+      },
+    },
+    updateCommandDeviceReports: {
+      __type: "UpdateCommandDeviceReportsMutationResponse!",
+      __args: {
+        connect: "CommandDeviceReportConnectInput",
+        connectOrCreate: "CommandDeviceReportConnectOrCreateInput",
+        create: "CommandDeviceReportRelationInput",
+        delete: "CommandDeviceReportDeleteInput",
+        disconnect: "CommandDeviceReportDisconnectInput",
+        update: "CommandDeviceReportUpdateInput",
+        where: "CommandDeviceReportWhere",
       },
     },
     updateCommandDeviceSetpoints: {
@@ -49129,6 +51048,21 @@ export const generatedSchema : any = {
     commandDevicePluginsCount: {
       __type: "Int!",
       __args: { where: "CommandDevicePluginWhere" },
+    },
+    commandDeviceReports: {
+      __type: "[CommandDeviceReport!]!",
+      __args: {
+        options: "CommandDeviceReportOptions",
+        where: "CommandDeviceReportWhere",
+      },
+    },
+    commandDeviceReportsAggregate: {
+      __type: "CommandDeviceReportAggregateSelection!",
+      __args: { where: "CommandDeviceReportWhere" },
+    },
+    commandDeviceReportsCount: {
+      __type: "Int!",
+      __args: { where: "CommandDeviceReportWhere" },
     },
     commandDeviceSetpoints: {
       __type: "[CommandDeviceSetpoint!]!",
@@ -49957,6 +51891,19 @@ export interface CommandDevice {
     sort?: Maybe<Array<CommandDevicePeripheralsConnectionSort>>;
     where?: Maybe<CommandDevicePeripheralsConnectionWhere>;
   }) => CommandDevicePeripheralsConnection;
+  reporting: (args?: {
+    options?: Maybe<CommandDeviceReportOptions>;
+    where?: Maybe<CommandDeviceReportWhere>;
+  }) => Maybe<Array<Maybe<CommandDeviceReport>>>;
+  reportingAggregate: (args?: {
+    where?: Maybe<CommandDeviceReportWhere>;
+  }) => Maybe<CommandDeviceCommandDeviceReportReportingAggregationSelection>;
+  reportingConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandDeviceReportingConnectionSort>>;
+    where?: Maybe<CommandDeviceReportingConnectionWhere>;
+  }) => CommandDeviceReportingConnection;
   waitingForActions: (args?: {
     options?: Maybe<CommandProgramActionOptions>;
     where?: Maybe<CommandProgramActionWhere>;
@@ -50021,6 +51968,22 @@ export interface CommandDeviceCommandDevicePeripheralPeripheralsNodeAggregateSel
   name: StringAggregateSelection;
   ports: IntAggregateSelection;
   type: StringAggregateSelection;
+}
+
+export interface CommandDeviceCommandDeviceReportReportingAggregationSelection {
+  __typename?: "CommandDeviceCommandDeviceReportReportingAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandDeviceCommandDeviceReportReportingNodeAggregateSelection>;
+}
+
+export interface CommandDeviceCommandDeviceReportReportingNodeAggregateSelection {
+  __typename?: "CommandDeviceCommandDeviceReportReportingNodeAggregateSelection";
+  h: IntAggregateSelection;
+  id: IDAggregateSelection;
+  type: StringAggregateSelection;
+  w: IntAggregateSelection;
+  x: IntAggregateSelection;
+  y: IntAggregateSelection;
 }
 
 export interface CommandDeviceCommandProgramActionWaitingForActionsAggregationSelection {
@@ -50619,6 +52582,164 @@ export interface CommandDevicePluginRulesRelationship {
   __typename?: "CommandDevicePluginRulesRelationship";
   cursor: ScalarsEnums["String"];
   node: CommandProgramFlow;
+}
+
+export interface CommandDeviceReport {
+  __typename?: "CommandDeviceReport";
+  device: (args?: {
+    options?: Maybe<CommandDeviceOptions>;
+    where?: Maybe<CommandDeviceWhere>;
+  }) => Maybe<CommandDevice>;
+  deviceAggregate: (args?: {
+    where?: Maybe<CommandDeviceWhere>;
+  }) => Maybe<CommandDeviceReportCommandDeviceDeviceAggregationSelection>;
+  deviceConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandDeviceReportDeviceConnectionSort>>;
+    where?: Maybe<CommandDeviceReportDeviceConnectionWhere>;
+  }) => CommandDeviceReportDeviceConnection;
+  h?: Maybe<ScalarsEnums["Int"]>;
+  id: ScalarsEnums["ID"];
+  templateDevice: (args?: {
+    options?: Maybe<CommandProgramDevicePlaceholderOptions>;
+    where?: Maybe<CommandProgramDevicePlaceholderWhere>;
+  }) => Maybe<CommandProgramDevicePlaceholder>;
+  templateDeviceAggregate: (args?: {
+    where?: Maybe<CommandProgramDevicePlaceholderWhere>;
+  }) => Maybe<CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection>;
+  templateDeviceConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandDeviceReportTemplateDeviceConnectionSort>>;
+    where?: Maybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
+  }) => CommandDeviceReportTemplateDeviceConnection;
+  templateKey: (args?: {
+    options?: Maybe<CommandProgramDeviceStateOptions>;
+    where?: Maybe<CommandProgramDeviceStateWhere>;
+  }) => Maybe<CommandProgramDeviceState>;
+  templateKeyAggregate: (args?: {
+    where?: Maybe<CommandProgramDeviceStateWhere>;
+  }) => Maybe<CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection>;
+  templateKeyConnection: (args?: {
+    after?: Maybe<Scalars["String"]>;
+    first?: Maybe<Scalars["Int"]>;
+    sort?: Maybe<Array<CommandDeviceReportTemplateKeyConnectionSort>>;
+    where?: Maybe<CommandDeviceReportTemplateKeyConnectionWhere>;
+  }) => CommandDeviceReportTemplateKeyConnection;
+  total?: Maybe<ScalarsEnums["Boolean"]>;
+  type?: Maybe<ScalarsEnums["String"]>;
+  w?: Maybe<ScalarsEnums["Int"]>;
+  x?: Maybe<ScalarsEnums["Int"]>;
+  y?: Maybe<ScalarsEnums["Int"]>;
+}
+
+export interface CommandDeviceReportAggregateSelection {
+  __typename?: "CommandDeviceReportAggregateSelection";
+  count: ScalarsEnums["Int"];
+  h: IntAggregateSelection;
+  id: IDAggregateSelection;
+  type: StringAggregateSelection;
+  w: IntAggregateSelection;
+  x: IntAggregateSelection;
+  y: IntAggregateSelection;
+}
+
+export interface CommandDeviceReportCommandDeviceDeviceAggregationSelection {
+  __typename?: "CommandDeviceReportCommandDeviceDeviceAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection>;
+}
+
+export interface CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection {
+  __typename?: "CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection";
+  id: IDAggregateSelection;
+  lastOnline: DateTimeAggregateSelection;
+  name: StringAggregateSelection;
+  network_name: StringAggregateSelection;
+  operatingMode: StringAggregateSelection;
+  operatingState: StringAggregateSelection;
+}
+
+export interface CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection {
+  __typename?: "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection>;
+}
+
+export interface CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection {
+  __typename?: "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection";
+  id: IDAggregateSelection;
+  name: StringAggregateSelection;
+}
+
+export interface CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection {
+  __typename?: "CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection>;
+}
+
+export interface CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection {
+  __typename?: "CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection";
+  id: IDAggregateSelection;
+  inputUnits: StringAggregateSelection;
+  key: StringAggregateSelection;
+  max: StringAggregateSelection;
+  min: StringAggregateSelection;
+  type: StringAggregateSelection;
+  units: StringAggregateSelection;
+}
+
+export interface CommandDeviceReportDeviceConnection {
+  __typename?: "CommandDeviceReportDeviceConnection";
+  edges: Array<CommandDeviceReportDeviceRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandDeviceReportDeviceRelationship {
+  __typename?: "CommandDeviceReportDeviceRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandDevice;
+}
+
+export interface CommandDeviceReportTemplateDeviceConnection {
+  __typename?: "CommandDeviceReportTemplateDeviceConnection";
+  edges: Array<CommandDeviceReportTemplateDeviceRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandDeviceReportTemplateDeviceRelationship {
+  __typename?: "CommandDeviceReportTemplateDeviceRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandProgramDevicePlaceholder;
+}
+
+export interface CommandDeviceReportTemplateKeyConnection {
+  __typename?: "CommandDeviceReportTemplateKeyConnection";
+  edges: Array<CommandDeviceReportTemplateKeyRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandDeviceReportTemplateKeyRelationship {
+  __typename?: "CommandDeviceReportTemplateKeyRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandProgramDeviceState;
+}
+
+export interface CommandDeviceReportingConnection {
+  __typename?: "CommandDeviceReportingConnection";
+  edges: Array<CommandDeviceReportingRelationship>;
+  pageInfo: PageInfo;
+  totalCount: ScalarsEnums["Int"];
+}
+
+export interface CommandDeviceReportingRelationship {
+  __typename?: "CommandDeviceReportingRelationship";
+  cursor: ScalarsEnums["String"];
+  node: CommandDeviceReport;
 }
 
 export interface CommandDeviceSetpoint {
@@ -54083,6 +56204,12 @@ export interface CreateCommandDevicePluginsMutationResponse {
   info: CreateInfo;
 }
 
+export interface CreateCommandDeviceReportsMutationResponse {
+  __typename?: "CreateCommandDeviceReportsMutationResponse";
+  commandDeviceReports: Array<CommandDeviceReport>;
+  info: CreateInfo;
+}
+
 export interface CreateCommandDeviceSetpointsMutationResponse {
   __typename?: "CreateCommandDeviceSetpointsMutationResponse";
   commandDeviceSetpoints: Array<CommandDeviceSetpoint>;
@@ -55475,6 +57602,12 @@ export interface UpdateCommandDevicePluginsMutationResponse {
   info: UpdateInfo;
 }
 
+export interface UpdateCommandDeviceReportsMutationResponse {
+  __typename?: "UpdateCommandDeviceReportsMutationResponse";
+  commandDeviceReports: Array<CommandDeviceReport>;
+  info: UpdateInfo;
+}
+
 export interface UpdateCommandDeviceSetpointsMutationResponse {
   __typename?: "UpdateCommandDeviceSetpointsMutationResponse";
   commandDeviceSetpoints: Array<CommandDeviceSetpoint>;
@@ -55784,6 +57917,9 @@ export interface Mutation {
   createCommandDevicePlugins: (args: {
     input: Array<CommandDevicePluginCreateInput>;
   }) => CreateCommandDevicePluginsMutationResponse;
+  createCommandDeviceReports: (args: {
+    input: Array<CommandDeviceReportCreateInput>;
+  }) => CreateCommandDeviceReportsMutationResponse;
   createCommandDeviceSetpoints: (args: {
     input: Array<CommandDeviceSetpointCreateInput>;
   }) => CreateCommandDeviceSetpointsMutationResponse;
@@ -55935,6 +58071,10 @@ export interface Mutation {
   deleteCommandDevicePlugins: (args?: {
     delete?: Maybe<CommandDevicePluginDeleteInput>;
     where?: Maybe<CommandDevicePluginWhere>;
+  }) => DeleteInfo;
+  deleteCommandDeviceReports: (args?: {
+    delete?: Maybe<CommandDeviceReportDeleteInput>;
+    where?: Maybe<CommandDeviceReportWhere>;
   }) => DeleteInfo;
   deleteCommandDeviceSetpoints: (args?: {
     delete?: Maybe<CommandDeviceSetpointDeleteInput>;
@@ -56156,6 +58296,15 @@ export interface Mutation {
     update?: Maybe<CommandDevicePluginUpdateInput>;
     where?: Maybe<CommandDevicePluginWhere>;
   }) => UpdateCommandDevicePluginsMutationResponse;
+  updateCommandDeviceReports: (args?: {
+    connect?: Maybe<CommandDeviceReportConnectInput>;
+    connectOrCreate?: Maybe<CommandDeviceReportConnectOrCreateInput>;
+    create?: Maybe<CommandDeviceReportRelationInput>;
+    delete?: Maybe<CommandDeviceReportDeleteInput>;
+    disconnect?: Maybe<CommandDeviceReportDisconnectInput>;
+    update?: Maybe<CommandDeviceReportUpdateInput>;
+    where?: Maybe<CommandDeviceReportWhere>;
+  }) => UpdateCommandDeviceReportsMutationResponse;
   updateCommandDeviceSetpoints: (args?: {
     connect?: Maybe<CommandDeviceSetpointConnectInput>;
     connectOrCreate?: Maybe<CommandDeviceSetpointConnectOrCreateInput>;
@@ -56555,6 +58704,16 @@ export interface Query {
   }) => CommandDevicePluginAggregateSelection;
   commandDevicePluginsCount: (args?: {
     where?: Maybe<CommandDevicePluginWhere>;
+  }) => ScalarsEnums["Int"];
+  commandDeviceReports: (args?: {
+    options?: Maybe<CommandDeviceReportOptions>;
+    where?: Maybe<CommandDeviceReportWhere>;
+  }) => Array<CommandDeviceReport>;
+  commandDeviceReportsAggregate: (args?: {
+    where?: Maybe<CommandDeviceReportWhere>;
+  }) => CommandDeviceReportAggregateSelection;
+  commandDeviceReportsCount: (args?: {
+    where?: Maybe<CommandDeviceReportWhere>;
   }) => ScalarsEnums["Int"];
   commandDeviceSetpoints: (args?: {
     options?: Maybe<CommandDeviceSetpointOptions>;
@@ -57038,6 +59197,8 @@ export interface SchemaObjectTypes {
   CommandDeviceCalibrationsRelationship: CommandDeviceCalibrationsRelationship;
   CommandDeviceCommandDevicePeripheralPeripheralsAggregationSelection: CommandDeviceCommandDevicePeripheralPeripheralsAggregationSelection;
   CommandDeviceCommandDevicePeripheralPeripheralsNodeAggregateSelection: CommandDeviceCommandDevicePeripheralPeripheralsNodeAggregateSelection;
+  CommandDeviceCommandDeviceReportReportingAggregationSelection: CommandDeviceCommandDeviceReportReportingAggregationSelection;
+  CommandDeviceCommandDeviceReportReportingNodeAggregateSelection: CommandDeviceCommandDeviceReportReportingNodeAggregateSelection;
   CommandDeviceCommandProgramActionWaitingForActionsAggregationSelection: CommandDeviceCommandProgramActionWaitingForActionsAggregationSelection;
   CommandDeviceCommandProgramActionWaitingForActionsNodeAggregateSelection: CommandDeviceCommandProgramActionWaitingForActionsNodeAggregateSelection;
   CommandDeviceCommandProgramActiveProgramAggregationSelection: CommandDeviceCommandProgramActiveProgramAggregationSelection;
@@ -57105,6 +59266,22 @@ export interface SchemaObjectTypes {
   CommandDevicePluginPluginRelationship: CommandDevicePluginPluginRelationship;
   CommandDevicePluginRulesConnection: CommandDevicePluginRulesConnection;
   CommandDevicePluginRulesRelationship: CommandDevicePluginRulesRelationship;
+  CommandDeviceReport: CommandDeviceReport;
+  CommandDeviceReportAggregateSelection: CommandDeviceReportAggregateSelection;
+  CommandDeviceReportCommandDeviceDeviceAggregationSelection: CommandDeviceReportCommandDeviceDeviceAggregationSelection;
+  CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection: CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection;
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection: CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection;
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection: CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection;
+  CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection: CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection;
+  CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection: CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection;
+  CommandDeviceReportDeviceConnection: CommandDeviceReportDeviceConnection;
+  CommandDeviceReportDeviceRelationship: CommandDeviceReportDeviceRelationship;
+  CommandDeviceReportTemplateDeviceConnection: CommandDeviceReportTemplateDeviceConnection;
+  CommandDeviceReportTemplateDeviceRelationship: CommandDeviceReportTemplateDeviceRelationship;
+  CommandDeviceReportTemplateKeyConnection: CommandDeviceReportTemplateKeyConnection;
+  CommandDeviceReportTemplateKeyRelationship: CommandDeviceReportTemplateKeyRelationship;
+  CommandDeviceReportingConnection: CommandDeviceReportingConnection;
+  CommandDeviceReportingRelationship: CommandDeviceReportingRelationship;
   CommandDeviceSetpoint: CommandDeviceSetpoint;
   CommandDeviceSetpointAggregateSelection: CommandDeviceSetpointAggregateSelection;
   CommandDeviceSetpointCommandProgramDeviceStateKeyAggregationSelection: CommandDeviceSetpointCommandProgramDeviceStateKeyAggregationSelection;
@@ -57464,6 +59641,7 @@ export interface SchemaObjectTypes {
   CreateCommandDevicePeripheralProductsMutationResponse: CreateCommandDevicePeripheralProductsMutationResponse;
   CreateCommandDevicePeripheralsMutationResponse: CreateCommandDevicePeripheralsMutationResponse;
   CreateCommandDevicePluginsMutationResponse: CreateCommandDevicePluginsMutationResponse;
+  CreateCommandDeviceReportsMutationResponse: CreateCommandDeviceReportsMutationResponse;
   CreateCommandDeviceSetpointsMutationResponse: CreateCommandDeviceSetpointsMutationResponse;
   CreateCommandDevicesMutationResponse: CreateCommandDevicesMutationResponse;
   CreateCommandHMIDevicePortsMutationResponse: CreateCommandHMIDevicePortsMutationResponse;
@@ -57636,6 +59814,7 @@ export interface SchemaObjectTypes {
   UpdateCommandDevicePeripheralProductsMutationResponse: UpdateCommandDevicePeripheralProductsMutationResponse;
   UpdateCommandDevicePeripheralsMutationResponse: UpdateCommandDevicePeripheralsMutationResponse;
   UpdateCommandDevicePluginsMutationResponse: UpdateCommandDevicePluginsMutationResponse;
+  UpdateCommandDeviceReportsMutationResponse: UpdateCommandDeviceReportsMutationResponse;
   UpdateCommandDeviceSetpointsMutationResponse: UpdateCommandDeviceSetpointsMutationResponse;
   UpdateCommandDevicesMutationResponse: UpdateCommandDevicesMutationResponse;
   UpdateCommandHMIDevicePortsMutationResponse: UpdateCommandHMIDevicePortsMutationResponse;
@@ -57702,6 +59881,8 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceCalibrationsRelationship"
   | "CommandDeviceCommandDevicePeripheralPeripheralsAggregationSelection"
   | "CommandDeviceCommandDevicePeripheralPeripheralsNodeAggregateSelection"
+  | "CommandDeviceCommandDeviceReportReportingAggregationSelection"
+  | "CommandDeviceCommandDeviceReportReportingNodeAggregateSelection"
   | "CommandDeviceCommandProgramActionWaitingForActionsAggregationSelection"
   | "CommandDeviceCommandProgramActionWaitingForActionsNodeAggregateSelection"
   | "CommandDeviceCommandProgramActiveProgramAggregationSelection"
@@ -57769,6 +59950,22 @@ export type SchemaObjectTypesNames =
   | "CommandDevicePluginPluginRelationship"
   | "CommandDevicePluginRulesConnection"
   | "CommandDevicePluginRulesRelationship"
+  | "CommandDeviceReport"
+  | "CommandDeviceReportAggregateSelection"
+  | "CommandDeviceReportCommandDeviceDeviceAggregationSelection"
+  | "CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection"
+  | "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection"
+  | "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection"
+  | "CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection"
+  | "CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection"
+  | "CommandDeviceReportDeviceConnection"
+  | "CommandDeviceReportDeviceRelationship"
+  | "CommandDeviceReportTemplateDeviceConnection"
+  | "CommandDeviceReportTemplateDeviceRelationship"
+  | "CommandDeviceReportTemplateKeyConnection"
+  | "CommandDeviceReportTemplateKeyRelationship"
+  | "CommandDeviceReportingConnection"
+  | "CommandDeviceReportingRelationship"
   | "CommandDeviceSetpoint"
   | "CommandDeviceSetpointAggregateSelection"
   | "CommandDeviceSetpointCommandProgramDeviceStateKeyAggregationSelection"
@@ -58128,6 +60325,7 @@ export type SchemaObjectTypesNames =
   | "CreateCommandDevicePeripheralProductsMutationResponse"
   | "CreateCommandDevicePeripheralsMutationResponse"
   | "CreateCommandDevicePluginsMutationResponse"
+  | "CreateCommandDeviceReportsMutationResponse"
   | "CreateCommandDeviceSetpointsMutationResponse"
   | "CreateCommandDevicesMutationResponse"
   | "CreateCommandHMIDevicePortsMutationResponse"
@@ -58300,6 +60498,7 @@ export type SchemaObjectTypesNames =
   | "UpdateCommandDevicePeripheralProductsMutationResponse"
   | "UpdateCommandDevicePeripheralsMutationResponse"
   | "UpdateCommandDevicePluginsMutationResponse"
+  | "UpdateCommandDeviceReportsMutationResponse"
   | "UpdateCommandDeviceSetpointsMutationResponse"
   | "UpdateCommandDevicesMutationResponse"
   | "UpdateCommandHMIDevicePortsMutationResponse"

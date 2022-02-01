@@ -98,11 +98,20 @@ export class PluginBank {
 								value = ((value - curr.min) / (curr.max - curr.min)) * 100
 							}
 
+							// let update: any = {};
+							// if(curr.key != 'speed'){
+							// 	update[curr.key] = value;
+							// }else{
+							// 	console.log("Tried to update speed", value)
+							// }
 							return {
 								...prev,
+								// ...update,
 								[curr.key]: value //event.value[curr.foreignKey]
 							}
 						}, {})
+
+						// console.log({cleanState})
 	
 					}
 					

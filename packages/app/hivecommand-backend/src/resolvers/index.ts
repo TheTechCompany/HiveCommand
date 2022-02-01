@@ -85,6 +85,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					query += ` AND valueKey=$${params.length}`
 				}
 
+				query += ` ORDER BY timestamp ASC`
 				console.log(query, params)
 
 				const result = await client.query(
