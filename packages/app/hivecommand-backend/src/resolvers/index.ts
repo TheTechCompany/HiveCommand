@@ -178,7 +178,8 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 						waitingId: waitingId,
 						address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 						deviceId: args.deviceId,
-						flow: action.id
+						flow: action.id,
+						authorizedBy: context.user.name
 					}
 					return await channel.sendToQueue(`COMMAND:FLOW:PRIORITIZE`, Buffer.from(JSON.stringify(actionRequest)))
 				}
@@ -234,7 +235,8 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 						address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 						deviceId: args.deviceId,
 						deviceName: args.deviceName,
-						action: action.key
+						action: action.key,
+						authorizedBy: context.user.name
 					}
 
 					// channel.
@@ -273,7 +275,8 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				let actionRequest = {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
-					mode: args.mode
+					mode: args.mode,
+					authorizedBy: context.user.name
 				}
 
 				await session.writeTransaction(async (tx) => {
@@ -289,7 +292,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 				return await channel.sendToQueue(`COMMAND:MODE`, Buffer.from(JSON.stringify(actionRequest)))
 			},
-			changeState: async (root: any, args: {deviceId: string, state: string}) => {
+			changeState: async (root: any, args: {deviceId: string, state: string}, context: any) => {
 				if(args.state != "on" && args.state != "off" && args.state != "standby"){
 					throw new Error("Invalid state")
 				} 
@@ -308,7 +311,9 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				let actionRequest = {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
-					state: args.state
+					state: args.state,
+					authorizedBy: context.user.name
+
 				}
 
 				await session.writeTransaction(async (tx) => {
@@ -340,7 +345,8 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 					deviceId: args.deviceId,
 					deviceName: args.deviceName,
-					mode: args.mode
+					mode: args.mode,
+					authorizedBy: context.user.name
 				}
 
 				return await channel.sendToQueue(`COMMAND:DEVICE:MODE`, Buffer.from(JSON.stringify(actionRequest)))
