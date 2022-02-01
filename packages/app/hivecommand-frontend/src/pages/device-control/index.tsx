@@ -85,6 +85,21 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     max
                 }
 
+                reporting {
+                    device {
+                        id
+                        name
+                    }
+                    templateDevice {
+                        id
+                        name
+                    }
+                    templateKey {
+                        id
+                        name
+                    }
+                }
+
                 peripherals {
                     id
                     name
@@ -354,6 +369,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
+    const reporting = rootDevice.reporting || [];
+
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
     const values = deviceValueData?.commandDeviceValue || []
@@ -451,6 +468,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             controlId: id,
             program,
             values,
+            reporting,
             hmi,
             hmiNodes,
             groups,
