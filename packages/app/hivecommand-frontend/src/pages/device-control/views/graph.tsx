@@ -1,164 +1,198 @@
-import React, {useMemo, useState, useContext} from 'react';
-import { Box, Text } from 'grommet';
-import { LineGraph } from '@hexhive/ui';
-import { useQuery, gql } from '@apollo/client';
-import moment from 'moment-timezone';
-import { DeviceControlContext } from '../context';
+import React, { useMemo, useState, useContext } from "react";
+import { Box, Button, Text } from "grommet";
+import { Add } from "grommet-icons";
+import { GridLayoutItem, LineGraph } from "@hexhive/ui";
+import { useQuery, gql } from "@apollo/client";
+import { DeviceControlContext } from "../context";
+import { ControlGraphModal } from "../../../components/modals/device-control-graph";
+import { useAddDeviceChart, useUpdateDeviceChart, useRemoveDeviceChart, useUpdateDeviceChartGrid } from '@hive-command/api'
+import { GraphGrid } from '@hexhive/ui'
+// import { Graph, GraphContainer } from "../../../components/ui/graph";
 
-const GraphBlock = (props) => {
-	return (
-		<Box background="neutral-1" flex elevation="small" round="xsmall">
-			<Box direction="row" pad={{horizontal: 'small'}}><Text>{props.label}</Text></Box>
-			<LineGraph
-				data={props.data || []}
-				xKey={props.xKey || 'timestamp'}
-				yKey={props.yKey || 'value'} />
-		</Box>
-	)
-}
+// import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
+import moment from "moment";
+import { Graph } from "../../../components/ui/graph";
 
-export const DeviceControlGraph : React.FC<any> = (props) => {
+export const DeviceControlGraph: React.FC<any> = (props) => {
+  const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
 
-	const { controlId } = useContext(DeviceControlContext)
+  const [dayBefore, setDayBefore] = useState<string>(
+    new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
+  );
 
-	const [ dayBefore, setDayBefore ] = useState<string>(new Date(Date.now() - (1000 * 60 * 60 * 24 * 2)).toISOString())
+  const [deviceList, setDeviceList] = useState([]);
 
-	const { data } = useQuery(gql`
-		query TimeSeriesData ($device: String, $device1: String, $device2: String, $device3: String, $deviceId: String, $startDate: String, $valueKey: String, $valueKey2: String){
-			commandDeviceTimeseriesTotal(deviceId: $deviceId, device: $device, startDate: $startDate, valueKey: $valueKey) {
-				total
-			}
+  const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
 
-			commandDeviceTimeseriesTotal1:commandDeviceTimeseriesTotal(deviceId: $deviceId, device: $device1, startDate: $startDate, valueKey: $valueKey) {
-				total
-			}
-
-			commandDeviceTimeseries(deviceId: $deviceId, device: $device, startDate: $startDate, valueKey: $valueKey) {
-				timestamp
-				value
-			}
-			commandDeviceTimeseries1:commandDeviceTimeseries(deviceId: $deviceId, device: $device1, startDate: $startDate, valueKey: $valueKey) {
-				timestamp
-				value
-			}
-
-			commandDeviceTimeseries2:commandDeviceTimeseries(deviceId: $deviceId, device: $device2, startDate: $startDate, valueKey: $valueKey2) {
-				timestamp
-				value
-			}
-
-			commandDeviceTimeseries3:commandDeviceTimeseries(deviceId: $deviceId, device: $device3, startDate: $startDate, valueKey: $valueKey2) {
-				timestamp
-				value
-			}
-		}
-	`, {
-		variables: {
-			device: 'FIT301',
-			device1: 'FIT101',
-			device2: 'PT201',
-			device3: 'PT301',
-			deviceId: controlId,
-			valueKey: 'flow',
-			valueKey2: 'pressure',
-			startDate: dayBefore
-		}
-	})
-
-	console.log("Render", data)
+  const { data } = useQuery(
+    gql`
+      query TimeSeriesData {
 	
-	const total = useMemo(() => {
-		return data?.commandDeviceTimeseriesTotal?.total;
-	}, [data?.commandDeviceTimeseriesTotal])
+		commandDevices{ id } 
+		${reporting.map((graph) => {
+      
+			const queryName = graph.templateDevice?.name;
+			const queryKey = graph.templateKey?.key;
+		
+      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+          timestamp
+          value
+  
+        }
+        `;
+      let deviceTotal = "";
+      if (graph.total) {
+        deviceTotal = `
+          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+            total
+          }
+          `;
+      }
+      return `
+      ${deviceTimeseries}
+      ${deviceTotal}
+      `;
+    })}
 
-	const total1 = useMemo(() => {
-		return data?.commandDeviceTimeseriesTotal1?.total;
-	}, [data?.commandDeviceTimeseriesTotal1])
+	}
+       
+    `);
 
+	const addChart = useAddDeviceChart(controlId)
+	const updateChart = useUpdateDeviceChart(controlId)
+	const updateChartGrid = useUpdateDeviceChartGrid(controlId)
+	const removeChart = useRemoveDeviceChart(controlId);
 
-	const values = useMemo(() => {
-		return data?.commandDeviceTimeseries?.map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).tz(Intl.DateTimeFormat().resolvedOptions().timeZone).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries])
+  console.log("Render", {reporting});
 
+  const values = useMemo(() => {
+    return reporting.map((graph) => {
 
-	const values1 = useMemo(() => {
-		return data?.commandDeviceTimeseries1?.filter((a) => a.value != '0' && a.value != 0).map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime()) // + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: parseFloat(x.value)}
-		}) 
-	}, [data?.commandDeviceTimeseries1])
-	
-	const values2 = useMemo(() => {
-		return data?.commandDeviceTimeseries2?.filter((a) => a.value != '0' && a.value != 0).map((x) => {
-			let date = new Date(x.timestamp)
-			console.log(date.getTimezoneOffset() * 60000)
-			date = new Date(date.getTime()) //- (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries2])
+    //   const device = program.devices?.find((item) => graph.deviceID == item.id);
 
+    //   const key = device?.type.state.find(
+    //     (item) => graph.keyID == item.id
+    //   )?.key;
 
-	const values3 = useMemo(() => {
-		return data?.commandDeviceTimeseries3?.map((x) => {
-			let date = new Date(x.timestamp)
-			date = new Date(date.getTime() + (date.getTimezoneOffset() * 60000))
-			return {timestamp: moment(date).format('DD/MM/YYYY - hh:mma'), value: x.value}
-		}) 
-	}, [data?.commandDeviceTimeseries3])
-	// const values = [];
-	// const query = useQuery({suspense: false, staleWhileRevalidate: true})
+      const value = data?.[graph.templateDevice.name]?.map((item) => {
+        let d = new Date(item.timestamp);
+        let offset = (new Date().getTimezoneOffset() / 60) * -1;
+        return {
+          ...item,
+          timestamp: moment(d).add(offset, "hours").format("ddd DD hh:mma "),
+        };
+      });
 
+      const total = data?.[`${graph.templateDevice.name}Total`]?.total;
 
-	// const values = query.commandDeviceTimeseries({
-	// 	device: 'FIT301', 
-	// 	valueKey: 'flow', 
-	// 	deviceId: props.match.params.id, 
-	// 	startDate: dayBefore
-	//  })
+      return {
+		  ...graph,
+		  label: `${graph.templateDevice.name} - ${graph.templateKey.key}`,
+		  values: value,
+		  total: total ?  parseFloat(total).toFixed(2) : undefined
+      };
+    });
+  }, [reporting, program, data]);
 
-	return (
-		<Box 
-			pad="xsmall"
-			flex
-			gap="xsmall"
-			background="light-1" 
-			elevation="small" 
-			round="xsmall">
-				
-			<Box gap="xsmall" flex direction="row">
-				{/* Total Flows */}
-				<GraphBlock
-					label={`FIT301 - Last 7 days | Throughput: ${total?.toFixed(2)} Liters`}
-					data={values}
-					xKey={'timestamp'}
-					yKey={'value'} />
-			
-				<GraphBlock 
-					label={`FIT101 - Last 7 days | Throughput: ${total1?.toFixed(2)} Liters`}
-					data={values1}
-					xKey={'timestamp'}
-					yKey={'value'} />
+  const [modalOpen, openModal] = useState(false);
+
+  console.log({ reporting });
+
+  return (
+    <Box
+      pad="xsmall"
+      flex
+      gap="xsmall"
+      background="light-1"
+      elevation="small"
+      round="xsmall"
+    >
+      <ControlGraphModal
+        open={modalOpen}
+        devices={program.devices}
+        onClose={() => {
+          openModal(false);
+        }}
+        onSubmit={(graph) => {
+
+			addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
+				openModal(false);
+				refresh?.()
+			})
+        //   const device = program.devices?.find(
+        //     (item) => graph.deviceID == item.id
+        //   );
+
+        //   const key = device?.type.state.find(
+        //     (item) => graph.keyID == item.id
+        //   )?.key;
+
+        //   setDeviceList([...deviceList, graph]);
+        //   setDeviceLayout([
+        //     ...deviceLayout,
+        //     { id: `${device.name} - ${key}`, x: 0, y: 1, w: 8, h: 6 },
+        //   ]);
+        }}
+      />
+      <Box justify="end" direction="row">
+        <Button
+          onClick={() => openModal(true)}
+          icon={<Add size="small" />}
+          plain
+          style={{ padding: 6, borderRadius: 3 }}
+          hoverIndicator
+        />
+      </Box>
+
+	  <GraphGrid 
+		onRemoveItem={(item) => {
+			removeChart(item.id).then(() => {
+				refresh?.()
+			})
+		}}
+	  	onLayoutChange={(layout) => {
+			updateChartGrid(layout.map((x) => ({
+				...x,
+				id: x.i
+			})));
+
+			// console.log(layout)
+		}}
+	  	layout={values}
+		  >
+		{(item: any) => (
+			<Box flex>
+				<Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
 			</Box>
-			<Box gap="xsmall" flex direction="row">
-				{/* Membrane pressures */}
-				<GraphBlock
-					label={"PT201 - Pressure"}
-					xKey={'timestamp'}
-					yKey={'value'}
-					data={values2 || []}/>
-
-				<GraphBlock 
-					data={values3 || []}
-					label={"PT301 - Pressure"}
-					xKey={'timestamp'}
-					yKey={'value'} />
-				
-			</Box>
-		</Box>
-	)
-}
+		)}
+	  </GraphGrid>
+{/* 
+      <GraphGridLayout
+        onLayoutChange={(layout) => {
+          setDeviceLayout(layout);
+        }}
+        layout={deviceLayout}
+      >
+        {values.map((graph, ix) => (
+          <div
+            key={`${graph.device.name} - ${graph.key}`}
+            style={{ display: "flex" }}
+          >
+            <GraphContainer
+              dataKey={`${graph.device.name} - ${graph.key}`}
+              total={graph.total}
+              onRemove={() => {
+                let arr = deviceList.slice();
+                arr.splice(ix, 1);
+                setDeviceList(arr);
+              }}
+              label={`${graph.device.name} - ${graph.key}`}
+            >
+              <Graph data={graph.value} xKey={"timestamp"} yKey={"value"} />
+            </GraphContainer>
+          </div>
+        ))}
+      </GraphGridLayout> */}
+    </Box>
+  );
+};

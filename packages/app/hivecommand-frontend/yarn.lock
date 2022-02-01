@@ -1818,20 +1818,20 @@
   resolved "https://registry.npmjs.org/@hexhive/styles/-/styles-0.0.6-alpha.0.tgz"
   integrity sha512-k84xT4d1/rKr9a/gWBQjD4ZgPXNZ9rvjQUix2ABXzrYb1RuNpJgGvnVHQeggCpALIONzrgjI/oVZFDo5nqZpaA==
 
-"@hexhive/styles@^0.0.6-alpha.1":
-  version "0.0.6-alpha.1"
-  resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.1.tgz#96b1306573596a05c4d437aa26c06b20324b0563"
-  integrity sha512-gCjudvztbxPZ468Ej+LMCvOyF49GogyytTBIXy7TiJdHtINhq4Lw1MAUucqBOFcudCCo33elozSsK5LcOUyBIw==
+"@hexhive/styles@^0.0.6-alpha.13":
+  version "0.0.6-alpha.13"
+  resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.13.tgz#4c316bdbb8a6c1489faf4912b26400cdff43be8b"
+  integrity sha512-bZcFH+VpAV7MpxTRdK+o+HQyEpWoCCXxA6j21g7JiTr+skzxb+yoMIGUESxJ6FgpTh6HjxYE4gHWIx/YRWxrgQ==
 
-"@hexhive/ui@^0.0.6-alpha.11":
-  version "0.0.6-alpha.12"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.12.tgz#de3efa19e6e145ef279a0cfda2d3b70b1dfd03a6"
-  integrity sha512-zwH7JvJIWaCkqeq9vwzFJ07MH6q4EjqWq7uZocr5/L5Ny139Ppfy27OpejMrrGiWZwHR+J2DRmtcueaYVf8gwQ==
+"@hexhive/ui@0.0.6-alpha.21":
+  version "0.0.6-alpha.21"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.21.tgz#f1fda304f167a7127bc3cdccb46c75423796959d"
+  integrity sha512-YXjc5QYmaVl6wD3RE77NX5bxhlYIHyhM0Ct4RgUOT8iWnMOZqUhyzfqSA8Fk/3GLJn65lVSmJrBppdd2ho0rXQ==
   dependencies:
     "@babylonjs/core" "5.0.0-alpha.6"
     "@babylonjs/loaders" "5.0.0-alpha.6"
-    "@hexhive/styles" "^0.0.6-alpha.1"
-    "@hexhive/utils" "^0.0.6-alpha.1"
+    "@hexhive/styles" "^0.0.6-alpha.13"
+    "@hexhive/utils" "^0.0.6-alpha.13"
     "@remirror/core-utils" "^1.1.0"
     "@remirror/pm" "^1.0.1"
     "@remirror/react" "^1.0.2"
@@ -1853,6 +1853,7 @@
     react-big-calendar "^0.33.6"
     react-doc-viewer "^0.1.5"
     react-dropzone "^11.3.4"
+    react-grid-layout "^1.3.3"
     react-hyper-tree "^0.2.18"
     react-multi-date-picker "^3.0.0"
     react-popover "^0.5.10"
@@ -1869,10 +1870,10 @@
     slate-react "^0.65.3"
     use-prosemirror "^1.2.1"
 
-"@hexhive/utils@^0.0.6-alpha.1":
-  version "0.0.6-alpha.1"
-  resolved "https://registry.yarnpkg.com/@hexhive/utils/-/utils-0.0.6-alpha.1.tgz#871f3755b0d7668fe9a83277ebb836e2c4f598ef"
-  integrity sha512-AC7SCvyVUCPxhkh5Iizh08YABxVubQ3x2YojxOXLXCroZikjxbFq1TD9JWT/ARdqJXPSFnm/pPoS06AXtcGW0Q==
+"@hexhive/utils@^0.0.6-alpha.13":
+  version "0.0.6-alpha.13"
+  resolved "https://registry.yarnpkg.com/@hexhive/utils/-/utils-0.0.6-alpha.13.tgz#bb2a5415a5fa39870dd40397f1e41a9c1dc89a92"
+  integrity sha512-jB7lgqBbWjymdV4ZReW8zmgVOs2QCcei+8sGhqHQkZDt48IbvfrTaklKxIKnQJpX/p1JgqiO8fjoxr802sXZQw==
 
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
@@ -8874,7 +8875,7 @@ lodash.isboolean@^3.0.3:
   resolved "https://registry.yarnpkg.com/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz#6c2e171db2a257cd96802fd43b01b20d5f5870f6"
   integrity sha1-bC4XHbKiV82WgC/UOwGyDV9YcPY=
 
-lodash.isequal@^4.5.0:
+lodash.isequal@^4.0.0, lodash.isequal@^4.5.0:
   version "4.5.0"
   resolved "https://registry.npmjs.org/lodash.isequal/-/lodash.isequal-4.5.0.tgz"
   integrity sha1-QVxEePK8wwEgwizhDtMib30+GOA=
@@ -9954,6 +9955,15 @@ prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
+prop-types@15.x, prop-types@^15.0.0, prop-types@^15.6.0:
+  version "15.8.1"
+  resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 prop-types@^15.5.10, prop-types@^15.5.2, prop-types@^15.5.8, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.8.0"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.0.tgz"
@@ -10688,6 +10698,14 @@ react-dom@^17.0.2:
     object-assign "^4.1.1"
     scheduler "^0.20.2"
 
+react-draggable@^4.0.0, react-draggable@^4.0.3:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/react-draggable/-/react-draggable-4.4.4.tgz#5b26d9996be63d32d285a426f41055de87e59b2f"
+  integrity sha512-6e0WdcNLwpBx/YIDpoyd2Xb04PB0elrDrulKUgdrIlwuYvxh5Ok9M+F8cljm8kPXXs43PmMzek9RrB1b7mLMqA==
+  dependencies:
+    clsx "^1.1.1"
+    prop-types "^15.6.0"
+
 react-dropzone@^11.3.4:
   version "11.4.2"
   resolved "https://registry.npmjs.org/react-dropzone/-/react-dropzone-11.4.2.tgz"
@@ -10706,6 +10724,17 @@ react-fast-compare@^3.0.1:
   version "3.2.0"
   resolved "https://registry.npmjs.org/react-fast-compare/-/react-fast-compare-3.2.0.tgz"
   integrity sha512-rtGImPZ0YyLrscKI9xTpV8psd6I8VAtjKCzQDlzyDvqJA8XOW78TXYQwNRNd8g8JZnDu8q9Fu/1v4HPAVwVdHA==
+
+react-grid-layout@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/react-grid-layout/-/react-grid-layout-1.3.3.tgz#6d255ae036bb2371a46effd494ca4dd6f7224311"
+  integrity sha512-qxSU0IVzlneoIH0eGohJK80zmyTv6iWOEn5t6rUTx8XGf7btkmp64YbDaVtUgULDwV40YIO6wdqkVtx/X2bWAQ==
+  dependencies:
+    clsx "^1.1.1"
+    lodash.isequal "^4.0.0"
+    prop-types "^15.0.0"
+    react-draggable "^4.0.0"
+    react-resizable "^3.0.4"
 
 react-hyper-tree@^0.2.18:
   version "0.2.18"
@@ -10819,6 +10848,14 @@ react-redux@~7.1.3:
     loose-envify "^1.4.0"
     prop-types "^15.7.2"
     react-is "^16.9.0"
+
+react-resizable@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/react-resizable/-/react-resizable-3.0.4.tgz#aa20108eff28c52c6fddaa49abfbef8abf5e581b"
+  integrity sha512-StnwmiESiamNzdRHbSSvA65b0ZQJ7eVQpPusrSmcpyGKzC0gojhtO62xxH6YOBmepk9dQTBi9yxidL3W4s3EBA==
+  dependencies:
+    prop-types "15.x"
+    react-draggable "^4.0.3"
 
 react-resize-aware@^3.1.0:
   version "3.1.1"

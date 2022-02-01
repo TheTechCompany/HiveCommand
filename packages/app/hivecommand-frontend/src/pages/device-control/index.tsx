@@ -85,6 +85,29 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     max
                 }
 
+                reporting {
+                    id
+                    x
+                    y
+                    w
+                    h
+
+                    total
+
+                    device {
+                        id
+                        name
+                    }
+                    templateDevice {
+                        id
+                        name
+                    }
+                    templateKey {
+                        id
+                        key
+                    }
+                }
+
                 peripherals {
                     id
                     name
@@ -279,6 +302,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 units
                                 key
                                 type
+                                id
                             }
                         }
                     }
@@ -354,6 +378,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
+    const reporting = rootDevice?.reporting || [];
+
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
     const values = deviceValueData?.commandDeviceValue || []
@@ -426,7 +452,9 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     }, [data, deviceValueData])
 
 
-
+        const refresh = () => {
+            return client.refetchQueries({ include: ['Q'] })
+        }
 
     const changeOperationMode = (mode: string) => {
         changeMode(mode).then(() => {
@@ -451,12 +479,14 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             controlId: id,
             program,
             values,
+            reporting,
             hmi,
             hmiNodes,
             groups,
             changeDeviceMode,
             changeDeviceValue,
-            performAction: performDeviceAction
+            performAction: performDeviceAction,
+            refresh
         }}>
             <Box
                 round="xsmall"

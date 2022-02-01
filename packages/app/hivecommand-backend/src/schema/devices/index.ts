@@ -29,7 +29,23 @@ type CommandDevice @auth(rules: [
 	online: Boolean
 	lastOnline: DateTime
 
+	reporting: [CommandDeviceReport] @relationship(type: "HAS_REPORT", direction: OUT)
+
 	organisation: HiveOrganisation @relationship(type: "HAS_COMMAND_DEVICE", direction: IN)
+}
+
+type CommandDeviceReport {
+	id: ID! @id
+	x: Int
+	y: Int
+	w: Int
+	h: Int
+
+	device: CommandDevice @relationship(type: "HAS_REPORT", direction: IN)
+	templateDevice: CommandProgramDevicePlaceholder @relationship(type: "USES_PLACEHOLDER", direction: OUT)  
+	templateKey: CommandProgramDeviceState @relationship(type: "USES_TEMPLATE_KEY", direction: OUT)
+	total: Boolean
+	type: String
 }
 
 type CommandDevicePeripheral {
