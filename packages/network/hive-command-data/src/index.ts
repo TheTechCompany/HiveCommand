@@ -54,7 +54,7 @@ export class HiveCommandData {
 
 	async updateLiveness(id: string, live?: boolean){
 		const session = this.driver.session()
-		console.log("Update liveness")
+		// console.log("Update liveness")
 
 		const result = await session.run(`
 				MATCH (device:CommandDevice {network_name: $id})
