@@ -40,10 +40,11 @@ type CommandDeviceReport {
 	y: Int
 	w: Int
 	h: Int
+
 	device: CommandDevice @relationship(type: "HAS_REPORT", direction: IN)
-	templateDevice: CommandProgramDevice @relationship(type: "USES_TEMPLATE", direction: OUT)  
+	templateDevice: CommandProgramDevicePlaceholder @relationship(type: "USES_PLACEHOLDER", direction: OUT)  
 	templateKey: CommandProgramDeviceState @relationship(type: "USES_TEMPLATE_KEY", direction: OUT)
-	
+	total: Boolean
 	type: String
 }
 

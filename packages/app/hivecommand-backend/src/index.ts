@@ -54,7 +54,7 @@ import { Pool } from 'pg';
 	// const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
 
 	const graphServer = new HiveGraph({
-		dev: true,
+		dev: false,
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
 		schema: {
 			typeDefs: typeDefs,

@@ -3034,6 +3034,7 @@ export interface CommandDeviceReportCreateInput {
   h?: InputMaybe<Scalars["Int"]>;
   templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceFieldInput>;
   templateKey?: InputMaybe<CommandDeviceReportTemplateKeyFieldInput>;
+  total?: InputMaybe<Scalars["Boolean"]>;
   type?: InputMaybe<Scalars["String"]>;
   w?: InputMaybe<Scalars["Int"]>;
   x?: InputMaybe<Scalars["Int"]>;
@@ -3240,6 +3241,7 @@ export interface CommandDeviceReportRelationInput {
 export interface CommandDeviceReportSort {
   h?: InputMaybe<SortDirection>;
   id?: InputMaybe<SortDirection>;
+  total?: InputMaybe<SortDirection>;
   type?: InputMaybe<SortDirection>;
   w?: InputMaybe<SortDirection>;
   x?: InputMaybe<SortDirection>;
@@ -3258,41 +3260,41 @@ export interface CommandDeviceReportTemplateDeviceAggregateInput {
 }
 
 export interface CommandDeviceReportTemplateDeviceConnectFieldInput {
-  connect?: InputMaybe<CommandProgramDeviceConnectInput>;
-  where?: InputMaybe<CommandProgramDeviceConnectWhere>;
+  connect?: InputMaybe<CommandProgramDevicePlaceholderConnectInput>;
+  where?: InputMaybe<CommandProgramDevicePlaceholderConnectWhere>;
 }
 
 export interface CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput {
   onCreate: CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate;
-  where: CommandProgramDeviceConnectOrCreateWhere;
+  where: CommandProgramDevicePlaceholderConnectOrCreateWhere;
 }
 
 export interface CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate {
-  node: CommandProgramDeviceCreateInput;
+  node: CommandProgramDevicePlaceholderCreateInput;
 }
 
 export interface CommandDeviceReportTemplateDeviceConnectionSort {
-  node?: InputMaybe<CommandProgramDeviceSort>;
+  node?: InputMaybe<CommandProgramDevicePlaceholderSort>;
 }
 
 export interface CommandDeviceReportTemplateDeviceConnectionWhere {
   AND?: InputMaybe<Array<CommandDeviceReportTemplateDeviceConnectionWhere>>;
   OR?: InputMaybe<Array<CommandDeviceReportTemplateDeviceConnectionWhere>>;
-  node?: InputMaybe<CommandProgramDeviceWhere>;
-  node_NOT?: InputMaybe<CommandProgramDeviceWhere>;
+  node?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
+  node_NOT?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
 }
 
 export interface CommandDeviceReportTemplateDeviceCreateFieldInput {
-  node: CommandProgramDeviceCreateInput;
+  node: CommandProgramDevicePlaceholderCreateInput;
 }
 
 export interface CommandDeviceReportTemplateDeviceDeleteFieldInput {
-  delete?: InputMaybe<CommandProgramDeviceDeleteInput>;
+  delete?: InputMaybe<CommandProgramDevicePlaceholderDeleteInput>;
   where?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
 }
 
 export interface CommandDeviceReportTemplateDeviceDisconnectFieldInput {
-  disconnect?: InputMaybe<CommandProgramDeviceDisconnectInput>;
+  disconnect?: InputMaybe<CommandProgramDevicePlaceholderDisconnectInput>;
   where?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
 }
 
@@ -3330,30 +3332,10 @@ export interface CommandDeviceReportTemplateDeviceNodeAggregationWhereInput {
   name_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
   name_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
   name_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
-  type_AVERAGE_EQUAL?: InputMaybe<Scalars["Float"]>;
-  type_AVERAGE_GT?: InputMaybe<Scalars["Float"]>;
-  type_AVERAGE_GTE?: InputMaybe<Scalars["Float"]>;
-  type_AVERAGE_LT?: InputMaybe<Scalars["Float"]>;
-  type_AVERAGE_LTE?: InputMaybe<Scalars["Float"]>;
-  type_EQUAL?: InputMaybe<Scalars["String"]>;
-  type_GT?: InputMaybe<Scalars["Int"]>;
-  type_GTE?: InputMaybe<Scalars["Int"]>;
-  type_LONGEST_EQUAL?: InputMaybe<Scalars["Int"]>;
-  type_LONGEST_GT?: InputMaybe<Scalars["Int"]>;
-  type_LONGEST_GTE?: InputMaybe<Scalars["Int"]>;
-  type_LONGEST_LT?: InputMaybe<Scalars["Int"]>;
-  type_LONGEST_LTE?: InputMaybe<Scalars["Int"]>;
-  type_LT?: InputMaybe<Scalars["Int"]>;
-  type_LTE?: InputMaybe<Scalars["Int"]>;
-  type_SHORTEST_EQUAL?: InputMaybe<Scalars["Int"]>;
-  type_SHORTEST_GT?: InputMaybe<Scalars["Int"]>;
-  type_SHORTEST_GTE?: InputMaybe<Scalars["Int"]>;
-  type_SHORTEST_LT?: InputMaybe<Scalars["Int"]>;
-  type_SHORTEST_LTE?: InputMaybe<Scalars["Int"]>;
 }
 
 export interface CommandDeviceReportTemplateDeviceUpdateConnectionInput {
-  node?: InputMaybe<CommandProgramDeviceUpdateInput>;
+  node?: InputMaybe<CommandProgramDevicePlaceholderUpdateInput>;
 }
 
 export interface CommandDeviceReportTemplateDeviceUpdateFieldInput {
@@ -3575,6 +3557,7 @@ export interface CommandDeviceReportUpdateInput {
   h?: InputMaybe<Scalars["Int"]>;
   templateDevice?: InputMaybe<CommandDeviceReportTemplateDeviceUpdateFieldInput>;
   templateKey?: InputMaybe<CommandDeviceReportTemplateKeyUpdateFieldInput>;
+  total?: InputMaybe<Scalars["Boolean"]>;
   type?: InputMaybe<Scalars["String"]>;
   w?: InputMaybe<Scalars["Int"]>;
   x?: InputMaybe<Scalars["Int"]>;
@@ -3607,16 +3590,18 @@ export interface CommandDeviceReportWhere {
   id_NOT_IN?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
   id_NOT_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
   id_STARTS_WITH?: InputMaybe<Scalars["ID"]>;
-  templateDevice?: InputMaybe<CommandProgramDeviceWhere>;
+  templateDevice?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
   templateDeviceAggregate?: InputMaybe<CommandDeviceReportTemplateDeviceAggregateInput>;
   templateDeviceConnection?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
   templateDeviceConnection_NOT?: InputMaybe<CommandDeviceReportTemplateDeviceConnectionWhere>;
-  templateDevice_NOT?: InputMaybe<CommandProgramDeviceWhere>;
+  templateDevice_NOT?: InputMaybe<CommandProgramDevicePlaceholderWhere>;
   templateKey?: InputMaybe<CommandProgramDeviceStateWhere>;
   templateKeyAggregate?: InputMaybe<CommandDeviceReportTemplateKeyAggregateInput>;
   templateKeyConnection?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
   templateKeyConnection_NOT?: InputMaybe<CommandDeviceReportTemplateKeyConnectionWhere>;
   templateKey_NOT?: InputMaybe<CommandProgramDeviceStateWhere>;
+  total?: InputMaybe<Scalars["Boolean"]>;
+  total_NOT?: InputMaybe<Scalars["Boolean"]>;
   type?: InputMaybe<Scalars["String"]>;
   type_CONTAINS?: InputMaybe<Scalars["String"]>;
   type_ENDS_WITH?: InputMaybe<Scalars["String"]>;
@@ -25986,16 +25971,16 @@ export const generatedSchema : any = {
     h: { __type: "Int" },
     id: { __type: "ID!" },
     templateDevice: {
-      __type: "CommandProgramDevice",
+      __type: "CommandProgramDevicePlaceholder",
       __args: {
-        options: "CommandProgramDeviceOptions",
-        where: "CommandProgramDeviceWhere",
+        options: "CommandProgramDevicePlaceholderOptions",
+        where: "CommandProgramDevicePlaceholderWhere",
       },
     },
     templateDeviceAggregate: {
       __type:
-        "CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection",
-      __args: { where: "CommandProgramDeviceWhere" },
+        "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection",
+      __args: { where: "CommandProgramDevicePlaceholderWhere" },
     },
     templateDeviceConnection: {
       __type: "CommandDeviceReportTemplateDeviceConnection!",
@@ -26027,6 +26012,7 @@ export const generatedSchema : any = {
         where: "CommandDeviceReportTemplateKeyConnectionWhere",
       },
     },
+    total: { __type: "Boolean" },
     type: { __type: "String" },
     w: { __type: "Int" },
     x: { __type: "Int" },
@@ -26058,6 +26044,21 @@ export const generatedSchema : any = {
     operatingMode: { __type: "StringAggregateSelection!" },
     operatingState: { __type: "StringAggregateSelection!" },
   },
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection:
+    {
+      __typename: { __type: "String!" },
+      count: { __type: "Int!" },
+      node: {
+        __type:
+          "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection",
+      },
+    },
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection:
+    {
+      __typename: { __type: "String!" },
+      id: { __type: "IDAggregateSelection!" },
+      name: { __type: "StringAggregateSelection!" },
+    },
   CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection: {
     __typename: { __type: "String!" },
     count: { __type: "Int!" },
@@ -26077,20 +26078,6 @@ export const generatedSchema : any = {
       type: { __type: "StringAggregateSelection!" },
       units: { __type: "StringAggregateSelection!" },
     },
-  CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection: {
-    __typename: { __type: "String!" },
-    count: { __type: "Int!" },
-    node: {
-      __type:
-        "CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection",
-    },
-  },
-  CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection: {
-    __typename: { __type: "String!" },
-    id: { __type: "IDAggregateSelection!" },
-    name: { __type: "StringAggregateSelection!" },
-    type: { __type: "StringAggregateSelection!" },
-  },
   CommandDeviceReportConnectInput: {
     device: { __type: "CommandDeviceReportDeviceConnectFieldInput" },
     templateDevice: {
@@ -26118,6 +26105,7 @@ export const generatedSchema : any = {
     h: { __type: "Int" },
     templateDevice: { __type: "CommandDeviceReportTemplateDeviceFieldInput" },
     templateKey: { __type: "CommandDeviceReportTemplateKeyFieldInput" },
+    total: { __type: "Boolean" },
     type: { __type: "String" },
     w: { __type: "Int" },
     x: { __type: "Int" },
@@ -26329,6 +26317,7 @@ export const generatedSchema : any = {
   CommandDeviceReportSort: {
     h: { __type: "SortDirection" },
     id: { __type: "SortDirection" },
+    total: { __type: "SortDirection" },
     type: { __type: "SortDirection" },
     w: { __type: "SortDirection" },
     x: { __type: "SortDirection" },
@@ -26347,18 +26336,18 @@ export const generatedSchema : any = {
     },
   },
   CommandDeviceReportTemplateDeviceConnectFieldInput: {
-    connect: { __type: "CommandProgramDeviceConnectInput" },
-    where: { __type: "CommandProgramDeviceConnectWhere" },
+    connect: { __type: "CommandProgramDevicePlaceholderConnectInput" },
+    where: { __type: "CommandProgramDevicePlaceholderConnectWhere" },
   },
   CommandDeviceReportTemplateDeviceConnectOrCreateFieldInput: {
     onCreate: {
       __type:
         "CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate!",
     },
-    where: { __type: "CommandProgramDeviceConnectOrCreateWhere!" },
+    where: { __type: "CommandProgramDevicePlaceholderConnectOrCreateWhere!" },
   },
   CommandDeviceReportTemplateDeviceConnectOrCreateFieldInputOnCreate: {
-    node: { __type: "CommandProgramDeviceCreateInput!" },
+    node: { __type: "CommandProgramDevicePlaceholderCreateInput!" },
   },
   CommandDeviceReportTemplateDeviceConnection: {
     __typename: { __type: "String!" },
@@ -26367,23 +26356,23 @@ export const generatedSchema : any = {
     totalCount: { __type: "Int!" },
   },
   CommandDeviceReportTemplateDeviceConnectionSort: {
-    node: { __type: "CommandProgramDeviceSort" },
+    node: { __type: "CommandProgramDevicePlaceholderSort" },
   },
   CommandDeviceReportTemplateDeviceConnectionWhere: {
     AND: { __type: "[CommandDeviceReportTemplateDeviceConnectionWhere!]" },
     OR: { __type: "[CommandDeviceReportTemplateDeviceConnectionWhere!]" },
-    node: { __type: "CommandProgramDeviceWhere" },
-    node_NOT: { __type: "CommandProgramDeviceWhere" },
+    node: { __type: "CommandProgramDevicePlaceholderWhere" },
+    node_NOT: { __type: "CommandProgramDevicePlaceholderWhere" },
   },
   CommandDeviceReportTemplateDeviceCreateFieldInput: {
-    node: { __type: "CommandProgramDeviceCreateInput!" },
+    node: { __type: "CommandProgramDevicePlaceholderCreateInput!" },
   },
   CommandDeviceReportTemplateDeviceDeleteFieldInput: {
-    delete: { __type: "CommandProgramDeviceDeleteInput" },
+    delete: { __type: "CommandProgramDevicePlaceholderDeleteInput" },
     where: { __type: "CommandDeviceReportTemplateDeviceConnectionWhere" },
   },
   CommandDeviceReportTemplateDeviceDisconnectFieldInput: {
-    disconnect: { __type: "CommandProgramDeviceDisconnectInput" },
+    disconnect: { __type: "CommandProgramDevicePlaceholderDisconnectInput" },
     where: { __type: "CommandDeviceReportTemplateDeviceConnectionWhere" },
   },
   CommandDeviceReportTemplateDeviceFieldInput: {
@@ -26421,34 +26410,14 @@ export const generatedSchema : any = {
     name_SHORTEST_GTE: { __type: "Int" },
     name_SHORTEST_LT: { __type: "Int" },
     name_SHORTEST_LTE: { __type: "Int" },
-    type_AVERAGE_EQUAL: { __type: "Float" },
-    type_AVERAGE_GT: { __type: "Float" },
-    type_AVERAGE_GTE: { __type: "Float" },
-    type_AVERAGE_LT: { __type: "Float" },
-    type_AVERAGE_LTE: { __type: "Float" },
-    type_EQUAL: { __type: "String" },
-    type_GT: { __type: "Int" },
-    type_GTE: { __type: "Int" },
-    type_LONGEST_EQUAL: { __type: "Int" },
-    type_LONGEST_GT: { __type: "Int" },
-    type_LONGEST_GTE: { __type: "Int" },
-    type_LONGEST_LT: { __type: "Int" },
-    type_LONGEST_LTE: { __type: "Int" },
-    type_LT: { __type: "Int" },
-    type_LTE: { __type: "Int" },
-    type_SHORTEST_EQUAL: { __type: "Int" },
-    type_SHORTEST_GT: { __type: "Int" },
-    type_SHORTEST_GTE: { __type: "Int" },
-    type_SHORTEST_LT: { __type: "Int" },
-    type_SHORTEST_LTE: { __type: "Int" },
   },
   CommandDeviceReportTemplateDeviceRelationship: {
     __typename: { __type: "String!" },
     cursor: { __type: "String!" },
-    node: { __type: "CommandProgramDevice!" },
+    node: { __type: "CommandProgramDevicePlaceholder!" },
   },
   CommandDeviceReportTemplateDeviceUpdateConnectionInput: {
-    node: { __type: "CommandProgramDeviceUpdateInput" },
+    node: { __type: "CommandProgramDevicePlaceholderUpdateInput" },
   },
   CommandDeviceReportTemplateDeviceUpdateFieldInput: {
     connect: { __type: "CommandDeviceReportTemplateDeviceConnectFieldInput" },
@@ -26680,6 +26649,7 @@ export const generatedSchema : any = {
       __type: "CommandDeviceReportTemplateDeviceUpdateFieldInput",
     },
     templateKey: { __type: "CommandDeviceReportTemplateKeyUpdateFieldInput" },
+    total: { __type: "Boolean" },
     type: { __type: "String" },
     w: { __type: "Int" },
     x: { __type: "Int" },
@@ -26713,7 +26683,7 @@ export const generatedSchema : any = {
     id_NOT_IN: { __type: "[ID]" },
     id_NOT_STARTS_WITH: { __type: "ID" },
     id_STARTS_WITH: { __type: "ID" },
-    templateDevice: { __type: "CommandProgramDeviceWhere" },
+    templateDevice: { __type: "CommandProgramDevicePlaceholderWhere" },
     templateDeviceAggregate: {
       __type: "CommandDeviceReportTemplateDeviceAggregateInput",
     },
@@ -26723,7 +26693,7 @@ export const generatedSchema : any = {
     templateDeviceConnection_NOT: {
       __type: "CommandDeviceReportTemplateDeviceConnectionWhere",
     },
-    templateDevice_NOT: { __type: "CommandProgramDeviceWhere" },
+    templateDevice_NOT: { __type: "CommandProgramDevicePlaceholderWhere" },
     templateKey: { __type: "CommandProgramDeviceStateWhere" },
     templateKeyAggregate: {
       __type: "CommandDeviceReportTemplateKeyAggregateInput",
@@ -26735,6 +26705,8 @@ export const generatedSchema : any = {
       __type: "CommandDeviceReportTemplateKeyConnectionWhere",
     },
     templateKey_NOT: { __type: "CommandProgramDeviceStateWhere" },
+    total: { __type: "Boolean" },
+    total_NOT: { __type: "Boolean" },
     type: { __type: "String" },
     type_CONTAINS: { __type: "String" },
     type_ENDS_WITH: { __type: "String" },
@@ -52630,12 +52602,12 @@ export interface CommandDeviceReport {
   h?: Maybe<ScalarsEnums["Int"]>;
   id: ScalarsEnums["ID"];
   templateDevice: (args?: {
-    options?: Maybe<CommandProgramDeviceOptions>;
-    where?: Maybe<CommandProgramDeviceWhere>;
-  }) => Maybe<CommandProgramDevice>;
+    options?: Maybe<CommandProgramDevicePlaceholderOptions>;
+    where?: Maybe<CommandProgramDevicePlaceholderWhere>;
+  }) => Maybe<CommandProgramDevicePlaceholder>;
   templateDeviceAggregate: (args?: {
-    where?: Maybe<CommandProgramDeviceWhere>;
-  }) => Maybe<CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection>;
+    where?: Maybe<CommandProgramDevicePlaceholderWhere>;
+  }) => Maybe<CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection>;
   templateDeviceConnection: (args?: {
     after?: Maybe<Scalars["String"]>;
     first?: Maybe<Scalars["Int"]>;
@@ -52655,6 +52627,7 @@ export interface CommandDeviceReport {
     sort?: Maybe<Array<CommandDeviceReportTemplateKeyConnectionSort>>;
     where?: Maybe<CommandDeviceReportTemplateKeyConnectionWhere>;
   }) => CommandDeviceReportTemplateKeyConnection;
+  total?: Maybe<ScalarsEnums["Boolean"]>;
   type?: Maybe<ScalarsEnums["String"]>;
   w?: Maybe<ScalarsEnums["Int"]>;
   x?: Maybe<ScalarsEnums["Int"]>;
@@ -52688,6 +52661,18 @@ export interface CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection {
   operatingState: StringAggregateSelection;
 }
 
+export interface CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection {
+  __typename?: "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection";
+  count: ScalarsEnums["Int"];
+  node?: Maybe<CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection>;
+}
+
+export interface CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection {
+  __typename?: "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection";
+  id: IDAggregateSelection;
+  name: StringAggregateSelection;
+}
+
 export interface CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection {
   __typename?: "CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection";
   count: ScalarsEnums["Int"];
@@ -52703,19 +52688,6 @@ export interface CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggr
   min: StringAggregateSelection;
   type: StringAggregateSelection;
   units: StringAggregateSelection;
-}
-
-export interface CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection {
-  __typename?: "CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection";
-  count: ScalarsEnums["Int"];
-  node?: Maybe<CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection>;
-}
-
-export interface CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection {
-  __typename?: "CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection";
-  id: IDAggregateSelection;
-  name: StringAggregateSelection;
-  type: StringAggregateSelection;
 }
 
 export interface CommandDeviceReportDeviceConnection {
@@ -52741,7 +52713,7 @@ export interface CommandDeviceReportTemplateDeviceConnection {
 export interface CommandDeviceReportTemplateDeviceRelationship {
   __typename?: "CommandDeviceReportTemplateDeviceRelationship";
   cursor: ScalarsEnums["String"];
-  node: CommandProgramDevice;
+  node: CommandProgramDevicePlaceholder;
 }
 
 export interface CommandDeviceReportTemplateKeyConnection {
@@ -59298,10 +59270,10 @@ export interface SchemaObjectTypes {
   CommandDeviceReportAggregateSelection: CommandDeviceReportAggregateSelection;
   CommandDeviceReportCommandDeviceDeviceAggregationSelection: CommandDeviceReportCommandDeviceDeviceAggregationSelection;
   CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection: CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection;
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection: CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection;
+  CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection: CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection;
   CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection: CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection;
   CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection: CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection;
-  CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection: CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection;
-  CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection: CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection;
   CommandDeviceReportDeviceConnection: CommandDeviceReportDeviceConnection;
   CommandDeviceReportDeviceRelationship: CommandDeviceReportDeviceRelationship;
   CommandDeviceReportTemplateDeviceConnection: CommandDeviceReportTemplateDeviceConnection;
@@ -59982,10 +59954,10 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceReportAggregateSelection"
   | "CommandDeviceReportCommandDeviceDeviceAggregationSelection"
   | "CommandDeviceReportCommandDeviceDeviceNodeAggregateSelection"
+  | "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceAggregationSelection"
+  | "CommandDeviceReportCommandProgramDevicePlaceholderTemplateDeviceNodeAggregateSelection"
   | "CommandDeviceReportCommandProgramDeviceStateTemplateKeyAggregationSelection"
   | "CommandDeviceReportCommandProgramDeviceStateTemplateKeyNodeAggregateSelection"
-  | "CommandDeviceReportCommandProgramDeviceTemplateDeviceAggregationSelection"
-  | "CommandDeviceReportCommandProgramDeviceTemplateDeviceNodeAggregateSelection"
   | "CommandDeviceReportDeviceConnection"
   | "CommandDeviceReportDeviceRelationship"
   | "CommandDeviceReportTemplateDeviceConnection"
