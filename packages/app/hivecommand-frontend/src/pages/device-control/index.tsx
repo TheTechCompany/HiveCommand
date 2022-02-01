@@ -294,6 +294,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 units
                                 key
                                 type
+                                id
                             }
                         }
                     }
