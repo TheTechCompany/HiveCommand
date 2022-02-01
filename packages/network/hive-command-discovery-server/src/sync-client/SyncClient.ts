@@ -58,7 +58,7 @@ export class SyncClient {
 		
 		await Promise.all((servers || []).map(async (server) => {
 			if(server.productUri?.toString() == "NodeOPCUA-Server"){
-				console.log("Server", JSON.stringify(server))
+				// console.log("Server", JSON.stringify(server))
 
 				
 				let serverUrl = (server.discoveryUrls || []).length > 0 ? server.discoveryUrls?.[0]?.toString() : undefined
@@ -67,7 +67,7 @@ export class SyncClient {
 
 				if(!this.clients[serverUri] && serverUrl){
 					
-					console.log("new server ", serverUri, server)
+					// console.log("new server ", serverUri, server)
 
 					//Match networkName to device id 
 					let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
@@ -80,8 +80,8 @@ export class SyncClient {
 					await this.clients[serverUri].connect(serverUrl)
 				
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
-					console.log(devices);
-					console.log(`Connected to ${server.discoveryUrls?.[0]?.toString()}, found ${devices?.references?.length}`)
+					// console.log(devices);
+					// console.log(`Connected to ${server.discoveryUrls?.[0]?.toString()}, found ${devices?.references?.length}`)
 
 					let items = [];
 					for(var i = 0; i < (devices?.references || []).length; i++){
@@ -108,7 +108,7 @@ export class SyncClient {
 
 						datapoints = [...datapoints]
 
-						console.log("Subscribing to", datapoints.map((x) => x.tag))
+						// console.log("Subscribing to", datapoints.map((x) => x.tag))
 	
 						const monitor = await this.clients[serverUri].subscribeMulti(datapoints || [])
 	

@@ -148,6 +148,7 @@ export class DiscoveryServer {
 
         channel.consume(`COMMAND:DEVICE:MODE`, async (msg) => {
             let stateUpdate : {
+                authorizedBy: string,
                 address: string,
                 deviceId: string,
                 deviceName: string,
@@ -155,7 +156,7 @@ export class DiscoveryServer {
             } = JSON.parse(msg?.content.toString() || '{}')
 
             if(!stateUpdate.deviceId || !stateUpdate.deviceName) return console.error(`No device in mode event`)
-            console.log(`Changing mode ${stateUpdate.deviceName} : ${stateUpdate.mode}`)
+            console.log(`User: ${stateUpdate.authorizedBy} Changing mode ${stateUpdate.deviceName} : ${stateUpdate.mode}`)
 
             if(!stateUpdate.mode) return console.error(`No mode in mode event`)
 
@@ -166,12 +167,14 @@ export class DiscoveryServer {
 
         channel.consume(`COMMAND:FLOW:PRIORITIZE`, async (msg) => {
             let stateUpdate : {
+                authorizedBy: string,
                 waitingId: string,
                 address: string,
                 deviceId: string,
                 flow: string
             } = JSON.parse(msg?.content.toString() || '{}')
 
+            console.log(`User: ${stateUpdate.authorizedBy} is waiting for flow ${stateUpdate.flow}`)
             if(!stateUpdate.flow) return console.error(`No flow in mode event`)
 
             await this.syncClient.callMethod(stateUpdate.address,  `/Objects/1:Controller/1:Machine`, `/1:skipTo`, [stateUpdate.flow])
@@ -184,11 +187,12 @@ export class DiscoveryServer {
         channel.consume(`COMMAND:MODE`, async (msg) => {
 
             let stateUpdate: {
+                authorizedBy: string,
                 address: string;
                 mode: string;
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`Changing controller mode ${stateUpdate.mode}`)
+            console.log(`User: ${stateUpdate.authorizedBy} Changing controller mode ${stateUpdate.mode}`)
 
             if(!stateUpdate.address) return console.error(`No address in mode event`)
 
@@ -205,11 +209,12 @@ export class DiscoveryServer {
 
         channel.consume(`COMMAND:STATE`, async (msg) => {
             let stateUpdate: {
+                authorizedBy: string,
                 address: string,
                 state: string,
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`Changing controller ${stateUpdate.address} state ${stateUpdate.state}`)
+            console.log(`User: ${stateUpdate.authorizedBy} Changing controller ${stateUpdate.address} state ${stateUpdate.state}`)
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
             switch(stateUpdate.state){
@@ -231,11 +236,13 @@ export class DiscoveryServer {
 
         channel.consume(`COMMAND:DEVICE:VALUE`, async (msg) => {
             let stateUpdate: {
+                authorizedBy: string,
                 address: string,
                 busPath: string,
                 value: string                
             } = JSON.parse(msg?.content.toString() || '{}')
 
+            console.log(`User: ${stateUpdate.authorizedBy} Changing value ${stateUpdate.busPath} to ${stateUpdate.value}`)
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
             await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, DataType.Double, stateUpdate.value)
@@ -246,6 +253,7 @@ export class DiscoveryServer {
 
         channel.consume(`COMMAND:DEVICE:CONTROL`, async (msg) => {
             let stateUpdate : {
+                authorizedBy: string,
                 address: string,
                 deviceId: string,
                 deviceName?: string
@@ -255,10 +263,12 @@ export class DiscoveryServer {
             console.log(msg?.content.toString())
 
             if(!stateUpdate.deviceName || !stateUpdate.deviceId) return console.error("No device in state event");
-            console.log(`Writing ${stateUpdate.action} to ${stateUpdate.deviceName}@${stateUpdate.deviceId}`)
+            
+            console.log(`User: ${stateUpdate.authorizedBy} Writing ${stateUpdate.action} to ${stateUpdate.deviceName}@${stateUpdate.deviceId}`)
+
             if(!stateUpdate.action) return console.error("No action in state event")
             await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:command`, [stateUpdate.deviceName, stateUpdate.action])
-            console.log(`Write complete`)
+            // console.log(`Write complete`)
         }, {
             noAck: true,
         })
