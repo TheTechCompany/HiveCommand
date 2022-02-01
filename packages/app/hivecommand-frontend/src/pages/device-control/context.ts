@@ -5,6 +5,7 @@ export const DeviceControlContext = React.createContext<{
 	program?: any;
 	hmi?: any;
 	values?: any[],
+	reporting?: any[],
 	hmiNodes?: any[],
 	waitingForActions?: {id: string}[]
 	groups?: any,
