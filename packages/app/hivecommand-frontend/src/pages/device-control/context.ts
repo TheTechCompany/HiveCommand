@@ -17,6 +17,7 @@ export const DeviceControlContext = React.createContext<{
 	operatingState?: string,
 	changeOperationState?: (state: "on" | "off" | "standby") => void;
 	changeOperationMode?: (mode: string) => void,
+	refresh?: () => void;
 }>({
 
 })

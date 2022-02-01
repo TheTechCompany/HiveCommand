@@ -86,6 +86,14 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                 }
 
                 reporting {
+                    id
+                    x
+                    y
+                    w
+                    h
+
+                    total
+
                     device {
                         id
                         name
@@ -96,7 +104,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     }
                     templateKey {
                         id
-                        name
+                        key
                     }
                 }
 
@@ -370,7 +378,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
-    const reporting = rootDevice.reporting || [];
+    const reporting = rootDevice?.reporting || [];
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
@@ -444,7 +452,9 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     }, [data, deviceValueData])
 
 
-
+        const refresh = () => {
+            return client.refetchQueries({ include: ['Q'] })
+        }
 
     const changeOperationMode = (mode: string) => {
         changeMode(mode).then(() => {
@@ -475,7 +485,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             groups,
             changeDeviceMode,
             changeDeviceValue,
-            performAction: performDeviceAction
+            performAction: performDeviceAction,
+            refresh
         }}>
             <Box
                 round="xsmall"
