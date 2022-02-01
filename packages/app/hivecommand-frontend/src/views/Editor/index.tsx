@@ -46,7 +46,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     const [ view, setView ] = useState<"Documentation" | "Program" | "HMI" | "Devices" | "Alarms">("Program")
 
-    const [ sidebarOpen, openSidebar ] = useState<boolean>(false);
+    const [ sidebarOpen, openSidebar ] = useState<boolean>(true);
 
     const [ nodes, setNodes ] = useState<InfiniteCanvasNode[]>([]);
     const [ paths, _setPaths ] = useState<InfiniteCanvasPath[]>([]);
