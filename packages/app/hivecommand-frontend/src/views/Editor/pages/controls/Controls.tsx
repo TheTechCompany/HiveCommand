@@ -6,7 +6,7 @@ import { NodeDropdown  } from '../../../../components/node-dropdown';
 import { BallValve, Blower, Conductivity, Sump,  DiaphragmValve, UfMembrane, Filter, FlowSensor, PressureSensor, Pump, SpeedController, Tank, BlowerSparge, NfMembrane, DosingTank } from '../../../../assets/hmi-elements';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
-import { Nodes, Action, Add, Aggregate, Subtract, RotateLeft, RotateRight } from 'grommet-icons'
+import { Nodes, Action, Add, MoreVertical,  Aggregate, Subtract, RotateLeft, RotateRight } from 'grommet-icons'
 import Settings from './Settings'
 import { nanoid } from 'nanoid';
 import { pick } from 'lodash';
@@ -15,7 +15,7 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode } from '@hive-command/api';
+import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { cleanTree } from '../../utils';
 import { ObjectTypeDefinitionNode } from 'graphql';
@@ -34,7 +34,7 @@ export const Controls = (props) => {
     const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
-
+    const [ selectedHMIAction, setSelectedHMIAction ] = useState<any>(undefined)
     const selectedRef = useRef<{selected?: {key?: "node" | "path", id?: string}}>({})
 
     const setSelected = (s: {key?: "node" | "path", id?: string}) => {
@@ -477,7 +477,7 @@ export const Controls = (props) => {
     const assignHMINode = useAssignHMINode(id, activeView)
 
     const createHMIAction = useCreateHMIAction(id, activeView)
-    
+    const deleteHMIAction = useDeleteHMIAction(id, activeView)
 
 
     const devices = data?.commandPrograms?.[0]?.devices
@@ -567,7 +567,7 @@ export const Controls = (props) => {
             case 'actions':
                 return (
                     <Box flex>
-                        <Box direction="row" justify="between">
+                        <Box  pad="xsmall" background={"accent-1"} direction="row" justify="between">
                             <Text>Action Palette</Text>
                             <Button 
                                 onClick={() => openAssignModal(true)}
@@ -577,9 +577,24 @@ export const Controls = (props) => {
                                 icon={<Add size="small" />} />
                         </Box>
 
-                        <List 
+                        <List
+                            pad={'none'} 
                             primaryKey={'name'}
-                            data={activeProgram?.actions} />
+                            data={activeProgram?.actions}>
+                            {(datum) => (
+                                <Box pad="xsmall" direction='row' justify='between' align='center'>
+                                    <Text size="small">{datum?.name}</Text>
+                                    <Button                                 
+                                        style={{padding: 6, borderRadius: 3}}
+                                        hoverIndicator 
+                                        onClick={() => {
+                                            openAssignModal(true)
+                                            setSelectedHMIAction(datum)
+                                        }}
+                                        icon={<MoreVertical size="small" />} />
+                                </Box>
+                            )}
+                        </List>
                     </Box>
                 );
             case 'nodes':
@@ -859,6 +874,14 @@ export const Controls = (props) => {
                 </Collapsible>
             <AssignFlowModal   
                 flows={flows}
+                selected={selectedHMIAction}
+                onDelete={() => {
+                    deleteHMIAction(selectedHMIAction.id).then(() => {
+                        openAssignModal(false)
+                        setSelectedHMIAction(undefined)
+                        refetch()
+                    })
+                }}
                 onClose={() => openAssignModal(false)}
                 onSubmit={(assignment) => {
                     createHMIAction(
@@ -866,6 +889,8 @@ export const Controls = (props) => {
                         assignment.flow, 
                     ).then(() => {
                         openAssignModal(false);
+                        refetch()
+
 
                     })
                 }}
@@ -917,7 +942,6 @@ export const Controls = (props) => {
                             e.stopPropagation()
                             e.preventDefault()
                         }}
-                        pad={'xsmall'} 
                         width="small">
                             {renderMenu()}
                   
