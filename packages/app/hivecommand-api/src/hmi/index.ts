@@ -290,6 +290,37 @@ export const useUpdateHMINode = (programId: string, hmiId: string) => {
   };
 };
 
+export const useDeleteHMIAction = (programId: string, hmiId: string) => {
+  const [ mutateFn ] = useMutation((mutation, args: {actionId: string}) => {
+    const item = mutation.updateCommandPrograms({
+      where: { id: programId },
+      update: {
+        hmi: [
+          {
+            where: { node: { id: hmiId } },
+            update: {
+              node: {
+                actions: [{
+                  delete: [{where: {node: {id: args.actionId}}}]
+                }]
+              },
+            },
+          },
+        ],
+      },
+    });
+    return {
+      item: {
+        ...item.commandPrograms?.[0],
+      },
+    };
+  })
+
+  return async (actionId: string) => {
+    return await mutateFn({args: {actionId}})
+  }
+}
+
 export const useDeleteHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
     (
