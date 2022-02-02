@@ -358,18 +358,19 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 
 					state {
 						
+						device {
+							id
+							name
+						}
+
 						deviceKey {
 							id
 							key
 						}
 
-						deviceValue {
-							type
+						comparator
+						assertion {
 							value
-							setpoint {
-								id
-								name
-							}
 						}
 
 					}
@@ -458,7 +459,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 								lock.valueType,
 								lock.comparator,
 								lock.assertion,
-								lock.action
+								lock.action,
+								lock.state
 						).then(() => {
 							refetch()
 						})
@@ -469,7 +471,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 								lock.valueType,
 								lock.comparator,
 								lock.assertion,
-								lock.action
+								lock.action,
+								lock.state
 						).then(() => {
 							refetch();
 						})

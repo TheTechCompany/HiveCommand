@@ -1,66 +1,24 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
-import { Box, CheckBox, TextInput } from 'grommet';
-import QueryBuilder, {Field, formatQuery, RuleGroupType, RuleType} from 'react-querybuilder';
+import { Box, Button, CheckBox, TextInput } from 'grommet';
+import { Add } from 'grommet-icons';
 import { DeviceInterlockContext } from '../context';
-import {Query, Builder, BasicConfig, Config, Utils as QbUtils, ImmutableTree} from 'react-awesome-query-builder';
-import AntdConfig from 'react-awesome-query-builder/lib/config/antd';
 
-import 'antd/dist/antd.css'; // or import "react-awesome-query-builder/css/antd.less";
-import 'react-awesome-query-builder/lib/css/styles.css';
-import { FormInput } from '@hexhive/ui';
+import { FormControl, FormInput } from '@hexhive/ui';
+import { nanoid } from 'nanoid';
 // import 'react-awesome-query-builder/lib/css/compact_styles.css'; //optional, for more compact styles
 
 
-const InitialConfig = AntdConfig; // or MaterialConfig or BasicConfig
-
-const config : Config = {
-	...InitialConfig,
-	fields: {
-	  qty: {
-		  label: 'Qty',
-		  type: 'number',
-		  fieldSettings: {
-			  min: 0,
-		  },
-		  valueSources: ['value'],
-		  preferWidgets: ['number'],
-	  },
-	  price: {
-		  label: 'Price',
-		  type: 'number',
-		  valueSources: ['value'],
-		  fieldSettings: {
-			  min: 10,
-			  max: 100,
-		  },
-		  preferWidgets: ['slider', 'rangeslider'],
-	  },
-	  color: {
-		  label: 'Color',
-		  type: 'select',
-		  valueSources: ['value'],
-		  fieldSettings: {
-			listValues: [
-			  { value: 'yellow', title: 'Yellow' },
-			  { value: 'green', title: 'Green' },
-			  { value: 'orange', title: 'Orange' }
-			],
-		  }
-	  },
-	  is_promotion: {
-		  label: 'Promo?',
-		  type: 'boolean',
-		  operators: ['equal'],
-		  valueSources: ['value'],
-	  },
-	}
-  };
-
-  const queryValue = {"id": QbUtils.uuid(), type: "group"};
-
+const COMPARATORS = [
+	">",
+	">=",
+	"<",
+	"<=",
+	"==",
+	"!="
+].map((x) => ({key: x}))
 
 export const StateSection = (props) => {
-	const { device, interlock, setInterlock } = useContext(DeviceInterlockContext)
+	const { device, interlock, setInterlock, devices } = useContext(DeviceInterlockContext)
 
 	// const [ config, setConfig ] = useState<Config>({
 	// 	...InitialConfig
@@ -68,25 +26,7 @@ export const StateSection = (props) => {
 
 	// const [ query, setQuery ] = useState<ImmutableTree>(QbUtils.checkTree(QbUtils.loadTree(interlock.state || {id: QbUtils.uuid(), type: 'group'}), config));
 
-	const config = useMemo(() => {
-
-		const stateFields = (device?.type?.state || []).reduce((prev, curr) => {
-			return {
-				...prev,
-				[curr.key]: {
-					label: curr.key,
-					type: curr.type == "BooleanT" ? 'boolean' : 'number',
-				  	valueSources: ['value'],
-				}
-			}
-		}, {})
-
-		return {
-			...InitialConfig,
-			fields: stateFields
-		}
-		// console.log("Config udpate")
-	}, [device])
+	
 
 	// const query = useMemo(() => {
 	// 	// if(interlock.state) {
@@ -102,37 +42,67 @@ export const StateSection = (props) => {
 
 	// 		// }
 	// }, [interlock.state])
-	console.log(device?.type)
+	
+	const updateStateRow = (ix: number, key: string, value: any) => {
+		let state = interlock.state || []
 
-	const changeState = (key: string, value: string) => {
-		let oldState = interlock?.state?.slice()
-		let ix = oldState.map((x) => x.deviceKey).indexOf(key)
-		if(ix > -1){
-			oldState[ix].deviceValue = value
-		}else{
-			oldState.push({deviceKey: key, deviceValue: value})
+		state[ix] = {
+			...state[ix],
+			[key]: value
 		}
-		console.log({oldState})
-		setInterlock({...interlock, state: oldState})
+		setInterlock({...interlock, state})
 	}
 
 	return (
 		<Box flex gap="xsmall">
-			{Object.keys(config?.fields)?.map((x) => config?.fields[x]).map((field) => field.type == 'number' ? (
-				<FormInput 
-					value={interlock.state?.find((a) => a.deviceKey == field.label)?.deviceValue}
-					onChange={(value) => changeState(field.label, value)}
-					placeholder={field?.label} 
-					type={'number'}/>
-			) : (
-				<Box direction='row' align='center' justify='end'>
-					<CheckBox 
-						checked={interlock.state?.find((a) => a.deviceKey == field.label)?.deviceValue == "true"}
-						onChange={(e) => changeState(field.label, `${e.target.checked}`)}
-						reverse 
-						label={field?.label} />
+			<Box justify='end' direction='row'>
+				<Button
+					onClick={() => setInterlock({...interlock, state: [...(interlock.state || []), {id: nanoid(), device: '', deviceKey: '', comparator: '', assertion: ''}]})}
+					hoverIndicator 
+					plain 
+					style={{padding: 6, borderRadius: 3}} icon={<Add size='small' />} />
+			</Box>
+			{interlock?.state?.map((lock, ix) => (
+				<Box direction='row' align='center'>
+					<FormControl 
+						value={lock.device}
+						onChange={(value) => updateStateRow(ix, 'device', value)}
+						options={devices || []}
+						placeholder="Input Device" />
+					<FormControl 
+						value={lock.deviceKey}
+						labelKey="key"
+						onChange={(value) => updateStateRow(ix, 'deviceKey', value)}
+						options={devices?.find((a) => a.id == lock?.device)?.type?.state || []}
+						placeholder="State Key" />
+					<FormControl 
+						value={lock.comparator ||''}
+						options={COMPARATORS || []}
+						labelKey='key'
+						valueKey='key'
+						onChange={(value) => updateStateRow(ix, 'comparator', value)}
+						placeholder="Comparison" />
+					{/* <FormControl 
+						placeholder="Value Type"
+						labelKey="label"
+						value={interlock.valueType || 'value'}
+						onChange={(value) => upd({...interlock, valueType: value})}
+						options={[{id: 'value', label: "Value"} , {id: 'setpoint', label: "Setpoint"}]} /> */}
+					{/* {(interlock.valueType && interlock.valueType == "setpoint") ?  (
+						<FormControl
+							labelKey="name"
+							placeholder="Input Device Setpoint"
+							value={interlock.assertion}
+							onChange={(value) => setInterlock({...interlock, assertion: value})}
+							options={devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
+					) : */}
+					<FormInput  
+						value={lock.assertion}
+						onChange={(value) => updateStateRow(ix, 'assertion', value)}
+						placeholder="Input Device State Value" /> 
 				</Box>
 			))}
+			
 		</Box>
 	)
 }
