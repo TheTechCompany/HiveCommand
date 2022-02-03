@@ -26,17 +26,19 @@ export default (dataBroker: Data) => {
        
         let deviceId = host?.replace(".hexhive.io", '')
 
-        const [ commandPayload, deviceAssignment] = await dataBroker.readTransaction(async (tx) => {
+        const [ commandPayload, deviceAssignment, deviceActions] = await dataBroker.readTransaction(async (tx) => {
             return await Promise.all([
                 dataBroker.getDeviceProgram(tx, deviceId), 
-                dataBroker.getDeviceAssignment(tx, deviceId)
+                dataBroker.getDeviceAssignment(tx, deviceId),
+                dataBroker.getDeviceActions(tx, deviceId),
             ])
         })
 
 
         res.send({payload: {
             command: commandPayload,
-            layout: deviceAssignment
+            layout: deviceAssignment,
+            actions: deviceActions
         }})
     })
 
