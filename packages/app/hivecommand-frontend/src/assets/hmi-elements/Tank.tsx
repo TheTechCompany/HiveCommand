@@ -86,9 +86,9 @@ function SvgTank(props: {device?: {setpoints?: {name: string, key: {key: string}
         />
         <rect
           x={2}
-          y={121.72 - ((120 / 100 * getLevel()) || 86.56)}
+          y={121.72 - ((120 / 100 * getLevel()) ?? 86.56)}
           width={120}
-          height={120 / 100 * getLevel() || 86.56}
+          height={120 / 100 * getLevel() ?? 86.56}
           rx={12.41}
           style={{
             mixBlendMode: "overlay",

@@ -146,6 +146,17 @@ export class Data {
 		})
 
 	}
+
+	async getDeviceActions(tx: Transaction, deviceId: string){
+		const actions = await tx.run(`
+			MATCH (device:CommandDevice {network_name: $id})-->(:CommandProgram)-->(:CommandProgramHMI)-[:HAS_ACTION]->(action:CommandProgramAction)
+			RETURN action{.*}
+		`, {
+			id: deviceId
+		})
+		return actions.records.map((x) => x.get(0))
+	}
+
 	async getDeviceProgram(tx: Transaction, deviceId: string){
 
 		/*
