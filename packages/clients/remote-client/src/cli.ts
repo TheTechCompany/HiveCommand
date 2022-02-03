@@ -16,5 +16,5 @@ const argv = yargs(process.argv.slice(2)).options({
 	})
 
 	await client.start()
-})
+})()
 
