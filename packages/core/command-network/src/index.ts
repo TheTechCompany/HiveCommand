@@ -1,7 +1,7 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
-import { AssignmentPayload, PayloadResponse } from './types';
+import { ActionPayload, AssignmentPayload, PayloadResponse } from './types';
 import log from 'loglevel'
 
 export * from './types'
@@ -119,13 +119,46 @@ export class CommandNetwork {
 	}
 
 	//Turn buses into OPC map
-	async initOPC(layout: AssignmentPayload[]){
+	async initOPC({layout, actions} : {layout: AssignmentPayload[], actions: ActionPayload[]}){
 
 		// await this.opc?.setComandEndpoint(this.request.bind(this))
 		
 		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
+
+		await Promise.all(actions.map(async (action) => {
+			// this.opc./
+
+			await this.opc?.addDevice({
+				name: action.name,
+				type: "CommandAction",
+			}, {
+				actions: {
+					start: {
+						inputs: [],
+						outputs: [{name: 'success', dataType: DataType.Boolean}],
+						func: async (args: Variant[]) => {
+							return [new Variant({dataType: DataType.Boolean, value: true})]
+						}
+					},
+					stop: {
+						inputs: [],
+						outputs: [{name: 'success', dataType: DataType.Boolean}],
+						func: async (args: Variant[]) => {
+							return [new Variant({dataType: DataType.Boolean, value: true})]
+						}
+					}
+				},
+				state: {
+					running: {
+						type: DataType.Boolean,
+						get: () => new Variant({dataType: DataType.Boolean, value: false})
+					}
+				}
+			})
+			//TODO add action to OPC /Controller/Actions/Flow/Running
+		}))
 
 		await Promise.all(layout.map(async (layout) => {
 			await this.opc?.addDevice({
@@ -192,7 +225,7 @@ export class CommandNetwork {
 	async start(credentials: {
 		hostname: string,
 		discoveryServer?: string
-	}, layout: AssignmentPayload[]){
+	}, struct: {layout: AssignmentPayload[], actions: ActionPayload[]} ){
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
@@ -203,7 +236,7 @@ export class CommandNetwork {
 
 
 		await this.opc.start()
-		await this.initOPC(layout);
+		await this.initOPC(struct);
 
 
 	}

@@ -1,8 +1,18 @@
 export interface PayloadResponse {
 	payload?: {
 		command: CommandPayloadItem[],
-		layout?: AssignmentPayload[]
+		layout?: AssignmentPayload[],
+		actions?: ActionPayload[]
 	}
+}
+
+export interface ActionPayload {
+	id: string;
+	name: string;
+	flows: {
+		id: string;
+		name: string
+	}[]
 }
 
 export interface CommandPayloadItem {
