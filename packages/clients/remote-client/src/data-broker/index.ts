@@ -1,6 +1,6 @@
 import { Pool, PoolClient, } from 'pg'
 
-import { Models, connect_data } from '@hive-command/data-types'
+import { Models, connect_data, disconnect_data } from '@hive-command/data-types'
 const { DeviceValue } = Models;
 
 export class DataBroker {
@@ -24,6 +24,11 @@ export class DataBroker {
 		})
 
 		this.client = await this.pool.connect()
+	}
+
+	async disconnect(){
+		await this.client?.release()
+		await disconnect_data()
 	}
 
 	async writeEntry(device: string, deviceId: string, valueKey: string, value: any){

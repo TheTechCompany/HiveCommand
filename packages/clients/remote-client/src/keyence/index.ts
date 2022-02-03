@@ -34,6 +34,11 @@ export class KeyenceClient {
 		}
 	}
 
+	async disconnect(){
+		await this.client.end()
+		// await this.client.
+	}
+
 	async read(address: string, signed?: boolean){
 		const result = await this.client.write(`RD ${address}\r\n`, {timeout: 5000})
 
