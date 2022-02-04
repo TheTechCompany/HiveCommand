@@ -22,6 +22,8 @@ export class KeyenceClient {
 			port: 8501,
 			negotiationMandatory: false,
 			timeout: 15000,
+			sendTimeout: 15000,
+			execTimeout: 15000
 		}
 
 		await this.client.connect(hostParams)
