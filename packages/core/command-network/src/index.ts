@@ -156,7 +156,7 @@ export class CommandNetwork {
 						get: () => new Variant({dataType: DataType.Boolean, value: false})
 					}
 				}
-			})
+			}, 'Controller')
 			//TODO add action to OPC /Controller/Actions/Flow/Running
 		}))
 
