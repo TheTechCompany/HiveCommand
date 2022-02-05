@@ -22,6 +22,8 @@ export class KeyenceClient {
 			port: 8501,
 			negotiationMandatory: false,
 			timeout: 15000,
+			sendTimeout: 15000,
+			execTimeout: 15000
 		}
 
 		await this.client.connect(hostParams)
@@ -32,6 +34,11 @@ export class KeyenceClient {
 		}else{
 			throw new Error('Session not opened')
 		}
+	}
+
+	async disconnect(){
+		await this.client.end()
+		// await this.client.
 	}
 
 	async read(address: string, signed?: boolean){

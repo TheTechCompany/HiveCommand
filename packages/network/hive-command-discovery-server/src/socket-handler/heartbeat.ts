@@ -5,7 +5,7 @@ const { Device } = Models;
 import { HiveCommandData } from '@hive-command/data'
 
 export const handleHeartbeat = async (dataManager: HiveCommandData, socket: Socket, data: any) => {
-    console.log(`Heartbeat`, (socket as any).networkName)
+    // console.log(`Heartbeat`, (socket as any).networkName)
 
     let id = (socket as any)?.networkName
    

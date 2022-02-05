@@ -57,8 +57,10 @@ type CommandInterlock {
 
 type CommandInterlockState {
 	id: ID! @id
-	deviceKey: CommandProgramDeviceState @relationship(type: "HAS_INTERLOCK_STATE", direction: OUT)
-	deviceValue: CommandInterlockAssertion @relationship(type: "HAS_ASSERTION", direction: OUT)
+	device: CommandProgramDevicePlaceholder @relationship(type: "DEPENDS_ON_DEVICE", direction: OUT)
+	deviceKey: CommandProgramDeviceState @relationship(type: "DEPENDS_ON_DEVICE_KEY", direction: OUT)
+	comparator: String
+	assertion: CommandInterlockAssertion @relationship(type: "HAS_ASSERTION", direction: OUT)
 
 	interlock: CommandInterlock @relationship(type: "USES_INTERLOCK_STATE", direction: IN)
 }

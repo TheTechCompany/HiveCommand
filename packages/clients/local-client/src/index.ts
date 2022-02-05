@@ -172,12 +172,14 @@ export class CommandClient {
 
 		if(commandPayload.payload){
 
-			if(commandPayload.payload.layout){
+			const { layout, actions } = commandPayload.payload;
+
+			if(layout){
 
 				await this.controller.start({
 					hostname: self.identity.named, 
 					discoveryServer: this.options.discoveryServer || 'http://localhost:8080',
-				}, commandPayload.payload.layout)
+				}, {layout: layout || [], actions: actions || []})
 			}
 			await this.machine?.load(commandPayload)
 		}

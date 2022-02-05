@@ -158,9 +158,13 @@ export default class Server {
                         func: (args: Variant[]) => Promise<Variant[]>
                     }
                 }
-            }
+            },
+            organizedBy?: string
         ){
-        if(this.deviceFolder){
+
+        let organizedFolder = organizedBy ? this.controllerFolder : this.deviceFolder;
+
+        if(organizedFolder){
 
             let obj;
             
@@ -204,7 +208,7 @@ export default class Server {
 
                 obj = type?.instantiate({
                     browseName: device.name,
-                    organizedBy: this.deviceFolder
+                    organizedBy: organizedFolder
                 })
                 
            
