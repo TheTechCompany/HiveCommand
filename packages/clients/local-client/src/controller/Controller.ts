@@ -9,7 +9,7 @@
 */
 import log from 'loglevel'
 
-import { AssignmentPayload, CommandNetwork, ValueBankInterface } from "@hive-command/network";
+import { ActionPayload, AssignmentPayload, CommandNetwork, ValueBankInterface } from "@hive-command/network";
 import { CommandStateMachineMode } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
@@ -182,7 +182,6 @@ export class Controller {
 						}
 					}
 				}
-
 			}
 		});
 
@@ -191,11 +190,17 @@ export class Controller {
 		this.setupHeartbeat();
 	}
 
-	async start(credentials: {
-		hostname: string,
-		discoveryServer: string
-	}, layout: AssignmentPayload[]){
-		await this.network.start(credentials, layout)
+	async start(
+		credentials: {
+			hostname: string,
+			discoveryServer: string
+		}, 
+		struct: {
+			layout: AssignmentPayload[], 
+			actions: ActionPayload[]
+		}
+	){
+		await this.network.start(credentials, struct)
 	}
 
 	async stop(){

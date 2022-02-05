@@ -1,6 +1,6 @@
 import { BaseModal, FormControl } from '@hexhive/ui';
 import { TextInput } from 'grommet';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 export const AssignFlowModal = (props) => {
 
@@ -9,6 +9,9 @@ export const AssignFlowModal = (props) => {
 		flow?: string[]
 	}>({})
 
+	useEffect(() => {
+		setAction(props.selected || {});
+	}, [props.selected])
 	const onSubmit = () => {
 		props.onSubmit(action)
 	}
@@ -17,6 +20,7 @@ export const AssignFlowModal = (props) => {
 			title="Assign Flow"
 			open={props.open} 
 			onSubmit={onSubmit}
+			onDelete={props.selected && props.onDelete}
 			onClose={props.onClose}>
 			<TextInput 
 				value={action.name}

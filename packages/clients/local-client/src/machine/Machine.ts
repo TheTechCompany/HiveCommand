@@ -143,8 +143,10 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		let payload = commandPayload.payload?.command;
-		let layout = commandPayload.payload?.layout;
+		const { command : payload, layout, actions } = commandPayload.payload || {};
+
+		// let payload = commandPayload.payload?.command;
+		// let layout = commandPayload.payload?.layout;
 
 		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 

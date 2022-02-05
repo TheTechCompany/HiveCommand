@@ -1,11 +1,16 @@
-# `runner-core-discovery-server`
+# `Command Discovery Server`
 
-> TODO: description
+> The `Command Discovery Server` is a service that allows you to discover commands that are available on the network.
 
 ## Usage
 
 ```
-const runnerCoreDiscoveryServer = require('runner-core-discovery-server');
+import { DiscoveryServer } from "@hive-command/discovery-server";
 
-// TODO: DEMONSTRATE API
+(async () => {
+	const server = new DiscoveryServer();
+
+	await server.listen(8080);
+})()
+
 ```

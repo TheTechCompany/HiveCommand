@@ -247,6 +247,7 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 		comparator: string,
 		assertion: string,
 		action: string,
+		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	}) => {
 
 		let assertionValue = {};
@@ -274,7 +275,19 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 										inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKey}}}},
 										comparator: args.comparator,
 										assertion: {create: {node: {type: args.type, ...assertionValue}}},
-										action: {connect: {where: {node: {id: args.action}}}}
+										action: {connect: {where: {node: {id: args.action}}}},
+										state: {
+											create: args.state?.map(state => {
+												return {
+													node : {
+														device: {connect: {where: {node: {id: state.device}}}},
+														deviceKey: {connect: {where: {node: {id: state.deviceKey}}}},
+														comparator: state.comparator,
+														assertion: {create: {node: {type: 'value', value: state.assertion}}}
+													}
+												}
+											})
+										}
 									}
 								}]
 							}]
@@ -295,7 +308,8 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 		type: string,
 		comparator: string,
 		assertion: string,
-		action: string
+		action: string,
+		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	) => {
 	
 		return await mutateFn({
@@ -305,7 +319,8 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 				type,
 				comparator,
 				assertion,
-				action
+				action,
+				state
 			}
 		})
 	}
@@ -320,7 +335,8 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 		type: string,
 		comparator: string,
 		assertion: string,
-		action: string
+		action: string,
+		state?: {id?: string, device: string, deviceKey: string, comparator: string, assertion: string}[]
 	}) => {
 		if(!args.action) return;
 
@@ -378,7 +394,37 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 										action: {
 											connect: {where: {node: {id: args.action}}}, 
 											disconnect: {where: {node: {id_NOT: args.action}}}
-										}
+										},
+										state: [
+											{
+												create: args.state?.filter((a) => !a.id).map(state => ({
+													node: {
+														device: {connect: {where: {node: {id: state.device}}}},
+														deviceKey: {connect: {where: {node: {id: state.deviceKey}}}},
+														comparator: state.comparator,
+														assertion: {create: {node: {type: 'value', value: state.assertion}}}
+													}
+												}))
+											},
+											...(args.state || []).filter((a) => a.id).map(state => ({
+													where: {node: {id: state.id}},
+													update: {
+														node: {
+															device: {
+																connect: {where: {node: {id: state.device}}},
+																disconnect: {where: {node: {id_NOT: state.device}}}
+															},
+															deviceKey: {
+																connect: {where: {node: {id: state.deviceKey}}},
+																disconnect: {where: {node: {id_NOT: state.deviceKey}}}
+															},
+															comparator: state.comparator,
+															assertion: {update: {node: {value: state.assertion}}}
+														}
+													}
+											}))
+										]
+										// .concat()
 									}
 								}
 							}]
@@ -400,7 +446,8 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 		type: string,
 		comparator: string,
 		assertion: string,
-		action: string
+		action: string,
+		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	) => {
 		return await mutateFn({
 			args: {
@@ -410,7 +457,8 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 				type,
 				comparator,
 				assertion,
-				action
+				action,
+				state
 			}
 		})
 	}

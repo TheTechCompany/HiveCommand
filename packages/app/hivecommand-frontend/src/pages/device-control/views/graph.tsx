@@ -79,7 +79,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         let offset = (new Date().getTimezoneOffset() / 60) * -1;
         return {
           ...item,
-          timestamp: moment(d).add(offset, "hours").format("ddd DD hh:mma "),
+          timestamp: moment(d).add(offset, 'hours').format("DD/MM hh:mma "),
         };
       });
 

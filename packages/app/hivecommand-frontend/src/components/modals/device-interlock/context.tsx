@@ -11,7 +11,7 @@ export interface DeviceInterlock {
 		setpoint?: string,
 		value?: string
 	},
-	state?: {id?: string, deviceKey: string, deviceValue: any }[],
+	state?: {id?: string, device: string, deviceKey: string, comparator: string, assertion: any }[],
 	valueType?: string,
 	action?: string
 }

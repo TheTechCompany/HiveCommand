@@ -133,7 +133,7 @@ export default () => {
                     plain 
                     placeholder={state.key} 
                     onChange={(e) => setWorkingState({...workingState, [state.key]: parseFloat(e.target.value)})}
-                    value={workingState[state.key] || parseFloat(value)} />
+                    value={workingState[state.key] ?? parseFloat(value)} />
             )
         }else{
             return <Text size="small">{value}</Text>
