@@ -31,7 +31,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 		commandDevices{ id } 
 		${reporting.map((graph) => {
       
-			const queryName = graph.templateDevice?.name;
+			const queryName = graph.templateDevice?.name.replace(/ /, '');
 			const queryKey = graph.templateKey?.key;
 		
       let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
@@ -74,7 +74,8 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     //     (item) => graph.keyID == item.id
     //   )?.key;
 
-      const value = data?.[graph.templateDevice.name]?.map((item) => {
+    let queryName = graph.templateDevice?.name.replace(/ /, '');
+      const value = data?.[queryName]?.map((item) => {
         let d = new Date(item.timestamp);
         let offset = (new Date().getTimezoneOffset() / 60) * -1;
         return {
@@ -83,7 +84,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         };
       });
 
-      const total = data?.[`${graph.templateDevice.name}Total`]?.total;
+      const total = data?.[`${queryName}Total`]?.total;
 
       return {
 		  ...graph,
@@ -95,8 +96,6 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
   }, [reporting, program, data]);
 
   const [modalOpen, openModal] = useState(false);
-
-  console.log({ reporting });
 
   return (
     <Box
