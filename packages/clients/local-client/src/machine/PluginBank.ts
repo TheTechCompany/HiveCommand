@@ -92,6 +92,8 @@ export class PluginBank {
 							let value = event.value[curr.foreignKey]
 
 							if(curr.min && curr.max){
+								console.log(device.name, value, curr.min, curr.max)
+
 								if(value < curr.min) value = curr.min
 								if(value > curr.max) value = curr.max
 
