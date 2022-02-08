@@ -146,7 +146,7 @@ export class CommandNetwork {
 							const [ value ] = args;
 
 							log.info(`Action ${action.name} started`)
-							const result = this.valueBank?.runOneshot?.(action.id)
+							const result = this.valueBank?.runOneshot?.(action.flows?.[0]?.id)
 
 							return [new Variant({dataType: DataType.Boolean, value: true})]
 						}
@@ -158,7 +158,7 @@ export class CommandNetwork {
 							const [ value ] = args;
 
 							log.info(`Action ${action.name} stopped`)
-							const result = this.valueBank?.stopOneshot?.(action.id)
+							const result = this.valueBank?.stopOneshot?.(action.flows?.[0]?.id)
 
 							return [new Variant({dataType: DataType.Boolean, value: true})]
 						}
@@ -168,7 +168,7 @@ export class CommandNetwork {
 					running: {
 						type: DataType.Boolean,
 						get: () => {
-							const value = this.valueBank.isRunning?.(action.id)
+							const value = this.valueBank.isRunning?.(action.flows?.[0]?.id)
 							return new Variant({dataType: DataType.Boolean, value: value})
 						}
 					}
