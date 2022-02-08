@@ -431,9 +431,8 @@ export class Machine {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		log.debug("write state - (LC Machine)", JSON.stringify(changes))
-
 		if(Object.keys(changes).length < 1) return;
+		log.debug("write state - (LC Machine)", JSON.stringify(changes))
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
