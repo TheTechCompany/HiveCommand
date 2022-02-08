@@ -145,6 +145,7 @@ export class CommandNetwork {
 						func: async (args: Variant[]) => {
 							const [ value ] = args;
 
+							log.info(`Action ${action.name} started`)
 							const result = this.valueBank?.runOneshot?.(action.id)
 
 							return [new Variant({dataType: DataType.Boolean, value: true})]
@@ -156,6 +157,7 @@ export class CommandNetwork {
 						func: async (args: Variant[]) => {
 							const [ value ] = args;
 
+							log.info(`Action ${action.name} stopped`)
 							const result = this.valueBank?.stopOneshot?.(action.id)
 
 							return [new Variant({dataType: DataType.Boolean, value: true})]
