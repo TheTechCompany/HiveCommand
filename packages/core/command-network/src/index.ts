@@ -10,8 +10,8 @@ export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
 	setDeviceMode?: (device: string, mode: boolean) => any;
 
-	runOneshot?: (flowId: string) => void;
-	stopOneshot?: (flowId: string) => void;
+	runOneshot?: (flowId: string) => Promise<void | Error>;
+	stopOneshot?: (flowId: string) => Promise<void | Error>;
 	isRunning?: (flowId: string) => boolean;
 
 	requestState?: (device: string, key: string, value: any) => void;
@@ -135,7 +135,7 @@ export class CommandNetwork {
 			// this.opc./
 
 			await this.opc?.addDevice({
-				name: action.name,
+				name: action.id,
 				type: "PlantAction",
 			}, {
 				actions: {
@@ -148,7 +148,8 @@ export class CommandNetwork {
 							log.info(`Action ${action.name} started`)
 							const result = this.valueBank?.runOneshot?.(action.flows?.[0]?.id)
 
-							return [new Variant({dataType: DataType.Boolean, value: true})]
+							const success = !(result instanceof Error);
+							return [new Variant({dataType: DataType.Boolean, value: success})]
 						}
 					},
 					stop: {
@@ -159,12 +160,19 @@ export class CommandNetwork {
 
 							log.info(`Action ${action.name} stopped`)
 							const result = this.valueBank?.stopOneshot?.(action.flows?.[0]?.id)
+							const success = !(result instanceof Error);
 
-							return [new Variant({dataType: DataType.Boolean, value: true})]
+							return [new Variant({dataType: DataType.Boolean, value: success})]
 						}
 					}
 				},
 				state: {
+					name: {
+						type: DataType.String,
+						get: () => {
+							return new Variant({dataType: DataType.String, value: action.name})
+						}
+					},
 					running: {
 						type: DataType.Boolean,
 						get: () => {
