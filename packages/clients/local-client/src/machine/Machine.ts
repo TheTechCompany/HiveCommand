@@ -359,9 +359,17 @@ export class Machine {
 		await this.fsm.pause()
 	}
 
+	isRunning(flowId: string){
+		return this.fsm.isActive(flowId);
+	}
+
 	async runOneshot(processId: string){
 		return await this.fsm.runFlow(processId)
 		// return new Error("Not implemented");
+	}
+
+	async stopOneshot(processId: string){
+		return await this.fsm.stopFlow(processId)
 	}
 
 

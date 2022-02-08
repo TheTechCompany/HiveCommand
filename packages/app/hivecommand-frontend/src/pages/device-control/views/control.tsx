@@ -307,7 +307,7 @@ export default () => {
 								options={operatingModes} />
 						</Box>
 						<ActionButton 
-							disabled={operatingMode == 'disabled'}
+							disabled={operatingMode != 'auto'}
 							onClick={() =>  {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}

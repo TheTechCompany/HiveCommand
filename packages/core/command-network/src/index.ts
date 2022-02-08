@@ -10,6 +10,10 @@ export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
 	setDeviceMode?: (device: string, mode: boolean) => any;
 
+	runOneshot?: (flowId: string) => void;
+	stopOneshot?: (flowId: string) => void;
+	isRunning?: (flowId: string) => boolean;
+
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
 	get?: (device: string, key:string ) => any;
@@ -132,13 +136,17 @@ export class CommandNetwork {
 
 			await this.opc?.addDevice({
 				name: action.name,
-				type: "CommandAction",
+				type: "PlantAction",
 			}, {
 				actions: {
 					start: {
 						inputs: [],
 						outputs: [{name: 'success', dataType: DataType.Boolean}],
 						func: async (args: Variant[]) => {
+							const [ value ] = args;
+
+							const result = this.valueBank?.runOneshot?.(action.id)
+
 							return [new Variant({dataType: DataType.Boolean, value: true})]
 						}
 					},
@@ -146,6 +154,10 @@ export class CommandNetwork {
 						inputs: [],
 						outputs: [{name: 'success', dataType: DataType.Boolean}],
 						func: async (args: Variant[]) => {
+							const [ value ] = args;
+
+							const result = this.valueBank?.stopOneshot?.(action.id)
+
 							return [new Variant({dataType: DataType.Boolean, value: true})]
 						}
 					}
@@ -153,10 +165,13 @@ export class CommandNetwork {
 				state: {
 					running: {
 						type: DataType.Boolean,
-						get: () => new Variant({dataType: DataType.Boolean, value: false})
+						get: () => {
+							const value = this.valueBank.isRunning?.(action.id)
+							new Variant({dataType: DataType.Boolean, value: false})
+						}
 					}
 				}
-			}, 'Controller')
+			}, 'PlantActions')
 			//TODO add action to OPC /Controller/Actions/Flow/Running
 		}))
 
