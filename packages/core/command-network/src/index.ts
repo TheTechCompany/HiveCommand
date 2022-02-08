@@ -167,7 +167,7 @@ export class CommandNetwork {
 						type: DataType.Boolean,
 						get: () => {
 							const value = this.valueBank.isRunning?.(action.id)
-							new Variant({dataType: DataType.Boolean, value: false})
+							return new Variant({dataType: DataType.Boolean, value: value})
 						}
 					}
 				}
