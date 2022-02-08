@@ -210,7 +210,7 @@ export class SyncClient {
 
 		// let [fullKey, type, bus, portAndKey] = parts;
 
-		let portParts = key.match(/(.+)-(.+)/)
+		let portParts = key.match(/(.+?)-(.+)/)
 
 		if(!portParts) return;
 
