@@ -154,7 +154,7 @@ export class Process extends EventEmitter{
 
     isActive(id: string){
         let active = this.chains.entrypoints.concat(this.chains.shutdown).map((x) => x.currentActions.map((y) => y.actionId)).reduce((prev, curr) => prev.concat(curr), [])
-        console.log({active})
+        // console.log({active})
         return active.indexOf(id) > -1;
     }
     // get sub_processes(){
