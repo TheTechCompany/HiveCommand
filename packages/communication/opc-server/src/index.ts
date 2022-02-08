@@ -42,8 +42,12 @@ export default class Server {
     private server: OPCUAServer;
 
     public namespace?: Namespace;
-    public deviceFolder? : UAObject
-    public controllerFolder?: UAObject;
+
+    public deviceFolder? : UAObject //Stores all the device for a program
+    public controllerFolder?: UAObject; //Contains all the major actions for controlling the program
+    
+    public plantFolder?: UAObject; //Stores all high-level plant information
+    public plantActions?: UAObject;
 
     public controller?: UAObjectType;
     public plant?: UAObjectType;
@@ -126,7 +130,9 @@ export default class Server {
             const objectsFolder = addressSpace.rootFolder.objects;
             this.controllerFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Controller'})
             this.deviceFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Devices'})
-
+           
+            this.plantFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Plant'})
+            this.plantActions = this.namespace.addFolder(this.plantFolder, {browseName: 'Actions'})
             // this.namespace.addMethod
 
             await this.initializeController();
@@ -134,12 +140,9 @@ export default class Server {
         }
     }
 
-
     getDeviceTypes(){
         return this.objectTypes;    
     }
-
-
 
     async addDevice(
             device: {name: string, type: string}, 
@@ -159,10 +162,29 @@ export default class Server {
                     }
                 }
             },
-            organizedBy?: string
+            organizedBy?:  "Devices" | "Plant" | "Controller" | "PlantActions"
         ){
 
-        let organizedFolder = organizedBy ? this.controllerFolder : this.deviceFolder;
+        let organizedFolder : UAObject | undefined = this.deviceFolder;
+
+        switch(organizedBy){
+            case 'Devices':
+                organizedFolder = this.deviceFolder;
+                break;
+            case 'Controller':
+                organizedFolder = this.controllerFolder;
+                break;
+            case 'Plant':
+                organizedFolder = this.plantFolder;
+                break;
+            case 'PlantActions':
+                organizedFolder = this.plantActions;
+                break;
+            default:
+                organizedFolder = this.deviceFolder;
+                break;
+        }
+        // let organizedFolder = organizedBy ? this.controllerFolder : this.deviceFolder;
 
         if(organizedFolder){
 
