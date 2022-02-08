@@ -234,9 +234,12 @@ export default class Server {
                 })
                 
            
-                for(var key in definition?.actions){
+
+                for(var k in definition?.actions){
+                    const key = k;
                    (obj?.getMethodByName(key) as UAMethod)?.bindMethod(async (inputs, context, callback) => {
                         //   callback()
+                        console.log(`Key ${key}`)
                         try{
                             const outputs = await definition?.actions?.[key].func(inputs)
                             callback(null, {statusCode: StatusCodes.Good, outputArguments: outputs})
