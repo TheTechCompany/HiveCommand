@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-client",
-  "version": "1.4.1-alpha.114",
+  "version": "1.4.1-alpha.115",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -36,7 +36,7 @@
   "dependencies": {
     "@hive-command/identity": "^1.4.1-alpha.112",
     "@hive-command/logging": "^1.4.1-alpha.112",
-    "@hive-command/network": "^1.4.1-alpha.114",
+    "@hive-command/network": "^1.4.1-alpha.115",
     "@hive-command/opcua-server": "^1.4.1-alpha.114",
     "@hive-command/plugin-base": "^1.4.1-alpha.112",
     "@hive-command/plugin-blessed": "^1.4.1-alpha.112",
