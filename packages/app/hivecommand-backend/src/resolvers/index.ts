@@ -55,7 +55,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 							device = $1
 							AND deviceId = $2
 							AND valueKey = $3
-							AND timestamp >= NOW() - (7 * INTERVAL '1 day') 
+							AND timestamp >= date_trunc('week', NOW())
 						GROUP by deviceId, device, valueKey, timestamp, value
 					) as SUB
 				`//startDate
