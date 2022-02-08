@@ -80,6 +80,8 @@ export class SyncClient {
 					await this.clients[serverUri].connect(serverUrl)
 				
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
+
+					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
 					// console.log(devices);
 					// console.log(`Connected to ${server.discoveryUrls?.[0]?.toString()}, found ${devices?.references?.length}`)
 
@@ -98,6 +100,17 @@ export class SyncClient {
 						items.push(item);
 					}
 			
+
+						let plant_datapoints = [
+							{
+								path: `/Objects/1:Controller/1:Machine/1:Mode`,
+								tag: "Plant-Mode"
+							},
+							{
+								path: `/Objects/1:Controller/1:Machine/1:Running`,
+								tag: "Plant-Running"
+							}
+						]
 	
 						let datapoints = items?.reduce<{path: string, tag: string}[]>((prev, curr) => {
 							return prev.concat(curr?.items?.filter((a) => a !== "Product" && a !== "Serial").map((item) => ({
@@ -106,7 +119,12 @@ export class SyncClient {
 							}) ) || [])
 						}, [])
 
-						datapoints = [...datapoints]
+						let action_datapoints = (actions?.references || []).map((ref) => ({
+							path: `/Objects/1:Plant/1:Actions/${ref.browseName.namespaceIndex}:${ref.browseName.name}/1:running`,
+							tag: `PlantActions-${ref.browseName.name}`
+						}))
+
+						datapoints = [...datapoints, ...action_datapoints, ...plant_datapoints]
 
 						// console.log("Subscribing to", datapoints.map((x) => x.tag))
 	
