@@ -250,6 +250,8 @@ export class CommandStateMachine extends EventEmitter {
 			delete this.running_processes[flowId]
 			console.timeEnd(runTag)
 			return result
+		}else{
+			return new Error("Cannot run process, starting conditions invalid")
 		}
 	}
 
@@ -258,7 +260,10 @@ export class CommandStateMachine extends EventEmitter {
 			const result = await this.running_processes[flowId].stop()
 			delete this.running_processes[flowId]
 			return result;
+		}else{
+			return new Error("Cannot stop process, stopping conditions invalid")
 		}
+		
 	}
 
 	changeMode(mode: CommandStateMachineMode){

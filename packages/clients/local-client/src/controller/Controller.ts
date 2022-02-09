@@ -43,13 +43,13 @@ export class Controller {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine?.isProgramRunning || false})
+							return new Variant({dataType: DataType.Boolean, value: this.machine.isProgramRunning || false})
 						}
 					},
 					Mode: {
 						type: DataType.String,
 						get: () => {
-							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine?.mode || CommandStateMachineMode.DISABLED]})
+							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine.mode]})
 						}
 					}
 				},
@@ -103,29 +103,28 @@ export class Controller {
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},
-					skipTo: {
-						inputs: [
-							{
-								name: 'process',
-								dataType: DataType.String
-							},
-						],
-						outputs: [
-							{
-								name: 'success',
-								dataType: DataType.Boolean
-							}
-						],
-						func: async (inputs) => {
-							const [value] = inputs;
+					// skipTo: {
+					// 	inputs: [
+					// 		{
+					// 			name: 'process',
+					// 			dataType: DataType.String
+					// 		},
+					// 	],
+					// 	outputs: [
+					// 		{
+					// 			name: 'success',
+					// 			dataType: DataType.Boolean
+					// 		}
+					// 	],
+					// 	func: async (inputs) => {
+					// 		const [value] = inputs;
 
-							console.log({value}, "skipTo")
+					// 		console.log({value}, "skipTo")
 						
-							const result = await this.machine?.runOneshot(value.value.toString())
-							// if(result) throw result;
-							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]]
-						}
-					},
+					// 		// if(result) throw result;
+					// 		return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]]
+					// 	}
+					// },
 					command: {
 						inputs: [
 							{

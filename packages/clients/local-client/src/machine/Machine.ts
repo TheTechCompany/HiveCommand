@@ -311,7 +311,7 @@ export class Machine {
 
 
 	get mode(){
-		return this.fsm.mode || CommandStateMachineMode.DISABLED
+		return this.fsm.mode
 	}
 
 
@@ -359,9 +359,17 @@ export class Machine {
 		await this.fsm.pause()
 	}
 
+	isRunning(flowId: string){
+		return this.fsm.isActive(flowId);
+	}
+
 	async runOneshot(processId: string){
 		return await this.fsm.runFlow(processId)
 		// return new Error("Not implemented");
+	}
+
+	async stopOneshot(processId: string){
+		return await this.fsm.stopFlow(processId)
 	}
 
 
@@ -423,9 +431,8 @@ export class Machine {
 	async writeState(){
 		const changes = this.busMap.getChanged()
 
-		log.debug("write state - (LC Machine)", JSON.stringify(changes))
-
 		if(Object.keys(changes).length < 1) return;
+		log.debug("write state - (LC Machine)", JSON.stringify(changes))
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
