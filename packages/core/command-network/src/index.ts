@@ -10,6 +10,10 @@ export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
 	setDeviceMode?: (device: string, mode: boolean) => any;
 
+	runOneshot?: (flowId: string) => Promise<void | Error>;
+	stopOneshot?: (flowId: string) => Promise<void | Error>;
+	isRunning?: (flowId: string) => boolean;
+
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
 	get?: (device: string, key:string ) => any;
@@ -131,32 +135,53 @@ export class CommandNetwork {
 			// this.opc./
 
 			await this.opc?.addDevice({
-				name: action.name,
-				type: "CommandAction",
+				name: action.id,
+				type: "PlantAction",
 			}, {
 				actions: {
 					start: {
 						inputs: [],
 						outputs: [{name: 'success', dataType: DataType.Boolean}],
 						func: async (args: Variant[]) => {
-							return [new Variant({dataType: DataType.Boolean, value: true})]
+							const [ value ] = args;
+
+							log.info(`Action ${action.name} started`)
+							const result = this.valueBank?.runOneshot?.(action.flows?.[0]?.id)
+
+							const success = !(result instanceof Error);
+							return [new Variant({dataType: DataType.Boolean, value: success})]
 						}
 					},
 					stop: {
 						inputs: [],
 						outputs: [{name: 'success', dataType: DataType.Boolean}],
 						func: async (args: Variant[]) => {
-							return [new Variant({dataType: DataType.Boolean, value: true})]
+							const [ value ] = args;
+
+							log.info(`Action ${action.name} stopped`)
+							const result = this.valueBank?.stopOneshot?.(action.flows?.[0]?.id)
+							const success = !(result instanceof Error);
+
+							return [new Variant({dataType: DataType.Boolean, value: success})]
 						}
 					}
 				},
 				state: {
+					name: {
+						type: DataType.String,
+						get: () => {
+							return new Variant({dataType: DataType.String, value: action.name})
+						}
+					},
 					running: {
 						type: DataType.Boolean,
-						get: () => new Variant({dataType: DataType.Boolean, value: false})
+						get: () => {
+							const value = this.valueBank.isRunning?.(action.flows?.[0]?.id)
+							return new Variant({dataType: DataType.Boolean, value: value})
+						}
 					}
 				}
-			}, 'Controller')
+			}, 'PlantActions')
 			//TODO add action to OPC /Controller/Actions/Flow/Running
 		}))
 

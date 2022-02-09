@@ -177,7 +177,7 @@ export class DiscoveryServer {
             console.log(`User: ${stateUpdate.authorizedBy} is waiting for flow ${stateUpdate.flow}`)
             if(!stateUpdate.flow) return console.error(`No flow in mode event`)
 
-            await this.syncClient.callMethod(stateUpdate.address,  `/Objects/1:Controller/1:Machine`, `/1:skipTo`, [stateUpdate.flow])
+            await this.syncClient.callMethod(stateUpdate.address,  `/Objects/1:Plant/1:Actions/1:${stateUpdate.flow}`, `/1:start`, [])
 
             await this.dataBroker.removeWaitingAction(stateUpdate.deviceId, stateUpdate.waitingId)
         }, {

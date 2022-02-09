@@ -307,7 +307,7 @@ export default () => {
 								options={operatingModes} />
 						</Box>
 						<ActionButton 
-							disabled={operatingMode == 'disabled'}
+							disabled={operatingMode != 'auto'}
 							onClick={() =>  {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}
@@ -318,7 +318,7 @@ export default () => {
 						<Box gap="xsmall">
 							{actions.map((action) => (
 								<ActionButton
-									waiting={waitingForActions.map((x) => x.id).includes(action.id)}
+									waiting={waitingForActions[action.id]}
 									onClick={() => controlAction(action)}
 									label={action.name} />
 							))}
