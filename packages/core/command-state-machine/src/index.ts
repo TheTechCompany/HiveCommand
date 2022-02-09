@@ -281,6 +281,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(canChange){
 			this.mode = mode;
 		}else{
+			log.error(reason)
 			return new Error(reason)
 		}
 	}

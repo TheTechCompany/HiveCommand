@@ -13,8 +13,6 @@ function SvgTank(props: {device?: {setpoints?: {name: string, key: {key: string}
     return level //(level - props?.conf?.level?.min) / ((props?.conf?.level?.max - props?.conf?.level?.min) / 100)
   }
 
-  console.log(props?.device)
-
   const renderSetpoint = () => {
     return props?.device?.setpoints?.map((setpoint, index) => {
       return (

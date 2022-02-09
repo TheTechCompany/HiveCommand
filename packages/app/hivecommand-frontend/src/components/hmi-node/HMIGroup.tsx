@@ -1,9 +1,10 @@
 import { Box } from 'grommet';
 import React, {useMemo, useContext} from 'react';
-import { useSVGStyle } from '../../hooks/svg';
+import { getSVGStyle } from '../../hooks/svg';
 import * as HMIIcons from '../../assets/hmi-elements'
 import { RetractingPort } from '@hexhive/ui';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
+import { Icon } from './Icon';
 
 export interface HMIGroupProps {
 	extras?: {
@@ -36,10 +37,7 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
 			return {
 				id: node.id,
 				extras: {
-					icon: useSVGStyle(HMIIcons[node.type.name], (props) => ({
-						stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open == 'true' || options?.on == 'true' || parseFloat(options?.speed) > 0)? 'green' : 'gray',
-						filter: `hue-rotate(${((options?.open == true || options?.open == 'true') || (options?.on == 'true')) ? '45' : '0'}deg)`
-					})),
+					icon: <Icon icon={node.type.name} options={options}/>,
 					options,
 					conf
 				},
@@ -82,7 +80,7 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
 						left: Node.x, 
 						top: Node.y
 					}}> 
-						<Node.extras.icon device={Node.device} scaleX={Node.scaleX} scaleY={Node.scaleY} rotation={Node.rotation} conf={Node.extras.conf} options={Node.extras.options} />
+						{React.cloneElement(Node.extras.icon, {device: Node.device, scaleX: Node.scaleX, scaleY: Node.scaleY, rotation: Node.rotation, conf: Node.extras.conf, options: Node.extras.options})}
 				</div>)}
 			{ports.map((Port) => 
 				<div style={{position: 'absolute', left: Port.x, top: Port.y}}>
