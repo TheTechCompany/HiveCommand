@@ -289,10 +289,10 @@ export class Process extends EventEmitter{
         }
         this.emit('stopped')
 
-        if(this.process){
-            console.log("Reloading process");
-            this.load(this.process);
-        }
+        // if(this.process){
+        //     console.log("Reloading process");
+        //     this.load(this.process);
+        // }
     }
 
     async pause(){

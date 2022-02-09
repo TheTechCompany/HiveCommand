@@ -134,8 +134,13 @@ export class CommandStateMachine extends EventEmitter {
 			log.debug('Listening to process')
 			process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		})
+	}
 
-
+	reload(){
+		if(this.program) {
+			log.debug(`Reloading program`)
+			this.load(this.program)
+		}
 	}
 
 

@@ -464,6 +464,32 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 	}
 }
 
+export const useDeletePlaceholderInterlock  = (programId: string, deviceId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {interlockId: string}) => {
+		const item = mutation.updateCommandProgramDevicePlaceholders({
+			where: {id: deviceId, program: {id: programId}},
+			update: {
+				interlocks: [{
+					delete: [{where: {node: {id: args.interlockId}}}]
+				}]
+			}
+		})
+
+		return {
+			item: {
+				...item.commandProgramDevicePlaceholders?.[0]
+			}
+		}
+	})
+
+	return async (id: string) => {
+		return await mutateFn({
+			args: {
+				interlockId: id
+			}
+		})
+	}
+}
 export const useCreatePlaceholderPlugin = (programId: string, deviceId: string) => {
 
 	const [mutateFn] = useMutation((mutation, args: { 
