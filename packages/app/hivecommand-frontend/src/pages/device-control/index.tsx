@@ -384,7 +384,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const values = deviceValueData?.commandDeviceValue || []
 
-    const waitingForActions = deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
+    const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {}) // deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
 
     const refetch = () => {
         client.refetchQueries({ include: ['Q'] })
@@ -476,10 +476,10 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             waitingForActions,
             changeOperationMode,
             changeOperationState,
-            operatingMode: rootDevice?.operatingMode,
-            operatingState: rootDevice?.operatingState,
-            // operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
-            // operatingState: values?.find((a) => a.devieId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "ON" : "OFF",
+            // operatingMode: rootDevice?.operatingMode,
+            // operatingState: rootDevice?.operatingState,
+            operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
+            operatingState: values?.find((a) => a.devieId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
             controlId: id,
             program,
             values,
