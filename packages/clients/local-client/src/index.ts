@@ -91,7 +91,11 @@ export class CommandClient {
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
 				setDeviceMode: this.machine.setDeviceMode.bind(this), 
 				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
-				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action})
+				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action}),
+
+				runOneshot: async (flow) => await this.machine?.runOneshot(flow),
+				stopOneshot: async (flow) => await this.machine?.stopOneshot(flow),
+				isRunning: (flow) => this.machine?.isRunning(flow) != undefined,
 			},
 			machine: this.machine,
 		})

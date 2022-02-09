@@ -143,46 +143,34 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 		},
 		Mutation: {
 			requestFlow: async (root: any, args: any, context: any) => {
-				console.log(args)
+				// console.log(args)
 				const waitingId = nanoid()
 				const device = await session.writeTransaction(async (tx) => {
 
 					const res = await tx.run(`
 						MATCH (device:CommandDevice {id: $id})
-						OPTIONAL MATCH (action:CommandProgramAction {id: $actionId})-->(flow:CommandProgramFlow)
-						RETURN device{.*, action: flow{.*}}
+						RETURN device{ .* }
 					`, {
 						id: args.deviceId,
 						actionId: args.actionId
 					})
 
-					await tx.run(`
-						MATCH (device:CommandDevice {id: $id})
-						MERGE (device)-[:WAITING_FOR {id: $waitingId, start: datetime($date)}]->(action:CommandProgramAction {id: $actionId})
-					`, {
-						id: args.deviceId,
-						actionId: args.actionId,
-						waitingId: waitingId,
-						date: new Date().toISOString()
-					})
 					return res.records?.[0]?.get(0)
 					// return await getDeviceActions(tx, args.deviceId, args.deviceName)
 				
 				})
 
-				let action = device.action
-
-				console.log(device, action)
-				if(action){
+				// console.log(device, action)
+				// if(action){
 					let actionRequest = {
 						waitingId: waitingId,
 						address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
 						deviceId: args.deviceId,
-						flow: action.id,
+						flow: args.actionId,
 						authorizedBy: context.jwt?.name
 					}
 					return await channel.sendToQueue(`COMMAND:FLOW:PRIORITIZE`, Buffer.from(JSON.stringify(actionRequest)))
-				}
+				// }
 				// 	return await channel.sendToQueue(`COMMAND:DEVICE:CONTROL`, Buffer.from(JSON.stringify(actionRequest)))
 				// }
 

@@ -7,7 +7,7 @@ export const DeviceControlContext = React.createContext<{
 	values?: any[],
 	reporting?: any[],
 	hmiNodes?: any[],
-	waitingForActions?: {id: string}[]
+	waitingForActions?: {[key: string]: boolean}
 	groups?: any,
 	changeDeviceMode?:any
 	changeDeviceValue?:any
