@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/plugin-revpi",
-  "version": "1.4.1-alpha.112",
+  "version": "1.4.1-alpha.124",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
@@ -21,7 +21,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@hive-command/plugin-base": "^1.4.1-alpha.112",
+    "@hive-command/plugin-base": "^1.4.1-alpha.124",
     "@revpi/node": "^1.0.9"
   },
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b"
