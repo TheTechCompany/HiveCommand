@@ -468,6 +468,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         })
     }
 
+    console.log({values})
+
     return (
         <DeviceControlProvider value={{
             actions,
@@ -476,6 +478,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             changeOperationState,
             operatingMode: rootDevice?.operatingMode,
             operatingState: rootDevice?.operatingState,
+            // operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
+            // operatingState: values?.find((a) => a.devieId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "ON" : "OFF",
             controlId: id,
             program,
             values,
