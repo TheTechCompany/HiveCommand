@@ -9,7 +9,7 @@ import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 import { DeviceInterlock } from '../../../../components/modals/device-interlock';
 import { DeviceSetpointModal } from '../../../../components/modals/device-setpoint';
 import { ListBox } from '../../../../components/ListBox';
-import { useCreatePlaceholderInterlock, useCreatePlaceholderPlugin, useCreatePlaceholderSetpoint, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
+import { useCreatePlaceholderInterlock, useCreatePlaceholderPlugin, useDeletePlaceholderInterlock,  useCreatePlaceholderSetpoint, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
 
 export interface DeviceSingleProps {
 	program?: string;
@@ -49,7 +49,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 
 	const createPlaceholderInterlock = useCreatePlaceholderInterlock(props.program, deviceId)
 	const updatePlaceholderInterlock = useUpdatePlaceholderInterlock(props.program, deviceId)
-	
+	const deletePlaceholderInterlock = useDeletePlaceholderInterlock(props.program, deviceId)
+
 	const createPlaceholderSetpoint = useCreatePlaceholderSetpoint(props.program, deviceId)
 	const updatePlaceholderSetpoint = useUpdatePlaceholderSetpoint(props.program, deviceId)
 
@@ -448,6 +449,13 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 				selected={selectedInterlock}
 				onClose={() => {
 					openInterlockModal(false)
+				}}
+				onDelete={() => {
+					deletePlaceholderInterlock(selectedInterlock.id).then(() => {
+						openInterlockModal(false)
+						setSelectedInterlock(undefined)
+						refetch()
+					})
 				}}
 				onSubmit={(lock) => {
 					console.log(lock)
