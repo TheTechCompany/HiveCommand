@@ -382,7 +382,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
-    const values = deviceValueData?.commandDeviceValue || []
+    const values : {deviceId: string, valueKey: string, value: string}[] = deviceValueData?.commandDeviceValue || []
 
     const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {}) // deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
 
@@ -468,7 +468,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         })
     }
 
-    console.log({values})
+    console.log({values, state: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")})
 
     return (
         <DeviceControlProvider value={{
@@ -479,7 +479,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             // operatingMode: rootDevice?.operatingMode,
             // operatingState: rootDevice?.operatingState,
             operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
-            operatingState: values?.find((a) => a.devieId == "Plant" && a.valueKey == "Running")?.value != 'false' ? "on" : "off",
+            operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'false' ? "on" : "off",
             controlId: id,
             program,
             values,
