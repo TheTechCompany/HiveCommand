@@ -311,7 +311,7 @@ export class Machine {
 
 
 	get mode(){
-		return this.fsm.mode || CommandStateMachineMode.DISABLED
+		return this.fsm.mode
 	}
 
 
