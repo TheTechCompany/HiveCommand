@@ -479,7 +479,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             // operatingMode: rootDevice?.operatingMode,
             // operatingState: rootDevice?.operatingState,
             operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
-            operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'false' ? "on" : "off",
+            operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
             controlId: id,
             program,
             values,
