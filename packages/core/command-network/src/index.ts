@@ -182,7 +182,6 @@ export class CommandNetwork {
 					}
 				}
 			}, 'PlantActions')
-			//TODO add action to OPC /Controller/Actions/Flow/Running
 		}))
 
 		await Promise.all(layout.map(async (layout) => {

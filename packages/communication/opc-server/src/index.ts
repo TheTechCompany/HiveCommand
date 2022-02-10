@@ -184,7 +184,6 @@ export default class Server {
                 organizedFolder = this.deviceFolder;
                 break;
         }
-        // let organizedFolder = organizedBy ? this.controllerFolder : this.deviceFolder;
 
         if(organizedFolder){
 
