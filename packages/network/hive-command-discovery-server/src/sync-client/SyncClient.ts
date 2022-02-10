@@ -218,7 +218,7 @@ export class SyncClient {
 		// let port = portAndKey.split('-')[0]
 		// let valueKey = portAndKey.split('-')[1]
 
-		if(value?.value?.toString() == "NaN" || value.value == NaN) return;
+		if(value?.value?.toString() == "NaN" || value.value == NaN || value?.value?.toString() == '{"low":-100,"high":100}') return;
 
 		// console.log("Key ", key, bus, port, valueKey, value.value)
 
