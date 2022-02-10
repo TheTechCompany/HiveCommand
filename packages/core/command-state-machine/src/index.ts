@@ -327,7 +327,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.OFF && this.status != CommandStateMachineStatus.STOPPING){
 			this.status = CommandStateMachineStatus.STOPPING;
 
-			await Promise.all(this.processes.map(async (process) => await process.stop()))
+			await Promise.all(this.processes.map(async (process) => process.stop()))
 
 			this.mode = CommandStateMachineMode.DISABLED
 		
