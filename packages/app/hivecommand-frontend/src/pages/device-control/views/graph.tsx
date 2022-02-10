@@ -75,6 +75,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     //   )?.key;
 
     let queryName = graph.templateDevice?.name.replace(/ /, '');
+
       const value = data?.[queryName]?.map((item) => {
         let d = new Date(item.timestamp);
         let offset = (new Date().getTimezoneOffset() / 60) * -1;
@@ -86,11 +87,19 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
       const total = data?.[`${queryName}Total`]?.total;
 
+      let dev = program.devices?.find((a) => a.name == graph.templateDevice?.name);
+      let configUnit = dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.displayUnit || dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.inputUnit;
+      let stateUnit = configUnit || dev?.type?.state?.find((a) => a.key == graph.templateKey?.key)?.units;
+
+      let stateParts = stateUnit?.match(/(.+)\/(.+)/)
+      if(stateParts && stateParts.length == 3){
+        stateUnit = stateParts[1]
+      }
       return {
 		  ...graph,
 		  label: `${graph.templateDevice.name} - ${graph.templateKey.key}`,
 		  values: value,
-		  total: total ?  parseFloat(total).toFixed(2) : undefined
+		  total: total ?  parseFloat(total).toFixed(2) + (stateUnit ? ` ${stateUnit}` : '') : undefined
       };
     });
   }, [reporting, program, data]);

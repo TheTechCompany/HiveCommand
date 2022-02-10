@@ -306,6 +306,9 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.status = CommandStateMachineStatus.ON;
 
+
+			//TODO change while clause to protect non disabled modes
+			//move out of start to ensure manual mode has safety interlocks
 			while(this.status == CommandStateMachineStatus.ON){
 				await this.checkInterlocks();
 

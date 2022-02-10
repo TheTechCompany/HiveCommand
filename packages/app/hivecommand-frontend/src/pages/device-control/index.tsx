@@ -261,6 +261,15 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 devicePlaceholder {
                                     id
                                     name
+                                    units {
+                                        inputUnit
+                                        displayUnit
+                                        state {
+                                            id
+                                            key
+                                        }
+                                    }
+                                    
                                     type {
                                         actions {
                                             key
@@ -296,8 +305,17 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     devices {
                         id
                         name
+                        units {
+                            inputUnit
+                            displayUnit
+                            state {
+                                id
+                                key
+                            }
+                        }
                         type {
                             state {
+                                id
                                 inputUnits
                                 units
                                 key
