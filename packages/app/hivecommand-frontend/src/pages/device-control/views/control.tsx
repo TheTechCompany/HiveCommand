@@ -57,7 +57,6 @@ export default () => {
     const [ workingState, setWorkingState ] = useState<any>({})
 
 	const { 
-		waitingForActions, 
 		changeOperationMode,
 		changeOperationState, 
 		program, 
@@ -98,7 +97,38 @@ export default () => {
         }
     })
 
+
 	const values : {deviceId: string, valueKey: string, value: string}[] = deviceValueData?.commandDeviceValue || []
+	
+	const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {})
+
+	const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
+        //Find map between P&ID tag and bus-port
+
+        if(!name) return;
+
+    
+        let v = values.filter((a) => a?.deviceId == name);
+        let state = program?.devices?.find((a) => a.name == name).type?.state;
+
+         
+        return v.reduce((prev, curr) => {
+            let unit = units?.find((a) => a.key == curr.valueKey);
+            let stateItem = state.find((a) => a.key == curr.valueKey);
+            let value = curr.value;
+
+            if(!stateItem) return prev;
+
+            if(stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT"){
+                value = parseFloat(value).toFixed(2)
+            }
+            return {
+                ...prev,
+                [curr.valueKey]: value
+            }
+        }, {})
+    
+    }
 
 
 	const hmiNodes = useMemo(() => {
@@ -149,33 +179,7 @@ export default () => {
 	// })
 
 	// alert(operatingMode)
-    const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
-        //Find map between P&ID tag and bus-port
-
-        if(!name) return;
-
-    
-        let v = values.filter((a) => a?.deviceId == name);
-        let state = program?.devices?.find((a) => a.name == name).type?.state;
-
-         
-        return v.reduce((prev, curr) => {
-            let unit = units?.find((a) => a.key == curr.valueKey);
-            let stateItem = state.find((a) => a.key == curr.valueKey);
-            let value = curr.value;
-
-            if(!stateItem) return prev;
-
-            if(stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT"){
-                value = parseFloat(value).toFixed(2)
-            }
-            return {
-                ...prev,
-                [curr.valueKey]: value
-            }
-        }, {})
-    
-    }
+   
 
     const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
         let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
