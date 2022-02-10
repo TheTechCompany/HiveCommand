@@ -132,7 +132,7 @@ export class CommandNetwork {
 		// })
 
 		await Promise.all(actions.map(async (action) => {
-			// this.opc./
+			console.log("Adding Plant Action", action.name)
 
 			await this.opc?.addDevice({
 				name: action.id,
