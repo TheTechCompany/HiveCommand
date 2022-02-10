@@ -322,10 +322,10 @@ export default class Server {
             organizedBy: this.controllerFolder
         });
 
-        const plant = await this.plant?.instantiate({
-            browseName: "Plant",
-            organizedBy: this.controllerFolder
-        })
+        // const plant = await this.plant?.instantiate({
+        //     browseName: "Plant",
+        //     organizedBy: this.controllerFolder
+        // })
 
         const that = this;
 
