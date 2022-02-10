@@ -2,6 +2,7 @@ import React from 'react';
 
 export const DeviceControlContext = React.createContext<{
 	controlId?: string;
+	device?: any;
 	program?: any;
 	hmi?: any;
 	values?: any[],

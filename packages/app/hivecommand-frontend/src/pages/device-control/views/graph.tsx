@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useContext } from "react";
+import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
 import { Add } from "grommet-icons";
 import { GridLayoutItem, LineGraph } from "@hexhive/ui";
@@ -12,6 +12,7 @@ import { GraphGrid } from '@hexhive/ui'
 // import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
 import moment from "moment";
 import { Graph } from "../../../components/ui/graph";
+import { useApolloClient } from "@apollo/client";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
@@ -23,6 +24,8 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
   const [deviceList, setDeviceList] = useState([]);
 
   const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
+
+  const client = useApolloClient()
 
   const { data } = useQuery(
     gql`
@@ -64,6 +67,16 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 	const removeChart = useRemoveDeviceChart(controlId);
 
   console.log("Render", {reporting});
+
+  useEffect(() => {
+      const timer = setInterval(() => {
+          client.refetchQueries({ include: ['TimeSeriesData'] })
+      }, 5 * 1000)
+
+      return () => {
+          clearInterval(timer)
+      }
+  }, [])
 
   const values = useMemo(() => {
     return reporting.map((graph) => {
