@@ -6,6 +6,7 @@ import { getDeviceActions } from '../data';
 import { DeviceValue } from '@hexhive/types'
 
 import { OGM } from '@neo4j/graphql-ogm'
+import {unit as mathUnit} from 'mathjs';
 
 const getProjection = (fieldASTs: any) => {
 	const { selections } = fieldASTs.selectionSet;
@@ -42,26 +43,56 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 				const { deviceId, device, valueKey, startDate } = args
 
-				console.log({deviceId}, {device}, {valueKey})
+				const unitResult = await session.run(`
+					MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
+					OPTIONAL MATCH (device)-[:MAPS_UNIT]->(unitConfig:CommandProgramDeviceUnit)-[:MAPS_STATE_UNIT]->(stateItem)
+					RETURN unitConfig{.*}
+				`, { id: deviceId, name: device, key: valueKey })
+
+				const unitConfig = unitResult.records?.[0]?.get(0)
+
+				let timeDimension = 60; //divide value by 60 to go from minutes to seconds, divide by 3,600 to go from hours to seconds
+
+				console.log({unitConfig})
+				if(unitConfig && (unitConfig.displayUnit || unitConfig.inputUnit)){
+					let unitRegex = /(.+)\/(.+)/
+					let [ fullText, unit, dimension ] = (unitConfig.displayUnit ? unitConfig.displayUnit.match(unitRegex) : unitConfig.inputUnit.match(unitRegex)) || [];
+					
+
+					if(dimension != undefined){
+						try{
+							let timeUnit = mathUnit(dimension).to('seconds');
+							console.log("Found", {unit, dimension})
+
+							timeDimension = timeUnit.toNumber()
+							console.log({timeDimension})
+						}catch(e) {
+							console.error("Could not parse time unit", {unit, dimension, e})
+						}
+					}
+
+				}
+
+
 				const query = `
-				SELECT 
-					sum(SUB.total) as total
-				FROM 
-					(
-						SELECT (try_cast(value, 0) / 60) * EXTRACT(EPOCH from (LEAD(timestamp) over (order by timestamp) - timestamp)) as total
-						FROM
-							command_device_values
-						WHERE
-							device = $1
-							AND deviceId = $2
-							AND valueKey = $3
-							AND timestamp >= date_trunc('week', NOW())
-						GROUP by deviceId, device, valueKey, timestamp, value
-					) as SUB
+					SELECT 
+						sum(SUB.total) as total
+					FROM 
+						(
+							SELECT (try_cast(value, 0) / ${timeDimension || 60}) * EXTRACT(EPOCH from (LEAD(timestamp) over (order by timestamp) - timestamp)) as total
+							FROM
+								command_device_values
+							WHERE
+								device = $1
+								AND deviceId = $2
+								AND valueKey = $3
+								AND timestamp >= date_trunc('week', NOW())
+							GROUP by deviceId, device, valueKey, timestamp, value
+						) as SUB
 				`//startDate
 				const result = await client.query(query, [deviceId, device, valueKey ])
 				await client.release()
-				console.log(result)
+
 				return result.rows?.[0]
 			},
 			commandDeviceTimeseries: async (root: any, args: {
@@ -86,14 +117,12 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				}
 
 				query += ` ORDER BY timestamp ASC`
-				console.log(query, params)
 
 				const result = await client.query(
 					query,
 					params
 				)
 
-				console.log(result)
 
 				await client.release()
 				return result.rows;

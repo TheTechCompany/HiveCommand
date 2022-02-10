@@ -72,10 +72,6 @@ import { Pool } from 'pg';
 
 	app.use(graphServer.middleware)
 
-	app.use((req, res) => {
-		console.log((req as any).user, (req as any).jwt)
-	})
-
 	
 	app.listen('9010')
 
