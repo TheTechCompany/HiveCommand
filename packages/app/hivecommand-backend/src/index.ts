@@ -49,7 +49,7 @@ import { Pool } from 'pg';
 
 	//TODO figure out the race condition to get the OGM with merged models from hive-graph
 
-	const resolved = await resolvers(driver.session(), pool, mqChannel)
+	const resolved = await resolvers(driver, pool, mqChannel)
 
 	// const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
 
