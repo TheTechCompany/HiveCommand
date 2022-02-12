@@ -7,6 +7,7 @@ import { DeviceValue } from '@hexhive/types'
 
 import { OGM } from '@neo4j/graphql-ogm'
 import {unit as mathUnit} from 'mathjs';
+import { Driver } from 'neo4j-driver';
 
 const getProjection = (fieldASTs: any) => {
 	const { selections } = fieldASTs.selectionSet;
@@ -28,8 +29,9 @@ const getProjection = (fieldASTs: any) => {
 	}, {});
   }
 
-export default async (session: Session, pool: Pool, channel: Channel) => {
+export default async (driver: Driver, pool: Pool, channel: Channel) => {
 
+	const session = driver.session();
 
 	return {
 		Query : {
@@ -42,6 +44,8 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				const client = await pool.connect()
 
 				const { deviceId, device, valueKey, startDate } = args
+
+				const session = driver.session()
 
 				const unitResult = await session.run(`
 					MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
@@ -75,7 +79,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 
 				const query = `
-					SELECT 
+					SELECT 			
 						sum(SUB.total) as total
 					FROM 
 						(
@@ -92,7 +96,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				`//startDate
 				const result = await client.query(query, [deviceId, device, valueKey ])
 				await client.release()
-
+				session.close()
 				return result.rows?.[0]
 			},
 			commandDeviceTimeseries: async (root: any, args: {
@@ -103,12 +107,19 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 			}) => {
 				const client = await pool.connect()
 
-				let query = `SELECT * FROM command_device_values WHERE deviceId=$1 AND device=$2`;
+				let query = `SELECT 
+								device,
+								deviceId,
+								valueKey,
+								time_bucket_gapfill('5 minute', "timestamp") as time, 
+								COALESCE(avg(value::float), 0) as value
+							FROM command_device_values 
+								WHERE deviceId=$1 AND device=$2`;
 				let params = [args.device, args.deviceId]
 
 				if(args.startDate){
 					params.push(new Date(args.startDate).toISOString())
-					query += ` AND timestamp >= $${params.length}`
+					query += ` AND timestamp >= $${params.length} AND timestamp < NOW()`
 				}
 				if(args.valueKey) {
 					params.push(args.valueKey)
@@ -116,7 +127,7 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					query += ` AND valueKey=$${params.length}`
 				}
 
-				query += ` ORDER BY timestamp ASC`
+				query += ` GROUP BY device, deviceId, valueKey, time ORDER BY time ASC`
 
 				const result = await client.query(
 					query,
@@ -125,7 +136,10 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 
 
 				await client.release()
-				return result.rows;
+				return result.rows?.map((row) => ({
+					...row,
+					timestamp: row.time
+				}));
 			},
 			commandDeviceValue: async (root: any, args: {
 				bus: string,
