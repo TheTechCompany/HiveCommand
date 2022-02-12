@@ -132,7 +132,7 @@ export class CommandNetwork {
 		// })
 
 		await Promise.all(actions.map(async (action) => {
-			// this.opc./
+			console.log("Adding Plant Action", action.name)
 
 			await this.opc?.addDevice({
 				name: action.id,
@@ -182,7 +182,6 @@ export class CommandNetwork {
 					}
 				}
 			}, 'PlantActions')
-			//TODO add action to OPC /Controller/Actions/Flow/Running
 		}))
 
 		await Promise.all(layout.map(async (layout) => {

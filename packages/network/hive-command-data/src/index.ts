@@ -12,7 +12,6 @@ export class HiveCommandData {
 		)
 
 		this.session = this.driver.session();
-		// this.session = this.driver.session()
 	}
 
 	async updateProcess(id: string, {process, target}: {process: string, target: string}){

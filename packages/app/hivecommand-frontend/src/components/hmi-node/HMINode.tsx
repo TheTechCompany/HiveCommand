@@ -3,7 +3,7 @@ import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
 import * as Icons from 'grommet-icons'
 import { RetractingPort } from '@hexhive/ui';
-import { useSVGStyle } from '../../hooks/svg';
+import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
 
@@ -57,7 +57,7 @@ export const BaseIconNode : React.FC<IconNodeProps> = (props) => {
     // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)
 
 
-    const Icon = useSVGStyle(props.extras?.icon && typeof(props.extras?.icon) === 'string' ? (Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : Icons.Previous, (props) => ({
+    const Icon = getSVGStyle(props.extras?.icon && typeof(props.extras?.icon) === 'string' ? (Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : Icons.Previous, (props) => ({
         stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open?.trim() == 'true' || options?.on?.trim() == 'true' || parseFloat(options?.speed) > 0) ? 'green' : 'gray'
        
     }))
@@ -138,9 +138,14 @@ export const UnstyledIconNode = (props : IconNodeProps) => {
         </BaseIconNode>
         {props.extras?.devicePlaceholder?.name && (
                         <Box
-                            style={{transform: `
-                            scaleX(${1 / (props.extras?.scaleX || 1)})
-                            scaleY(${1 / (props.extras?.scaleY || 1)})`}}
+                            style={{
+                                transform: `
+                                    scaleX(${1 / (props.extras?.scaleX || 1)})
+                                    scaleY(${1 / (props.extras?.scaleY || 1)})
+                                `,
+                                textAlign: 'center',
+                                position: 'absolute'
+                            }}
                             direction="row"
                             justify="center"
                             flex>

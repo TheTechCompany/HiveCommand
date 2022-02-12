@@ -94,13 +94,7 @@ export default class Client {
             const path_id = await this.getPathID(x.path) || ''
             nodes.push({tag: x.tag, path: path_id})
         }
-/*        let nodes = await Promise.(targets.map((async (x) => {
-            let path_id = await this.getPathID(x.path) || ''
-            return {
-                tag: x.tag,
-                path: path_id
-            }
-        })))*/
+
         nodes = nodes?.filter((a) => a.path.length > 0)
 
         const items = nodes?.map((x) => ({

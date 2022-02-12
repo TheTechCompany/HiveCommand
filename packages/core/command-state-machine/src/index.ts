@@ -134,8 +134,13 @@ export class CommandStateMachine extends EventEmitter {
 			log.debug('Listening to process')
 			process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		})
+	}
 
-
+	reload(){
+		if(this.program) {
+			log.debug(`Reloading program`)
+			this.load(this.program)
+		}
 	}
 
 
@@ -286,6 +291,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(canChange){
 			this.mode = mode;
 		}else{
+			log.error(reason)
 			return new Error(reason)
 		}
 	}
@@ -300,6 +306,9 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.status = CommandStateMachineStatus.ON;
 
+
+			//TODO change while clause to protect non disabled modes
+			//move out of start to ensure manual mode has safety interlocks
 			while(this.status == CommandStateMachineStatus.ON){
 				await this.checkInterlocks();
 
@@ -318,7 +327,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.OFF && this.status != CommandStateMachineStatus.STOPPING){
 			this.status = CommandStateMachineStatus.STOPPING;
 
-			await Promise.all(this.processes.map(async (process) => await process.stop()))
+			await Promise.all(this.processes.map(async (process) => process.stop()))
 
 			this.mode = CommandStateMachineMode.DISABLED
 		

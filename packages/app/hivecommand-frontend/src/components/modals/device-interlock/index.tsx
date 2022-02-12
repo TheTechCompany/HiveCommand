@@ -14,6 +14,7 @@ export interface DeviceInterlockModalProps {
 	actions?: any[];
 	device?: any;
 	onSubmit?: (interlock: any) => void;
+	onDelete?: () => void;
 	onClose?: () => void;
 }
 
@@ -106,6 +107,7 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 				open={props.open}
 				onClose={props.onClose}
 				onSubmit={onSubmit}	
+				onDelete={props.selected && props.onDelete}
 				width="large"
 				header={(
 					<Box background="accent-1" direction="row" gap="small">
