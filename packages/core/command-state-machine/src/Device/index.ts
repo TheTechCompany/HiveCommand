@@ -138,7 +138,7 @@ export class StateDevice {
 		if(actions[operation]){
 			return await actions[operation](this.state, this.setState, this.requestState)
 		}else {
-			throw new Error(`Operation ${operation} not found`)
+			console.error(`Operation ${operation} not found on ${this.name}`)
 		}
 		// return await this.client.performOperation({device: this.device.name, operation})
 	}

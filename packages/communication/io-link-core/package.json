@@ -1,6 +1,6 @@
 {
   "name": "@io-link/core",
-  "version": "1.4.1-alpha.112",
+  "version": "1.4.1-alpha.124",
   "description": "> TODO: description",
   "author": "The Tech Company",
   "homepage": "https://github.com/TheTechCompany/ifm-core/tree/main/packages/ifm-core#readme",
@@ -29,9 +29,9 @@
     "access": "public"
   },
   "dependencies": {
-    "@io-link/iodd": "^1.4.1-alpha.112",
-    "@io-link/master-api": "^1.4.1-alpha.112",
-    "@io-link/master-discovery": "^1.4.1-alpha.112",
+    "@io-link/iodd": "^1.4.1-alpha.124",
+    "@io-link/master-api": "^1.4.1-alpha.124",
+    "@io-link/master-discovery": "^1.4.1-alpha.124",
     "nanoid": "^3.2.0"
   },
   "devDependencies": {

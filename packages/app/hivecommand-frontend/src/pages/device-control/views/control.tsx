@@ -1,5 +1,5 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
 import { Checkmark } from 'grommet-icons';
 import { DeviceControlContext } from '../context';
@@ -7,6 +7,8 @@ import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
 import { useRequestFlow } from '@hive-command/api';
 import { FormControl } from '@hexhive/ui';
+import { gql, useQuery } from '@apollo/client';
+import { useApolloClient } from '@apollo/client';
 
 const ActionButton = (props) => {
 	console.log(props)
@@ -55,45 +57,52 @@ export default () => {
     const [ workingState, setWorkingState ] = useState<any>({})
 
 	const { 
-		waitingForActions, 
 		changeOperationMode,
 		changeOperationState, 
-		operatingMode, 
-		operatingState,
 		program, 
 		actions, 
-		values, 
 		hmi, 
-		hmiNodes, 
 		groups, 
 		changeDeviceMode, 
 		changeDeviceValue, 
 		performAction, 
-		controlId 
+		controlId,
+		device
 	} = useContext(DeviceControlContext)
 
-	console.log({operatingMode, waitingForActions, actions})
 
 	const requestFlow = useRequestFlow(controlId)
 
-	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
-	// 	deviceId: string,
-	// 	actionId: string
-	// }) => {
-	// 	const item = mutation.requestFlow({
-	// 		deviceId: args.deviceId,
-	// 		actionId: args.actionId
-	// 	})
+	const client = useApolloClient()
 
-	// 	return {
-	// 		item: {
-	// 			success: item.success
-	// 		}
-	// 	}
-	// })
+	const { data: deviceValueData } = useQuery(gql`
+		query DeviceValues( $idStr: String, $id: ID) {
+			commandDeviceValue(device: $idStr){
+				device
+				deviceId
+				value
+				valueKey
+			}
 
-	// alert(operatingMode)
-    const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
+			commandDevices (where: {id: $id}){
+				waitingForActions {
+					id
+				}
+			}
+		}
+    `, {
+        variables: {
+            id: controlId,
+            idStr: controlId
+        }
+    })
+
+
+	const values : {deviceId: string, valueKey: string, value: string}[] = deviceValueData?.commandDeviceValue || []
+	
+	const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {})
+
+	const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
         //Find map between P&ID tag and bus-port
 
         if(!name) return;
@@ -120,6 +129,57 @@ export default () => {
         }, {})
     
     }
+
+
+	const hmiNodes = useMemo(() => {
+        return hmi.concat(groups.map((x) => x.nodes).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
+
+            let device = node?.devicePlaceholder?.name;
+            let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
+            let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
+
+            // console.log("CONF", conf)
+            return {
+                ...node,
+                values: value,
+                conf
+            }
+        })
+    }, [device, deviceValueData])
+
+
+	const operatingMode = values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase();
+	const operatingState = values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off";
+   
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            client.refetchQueries({ include: ['DeviceValues'] })
+        }, 2 * 1000)
+
+        return () => {
+            clearInterval(timer)
+        }
+    }, [])
+
+	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
+	// 	deviceId: string,
+	// 	actionId: string
+	// }) => {
+	// 	const item = mutation.requestFlow({
+	// 		deviceId: args.deviceId,
+	// 		actionId: args.actionId
+	// 	})
+
+	// 	return {
+	// 		item: {
+	// 			success: item.success
+	// 		}
+	// 	}
+	// })
+
+	// alert(operatingMode)
+   
 
     const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
         let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];

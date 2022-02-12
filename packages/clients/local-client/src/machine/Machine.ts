@@ -325,6 +325,7 @@ export class Machine {
 
 	async stopProgram(){
 		await this.fsm.stop()
+		await this.fsm.reload()
 	}
 
 	async start(){
