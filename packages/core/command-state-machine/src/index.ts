@@ -59,6 +59,8 @@ const base_actions = [
 export interface CommandStateMachineEvents{
 	'transition': (transition: ProcessTransition) => void;
 	'event_loop': () => void;
+	'started': () => void;
+	'stopped': () => void;
 }
 
 export declare interface CommandStateMachine {
@@ -306,6 +308,7 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.status = CommandStateMachineStatus.ON;
 
+			this.emit('started')
 
 			//TODO change while clause to protect non disabled modes
 			//move out of start to ensure manual mode has safety interlocks
@@ -327,13 +330,16 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.OFF && this.status != CommandStateMachineStatus.STOPPING){
 			this.status = CommandStateMachineStatus.STOPPING;
 
+			console.log("Stopping")
 			await Promise.all(this.processes.map(async (process) => process.stop()))
-
+			console.log("Stopped")
 			this.mode = CommandStateMachineMode.DISABLED
 		
 			this.status = CommandStateMachineStatus.OFF
 
 			log.info('State Machine - Stopped')
+
+			this.emit('stopped')
 		}else{
 			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
 		}

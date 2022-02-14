@@ -90,7 +90,7 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 								device = $1
 								AND deviceId = $2
 								AND valueKey = $3
-								AND timestamp >= date_trunc('week', NOW())
+								AND timestamp >= date_trunc('week', NOW()) AND timestamp < NOW()
 							GROUP by deviceId, device, valueKey, timestamp, value
 						) as SUB
 				`//startDate
@@ -118,8 +118,8 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 				let params = [args.device, args.deviceId]
 
 				if(args.startDate){
-					params.push(new Date(args.startDate).toISOString())
-					query += ` AND timestamp >= $${params.length} AND timestamp < NOW()`
+					// params.push(new Date(args.startDate).toISOString())
+					query += ` AND timestamp >= date_trunc('week', NOW()) AND timestamp < NOW()`
 				}
 				if(args.valueKey) {
 					params.push(args.valueKey)
@@ -133,7 +133,7 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 					query,
 					params
 				)
-
+				
 
 				await client.release()
 				return result.rows?.map((row) => ({
