@@ -74,7 +74,7 @@ export class ProcessAction {
 		this.hasRun = true;
 		this.isRunning = false;
 
-        console.log("onEnterExit", action, this.node);
+        // console.log("onEnterExit", action, this.node);
         // switch(this.blockType){
         //     case 'action':
         //         this.isRunning = true;
