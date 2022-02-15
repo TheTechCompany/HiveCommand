@@ -390,7 +390,7 @@ export class Machine {
 
 
 	async requestState(event: {device: string, state: any | {[key: string]: any}}){
-		log.debug("request state - (LC Machine)", event)
+		// log.debug("request state - (LC Machine)", event)
 
 		let busPort = this.deviceMap.getDeviceBusPort(event.device)
 
@@ -433,7 +433,7 @@ export class Machine {
 		const changes = this.busMap.getChanged()
 
 		if(Object.keys(changes).length < 1) return;
-		log.debug("write state - (LC Machine)", JSON.stringify(changes))
+		// log.debug("write state - (LC Machine)", JSON.stringify(changes))
 
 		await Promise.all(Object.keys(changes).map(async (bus) => {
 			let busDevice = this.env.find((a) => a.id == bus)
