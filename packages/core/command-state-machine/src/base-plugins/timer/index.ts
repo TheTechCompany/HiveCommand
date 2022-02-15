@@ -18,11 +18,11 @@ export const handler = async (options: {timer: string}) => {
 
 		
 	return {
-		promise: async () => {
+		promise: (async () => {
 			console.time(`Timer ${id}`)
 			await timer_status
 			console.timeEnd(`Timer ${id}`)
-		},
+		})(),
 		cancel: () => timer.stop()
 	}
 	// 	return timer_status;
