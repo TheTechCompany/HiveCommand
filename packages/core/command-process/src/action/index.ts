@@ -141,7 +141,7 @@ export class ProcessAction {
     async onExit(){
         // console.log(`Exiting node ${this.node.type} ${this.node.id}`)
 
-        console.log("onExit", this.node);
+        // console.log("onExit", this.node);
 		let action = this.actions.find((a) => a.id == this.blockType)
 
 		await action?.onExit?.(this.node.options, {
@@ -151,7 +151,7 @@ export class ProcessAction {
 		}, this.process.getProcess)
 
 		this.hasRun = false;
-        console.log("onExitExit", this.node);
+        // console.log("onExitExit", this.node);
 
         // switch(this.blockType){
         //     case 'timer':
