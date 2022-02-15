@@ -25,7 +25,10 @@ export interface CommandAction {
 		options: any, 
 		hub: {performOperation: any, actions?: CommandAction[], getState: any}, 
 		node: CommandProcess
-	) => Promise<any>
+	) => Promise<{
+		promise: Promise<any>,
+		cancel: () => void
+	}>
 	onExit?: (
 		options: any, 
 		hub: {performOperation: any, actions?: CommandAction[], getState: any}, 
