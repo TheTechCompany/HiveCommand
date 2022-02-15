@@ -130,6 +130,10 @@ export class ProcessChain extends EventEmitter {
     });
   }
 
+  async stop(){
+    await Promise.all(this.current.map(async (x) => await x.onExit()))
+  }
+
   next() {
     let status = this.current.forEach((x, ix) => {
       const next = this.checkNext(x.id);

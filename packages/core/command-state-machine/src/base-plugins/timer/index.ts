@@ -10,19 +10,23 @@ export const handler = async (options: {timer: string}) => {
 	
 	// if(!isPrioritized || priority == this.node.id || priority == this.process.id){
 
-		console.time(`Timer ${id}`)
+	console.time(`Timer ${id}`)
 		
-		let timer : Timer =  new Timer(timeout)
+	let timer : Timer =  new Timer(timeout)
 
-		const timer_status = await timer.countDown()
+	const timer_status = timer.countDown()
 
-		console.timeEnd(`Timer ${id}`)
+	console.timeEnd(`Timer ${id}`)
 
 		
-		return timer_status;
+	return {
+		promise: timer_status,
+		cancel: () => timer.stop()
+	}
+	// 	return timer_status;
 	   
 	
-	// this.hasRun = true;
-	// this.isRunning = false;
-	return true;
+	// // this.hasRun = true;
+	// // this.isRunning = false;
+	// return true;
 }

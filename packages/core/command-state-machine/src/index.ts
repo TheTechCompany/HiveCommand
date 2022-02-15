@@ -4,7 +4,7 @@ import { State } from "./State";
 import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-import { Process, ProcessTransition } from '@hive-command/process'
+import { CommandAction, Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'
 export * from './types'
 
@@ -40,7 +40,7 @@ import { nanoid } from "nanoid";
 const base_actions = [
 	{
 		id: 'action',
-		onEnter: actions.action
+		onEnter: actions.action,
 	},
 	{
 		id: 'sub-process',
