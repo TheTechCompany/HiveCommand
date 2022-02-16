@@ -8,7 +8,7 @@
 	"Supply": {"key": "DM10301", "write": "flow", "units": "cu/h"},
 	"Permeate": {"key": "DM10306", "write": "flow", "units": "cu/h"},
 
-	"Control Air": {"key": "DM10406", "write": "pressure"},
-	"Permeate PT": {"key": "DM10311", "signed": true, "write": "pressure"},
-	"Discharge PT": {"key": "DM10316", "signed": true, "write": "pressure"}
+	"Control Air": {"key": "DM10406", "write": "pressure", "transform": "value / 10"},
+	"Permeate PT": {"key": "DM10311", "signed": true, "write": "pressure", "transform": "100 + value"},
+	"Discharge PT": {"key": "DM10316", "signed": true, "write": "pressure", "transform":"100 + value"}
 }
