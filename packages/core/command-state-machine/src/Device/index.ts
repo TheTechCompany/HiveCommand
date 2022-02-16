@@ -135,6 +135,7 @@ export class StateDevice {
 
 		log.debug("Device actions", {actions, action: actions[operation]})
 
+		console.log("Trying action", {operation, actions})
 		if(actions[operation]){
 			return await actions[operation](this.state, this.setState, this.requestState)
 		}else {
@@ -149,7 +150,7 @@ export class StateDevice {
 	}
 
 	async requestState(state: any){
-		log.debug("DEVICE - requestState", {state})
+		// log.debug("DEVICE - requestState", {state})
 		await this.client.requestState({device: this.device.name, state})
 	}
 

@@ -266,6 +266,10 @@ export class Process extends EventEmitter{
 
         this.running = false;
 
+        // Exit all entrypoint chains
+        await Promise.all(this.chains.entrypoints.map(async (chain) => await chain.stop()))
+
+        // Enter all exitpoint chains
 		let hasNext = this.chains.shutdown.map((x) => x.shouldRun()).indexOf(true) > -1
 
         while(hasNext){
