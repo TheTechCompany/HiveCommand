@@ -13,20 +13,24 @@ export const handler = async (
 	const val = hub.getState('TK201')
 	console.log({val})
 	
+	let promise;
+	let process: Process;
+
 	if(sub_process){
-		console.log("Start sub process")
-		// console.log("Start sub process", sub_process)
-		let process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
+
+		process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
 
 		process.on('transition', (transition) => {
 			console.log("Subprocess transition", transition)
 		})
 
-		await process.start()
+		promise = process.start()
+	}
 
-		console.log("Stop sub process")
-		// console.log("End sub process", sub_process)
-	
+
+	return {
+		promise,
+		cancel: () => process.stop()
 	}
 
 }
