@@ -26,11 +26,14 @@ export interface BaseGraphProps {
 }
 
 const BaseGraph: React.FC<BaseGraphProps> = (props) => {
+
+  console.log((props.data || []).map((x) => typeof(x[props.yKey])))
+
   return (
     <ResponsiveContainer>
       <LineChart
         margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
-        data={props.data}
+        data={props.data?.map((x) => ({...x, [props.yKey || '']: typeof(x?.[props.yKey]) === "number" ? x?.[props.yKey] : parseFloat(x?.[props.yKey])}))}
       >
         <XAxis dataKey={props.xKey} angle={-45} tickMargin={40} height={85} />
         <YAxis dataKey={props.yKey} />
