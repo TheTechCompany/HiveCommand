@@ -12,7 +12,9 @@ import { graphqlHTTP } from "express-graphql"
 import { connect_data } from '@hexhive/types';
 import typeDefs from './schema'
 import resolvers from './resolvers';
-import { Pool } from 'pg';
+import { Pool, types } from 'pg';
+
+types.setTypeParser(1114, (value) => value);
 
 (async () => {
 
