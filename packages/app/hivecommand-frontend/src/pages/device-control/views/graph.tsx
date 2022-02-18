@@ -91,7 +91,10 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
       const value = data?.[queryName]?.map((item) => {
         let d = new Date(item.timestamp);
-        let offset = (new Date().getTimezoneOffset() / 60) * -1;
+        let offset = (new Date().getTimezoneOffset() / 60) * -1
+
+        //.add(offset, 'hours')
+
         return {
           ...item,
           timestamp: moment(d).add(offset, 'hours').format("DD/MM hh:mma "),
