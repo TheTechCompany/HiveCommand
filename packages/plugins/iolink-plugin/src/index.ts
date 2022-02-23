@@ -72,6 +72,8 @@ export default class IOLinkPlugin extends BasePlugin {
 							return bits
 						})).reduce((prev, curr) => prev.concat(curr), []), iodd.gradient ? parseFloat(iodd.gradient) : 1)
 
+						console.log({port, device, iodd: device.iodd, data: payload[k].data})
+
 						this.emit('PORT:VALUE', {
 							bus: subscription?.master,
 							port: port,
