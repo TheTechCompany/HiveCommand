@@ -34,10 +34,12 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 		commandDevices{ id } 
 		${reporting.map((graph) => {
       
-			const queryName = graph.templateDevice?.name.replace(/ /, '');
 			const queryKey = graph.templateKey?.key;
+      const deviceKey = graph.templateDevice?.name.replace(/ /, '');
+
+			const queryName = `${deviceKey}${queryKey}`;
 		
-      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${deviceKey}", valueKey:"${queryKey}"){
           timestamp
           value
   
@@ -46,7 +48,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       let deviceTotal = "";
       if (graph.total) {
         deviceTotal = `
-          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${deviceKey}", valueKey:"${queryKey}"){
             total
           }
           `;
@@ -87,7 +89,9 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     //     (item) => graph.keyID == item.id
     //   )?.key;
 
-    let queryName = graph.templateDevice?.name.replace(/ /, '');
+    let queryKey = graph.templateKey?.key;
+    let deviceKey = graph.templateDevice?.name.replace(/ /, '');
+    let queryName = `${deviceKey}${queryKey}`;
 
       const value = data?.[queryName]?.map((item) => {
         let d = new Date(item.timestamp);
