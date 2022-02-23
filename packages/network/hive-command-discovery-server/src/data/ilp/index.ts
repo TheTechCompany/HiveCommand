@@ -1,13 +1,13 @@
 "use strict"
 
 import net from "net"
-import { PoolClient } from "pg"
+import { Pool, PoolClient } from "pg"
 
 // const client = new net.Socket()
 
 
 export const publishToILP = async (
-	socket: PoolClient,
+	socket: Pool,
 	rows: {
 		device : string,
 		deviceId : string,
