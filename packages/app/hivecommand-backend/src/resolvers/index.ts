@@ -41,7 +41,8 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 				valueKey?: string,
 				startDate?: string,
 			}) => {
-				const client = await pool.connect()
+				
+				// const client = await pool.connect()
 
 				const { deviceId, device, valueKey, startDate } = args
 
@@ -94,8 +95,10 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 							GROUP by deviceId, device, valueKey, timestamp, value
 						) as SUB
 				`//startDate
-				const result = await client.query(query, [deviceId, device, valueKey ])
-				await client.release()
+				const result = await pool.query(query, [deviceId, device, valueKey ])
+				// await client.release()
+
+				console.log({rows: result.rows})
 				session.close()
 				return result.rows?.[0]
 			},
@@ -105,7 +108,7 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 				valueKey?: string,
 				startDate?: string,
 			}) => {
-				const client = await pool.connect()
+				// const client = await pool.connect()
 
 				let query = `SELECT 
 								device,
@@ -129,13 +132,14 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 
 				query += ` GROUP BY device, deviceId, valueKey, time ORDER BY time ASC`
 
-				const result = await client.query(
+				const result = await pool.query(
 					query,
 					params
 				)
+				console.log({query, rows: result.rows, params})
 				
 
-				await client.release()
+				// await client.release()
 				return result.rows?.map((row) => ({
 					...row,
 					timestamp: row.time
