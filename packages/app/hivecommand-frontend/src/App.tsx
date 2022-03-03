@@ -7,13 +7,15 @@ import { BaseStyle } from "@hexhive/styles";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { AuthProvider } from '@hexhive/auth-ui'
 
+const API_URL = localStorage.getItem('HEXHIVE_API');
+
 const authServer = process.env.REACT_APP_API
   ? `${process.env.REACT_APP_API}`
   : "http://localhost:7000";
 
 const client = new ApolloClient({
-  uri: `${process.env.REACT_APP_API
-    ? `${process.env.REACT_APP_API}/graphql`
+  uri: `${process.env.NODE_ENV == 'production'
+    ? `${API_URL || process.env.REACT_APP_API}/graphql`
     : "http://localhost:7000/graphql"}?appliance=HiveCommand`,
   cache: new InMemoryCache(),
   credentials: "include",
