@@ -31,7 +31,8 @@ types.setTypeParser(1114, (value) => value);
 		user: process.env.TIMESERIES_USER || 'postgres',
 		password: process.env.TIMESERIES_PASSWORD || 'quest',
 		port: 5432,
-		connectionTimeoutMillis: 60 * 1000
+		// connectionTimeoutMillis: 60 * 1000,
+		max: 10
 	})
 
 	const mq = await amqp.connect(
