@@ -31,6 +31,7 @@ types.setTypeParser(1114, (value) => value);
 		user: process.env.TIMESERIES_USER || 'postgres',
 		password: process.env.TIMESERIES_PASSWORD || 'quest',
 		port: 5432,
+		keepAlive: true,
 		// connectionTimeoutMillis: 60 * 1000,
 		max: 10
 	})
