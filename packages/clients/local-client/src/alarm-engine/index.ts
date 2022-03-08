@@ -19,7 +19,8 @@ export class AlarmEngine {
     async send(msg: string){
         console.log(`Sending alarm: ${msg}`)
         try{
-            await sendSMS(this.options.number, this.options.messagePrefix + " " + msg, this.options.username, this.options.password);
+            const result = await sendSMS(this.options.number, this.options.messagePrefix + " " + msg, this.options.username, this.options.password);
+            console.log(`Alarm sent: ${result}`)
         }catch(e){
             console.log(`Failed to send alarm: ${msg}`, e)
         }
