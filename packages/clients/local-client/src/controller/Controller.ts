@@ -27,17 +27,17 @@ export class Controller {
 
 	private healthTimer?: NodeJS.Timeout
 
-	private alarmEngine? : AlarmEngine;
+	private alarmEngine : AlarmEngine;
 
 	constructor(opts: {
 		commandCenter: string,
 		machine: Machine,
 		valueBank: ValueBankInterface,
-		alarmEngine?: AlarmEngine
+		alarmEngine: AlarmEngine
 	}){
 
 
-		this.alarmEngine = this.alarmEngine;
+		this.alarmEngine = opts.alarmEngine;
 
 		this.valueBank = opts.valueBank;
 		this.machine = opts.machine;

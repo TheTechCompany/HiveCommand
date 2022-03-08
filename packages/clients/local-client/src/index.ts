@@ -32,7 +32,7 @@ export interface CommandClientOptions {
 	privateKey?: string
 	discoveryServer?: string
 
-	healthCheck?: {
+	healthCheck: {
 		number: string,
 		message: string,
 		username: string,
@@ -62,7 +62,7 @@ export class CommandClient {
 
 	private options : CommandClientOptions;
 
-	private alarmEngine? : AlarmEngine;
+	private alarmEngine : AlarmEngine;
 
 
 	constructor(opts: CommandClientOptions){
@@ -85,14 +85,15 @@ export class CommandClient {
 			pluginDir: opts.pluginDir || path.join(__dirname, `../../../plugins`)
 		})
 
-		if(this.options.healthCheck){
+		// if(this.options.healthCheck){
+			console.log("Setting up Alarm Engine")
 			this.alarmEngine = new AlarmEngine({
 				number: this.options.healthCheck?.number,
 				username: this.options.healthCheck?.username,
 				password: this.options.healthCheck?.password,
 				messagePrefix: this.options.healthCheck.message
 			})
-		}
+		// }
 
 
 		this.controller = new Controller({
