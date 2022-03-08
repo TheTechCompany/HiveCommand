@@ -35,7 +35,6 @@ export interface CommandClientOptions {
 	healthCheck?: {
 		number: string,
 		message: string,
-		interval: number,
 		username: string,
 		password: string
 	}
