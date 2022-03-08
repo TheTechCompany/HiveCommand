@@ -186,6 +186,7 @@ export class Controller {
 								log.info(`Changing machine mode to ${modeString}`)
 
 								await this.machine?.changeMode(newMode)
+								console.log({alarmEngine: this.alarmEngine})
 								this.alarmEngine?.send(`Controller:changeMode ${newMode}`)
 
 								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
