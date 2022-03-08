@@ -187,7 +187,7 @@ export class Controller {
 
 								await this.machine?.changeMode(newMode)
 								console.log({alarmEngine: this.alarmEngine})
-								await this.alarmEngine?.send(`Controller:changeMode ${newMode}`)
+								this.alarmEngine?.send(`Controller:changeMode ${newMode}`)
 
 								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 							}else{
