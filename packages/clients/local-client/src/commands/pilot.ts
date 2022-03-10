@@ -51,6 +51,12 @@ type Options = {
 		logLevel: logLevel ? (log.levels as any)[logLevel.toUpperCase()] : log.levels.INFO,
 		commandCenter,
 		// healthCenter: healthCenter,
+		healthCheck: {
+			number: process.env.HEALTH_CHECK_NUMBER || '',
+			message: process.env.HEALTH_CHECK_MESSAGE || '',
+			username: process.env.HEALTH_CHECK_USERNAME || '',
+			password: process.env.HEALTH_CHECK_PASSWORD || ''
+		},
 		privateKey: key,
 		ignorePlugins: ignorePlugins ? ignorePlugins.split(',').map((x) => x.trim()) : [],
 		pluginDir: pluginDir,

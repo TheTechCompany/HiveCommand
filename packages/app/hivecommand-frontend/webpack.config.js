@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = (webpackConfigEnv, argv) => {
+  // webpackConfigEnv.analyze = true;
   const defaultConfig = singleSpaDefaults({
     orgName: "hivecommand-app",
     projectName: "frontend",

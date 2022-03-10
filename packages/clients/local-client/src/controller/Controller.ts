@@ -15,6 +15,7 @@ import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
 import e from 'express';
+import { AlarmEngine } from '../alarm-engine';
 
 export class Controller {
 
@@ -26,11 +27,17 @@ export class Controller {
 
 	private healthTimer?: NodeJS.Timeout
 
+	private alarmEngine : AlarmEngine;
+
 	constructor(opts: {
 		commandCenter: string,
 		machine: Machine,
-		valueBank: ValueBankInterface
+		valueBank: ValueBankInterface,
+		alarmEngine: AlarmEngine
 	}){
+
+
+		this.alarmEngine = opts.alarmEngine;
 
 		this.valueBank = opts.valueBank;
 		this.machine = opts.machine;
@@ -67,6 +74,9 @@ export class Controller {
 						func: async (inputs) => {
 							log.debug('Controller:start')
 							this.machine?.startProgram()
+							
+							this.alarmEngine?.send(`Controller:start`)
+
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
 					},
@@ -84,6 +94,9 @@ export class Controller {
 							log.debug('Controller:shutdown')
 
 							this.machine?.stopProgram()
+
+							this.alarmEngine?.send(`Controller:shutdown`)
+
 							return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 						}
 					},
@@ -147,6 +160,7 @@ export class Controller {
 
 							console.log({device, action}, "Controller")
 							const result = await this.valueBank.requestAction?.(device.value.toString(), action.value.toString())	
+							
 							return [result || null, [new Variant({dataType: DataType.Boolean, value: true})]];
 						}
 					},
@@ -172,6 +186,8 @@ export class Controller {
 								log.info(`Changing machine mode to ${modeString}`)
 
 								await this.machine?.changeMode(newMode)
+								console.log({alarmEngine: this.alarmEngine})
+								this.alarmEngine?.send(`Controller:changeMode ${newMode}`)
 
 								return [null, [new Variant({dataType: DataType.Boolean, value: true})]]
 							}else{

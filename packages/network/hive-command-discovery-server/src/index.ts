@@ -10,7 +10,7 @@ import { handleSocket } from './socket-handler';
 import { HiveCommandData } from '@hive-command/data'
 import { DiscoveryService } from '@hive-command/opcua-lds'
 import { promises } from 'dns';
-
+import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
 const { Device, Program } = Models;
 import os from 'os';
@@ -156,7 +156,8 @@ export class DiscoveryServer {
             } = JSON.parse(msg?.content.toString() || '{}')
 
             if(!stateUpdate.deviceId || !stateUpdate.deviceName) return console.error(`No device in mode event`)
-            console.log(`User: ${stateUpdate.authorizedBy} Changing mode ${stateUpdate.deviceName} : ${stateUpdate.mode}`)
+
+            log(stateUpdate.authorizedBy, `Changing mode ${stateUpdate.deviceName} : ${stateUpdate.mode}`)
 
             if(!stateUpdate.mode) return console.error(`No mode in mode event`)
 
@@ -174,7 +175,7 @@ export class DiscoveryServer {
                 flow: string
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`User: ${stateUpdate.authorizedBy} is waiting for flow ${stateUpdate.flow}`)
+            log(stateUpdate.authorizedBy, `is waiting for flow ${stateUpdate.flow}`)
             if(!stateUpdate.flow) return console.error(`No flow in mode event`)
 
             await this.syncClient.callMethod(stateUpdate.address,  `/Objects/1:Plant/1:Actions/1:${stateUpdate.flow}`, `/1:start`, [])
@@ -192,7 +193,7 @@ export class DiscoveryServer {
                 mode: string;
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`User: ${stateUpdate.authorizedBy} Changing controller mode ${stateUpdate.mode}`)
+            log(stateUpdate.authorizedBy, `Changing controller mode ${stateUpdate.mode}`)
 
             if(!stateUpdate.address) return console.error(`No address in mode event`)
 
@@ -214,7 +215,7 @@ export class DiscoveryServer {
                 state: string,
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`User: ${stateUpdate.authorizedBy} Changing controller ${stateUpdate.address} state ${stateUpdate.state}`)
+            log(stateUpdate.authorizedBy, `Changing controller ${stateUpdate.address} state ${stateUpdate.state}`)
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
             switch(stateUpdate.state){
@@ -242,7 +243,7 @@ export class DiscoveryServer {
                 value: string                
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            console.log(`User: ${stateUpdate.authorizedBy} Changing value ${stateUpdate.busPath} to ${stateUpdate.value}`)
+            log(stateUpdate.authorizedBy, `Changing value ${stateUpdate.busPath} to ${stateUpdate.value}`)
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
             await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, DataType.Double, stateUpdate.value)
@@ -264,7 +265,7 @@ export class DiscoveryServer {
 
             if(!stateUpdate.deviceName || !stateUpdate.deviceId) return console.error("No device in state event");
             
-            console.log(`User: ${stateUpdate.authorizedBy} Writing ${stateUpdate.action} to ${stateUpdate.deviceName}@${stateUpdate.deviceId}`)
+            log(stateUpdate.authorizedBy, `Writing ${stateUpdate.action} to ${stateUpdate.deviceName}@${stateUpdate.deviceId}`)
 
             if(!stateUpdate.action) return console.error("No action in state event")
             await this.syncClient.callMethod(stateUpdate.address, `/Objects/1:Controller/1:Machine`, `/1:command`, [stateUpdate.deviceName, stateUpdate.action])
