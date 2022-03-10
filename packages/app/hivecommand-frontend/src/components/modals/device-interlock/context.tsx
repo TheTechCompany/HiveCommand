@@ -1,5 +1,4 @@
 import React from 'react';
-import { JsonTree } from 'react-awesome-query-builder';
 import { DeviceInterlock } from '.';
 
 
