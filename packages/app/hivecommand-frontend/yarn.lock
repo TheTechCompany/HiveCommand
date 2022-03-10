@@ -1687,10 +1687,10 @@
   resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.13.tgz#4c316bdbb8a6c1489faf4912b26400cdff43be8b"
   integrity sha512-bZcFH+VpAV7MpxTRdK+o+HQyEpWoCCXxA6j21g7JiTr+skzxb+yoMIGUESxJ6FgpTh6HjxYE4gHWIx/YRWxrgQ==
 
-"@hexhive/ui@0.0.6-alpha.58":
-  version "0.0.6-alpha.58"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.58.tgz#d5b6f2ce02cccc59bea2750bc2e5756cbadd8799"
-  integrity sha512-EJPECiqjmapepupQ9vyYGTWjJmWmT9Im7zFI++7lWQmrDGbXLZ4BLPhNJDPOTtT3ad30GY8yaTBMsPzuOYknQA==
+"@hexhive/ui@0.0.6-alpha.59":
+  version "0.0.6-alpha.59"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.59.tgz#56ded1256e1fd5a90a926dc2f7d5cfc9759d238e"
+  integrity sha512-vdpNxSuhuEefwFlKzB+q3i818d2Cu9cRlm/SyMJa3pz8j+J3YnOb+NqHR9jXU6SmtgsN12esnYmjb8nwfXBP0g==
   dependencies:
     "@hexhive/styles" "^0.0.6-alpha.13"
     "@hexhive/utils" "^0.0.6-alpha.13"
