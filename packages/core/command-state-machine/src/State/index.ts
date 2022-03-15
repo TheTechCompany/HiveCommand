@@ -23,7 +23,7 @@ export class State extends EventEmitter {
 	}	
 
 	public getByKey(key: string, subKey: string): any {
-		return this.internalState?.[key]?.[subKey];
+		return this.get(key)?.[subKey] || 0;
 	}	
 
 	public update(key: string, value: any): void {
