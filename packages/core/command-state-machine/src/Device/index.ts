@@ -135,7 +135,6 @@ export class StateDevice {
 
 		log.debug("Device actions", {actions, action: actions[operation]})
 
-		console.log("Trying action", {operation, actions})
 		if(actions[operation]){
 			return await actions[operation](this.state, this.setState, this.requestState)
 		}else {

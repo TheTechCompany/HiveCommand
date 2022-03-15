@@ -1687,10 +1687,10 @@
   resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.13.tgz#4c316bdbb8a6c1489faf4912b26400cdff43be8b"
   integrity sha512-bZcFH+VpAV7MpxTRdK+o+HQyEpWoCCXxA6j21g7JiTr+skzxb+yoMIGUESxJ6FgpTh6HjxYE4gHWIx/YRWxrgQ==
 
-"@hexhive/ui@0.0.6-alpha.59":
-  version "0.0.6-alpha.59"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.59.tgz#56ded1256e1fd5a90a926dc2f7d5cfc9759d238e"
-  integrity sha512-vdpNxSuhuEefwFlKzB+q3i818d2Cu9cRlm/SyMJa3pz8j+J3YnOb+NqHR9jXU6SmtgsN12esnYmjb8nwfXBP0g==
+"@hexhive/ui@0.0.6-alpha.63":
+  version "0.0.6-alpha.63"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.6-alpha.63.tgz#66ba9c4a49b28e3463ef13bb5be7d443ead03220"
+  integrity sha512-7I5ba2ImSqRL77R6ZjixlrHWIJs6w1ftv9tqShs0/rWPT/Jlpg6tO+H6s/e6O24CJQMCuBgNMSF/aZuEmiVxFg==
   dependencies:
     "@hexhive/styles" "^0.0.6-alpha.13"
     "@hexhive/utils" "^0.0.6-alpha.13"
@@ -1707,6 +1707,7 @@
     react-resize-aware "^3.1.1"
     react-router-dom "^6.2.2"
     react-vtree "^2.0.4"
+    react-window "^1.8.6"
     recharts "^2.1.9"
     styled-components "^5.3.3"
 
@@ -6567,7 +6568,7 @@ memfs@^3.1.2, memfs@^3.2.2:
   dependencies:
     fs-monkey "1.0.3"
 
-memoize-one@^5.1.1:
+"memoize-one@>=3.1.1 <6", memoize-one@^5.1.1:
   version "5.2.1"
   resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-5.2.1.tgz"
   integrity sha512-zYiwtZUcYyXKo/np96AGZAckk+FWWsUdJ3cHGGmld7+AhvcWmQyGCYUh1hc4Q/pkOhb65dQR/pqCyK0cOaHz4Q==
@@ -7587,6 +7588,14 @@ react-vtree@^2.0.4:
   integrity sha512-UOld0VqyAZrryF06K753X4bcEVN6/wW831exvVlMZeZAVHk9KXnlHs4rpqDAeoiBgUwJqoW/rtn0hwsokRRxPA==
   dependencies:
     "@babel/runtime" "^7.11.0"
+
+react-window@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/react-window/-/react-window-1.8.6.tgz#d011950ac643a994118632665aad0c6382e2a112"
+  integrity sha512-8VwEEYyjz6DCnGBsd+MgkD0KJ2/OXFULyDtorIiTz+QzwoP94tBoA7CnbtyXMm+cCeAUER5KJcPtWl9cpKbOBg==
+  dependencies:
+    "@babel/runtime" "^7.0.0"
+    memoize-one ">=3.1.1 <6"
 
 react@^17.0.2:
   version "17.0.2"
