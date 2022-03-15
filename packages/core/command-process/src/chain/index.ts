@@ -96,6 +96,10 @@ export class ProcessChain extends EventEmitter {
     return this.process.getState(key);
   }
 
+  setState(key: string, value: {[key: string]: any} | any){
+    return this.process.setState(key, value);
+  }
+
   changePosition(current: string[]) {
     // this.current = current
   }

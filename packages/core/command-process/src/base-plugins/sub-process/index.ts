@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { CommandAction, Process, ProcessChain } from "../../";
 
-export const handler = async (options: any, hub: {actions: CommandAction[], performOperation: any, getState: any}) => {
+export const handler = async (options: any, hub: {actions: CommandAction[], performOperation: any, getState: any, setState: any}) => {
 
 	console.log({hub})
-	let process = new Process(options?.["sub-process"], hub.actions, hub.performOperation, hub.getState)
+	let process = new Process(options?.["sub-process"], hub.actions, hub.performOperation, hub.getState, hub.setState)
 
 	await process.start()
 
