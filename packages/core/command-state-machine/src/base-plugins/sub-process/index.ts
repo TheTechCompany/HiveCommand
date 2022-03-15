@@ -3,7 +3,7 @@ import { ProgramProcess } from "../../types";
 
 export const handler = async (
 	options: any, 
-	hub: {actions: CommandAction[], performOperation: any, getState: any},
+	hub: {actions: CommandAction[], performOperation: any, getState: any, setState: any},
 	node: ProgramProcess
 ) => {
 
@@ -18,7 +18,7 @@ export const handler = async (
 
 	if(sub_process){
 
-		process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState)
+		process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState, hub.setState)
 
 		process.on('transition', (transition) => {
 			console.log("Subprocess transition", transition)

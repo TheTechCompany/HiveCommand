@@ -71,6 +71,7 @@ export class ProcessAction {
 		const { promise, cancel } = await action?.onEnter?.(this.node.options, {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
+            setState: this.process.setState,
 			actions: this.actions
 		}, this.process.getProcess) || {}
 
@@ -159,6 +160,7 @@ export class ProcessAction {
             await action?.onExit?.(this.node.options, {
                 performOperation: this.process.performOperation,
                 getState: this.process.getState,
+                setState: this.process.setState,
                 actions: this.actions
             }, this.process.getProcess)
 
