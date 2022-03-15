@@ -124,9 +124,16 @@ export class CommandStateMachine extends EventEmitter {
 		this.state = new State(program.initialState || {});
 
 		this.processes = program.processes.map((process) => {
-			return new Process(process, base_actions as any, this.performOperation, (key: string) => {
-				return this.state?.get(key)
-			})
+			return new Process(
+					process, 
+					base_actions as any, 
+					this.performOperation, 
+					(key: string) => {
+						return this.state?.get(key)
+					},
+					(key: string, value) => {
+						return this.state?.update(key, value);
+					})
 		})
 
 		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client));
@@ -252,7 +259,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
 			if(!this.state) return;
-			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
+			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
 			console.timeEnd(runTag)
