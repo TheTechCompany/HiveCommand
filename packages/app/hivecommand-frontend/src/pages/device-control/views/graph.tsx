@@ -173,11 +173,12 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       </Box>
 
 	  <GraphGrid 
-		onRemoveItem={(item) => {
-			removeChart(item.id).then(() => {
-				refresh?.()
-			})
-		}}
+      onRemoveItem={(item) => {
+        // alert("Remove" + item.id)
+        removeChart(item.id).then(() => {
+        	refresh?.()
+        })
+      }}
 	  	onLayoutChange={(layout) => {
 			updateChartGrid(layout.map((x) => ({
 				...x,
