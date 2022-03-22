@@ -191,7 +191,7 @@ export const useCreateProgramNode = (program: string, flow: string, parent?: str
 				type: args.type,
 				x: args.x,
 				y: args.y,
-				subprocess: { connect: {where: {id: args.subprocess}}}
+				subprocess: { connect: {where: {node: {id: args.subprocess}}}}
 			}
 		}else{
 			query = {
