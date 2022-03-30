@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
-import { Add } from "grommet-icons";
-import { GridLayoutItem, LineGraph } from "@hexhive/ui";
+import { Add, Previous, Next } from "grommet-icons";
+import { DateSelector, GridLayoutItem, LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../../../components/modals/device-control-graph";
@@ -17,9 +17,23 @@ import { useApolloClient } from "@apollo/client";
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
 
-  const [dayBefore, setDayBefore] = useState<string>(
-    new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-  );
+  const [datum, setDatum] = useState(new Date())
+  const startOfWeek = moment(datum).startOf('isoWeek');
+  const endOfWeek = moment(datum).endOf('isoWeek');
+
+  const prevWeek = () => {
+    setDatum(moment(datum).subtract(1, 'week').toDate());
+  }
+
+  const nextWeek = () => {
+    setDatum(moment(datum).add(1, 'week').toDate());
+  }
+
+
+
+  // const [dayBefore, setDayBefore] = useState<string>(
+  //   new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
+  // );
 
   const [deviceList, setDeviceList] = useState([]);
 
@@ -38,8 +52,10 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       const deviceKey = graph.templateDevice?.name.replace(/ /, '');
 
 			const queryName = `${deviceKey}${queryKey}`;
+
+      const date = startOfWeek.toISOString()
 		
-      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${deviceKey}", valueKey:"${queryKey}"){
+      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
           timestamp
           value
   
@@ -48,7 +64,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       let deviceTotal = "";
       if (graph.total) {
         deviceTotal = `
-          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${deviceKey}", valueKey:"${queryKey}"){
+          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
             total
           }
           `;
@@ -163,6 +179,22 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         }}
       />
       <Box justify="end" direction="row">
+        <Box direction="row" align="center" justify="center" flex>
+          <Button 
+            onClick={prevWeek}
+            plain 
+            style={{padding: 6, borderRadius: 3}} 
+            hoverIndicator 
+            icon={<Previous size="small" />} />
+          <Text>{startOfWeek.format('DD/MM/yy')} - {endOfWeek.format('DD/MM/yy')}</Text>
+          <Button 
+            onClick={nextWeek}
+            plain 
+            style={{padding: 6, borderRadius: 3}} 
+            hoverIndicator 
+            icon={<Next size="small" />} />
+
+        </Box>
         <Button
           onClick={() => openModal(true)}
           icon={<Add size="small" />}

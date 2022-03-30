@@ -8,6 +8,7 @@ import { DeviceValue } from '@hexhive/types'
 import { OGM } from '@neo4j/graphql-ogm'
 import {unit as mathUnit} from 'mathjs';
 import { Driver } from 'neo4j-driver';
+import moment from 'moment';
 
 const getProjection = (fieldASTs: any) => {
 	const { selections } = fieldASTs.selectionSet;
@@ -45,6 +46,13 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 				// const client = await pool.connect()
 
 				const { deviceId, device, valueKey, startDate } = args
+
+				let beforeTime = moment(startDate).add(1, 'week')
+				const afterTime = moment(startDate).toISOString();
+
+				if(moment(beforeTime).isAfter(moment())){
+					beforeTime = moment();
+				}
 
 				const session = driver.session()
 
@@ -91,11 +99,13 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 								device = $1
 								AND deviceId = $2
 								AND valueKey = $3
-								AND timestamp >= date_trunc('week', NOW()) AND timestamp < NOW()
+								AND timestamp >= $4
+								AND timestamp < $5
 							GROUP by deviceId, device, valueKey, timestamp, value
 						) as SUB
 				`//startDate
-				const result = await pool.query(query, [deviceId, device, valueKey ])
+				//date_trunc('week', NOW()) 
+				const result = await pool.query(query, [deviceId, device, valueKey, afterTime, beforeTime.toISOString() ])
 				// await client.release()
 
 				console.log({rows: result.rows})
@@ -110,6 +120,7 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 			}) => {
 				// const client = await pool.connect()
 
+		
 				let query = `SELECT 
 								device,
 								deviceId,
@@ -122,7 +133,16 @@ export default async (driver: Driver, pool: Pool, channel: Channel) => {
 
 				if(args.startDate){
 					// params.push(new Date(args.startDate).toISOString())
-					query += ` AND timestamp >= date_trunc('week', NOW()) AND timestamp < NOW()`
+					let beforeTime = moment(args.startDate).add(1, 'week');
+					if(moment(beforeTime).isAfter(moment())){
+						beforeTime = moment();
+					}
+					const afterTime = moment(args.startDate).toISOString();
+					
+					params.push(afterTime)
+					params.push(beforeTime.toISOString());
+
+					query += ` AND timestamp >= $3 AND timestamp < $4`
 				}
 				if(args.valueKey) {
 					params.push(args.valueKey)
