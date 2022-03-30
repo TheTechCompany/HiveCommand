@@ -14,7 +14,10 @@ import typeDefs from './schema'
 import resolvers from './resolvers';
 import { Pool, types } from 'pg';
 
-types.setTypeParser(1114, (value) => value);
+types.setTypeParser(1114, (value) => {
+	// console.log({value})
+	return new Date(`${value}+0000`)
+});
 
 (async () => {
 
