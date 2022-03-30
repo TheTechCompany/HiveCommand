@@ -101,7 +101,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
         return {
           ...item,
-          timestamp: moment(d).add(offset, 'hours').format("DD/MM hh:mma "),
+          timestamp: moment(d).format("DD/MM hh:mma "),
         };
       });
 
@@ -171,30 +171,31 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           hoverIndicator
         />
       </Box>
+    <Box flex overflow='auto'>
+      <GraphGrid 
+        onRemoveItem={(item) => {
+          // alert("Remove" + item.id)
+          removeChart(item.id).then(() => {
+            refresh?.()
+          })
+        }}
+        onLayoutChange={(layout) => {
+        updateChartGrid(layout.map((x) => ({
+          ...x,
+          id: x.i
+        })));
 
-	  <GraphGrid 
-      onRemoveItem={(item) => {
-        // alert("Remove" + item.id)
-        removeChart(item.id).then(() => {
-        	refresh?.()
-        })
+        // console.log(layout)
       }}
-	  	onLayoutChange={(layout) => {
-			updateChartGrid(layout.map((x) => ({
-				...x,
-				id: x.i
-			})));
-
-			// console.log(layout)
-		}}
-	  	layout={values}
-		  >
-		{(item: any) => (
-			<Box flex>
-				<Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
-			</Box>
-		)}
-	  </GraphGrid>
+        layout={values}
+        >
+      {(item: any) => (
+        <Box flex>
+          <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
+        </Box>
+      )}
+      </GraphGrid>
+    </Box>
 {/* 
       <GraphGridLayout
         onLayoutChange={(layout) => {
