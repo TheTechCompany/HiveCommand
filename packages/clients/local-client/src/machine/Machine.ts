@@ -324,8 +324,10 @@ export class Machine {
 	}
 
 	async stopProgram(){
-		await this.fsm.stop()
-		await this.fsm.reload()
+		const stopped = await this.fsm.stop()
+		if(stopped){
+			await this.fsm.reload()
+		}
 	}
 
 	async start(){
