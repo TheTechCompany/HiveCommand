@@ -347,8 +347,10 @@ export class CommandStateMachine extends EventEmitter {
 			log.info('State Machine - Stopped')
 
 			this.emit('stopped')
+			return true;
 		}else{
 			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
+			return false;
 		}
 
 	}
