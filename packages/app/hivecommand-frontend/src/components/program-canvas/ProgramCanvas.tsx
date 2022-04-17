@@ -32,10 +32,13 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
     
     const pathRef = useRef<{paths: InfiniteCanvasPath[]}>({paths: []})
 
+	const localPaths = useRef<{paths: string[]}>({paths: []})
+
     const setPaths = (paths: InfiniteCanvasPath[]) => {
         _setPaths(paths)
         pathRef.current.paths = paths;
     }
+
 
     const updateRef = useRef<{addPath?: (path: any) => void, updatePath?: (path: any) => void}>({
         updatePath: (path) => {
@@ -46,7 +49,10 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
         },
         addPath: (path) => {
             let p = pathRef.current.paths.slice()
-            p.push(path)
+			
+			localPaths.current.paths = [...localPaths.current.paths, path.id];
+
+            p.push({...path})
             setPaths(p)
         }
     })
@@ -106,7 +112,11 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
                 onPathUpdate={(path) => {
 
 					if(path.source && path.target){
-						props.onPathCreate?.(path)
+						let mod = path;
+						if(localPaths.current.paths.includes(path.id)){
+							mod.id = undefined;
+						}
+						props.onPathCreate?.({...mod})
 					}
                    
                     updateRef.current?.updatePath(path)

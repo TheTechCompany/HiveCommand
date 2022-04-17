@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Text, List, Button, Collapsible, TextInput, Select, CheckBox } from 'grommet'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
@@ -15,7 +15,7 @@ import { HMIGroupModal } from '../../../../components/modals/hmi-group';
 import { debounce } from 'lodash';
 import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useConnectHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode } from '@hive-command/api';
+import { useAssignHMINode, useCreateHMIAction, useCreateHMIGroup, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { cleanTree } from '../../utils';
 import { ObjectTypeDefinitionNode } from 'graphql';
@@ -30,7 +30,6 @@ export const Controls = (props) => {
 
     const createProgramHMI = useCreateProgramHMI(id)
 
-    const [ activeView, setActiveView ] = useState<string>(undefined)
     const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
@@ -81,7 +80,200 @@ export const Controls = (props) => {
     const [ aggregate, setAggregate ] = useState<any>()
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
-    const nodeMenu = [
+
+    const client = useApolloClient()
+
+    const { data } = useQuery(gql`
+        query Q ($id: ID){
+
+            commandInterfaceDevices{
+                id
+                name
+                width
+                height
+            }
+
+            commandPrograms(where: {id: $id}){
+                id
+                name
+
+                interface {
+                    id
+                    name
+
+                    actions {
+                        id
+                        name
+                    }
+
+                    edges {
+                        id
+                        from {
+                            id
+                        
+                        }
+                        fromHandle
+                        to {
+                          
+                            id
+                        
+                        }
+                        toHandle
+                        points {
+                            x
+                            y
+                        }
+                    }
+                    nodes {
+                    
+
+                        
+                            id
+                            type {
+                                name
+                                width
+                                height
+                                ports {
+                                    key
+                                    x
+                                    y
+                                    rotation
+                                }
+                            }
+                            devicePlaceholder {
+                                id
+                                name
+
+                                setpoints {
+                                    id
+                                    name
+                                    key {
+                                        id
+                                        key
+                                    }
+                                    value
+                                    type
+                                }
+                            }
+                            x
+                            y
+
+                            showTotalizer
+                            rotation
+                            scaleX
+                            scaleY
+
+                            inputs {
+                                id
+                                type {
+                                    name
+                                }
+                            }
+                        
+                    }
+
+                    groups {
+                        id
+                        x
+                        y
+                        
+                        nodes {
+                            id
+                            type {
+                                
+                                name
+                            }
+                            x
+                            y
+
+                            z
+                            rotation
+                            scaleX
+                            scaleY
+
+                            devicePlaceholder {
+                                id
+                                name
+
+                                setpoints {
+                                    id
+                                    name
+                                    key {
+                                        id
+                                        key
+                                    }
+                                    value
+                                    type
+                                }
+                            }
+                        }
+                        ports {
+                            id
+                            x
+                            y
+                            rotation
+                            length
+                        }
+                    }
+                }
+
+                program {
+                    id
+                    name
+                    children {
+                        id
+                        name
+                    }
+                }
+
+                devices {
+                    id
+                    name
+                    type {
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    `, {
+        variables: {
+            id: id
+        }
+    })
+    
+    const refetch = () => {
+        client.refetchQueries({include: ['Q']})
+    }
+
+    const createHMINode = useCreateHMINode(id)
+    const updateHMINode = useUpdateHMINode(id)
+    const deleteHMINode = useDeleteHMINode(id)
+
+    const createHMIGroup = useCreateHMIGroup(id)
+    const updateHMIGroup = useUpdateHMIGroup()
+
+    const deleteHMIEdge = useDeleteHMIPath(id)
+    const createHMIEdge = useCreateHMIPath(id)
+    const updateHMIEdge = useUpdateHMIPath(id)
+
+    const assignHMINode = useAssignHMINode(id)
+
+    const createHMIAction = useCreateHMIAction(id)
+    const deleteHMIAction = useDeleteHMIAction(id)
+
+
+    const canvasTemplates = data?.commandInterfaceDevices || [];
+
+    const devices = data?.commandPrograms?.[0]?.devices
+    const flows = data?.commandPrograms?.[0]?.program;
+    let program = data?.commandPrograms?.[0]
+
+    let activeProgram = (program?.interface)
+
+    console.log({flows})
+    
+    const nodeMenu = useMemo(() => [
         {
             icon: <Blower width="40px" height="40px" />,
             label: "Blower",
@@ -295,206 +487,25 @@ export const Controls = (props) => {
                 icon: "Sump"
             }
         }
-    ]
-
-
-    const client = useApolloClient()
-
-    const { data } = useQuery(gql`
-        query Q ($id: ID){
-            commandPrograms(where: {id: $id}){
-                id
-                name
-
-                hmi {
-                    id
-                    name
-
-                    actions {
-                        id
-                        name
-                    }
-
-                    paths {
-                        id
-                        source {
-                            ... on CommandHMIGroup {
-                                id
-                            }
-
-                            ... on CommandHMINode {
-                                id
-                            }
-                        }
-                        sourceHandle
-                        target {
-                            ... on CommandHMIGroup {
-                                id
-                            }
-
-                            ... on CommandHMINode {
-                                id
-                            }
-                        
-                        }
-                        targetHandle
-                        points {
-                            x
-                            y
-                        }
-                    }
-                    nodes {
-                    
-
-                        
-                            id
-                            type {
-                                name
-                                width
-                                height
-                                ports {
-                                    key
-                                    x
-                                    y
-                                    rotation
-                                }
-                            }
-                            devicePlaceholder {
-                                id
-                                name
-
-                                setpoints {
-                                    id
-                                    name
-                                    key {
-                                        id
-                                        key
-                                    }
-                                    value
-                                    type
-                                }
-                            }
-                            x
-                            y
-
-                            showTotalizer
-                            rotation
-                            scaleX
-                            scaleY
-
-                            inputs {
-                                id
-                                type {
-                                    name
-                                }
-                            }
-                        
-                    }
-
-                    groups {
-                        id
-                        x
-                        y
-                        
-                        nodes {
-                            id
-                            type {
-                                
-                                name
-                            }
-                            x
-                            y
-
-                            z
-                            rotation
-                            scaleX
-                            scaleY
-
-                            devicePlaceholder {
-                                id
-                                name
-
-                                setpoints {
-                                    id
-                                    name
-                                    key {
-                                        id
-                                        key
-                                    }
-                                    value
-                                    type
-                                }
-                            }
-                        }
-                        ports {
-                            id
-                            x
-                            y
-                            rotation
-                            length
-                        }
-                    }
-                }
-
-                program {
-                    id
-                    name
-                    children {
-                        id
-                        name
-                    }
-                }
-
-                devices {
-                    id
-                    name
-                    type {
-                        id
-                        name
-                    }
-                }
+    ].map((x) => {
+        let item = canvasTemplates.find((a) => a.name == x.extras.icon)
+        return {
+            id: item?.id,
+            ...x,
+            extras: {
+                ...x.extras,
+                id: item?.id
             }
         }
-    `, {
-        variables: {
-            id: id
-        }
-    })
-    
-    const refetch = () => {
-        client.refetchQueries({include: ['Q']})
-    }
+    }).filter((a) => a.id), [canvasTemplates])
 
-    const createHMINode = useCreateHMINode(id, activeView)
-    const updateHMINode = useUpdateHMINode(id, activeView)
-    const deleteHMINode = useDeleteHMINode(id, activeView)
-
-    const createHMIGroup = useCreateHMIGroup(id, activeView)
-    const updateHMIGroup = useUpdateHMIGroup()
-
-    const deleteHMIPath = useDeleteHMIPath(id, activeView)
-    const connectHMINode = useConnectHMINode(id, activeView)
-    const assignHMINode = useAssignHMINode(id, activeView)
-
-    const createHMIAction = useCreateHMIAction(id, activeView)
-    const deleteHMIAction = useDeleteHMIAction(id, activeView)
-
-
-    const devices = data?.commandPrograms?.[0]?.devices
-    const flows = data?.commandPrograms?.[0]?.program;
-    let program = data?.commandPrograms?.[0]
-
-    let activeProgram = (program?.hmi)?.find((a) => a.id == activeView)
-
-    console.log({flows})
-    
     useEffect(() => {
         let program = data?.commandPrograms?.[0]
-        if(program && activeView){
+        if(program){
 
             // console.log("GROUPS", (program.hmi).find((a) => a.id == activeView)?.groups)
 
-           let activeProgram = (program.hmi).find((a) => a.id == activeView)
+           let activeProgram = (program.interface)
             let nodes = activeProgram?.nodes || []
             let groups = activeProgram?.groups || []
             setNodes(nodes.map((x) => ({
@@ -542,20 +553,20 @@ export const Controls = (props) => {
                 }
             }))))
 
-            setPaths((program.hmi).find((a) => a.id == activeView).paths.map((x) => {
+            setPaths((program.interface)?.edges?.map((x) => {
                 return {
                     id: x.id,
-                    source: x?.source?.id,
-                    sourceHandle: x.sourceHandle,
-                    target: x?.target?.id,
-                    targetHandle: x.targetHandle,
+                    source: x?.from?.id,
+                    sourceHandle: x.fromHandle,
+                    target: x?.to?.id,
+                    targetHandle: x.toHandle,
                     points: x.points
                 }
             }).reduce((prev, curr) => {
                 return prev.concat(curr)
             }, []))
         }
-    }, [data?.commandPrograms?.[0], activeView])
+    }, [data?.commandPrograms?.[0]])
 
   
     const changeMenu = (view: string) => {
@@ -580,7 +591,7 @@ export const Controls = (props) => {
                         <List
                             pad={'none'} 
                             primaryKey={'name'}
-                            data={activeProgram?.actions}>
+                            data={activeProgram?.actions || []}>
                             {(datum) => (
                                 <Box pad="xsmall" direction='row' justify='between' align='center'>
                                     <Text size="small">{datum?.name}</Text>
@@ -778,7 +789,7 @@ export const Controls = (props) => {
                         refetch()
                     })
                 }else{
-                    deleteHMIPath(selectedRef.current?.selected?.id).then(() => {
+                    deleteHMIEdge(selectedRef.current?.selected?.id).then(() => {
                         refetch()
                     })
                 }
@@ -793,6 +804,27 @@ export const Controls = (props) => {
             direction="row"
             flex>
 
+<ProgramCanvasModal
+                    open={createModalOpen}
+                    onSubmit={(item) => {
+                            let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
+                            createProgramHMI(item.name, parent).then(() => {
+                                refetch()
+                            })
+          
+                        
+                        openCreateModal(false)
+                    }}
+                    onClose={() => {
+                        setSelectedItem(undefined)
+                        openCreateModal(false)
+                    }}
+                    modal={(gql`
+                        type HMI {
+                            name: String
+                        }
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
+{/*                     
                 <Collapsible    
                     direction="horizontal"
                     open={sidebarOpen}>
@@ -826,27 +858,8 @@ export const Controls = (props) => {
                                 icon={<Add size="small" />} />
                         </Box> */}
                 
-                <ProgramCanvasModal
-                    open={createModalOpen}
-                    onSubmit={(item) => {
-                            let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                            createProgramHMI(item.name, parent).then(() => {
-                                refetch()
-                            })
-          
-                        
-                        openCreateModal(false)
-                    }}
-                    onClose={() => {
-                        setSelectedItem(undefined)
-                        openCreateModal(false)
-                    }}
-                    modal={(gql`
-                        type HMI {
-                            name: String
-                        }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
-                        <HyperTree 
+              
+                        {/* <HyperTree 
                             id="editor-menu"
                             onCreate={(node) => {
                                 console.log("CREATE", node)
@@ -862,16 +875,16 @@ export const Controls = (props) => {
                                 id: 'root',
                                 name: "HMI",
                                 children: cleanTree(program?.hmi) || []
-                            }]} />
+                            }]} /> */}
                         {/* <List 
                             onClickItem={({item}) => {
                                 console.log(item)
                                 setActiveProgram(item.id)
                             }}
                             primaryKey="name"
-                            data={view == "Program" ? program.program : program.hmi} /> */}
+                            data={view == "Program" ? program.program : program.hmi} /> 
                     </Box>
-                </Collapsible>
+                </Collapsible> */}
             <AssignFlowModal   
                 flows={flows}
                 selected={selectedHMIAction}
@@ -923,7 +936,7 @@ export const Controls = (props) => {
                 }}
                 onClose={() => openModal(false)}
                 nodeMenu={nodeMenu} />
-			{activeView != undefined ?  (<InfiniteCanvas
+			{(<InfiniteCanvas
                 snapToGrid={false}
                 onDelete={watchEditorKeys}
                 onSelect={(key, id) => {
@@ -975,18 +988,40 @@ export const Controls = (props) => {
                         }
 
                         debounce((path: any) => {
-              
-                            connectHMINode(
-                                (path as any).draft ? undefined : path.id,
-                                path.source,
-                                path.sourceHandle,
-                                path.target,
-                                path.targetHandle,
-                                path.points
-                            ).then(() => {
+                            
+                            if(!path.draft){
+                                updateHMIEdge(
+                                    path.id,
+                                    path.source,
+                                    path.sourceHandle,
+                                    path.target,
+                                    path.targetHandle,
+                                    path.points
+                                ).then(() => {
+                                    refetch()
+                                })
+                            }else{
+                                createHMIEdge(
+                                    path.source,
+                                    path.sourceHandle,
+                                    path.target,
+                                    path.targetHandle,
+                                    path.points
+                                ).then(() => {
+                                    refetch()
+                                })
+                            }
+                            // connectHMINode(
+                            //     (path as any).draft ? undefined : path.id,
+                            //     path.source,
+                            //     path.sourceHandle,
+                            //     path.target,
+                            //     path.targetHandle,
+                            //     path.points
+                            // ).then(() => {
              
-                                refetch()
-                            })
+                            //     refetch()
+                            // })
                         }, 1000)(path)
           
                     }
@@ -1032,8 +1067,11 @@ export const Controls = (props) => {
                     //         type: data.extras.icon
                     //     }})
                     // }else{
+
+                    // console.log({data})
+
                         createHMINode(
-                            data.extras.icon,
+                            data.extras?.id,
                             position.x,
                             position.y,
                         )
@@ -1060,9 +1098,7 @@ export const Controls = (props) => {
                 >
   
                 <ZoomControls anchor={{vertical: 'bottom', horizontal: 'right'}} />
-            </InfiniteCanvas>) : (
-                <EmptyView label="HMI" />
-            )}
+            </InfiniteCanvas>)}
            
             <Box background="accent-1" >
                 <Button

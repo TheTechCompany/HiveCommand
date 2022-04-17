@@ -10,7 +10,7 @@ import { ProgramCanvasModal } from '../../../../components/modals/program-canvas
 import { nanoid } from 'nanoid';
 import _ from 'lodash';
 
-import { useRemoveNodeAction, useRemovePathConditions, useUpdateNodeConfiguration, useUpdatePathConditions } from '@hive-command/api';
+import { useCreateNodeAction, useRemoveNodeAction, useRemovePathCondition, useUpdateNodeAction, useUpdatePathCondition, useCreatePathCondition } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 
 export interface ProgramDrawerProps {
@@ -101,19 +101,26 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 
 	const [ createSchema, setCreateSchema ] = useState<ObjectTypeDefinitionNode>()
 
-	const { selected, conditions, activeProgram, selectedType } = useProgramEditor()
+	const { selected, activeProgram, selectedType } = useProgramEditor()
 
-	const updateNodeConfiguration = useUpdateNodeConfiguration(program?.id, activeProgram, flow?.parent?.id)
+	const createNodeAction = useCreateNodeAction(program.id, activeProgram, flow?.parent?.id)
+	const updateNodeAction = useUpdateNodeAction(program.id, activeProgram, flow?.parent?.id)
+	const deleteNodeAction = useRemoveNodeAction(program.id, activeProgram, flow?.parent?.id)
 
-	const removeNodeAction = useRemoveNodeAction(program?.id, activeProgram, flow?.parent?.id)
+	// const updateNodeConfiguration = useUpdateNodeConfiguration(program?.id, activeProgram, flow?.parent?.id)
 
-	const updatePathConditions = useUpdatePathConditions(program?.id, activeProgram, flow?.parent?.id)
-	const removePathConditions = useRemovePathConditions(program?.id, activeProgram, flow?.parent?.id)
+	// const removeNodeAction = useRemoveNodeAction(program?.id, activeProgram, flow?.parent?.id)
+
+	const createPathCondition = useCreatePathCondition(program?.id, activeProgram, flow?.parent?.id)
+	const updatePathConditions = useUpdatePathCondition(program?.id, activeProgram, flow?.parent?.id)
+	const removePathConditions = useRemovePathCondition(program?.id, activeProgram, flow?.parent?.id)
 
 	useEffect(() => {
 		let newConf : any = {};
 		switch(selectedType){
 			case 'node':
+
+			console.log("NODE", {selected})
 
 				selected?.extras?.configuration?.forEach((conf) => {
 					let isArray = conf.key.match(/\[(.+)\]\[(.+)\]-(.+)/);
@@ -130,22 +137,27 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 
 					// }else{
 						if(conf.key != "actions"){
-							newConf[conf.key] = {id: conf.id, value: conf.value};
+							newConf[conf.key] = {id: conf.id, value: conf.value };
 						}
 
 					// }
 					
 				})
 				console.log("NEW", selected)
-				setInfo({actions: selected?.extras?.configuration?.find((a) => a.key == "actions") || {value: []}, conf: newConf})
+
+				let actions = selected?.extras?.configuration?.find((a) => a.key == "actions") || {value: []}
+				if(!actions.value){
+					actions.value = [];
+				}
+				setInfo({actions: actions, conf: newConf})
 
 			break;	
 		case 'path':
-			console.log("Path ", conditions, selected?.extras)
+			// console.log("Path ", conditions, selected?.extras)
 				setInfo({
 		
 						conditions: {
-							value: conditions?.filter((a) => selected?.extras?.configuration?.conditions?.indexOf(a.id) > -1)
+							value: selected.extras.conditions, //selected.extras.conditions?.filter((a) => selected?.extras?.configuration?.conditions?.indexOf(a.id) > -1) || []
 						}
 					
 				})
@@ -155,30 +167,30 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 			break;
 		}
 
-	}, [selected, selectedType, conditions]);
+	}, [selected, selectedType]);
 
 
 
-	const updateNodeConf = () => {
-		console.log(info);
+	// const updateNodeConf = () => {
+	// 	console.log(info);
 
-		let conf = []
-		for(var k in info.conf){
-			conf.push({
-				id: info.conf[k]?.id,
-				key: k, 
-				value: info.conf[k]?.value
-			})
-		}
+	// 	let conf = []
+	// 	for(var k in info.conf){
+	// 		conf.push({
+	// 			id: info.conf[k]?.id,
+	// 			key: k, 
+	// 			value: info.conf[k]?.value
+	// 		})
+	// 	}
 
-		updateNodeConfiguration(
-				selected.id,
-				[],
-				conf
-			).then(() => {
-			// refetch()
-		})
-	}
+	// 	updateNodeConfiguration(
+	// 			selected.id,
+	// 			[],
+	// 			conf
+	// 		).then(() => {
+	// 		// refetch()
+	// 	})
+	// }
 
 
 	const onChange = (key: string, value: any) => {
@@ -262,7 +274,7 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 					<Text>{type?.type}</Text>
 					{edited && <Button 
 						plain
-						onClick={updateNodeConf}
+						// onClick={updateNodeConf}
 						style={{padding: 6, borderRadius: 3}}
 						size="small" 
 						hoverIndicator 
@@ -286,23 +298,40 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 												
 											// })
 
-
-											updateNodeConfiguration(
-													selected.id,
-													[item],
-													[]
-												).then(() => {
-												refresh()
-											})
+											if(!item.id){
+												createNodeAction(selected.id, item).then(() => {
+													refresh()
+												})
+											}else{
+												item.device = item.device?.id || item.device;
+												item.request = item.request?.id || item.request;
+												
+												updateNodeAction(selected.id, item).then(() => {
+													refresh();
+												})
+											}
+											
 										}else{
+											if(item.id){
 
-											updatePathConditions(
-												(selected as InfiniteCanvasPath).source,
-												selected.id,
-												[...(info[field.key].value || []), item],
-											).then(() => {
-												refresh()
-											})
+												updatePathConditions(
+													(selected as InfiniteCanvasPath).source,
+													selected.id,
+													{
+														...item,
+														inputDevice: item.inputDevice.id,
+													},
+												).then(() => {
+													refresh()
+												})
+											}else{
+												createPathCondition(
+													selected.id,
+													item
+												).then(() => {
+													refresh();
+												})
+											}
 										}
 									}}
 									onDelete={() => {
@@ -311,7 +340,7 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 											setCreateSchema(undefined)
 											setSelected(undefined)
 
-											removeNodeAction(
+											deleteNodeAction(
 												 selected.id,
 												existingItem.id
 											).then(() => {
@@ -363,7 +392,7 @@ export const ProgramDrawer : React.FC<ProgramDrawerProps> = (props) => {
 										value={info['operation']} /> */}
 									<List
 										pad="none"
-										data={info?.[field.key]?.value}>
+										data={info?.[field.key]?.value || []}>
 										{(datum) => (
 											<Box 
 												pad={'xsmall'}

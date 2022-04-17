@@ -1,105 +1,197 @@
+import { PrismaClient } from "@prisma/client";
 import gql from "graphql-tag";
+import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
+import { nanoid } from "nanoid";
+import { Pool } from "pg";
+import analytics from "./analytics";
 
-export default gql`
+export default (prisma: PrismaClient, pool: Pool) => {
 
-extend type HiveOrganisation {
-	commandDevices: [CommandDevice] @relationship(type: "HAS_COMMAND_DEVICE", direction: OUT)
-}
-
-type CommandDevice @auth(rules: [
-	{operations: [READ, UPDATE], where: {organisation: {id: "$jwt.organisation"}}},
-	{operations: [UPDATE], where: {organisation: {id: "$jwt.organisation"}}}
-]) {
-	id: ID! @id
-	name: String
-
-	activeProgram: CommandProgram @relationship(type: "RUNNING_PROGRAM", direction: OUT)
-
-	network_name: String
-
-	calibrations: [CommandProgramDeviceCalibration] @relationship(type: "HAS_CALIBRATION", direction: OUT)
-
-	peripherals: [CommandDevicePeripheral] @relationship(type: "HAS_PERIPHERAL", direction: OUT)
+	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma, pool)
 	
-	operatingMode: String
-	operatingState: String
+	const resolvers = mergeResolvers([
+		analyticResolvers,
+		{
+		Query: {
+			commandDevices: async (root: any, args: any, context: any) => {
+				let whereArg : any = {};
+				if(args.where){
+					if(args.where.id) whereArg['id'] = args.where.id;
+				}
+				const devices = await prisma.device.findMany({
+					where: {organisation: context.jwt.organisation, ...whereArg}, 
+					include: {
+						activeProgram: {
+							include: {
+								interface: {include: {nodes: {include: {type: true}}, edges: {include: {from: true, to: true}}, actions: true}},
+							}
+						}
+					}
+				}) || []
+				console.log({devices})
+				return devices;
+			}
+		},
+		Mutation: {
+			createCommandDevice: async (root: any, args: {input: {name: string, network_name: string, program: string}}, context: any) => {
+				return await prisma.device.create({
+					data: {
+						id: nanoid(),
+						name: args.input.name,
+						network_name: args.input.network_name,
+						activeProgram: {
+							connect: {id: args.input.program}
+						},
+						organisation: context.jwt.organisation
+					}
+				})
+			},
+			updateCommandDevice: async (root: any, args: {id: string, input: {name: string, network_name: string, program: string}}, context: any) => {
+				return await prisma.device.update({
+					where: {id: args.id},
+					data: {
+						name: args.input.name,
+						network_name: args.input.network_name,
+						activeProgram: {
+							connect: {id: args.input.program}
+						}
+					}
+				})
+			},
+			deleteCommandDevice: async (root: any, args: {id: string}, context: any) => {
+				return await prisma.device.delete({where: {id: args.id}});
+			}
+		}
+	}])
 
-	waitingForActions: [CommandProgramAction] @relationship(type: "WAITING_FOR", direction: OUT)
+	//		waitingForActions: [CommandProgramAction] 
 
-	online: Boolean
-	lastOnline: DateTime
 
-	reporting: [CommandDeviceReport] @relationship(type: "HAS_REPORT", direction: OUT)
+	/*
 
-	organisation: HiveOrganisation @relationship(type: "HAS_COMMAND_DEVICE", direction: IN)
-}
+	*/
+	const typeDefs = mergeTypeDefs([
+		analyticTypeDefs,
+		`
 
-type CommandDeviceReport {
-	id: ID! @id
-	x: Int
-	y: Int
-	w: Int
-	h: Int
-
-	device: CommandDevice @relationship(type: "HAS_REPORT", direction: IN)
-	templateDevice: CommandProgramDevicePlaceholder @relationship(type: "USES_PLACEHOLDER", direction: OUT)  
-	templateKey: CommandProgramDeviceState @relationship(type: "USES_TEMPLATE_KEY", direction: OUT)
-	total: Boolean
-	type: String
-}
-
-type CommandDevicePeripheral {
-	id: ID! @id
-	name: String
-	type: String
 	
-	ports: Int
+	type Query {
+		commandDevices(where: CommandDeviceWhere): [CommandDevice]!
+	}
 
-	connectedDevices: [CommandDevicePeripheralProduct] @relationship(type: "IS_CONNECTED", direction: IN, properties: "CommandDevicePeripheralPort")
-	mappedDevices: [CommandDevicePeripheralMap] @relationship(type: "HAS_MAPPING", direction: OUT, properties: "CommandDevicePeripheralPort")
+	type Mutation {
+		createCommandDevice(input: CommandDeviceInput!): CommandDevice!
+		updateCommandDevice(id: ID!, input: CommandDeviceInput!): CommandDevice!
+		deleteCommandDevice(id: ID!): CommandDevice!
+	}
 
-	device: CommandDevice @relationship(type: "HAS_PERIPHERAL", direction: IN)
+	input CommandDeviceInput {
+		name: String
+		network_name: String
+		program: String
+	}
+
+	input CommandDeviceWhere {
+		id: ID
+	}
+
+	type CommandDevice  {
+		id: ID! 
+		name: String
+
+		activeProgram: CommandProgram 
+
+		network_name: String
+
+		calibrations: [CommandProgramDeviceCalibration] 
+
+		peripherals: [CommandDevicePeripheral] 
+		
+		operatingMode: String
+		operatingState: String
+
+		waitingForActions: [CommandProgramAction]
+
+		online: Boolean
+		lastOnline: DateTime
+
+		reporting: [CommandDeviceReport] 
+
+		organisation: HiveOrganisation 
+	}
+
+	type CommandDeviceReport {
+		id: ID! 
+		x: Int
+		y: Int
+		w: Int
+		h: Int
+
+		device: CommandDevice 
+		templateDevice: CommandProgramDevicePlaceholder 
+		templateKey: CommandProgramDeviceState
+		total: Boolean
+		type: String
+	}
+
+	type CommandDevicePeripheral {
+		id: ID! 
+		name: String
+		type: String
+		
+		ports: Int
+
+		connectedDevices: [CommandDevicePeripheralProduct] 
+		mappedDevices: [CommandDevicePeripheralMap] 
+
+		device: CommandDevice 
+	}
+
+	type CommandProgramDeviceCalibration {
+		id: ID 
+		rootDevice: CommandDevice 
+
+		device: CommandProgramDevicePlaceholder 
+		deviceKey: CommandProgramDeviceState 
+
+		min: String
+		max: String
+	}
+
+	type CommandDevicePeripheralProduct {
+		id:ID 
+		deviceId: String
+		vendorId: String
+		name: String
+
+		peripheral: CommandDevicePeripheral 
+
+		connections: [CommandPeripheralProductDatapoint]
+	}
+
+	type CommandPeripheralProductDatapoint {
+		direction: String
+		key: String
+		type: String
+
+		product: CommandDevicePeripheralProduct
+	}
+
+	type CommandDevicePeripheralMap {
+		id: ID! 
+		key: CommandPeripheralProductDatapoint 
+		device: CommandProgramDevicePlaceholder
+		value: CommandProgramDeviceState
+	}
+
+	interface CommandDevicePeripheralPort {
+		port: String
+	}
+
+	`]);
+
+	return {
+		typeDefs,
+		resolvers
+	}
 }
-
-type CommandProgramDeviceCalibration {
-	id: ID @id
-	rootDevice: CommandDevice @relationship(type: "HAS_CALIBRATION", direction: IN)
-
-	device: CommandProgramDevicePlaceholder @relationship(type: "USES_DEVICE", direction: OUT)
-	deviceKey: CommandProgramDeviceState @relationship(type: "USES_STATE_ITEM", direction: OUT)
-
-	min: String
-	max: String
-}
-
-type CommandDevicePeripheralProduct {
-	id:ID @id
-	deviceId: String
-	vendorId: String
-	name: String
-
-	peripheral: CommandDevicePeripheral @relationship(type: "IS_CONNECTED", direction: OUT, properties: "CommandDevicePeripheralPort")
-
-	connections: [CommandPeripheralProductDatapoint] @relationship(type: "HAS_VARIABLE", direction: OUT)
-}
-
-type CommandPeripheralProductDatapoint {
-	direction: String
-	key: String
-	type: String
-
-	product: CommandDevicePeripheralProduct  @relationship(type: "HAS_VARIABLE", direction: IN)
-}
-
-type CommandDevicePeripheralMap {
-	id: ID! @id
-	key: CommandPeripheralProductDatapoint @relationship(type: "USES_VARIABLE", direction: OUT)
-	device: CommandProgramDevicePlaceholder @relationship(type: "USES_DEVICE", direction: OUT)
-	value: CommandProgramDeviceState @relationship(type: "USES_STATE", direction: OUT)
-}
-
-interface CommandDevicePeripheralPort @relationshipProperties {
-	port: String
-}
-
-`

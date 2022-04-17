@@ -1,218 +1,122 @@
-import { gql } from 'graphql-tag';
+import { prisma, PrismaClient } from '@prisma/client';
+import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
+
 import devices from './devices';
 import hmi from './hmi';
 import program from './program';
 
-export default gql`
+import operations from './operations'
+import { Channel } from 'amqplib';
+import { Pool } from 'pg';
 
-	type Query {
-		commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
-		commandDeviceTimeseries(deviceId: String, device: String, valueKey: String, startDate: String): [CommandDeviceTimeseriesData]
-		commandDeviceTimeseriesTotal(deviceId: String, device: String, valueKey: String, startDate: String, endDate: String): CommandDeviceTimeseriesTotal
-	}
+export default (prisma: PrismaClient, pool: Pool, channel: Channel) => {
 
-	type Mutation {
-		changeMode(deviceId: String, mode: String): Boolean
-		changeState(deviceId: String, state: String): Boolean
-		
+	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, pool);
+	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
+	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
-		performDeviceAction(deviceId: String, deviceName: String, action: String): Boolean
-		changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): Boolean
-		
-		changeDeviceMode(deviceId: String, deviceName: String, mode: String): Boolean
-		requestFlow(deviceId: String, actionId: String): Boolean
-	}
+	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(channel)
 
-	type CommandDeviceTimeseriesTotal @exclude {
-		total: Float
-	}
+	const resolvers = mergeResolvers([
+		deviceResolvers,
+		programResolvers,
+		hmiResolvers,
+		operationResolvers
+	]);
 
-	type CommandDeviceTimeseriesData @exclude {
-		device: String
-		deviceId: String 
-		valueKey: String
-		value: String
-		timestamp: DateTime
-	}
+	/*
+		type Query {
+			commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
+			commandDeviceTimeseries(deviceId: String, device: String, valueKey: String, startDate: String): [CommandDeviceTimeseriesData]
+			commandDeviceTimeseriesTotal(deviceId: String, device: String, valueKey: String, startDate: String, endDate: String): CommandDeviceTimeseriesTotal
+		}
 
-	type CommandDeviceValue @exclude{
-		device: String
-		deviceId: String
-		value: String
-		valueKey: String
-	}
+		type Mutation {
+			changeMode(deviceId: String, mode: String): Boolean
+			changeState(deviceId: String, state: String): Boolean
+			
+			performDeviceAction(deviceId: String, deviceName: String, action: String): Boolean
+			changeDeviceValue(deviceId: String, deviceName: String, key: String, value: String): Boolean
+			
+			changeDeviceMode(deviceId: String, deviceName: String, mode: String): Boolean
+			requestFlow(deviceId: String, actionId: String): Boolean
+		}
 
+	*/
 
+	 const typeDefs = mergeTypeDefs([
+		 `	
+		type CommandKeyValue {
+			id: ID 
+			key: String
+			value: String
+		}
+		`,
+		operationTypeDefs,
+		deviceTypeDefs,
+		programTypeDefs,
+		hmiTypeDefs
+	 ])
+	
+
+	/*
+	
 	type CommandKeyValue {
-		id: ID @id
+		id: ID 
 		key: String
 		value: String
 	}
 
-${devices}
 
 
-	type CommandInterlockAssertion {
-		id: ID! @id
-		type: String
-		value: String
-		setpoint: CommandDeviceSetpoint @relationship(type: "USES_SETPOINT", direction: OUT)
-	}
 
-	type CommandProgramDevicePlaceholder {
-		id: ID! @id
-		name: String
-
-		type: CommandProgramDevice @relationship(type: "USES_TEMPLATE", direction: OUT)
-
-		units: [CommandProgramDeviceUnit] @relationship(type: "MAPS_UNIT", direction: OUT)
-
-		requiresMutex: Boolean
-
-		interlocks: [CommandInterlock] @relationship(type: "HAS_INTERLOCK", direction: OUT)
-		setpoints: [CommandDeviceSetpoint] @relationship(type: "HAS_SETPOINT", direction: OUT)
-		plugins: [CommandDevicePlugin] @relationship(type: "HAS_PLUGIN", direction: OUT)
-
-		program: CommandProgram @relationship(type: "USES_DEVICE", direction: IN)
-	}
-
-	type CommandProgramDeviceUnit {
-		id: ID! @id
-
-		inputUnit: String
-		displayUnit: String
-		
-		state: CommandProgramDeviceState @relationship(type: "MAPS_STATE_UNIT", direction: OUT)
-
-		device: CommandProgramDevicePlaceholder @relationship(type: "MAPS_UNIT", direction: IN)
-	}
-
-	type CommandDeviceSetpoint {
-		id: ID! @id
-		name: String
-		key: CommandProgramDeviceState @relationship(type: "USES_STATE", direction: OUT)
-		type: String
-		value: String
-	}
-
-	type CommandDevicePlugin {
-		id: ID! @id
-		plugin: CommandProgramDevicePlugin @relationship(type: "USES_PLUGIN", direction: OUT)
-		rules: CommandProgramFlow @relationship(type: "WHEN_FLOW", direction: OUT)
-		configuration: [CommandKeyValue] @relationship(type: "USES_KV", direction: OUT)
-	}
-
-
-	interface CommandProgramDevicePluginAssignment @relationshipProperties {
+	interface CommandProgramDevicePluginAssignment {
 		configuration: [String]
 	}
 
-	type CommandProgramDevicePlugin {
-		id: ID! @id
-		name: String
-		compatibility: [CommandProgramDevicePluginCompatibility] @relationship(type: "USES_COMPATIBILITY", direction: OUT)
-		config: [CommandProgramDevicePluginConfiguration] @relationship(type: "HAS_CONF", direction: OUT)
-		tick: String
-	}
-
-	type CommandProgramDevicePluginCompatibility {
-		id: ID! @id
-		name: String
-	}
-
-	type CommandProgramDevicePluginConfiguration {
-		id: ID! @id
+	
+	interface CommandProgramDevicePluginRequires  {
 		key: String
-		type: String
-		requires: [CommandProgramDevicePluginConfiguration] @relationship(type: "REQUIRES", direction: OUT, properties: "CommandProgramDevicePluginRequires")
-		value: String
-		plugin: CommandProgramDevicePlugin @relationship(type: "HAS_CONF", direction: IN)
-	}
-
-	interface CommandProgramDevicePluginRequires @relationshipProperties {
-		key: String
-	}
-
-	type CommandProgramDevice {
-		id: ID! @id
-		name: String
-		type: String
-
-		usedIn: [CommandProgramDevicePlaceholder] @relationship(type: "USES_TEMPLATE", direction: IN)
-
-		state: [CommandProgramDeviceState] @relationship(type: "HAS_STATE", direction: OUT)
-		actions: [CommandProgramDeviceAction] @relationship(type: "HAS_ACTION", direction: OUT)
-	}
-
-
-	type CommandProgramDeviceAction {
-		id: ID! @id
-		key: String
-
-		device: CommandProgramDevice @relationship(type: "HAS_ACTION", direction: IN)
-
-	}
-
-	type CommandProgramDeviceState {
-		id: ID! @id
-		key: String
-		type: String
-		
-		inputUnits: String
-		units: String
-
-		writable: Boolean
-
-		min: String
-		max: String
-
-		device: CommandProgramDevice @relationship(type: "HAS_STATE", direction: IN)
 	}
 
 	type CommandProgramDocumentation {
-		id: ID! @id
+		id: ID! 
 		name: String
 		blocks: [String]
 
-		program: CommandProgram @relationship(type: "HAS_DOCS", direction: IN)
+		program: CommandProgram 
 	}
 
-	type CommandProgramFlow {
-		id: ID! @id
-		name: String
-		parent: CommandProgramFlow @relationship(type: "HAS_SUBFLOW", direction: IN)
-		children: [CommandProgramFlow] @relationship(type: "HAS_SUBFLOW", direction: OUT)
 
-		nodes: [CommandProgramNode] @relationship(type: "USES_NODE", direction: OUT)
-		conditions: [CommandProgramNodeFlowConfiguration] @relationship(type: "HAS_CONDITION", direction: OUT)
-		programs: [CommandProgram] @relationship(type: "USES_FLOW", direction: IN)
-	}
 
-	type CommandActionItem {
-		id: ID! @id
-		device: CommandProgramDevicePlaceholder @relationship(type: "ACTIONS", direction: OUT)
-		request: CommandProgramDeviceAction @relationship(type: "USES_ACTION", direction: OUT)
-		release: Boolean
-	}
 
 
 	type CommandPlugin {
-		id: ID! @id
+		id: ID! 
 		name: String
-		items: [CommandPluginItem] @relationship(type: "HAS_PLUGIN_ITEM", direction: OUT)
+		items: [CommandPluginItem] 
 
 	}
 
 	type CommandPluginItem {
-		id: ID! @id
+		id: ID! 
 		name: String
 		type: String
 		value: String
 
-		usedIn: [CommandPlugin] @relationship(type: "HAS_PLUGIN_ITEM", direction: IN)
+		usedIn: [CommandPlugin] 
 	}
 
-	${program}
-	${hmi}
 
-`
+	*/
+/*
+	${programTypeDefs}
+	${hmiTypeDefs}
+*/
+
+
+	return {
+		typeDefs,
+		resolvers
+	}
+}

@@ -11,7 +11,7 @@ export interface RoutedTabProps{
 
 export const RoutedTabs : React.FC<RoutedTabProps> = (props) => {
 	return (
-		<Box direction="row">
+		<Box direction="row" gap="xsmall">
 			{props.tabs.map((tab) => (
 				<RoutedTabButton
 					default={tab.default}

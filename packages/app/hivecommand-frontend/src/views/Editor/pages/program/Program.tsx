@@ -112,7 +112,7 @@ export const Program = (props) => {
     ]
 
     const { data } = useQuery(gql`
-    query Q ($id: ID, $program: ID!){
+    query Q ($id: ID, $program: ID){
         commandPrograms(where: {id: $id}){
             id
             name
@@ -152,25 +152,55 @@ export const Program = (props) => {
                     id
                 }
 
-                conditions {
+
+                edges {
                     id
-                    inputDevice {
+
+                    from {
                         id
-                        name
                     }
-                    inputDeviceKey {
+                    fromHandle
+                    
+                    to {
                         id
-                        key
                     }
-                    comparator
-                    assertion
+
+                    conditions {
+                        id
+
+                        inputDevice {
+                            id
+                            name
+                        }
+                        inputDeviceKey {
+                            id
+                            key
+                        }
+                        comparator
+                        assertion
+                    }
+
+                    toHandle
+
+                    points{
+                        x
+                        y
+                    }
                 }
+
                 nodes {
                     id
                     type
                     x 
                     y
 
+                    inputs {
+                        id
+                    }
+                    
+                    outputs {
+                        id
+                    }
 
                     subprocess {
                         id
@@ -197,24 +227,7 @@ export const Program = (props) => {
                         value
                     }
 
-                    nextConnection {
-                        edges {
-                            conditions
-
-                            id
-                            sourceHandle
-                            targetHandle
-
-
-                            points {
-                                x
-                                y
-                            }
-                            node {
-                                id
-                            }
-                        }
-                    }
+                   
                 }
             
         }
@@ -249,7 +262,7 @@ export const Program = (props) => {
                     icon: x.type,
                     label: x.subprocess?.name,
                     configuration: [
-                        ...x.configuration,
+                        ...(x.configuration || []),
                         { key: "actions", value: x.actions }
                     ]
                     // actions: x.actions
@@ -259,22 +272,22 @@ export const Program = (props) => {
             })))
 
             
-            setPaths(flow.nodes.map((x) => {
-                console.log("NEXT", x)
-                return x.nextConnection.edges.map((conn) => ({
+            setPaths(flow?.edges?.map((conn) => {
+                return {
                     id: conn.id,
-                    source: x.id,
-                    sourceHandle: conn.sourceHandle,
-                    target: conn.node.id,
-                    targetHandle: conn.targetHandle,
+                    source: conn.from?.id,
+                    sourceHandle: conn.fromHandle,
+                    target: conn.to?.id,
+                    targetHandle: conn.toHandle,
                     points: conn.points,
                     extras: {
+                        conditions: conn.conditions,
                         configuration: {
                             conditions: conn.conditions
                         }
                     }
-                }))
-            }).reduce((prev, curr) => prev.concat(curr), []))
+                }
+            }))
         }
     }, [flow, activeProgram])
 
@@ -353,7 +366,7 @@ export const Program = (props) => {
             let path = paths.find((a) => a.id == _paths[0]);
 
             queries.push(
-                disconnectProgramNode(path.source, path.sourceHandle, path.target, path.targetHandle)
+                disconnectProgramNode(_paths[0]) //, path.sourceHandle, path.target, path.targetHandle)
             )
     
             // return {
@@ -488,7 +501,6 @@ export const Program = (props) => {
                 flow,
                 refresh: refetch,
                 devices,
-                conditions: conditions,
                 program,
                 activeProgram: activeProgram,
                 selectedType: selected.key,
@@ -645,7 +657,8 @@ export const Program = (props) => {
                             path.sourceHandle,
                             path.target,
                             path.targetHandle,
-                            path.points
+                            path.points,
+                            path.id != 'temp' && path.id
                         ).then(() => {
                             refetch()
                         })
