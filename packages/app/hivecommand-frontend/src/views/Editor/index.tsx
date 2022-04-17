@@ -24,6 +24,7 @@ import { ObjectTypeDefinitionNode } from 'graphql'
 import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
+import { Variables } from './pages/variables';
 export interface EditorProps {
 
 }
@@ -75,11 +76,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     }
                 }
 
-                hmi {
-                    id
-                    name
-                   
-                }
+             
             }
         }
     `, {
@@ -235,10 +232,10 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const query = qs.parse(location.search, {ignoreQueryPrefix: true})
 
     const menu = [
-        "Documentation",
         "Program",
         "Controls",
         "Devices",
+        "Variables",
         "Alarms"
     ]
 
@@ -344,7 +341,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 <Route path={`devices`} element={<Devices/>} />
                                 <Route path={`devices/:id*`} element={ <DeviceSingle program={id} />} />
                                 <Route path={`alarms`} element={<Alarms/>} />
-                                <Route path={`documentation`} element={<Documentation/>} />
+                                <Route path={`variables`} element={<Variables />} />
                             </Route>
                         </Routes>
                     </Box>

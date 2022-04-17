@@ -19,26 +19,32 @@ export const useCreateDevice = (user: string) => {
           activeProgram: { connect: { where: { node: { id: args.program } } } },
         };
       }
-      const item = mutation.updateHiveOrganisations({
-        where: { members: { id: user } },
-        update: {
-          commandDevices: [
-            {
-              create: [
-                {
-                  node: {
-                    name: args.name,
-                    network_name: args.network_name,
-                  },
-                },
-              ],
-            },
-          ],
-        },
+
+      const item = mutation.createCommandDevice({
+        input: {
+          name: args.name,
+          network_name: args.network_name,
+          program: args.program
+        }
+        // where: { members: { id: user } },
+        // update: {
+        //   commandDevices: [
+        //     {
+        //       create: [
+        //         {
+        //           node: {
+        //             name: args.name,
+        //             network_name: args.network_name,
+        //           },
+        //         },
+        //       ],
+        //     },
+        //   ],
+        // },
       });
       return {
         item: {
-          ...item.hiveOrganisations?.[0],
+          ...item
         },
       };
     }
@@ -106,25 +112,31 @@ export const useUpdateDevice = (user: string) => {
         };
       }
 
-	  const item = mutation.updateHiveOrganisations({
-		  where: { members: { id: user } },
-		  update: {
-			  commandDevices: [{
-				  where: {node: {id: args.id}},
-				  update: {
-					  node: {
-						  name: args.name,
-						  network_name: args.network_name,
-						  ...programUpdate
-					  }
-				  }
-			  }]
-		  }
+	  const item = mutation.updateCommandDevice({
+      id: args.id,
+      input: {
+        name: args.name,
+        network_name: args.network_name,
+        program: args.program,
+      }
+		  // where: { members: { id: user } },
+		  // update: {
+			//   commandDevices: [{
+			// 	  where: {node: {id: args.id}},
+			// 	  update: {
+			// 		  node: {
+			// 			  name: args.name,
+			// 			  network_name: args.network_name,
+			// 			  ...programUpdate
+			// 		  }
+			// 	  }
+			//   }]
+		  // }
 		})
 
 		return {
 			item: {
-				...item.hiveOrganisations?.[0]
+				...item
 			}
 		}
     //   mutation.updateCommandDevices({
@@ -173,161 +185,161 @@ export const useMapPort = (deviceId: string) => {
       }
     ) => {
 
-      let deviceMapping: any[] = [
-        {
-          create: args.connections
-            .filter((a) => !a.id)
-            .map((map) => {
-              let keyConnect = map.key
-                ? {
-                    key: {
-                      connect: {
-                        where: {
-                          node: {
-                            key: map.key,
-                            product: {
-                              peripheral: { id: args.peripheralId },
-                              peripheralConnection: {
-                                edge: { port: args.port },
-                              },
-                            },
-                          },
-                        },
-                      },
-                    },
-                  }
-                : {};
+    //   let deviceMapping: any[] = [
+    //     {
+    //       create: args.connections
+    //         .filter((a) => !a.id)
+    //         .map((map) => {
+    //           let keyConnect = map.key
+    //             ? {
+    //                 key: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         key: map.key,
+    //                         product: {
+    //                           peripheral: { id: args.peripheralId },
+    //                           peripheralConnection: {
+    //                             edge: { port: args.port },
+    //                           },
+    //                         },
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
 
-              let deviceConnect = map.device
-                ? {
-                    device: {
-                      connect: {
-                        where: {
-                          node: {
-                            id: map.device,
-                          },
-                        },
-                      },
-                    },
-                  }
-                : {};
+    //           let deviceConnect = map.device
+    //             ? {
+    //                 device: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         id: map.device,
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
 
-              let valueConnect = map.value
-                ? {
-                    value: {
-                      connect: {
-                        where: {
-                          node: {
-                            device: {
-                              usedIn: {
-                                id_IN: [map.device],
-                              },
-                            },
-                            key: map.value,
-                          },
-                        },
-                      },
-                    },
-                  }
-                : {};
-              return {
-                node: {
-                  ...keyConnect,
-                  ...deviceConnect,
-                  ...valueConnect,
-                },
-                edge: {
-                  port: args.port,
-                },
-              };
-            }),
-        },
-        ...(args.connections || [])
-          .filter((a) => a.id)
-          .map((item) => {
-            return {
-              where: { node: { id: item.id } },
-              update: {
-                node: {
-                  key: {
-                    connect: {
-                      where: {
-                        node: {
-                          key: item.key,
-                          product: {
-                            peripheral: { id: args.peripheralId },
-                            peripheralConnection: { edge: { port: args.port } },
-                          },
-                        },
-                      },
-                    },
-                  },
-                  device: {
-                    disconnect: {
-                      where: {
-                        node: {
-                          id_NOT: item.device,
-                        },
-                      },
-                    },
-                    connect: {
-                      where: {
-                        node: {
-                          id: item.device,
-                        },
-                      },
-                    },
-                  },
-                  value: {
-                    disconnect: {
-                      where: {
-                        node: {
-                          device: {
-                            id_NOT_IN: [item.device],
-                          },
-                          key_NOT: item.value,
-                        },
-                      },
-                    },
-                    connect: {
-                      where: {
-                        node: {
-                          device: {
-                            usedIn: {
-                              id_IN: [item.device],
-                            },
-                          },
-                          key: item.value,
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            };
-          }),
-      ];
+    //           let valueConnect = map.value
+    //             ? {
+    //                 value: {
+    //                   connect: {
+    //                     where: {
+    //                       node: {
+    //                         device: {
+    //                           usedIn: {
+    //                             id_IN: [map.device],
+    //                           },
+    //                         },
+    //                         key: map.value,
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               }
+    //             : {};
+    //           return {
+    //             node: {
+    //               ...keyConnect,
+    //               ...deviceConnect,
+    //               ...valueConnect,
+    //             },
+    //             edge: {
+    //               port: args.port,
+    //             },
+    //           };
+    //         }),
+    //     },
+    //     ...(args.connections || [])
+    //       .filter((a) => a.id)
+    //       .map((item) => {
+    //         return {
+    //           where: { node: { id: item.id } },
+    //           update: {
+    //             node: {
+    //               key: {
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       key: item.key,
+    //                       product: {
+    //                         peripheral: { id: args.peripheralId },
+    //                         peripheralConnection: { edge: { port: args.port } },
+    //                       },
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //               device: {
+    //                 disconnect: {
+    //                   where: {
+    //                     node: {
+    //                       id_NOT: item.device,
+    //                     },
+    //                   },
+    //                 },
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       id: item.device,
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //               value: {
+    //                 disconnect: {
+    //                   where: {
+    //                     node: {
+    //                       device: {
+    //                         id_NOT_IN: [item.device],
+    //                       },
+    //                       key_NOT: item.value,
+    //                     },
+    //                   },
+    //                 },
+    //                 connect: {
+    //                   where: {
+    //                     node: {
+    //                       device: {
+    //                         usedIn: {
+    //                           id_IN: [item.device],
+    //                         },
+    //                       },
+    //                       key: item.value,
+    //                     },
+    //                   },
+    //                 },
+    //               },
+    //             },
+    //           },
+    //         };
+    //       }),
+    //   ];
 
-      const item = mutation.updateCommandDevices({
-        where: { id: deviceId },
-        update: {
-          peripherals: [
-            {
-              where: { node: { id: args.peripheralId } },
-              update: {
-                node: {
-                  mappedDevices: deviceMapping,
-                },
-              },
-            },
-          ],
-        },
-      });
-	  return {
-		  item: {
-			  ...item.commandDevices?.[0]
-		  }
-	  }
+    //   const item = mutation.updateCommandDevices({
+    //     where: { id: deviceId },
+    //     update: {
+    //       peripherals: [
+    //         {
+    //           where: { node: { id: args.peripheralId } },
+    //           update: {
+    //             node: {
+    //               mappedDevices: deviceMapping,
+    //             },
+    //           },
+    //         },
+    //       ],
+    //     },
+    //   });
+	  // return {
+		//   item: {
+		// 	  ...item.commandDevices?.[0]
+		//   }
+	  // }
     }
   );
 

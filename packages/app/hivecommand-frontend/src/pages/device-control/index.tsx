@@ -93,32 +93,14 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     name
                     type
 
-                    mappedDevicesConnection {
-                        edges{
-                            port
-
-                            node {
-                                device {
-                                    name
-                                }
-
-                                key {
-                                    key
-                                }
-                                value {
-                                    key
-                                }
-                                
-                            }
-                        }
-                    }
+                    
                 }
                
                 activeProgram {
                     id
                     name
                     
-                    hmi{
+                    interface{
                         id
                         name
 
@@ -131,25 +113,15 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             }
                         }
 
-                        paths {
-                            source {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                        edges {
+                            from {
+                                id
                             }
-                            sourceHandle
-                            target {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                            fromHandle
+                            to {
+                               id
                             }
-                            targetHandle
+                            toHandle
                             points {
                                 x
                                 y
@@ -389,10 +361,10 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const program = data?.commandDevices?.[0]?.activeProgram || {};
 
-    const actions = program?.hmi?.[0]?.actions || [];
+    const actions = program?.interface?.actions || [];
 
-    const hmi = program?.hmi?.[0]?.nodes || [];
-    const groups = program?.hmi?.[0]?.groups || [];
+    const hmi = program?.interface?.nodes || [];
+    const groups = program?.interface?.groups || [];
 
 
     // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {

@@ -1,108 +1,261 @@
+import { PrismaClient } from "@prisma/client";
 import gql from "graphql-tag";
+import { nanoid } from 'nanoid';
 
-export default gql`
-
-
-type CommandProgramHMI {
-	id: ID! @id
-	name: String
-
-	actions: [CommandProgramAction] @relationship(type: "HAS_ACTION", direction: OUT)
-
-	paths: [CommandHMIPath] @relationship(type: "USES_PATH", direction: OUT)
-	groups: [CommandHMIGroup] @relationship(type: "USES_GROUP", direction: OUT)
-	nodes: [CommandHMINode] @relationship(type: "USES_NODE", direction: OUT)
-	programs: [CommandProgram] @relationship(type: "USES_HMI", direction: IN)
-}
-
-
-union CommandHMINodes = CommandHMINode | CommandHMIGroup
-
-type CommandHMIGroup {
-	id: ID! @id
-	x: Float
-	y: Float
-
-	width: Float
-	height: Float
-
-	rotation: Float
-	scaleX: Float
-	scaleY: Float
-
-	nodes: [CommandHMINode] @relationship(type: "USES_NODE", direction: OUT)
-	ports: [CommandHMIPort] @relationship(type: "HAS_PORT", direction: OUT)
-
-	inputs: [CommandHMINode] @relationship(type: "USE_NEXT", direction: IN, properties: "CommandHMINodeFlow")
-	outputs: [CommandHMINode] @relationship(type: "USE_NEXT", direction: OUT, properties: "CommandHMINodeFlow")
-}
-
-type CommandHMIPort {
-	id: ID! @id
-	key: String
-	x: Float
-	y: Float
-	length: Float
-	rotation: Float
-}
-
-type CommandHMINode {
-	id: ID! @id
-	x: Float
-	y: Float
-
-	rotation: Float
-	scaleX: Float
-	scaleY: Float
-
-	z: Int
-
-	showTotalizer : Boolean
+export default (prisma: PrismaClient) => {
 	
-	type: CommandHMIDevice @relationship(type: "USES_VISUAL", direction: OUT)
+	const resolvers = {	
+		Query: {
+			commandInterfaceDevices: async () => {
+				return await prisma.canvasNodeTemplate.findMany()
+			}
+		},
+		Mutation: {
+			createCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
+				let deviceUpdate: any = {};
+				if(args.input.devicePlaceholder){
+					deviceUpdate['devicePlaceholder'] = {
+						connect: {id: args.input.devicePlaceholder}
+					}
+				}
+				return await prisma.canvasNode.create({
+					data: {
+						id: nanoid(),
+						x: args.input.x,
+						y: args.input.y,
+						rotation: args.input.rotation || 0,
+						scaleX: args.input.scaleX || 1,
+						scaleY: args.input.scaleY || 1,
+						z: args.input.z || 1,
+						showTotalizer: args.input.showTotalizer || false,
+						...deviceUpdate,
+						type: {
+							connect: {id: args.input.type}
+						},
+						hmi: {
+							connect: { programId: args.program }
+						}
+					}
+				})
+			},
+			updateCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
+				let deviceUpdate: any = {};
+				if(args.input.devicePlaceholder){
+					deviceUpdate['devicePlaceholder'] = {
+						connect: {id: args.input.devicePlaceholder}
+					}
+				}
+				if(args.input.z) deviceUpdate['z'] = args.input.z;
+				if(args.input.showTotalizer) deviceUpdate['showTotalizer'] = args.input.showTotalizer;
+				if(args.input.x) deviceUpdate['x'] = args.input.x;
+				if(args.input.y) deviceUpdate['y'] = args.input.y;
+				if(args.input.rotation) deviceUpdate['rotation'] = args.input.rotation;
 
-	devicePlaceholder: CommandProgramDevicePlaceholder @relationship(type: "REPRESENTS", direction: OUT)
+				if(args.input.type) deviceUpdate['type'] = { connect: {id: args.input.type} };
 
-	flow: [CommandProgramHMI] @relationship(type: "USES_NODE", direction: IN)
+				return await prisma.canvasNode.update({
+					where: {id: args.id},
+					data: {
+						...deviceUpdate,
+					
+						// hmi: {
+						// 	connect: { programId: args.program }
+						// }
+					}
+				})
+			},
+			deleteCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
+				return await prisma.canvasNode.delete({where: {id: args.id}});
+			},
+			createCommandProgramInterfaceEdge: async (root: any, args: any, context: any) => {
+				return await prisma.canvasEdge.create({
+					data: {
+						id: nanoid(),
+						from: {
+							connect: {id: args.input.from}
+						},
+						fromHandle: args.input.fromHandle,
+						to: {
+							connect: {id: args.input.to}
+						},
+						toHandle: args.input.toHandle,
+						points: args.input.points,
+						hmi: {
+							connect: { programId: args.program }
+						}
+					}
+				})
+			},
+			updateCommandProgramInterfaceEdge: async (root: any, args: any, context: any) => {
+				return await prisma.canvasEdge.update({
+					where: {id: args.id},
+					data: {
+						from: {
+							connect: {id: args.input.from}
+						},
+						fromHandle: args.input.fromHandle,
+						to: {
+							connect: {id: args.input.to}
+						},
+						toHandle: args.input.toHandle,
+						points: args.input.points
+						// hmi: {
+						// 	connect: { programId: args.program }
+						// }
+					}
+				})
+			},
+			deleteCommandProgramInterfaceEdge: async (root: any, args: any, context: any) => {
+				return await prisma.canvasEdge.delete({where: {id: args.id}});
+			},
+		}
+	}
+	
+	const typeDefs = `
 
-	inputs: [CommandHMINode] @relationship(type: "USE_NEXT", direction: IN, properties: "CommandHMINodeFlow")
-	outputs: [CommandHMINode] @relationship(type: "USE_NEXT", direction: OUT, properties: "CommandHMINodeFlow")
+	type Query {
+		commandInterfaceDevices: [CommandHMIDevice!]!
+	}
+
+	type Mutation {
+		createCommandProgramInterfaceNode (program: ID, input: ComandProgramInterfaceNodeInput!): CommandHMINode
+		updateCommandProgramInterfaceNode (program: ID, id: ID, input: ComandProgramInterfaceNodeInput!): CommandHMINode
+		deleteCommandProgramInterfaceNode (program: ID, id: ID!): CommandHMINode
+
+		createCommandProgramInterfaceEdge (program: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
+		updateCommandProgramInterfaceEdge (program: ID, id: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
+		deleteCommandProgramInterfaceEdge (program: ID, id: ID!): CommandHMIEdge
+	}
+
+	type CommandProgramHMI {
+		id: ID! 
+		name: String
+
+		actions: [CommandProgramAction] 
+
+		edges: [CommandHMIEdge]
+
+		groups: [CommandHMIGroup] 
+		nodes: [CommandHMINode]
+		programs: [CommandProgram]
+	}
+
+
+	union CommandHMINodes = CommandHMINode | CommandHMIGroup
+
+	type CommandHMIGroup {
+		id: ID! 
+		x: Float
+		y: Float
+
+		width: Float
+		height: Float
+
+		rotation: Float
+		scaleX: Float
+		scaleY: Float
+
+		nodes: [CommandHMINode]
+		ports: [CommandHMIPort]
+
+		inputs: [CommandHMINode]
+		outputs: [CommandHMINode] 
+	}
+
+	type CommandHMIPort {
+		id: ID! 
+		key: String
+		x: Float
+		y: Float
+		length: Float
+		rotation: Float
+	}
+
+	input ComandProgramInterfaceNodeInput{
+		x: Float
+		y: Float
+		rotation: Float
+		scaleX: Float
+		scaleY: Float
+
+		z: Int
+
+		showTotalizer : Boolean
+		
+		type: String
+		devicePlaceholder: String
+	}
+
+	type CommandHMINode {
+		id: ID! 
+		x: Float
+		y: Float
+
+		rotation: Float
+		scaleX: Float
+		scaleY: Float
+
+		z: Int
+
+		showTotalizer : Boolean
+		
+		type: CommandHMIDevice 
+
+		devicePlaceholder: CommandProgramDevicePlaceholder 
+
+		flow: [CommandProgramHMI] 
+
+		inputs: [CommandHMINode] 
+		outputs: [CommandHMINode] 
+	}
+
+	input ComandProgramInterfaceEdgeInput {
+		from: String
+		fromHandle: String
+		to: String
+		toHandle: String
+		points: [PointInput]
+	}
+
+	type CommandHMIEdge {
+		id: ID! 
+		from: CommandHMINode
+		fromHandle: String
+		to: CommandHMINode
+		toHandle: String
+		points: [Point]
+	}
+
+
+	interface CommandHMINodeFlow  {
+		id: ID 
+		sourceHandle: String
+		targetHandle: String
+	}
+
+
+	type CommandHMIDevice {
+		id: ID! 
+		name: String
+
+		width: Float
+		height: Float
+
+		ports: [CommandHMIDevicePort]
+	}
+
+	type CommandHMIDevicePort {
+		id: ID! 
+		x: Float
+		y: Float
+		key: String
+		rotation: Float
+	}
+
+	`
+
+	return {
+		typeDefs,
+		resolvers
+	}
 }
-
-type CommandHMIPath {
-	id: ID! @id
-	points: [CartesianPoint]
-	source: CommandHMINodes @relationship(type: "HAS_SOURCE", direction: OUT)
-	sourceHandle: String
-	target: CommandHMINodes @relationship(type: "HAS_TARGET", direction: OUT)
-	targetHandle: String
-}
-
-
-interface CommandHMINodeFlow @relationshipProperties {
-	id: ID @id
-	sourceHandle: String
-	targetHandle: String
-	points: [CartesianPoint]
-}
-
-
-type CommandHMIDevice {
-	id: ID! @id
-	name: String
-
-	width: Float
-	height: Float
-
-	ports: [CommandHMIDevicePort] @relationship(type: "HAS_PORT", direction: OUT)
-}
-
-type CommandHMIDevicePort {
-	id: ID! @id
-	x: Float
-	y: Float
-	key: String
-	rotation: Float
-}
-
-`

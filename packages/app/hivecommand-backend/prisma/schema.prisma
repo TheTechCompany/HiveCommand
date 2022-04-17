@@ -1,0 +1,308 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Device {
+  id String @id
+  name String
+
+  online Boolean?
+
+  network_name String
+
+  activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
+  program String?
+
+  createdAt DateTime @default(now())
+  lastSeen DateTime?
+
+  organisation String
+}
+
+model IOTemplate {
+  id String @id
+  name String
+
+  type String
+
+  state IOTemplateState[] @relation(name: "hasState")
+  actions IOTemplateAction[] @relation(name: "hasAction")
+
+  createdAt DateTime @default(now())
+  
+  usedBy ProgramFlowIO[] @relation(name: "useTemplate")
+
+}
+
+model IOTemplateAction {
+  id String @id 
+  key String
+
+  usedIn ProgramFlowNodeAction[] @relation(name: "deviceAction")
+
+  device IOTemplate @relation(name: "hasAction", references: [id], fields: [deviceId], onDelete: Cascade)
+  deviceId String
+}
+
+model IOTemplateState {
+  id String @id 
+  
+  key String
+  type String
+            
+  inputUnits String?
+  units String?
+  writable Boolean
+
+  min String?
+  max String?
+
+  usedIn ProgramFlowEdgeCondition[] @relation(name: "edgeConditionKey")
+
+  device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
+  deviceId String
+}
+
+model Program {
+  id String @id
+
+  name String
+
+
+  program ProgramFlow[]
+
+  interface ProgramHMI? @relation(name: "hasInterface")
+
+  devices ProgramFlowIO[]
+
+  alarms ProgramAlarm[] @relation(name: "useAlarm")
+
+  variables ProgramVariable[] @relation(name: "useVariable")
+
+  usedBy Device[] @relation(name: "useProgram")
+
+  createdAt DateTime @default(now())
+
+  organisation String
+}
+
+model ProgramAlarm {
+  id String @id
+  name String
+
+  conditions ProgramAlarmCondition[] @relation(name: "useCondition")
+
+  program Program @relation(name: "useAlarm", fields: [programId], references: [id])
+  programId String
+}
+
+model ProgramAlarmCondition {
+  id String @id
+  name String
+
+  device String
+  variable String
+  value String
+
+  alarm ProgramAlarm @relation(name: "useCondition", fields: [alarmId], references: [id])
+  alarmId String
+}
+
+model ProgramVariable {
+  id String @id
+  name String
+  defaultValue String
+  value String
+  program Program @relation(name: "useVariable", fields: [programId], references: [id])
+  programId String
+}
+
+model ProgramFlowIO {
+  id String @id
+
+  name String
+
+  type IOTemplate? @relation(name: "useTemplate", fields: [templateId], references: [id], onUpdate: Cascade)
+  templateId String?
+
+  shownBy CanvasNode[] @relation(name: "shownOn")
+
+  usedBy ProgramFlowNodeAction[] @relation(name: "useDevice")
+  usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
+
+  program Program @relation(fields: [programId], references: [id])
+  programId String
+}
+
+model ProgramHMI {
+  id String @id
+
+  nodes CanvasNode[] @relation(name: "useNode")
+  edges CanvasEdge[] @relation(name: "useEdge")
+
+  actions ProgramHMIAction[] @relation(name: "forInterface")
+
+  program Program @relation(name: "hasInterface", fields: [programId], references: [id])
+  programId String
+
+}
+
+model ProgramHMIAction {
+  id String @id
+  name String
+
+  flow ProgramFlow[] @relation(name: "useFlow")
+
+  interface ProgramHMI @relation(name: "forInterface", fields: [interfaceId], references: [id])
+  interfaceId String
+}
+
+model CanvasEdge {
+  id String @id
+
+  from CanvasNode @relation(name: "fromNode", fields: [fromId], references: [id])
+  fromId String
+
+  fromHandle String?
+
+  to CanvasNode @relation(name: "toNode", fields: [toId], references: [id])
+  toId String
+
+  toHandle String?
+
+  points Json?
+
+  hmi ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
+  hmiId String
+}
+
+model CanvasNodeTemplate {
+  id String @id
+
+  name String
+
+  width Float?
+	height Float?
+
+  ports Json?
+  
+  usedBy CanvasNode[] @relation(name: "usedBy")
+
+}
+
+model CanvasNode {
+  id String @id
+
+  x Float
+  y Float
+  
+  rotation Float
+	scaleX Float
+	scaleY Float
+
+	z Int
+
+	showTotalizer Boolean
+		
+	type CanvasNodeTemplate @relation(name: "usedBy", fields: [templateId], references: [id])
+  templateId String
+
+	devicePlaceholder ProgramFlowIO?  @relation(name: "shownOn", fields: [deviceId], references: [id])
+  deviceId String?
+
+  inputs CanvasEdge[] @relation(name: "fromNode")
+  outputs CanvasEdge[] @relation(name: "toNode")
+
+  hmi ProgramHMI @relation(name: "useNode", fields: [hmiId], references: [id])
+  hmiId String
+}
+
+model ProgramFlow {
+  id String @id
+  name String
+
+  nodes ProgramFlowNode[] @relation(name: "forFlow")
+  edges ProgramFlowEdge[]
+
+  usedIn ProgramHMIAction[] @relation(name: "useFlow")
+  usedBy ProgramFlowNode[] @relation(name: "useSubprocess")
+
+  program Program @relation(fields: [programId], references: [id]) 
+  programId String
+}
+
+model ProgramFlowNode {
+  id String @id
+  type String
+  x Float
+  y Float
+  width Int?
+  height Int?
+
+  actions ProgramFlowNodeAction[] @relation(name: "useAction")
+
+  subprocess ProgramFlow? @relation(name: "useSubprocess", fields: [subprocessId], references: [id])
+  subprocessId String?
+
+  programFlow ProgramFlow @relation(name: "forFlow", fields: [programFlowId], references: [id]) 
+  programFlowId String
+
+  inputs ProgramFlowEdge[] @relation(name: "to")
+  outputs ProgramFlowEdge[] @relation(name: "from")
+}
+
+model ProgramFlowNodeAction {
+  id String @id
+
+  device ProgramFlowIO @relation(name: "useDevice", fields: [deviceId], references: [id])
+  deviceId String
+
+  request IOTemplateAction @relation(name: "deviceAction", fields: [requestId], references: [id])
+  requestId String  
+
+  node ProgramFlowNode @relation(name: "useAction", fields: [nodeId], references: [id])
+  nodeId String
+}
+
+model ProgramFlowEdgeCondition {
+  id String @id
+
+  inputDevice ProgramFlowIO? @relation(name: "usedByEdgeCondition", fields: [deviceId], references: [id])
+  deviceId String?
+
+  inputDeviceKey IOTemplateState? @relation(name: "edgeConditionKey", fields: [deviceKeyId], references: [id])
+  deviceKeyId String?
+
+  comparator String?
+  assertion String?
+
+  edge ProgramFlowEdge @relation(name: "useEdgeCondition", fields: [edgeId], references: [id])
+  edgeId String
+}
+
+
+model ProgramFlowEdge {
+  id String @id
+  from ProgramFlowNode @relation(name: "from", fields: [fromId], references: [id])
+  fromId String
+  fromHandle String
+
+  to ProgramFlowNode @relation(name: "to", fields: [toId], references: [id])
+  toId String
+  toHandle String
+
+  points Json?
+
+  conditions ProgramFlowEdgeCondition[] @relation(name: "useEdgeCondition")
+
+  programFlow ProgramFlow @relation(fields: [programFlowId], references: [id])
+  programFlowId String
+}
