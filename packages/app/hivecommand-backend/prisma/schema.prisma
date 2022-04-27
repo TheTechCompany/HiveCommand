@@ -1,0 +1,462 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Device {
+  id String @id
+  name String
+
+  online Boolean?
+
+  network_name String
+
+  activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
+  program String?
+
+  createdAt DateTime @default(now())
+  lastSeen DateTime?
+
+  organisation String
+}
+
+model IOTemplate {
+  id String @id
+  name String
+
+  type String
+
+  state IOTemplateState[] @relation(name: "hasState")
+  actions IOTemplateAction[] @relation(name: "hasAction")
+
+  createdAt DateTime @default(now())
+  
+  usedBy ProgramFlowIO[] @relation(name: "useTemplate")
+
+}
+
+model IOTemplateAction {
+  id String @id 
+  key String
+
+  func String?
+
+  usedIn ProgramFlowNodeAction[] @relation(name: "deviceAction")
+  usedByInterlock ProgramInterlock[] @relation(name: "performInterlockAction")
+
+  device IOTemplate @relation(name: "hasAction", references: [id], fields: [deviceId], onDelete: Cascade)
+  deviceId String
+}
+
+model IOTemplateState {
+  id String @id 
+  
+  key String
+  type String
+            
+  inputUnits String?
+  units String?
+  writable Boolean
+
+  min String?
+  max String?
+
+  usedIn ProgramFlowEdgeCondition[] @relation(name: "edgeConditionKey")
+  usedBySetpoint ProgramSetpoint[] @relation(name: "setpointFor")
+  
+  requiredByInterlock ProgramInterlock[] @relation(name: "requiresState")
+  usedByInterlock ProgramInterlock[] @relation(name: "observesDeviceState")
+
+  device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
+  deviceId String
+}
+
+model Program {
+  id String @id
+
+  name String
+
+
+  program ProgramFlow[]
+
+  interface ProgramHMI? @relation(name: "hasInterface")
+
+  devices ProgramFlowIO[]
+
+  alarms ProgramAlarm[] @relation(name: "useAlarm")
+
+  variables ProgramVariable[] @relation(name: "useVariable")
+
+  usedBy Device[] @relation(name: "useProgram")
+
+  createdAt DateTime @default(now())
+
+  organisation String
+}
+
+model ProgramAlarm {
+  id String @id
+  name String
+
+  conditions ProgramAlarmCondition[] @relation(name: "useCondition")
+
+  program Program @relation(name: "useAlarm", fields: [programId], references: [id])
+  programId String
+}
+
+model ProgramAlarmCondition {
+  id String @id
+  name String
+
+  device String
+  variable String
+  value String
+
+  alarm ProgramAlarm @relation(name: "useCondition", fields: [alarmId], references: [id])
+  alarmId String
+}
+
+model ProgramVariable {
+  id String @id
+  name String
+  type String
+  defaultValue String
+
+  value String?
+
+  usedBy ProgramAssertion[] @relation(name: "usesVariable")
+
+  program Program @relation(name: "useVariable", fields: [programId], references: [id])
+  programId String
+}
+
+model ProgramFlowIO {
+  id String @id
+
+  name String
+
+  type IOTemplate? @relation(name: "useTemplate", fields: [templateId], references: [id], onUpdate: Cascade)
+  templateId String?
+
+  setpoints ProgramSetpoint[] @relation(name: "useSetpoint")
+  interlocks ProgramInterlock[] @relation(name: "useInterlock")
+
+  plugins IOPlugin[] @relation(name: "usePlugin")
+
+  shownBy CanvasNode[] @relation(name: "shownOn")
+
+  observedBy ProgramInterlock[] @relation(name: "observesDevice")
+
+  usedBy ProgramFlowNodeAction[] @relation(name: "useDevice")
+  usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
+
+  program Program @relation(fields: [programId], references: [id])
+  programId String
+}
+
+model IOPluginTemplate {
+  id String @id
+  name String
+
+  config IOPluginTemplateConfig[] @relation(name: "hasConfig")
+
+  tick String
+
+  usedBy IOPlugin[] @relation(name: "usePluginTemplate")
+}
+
+model IOPluginTemplateConfig {
+  id String @id
+
+  key String
+  type String
+
+  order Int?
+
+  requires IOPluginTemplateConfig[] @relation(name: "requiresConfig")
+
+  requiredBy IOPluginTemplateConfig[] @relation(name: "requiresConfig")
+
+  template IOPluginTemplate @relation(name: "hasConfig", fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+  usedIn IOPluginConfig[] @relation(name: "useConfig")
+}
+
+model IOPlugin {
+  id String @id
+
+  plugin IOPluginTemplate @relation(name: "usePluginTemplate", fields: [pluginId], references: [id])
+  pluginId String
+
+  rules ProgramFlow? @relation(name: "activatePlugin", fields: [ruleId], references: [id])
+  ruleId String?
+
+  config IOPluginConfig[] @relation(name: "usePluginConfig")
+
+  device ProgramFlowIO @relation(name: "usePlugin", fields: [deviceId], references: [id])
+  deviceId String
+} 
+
+model IOPluginConfig {
+  id String @id
+
+  key IOPluginTemplateConfig @relation(name: "useConfig", fields: [configId], references: [id])
+  configId String
+
+  value String
+
+  plugin IOPlugin @relation(name: "usePluginConfig", fields: [pluginId], references: [id])
+  pluginId String
+}
+
+model ProgramSetpoint {
+  id String @id
+  name String
+  type String
+
+  key IOTemplateState @relation(name: "setpointFor", fields: [stateId], references: [id], onDelete: Cascade)
+  stateId String
+
+  value String
+
+  usedBy ProgramAssertion[] @relation(name: "usesSetpoint")
+
+  device ProgramFlowIO @relation(name: "useSetpoint", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+model ProgramInterlock {
+  id String @id
+
+  state IOTemplateState[] @relation(name: "requiresState")
+  
+  inputDevice ProgramFlowIO @relation(name: "observesDevice", fields: [inputDeviceId], references: [id])
+  inputDeviceId String
+
+  inputDeviceKey IOTemplateState @relation(name: "observesDeviceState", fields: [inputDeviceKeyId], references: [id])
+  inputDeviceKeyId String 
+
+  comparator String
+
+  assertion ProgramAssertion @relation(name: "assertInterlock", fields: [assertionId], references: [id])
+  assertionId String
+
+  action IOTemplateAction @relation(name: "performInterlockAction", fields: [actionId], references: [id], onDelete: Cascade)
+  actionId String
+
+  device ProgramFlowIO @relation(name: "useInterlock", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+model ProgramAssertion {
+  id String @id
+  type String
+  
+  value String?
+  setpoint ProgramSetpoint? @relation(name: "usesSetpoint", fields: [setpointId], references: [id])
+  setpointId String? 
+
+  variable ProgramVariable? @relation(name: "usesVariable", fields: [variableId], references: [id])
+  variableId String?
+
+  usedByEdge ProgramFlowEdgeCondition[] @relation(name: "edgeCondition")
+  usedByInterlock ProgramInterlock[] @relation(name: "assertInterlock")
+}
+
+model ProgramHMI {
+  id String @id
+
+  nodes CanvasNode[] @relation(name: "useNode")
+
+  edges CanvasEdge[] @relation(name: "useEdge")
+
+  actions ProgramHMIAction[] @relation(name: "forInterface")
+
+  program Program @relation(name: "hasInterface", fields: [programId], references: [id])
+  programId String
+
+}
+
+model ProgramHMIAction {
+  id String @id
+  name String
+
+  flow ProgramFlow[] @relation(name: "useFlow")
+
+  interface ProgramHMI @relation(name: "forInterface", fields: [interfaceId], references: [id])
+  interfaceId String
+}
+
+model CanvasEdge {
+  id String @id
+
+  from CanvasNode @relation(name: "fromNode", fields: [fromId], references: [id], onDelete: Cascade)
+  fromId String
+
+  fromHandle String?
+
+  to CanvasNode @relation(name: "toNode", fields: [toId], references: [id], onDelete: Cascade)
+  toId String
+
+  toHandle String?
+
+  points Json?
+
+  hmi ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
+  hmiId String
+}
+
+model CanvasNodeTemplate {
+  id String @id
+
+  name String
+
+  width Float?
+	height Float?
+
+  ports Json?
+  
+  usedBy CanvasNode[] @relation(name: "usedBy")
+
+}
+
+model CanvasNode {
+  id String @id
+
+  x Float
+  y Float
+  
+  rotation Float
+	scaleX Float
+	scaleY Float
+
+	z Int
+
+	showTotalizer Boolean
+
+	type CanvasNodeTemplate @relation(name: "usedBy", fields: [templateId], references: [id], onDelete: Cascade)
+  templateId String
+
+	devicePlaceholder ProgramFlowIO?  @relation(name: "shownOn", fields: [deviceId], references: [id])
+  deviceId String?
+
+  children CanvasNode[] @relation(name: "hasNode")
+
+  parent CanvasNode? @relation(name: "hasNode", fields: [parentId], references: [id])
+  parentId String?
+
+  inputs CanvasEdge[] @relation(name: "fromNode")
+  outputs CanvasEdge[] @relation(name: "toNode")
+
+  ports CanvasPort[] @relation(name: "hasPort")
+
+  hmi ProgramHMI? @relation(name: "useNode", fields: [hmiId], references: [id])
+  hmiId String?
+}
+
+
+model CanvasPort {
+		id String @id
+		key String
+		x Float
+		y Float
+		length Float
+		rotation Float
+
+    node CanvasNode @relation(name: "hasPort", fields: [nodeId], references: [id], onDelete: Cascade)
+    nodeId String
+}
+
+model ProgramFlow {
+  id String @id
+  name String
+
+  nodes ProgramFlowNode[] @relation(name: "forFlow")
+  edges ProgramFlowEdge[]
+
+  usedIn ProgramHMIAction[] @relation(name: "useFlow")
+  usedBy ProgramFlowNode[] @relation(name: "useSubprocess")
+
+  activatesPlugin IOPlugin[] @relation(name: "activatePlugin")
+
+  program Program @relation(fields: [programId], references: [id]) 
+  programId String
+}
+
+model ProgramFlowNode {
+  id String @id
+  type String
+  x Float
+  y Float
+  width Int?
+  height Int?
+
+  actions ProgramFlowNodeAction[] @relation(name: "useAction")
+
+  subprocess ProgramFlow? @relation(name: "useSubprocess", fields: [subprocessId], references: [id])
+  subprocessId String?
+
+  programFlow ProgramFlow @relation(name: "forFlow", fields: [programFlowId], references: [id]) 
+  programFlowId String
+
+  inputs ProgramFlowEdge[] @relation(name: "to")
+  outputs ProgramFlowEdge[] @relation(name: "from")
+}
+
+model ProgramFlowNodeAction {
+  id String @id
+
+  device ProgramFlowIO @relation(name: "useDevice", fields: [deviceId], references: [id])
+  deviceId String
+
+  request IOTemplateAction @relation(name: "deviceAction", fields: [requestId], references: [id], onDelete: Cascade)
+  requestId String  
+
+  node ProgramFlowNode @relation(name: "useAction", fields: [nodeId], references: [id])
+  nodeId String
+}
+
+model ProgramFlowEdgeCondition {
+  id String @id
+
+  inputDevice ProgramFlowIO? @relation(name: "usedByEdgeCondition", fields: [deviceId], references: [id])
+  deviceId String?
+
+  inputDeviceKey IOTemplateState? @relation(name: "edgeConditionKey", fields: [deviceKeyId], references: [id])
+  deviceKeyId String?
+
+  comparator String?
+
+  assertion ProgramAssertion @relation(name: "edgeCondition", fields: [assertionId], references: [id])
+  assertionId String
+
+  edge ProgramFlowEdge @relation(name: "useEdgeCondition", fields: [edgeId], references: [id])
+  edgeId String
+}
+
+
+model ProgramFlowEdge {
+  id String @id
+  from ProgramFlowNode @relation(name: "from", fields: [fromId], references: [id])
+  fromId String
+  fromHandle String
+
+  to ProgramFlowNode @relation(name: "to", fields: [toId], references: [id])
+  toId String
+  toHandle String
+
+  points Json?
+
+  conditions ProgramFlowEdgeCondition[] @relation(name: "useEdgeCondition")
+
+  programFlow ProgramFlow @relation(fields: [programFlowId], references: [id])
+  programFlowId String
+}

@@ -93,32 +93,14 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     name
                     type
 
-                    mappedDevicesConnection {
-                        edges{
-                            port
-
-                            node {
-                                device {
-                                    name
-                                }
-
-                                key {
-                                    key
-                                }
-                                value {
-                                    key
-                                }
-                                
-                            }
-                        }
-                    }
+                    
                 }
                
                 activeProgram {
                     id
                     name
                     
-                    hmi{
+                    interface{
                         id
                         name
 
@@ -131,91 +113,22 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             }
                         }
 
-                        paths {
-                            source {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                        edges {
+                            from {
+                                id
                             }
-                            sourceHandle
-                            target {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                            fromHandle
+                            to {
+                               id
                             }
-                            targetHandle
+                            toHandle
                             points {
                                 x
                                 y
                             }
 
                         }
-                        groups {
-                            id
-                            x
-                            y
-
-                            width
-                            height
-
-                            nodes {
-                                    id
-                                    type {
-                                        name
-                                    }
-                                    x
-                                    y
-
-                                    z
-                                    scaleX
-                                    scaleY
-                                    rotation
-
-                                    devicePlaceholder {
-                                        id
-                                        name
-                                        type {
-                                            actions {
-                                                key
-                                            }
-        
-                                            state {
-                                                units
-                                                inputUnits
-                                                key
-                                                writable
-                                            }
-                                        }
-
-
-                                        setpoints {
-                                            id
-                                            name
-                                            key {
-                                                id
-                                                key
-                                            }
-                                            value
-                                            type
-                                        }
-        
-                                    }
-                                
-                            }
-                            ports {
-                                id
-                                x
-                                y
-                                rotation
-                                length
-                            }
-                        }
+                        
                         nodes{
        
                                 id
@@ -277,6 +190,26 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     
                                 }
                             
+                            children {
+                                id
+                                type {
+                                    name
+                                    width
+                                    height
+                                }
+                                scaleX
+                                scaleY
+                                x
+                                y
+                            }
+
+                            ports {
+                                id
+                                x
+                                y
+                                length
+                                rotation
+                            }
                             
                         }
                             
@@ -389,10 +322,10 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const program = data?.commandDevices?.[0]?.activeProgram || {};
 
-    const actions = program?.hmi?.[0]?.actions || [];
+    const actions = program?.interface?.actions || [];
 
-    const hmi = program?.hmi?.[0]?.nodes || [];
-    const groups = program?.hmi?.[0]?.groups || [];
+    const hmi = program?.interface?.nodes?.filter((a) => !a.children || a.children.length == 0) || [];
+    const groups = program?.interface?.nodes?.filter((a) => a.children && a.children.length > 0) || [];
 
 
     // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {

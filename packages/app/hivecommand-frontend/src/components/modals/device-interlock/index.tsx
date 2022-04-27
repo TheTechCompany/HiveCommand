@@ -10,9 +10,13 @@ import { DeviceInterlockProvider } from './context';
 export interface DeviceInterlockModalProps {
 	open: boolean;
 	selected?: any
+
 	devices?: any[];
 	actions?: any[];
 	device?: any;
+
+	variables?: any[];
+
 	onSubmit?: (interlock: any) => void;
 	onDelete?: () => void;
 	onClose?: () => void;
@@ -27,12 +31,17 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 		inputDeviceKey?: string,
 		comparator?: string,
 		assertion?: {
+			type?: string,
+			variable?: string,
 			setpoint?: string,
 			value?: string
 		},
-		valueType?: string,
 		action?: string
-	}>({})
+	}>({
+		assertion: {
+			type: 'value'
+		}
+	})
 
 	const onSubmit = () => {
 		props.onSubmit?.(interlock)
@@ -44,15 +53,19 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 			console.log({selected: props.selected})
 			setInterlock({
 				...props.selected,
-				state: props.selected.state.map(state => ({
+				state: props.selected.state?.map(state => ({
 					deviceKey: state.deviceKey?.id,
 					deviceValue: state?.deviceValue?.type == 'setpoint' ? state?.deviceValue?.setpoint?.id : state?.deviceValue?.value
 				})),
-				valueType: props.selected?.assertion?.type || 'value',
 				inputDevice: props.selected?.inputDevice?.id,
 				inputDeviceKey: props.selected?.inputDeviceKey?.id,
 				comparator: props.selected?.comparator,
-				assertion: props.selected?.assertion?.type == 'setpoint' ? props.selected?.assertion?.setpoint?.id : props.selected?.assertion?.value,
+				assertion: {
+					type: props.selected?.assertion?.type,
+					value: props.selected?.assertion?.value,
+					setpoint: props.selected?.assertion?.setpoint?.id,
+					variable: props.selected?.assertion?.variable?.id
+				},
 				action: props.selected?.action?.id
 			})
 		}
@@ -97,6 +110,7 @@ export const DeviceInterlock : React.FC<DeviceInterlockModalProps> = (props) => 
 			value={{
 				interlock,
 				setInterlock,
+				variables: props.variables,
 				devices: props.devices,
 				device: props.device,
 				actions: props.actions

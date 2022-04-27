@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "CanvasNodeTemplate" ALTER COLUMN "width" DROP NOT NULL,
+ALTER COLUMN "height" DROP NOT NULL,
+ALTER COLUMN "ports" DROP NOT NULL;

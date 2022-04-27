@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import jwt from 'jsonwebtoken'
 import jwt_decode from 'jwt-decode';
 import bodyParser from 'body-parser'
-import { Models, connect_data, disconnect_data } from '@hive-command/data-types'
+import { Models, connect_data, disconnect_data } from '@hive-command/data'
 import routes from './routes';
 import { handleSocket } from './socket-handler';
 import { HiveCommandData } from '@hive-command/data'

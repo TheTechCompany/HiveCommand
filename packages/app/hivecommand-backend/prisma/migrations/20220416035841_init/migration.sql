@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "CanvasEdge" ALTER COLUMN "fromHandle" DROP NOT NULL,
+ALTER COLUMN "points" DROP NOT NULL,
+ALTER COLUMN "toHandle" DROP NOT NULL;

@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Models } from '@hive-command/data-types'
+import { Models } from '@hive-command/data'
 const { Device, DNSRecord } = Models;
 import jwt from 'jsonwebtoken'
 

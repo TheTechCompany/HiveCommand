@@ -1,9 +1,14 @@
+import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api/dist/gqty';
 import React from 'react';
 
 export const DeviceControlContext = React.createContext<{
 	controlId?: string;
 	device?: any;
-	program?: any;
+	program?: {
+		id: string;
+		interface: CommandProgramHMI,
+		devices: CommandProgramDevicePlaceholder[]
+	};
 	hmi?: any;
 	reporting?: any[],
 	hmiNodes?: any[],

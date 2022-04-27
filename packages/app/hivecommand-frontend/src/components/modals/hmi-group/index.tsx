@@ -11,7 +11,19 @@ import { HMIGroupProvider } from './context';
 
 const PORT_ANCHOR = {x: 300, y: 60}
 
-export const HMIGroupModal = (props) => {
+export interface HMIGroupModalProps {
+	onSubmit?: (item: any) => void
+	onClose?: () => void;
+	open: boolean;
+
+	nodeMenu?: any[];
+	base?: any;
+
+	devices?: any[];
+}
+
+
+export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 
 	const [ selected, setSelected ] = useState<{key?: string, id?: string}>({})
 
@@ -27,11 +39,15 @@ export const HMIGroupModal = (props) => {
 		
 	
 		let group = {
-			nodes: nodes,
+			nodes: nodes.map((node) => ({
+				...node,
+				id: node.id.indexOf(`tmp-`) > -1 ? undefined : node.id,
+			})),
 			ports: ports.map((port) => ({
 				...port,
 				x: PORT_ANCHOR.x + port.x,
-				y: PORT_ANCHOR.y + port.y
+				y: PORT_ANCHOR.y + port.y,
+				id: port.id.indexOf('tmp-') > -1 ? undefined : port.id
 			}))
 		}
 
@@ -41,19 +57,49 @@ export const HMIGroupModal = (props) => {
 	useEffect(() => {
 		if(props.base){
 
-			setNodes([{
-				id: 'base',
-				x: 300,
-				y: 0,
-				extras: {
-					scaleX: 1,
-					scaleY: 1,
-					rotation: 0,
-					iconStr: props.base,
-					icon: HMIIcons[props.base]
-				},
-				type: 'hmi-node'
-			}])
+			if(props.base.extras.nodes){
+				console.log({nodes: props.base.extras.nodes});
+
+				setNodes(props.base.extras.nodes?.map((node) => ({
+					...node,
+					width: node.type.width ? `${node.type.width}px` : '55px',
+					height: node.type.height ? `${node.type.height}px` : '55px',
+					extras: {
+						device: node?.devicePlaceholder?.id || node?.extras?.device,
+						scaleX: node.scaleX,
+						scaleY: node.scaleY,
+						rotation: node.rotation,
+						iconStr: node.type.name,
+						icon: HMIIcons[node.type.name]
+					},
+					type: 'hmi-node'
+				})))
+
+				setPorts(props.base.extras.ports.map((port) => ({
+					...port,
+					x: port.x - PORT_ANCHOR.x,
+					y: port.y - PORT_ANCHOR.y,
+				})))
+			}else{
+				const iconString = props.base.extras.iconString;
+				setNodes([{
+					id: 'base',
+					x: 300,
+					y: 0,
+					extras: {
+						scaleX: 1,
+						scaleY: 1,
+						rotation: 0,
+						device: props.base?.devicePlaceholder?.id || props.base?.extras?.device,
+						iconStr: iconString,
+						icon: HMIIcons[iconString]
+					},
+					type: 'hmi-node'
+				}])
+			}
+
+			console.log({base: props.base})
+			
 		}
 	}, [props.base])
 
@@ -63,9 +109,12 @@ export const HMIGroupModal = (props) => {
 		<HMIGroupProvider value={{
 			nodes,
 			ports,
+			devices: props.devices,
 			selected: selected.id,
 			addPort: () => {
-				setPorts([...ports, {id: nanoid()}])
+				setPorts([...ports, {
+					id: `tmp-${nanoid()}`
+				}])
 			},
 			updatePort: (id, update) => {
 				let p = ports.slice()
@@ -100,6 +149,9 @@ export const HMIGroupModal = (props) => {
 					direction="row"
 					height={{min: '400px'}}>
 					<InfiniteCanvas
+						onDelete={() => {
+							console.log("DELETE")
+						}}
 						editable={true}
 						factories={[new HMINodeFactory()]}
 						menu={(
@@ -129,14 +181,20 @@ export const HMIGroupModal = (props) => {
 						}}
 						
 						onDrop={(position, data) => {
-							data.extras.icon = HMIIcons[data.extras.icon]
+							const iconStr = data.extras.icon;
+							const icon = HMIIcons[iconStr];
+
+							console.log("Drop", {data});
 
 							setNodes([...nodes, {
-								id: nanoid(),
+								id: `tmp-${nanoid()}`,
 								x: position.x, 
 								y: position.y,
+								width: data.extras.width,
+								height: data.extras.height,
 								extras: {
-									icon: data.extras.icon || 'Tank',
+									icon: icon,
+									iconStr,
 									rotation: 0
 								},
 								type: HMINodeFactory.TAG
