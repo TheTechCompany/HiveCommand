@@ -7,7 +7,7 @@ import * as Icons from 'grommet-icons';
 import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
 
-import { useQuery as useApollo, gql } from '@apollo/client'
+import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { useAuth } from '@hexhive/auth-ui';
 export interface DevicePageProps {
     match?: any;
@@ -52,6 +52,12 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
             }
         }
     ` )
+
+    const client = useApolloClient()
+
+    const refetch = () => {
+        client.refetchQueries({include: ['Q']})
+    }
 
     const devices = data?.commandDevices || [];
     const programs = data?.commandPrograms || []
@@ -135,9 +141,11 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
         if(device.id){
             updateDevice(device.id, device.name, device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((updated) => {
                 console.log("Update result", updated)
+                refetch()
             })
         }else{
             createDevice(device.name || '', device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((new_device) => {
+                refetch()
                 // if(new_device.item){
                 //     let d: any[] = devices.slice()
                 //     d.push(new_device.item)

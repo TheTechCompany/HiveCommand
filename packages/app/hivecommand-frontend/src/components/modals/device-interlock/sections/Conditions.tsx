@@ -15,8 +15,53 @@ const COMPARATORS = [
 	"!="
 ].map((x) => ({key: x}))
 export const ConditionSection = (props) => {
-	const { interlock, devices, setInterlock } = useContext(DeviceInterlockContext)
 
+	const { interlock, variables, devices, setInterlock } = useContext(DeviceInterlockContext)
+
+	const renderAssertionInput = () => {
+		if(!interlock.assertion?.type) return;
+		switch(interlock.assertion.type){
+			case 'setpoint':
+				return (
+					<FormControl
+						labelKey="name"
+						placeholder="Input Device Setpoint"
+						value={interlock.assertion.setpoint}
+						valueKey="id"
+						onChange={(value) => setInterlock({...interlock, assertion: {...interlock.assertion, setpoint: value} })}
+						options={devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
+				)
+			case 'variable':
+				return (
+					<FormControl
+						placeholder='Input Device Variable'
+						options={variables}
+						labelKey='name'
+						value={interlock.assertion.variable}
+						valueKey='id'
+						onChange={(value) => setInterlock({...interlock, assertion: {...interlock.assertion, variable: value} })}
+						/>
+				)
+			case 'value':
+				return (
+					<FormInput 
+						value={interlock.assertion.value}
+						onChange={(value) => setInterlock({...interlock, assertion: {...interlock.assertion, value} })}
+						placeholder="Input Device State Value" />
+				)
+		}
+		// {(interlock.valueType && interlock.valueType == "setpoint") ?  (
+		// 	<FormControl
+		// 		labelKey="name"
+		// 		placeholder="Input Device Setpoint"
+		// 		value={interlock.assertion}
+		// 		onChange={(value) => setInterlock({...interlock, assertion: value})}
+		// 		options={devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
+		// ) : <FormInput 
+		// 	value={interlock.assertion}
+		// 	onChange={(value) => setInterlock({...interlock, assertion: value})}
+		// 	placeholder="Input Device State Value" /> }
+	}
 
 	console.log(interlock)
 
@@ -47,20 +92,10 @@ export const ConditionSection = (props) => {
 					<FormControl 
 						placeholder="Value Type"
 						labelKey="label"
-						value={interlock.valueType || 'value'}
-						onChange={(value) => setInterlock({...interlock, valueType: value})}
-						options={[{id: 'value', label: "Value"} , {id: 'setpoint', label: "Setpoint"}]} />
-					{(interlock.valueType && interlock.valueType == "setpoint") ?  (
-						<FormControl
-							labelKey="name"
-							placeholder="Input Device Setpoint"
-							value={interlock.assertion}
-							onChange={(value) => setInterlock({...interlock, assertion: value})}
-							options={devices?.find((a) => a.id == interlock?.inputDevice)?.setpoints || []} /> 
-					) : <FormInput 
-						value={interlock.assertion}
-						onChange={(value) => setInterlock({...interlock, assertion: value})}
-						placeholder="Input Device State Value" /> }
+						value={interlock.assertion?.type || 'value'}
+						onChange={(value) => setInterlock({...interlock, assertion: {...interlock.assertion, type: value}})}
+						options={[{id: 'value', label: "Value"} , {id: 'setpoint', label: "Setpoint"}, {id: 'variable', label: "Variable"}]} />
+					{renderAssertionInput()}
 				</Box>
 		</Box>
 	)

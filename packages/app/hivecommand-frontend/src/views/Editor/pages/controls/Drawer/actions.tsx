@@ -1,0 +1,74 @@
+import { AssignFlowModal } from "../../../../../components/modals/assign-flow";
+import { Box, Button, List, Text } from "grommet";
+import { MoreVertical, Add } from 'grommet-icons';
+import React, { useState } from "react";
+import { useCreateHMIAction, useDeleteHMIAction } from "@hive-command/api";
+import { useHMIContext } from "../context";
+
+export const ActionMenu = () => {
+    const [ assignModalOpen, openAssignModal ] = useState<boolean>(false);
+    const [ selectedHMIAction, setSelectedHMIAction ] = useState<any>(undefined)
+    
+
+    const { programId, actions, flows, refetch } = useHMIContext();
+
+    const createHMIAction = useCreateHMIAction(programId)
+    const deleteHMIAction = useDeleteHMIAction(programId)
+
+    
+    return (
+        <Box flex>
+             <AssignFlowModal   
+                flows={flows}
+                selected={selectedHMIAction}
+                onDelete={() => {
+                    deleteHMIAction(selectedHMIAction.id).then(() => {
+                        openAssignModal(false)
+                        setSelectedHMIAction(undefined)
+                        refetch()
+                    })
+                }}
+                onClose={() => openAssignModal(false)}
+                onSubmit={(assignment) => {
+                    createHMIAction(
+                        assignment.name,
+                        assignment.flow, 
+                    ).then(() => {
+                        openAssignModal(false);
+                        refetch()
+
+
+                    })
+                }}
+                open={assignModalOpen} />
+        <Box  pad="xsmall" background={"accent-1"} direction="row" justify="between">
+            <Text>Action Palette</Text>
+            <Button 
+                onClick={() => openAssignModal(true)}
+                style={{padding: 6, borderRadius: 3}} 
+                plain 
+                hoverIndicator
+                icon={<Add size="small" />} />
+        </Box>
+
+        <List
+            pad={'none'} 
+            primaryKey={'name'}
+            data={actions || []}>
+            {(datum) => (
+                <Box pad="xsmall" direction='row' justify='between' align='center'>
+                    <Text size="small">{datum?.name}</Text>
+                    <Button                                 
+                        style={{padding: 6, borderRadius: 3}}
+                        hoverIndicator 
+                        onClick={() => {
+                            openAssignModal(true)
+                            setSelectedHMIAction(datum)
+                        }}
+                        icon={<MoreVertical size="small" />} />
+                </Box>
+            )}
+        </List>
+    </Box>
+    )
+}

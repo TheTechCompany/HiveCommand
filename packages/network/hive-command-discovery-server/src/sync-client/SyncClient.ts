@@ -4,7 +4,7 @@ import async, { AsyncFunction, series } from 'async';
 import { ApplicationDescription, DataType, ReferenceDescription, ServerOnNetwork, Variant } from 'node-opcua';
 import os from 'os';
 import { DiscoveryServer } from '..';
-import { Models } from '@hive-command/data-types'
+import { Models } from '@hive-command/data'
 import { Pool, PoolClient } from "pg";
 import { publishToILP } from '../data/ilp';
 

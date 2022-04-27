@@ -337,10 +337,11 @@ export default () => {
 				setInfoTarget(undefined)
 			}}
 			onSelect={(select) => {
-				let node = program.hmi?.[0]?.nodes?.concat(program?.hmi?.[0]?.groups).find((a) => a.id == select.id)
+				console.log({hmi: program.interface});
+				let node = program.interface?.nodes?.find((a) => a.id == select.id)
 
 				const { x, y, scaleX, scaleY} = node;
-				setInfoTarget({x: x + (node.width || node?.type?.width), y: y})
+				setInfoTarget({x: x + (node.type.width || node?.type?.width), y: y})
 				
 				setSelected(select)
 			}}

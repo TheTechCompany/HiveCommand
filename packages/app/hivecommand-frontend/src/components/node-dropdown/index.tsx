@@ -14,7 +14,7 @@ export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
     const [ expanded, setExpanded ] = useState(false)
 
     return (
-      
+            <Box flex>
                     
                     <BlockTray 
                         renderItem={(block) => (
@@ -26,11 +26,29 @@ export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
                             justify={block.extras?.dimensions ? "center" : 'start'}
                             align="center"
                             direction="row">
-                            {block.icon}
+
+
+                            {/* <Box 
+                                style={{cursor: 'pointer'}}
+                                background="neutral-4" 
+                                round="xsmall" 
+                                pad={{horizontal: "xsmall"}}>
+                                {node.icon} 
+                            </Box>
+                        ) */}
+                                <div style={{position: 'relative'}}>
+                                    {React.cloneElement(block.icon, {style: {stroke: 'gray', width: `${block.extras.width}px`, height: `${block.extras.height}px`}})}
+                                </div>
                             <Box 
-                                style={block.extras?.dimensions || {marginLeft: 8}}>{block.content || block?.label}</Box>
+                                style={
+                                    block.extras?.dimensions || 
+                                    {marginLeft: 8}
+                                }>
+                                    {block.content || block?.label}
+                            </Box>
                         </Box>)}
                         blocks={props.items as any} />
+                </Box>
 
     )
 }

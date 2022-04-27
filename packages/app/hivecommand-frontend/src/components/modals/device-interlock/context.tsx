@@ -7,17 +7,19 @@ export interface DeviceInterlock {
 	inputDeviceKey?: string,
 	comparator?: string,
 	assertion?: {
+		type?: string,
 		setpoint?: string,
+		variable?: string,
 		value?: string
 	},
 	state?: {id?: string, device: string, deviceKey: string, comparator: string, assertion: any }[],
-	valueType?: string,
 	action?: string
 }
 export const DeviceInterlockContext = React.createContext<{
 	device?: any,
 	devices?: any[],
-	actions?: any[]
+	actions?: any[],
+	variables?: any[],
 	interlock?: DeviceInterlock,
 	setInterlock?: (interlock: DeviceInterlock) => void
 }>({

@@ -180,7 +180,7 @@ export const Devices = (props) => {
 								justify="between"
 								align="center"
 								direction="row">
-								<Text size="small">{datum.name}</Text>
+								<Text size="small">{datum.name} - {datum.type?.name}</Text>
 							{datum.plugins?.length > 0 && (
 								<Button 
 									disabled
