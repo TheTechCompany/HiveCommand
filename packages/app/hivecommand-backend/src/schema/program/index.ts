@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { mergeResolvers } from '@graphql-tools/merge'
 import io from './io'
+import variables from "./variables";
 
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
@@ -8,6 +9,7 @@ import { nanoid } from "nanoid";
 export default (prisma: PrismaClient) => {
 	
 	const { typeDefs: ioTypeDefs, resolvers: ioResolvers } = io(prisma)
+	const { typeDefs: variableTypeDefs, resolvers: variableResolvers } = variables(prisma)
 
 	const resolvers = mergeResolvers([
 		{
@@ -21,9 +23,35 @@ export default (prisma: PrismaClient) => {
 						where: whereArgs,
 						include: {
 							type: {
-								include: {actions: true, state: true}
+								include: {
+									actions: true, 
+									state: true
+								}
+							},
+							interlocks: {
+								include: {
+									action: true,
+									inputDevice: true,
+									inputDeviceKey: true,
+									assertion: {
+										include: {
+											setpoint: true,
+											variable: true
+										}
+									}
+								}
+							},
+							setpoints: {
+								include: {
+									key: true
+								}
 							}
 						}
+					})
+				},
+				variables: async (root: any, args: any, context: any) => {
+					return await prisma.programVariable.findMany({
+						where: {program: {id: root.id}}
 					})
 				}
 			},
@@ -41,9 +69,26 @@ export default (prisma: PrismaClient) => {
 										type: true,
 										devicePlaceholder: true,
 										inputs: true,
-										outputs: true
+										outputs: true,
+										children: {
+											include: {
+												type: true,
+												devicePlaceholder: true
+											}
+										},
+										ports: true
 									}
 								},
+								// groups: {
+								// 	include: {
+								// 		nodes: {
+								// 			include: {
+								// 				type: true
+								// 			}
+								// 		},
+								// 		ports: true
+								// 	}
+								// },
 								edges: {
 									include: {
 										from: true,
@@ -84,7 +129,18 @@ export default (prisma: PrismaClient) => {
 								include: { 
 									from: true, 
 									to: true, 
-									conditions: {include: {inputDevice: true, inputDeviceKey: true}}
+									conditions: {
+										include: {
+											inputDevice: true, 
+											inputDeviceKey: true,
+											assertion: {
+												include: {
+													setpoint: true,
+													variable: true
+												}
+											}
+										}
+									}
 								}
 							}
 						}
@@ -251,6 +307,20 @@ export default (prisma: PrismaClient) => {
 					return res != null
 				},
 				createCommandProgramFlowEdgeCondition: async (root: any, args: any) => {
+					let assertionCreate : any = {
+
+					};
+					if(args.input.assertion.type == 'value'){
+						assertionCreate['value'] = args.input.assertion.value;
+					}else if(args.input.assertion.type == 'setpoint'){
+						assertionCreate['setpoint'] = {
+							connect: {id: args.input.assertion.setpoint}
+						}
+					}else if(args.input.assertion.type == 'variable'){
+						assertionCreate['variable'] = {
+							connect: {id: args.input.assertion.variable}
+						}
+					}
 					return await prisma.programFlowEdgeCondition.create({
 						data: {
 							id: nanoid(),
@@ -261,7 +331,13 @@ export default (prisma: PrismaClient) => {
 								connect: {id: args.input.inputDeviceKey}
 							},
 							comparator: args.input.comparator,
-							assertion: args.input.assertion,
+							assertion: {
+								create: {
+									id: nanoid(),
+									type: args.input.assertion.type,
+									...assertionCreate
+								}
+							}, 
 							edge: {
 								connect: {id: args.edge}
 							}
@@ -272,16 +348,48 @@ export default (prisma: PrismaClient) => {
 				updateCommandProgramFlowEdgeCondition: async (root: any, args: any) => {
 					let update : any = {};
 
+					let assertionUpdate : any = {};
 					if(args.input){
 						if(args.input.inputDeviceKey) update['inputDeviceKey'] = {connect: {id: args.input.inputDeviceKey}}
 						if(args.input.inputDevice) update['inputDevice'] = {connect: {id: args.input.inputDevice}}
+
+						if(args.input.assertion.type == 'value'){
+							assertionUpdate['value'] = args.input.assertion.value;
+							assertionUpdate['setpoint'] = {
+								disconnect: true
+							}
+							assertionUpdate['variable'] = {
+								disconnect: true
+							}
+						}else if(args.input.assertion.type == 'setpoint'){
+							assertionUpdate['value'] = undefined
+							assertionUpdate['setpoint'] = {
+								connect: {id: args.input.assertion.setpoint}
+							}
+							assertionUpdate['variable'] = {
+								disconnect: true
+							}
+						}else if(args.input.assertion.type == 'variable'){
+							assertionUpdate['variable'] = {
+								connect: {id: args.input.assertion.variable}
+							}
+							assertionUpdate['setpoint'] = {
+								disconnect: true
+							}
+							assertionUpdate['value'] = undefined
+						}
 					}
 					return await prisma.programFlowEdgeCondition.update({
 						where: {id: args.id},
 						data: {
 							...update,
 							comparator: args.input.comparator,
-							assertion: args.input.assertion
+							assertion: {
+								update: {
+									type: args.input.assertion.type,
+									...assertionUpdate
+								}
+							}
 						}
 					})
 				},
@@ -291,12 +399,14 @@ export default (prisma: PrismaClient) => {
 				}
 			}
 		},
-		ioResolvers
+		ioResolvers,
+		variableResolvers
 	])
 	
 	const typeDefs = `
 
 	${ioTypeDefs}
+	${variableTypeDefs}
 
 	type Query {
 		commandPrograms(where: CommandProgramWhere): [CommandProgram]!
@@ -350,7 +460,9 @@ export default (prisma: PrismaClient) => {
 		interface: CommandProgramHMI
 
 		devices(where: CommandProgramDeviceWhere): [CommandProgramDevicePlaceholder]
+		
 		alarms: [CommandProgramAlarm] 
+		variables: [CommandProgramVariable]
 
 		createdAt: DateTime 
 
@@ -444,7 +556,7 @@ export default (prisma: PrismaClient) => {
 		inputDevice: ID
 		inputDeviceKey: String
 		comparator: String
-		assertion: String
+		assertion: CommandAssertionInput
 	}
 
 	type CommandProgramEdgeCondition {
@@ -453,7 +565,7 @@ export default (prisma: PrismaClient) => {
 		inputDevice: CommandProgramDevicePlaceholder
 		inputDeviceKey: CommandProgramDeviceState 
 		comparator: String
-		assertion: String
+		assertion: CommandAssertion
 
 		flow: CommandProgramFlow 
 	}

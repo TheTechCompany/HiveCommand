@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid"
-import { mutation, useMutation } from "../../gqty"
+import { CommandAssertionInput, mutation, useMutation } from "../../gqty"
 
 export const useCreateProgramPlaceholder = (programId: string) => {
 	
@@ -215,7 +215,10 @@ export const useUpdatePlaceholderSetpoint = (programId: string, deviceId: string
 			device: deviceId,
 			id: args.setpointId,
 			input: {
-
+				name: args.name,
+				key: args.key,
+				type: args.type,
+				value: args.value
 			}
 			// where: {id: programId},
 			// update: {
@@ -275,7 +278,10 @@ export const useCreatePlaceholderSetpoint = (programId: string, deviceId: string
 			program: programId,
 			device: deviceId,
 			input: {
-
+				name: args.name,
+				type: args.type,
+				value: args.value,
+				key: args.key
 			}
 			// where: {id: programId},
 			// update: {
@@ -329,28 +335,32 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 		inputDevice: string,
 		inputDeviceKey: string,
 		comparator: string,
-		assertion: string,
+		assertion: CommandAssertionInput,
 		action: string,
 		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	}) => {
 
-		let assertionValue = {};
-		if(args.type == "setpoint"){
-			assertionValue = {
-				setpoint: {connect: {where: {node: {id: args.assertion}}}}
-			}
-		}else if(args.type == "value"){
-			assertionValue = {
-				value: args.assertion
-			}
-		}
+		// let assertionValue = {};
+		// if(args.type == "setpoint"){
+		// 	assertionValue = {
+		// 		setpoint: {connect: {where: {node: {id: args.assertion}}}}
+		// 	}
+		// }else if(args.type == "value"){
+		// 	assertionValue = {
+		// 		value: args.assertion
+		// 	}
+		// }
 
 		const item = mutation.createCommandProgramDeviceInterlock({
 			program: programId,
 			device: deviceId,
 			input: {
-
-			}
+				inputDevice: args.inputDevice,
+				inputDeviceKey: args.inputDeviceKey,
+				comparator: args.comparator,
+				assertion: args.assertion,
+				action: args.action
+			}	
 			// where: {id: programId},
 			// update: {
 			// 	devices: [{
@@ -396,7 +406,7 @@ export const useCreatePlaceholderInterlock = (programId: string, deviceId: strin
 		inputDeviceKeyId: string,
 		type: string,
 		comparator: string,
-		assertion: string,
+		assertion: CommandAssertionInput,
 		action: string,
 		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	) => {
@@ -423,7 +433,7 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 		inputDeviceKey: string,
 		type: string,
 		comparator: string,
-		assertion: string,
+		assertion: CommandAssertionInput,
 		action: string,
 		state?: {id?: string, device: string, deviceKey: string, comparator: string, assertion: string}[]
 	}) => {
@@ -460,7 +470,11 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 			device: deviceId,
 			id: args.interlockId,
 			input: {
-
+				inputDevice: args.inputDevice,
+				inputDeviceKey: args.inputDeviceKey,
+				comparator: args.comparator,
+				assertion: args.assertion,
+				action: args.action
 			}
 			// where: {id: programId},
 			// update: {
@@ -540,7 +554,7 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 		inputDeviceKeyId: string,
 		type: string,
 		comparator: string,
-		assertion: string,
+		assertion: CommandAssertionInput,
 		action: string,
 		state?: {device: string, deviceKey: string, comparator: string, assertion: string}[]
 	) => {

@@ -9,6 +9,7 @@ export const useCreateHMIAction = (programId: string) => {
         flow: string[];
       }
     ) => {
+      // const item = mutation.createCommandProgramInterfaceGroup()
       // const item = mutation.updateCommandPrograms({
       //   where: { id: programId },
       //   update: {
@@ -75,12 +76,30 @@ export interface HMIGroupNode {
 	y: number
  }
 
-export const useCreateHMIGroup = (programId: string) => {
+export const useUpdateHMIGroup = (programId: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
+    node: string,
 		nodes: HMIGroupNode[]
 		ports: HMIGroupPort[]
 	}) => {
+
+    const item = mutation.updateCommandProgramInterfaceNode({
+      id: args.node,
+      input: {
+        children: args.nodes,
+        ports: args.ports
+      }
+    })
+
+    // const item = mutation.createCommandProgramInterfaceGroup({
+    //   program: programId,
+    //   node: args.node,
+    //   input: {
+    //     nodes: args.nodes,
+    //     ports: args.ports,
+    //   }
+    // })
 	
 		// const item = mutation.updateCommandPrograms({
 		// 	where: {id: programId},
@@ -126,11 +145,18 @@ export const useCreateHMIGroup = (programId: string) => {
 		// 		...item.commandPrograms?.[0]
 		// 	}
 		// }
+
+    return {
+      item: {
+        ...item
+      }
+    }
 	})
 
-	return async (nodes: HMIGroupNode[], ports: HMIGroupPort[]) => {
+	return async (nodeId: string, nodes: HMIGroupNode[], ports: HMIGroupPort[]) => {
 		return await mutateFn({
 			args: {
+        node: nodeId,
 				nodes,
 				ports
 			}
@@ -139,31 +165,44 @@ export const useCreateHMIGroup = (programId: string) => {
 
 };
 
-export const useUpdateHMIGroup = () => {
+// export const useUpdateHMIGroup = () => {
 	
-	const [ mutateFn ] = useMutation((mutation, args: {
-		id: string,
-		x: number,
-		y: number
-	}) => {
-		// const item = mutation.updateCommandHMIGroups({
-		// 	where: {id: args.id},
-		// 	update: {
-		// 		x: args.x,
-		// 		y: args.y
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandHmiGroups?.[0]
-		// 	}
-		// }
-	})
-	return async (id: string, x: number, y: number) => {
+// 	const [ mutateFn ] = useMutation((mutation, args: {
+// 		id: string,
+// 		x: number,
+// 		y: number
+// 	}) => {
 
-		return await mutateFn({args: {id, x, y}})
-	}
-};
+//     const item = mutation.updateCommandProgramInterfaceGroup({
+//       id: args.id,
+//       input: {
+//         x: args.x,
+//         y: args.y
+//       }
+//     })
+// 		// const item = mutation.updateCommandHMIGroups({
+// 		// 	where: {id: args.id},
+// 		// 	update: {
+// 		// 		x: args.x,
+// 		// 		y: args.y
+// 		// 	}
+// 		// })
+// 		// return {
+// 		// 	item: {
+// 		// 		...item.commandHmiGroups?.[0]
+// 		// 	}
+// 		// }
+//     return {
+//       item: {
+//         ...item
+//       }
+//     }
+// 	})
+// 	return async (id: string, x: number, y: number) => {
+
+// 		return await mutateFn({args: {id, x, y}})
+// 	}
+// };
 
 export const useCreateHMINode = (programId: string) => {
   const [mutateFn] = useMutation(

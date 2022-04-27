@@ -23,7 +23,47 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					include: {
 						activeProgram: {
 							include: {
-								interface: {include: {nodes: {include: {type: true}}, edges: {include: {from: true, to: true}}, actions: true}},
+								interface: {
+									include: {
+										nodes: {
+											include: {
+												type: true,
+												devicePlaceholder: {
+													include: {
+														type: {
+															include: {
+																actions: true,
+																state: true
+															}
+														}
+													}
+												},
+												children: {
+													include: {
+														type: true,
+														devicePlaceholder: {
+															include: {
+																type: {
+																	include: {
+																		actions: true,
+																		state: true
+																	}
+																}
+															}
+														}
+													}
+												},
+												ports: true
+											}
+										}, 
+										edges: {
+											include: {
+												from: true, to: true
+											}
+										}, 
+										actions: true
+									}
+								},
 							}
 						}
 					}

@@ -92,9 +92,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         let program = props.program
         if(program){
             let hmi = program.interface //TODO change to a default flag on the HMI
-            console.log("Loading HMI", {program})
-            setNodes(hmi?.nodes?.map((x) => {
-                // console.log( "VAL", x.devicePlaceholder, props.deviceValues, props.deviceValues.find((a) => a.device == x.devicePlaceholder))
+
+            const nodes = hmi?.nodes?.filter((a) => !a.children || a.children.length == 0);
+            const groups = hmi?.nodes?.filter((a) => a.children && a.children.length > 0);
+
+            setNodes(nodes?.map((x) => {
+
                 return {
                     id: x.id,
                     x: x.x,
@@ -117,7 +120,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     type: 'hmi-node',
                 }
                 
-            }).concat((hmi?.groups || []).map((group) => ({
+            }).concat((groups || []).map((group) => ({
                 id: group.id,
                 x: group.x || 0,
                 y: group.y || 0,
@@ -125,7 +128,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 height: `${group.height}px`,
                 type: 'hmi-node',
                 extras: {
-                    nodes: group.nodes?.map((x) => ({
+                    nodes: group.children?.map((x) => ({
                         id: x.id,
                         x: x.x,
                         y: x.y,
@@ -214,11 +217,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     paths={pathRef.current.paths}
                     factories={[new IconNodeFactory(), new HMINodeFactory()]}
                     onPathCreate={(path) => {
-                        // console.log("CREATE", path)
-                        // setPat'hs([...paths, path])
-
-
-
+        
                         updateRef.current?.addPath(path);
                     }}
                 

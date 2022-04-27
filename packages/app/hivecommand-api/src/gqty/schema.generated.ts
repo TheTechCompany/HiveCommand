@@ -37,8 +37,18 @@ export interface ComandProgramInterfaceEdgeInput {
   toHandle?: InputMaybe<Scalars["String"]>;
 }
 
+export interface ComandProgramInterfaceGroupInput {
+  nodes?: InputMaybe<Array<InputMaybe<ComandProgramInterfaceNodeInput>>>;
+  ports?: InputMaybe<Array<InputMaybe<CommandHMIPortInput>>>;
+  x?: InputMaybe<Scalars["Float"]>;
+  y?: InputMaybe<Scalars["Float"]>;
+}
+
 export interface ComandProgramInterfaceNodeInput {
+  children?: InputMaybe<Array<InputMaybe<ComandProgramInterfaceNodeInput>>>;
   devicePlaceholder?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["String"]>;
+  ports?: InputMaybe<Array<InputMaybe<CommandHMIPortInput>>>;
   rotation?: InputMaybe<Scalars["Float"]>;
   scaleX?: InputMaybe<Scalars["Float"]>;
   scaleY?: InputMaybe<Scalars["Float"]>;
@@ -49,14 +59,41 @@ export interface ComandProgramInterfaceNodeInput {
   z?: InputMaybe<Scalars["Int"]>;
 }
 
+export interface CommandAssertionInput {
+  setpoint?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<Scalars["String"]>;
+  value?: InputMaybe<Scalars["String"]>;
+  variable?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandDeviceInput {
   name?: InputMaybe<Scalars["String"]>;
   network_name?: InputMaybe<Scalars["String"]>;
   program?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandDevicePluginConfigurationInput {
+  key?: InputMaybe<Scalars["String"]>;
+  value?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandDevicePluginInput {
+  config?: InputMaybe<Array<InputMaybe<CommandDevicePluginConfigurationInput>>>;
+  plugin?: InputMaybe<Scalars["String"]>;
+  rules?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandDeviceWhere {
   id?: InputMaybe<Scalars["ID"]>;
+}
+
+export interface CommandHMIPortInput {
+  id?: InputMaybe<Scalars["String"]>;
+  key?: InputMaybe<Scalars["String"]>;
+  length?: InputMaybe<Scalars["Float"]>;
+  rotation?: InputMaybe<Scalars["Float"]>;
+  x?: InputMaybe<Scalars["Float"]>;
+  y?: InputMaybe<Scalars["Float"]>;
 }
 
 export interface CommandProgramDeviceInput {
@@ -66,16 +103,14 @@ export interface CommandProgramDeviceInput {
 
 export interface CommandProgramDeviceInterlockInput {
   action?: InputMaybe<Scalars["String"]>;
+  assertion?: InputMaybe<CommandAssertionInput>;
   comparator?: InputMaybe<Scalars["String"]>;
   inputDevice?: InputMaybe<Scalars["String"]>;
   inputDeviceKey?: InputMaybe<Scalars["String"]>;
 }
 
-export interface CommandProgramDevicePluginInput {
-  name?: InputMaybe<Scalars["String"]>;
-}
-
 export interface CommandProgramDeviceSetpointInput {
+  key?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<Scalars["String"]>;
   value?: InputMaybe<Scalars["String"]>;
@@ -86,7 +121,7 @@ export interface CommandProgramDeviceWhere {
 }
 
 export interface CommandProgramFlowEdgeConditionInput {
-  assertion?: InputMaybe<Scalars["String"]>;
+  assertion?: InputMaybe<CommandAssertionInput>;
   comparator?: InputMaybe<Scalars["String"]>;
   inputDevice?: InputMaybe<Scalars["ID"]>;
   inputDeviceKey?: InputMaybe<Scalars["String"]>;
@@ -125,6 +160,12 @@ export interface CommandProgramInput {
   name?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandProgramVariableInput {
+  defaultValue?: InputMaybe<Scalars["String"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandProgramWhere {
   id?: InputMaybe<Scalars["ID"]>;
 }
@@ -152,8 +193,17 @@ export const generatedSchema = {
     to: { __type: "String" },
     toHandle: { __type: "String" },
   },
+  ComandProgramInterfaceGroupInput: {
+    nodes: { __type: "[ComandProgramInterfaceNodeInput]" },
+    ports: { __type: "[CommandHMIPortInput]" },
+    x: { __type: "Float" },
+    y: { __type: "Float" },
+  },
   ComandProgramInterfaceNodeInput: {
+    children: { __type: "[ComandProgramInterfaceNodeInput]" },
     devicePlaceholder: { __type: "String" },
+    id: { __type: "String" },
+    ports: { __type: "[CommandHMIPortInput]" },
     rotation: { __type: "Float" },
     scaleX: { __type: "Float" },
     scaleY: { __type: "Float" },
@@ -169,6 +219,20 @@ export const generatedSchema = {
     id: { __type: "ID!" },
     release: { __type: "Boolean" },
     request: { __type: "CommandProgramDeviceAction" },
+  },
+  CommandAssertion: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID!" },
+    setpoint: { __type: "CommandDeviceSetpoint" },
+    type: { __type: "String" },
+    value: { __type: "String" },
+    variable: { __type: "CommandProgramVariable" },
+  },
+  CommandAssertionInput: {
+    setpoint: { __type: "String" },
+    type: { __type: "String" },
+    value: { __type: "String" },
+    variable: { __type: "String" },
   },
   CommandDevice: {
     __typename: { __type: "String!" },
@@ -223,10 +287,19 @@ export const generatedSchema = {
   },
   CommandDevicePlugin: {
     __typename: { __type: "String!" },
-    configuration: { __type: "[CommandKeyValue]" },
+    config: { __type: "[CommandKeyValue]" },
     id: { __type: "ID!" },
     plugin: { __type: "CommandProgramDevicePlugin" },
     rules: { __type: "CommandProgramFlow" },
+  },
+  CommandDevicePluginConfigurationInput: {
+    key: { __type: "String" },
+    value: { __type: "String" },
+  },
+  CommandDevicePluginInput: {
+    config: { __type: "[CommandDevicePluginConfigurationInput]" },
+    plugin: { __type: "String" },
+    rules: { __type: "String" },
   },
   CommandDeviceReport: {
     __typename: { __type: "String!" },
@@ -344,10 +417,18 @@ export const generatedSchema = {
     x: { __type: "Float" },
     y: { __type: "Float" },
   },
+  CommandHMIPortInput: {
+    id: { __type: "String" },
+    key: { __type: "String" },
+    length: { __type: "Float" },
+    rotation: { __type: "Float" },
+    x: { __type: "Float" },
+    y: { __type: "Float" },
+  },
   CommandInterlock: {
     __typename: { __type: "String!" },
     action: { __type: "CommandProgramDeviceAction" },
-    assertion: { __type: "CommandInterlockAssertion" },
+    assertion: { __type: "CommandAssertion" },
     comparator: { __type: "String" },
     device: { __type: "CommandProgramDevicePlaceholder" },
     id: { __type: "ID!" },
@@ -355,16 +436,9 @@ export const generatedSchema = {
     inputDeviceKey: { __type: "CommandProgramDeviceState" },
     state: { __type: "[CommandInterlockState]" },
   },
-  CommandInterlockAssertion: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID!" },
-    setpoint: { __type: "CommandDeviceSetpoint" },
-    type: { __type: "String" },
-    value: { __type: "String" },
-  },
   CommandInterlockState: {
     __typename: { __type: "String!" },
-    assertion: { __type: "CommandInterlockAssertion" },
+    assertion: { __type: "CommandAssertion" },
     comparator: { __type: "String" },
     device: { __type: "CommandProgramDevicePlaceholder" },
     deviceKey: { __type: "CommandProgramDeviceState" },
@@ -398,6 +472,7 @@ export const generatedSchema = {
     organisation: { __type: "HiveOrganisation" },
     program: { __type: "[CommandProgramFlow]" },
     usedOn: { __type: "CommandDevice" },
+    variables: { __type: "[CommandProgramVariable]" },
   },
   CommandProgramAction: {
     __typename: { __type: "String!" },
@@ -441,6 +516,7 @@ export const generatedSchema = {
   },
   CommandProgramDeviceInterlockInput: {
     action: { __type: "String" },
+    assertion: { __type: "CommandAssertionInput" },
     comparator: { __type: "String" },
     inputDevice: { __type: "String" },
     inputDeviceKey: { __type: "String" },
@@ -474,13 +550,14 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     id: { __type: "ID!" },
     key: { __type: "String" },
+    order: { __type: "Int" },
     plugin: { __type: "CommandProgramDevicePlugin" },
     requires: { __type: "[CommandProgramDevicePluginConfiguration]" },
     type: { __type: "String" },
     value: { __type: "String" },
   },
-  CommandProgramDevicePluginInput: { name: { __type: "String" } },
   CommandProgramDeviceSetpointInput: {
+    key: { __type: "String" },
     name: { __type: "String" },
     type: { __type: "String" },
     value: { __type: "String" },
@@ -518,7 +595,7 @@ export const generatedSchema = {
   },
   CommandProgramEdgeCondition: {
     __typename: { __type: "String!" },
-    assertion: { __type: "String" },
+    assertion: { __type: "CommandAssertion" },
     comparator: { __type: "String" },
     flow: { __type: "CommandProgramFlow" },
     id: { __type: "ID!" },
@@ -536,7 +613,7 @@ export const generatedSchema = {
     program: { __type: "CommandProgram" },
   },
   CommandProgramFlowEdgeConditionInput: {
-    assertion: { __type: "String" },
+    assertion: { __type: "CommandAssertionInput" },
     comparator: { __type: "String" },
     inputDevice: { __type: "ID" },
     inputDeviceKey: { __type: "String" },
@@ -599,6 +676,20 @@ export const generatedSchema = {
     inputDevice: { __type: "CommandProgramDevicePlaceholder" },
     inputDeviceKey: { __type: "CommandProgramDeviceState" },
   },
+  CommandProgramVariable: {
+    __typename: { __type: "String!" },
+    defaultValue: { __type: "String" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    program: { __type: "CommandProgram" },
+    type: { __type: "String" },
+    value: { __type: "String" },
+  },
+  CommandProgramVariableInput: {
+    defaultValue: { __type: "String" },
+    name: { __type: "String" },
+    type: { __type: "String" },
+  },
   CommandProgramWhere: { id: { __type: "ID" } },
   HiveOrganisation: {
     __typename: { __type: "String!" },
@@ -655,10 +746,10 @@ export const generatedSchema = {
       },
     },
     createCommandProgramDevicePlugin: {
-      __type: "CommandProgramDevicePlugin!",
+      __type: "CommandDevicePlugin!",
       __args: {
         device: "ID!",
-        input: "CommandProgramDevicePluginInput!",
+        input: "CommandDevicePluginInput!",
         program: "ID!",
       },
     },
@@ -712,9 +803,21 @@ export const generatedSchema = {
       __type: "CommandHMIEdge",
       __args: { input: "ComandProgramInterfaceEdgeInput!", program: "ID" },
     },
+    createCommandProgramInterfaceGroup: {
+      __type: "CommandHMIGroup",
+      __args: {
+        input: "ComandProgramInterfaceGroupInput!",
+        node: "ID",
+        program: "ID",
+      },
+    },
     createCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: { input: "ComandProgramInterfaceNodeInput!", program: "ID" },
+    },
+    createCommandProgramVariable: {
+      __type: "CommandProgramVariable!",
+      __args: { input: "CommandProgramVariableInput!", program: "ID!" },
     },
     deleteCommandDevice: { __type: "CommandDevice!", __args: { id: "ID!" } },
     deleteCommandProgram: { __type: "Boolean!", __args: { id: "ID!" } },
@@ -758,9 +861,17 @@ export const generatedSchema = {
       __type: "CommandHMIEdge",
       __args: { id: "ID!", program: "ID" },
     },
+    deleteCommandProgramInterfaceGroup: {
+      __type: "CommandHMIGroup",
+      __args: { id: "ID!", node: "ID", program: "ID" },
+    },
     deleteCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: { id: "ID!", program: "ID" },
+    },
+    deleteCommandProgramVariable: {
+      __type: "CommandProgramVariable!",
+      __args: { id: "ID!", program: "ID!" },
     },
     performDeviceAction: {
       __type: "Boolean",
@@ -796,11 +907,11 @@ export const generatedSchema = {
       },
     },
     updateCommandProgramDevicePlugin: {
-      __type: "CommandProgramDevicePlugin!",
+      __type: "CommandDevicePlugin!",
       __args: {
         device: "ID!",
         id: "ID!",
-        input: "CommandProgramDevicePluginInput!",
+        input: "CommandDevicePluginInput!",
         program: "ID!",
       },
     },
@@ -863,12 +974,29 @@ export const generatedSchema = {
         program: "ID",
       },
     },
+    updateCommandProgramInterfaceGroup: {
+      __type: "CommandHMIGroup",
+      __args: {
+        id: "ID",
+        input: "ComandProgramInterfaceGroupInput!",
+        node: "ID",
+        program: "ID",
+      },
+    },
     updateCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: {
         id: "ID",
         input: "ComandProgramInterfaceNodeInput!",
         program: "ID",
+      },
+    },
+    updateCommandProgramVariable: {
+      __type: "CommandProgramVariable!",
+      __args: {
+        id: "ID!",
+        input: "CommandProgramVariableInput!",
+        program: "ID!",
       },
     },
   },
@@ -903,6 +1031,7 @@ export const generatedSchema = {
       __args: { where: "CommandDeviceWhere" },
     },
     commandInterfaceDevices: { __type: "[CommandHMIDevice!]!" },
+    commandProgramDevicePlugins: { __type: "[CommandProgramDevicePlugin]!" },
     commandProgramDevices: { __type: "[CommandProgramDevice]!" },
     commandProgramFlows: {
       __type: "[CommandProgramFlow]!",
@@ -924,6 +1053,15 @@ export interface CommandActionItem {
   id: ScalarsEnums["ID"];
   release?: Maybe<ScalarsEnums["Boolean"]>;
   request?: Maybe<CommandProgramDeviceAction>;
+}
+
+export interface CommandAssertion {
+  __typename?: "CommandAssertion";
+  id: ScalarsEnums["ID"];
+  setpoint?: Maybe<CommandDeviceSetpoint>;
+  type?: Maybe<ScalarsEnums["String"]>;
+  value?: Maybe<ScalarsEnums["String"]>;
+  variable?: Maybe<CommandProgramVariable>;
 }
 
 export interface CommandDevice {
@@ -979,7 +1117,7 @@ export interface CommandDevicePeripheralProduct {
 
 export interface CommandDevicePlugin {
   __typename?: "CommandDevicePlugin";
-  configuration?: Maybe<Array<Maybe<CommandKeyValue>>>;
+  config?: Maybe<Array<Maybe<CommandKeyValue>>>;
   id: ScalarsEnums["ID"];
   plugin?: Maybe<CommandProgramDevicePlugin>;
   rules?: Maybe<CommandProgramFlow>;
@@ -1116,7 +1254,7 @@ export interface CommandHMIPort {
 export interface CommandInterlock {
   __typename?: "CommandInterlock";
   action?: Maybe<CommandProgramDeviceAction>;
-  assertion?: Maybe<CommandInterlockAssertion>;
+  assertion?: Maybe<CommandAssertion>;
   comparator?: Maybe<ScalarsEnums["String"]>;
   device?: Maybe<CommandProgramDevicePlaceholder>;
   id: ScalarsEnums["ID"];
@@ -1125,17 +1263,9 @@ export interface CommandInterlock {
   state?: Maybe<Array<Maybe<CommandInterlockState>>>;
 }
 
-export interface CommandInterlockAssertion {
-  __typename?: "CommandInterlockAssertion";
-  id: ScalarsEnums["ID"];
-  setpoint?: Maybe<CommandDeviceSetpoint>;
-  type?: Maybe<ScalarsEnums["String"]>;
-  value?: Maybe<ScalarsEnums["String"]>;
-}
-
 export interface CommandInterlockState {
   __typename?: "CommandInterlockState";
-  assertion?: Maybe<CommandInterlockAssertion>;
+  assertion?: Maybe<CommandAssertion>;
   comparator?: Maybe<ScalarsEnums["String"]>;
   device?: Maybe<CommandProgramDevicePlaceholder>;
   deviceKey?: Maybe<CommandProgramDeviceState>;
@@ -1171,6 +1301,7 @@ export interface CommandProgram {
   organisation?: Maybe<HiveOrganisation>;
   program?: Maybe<Array<Maybe<CommandProgramFlow>>>;
   usedOn?: Maybe<CommandDevice>;
+  variables?: Maybe<Array<Maybe<CommandProgramVariable>>>;
 }
 
 export interface CommandProgramAction {
@@ -1246,6 +1377,7 @@ export interface CommandProgramDevicePluginConfiguration {
   __typename?: "CommandProgramDevicePluginConfiguration";
   id: ScalarsEnums["ID"];
   key?: Maybe<ScalarsEnums["String"]>;
+  order?: Maybe<ScalarsEnums["Int"]>;
   plugin?: Maybe<CommandProgramDevicePlugin>;
   requires?: Maybe<Array<Maybe<CommandProgramDevicePluginConfiguration>>>;
   type?: Maybe<ScalarsEnums["String"]>;
@@ -1287,7 +1419,7 @@ export interface CommandProgramEdge {
 
 export interface CommandProgramEdgeCondition {
   __typename?: "CommandProgramEdgeCondition";
-  assertion?: Maybe<ScalarsEnums["String"]>;
+  assertion?: Maybe<CommandAssertion>;
   comparator?: Maybe<ScalarsEnums["String"]>;
   flow?: Maybe<CommandProgramFlow>;
   id: ScalarsEnums["ID"];
@@ -1348,6 +1480,16 @@ export interface CommandProgramNodeFlowConfiguration {
   inputDeviceKey?: Maybe<CommandProgramDeviceState>;
 }
 
+export interface CommandProgramVariable {
+  __typename?: "CommandProgramVariable";
+  defaultValue?: Maybe<ScalarsEnums["String"]>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  program?: Maybe<CommandProgram>;
+  type?: Maybe<ScalarsEnums["String"]>;
+  value?: Maybe<ScalarsEnums["String"]>;
+}
+
 export interface HiveOrganisation {
   __typename?: "HiveOrganisation";
   id: ScalarsEnums["ID"];
@@ -1400,9 +1542,9 @@ export interface Mutation {
   }) => CommandInterlock;
   createCommandProgramDevicePlugin: (args: {
     device: Scalars["ID"];
-    input: CommandProgramDevicePluginInput;
+    input: CommandDevicePluginInput;
     program: Scalars["ID"];
-  }) => CommandProgramDevicePlugin;
+  }) => CommandDevicePlugin;
   createCommandProgramDeviceSetpoint: (args: {
     device: Scalars["ID"];
     input: CommandProgramDeviceSetpointInput;
@@ -1438,10 +1580,19 @@ export interface Mutation {
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
+  createCommandProgramInterfaceGroup: (args: {
+    input: ComandProgramInterfaceGroupInput;
+    node?: Maybe<Scalars["ID"]>;
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandHMIGroup>;
   createCommandProgramInterfaceNode: (args: {
     input: ComandProgramInterfaceNodeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
+  createCommandProgramVariable: (args: {
+    input: CommandProgramVariableInput;
+    program: Scalars["ID"];
+  }) => CommandProgramVariable;
   deleteCommandDevice: (args: { id: Scalars["ID"] }) => CommandDevice;
   deleteCommandProgram: (args: {
     id: Scalars["ID"];
@@ -1495,10 +1646,19 @@ export interface Mutation {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
+  deleteCommandProgramInterfaceGroup: (args: {
+    id: Scalars["ID"];
+    node?: Maybe<Scalars["ID"]>;
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandHMIGroup>;
   deleteCommandProgramInterfaceNode: (args: {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
+  deleteCommandProgramVariable: (args: {
+    id: Scalars["ID"];
+    program: Scalars["ID"];
+  }) => CommandProgramVariable;
   performDeviceAction: (args?: {
     action?: Maybe<Scalars["String"]>;
     deviceId?: Maybe<Scalars["String"]>;
@@ -1530,9 +1690,9 @@ export interface Mutation {
   updateCommandProgramDevicePlugin: (args: {
     device: Scalars["ID"];
     id: Scalars["ID"];
-    input: CommandProgramDevicePluginInput;
+    input: CommandDevicePluginInput;
     program: Scalars["ID"];
-  }) => CommandProgramDevicePlugin;
+  }) => CommandDevicePlugin;
   updateCommandProgramDeviceSetpoint: (args: {
     device: Scalars["ID"];
     id: Scalars["ID"];
@@ -1575,11 +1735,22 @@ export interface Mutation {
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
+  updateCommandProgramInterfaceGroup: (args: {
+    id?: Maybe<Scalars["ID"]>;
+    input: ComandProgramInterfaceGroupInput;
+    node?: Maybe<Scalars["ID"]>;
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandHMIGroup>;
   updateCommandProgramInterfaceNode: (args: {
     id?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceNodeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
+  updateCommandProgramVariable: (args: {
+    id: Scalars["ID"];
+    input: CommandProgramVariableInput;
+    program: Scalars["ID"];
+  }) => CommandProgramVariable;
 }
 
 export interface Query {
@@ -1607,6 +1778,7 @@ export interface Query {
     where?: Maybe<CommandDeviceWhere>;
   }) => Array<Maybe<CommandDevice>>;
   commandInterfaceDevices: Array<CommandHMIDevice>;
+  commandProgramDevicePlugins: Array<Maybe<CommandProgramDevicePlugin>>;
   commandProgramDevices: Array<Maybe<CommandProgramDevice>>;
   commandProgramFlows: (args?: {
     where?: Maybe<CommandProgramFlowWhere>;
@@ -1623,6 +1795,7 @@ export interface Subscription {
 
 export interface SchemaObjectTypes {
   CommandActionItem: CommandActionItem;
+  CommandAssertion: CommandAssertion;
   CommandDevice: CommandDevice;
   CommandDevicePeripheral: CommandDevicePeripheral;
   CommandDevicePeripheralMap: CommandDevicePeripheralMap;
@@ -1642,7 +1815,6 @@ export interface SchemaObjectTypes {
   CommandHMINodeFlow: CommandHMINodeFlow;
   CommandHMIPort: CommandHMIPort;
   CommandInterlock: CommandInterlock;
-  CommandInterlockAssertion: CommandInterlockAssertion;
   CommandInterlockState: CommandInterlockState;
   CommandKeyValue: CommandKeyValue;
   CommandPeripheralProductDatapoint: CommandPeripheralProductDatapoint;
@@ -1665,6 +1837,7 @@ export interface SchemaObjectTypes {
   CommandProgramNode: CommandProgramNode;
   CommandProgramNodeConfiguration: CommandProgramNodeConfiguration;
   CommandProgramNodeFlowConfiguration: CommandProgramNodeFlowConfiguration;
+  CommandProgramVariable: CommandProgramVariable;
   HiveOrganisation: HiveOrganisation;
   HiveUser: HiveUser;
   Mutation: Mutation;
@@ -1674,6 +1847,7 @@ export interface SchemaObjectTypes {
 }
 export type SchemaObjectTypesNames =
   | "CommandActionItem"
+  | "CommandAssertion"
   | "CommandDevice"
   | "CommandDevicePeripheral"
   | "CommandDevicePeripheralMap"
@@ -1693,7 +1867,6 @@ export type SchemaObjectTypesNames =
   | "CommandHMINodeFlow"
   | "CommandHMIPort"
   | "CommandInterlock"
-  | "CommandInterlockAssertion"
   | "CommandInterlockState"
   | "CommandKeyValue"
   | "CommandPeripheralProductDatapoint"
@@ -1716,6 +1889,7 @@ export type SchemaObjectTypesNames =
   | "CommandProgramNode"
   | "CommandProgramNodeConfiguration"
   | "CommandProgramNodeFlowConfiguration"
+  | "CommandProgramVariable"
   | "HiveOrganisation"
   | "HiveUser"
   | "Mutation"

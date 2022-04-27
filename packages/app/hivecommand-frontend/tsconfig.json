@@ -9,6 +9,7 @@
   "include": ["src/**/*", "node_modules/@types"],
   "exclude": ["src/**/*.test*"],
   "references": [
-    {"path": "../hivecommand-api"}
+    {"path": "../hivecommand-api"},
+    {"path": "../../core/command-data-types"}
   ]
 }

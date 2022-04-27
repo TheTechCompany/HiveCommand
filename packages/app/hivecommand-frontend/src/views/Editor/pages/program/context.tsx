@@ -5,6 +5,7 @@ export const ProgramEditorContext = React.createContext<{
 	flow?: {parent?: {id: string}, id: string},
 	program?: {id: string}, 
 	devices?: any[],
+	variables?: any[],
 	// conditions?: {id?: string, input: string, comparator: string, assertion: string}[]
 	activeProgram?: string;
 	selectedType?: string,

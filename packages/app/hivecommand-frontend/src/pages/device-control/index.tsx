@@ -128,66 +128,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             }
 
                         }
-                        groups {
-                            id
-                            x
-                            y
-
-                            width
-                            height
-
-                            nodes {
-                                    id
-                                    type {
-                                        name
-                                    }
-                                    x
-                                    y
-
-                                    z
-                                    scaleX
-                                    scaleY
-                                    rotation
-
-                                    devicePlaceholder {
-                                        id
-                                        name
-                                        type {
-                                            actions {
-                                                key
-                                            }
-        
-                                            state {
-                                                units
-                                                inputUnits
-                                                key
-                                                writable
-                                            }
-                                        }
-
-
-                                        setpoints {
-                                            id
-                                            name
-                                            key {
-                                                id
-                                                key
-                                            }
-                                            value
-                                            type
-                                        }
-        
-                                    }
-                                
-                            }
-                            ports {
-                                id
-                                x
-                                y
-                                rotation
-                                length
-                            }
-                        }
+                        
                         nodes{
        
                                 id
@@ -249,6 +190,26 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     
                                 }
                             
+                            children {
+                                id
+                                type {
+                                    name
+                                    width
+                                    height
+                                }
+                                scaleX
+                                scaleY
+                                x
+                                y
+                            }
+
+                            ports {
+                                id
+                                x
+                                y
+                                length
+                                rotation
+                            }
                             
                         }
                             
@@ -363,8 +324,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const actions = program?.interface?.actions || [];
 
-    const hmi = program?.interface?.nodes || [];
-    const groups = program?.interface?.groups || [];
+    const hmi = program?.interface?.nodes?.filter((a) => !a.children || a.children.length == 0) || [];
+    const groups = program?.interface?.nodes?.filter((a) => a.children && a.children.length > 0) || [];
 
 
     // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {

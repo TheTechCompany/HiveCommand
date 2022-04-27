@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react';
 
-import { Box, Button, Collapsible, List, Text, TextInput } from 'grommet'
+import { Box, Button, Collapsible, List, Select, Text, TextInput } from 'grommet'
 import { Nodes, Subtract, Connect, Add } from 'grommet-icons';
 import { NodeDropdown } from '../../node-dropdown';
 import SvgSettings from '../../../views/Editor/pages/program/Settings';
@@ -12,11 +12,12 @@ export const HMIGroupMenu = (props) => {
 
 	const [ selected, setSelected ] = useState<any>()
 
-	const { selected: selectedNode, nodes, ports, updateNode, addPort, updatePort } = useContext(HMIGroupContext)
+	const { selected: selectedNode, devices, nodes, ports, updateNode, addPort, updatePort } = useContext(HMIGroupContext)
 
 	const renderMenu = () => {
 		let node = nodes.find((a) => a.id == selectedNode)
 
+		console.log({node, devices})
 		switch(selectedMenu){
 			case 'nodes':
 				return (
@@ -25,6 +26,20 @@ export const HMIGroupMenu = (props) => {
 				)
 			case 'settings':
 				return <Box>
+					<Select
+						valueKey={{ reduce: true, key: "id" }}
+						labelKey="name"
+						value={node?.extras?.devicePlaceholder?.id || node?.extras?.device}
+						onChange={({ value }) => {
+							// assignHMINode(selected.id, value).then(() => {
+							// 	refetch()
+							// })
+							updateNode(selectedNode, {
+								device: value
+							})
+						}}
+						options={devices.filter((a) => a.type?.name.replace(/ /, '').indexOf(node?.extras?.iconString || node?.extras?.iconStr ) > -1)}
+						placeholder="Device" />
 					<BumpInput	
 						value={node?.extras?.rotation || 0}
 						leftIcon={<Subtract size="small" />}
@@ -179,7 +194,7 @@ export const HMIGroupMenu = (props) => {
 				active={selectedMenu == 'settings'}
 				hoverIndicator
 				onClick={() => setSelectedMenu(selectedMenu == 'settings' ? undefined : 'settings')}
-				icon={<SvgSettings />} />
+				icon={<SvgSettings  width={30} height={30}/>} />
 
 			<Button
 				active={selectedMenu == 'ports'}
