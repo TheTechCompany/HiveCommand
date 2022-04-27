@@ -117,11 +117,21 @@ export const Program = (props) => {
             id
             name
 
+            variables {
+                id
+                name
+            }
 
             devices {
                 id
                 name
                 requiresMutex
+
+                setpoints {
+                    id
+                    name
+                }
+
                 type {
                     id
                     name
@@ -177,7 +187,21 @@ export const Program = (props) => {
                             key
                         }
                         comparator
-                        assertion
+                        assertion {
+                            id
+                            type
+                            value
+                            setpoint {
+                                id
+                                name
+                                value
+                            }
+                            variable {
+                                id
+                                name
+                                value
+                            }
+                        }
                     }
 
                     toHandle
@@ -488,6 +512,7 @@ export const Program = (props) => {
 
 
     const devices = data?.commandPrograms?.[0].devices || []
+    const variables = data?.commandPrograms?.[0]?.variables || [];
 
     useEffect(() => {
         setConditions(flow?.conditions)
@@ -501,6 +526,7 @@ export const Program = (props) => {
                 flow,
                 refresh: refetch,
                 devices,
+                variables,
                 program,
                 activeProgram: activeProgram,
                 selectedType: selected.key,

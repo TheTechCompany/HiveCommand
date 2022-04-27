@@ -1,6 +1,7 @@
 import { nanoid } from "nanoid";
 import { getProgramSelector } from "..";
-import { useMutation } from "../../gqty";
+import { CommandAssertionInput, useMutation } from "../../gqty";
+
 
 export const useCreatePathCondition = (programId: string, flowId: string, parent?: string) => {
 	const [ mutateFn ] = useMutation((mutation, args: {
@@ -8,7 +9,7 @@ export const useCreatePathCondition = (programId: string, flowId: string, parent
 		inputDevice: string,
 		inputDeviceKey: string,
 		comparator: string,
-		assertion: string
+		assertion: CommandAssertionInput
 	}) => {
 		const item = mutation.createCommandProgramFlowEdgeCondition({
 			edge: args.path,
@@ -28,7 +29,7 @@ export const useCreatePathCondition = (programId: string, flowId: string, parent
 		}
 	})
 
-	return async (id: string, item: {inputDevice: string, inputDeviceKey: string, comparator: string, assertion: string}) => {
+	return async (id: string, item: {inputDevice: string, inputDeviceKey: string, comparator: string, assertion: CommandAssertionInput}) => {
 		return await mutateFn({
 			args: {
 				path: id,
@@ -52,7 +53,7 @@ export const useUpdatePathCondition = (programId: string, flowId: string, parent
 			inputDevice: string,
 			inputDeviceKey: string,
 			comparator: string,
-			assertion: string
+			assertion: CommandAssertionInput
 		}
 	}) => {
 
@@ -234,7 +235,7 @@ export const useUpdatePathCondition = (programId: string, flowId: string, parent
 			inputDevice: string,
 			inputDeviceKey: string ,
 			comparator: string,
-			assertion: string
+			assertion: CommandAssertionInput
 		}
 	) => {
 		return await mutateFn({

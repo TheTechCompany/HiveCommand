@@ -5,6 +5,7 @@ import { mutation, useMutation } from "../gqty"
 export * from './placeholders'
 export * from './conditions'
 export * from './actions'
+export * from './variables'
 
 export const useCreateProgram = (organisation: string) => {
 

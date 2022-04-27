@@ -6,7 +6,7 @@ function SvgSump(props: any) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 94.31 75.79"
-      style={{fill: props?.style?.stroke || '#000'}}
+      style={{fill: props?.style?.stroke || '#000', width: props.style?.width, height: props.style?.height}}
 
     >
       <g>

@@ -1,6 +1,6 @@
 import { Pool, PoolClient, } from 'pg'
 
-import { Models, connect_data, disconnect_data } from '@hive-command/data-types'
+import { Models, connect_data, disconnect_data } from '@hive-command/data'
 const { DeviceValue } = Models;
 
 export class DataBroker {

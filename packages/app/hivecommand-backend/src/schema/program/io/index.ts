@@ -7,6 +7,7 @@ export default (prisma: PrismaClient) => {
 
         type Query {
             commandProgramDevices: [CommandProgramDevice]!
+            commandProgramDevicePlugins: [CommandProgramDevicePlugin]!
         }
 
         type Mutation {
@@ -22,8 +23,8 @@ export default (prisma: PrismaClient) => {
             updateCommandProgramDeviceSetpoint(program: ID!, device: ID!, id: ID!, input: CommandProgramDeviceSetpointInput!): CommandDeviceSetpoint!
             deleteCommandProgramDeviceSetpoint(program: ID!, device: ID!, id: ID!): Boolean!
 
-            createCommandProgramDevicePlugin(program: ID!, device: ID!, input: CommandProgramDevicePluginInput!): CommandProgramDevicePlugin!
-            updateCommandProgramDevicePlugin(program: ID!, device: ID!, id: ID!, input: CommandProgramDevicePluginInput!): CommandProgramDevicePlugin!
+            createCommandProgramDevicePlugin(program: ID!, device: ID!, input: CommandDevicePluginInput!): CommandDevicePlugin!
+            updateCommandProgramDevicePlugin(program: ID!, device: ID!, id: ID!, input: CommandDevicePluginInput!): CommandDevicePlugin!
             deleteCommandProgramDevicePlugin(program: ID!, device: ID!, id: ID!): Boolean!
         }
     
@@ -53,6 +54,8 @@ export default (prisma: PrismaClient) => {
             inputDevice: String
             inputDeviceKey: String
             comparator: String
+            
+            assertion: CommandAssertionInput
 
             action: String
         }
@@ -66,19 +69,26 @@ export default (prisma: PrismaClient) => {
             inputDeviceKey: CommandProgramDeviceState
             comparator: String
 
-            assertion: CommandInterlockAssertion 
+            assertion: CommandAssertion 
             
             action: CommandProgramDeviceAction
 
             device: CommandProgramDevicePlaceholder 
         }
 
+        input CommandAssertionInput {
+            type: String
+            value: String
+            setpoint: String
+            variable: String
+        }
 
-        type CommandInterlockAssertion {
+        type CommandAssertion {
             id: ID! 
             type: String
             value: String
             setpoint: CommandDeviceSetpoint 
+            variable: CommandProgramVariable
         }
 
         type CommandInterlockState {
@@ -86,13 +96,14 @@ export default (prisma: PrismaClient) => {
             device: CommandProgramDevicePlaceholder 
             deviceKey: CommandProgramDeviceState 
             comparator: String
-            assertion: CommandInterlockAssertion 
+            assertion: CommandAssertion 
 
             interlock: CommandInterlock 
         }
 
         input CommandProgramDeviceSetpointInput {
             name: String
+            key: String
             type: String
             value: String
         }
@@ -143,10 +154,7 @@ export default (prisma: PrismaClient) => {
         }
     
 
-        input CommandProgramDevicePluginInput {
-            name: String
-        }
-
+       
         type CommandProgramDevicePlugin {
             id: ID! 
             name: String
@@ -164,16 +172,30 @@ export default (prisma: PrismaClient) => {
             id: ID! 
             key: String
             type: String
+            
+            order: Int
+
             requires: [CommandProgramDevicePluginConfiguration]
             value: String
             plugin: CommandProgramDevicePlugin
+        }
+
+        input CommandDevicePluginConfigurationInput {
+            key: String
+            value: String
+        }
+
+        input CommandDevicePluginInput {
+            plugin: String
+            rules: String
+            config: [CommandDevicePluginConfigurationInput]
         }
 
         type CommandDevicePlugin {
             id: ID! 
             plugin: CommandProgramDevicePlugin 
             rules: CommandProgramFlow 
-            configuration: [CommandKeyValue] 
+            config: [CommandKeyValue] 
         }
 
     
@@ -193,6 +215,18 @@ export default (prisma: PrismaClient) => {
         Query: {
             commandProgramDevices: async (parent: any, args: any, context: any, info: any) => {
                 return await prisma.iOTemplate.findMany();
+            },
+            commandProgramDevicePlugins: async (parent: any, args: any, context: any, info: any) => {
+                return await prisma.iOPluginTemplate.findMany({
+                    include: {
+                        config: {
+                            include: {
+                                requires: true
+                            }
+                        },
+                        
+                    }
+                });
             }
         },
         Mutation: {
@@ -227,23 +261,201 @@ export default (prisma: PrismaClient) => {
                 const res = await prisma.programFlowIO.delete({where: {id: args.id}})
                 return res != null;
             },
-            createCommandProgramDeviceInterlock: () => {
+            createCommandProgramDeviceInterlock: async (root: any, args: any) => {
+                let assertionUpdate : any = {};
+                
+                let assertionType = args.input.assertion.type.toLowerCase();
+
+                if (assertionType == "setpoint") {
+                    assertionUpdate = {
+                        setpoint: {
+                            connect: {id: args.input.assertion.setpoint}
+                        }
+                    }
+                } else if (assertionType == "variable") {
+                    assertionUpdate = {
+                        variable: {
+                            connect: {id: args.input.assertion.variable}
+                        }
+                    }
+
+                } else if (assertionType == "value") {
+                    assertionUpdate = {
+                        value: args.input.assertion.value
+                    }
+                }
+
+                return await prisma.programInterlock.create({
+                    data: {
+                        id: nanoid(),
+                        inputDevice: {
+                            connect: {id: args.input.inputDevice}
+                        },
+                        inputDeviceKey: {
+                            connect: {id: args.input.inputDeviceKey}
+                        },
+                        comparator: args.input.comparator,
+                        assertion: {
+                            create: {
+                                id: nanoid(),
+                                type: args.input.assertion.type,
+                                ...assertionUpdate
+                            }
+                        },
+                        action: {
+                            connect: {id: args.input.action}
+                        },
+                        device: {
+                            connect: {id: args.device}
+                        }
+                    }
+                })
             },
-            updateCommandProgramDeviceInterlock: () => {
+            updateCommandProgramDeviceInterlock: async (root: any, args: any) => {
+                let assertionUpdate : any = {};
+                
+                let assertionType = args.input.assertion.type.toLowerCase();
+
+                if (assertionType == "setpoint") {
+                    assertionUpdate = {
+                        setpoint: {
+                            connect: {id: args.input.assertion.setpoint}
+                        },
+                        variable: {
+                            disconnect: true
+                        },
+                        value: undefined
+                    }
+                } else if (assertionType == "variable") {
+                    assertionUpdate = {
+                        variable: {
+                            connect: {id: args.input.assertion.variable}
+                        },
+                        setpoint: {
+                            disconnect: true
+                        },
+                        value: undefined
+                    }
+
+                } else if (assertionType == "value") {
+                    assertionUpdate = {
+                        value: args.input.assertion.value,
+                        variable: {
+                            disconnect: true
+                        },
+                        setpoint: {
+                            disconnect: true
+                        }
+                    }
+                }
+
+                return await prisma.programInterlock.update({
+                    where: {id: args.id},
+                    data: {
+                        inputDevice: {
+                            connect: {id: args.input.inputDevice}
+                        },
+                        inputDeviceKey: {
+                            connect: {id: args.input.inputDeviceKey}
+                        },
+                        comparator: args.input.comparator,
+                        assertion: {
+                            update: {
+                                type: args.input.assertion.type,
+                                ...assertionUpdate
+                            }
+                        },
+                        action: {
+                            connect: {id: args.input.action},
+                        }
+                    }
+                })
             },
-            deleteCommandProgramDeviceInterlock: () => {
+            deleteCommandProgramDeviceInterlock: async (root: any, args: any) => {
+                return await prisma.programInterlock.delete({where: {id: args.id}});
             },
-            createCommandProgramDeviceSetpoint: () => {
+            createCommandProgramDeviceSetpoint: async (root: any, args: any, context: any) => {
+                return await prisma.programSetpoint.create({
+                    data: {
+                        id: nanoid(),
+                        name: args.input.name,
+                        key: {connect: {id: args.input.key}},
+                        type: args.input.type,
+                        value: args.input.value,
+                        device: {
+                            connect: {id: args.device}
+                        }
+                    }
+                })
             },
-            updateCommandProgramDeviceSetpoint: () => {
+            updateCommandProgramDeviceSetpoint: async (root: any, args: any, context: any) => {
+                return await prisma.programSetpoint.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: {
+                        name: args.input.name,
+                        key: {connect: {id: args.input.key}},
+                        type: args.input.type,
+                        value: args.input.value,
+                        device: {
+                            connect: {id: args.device}
+                        }
+                    }
+                })
             },
-            deleteCommandProgramDeviceSetpoint: () => {
+            deleteCommandProgramDeviceSetpoint: async (root: any, args: any) => {
+                return await prisma.programSetpoint.delete({where: {id: args.id}})
             },
-            createCommandProgramDevicePlugin: () => {
+            createCommandProgramDevicePlugin: async (root: any, args: any, context: any) => {
+                return await prisma.iOPlugin.create({
+                    data: {
+                        id: nanoid(),
+                        rules: {
+                            connect: {id: args.input.rules}
+                        },
+                        plugin: {
+                            connect: {
+                                id: args.input.plugin
+                            }
+                        },
+                        config: {
+                            createMany: args.input.config.map((config: any) => {
+                                return {
+                                    id: nanoid(),
+                                    key: {
+                                        connect: {id: config.key},
+                                    },
+                                    value: config.value
+                                }  
+                            })
+                        },
+                        device: {
+                            connect: {id: args.device}
+                        }
+                    }
+                })
             },
-            updateCommandProgramDevicePlugin: () => {
+            updateCommandProgramDevicePlugin: async (root: any, args: any, context: any) => {
+                return await prisma.iOPlugin.update({
+                    where: {id: args.id},
+                    data: {
+                        rules: {
+                            connect: {id: args.input.rules}
+                        },
+                        plugin: {
+                            connect: { id: args.input.plugin }
+                        },
+                        config: {
+                            updateMany: args.input.config.map((config: any) => {
+
+                            })
+                        }
+                    }
+                })
             },
-            deleteCommandProgramDevicePlugin: () => {
+            deleteCommandProgramDevicePlugin: async (root: any, args: any, context: any) => {
+                return await prisma.iOPlugin.delete({where: {id: args.id}})
             }
         }
     };
