@@ -190,8 +190,3 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:${{ steps.postgres_pass.outputs.pass }}@localhost:5432/hivecommand
         working-directory: ./packages/app/hivecommand-backend/
-
-      - run: npx prisma db seed
-        env:
-          DATABASE_URL: postgresql://postgres:${{ steps.postgres_pass.outputs.pass }}@localhost:5432/hivecommand
-        working-directory: ./packages/app/hivecommand-backend/
