@@ -7,9 +7,8 @@ export const Service = (provider: Provider) => {
     const config = new Config();
 
     const suffix = config.require('suffix');
-    const imageTag = config.require('image-tag');
 
-    const appName = `hivecommand-${suffix}`
+    const appName = `hive-command-${suffix}`
 
     const appLabels = { appClass: appName };
 
