@@ -24,6 +24,7 @@ const main = (async () => {
     
     const rootServer = gatewayRef.getOutput('gatewayUrl');
     const dbUrl = gatewayRef.getOutput('postgres_name');
+    const dbPass = gatewayRef.getOutput('postgres_pass');
 
     const provider = new Provider('eks', { kubeconfig });
 
