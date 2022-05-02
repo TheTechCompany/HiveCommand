@@ -1,0 +1,12 @@
+{
+    "name": "hivecommand-app",
+    "devDependencies": {
+        "@types/node": "^17.0.31"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^5.0.0",
+        "@pulumi/awsx": "^0.40.0",
+        "@pulumi/eks": "^0.37.1",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}
