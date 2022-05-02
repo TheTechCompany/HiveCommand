@@ -8,7 +8,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
     const config = new Config();
 
     const suffix = config.require('suffix');
-    const imageTag = process.env.IMAGE_TAG //config.require('image-tag');
+    const imageTag = process.env.IMAGE_TAG 
 
     const appName = `hive-command-${suffix}`
 
