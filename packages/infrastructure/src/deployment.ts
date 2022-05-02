@@ -1,9 +1,9 @@
 import {Provider} from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
-import { Config, Output } from '@pulumi/pulumi'
+import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>) => {
 
     const config = new Config();
 
@@ -46,7 +46,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
                             {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
 
-                            { name: "DATABASE_URL", value: dbUrl.apply((url) => `postgresql://postgres:${config.require('postgres-password')}@${url}.default.svc.cluster.local:5432/hivecommand`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand`) },
 
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},
