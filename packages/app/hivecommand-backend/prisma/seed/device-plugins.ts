@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 
 export default async (prisma: PrismaClient) => {
 
-    await prisma.iOPluginTemplate.deleteMany({});
+    // await prisma.iOPluginTemplate.deleteMany({});
 
     const actuatorId = nanoid();
     const targetId = nanoid();

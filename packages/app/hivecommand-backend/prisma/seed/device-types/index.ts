@@ -8,8 +8,8 @@ import valves from "./valves";
 import virtual from "./virtual";
 
 export default async (prisma: PrismaClient) => {
-    await prisma.iOTemplate.deleteMany({});
-    await prisma.canvasNodeTemplate.deleteMany({});
+    // await prisma.iOTemplate.deleteMany({});
+    // await prisma.canvasNodeTemplate.deleteMany({});
     
     await membranes(prisma)
     await sensors(prisma);
