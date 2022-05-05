@@ -120,10 +120,14 @@ export const Devices = (props) => {
 				onDelete={() => {
 					deleteDevice(selected.id).then(() => {
 						openModal(false)
+						setSelected(undefined)
+						refetch()
 					})
 				}}
 				onClose={() => {
 					openModal(false);
+					setSelected(undefined)
+
 				}}
 				onSubmit={(device) => {
 					if(device.id){
@@ -132,7 +136,11 @@ export const Devices = (props) => {
 							device.name,
 							device.type,
 							device.requiresMutex,
-						)
+						).then(() => {
+							refetch();
+							openModal(false)
+							setSelected(undefined)
+						})
 					}else{
 						createDevice(
 							device.name,
@@ -141,6 +149,8 @@ export const Devices = (props) => {
 						).then(() => {
 							openModal(false)
 							refetch()
+							setSelected(undefined)
+
 						})
 					}
 
