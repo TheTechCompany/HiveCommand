@@ -11,7 +11,6 @@ import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
 
 const ActionButton = (props) => {
-	console.log(props)
 	return (
 		<Box background="accent-1" direction='row' round="xsmall" width={'100%'} align='center' justify='center' elevation="small">
 			<Button 
@@ -42,14 +41,9 @@ export default () => {
 		{
 			label: 'Manual',
 			key: 'manual'
-		},
-		// {
-		// 	label: 'Timer',
-		// 	key: 'timer'
-		// }
+		}
 	]
 
-	// const [operating, setOperating] = useState<string>('disabled')
 
     const [ infoTarget, setInfoTarget ] = useState<{x?: number, y?: number}>(undefined);
     const [ selected, setSelected ] = useState<{key?: string, id?: string}>(undefined)
@@ -262,10 +256,7 @@ export default () => {
 				  ))}
 				 </Box>
   
-  {/* 
-  
-				  {deviceValues(node?.devicePlaceholder?.name)} */}
-				  <Box align="center" justify="around" direction="row">
+  				  <Box align="center" justify="around" direction="row">
 				  	{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
 					  <Button
 						  plain
