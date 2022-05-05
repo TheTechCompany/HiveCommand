@@ -179,7 +179,7 @@ jobs:
       
       - uses: azure/setup-kubectl@v2.0
 
-      - run: aws eks update-config --name hexhive-cluster-eksCluster-506b63f
+      - run: aws eks update-kubeconfig --name hexhive-cluster-eksCluster-506b63f
    
       - run: kubectl port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
       
