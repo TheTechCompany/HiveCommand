@@ -161,9 +161,6 @@ jobs:
 
       - run: mkdir ~/.kube/
 
-      - run: echo $(pulumi stack -s ultraviolet/apps/staging output kubeconfig) > ~/.kube/config.json
-        working-directory: ./packages/infrastructure
-        id: kube_config
 
       - run: echo "::set-output name=postgres::$(pulumi stack -s ultraviolet/apps/staging output postgres_name)" 
         working-directory: ./packages/infrastructure
@@ -182,9 +179,9 @@ jobs:
       
       - uses: azure/setup-kubectl@v2.0
 
-      - run: sed -e 's/v1alpha1/v1beta1/' ~/.kube/config.json > ~/.kube/config.json
-
-      - run: kubectl --kubeconfig ~/.kube/config.json port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
+      - run: aws eks update-config --name hexhive-cluster-eksCluster-506b63f
+   
+      - run: kubectl port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
       
       - run: sleep 30s
 

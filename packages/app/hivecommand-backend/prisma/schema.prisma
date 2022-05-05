@@ -41,7 +41,7 @@ model DeviceReport {
 
   total Boolean
 
-  dataDevice ProgramFlowIO @relation(name: "hasDataDevice", fields: [dataDeviceId], references: [id])
+  dataDevice ProgramFlowIO @relation(name: "hasDataDevice", fields: [dataDeviceId], references: [id], onDelete: Cascade)
   dataDeviceId String
 
   dataKey IOTemplateState @relation(name: "hasDataKey", fields: [dataKeyId], references: [id])
