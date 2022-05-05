@@ -182,7 +182,7 @@ jobs:
       
       - uses: azure/setup-kubectl@v2.0
 
-      - run: sed -e 's/v1alpha1/v1beta1/' ~/.kube/config.json
+      - run: sed -e 's/v1alpha1/v1beta1/' ~/.kube/config.json > ~/.kube/config.json
 
       - run: kubectl --kubeconfig ~/.kube/config.json port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
       
