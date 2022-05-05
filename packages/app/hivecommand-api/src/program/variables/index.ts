@@ -13,7 +13,11 @@ export const useCreateProgramVariable = (programId: string) => {
 
 		const newItem = mutation.createCommandProgramVariable({
 			program: programId,
-			input: args.input
+			input: {
+				name: args.input.name,
+				type: args.input.type,
+				defaultValue: args.input.defaultValue
+			}
 		})
 
 		return {
@@ -55,7 +59,11 @@ export const useUpdateProgramVariable = (programId: string) => {
 		const newItem = mutation.updateCommandProgramVariable({
 			program: programId,
             id: args.id,
-			input: args.input
+			input: {
+				name: args.input.name,
+				type: args.input.type,
+				defaultValue: args.input.defaultValue
+			}
 		})
 
 		return {

@@ -1,6 +1,6 @@
 import { VariableModal } from "../../../../components/modals/program-variable";
 import { Button, Box, Text, List } from "grommet"
-import { Add } from 'grommet-icons';
+import { Add, MoreVertical } from 'grommet-icons';
 import { useState } from "react";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
@@ -9,6 +9,7 @@ import { useCreateProgramVariable, useDeleteProgramVariable, useUpdateProgramVar
 export const Variables = () => {
 
     const [ modalOpen, openModal ] = useState(false);
+    const [ selected, setSelected ] = useState()
 
     const { id } = useParams()
 
@@ -42,41 +43,63 @@ export const Variables = () => {
     const variables = data?.commandPrograms?.[0]?.variables;
 
     return (
-        <Box flex pad="xsmall">
+        <Box flex >
+                
             <VariableModal 
+                selected={selected}
                 open={modalOpen}
-                onClose={() => openModal(false)}
+                onClose={() => {
+                    openModal(false)
+                    setSelected(undefined)
+
+                }}
                 onSubmit={(variable) => {
                     if(variable.id){
                         updateProgramVariable(variable.id, variable).then(() => {
                             refetch()
                             openModal(false)
+                            setSelected(undefined)
                         })
                     }else{
                         createProgramVariable(variable).then(() => {
                             refetch();
                             openModal(false);
+                            setSelected(undefined)
+
                         })
                     }
                 }}
                 />
-            <Box direction="row" align="center" justify="between">
+            <Box  pad="xsmall" background={'accent-1'} direction="row" align="center" justify="between">
                 <Text>Variables</Text>
                 <Button
                     onClick={() => openModal(true)}
                     plain
                     style={{padding: 6, borderRadius: 3}}
-                    hoverIndicator={'accent-1'}
+                    hoverIndicator
                     icon={<Add size="small" />} />
             </Box>
-            <Box flex>
+            <Box pad="xsmall" flex>
                 <List
                     data={variables}
                     
                     >
                     {(datum) => (
-                        <Box>
-                            {datum.name}
+                        <Box 
+                            justify="between"
+                            direction="row" 
+                            align="center">
+                            <Text size="small">{datum.name}</Text>
+
+                            <Button
+                                style={{padding: 6, borderRadius: 3}}
+                                plain
+                                hoverIndicator 
+                                onClick={() => {
+                                    setSelected(datum)
+                                    openModal(true)
+                                }}
+                                icon={<MoreVertical size="small" />} />
                         </Box>
                     )}
                 </List>
