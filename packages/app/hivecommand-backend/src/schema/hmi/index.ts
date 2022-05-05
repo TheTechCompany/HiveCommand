@@ -372,6 +372,8 @@ export default (prisma: PrismaClient) => {
 		}
 	}
 
+
+	
 	const typeDefs = `
 
 	type Query {
