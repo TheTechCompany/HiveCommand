@@ -21,6 +21,13 @@ export default (prisma: PrismaClient, pool: Pool) => {
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						reports: {
+							include: {
+								dataKey: true,
+								dataDevice: true,
+								device: true,
+							}
+						},
 						activeProgram: {
 							include: {
 								interface: {
@@ -64,6 +71,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 										actions: true
 									}
 								},
+								
 							}
 						}
 					}
@@ -155,24 +163,12 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		online: Boolean
 		lastOnline: DateTime
 
-		reporting: [CommandDeviceReport] 
+		reports: [CommandDeviceReport] 
 
 		organisation: HiveOrganisation 
 	}
 
-	type CommandDeviceReport {
-		id: ID! 
-		x: Int
-		y: Int
-		w: Int
-		h: Int
 
-		device: CommandDevice 
-		templateDevice: CommandProgramDevicePlaceholder 
-		templateKey: CommandProgramDeviceState
-		total: Boolean
-		type: String
-	}
 
 	type CommandDevicePeripheral {
 		id: ID! 

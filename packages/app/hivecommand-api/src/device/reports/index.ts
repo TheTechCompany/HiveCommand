@@ -11,43 +11,27 @@ export const useAddDeviceChart = (deviceId: string) => {
 		h: number,
 		total?: boolean
 	}) => {
-		
-		// const item = mutation.updateCommandDevices({
-		// 	where: {id: deviceId},
-		// 	update: {
-		// 		reporting: [{
-		// 			create: [{
-		// 				node: {
-		// 					type: args.type,
-		// 					templateDevice: {
-		// 						connect: {
-		// 							where: {
-		// 								node: {id: args.templateId}
-		// 							}
-		// 						}
-		// 					},
-		// 					templateKey: {
-		// 						connect: {
-		// 							where: {
-		// 								node: {id: args.keyId}
-		// 							}
-		// 						}
-		// 					},
-		// 					x: args.x || 0,
-		// 					y: args.y || 0,
-		// 					w: args.w || 2,
-		// 					h: args.h || 1,
-		// 					total: args.total || false
-		// 				}
-		// 			}]
-		// 		}]
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandDevices?.[0]
-		// 	}
-		// }
+		const item = mutation.createCommandDeviceReport({
+			input: {
+				type: args.type,
+				x: args.x,
+				y: args.y,
+				width: args.w,
+				height: args.h,
+				total: args.total,
+
+				dataDevice: args.templateId,
+				dataKey: args.keyId,
+				
+				device: deviceId
+			}
+		})
+	
+		return {
+			item: {
+				...item
+			}
+		}
 	})
 	return (type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
@@ -67,6 +51,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 
 export const useUpdateDeviceChart = (deviceId: string) => {
 	const [ addGraph ] = useMutation((mutation, args: {
+		id: string,
 		type: string,
 		templateId: string,
 		keyId: string,
@@ -76,58 +61,30 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 		h: number,
 		total?: boolean
 	}) => {
-		// const item = mutation.updateCommandDevices({
-		// 	where: {id: deviceId},
-		// 	update: {
-		// 		reporting: [{
-				
-		// 			update: {
-		// 				node: {
-		// 					type: args.type,
-		// 					templateDevice: {
-		// 						connect: {
-		// 							where: {
-		// 								node: {id: args.templateId}
-		// 							}
-		// 						},
-		// 						disconnect: {
-		// 							where: {
-		// 								node: {id_NOT: args.templateId}
-		// 							}
-		// 						}
-		// 					},
-		// 					templateKey: {
-		// 						connect: {
-		// 							where: {
-		// 								node: {id: args.keyId}
-		// 							}
-		// 						},
-		// 						disconnect: {
-		// 							where: {
-		// 								node: {id_NOT: args.keyId}
-		// 							}
-		// 						}
-		// 					},
-		// 					x: args.x || 0,
-		// 					y: args.y || 0,
-		// 					w: args.w || 2,
-		// 					h: args.h || 1,
-		// 					total: args.total || false
-		// 				}
-		// 			}
-		// 		}]
+		const item = mutation.updateCommandDeviceReport({
+			id: args.id,
+			input: {
+				type: args.type,
+				total: args.total,
+				x: args.x,
+				y: args.y,
+				width: args.w,
+				height: args.h,
+				dataDevice: args.templateId,
+				dataKey: args.keyId
+			}
+		})
 
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandDevices?.[0]
-		// 	}
-		// }
+		return {
+			item: {
+				...item
+			}
+		}
 	})
-	return (type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (id: string, type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
 			args: {
+				id,
 				type,
 				templateId,
 				keyId,
@@ -149,28 +106,24 @@ export const useUpdateDeviceChartGrid = (deviceId: string) => {
 		w: number,
 		h: number,
 	}[]}) => {
-		// const item = mutation.updateCommandDevices({
-		// 	where: {id: deviceId},
-		// 	update: {
-		// 		reporting: args.items.map((arg) => ({
-		// 			where: {node: {id: arg.id}},
-		// 			update: {
-		// 				node: {
-		// 					x: arg.x || 0,
-		// 					y: arg.y || 0,
-		// 					w: arg.w || 2,
-		// 					h: arg.h || 1
-		// 				}
-		// 			}
-		// 		}))
-		// 	}
-		// });
 
-		// return {
-		// 	item: {
-		// 		...item.commandDevices?.[0]
-		// 	}
-		// }
+		const item = mutation.updateCommandDeviceReportGrid({
+			device: deviceId,
+			grid: args.items.map((item) => ({
+				id: item.id,
+				x: item.x,
+				y: item.y,
+				width: item.w,
+				height: item.h
+			}))
+		})
+
+
+		return {
+			item: [
+				...item || []
+			]
+		}
 	})
 	return (items: {id: string,  x: number, y: number, w: number, h: number}[]) => {
 		return addGraph({
@@ -185,23 +138,14 @@ export const useUpdateDeviceChartGrid = (deviceId: string) => {
 export const useRemoveDeviceChart = (deviceId: string) => {
 
 	const [ removeGraph ] = useMutation((mutation, args: {id: string}) => {
-		// const item = mutation.updateCommandDevices({
-		// 	where: {id: deviceId},
-		// 	update: {
-		// 		reporting: [{
-		// 			delete: [{
-		// 				where: {
-		// 					node: {id: args.id}
-		// 				}
-		// 			}]
-		// 		}]
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandDevices?.[0]
-		// 	}
-		// }
+
+		const item = mutation.deleteCommandDeviceReport({id: args.id})
+		
+		return {
+			item: {
+				...item
+			}
+		}
 	})
 	return (id: string) => {
 		return removeGraph({

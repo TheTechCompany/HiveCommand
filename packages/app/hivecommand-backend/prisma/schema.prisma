@@ -21,10 +21,34 @@ model Device {
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
   program String?
 
+  reports DeviceReport[] @relation(name: "hasReports")
+
   createdAt DateTime @default(now())
   lastSeen DateTime?
 
   organisation String
+}
+
+model DeviceReport {
+  id String @id
+
+  type String
+
+  x Float
+  y Float
+  width Float
+  height Float
+
+  total Boolean
+
+  dataDevice ProgramFlowIO @relation(name: "hasDataDevice", fields: [dataDeviceId], references: [id])
+  dataDeviceId String
+
+  dataKey IOTemplateState @relation(name: "hasDataKey", fields: [dataKeyId], references: [id])
+  dataKeyId String
+
+  device Device @relation(name: "hasReports", fields: [deviceId], references: [id])
+  deviceId String
 }
 
 model IOTemplate {
@@ -73,6 +97,8 @@ model IOTemplateState {
   
   requiredByInterlock ProgramInterlock[] @relation(name: "requiresState")
   usedByInterlock ProgramInterlock[] @relation(name: "observesDeviceState")
+
+  reportedBy DeviceReport[] @relation(name: "hasDataKey")
 
   device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
@@ -156,6 +182,8 @@ model ProgramFlowIO {
 
   usedBy ProgramFlowNodeAction[] @relation(name: "useDevice")
   usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
+
+  reportedBy DeviceReport[] @relation(name: "hasDataDevice")
 
   program Program @relation(fields: [programId], references: [id])
   programId String
