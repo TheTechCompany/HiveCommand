@@ -30,12 +30,6 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     setDatum(moment(datum).add(1, 'week').toDate());
   }
 
-
-
-  // const [dayBefore, setDayBefore] = useState<string>(
-  //   new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-  // );
-
   const [deviceList, setDeviceList] = useState([]);
 
   const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
