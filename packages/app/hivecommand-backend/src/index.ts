@@ -38,6 +38,10 @@ const prisma = new PrismaClient();
 		max: 10
 	})
 
+	pool.on('connect', () => {
+		console.log("pool connect")
+	})
+
 	const mq = await amqp.connect(
 		process.env.RABBIT_URL || 'amqp://localhost'
 	)

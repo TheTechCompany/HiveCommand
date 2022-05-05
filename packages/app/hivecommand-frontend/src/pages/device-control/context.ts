@@ -7,6 +7,7 @@ export const DeviceControlContext = React.createContext<{
 	program?: {
 		id: string;
 		interface: CommandProgramHMI,
+		variables: any[],
 		devices: CommandProgramDevicePlaceholder[]
 	};
 	hmi?: any;

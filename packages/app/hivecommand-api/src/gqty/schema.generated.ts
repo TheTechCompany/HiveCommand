@@ -83,6 +83,19 @@ export interface CommandDevicePluginInput {
   rules?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandDeviceReportInput {
+  dataDevice?: InputMaybe<Scalars["String"]>;
+  dataKey?: InputMaybe<Scalars["String"]>;
+  device?: InputMaybe<Scalars["String"]>;
+  height?: InputMaybe<Scalars["Int"]>;
+  id?: InputMaybe<Scalars["ID"]>;
+  total?: InputMaybe<Scalars["Boolean"]>;
+  type?: InputMaybe<Scalars["String"]>;
+  width?: InputMaybe<Scalars["Int"]>;
+  x?: InputMaybe<Scalars["Int"]>;
+  y?: InputMaybe<Scalars["Int"]>;
+}
+
 export interface CommandDeviceWhere {
   id?: InputMaybe<Scalars["ID"]>;
 }
@@ -247,7 +260,7 @@ export const generatedSchema = {
     operatingState: { __type: "String" },
     organisation: { __type: "HiveOrganisation" },
     peripherals: { __type: "[CommandDevicePeripheral]" },
-    reporting: { __type: "[CommandDeviceReport]" },
+    reports: { __type: "[CommandDeviceReport]" },
     waitingForActions: { __type: "[CommandProgramAction]" },
   },
   CommandDeviceInput: {
@@ -303,14 +316,34 @@ export const generatedSchema = {
   },
   CommandDeviceReport: {
     __typename: { __type: "String!" },
+    dataDevice: { __type: "CommandProgramDevicePlaceholder" },
+    dataKey: { __type: "CommandProgramDeviceState" },
     device: { __type: "CommandDevice" },
-    h: { __type: "Int" },
+    height: { __type: "Int" },
     id: { __type: "ID!" },
-    templateDevice: { __type: "CommandProgramDevicePlaceholder" },
-    templateKey: { __type: "CommandProgramDeviceState" },
+    total: { __type: "Boolean" },
+    totalValue: {
+      __type: "CommandDeviceTimeseriesTotal",
+      __args: { startDate: "DateTime" },
+    },
+    type: { __type: "String" },
+    values: {
+      __type: "[CommandDeviceTimeseriesData]",
+      __args: { startDate: "DateTime" },
+    },
+    width: { __type: "Int" },
+    x: { __type: "Int" },
+    y: { __type: "Int" },
+  },
+  CommandDeviceReportInput: {
+    dataDevice: { __type: "String" },
+    dataKey: { __type: "String" },
+    device: { __type: "String" },
+    height: { __type: "Int" },
+    id: { __type: "ID" },
     total: { __type: "Boolean" },
     type: { __type: "String" },
-    w: { __type: "Int" },
+    width: { __type: "Int" },
     x: { __type: "Int" },
     y: { __type: "Int" },
   },
@@ -384,11 +417,13 @@ export const generatedSchema = {
   },
   CommandHMINode: {
     __typename: { __type: "String!" },
+    children: { __type: "[CommandHMINode]" },
     devicePlaceholder: { __type: "CommandProgramDevicePlaceholder" },
     flow: { __type: "[CommandProgramHMI]" },
     id: { __type: "ID!" },
     inputs: { __type: "[CommandHMINode]" },
     outputs: { __type: "[CommandHMINode]" },
+    ports: { __type: "[CommandHMIPort]" },
     rotation: { __type: "Float" },
     scaleX: { __type: "Float" },
     scaleY: { __type: "Float" },
@@ -641,7 +676,6 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     actions: { __type: "[CommandProgramAction]" },
     edges: { __type: "[CommandHMIEdge]" },
-    groups: { __type: "[CommandHMIGroup]" },
     id: { __type: "ID!" },
     name: { __type: "String" },
     nodes: { __type: "[CommandHMINode]" },
@@ -728,6 +762,10 @@ export const generatedSchema = {
     createCommandDevice: {
       __type: "CommandDevice!",
       __args: { input: "CommandDeviceInput!" },
+    },
+    createCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { input: "CommandDeviceReportInput" },
     },
     createCommandProgram: {
       __type: "CommandProgram!",
@@ -820,6 +858,10 @@ export const generatedSchema = {
       __args: { input: "CommandProgramVariableInput!", program: "ID!" },
     },
     deleteCommandDevice: { __type: "CommandDevice!", __args: { id: "ID!" } },
+    deleteCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { id: "ID" },
+    },
     deleteCommandProgram: { __type: "Boolean!", __args: { id: "ID!" } },
     deleteCommandProgramDevice: {
       __type: "Boolean!",
@@ -884,6 +926,14 @@ export const generatedSchema = {
     updateCommandDevice: {
       __type: "CommandDevice!",
       __args: { id: "ID!", input: "CommandDeviceInput!" },
+    },
+    updateCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { id: "ID", input: "CommandDeviceReportInput" },
+    },
+    updateCommandDeviceReportGrid: {
+      __type: "[CommandDeviceReport]",
+      __args: { device: "ID", grid: "[CommandDeviceReportInput]" },
     },
     updateCommandProgram: {
       __type: "CommandProgram!",
@@ -1077,7 +1127,7 @@ export interface CommandDevice {
   operatingState?: Maybe<ScalarsEnums["String"]>;
   organisation?: Maybe<HiveOrganisation>;
   peripherals?: Maybe<Array<Maybe<CommandDevicePeripheral>>>;
-  reporting?: Maybe<Array<Maybe<CommandDeviceReport>>>;
+  reports?: Maybe<Array<Maybe<CommandDeviceReport>>>;
   waitingForActions?: Maybe<Array<Maybe<CommandProgramAction>>>;
 }
 
@@ -1125,14 +1175,20 @@ export interface CommandDevicePlugin {
 
 export interface CommandDeviceReport {
   __typename?: "CommandDeviceReport";
+  dataDevice?: Maybe<CommandProgramDevicePlaceholder>;
+  dataKey?: Maybe<CommandProgramDeviceState>;
   device?: Maybe<CommandDevice>;
-  h?: Maybe<ScalarsEnums["Int"]>;
+  height?: Maybe<ScalarsEnums["Int"]>;
   id: ScalarsEnums["ID"];
-  templateDevice?: Maybe<CommandProgramDevicePlaceholder>;
-  templateKey?: Maybe<CommandProgramDeviceState>;
   total?: Maybe<ScalarsEnums["Boolean"]>;
+  totalValue: (args?: {
+    startDate?: Maybe<Scalars["DateTime"]>;
+  }) => Maybe<CommandDeviceTimeseriesTotal>;
   type?: Maybe<ScalarsEnums["String"]>;
-  w?: Maybe<ScalarsEnums["Int"]>;
+  values: (args?: {
+    startDate?: Maybe<Scalars["DateTime"]>;
+  }) => Maybe<Array<Maybe<CommandDeviceTimeseriesData>>>;
+  width?: Maybe<ScalarsEnums["Int"]>;
   x?: Maybe<ScalarsEnums["Int"]>;
   y?: Maybe<ScalarsEnums["Int"]>;
 }
@@ -1214,11 +1270,13 @@ export interface CommandHMIGroup {
 
 export interface CommandHMINode {
   __typename?: "CommandHMINode";
+  children?: Maybe<Array<Maybe<CommandHMINode>>>;
   devicePlaceholder?: Maybe<CommandProgramDevicePlaceholder>;
   flow?: Maybe<Array<Maybe<CommandProgramHMI>>>;
   id: ScalarsEnums["ID"];
   inputs?: Maybe<Array<Maybe<CommandHMINode>>>;
   outputs?: Maybe<Array<Maybe<CommandHMINode>>>;
+  ports?: Maybe<Array<Maybe<CommandHMIPort>>>;
   rotation?: Maybe<ScalarsEnums["Float"]>;
   scaleX?: Maybe<ScalarsEnums["Float"]>;
   scaleY?: Maybe<ScalarsEnums["Float"]>;
@@ -1442,7 +1500,6 @@ export interface CommandProgramHMI {
   __typename?: "CommandProgramHMI";
   actions?: Maybe<Array<Maybe<CommandProgramAction>>>;
   edges?: Maybe<Array<Maybe<CommandHMIEdge>>>;
-  groups?: Maybe<Array<Maybe<CommandHMIGroup>>>;
   id: ScalarsEnums["ID"];
   name?: Maybe<ScalarsEnums["String"]>;
   nodes?: Maybe<Array<Maybe<CommandHMINode>>>;
@@ -1528,6 +1585,9 @@ export interface Mutation {
     state?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
   createCommandDevice: (args: { input: CommandDeviceInput }) => CommandDevice;
+  createCommandDeviceReport: (args?: {
+    input?: Maybe<CommandDeviceReportInput>;
+  }) => Maybe<CommandDeviceReport>;
   createCommandProgram: (args: {
     input: CommandProgramInput;
   }) => CommandProgram;
@@ -1594,6 +1654,9 @@ export interface Mutation {
     program: Scalars["ID"];
   }) => CommandProgramVariable;
   deleteCommandDevice: (args: { id: Scalars["ID"] }) => CommandDevice;
+  deleteCommandDeviceReport: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandDeviceReport>;
   deleteCommandProgram: (args: {
     id: Scalars["ID"];
   }) => ScalarsEnums["Boolean"];
@@ -1672,6 +1735,14 @@ export interface Mutation {
     id: Scalars["ID"];
     input: CommandDeviceInput;
   }) => CommandDevice;
+  updateCommandDeviceReport: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandDeviceReportInput>;
+  }) => Maybe<CommandDeviceReport>;
+  updateCommandDeviceReportGrid: (args?: {
+    device?: Maybe<Scalars["ID"]>;
+    grid?: Maybe<Array<Maybe<CommandDeviceReportInput>>>;
+  }) => Maybe<Array<Maybe<CommandDeviceReport>>>;
   updateCommandProgram: (args: {
     id: Scalars["ID"];
     input: CommandProgramInput;

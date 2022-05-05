@@ -13,6 +13,7 @@ import { GraphGrid } from '@hexhive/ui'
 import moment from "moment";
 import { Graph } from "../../../components/ui/graph";
 import { useApolloClient } from "@apollo/client";
+import { LoadingIndicator } from "../../../components/LoadingIndicator";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
@@ -41,43 +42,47 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   const client = useApolloClient()
 
-  const { data } = useQuery(
-    gql`
-      query TimeSeriesData {
-	
-		commandDevices{ id } 
-		${reporting.map((graph) => {
-      
-			const queryKey = graph.templateKey?.key;
-      const deviceKey = graph.templateDevice?.name.replace(/ /, '');
+  const { data, loading } = useQuery(gql`
+    query ReportData($id: ID, $startDate: DateTime) {
 
-			const queryName = `${deviceKey}${queryKey}`;
+      commandDevices(where: {id: $id}){
 
-      const date = startOfWeek.toISOString()
-		
-      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
-          timestamp
-          value
-  
-        }
-        `;
-      let deviceTotal = "";
-      if (graph.total) {
-        deviceTotal = `
-          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
-            total
+        reports {
+          id
+          x
+          y
+          width
+          height
+
+          total
+
+          device {
+              id
+              name
           }
-          `;
-      }
-      return `
-      ${deviceTimeseries}
-      ${deviceTotal}
-      `;
-    })}
+          dataDevice {
+              id
+              name
+          }
+          dataKey {
+              id
+              key
+          }
 
-	}
-       
-    `);
+          values (startDate: $startDate) {
+            timestamp
+            value
+          }
+        }
+      }
+    }
+  `, {
+    variables: {
+      id: controlId,
+      startDate: startOfWeek.toISOString()
+    }
+  })
+ 
 
 	const addChart = useAddDeviceChart(controlId)
 	const updateChart = useUpdateDeviceChart(controlId)
@@ -88,7 +93,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   useEffect(() => {
       const timer = setInterval(() => {
-          client.refetchQueries({ include: ['TimeSeriesData'] })
+          client.refetchQueries({ include: ['ReportData'] })
       }, 5 * 1000)
 
       return () => {
@@ -96,49 +101,18 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       }
   }, [])
 
-  const values = useMemo(() => {
-    return reporting.map((graph) => {
+  const values = (data?.commandDevices?.[0]?.reports || []).map((report) => ({
+    ...report,
+    w: report.width,
+    h: report.height,
+    label: `${report.dataDevice?.name} - ${report.dataKey?.key}`,
+    values: report.values?.map((value) => ({
+      ...value,
+      timestamp: moment(value.timestamp).format("DD/MM hh:mma")
+    })),
+    total: report.totalValue
+  }))
 
-    //   const device = program.devices?.find((item) => graph.deviceID == item.id);
-
-    //   const key = device?.type.state.find(
-    //     (item) => graph.keyID == item.id
-    //   )?.key;
-
-    let queryKey = graph.templateKey?.key;
-    let deviceKey = graph.templateDevice?.name.replace(/ /, '');
-    let queryName = `${deviceKey}${queryKey}`;
-
-      const value = data?.[queryName]?.map((item) => {
-        let d = new Date(item.timestamp);
-        let offset = (new Date().getTimezoneOffset() / 60) * -1
-
-        //.add(offset, 'hours')
-
-        return {
-          ...item,
-          timestamp: moment(d).format("DD/MM hh:mma "),
-        };
-      });
-
-      const total = data?.[`${queryName}Total`]?.total;
-
-      let dev = program.devices?.find((a) => a.name == graph.templateDevice?.name);
-      let configUnit = dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.displayUnit || dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.inputUnit;
-      let stateUnit = configUnit || dev?.type?.state?.find((a) => a.key == graph.templateKey?.key)?.units;
-
-      let stateParts = stateUnit?.match(/(.+)\/(.+)/)
-      if(stateParts && stateParts.length == 3){
-        stateUnit = stateParts[1]
-      }
-      return {
-		  ...graph,
-		  label: `${graph.templateDevice.name} - ${graph.templateKey.key}`,
-		  values: value,
-		  total: total ?  parseFloat(total).toFixed(2) + (stateUnit ? ` ${stateUnit}` : '') : undefined
-      };
-    });
-  }, [reporting, program, data]);
 
   const [modalOpen, openModal] = useState(false);
 
@@ -150,6 +124,8 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       background="light-1"
       elevation="small"
       round="xsmall"
+      style={{position: 'relative'}}
+
     >
       <ControlGraphModal
         open={modalOpen}
@@ -159,23 +135,11 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         }}
         onSubmit={(graph) => {
 
-			addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
-				openModal(false);
-				refresh?.()
-			})
-        //   const device = program.devices?.find(
-        //     (item) => graph.deviceID == item.id
-        //   );
-
-        //   const key = device?.type.state.find(
-        //     (item) => graph.keyID == item.id
-        //   )?.key;
-
-        //   setDeviceList([...deviceList, graph]);
-        //   setDeviceLayout([
-        //     ...deviceLayout,
-        //     { id: `${device.name} - ${key}`, x: 0, y: 1, w: 8, h: 6 },
-        //   ]);
+        addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
+          openModal(false);
+          refresh?.()
+        })
+        
         }}
       />
       <Box justify="end" direction="row">
@@ -203,7 +167,10 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           hoverIndicator
         />
       </Box>
-    <Box flex overflow='auto'>
+    <Box 
+      flex 
+      overflow='auto'>
+      {loading && <LoadingIndicator />}
       <GraphGrid 
         onRemoveItem={(item) => {
           // alert("Remove" + item.id)
@@ -212,10 +179,10 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           })
         }}
         onLayoutChange={(layout) => {
-        updateChartGrid(layout.map((x) => ({
-          ...x,
-          id: x.i
-        })));
+          updateChartGrid(layout.map((x) => ({
+            ...x,
+            id: x.i
+          })));
 
         // console.log(layout)
       }}

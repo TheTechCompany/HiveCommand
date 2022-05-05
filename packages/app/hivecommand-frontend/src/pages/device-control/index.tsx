@@ -8,7 +8,7 @@ import { matchPath, Navigate, Route, Routes, useNavigate, useParams } from 'reac
 // import program from 'shared/hexhive-types/src/models/program';
 import * as HMINodes from '../../assets/hmi-elements'
 
-import { Services, Cycle, Analytics, Info, Technology } from 'grommet-icons';
+import { Services, Cycle, CloudUpload, Analytics, Dashboard, Action, System, Info, Technology } from 'grommet-icons';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import Controls from './views/control'
@@ -16,6 +16,7 @@ import { DeviceControlGraph } from './views/graph'
 import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, usePerformDeviceAction } from '@hive-command/api';
+import { ControlVariable } from './views/variable';
 
 export interface DeviceControlProps {
 
@@ -30,10 +31,11 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
 
     const toolbar_menu = [
-        { id: 'info', icon: <Info /> },
-        { id: 'controls', icon: <Services /> },
+        { id: 'controls', icon: <Dashboard /> },
+        { id: 'variables', icon: <System />},
         { id: 'graphs', icon: <Analytics /> },
-        { id: 'devices', icon: <Technology /> }
+        { id: 'info', icon: <Action /> },
+        { id: 'devices', icon: <Services /> },
     ]
 
     const view = toolbar_menu.find((a) => {
@@ -65,28 +67,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     max
                 }
 
-                reporting {
-                    id
-                    x
-                    y
-                    w
-                    h
-
-                    total
-
-                    device {
-                        id
-                        name
-                    }
-                    templateDevice {
-                        id
-                        name
-                    }
-                    templateKey {
-                        id
-                        key
-                    }
-                }
+          
 
                 peripherals {
                     id
@@ -215,6 +196,12 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             
                     }
 
+                    variables {
+                        id
+                        name
+                        type
+                    }
+
                     devices {
                         id
                         name
@@ -309,7 +296,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
-    const reporting = rootDevice?.reporting || [];
+    const reporting = rootDevice?.reports || [];
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
@@ -434,6 +421,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                         items={toolbar_menu} />
                     <Box flex>
                         <Routes>
+                            <Route path={`variables`} element={<ControlVariable />} />
                             <Route path={`info`}  element={<DeviceSingle/>} />
                             <Route path={`controls`} element={<Controls/>} />
                             <Route path={`graphs`} element={<DeviceControlGraph/>} />
