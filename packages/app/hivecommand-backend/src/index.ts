@@ -57,7 +57,6 @@ const prisma = new PrismaClient();
 	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
-	//TODO figure out the race condition to get the OGM with merged models from hive-graph
 
 	const { typeDefs, resolvers } = schema(prisma, pool, mqChannel);
 
