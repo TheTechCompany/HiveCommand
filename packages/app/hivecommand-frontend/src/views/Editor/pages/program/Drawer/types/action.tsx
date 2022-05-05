@@ -13,7 +13,7 @@ export const ActionDrawerItem = () => {
 
     const { program } = useCommandEditor()
 
-	const { activeProgram, devices, selectedType, selected: node,  flow } = useProgramEditor()
+	const { activeProgram, devices, selectedType, selected: node, refresh, flow } = useProgramEditor()
 
     const createNodeAction = useCreateNodeAction(program.id, activeProgram, flow?.parent?.id)
 	const updateNodeAction = useUpdateNodeAction(program.id, activeProgram, flow?.parent?.id)
@@ -28,20 +28,32 @@ export const ActionDrawerItem = () => {
 
                 open={modalOpen}
                 selected={selected}
-                onClose={() => openModal(false)}
+                onClose={() => {
+                    openModal(false)
+                    setSelected(undefined)
+                }}
                 onDelete={() => {
                     deleteNodeAction(node.id, selected.id).then(() => {
                         openModal(false)
+                    }).then(() => {
+                        refresh()
+                        setSelected(undefined)
                     })
                 }}
                 onSubmit={(action) => {
                     if(action.id){
                         updateNodeAction(node.id, action).then(() => {
                             openModal(false)
+                        }).then(() => {
+                            refresh()
+                            setSelected(undefined)
                         })
                     }else{
                         createNodeAction(node.id, action).then(() => {
                             openModal(false);
+                        }).then(() => {
+                            refresh()
+                          setSelected(undefined)
                         })
                     }
                 }} />
@@ -73,7 +85,7 @@ export const ActionDrawerItem = () => {
                         align="center"
                         direction="row">
                         <Box flex>
-                            <Text>{datum.device?.name} {datum.request?.key}</Text>
+                            <Text size="small">{datum.device?.name} {datum.request?.key}</Text>
                             {/* <Text size="small">{renderListItem(datum, form_type.find((a) => a.name == field.type))}</Text> */}
                         </Box>
                         <Button
