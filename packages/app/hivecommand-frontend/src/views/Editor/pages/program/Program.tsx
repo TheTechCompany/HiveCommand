@@ -294,7 +294,7 @@ export const Program = (props) => {
     })
 
     const refetch = () => {
-        client.refetchQueries({ include: ['ProgramEditor'] })
+        client.refetchQueries({ include: ['ProgramEditor', 'FlowData'] })
     }
 
     let flow = flowData?.commandProgramFlows?.[0]
