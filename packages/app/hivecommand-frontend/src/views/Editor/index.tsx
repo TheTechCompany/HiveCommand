@@ -225,7 +225,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     // const Processes = (shardQuery.data || {}).FlowShardMany || []
     // const program_root = (programQuery.data || {}).ProgramOne;
 
-    console.log("PROGRAM", program)
+    // console.log("PROGRAM", program)
     
     // const [ updateProject, updateInfo ] = programActions.useUpdateProgram(props.match.params.id)
 
@@ -260,7 +260,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     return (
         <CommandEditorProvider value={{
             sidebarOpen: sidebarOpen,
-            program
+            program,
+            refetch: refetch
         }}>
             <Suspense fallback={(
                 <Box 
