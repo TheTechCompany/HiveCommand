@@ -63,6 +63,65 @@ export const useCreateProgramFlow = (programId: string) => {
 	}
 }
 
+export const useUpdateProgramFlow = (programId: string) => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {id: string, name: string, parent?: string}) => {
+
+		const item = mutation.updateCommandProgramFlow({
+			program: programId,
+			id: args.id,
+			input: {
+				name: args.name,
+				parent: args.parent
+				// parent: args.parent
+			}
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+
+	return async (id: string, name: string, parent?: string) => {
+		return await mutateFn({
+			args: {
+				id,
+				name,
+				parent
+			}
+		})
+	}
+}
+
+
+
+export const useDeleteProgramFlow = (programId: string) => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {id: string}) => {
+
+		const item = mutation.deleteCommandProgramFlow({
+			program: programId,
+			id: args.id
+		})
+		return {
+			item: item
+		}
+	})
+
+	return async (id: string) => {
+		return await mutateFn({
+			args: {
+				id
+			}
+		})
+	}
+}
+
+
+
+
+
 export const useCreateProgramHMI = (programId: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string}) => {
