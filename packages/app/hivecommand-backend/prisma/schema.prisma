@@ -478,11 +478,12 @@ model ProgramFlowEdgeCondition {
 
 model ProgramFlowEdge {
   id String @id
-  from ProgramFlowNode @relation(name: "from", fields: [fromId], references: [id])
+  
+  from ProgramFlowNode @relation(name: "from", fields: [fromId], references: [id], onDelete: Cascade)
   fromId String
   fromHandle String
 
-  to ProgramFlowNode @relation(name: "to", fields: [toId], references: [id])
+  to ProgramFlowNode @relation(name: "to", fields: [toId], references: [id], onDelete: Cascade)
   toId String
   toHandle String
 

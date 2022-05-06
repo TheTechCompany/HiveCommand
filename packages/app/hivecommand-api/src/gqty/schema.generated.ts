@@ -160,6 +160,7 @@ export interface CommandProgramFlowNodeActionInput {
 }
 
 export interface CommandProgramFlowNodeInput {
+  subprocess?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<Scalars["String"]>;
   x?: InputMaybe<Scalars["Float"]>;
   y?: InputMaybe<Scalars["Float"]>;
@@ -671,6 +672,7 @@ export const generatedSchema = {
     request: { __type: "ID" },
   },
   CommandProgramFlowNodeInput: {
+    subprocess: { __type: "String" },
     type: { __type: "String" },
     x: { __type: "Float" },
     y: { __type: "Float" },
