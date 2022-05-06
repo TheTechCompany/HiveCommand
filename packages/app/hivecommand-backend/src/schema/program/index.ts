@@ -61,7 +61,12 @@ export default (prisma: PrismaClient) => {
 					return await prisma.program.findMany({
 						where: {...filter, organisation: context.jwt.organisation
 					}, include: {
-						program: true,
+						program: {
+							include: {
+								parent: true,
+								children: true
+							}
+						},
 						interface: {
 							include: {
 								nodes: {
@@ -187,13 +192,24 @@ export default (prisma: PrismaClient) => {
 				},
 
 				createCommandProgramFlow: async (root: any, args: any) => {
+					let parentQuery : any = {};
+
+					if(args.input.parent){
+						parentQuery['parent'] = {
+							connect: {id: args.input.parent}
+						}
+					}else{
+						parentQuery['program'] = {
+							connect: {id: args.program}
+						}
+					}
+
 					const flow = await prisma.programFlow.create({
 						data: {
 							id: nanoid(),
 							name: args.input.name,
-							program: {
-								connect: {id: args.program}
-							}
+							...parentQuery,
+							
 						}
 					})
 
@@ -473,7 +489,7 @@ export default (prisma: PrismaClient) => {
 
 	input CommandProgramFlowInput {
 		name: String
-
+		parent: String
 	}
 
 	input CommandProgramFlowWhere {

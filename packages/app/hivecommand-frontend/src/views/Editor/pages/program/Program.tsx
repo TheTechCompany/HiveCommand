@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Button, Collapsible, List, Text } from 'grommet';
 import { useConnectProgramNode, useCreateProgramFlow, useCreateProgramNode, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramNode } from '@hive-command/api';
 
@@ -39,7 +39,7 @@ export const Program = (props) => {
 
     const { id } = useParams()
 
-    const { sidebarOpen, program } = useCommandEditor()
+    const { sidebarOpen, refetch: refetchProgram } = useCommandEditor()
 
     const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
     const [ activeProgram, setActiveProgram ] = useState<string>(undefined)
@@ -111,11 +111,138 @@ export const Program = (props) => {
    
     ]
 
+    const { data: flowData } = useQuery(gql`
+        query FlowData ($program: ID){ 
+            commandProgramFlows (where: {id: $program}) {
+                    id
+                    name
+
+                    children {
+                        id
+                        name
+                    }
+
+                    parent {
+                        id
+                    }
+
+
+                    edges {
+                        id
+
+                        from {
+                            id
+                        }
+                        fromHandle
+                        
+                        to {
+                            id
+                        }
+
+                        conditions {
+                            id
+
+                            inputDevice {
+                                id
+                                name
+                            }
+                            inputDeviceKey {
+                                id
+                                key
+                            }
+                            comparator
+                            assertion {
+                                id
+                                type
+                                value
+                                setpoint {
+                                    id
+                                    name
+                                    value
+                                }
+                                variable {
+                                    id
+                                    name
+                                    value
+                                }
+                            }
+                        }
+
+                        toHandle
+
+                        points{
+                            x
+                            y
+                        }
+                    }
+
+                    nodes {
+                        id
+                        type
+                        x 
+                        y
+
+                        inputs {
+                            id
+                        }
+                        
+                        outputs {
+                            id
+                        }
+
+                        subprocess {
+                            id
+                            name
+                        }
+
+                        actions {
+                            id
+                            release
+
+                            device {
+                                id
+                                name
+                            }
+                            request {
+                                id
+                                key
+                            }
+                        }
+                        configuration {
+                            id
+                            key
+                            
+                            value
+                        }
+
+                    
+                    }
+                
+            }
+        }
+
+    `, {
+        variables: {
+            program: activeProgram
+        }
+    });
+    
+
     const { data } = useQuery(gql`
-    query Q ($id: ID, $program: ID){
+    query ProgramEditor ($id: ID){
         commandPrograms(where: {id: $id}){
             id
             name
+
+            program {
+                id
+                name
+                children {
+                    id
+                    name
+                }
+            }
+
 
             variables {
                 id
@@ -149,126 +276,21 @@ export const Program = (props) => {
 
         }
 
-        commandProgramFlows (where: {id: $program}) {
-                id
-                name
-
-                children {
-                    id
-                    name
-                }
-
-                parent {
-                    id
-                }
-
-
-                edges {
-                    id
-
-                    from {
-                        id
-                    }
-                    fromHandle
-                    
-                    to {
-                        id
-                    }
-
-                    conditions {
-                        id
-
-                        inputDevice {
-                            id
-                            name
-                        }
-                        inputDeviceKey {
-                            id
-                            key
-                        }
-                        comparator
-                        assertion {
-                            id
-                            type
-                            value
-                            setpoint {
-                                id
-                                name
-                                value
-                            }
-                            variable {
-                                id
-                                name
-                                value
-                            }
-                        }
-                    }
-
-                    toHandle
-
-                    points{
-                        x
-                        y
-                    }
-                }
-
-                nodes {
-                    id
-                    type
-                    x 
-                    y
-
-                    inputs {
-                        id
-                    }
-                    
-                    outputs {
-                        id
-                    }
-
-                    subprocess {
-                        id
-                        name
-                    }
-
-                    actions {
-                        id
-                        release
-
-                        device {
-                            id
-                            name
-                        }
-                        request {
-                            id
-                            key
-                        }
-                    }
-                    configuration {
-                        id
-                        key
-                        
-                        value
-                    }
-
-                   
-                }
-            
-        }
+    
     }
 `, {
         variables: {
             id: id,
-            program: activeProgram
         }
     })
 
     const refetch = () => {
-        client.refetchQueries({ include: ['Q'] })
+        client.refetchQueries({ include: ['ProgramEditor'] })
     }
 
-    let flow = data?.commandProgramFlows?.[0]
+    let flow = flowData?.commandProgramFlows?.[0]
 
+    const program = data?.commandPrograms?.[0];
 
     const createProgramNode = useCreateProgramNode(id, activeProgram, flow?.parent?.id)
     const updateProgramNode = useUpdateProgramNode(id, activeProgram, flow?.parent?.id)
@@ -514,6 +536,14 @@ export const Program = (props) => {
     const devices = data?.commandPrograms?.[0].devices || []
     const variables = data?.commandPrograms?.[0]?.variables || [];
 
+
+    const tree = useMemo(() => {
+        console.log({program: program?.program})
+        return cleanTree(program?.program)
+    }, [program])
+
+    console.log({tree});
+
     useEffect(() => {
         setConditions(flow?.conditions)
     }, [flow])
@@ -572,11 +602,12 @@ export const Program = (props) => {
                     onSubmit={(item) => {
                             let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
                             createProgramFlow(item.name, parent).then(() => {
-                                refetch()
+                                refetchProgram()
+                                openModal(false)
+                                
                             })
           
                         
-                        openModal(false)
                     }}
                     onClose={() => {
                         setSelectedItem(undefined)
@@ -602,7 +633,7 @@ export const Program = (props) => {
                             data={[{
                                 id: 'root',
                                 name: `Program`,
-                                children: cleanTree(program?.program) || []
+                                children: tree || []
                             }]} />
                         {/* <List 
                             onClickItem={({item}) => {

@@ -2,7 +2,7 @@ import React from "react";
 
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
-
+	refetch?: () => void;
 	program?: {
 		id?: string;
 		program?: any[];

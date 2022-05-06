@@ -42,6 +42,7 @@ export const useCreateProgramFlow = (programId: string) => {
 			program: programId,
 			input: {
 				name: args.name,
+				parent: args.parent
 				// parent: args.parent
 			}
 		})
