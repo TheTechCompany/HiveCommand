@@ -129,7 +129,9 @@ export default (prisma: PrismaClient) => {
 								include: {
 									actions: {
 										include: {device: true, request: true}
-									}
+									},
+									subprocess: true,
+									
 								}
 							}, 
 							edges: {
@@ -232,12 +234,16 @@ export default (prisma: PrismaClient) => {
 					return res != null
 				},
 				createCommandProgramFlowNode: async (root: any, args: any) => {
+					let subprocessQuery : any = {};
+					if(args.input?.subprocess) subprocessQuery['subprocess'] = {connect: {id: args.input.subprocess}};
+
 					const flowNode = await prisma.programFlowNode.create({
 						data: {
 							id: nanoid(),
 							x: args.input.x,
 							y: args.input.y,
 							type: args.input.type,
+							...subprocessQuery,
 							programFlow: {
 								connect: {id: args.flow}
 							}
@@ -535,6 +541,8 @@ export default (prisma: PrismaClient) => {
 		input CommandProgramFlowNodeInput {
 			x: Float
 			y: Float
+
+			subprocess: String
 
 			type: String
 		}
