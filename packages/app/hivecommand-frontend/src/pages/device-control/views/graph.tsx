@@ -11,12 +11,17 @@ import { GraphGrid } from '@hexhive/ui'
 
 // import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
 import moment from "moment";
-import { Graph } from "../../../components/ui/graph";
+import { Graph, GraphContainer } from "../../../components/ui/graph";
 import { useApolloClient } from "@apollo/client";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
+import { MoreVert } from "@mui/icons-material";
+import { Menu } from "@mui/material";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
+
   const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
+
+  const [ selected, setSelected ] = useState();
 
   const [datum, setDatum] = useState(new Date())
   const startOfWeek = moment(datum).startOf('isoWeek');
@@ -36,8 +41,8 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   const client = useApolloClient()
 
-  const { data, loading } = useQuery(gql`
-    query ReportData($id: ID, $startDate: DateTime) {
+  const { data } = useQuery(gql`
+    query ReportData($id: ID) {
 
       commandDevices(where: {id: $id}){
 
@@ -63,7 +68,24 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
               key
           }
 
-          values (startDate: $startDate) {
+      
+        }
+      }
+    }
+  `, {
+    variables: {
+      id: controlId,
+      startDate: startOfWeek.toISOString()
+    }
+  })
+ 
+  const { data: reportData, loading } = useQuery(gql`
+    query ReportDataValue($id: ID, $startDate: DateTime){
+      commandDevices(where: {id: $id}){
+        
+        reports {
+          id
+          values (startDate: $startDate){
             timestamp
             value
           }
@@ -76,18 +98,25 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       startDate: startOfWeek.toISOString()
     }
   })
- 
 
 	const addChart = useAddDeviceChart(controlId)
 	const updateChart = useUpdateDeviceChart(controlId)
 	const updateChartGrid = useUpdateDeviceChartGrid(controlId)
 	const removeChart = useRemoveDeviceChart(controlId);
 
+
+  const refetchValues = () => {
+    client.refetchQueries({include: ['ReportDataValue']})
+  }
+  const refetchStructure = () => {
+    client.refetchQueries({include: ["ReportData"]})
+  }
+
   console.log("Render", {reporting});
 
   useEffect(() => {
       const timer = setInterval(() => {
-          client.refetchQueries({ include: ['ReportData'] })
+        refetchValues()
       }, 5 * 1000)
 
       return () => {
@@ -95,17 +124,22 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       }
   }, [])
 
-  const values = (data?.commandDevices?.[0]?.reports || []).map((report) => ({
-    ...report,
-    w: report.width,
-    h: report.height,
-    label: `${report.dataDevice?.name} - ${report.dataKey?.key}`,
-    values: report.values?.map((value) => ({
-      ...value,
-      timestamp: moment(value.timestamp).format("DD/MM hh:mma")
-    })),
-    total: report.totalValue
-  }))
+  const values = (data?.commandDevices?.[0]?.reports || []).map((report) => {
+
+    let reportValue = reportData?.commandDevices?.[0]?.reports?.find((a) => a.id == report.id);
+
+    return {
+      ...report,
+      w: report.width,
+      h: report.height,
+      label: `${report.dataDevice?.name} - ${report.dataKey?.key}`,
+      values: reportValue?.values?.map((value) => ({
+        ...value,
+        timestamp: moment(value.timestamp).format("DD/MM hh:mma")
+      })),
+      total: report.totalValue
+    }
+  })
 
 
   const [modalOpen, openModal] = useState(false);
@@ -123,16 +157,28 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     >
       <ControlGraphModal
         open={modalOpen}
+        selected={selected}
         devices={program.devices}
         onClose={() => {
           openModal(false);
+          setSelected(undefined)
         }}
         onSubmit={(graph) => {
-
-        addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
-          openModal(false);
-          refresh?.()
-        })
+          if(!graph.id){
+            addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
+              openModal(false);
+              refetchStructure?.()
+              refetchValues?.()
+              setSelected(undefined)
+            })
+          }else{
+            updateChart(graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
+              openModal(false);
+              refetchStructure?.()
+              refetchValues?.()
+              setSelected(undefined)
+            })
+          }
         
         }}
       />
@@ -166,26 +212,36 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       overflow='auto'>
       {loading && <LoadingIndicator />}
       <GraphGrid 
-        onRemoveItem={(item) => {
-          // alert("Remove" + item.id)
-          removeChart(item.id).then(() => {
-            refresh?.()
-          })
-        }}
+       
         onLayoutChange={(layout) => {
           updateChartGrid(layout.map((x) => ({
             ...x,
             id: x.i
-          })));
+          }))).then(() => {
+            refetchStructure?.()
+          });
 
         // console.log(layout)
       }}
+        noWrap
         layout={values}
         >
       {(item: any) => (
-        <Box flex>
+       <GraphContainer
+        onDelete={() => {
+          removeChart(item.id).then(() => {
+            refetchStructure?.()
+          })
+        }}
+        onEdit={() => {
+          openModal(true);
+          setSelected(item)
+        }}
+        dataKey={item.dataKey?.key}
+        label={`${item.dataDevice?.name} - ${item.dataKey?.key}`}
+        total={item.totalValue?.total}>
           <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
-        </Box>
+        </GraphContainer>
       )}
       </GraphGrid>
     </Box>

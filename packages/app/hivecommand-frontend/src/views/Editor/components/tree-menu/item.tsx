@@ -35,11 +35,9 @@ export const MenuItem : React.FC<TreeItemContentProps> = forwardRef<HTMLDivEleme
         displayIcon
       } = props as any;
       
-      console.log("TREE ITEM", {props})
 
       const icon = iconProp || expansionIcon || displayIcon;
 
-      console.log({icon, expandIcon, collapseIcon})
 
       const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         preventSelection(event);
@@ -48,18 +46,15 @@ export const MenuItem : React.FC<TreeItemContentProps> = forwardRef<HTMLDivEleme
       const handleExpansionClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
       ) => {
-          console.log("Exapnd", props.nodeId)
         handleExpansion(event);
       };
     
       const handleSelectionClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
       ) => {
-          console.log("Seelct")
         handleSelection(event);
       };
 
-      console.log({expanded})
 
     return (
         <Box 
@@ -122,7 +117,6 @@ export const CustomTreeItem = (props: any) => {
 }
 
 export const MenuItemGroup = (props) => {
-    console.log("GROUP", {props})
     return (
         <CustomTreeItem nodeId={props.id} label={props.label}>
             {props.items?.map((item) => <MenuItemGroup id={item.id} label={item.name} items={item.children} />)}

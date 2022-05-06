@@ -205,34 +205,8 @@ export const useCreateProgramNode = (program: string, flow: string, parent?: str
 		subprocess?: string
 	}) => {
 		
-		let query = {};
-		if(args.type == "Connect" && args.subprocess){
-			query = {
-				type: args.type,
-				x: args.x,
-				y: args.y,
-				subprocess: { connect: {where: {node: {id: args.subprocess}}}}
-			}
-		}else{
-			query = {
-				type: args.type,
-				x: args.x,
-				y: args.y
-			}
-		}
 
-
-		let update = {
-			node: {
-				nodes: [{
-					create: [{
-						node: query
-					}]
-				}]
-			}
-		}
-
-		let updateQuery = getProgramSelector(update, flow, parent)
+		// let updateQuery = getProgramSelector(update, flow, parent)
 
 		const item = mutation.createCommandProgramFlowNode({
 			program: program,
@@ -240,7 +214,8 @@ export const useCreateProgramNode = (program: string, flow: string, parent?: str
 			input: {
 				x: args.x,
 				y: args.y,
-				type: args.type
+				type: args.type,
+				subprocess: args.subprocess
 			}
 			// where: {id: program},
 			// update: {
