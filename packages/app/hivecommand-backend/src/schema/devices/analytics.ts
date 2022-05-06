@@ -164,22 +164,14 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					where: {id: args.id},
 					data: {
 						type: args.input.type,
-						total: args.input.total,
+						total: args.input.total || false,
 
 						x: args.input.x,
 						y: args.input.y,
 						width: args.input.width,
 						height: args.input.height,
-
-						dataDevice: {
-							connect: {id: args.input.dataDevice}
-						},
-						dataKey: {
-							connect: {id: args.input.dataKey}
-						},
-						device: {
-							connect: {id: args.input.device}
-						}
+						dataDeviceId: args.input.dataDevice,
+						dataKeyId: args.input.dataKey
 					}
 				})
 			},
