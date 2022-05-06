@@ -123,6 +123,8 @@ export default (prisma: PrismaClient) => {
 					const flow = await prisma.programFlow.findMany({
 						where: filter, 
 						include: {
+							children: true,
+							parent: true,
 							nodes: {
 								include: {
 									actions: {
