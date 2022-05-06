@@ -410,13 +410,18 @@ model ProgramFlow {
   nodes ProgramFlowNode[] @relation(name: "forFlow")
   edges ProgramFlowEdge[]
 
+  parent ProgramFlow? @relation(name: "hasChild", fields: [parentId], references: [id])
+  parentId String?
+
+  children ProgramFlow[] @relation(name: "hasChild")
+
   usedIn ProgramHMIAction[] @relation(name: "useFlow")
   usedBy ProgramFlowNode[] @relation(name: "useSubprocess")
 
   activatesPlugin IOPlugin[] @relation(name: "activatePlugin")
 
-  program Program @relation(fields: [programId], references: [id]) 
-  programId String
+  program Program? @relation(fields: [programId], references: [id]) 
+  programId String?
 }
 
 model ProgramFlowNode {

@@ -150,6 +150,7 @@ export interface CommandProgramFlowEdgeInput {
 
 export interface CommandProgramFlowInput {
   name?: InputMaybe<Scalars["String"]>;
+  parent?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandProgramFlowNodeActionInput {
@@ -660,7 +661,10 @@ export const generatedSchema = {
     to: { __type: "ID" },
     toHandle: { __type: "String" },
   },
-  CommandProgramFlowInput: { name: { __type: "String" } },
+  CommandProgramFlowInput: {
+    name: { __type: "String" },
+    parent: { __type: "String" },
+  },
   CommandProgramFlowNodeActionInput: {
     device: { __type: "ID" },
     id: { __type: "ID" },
