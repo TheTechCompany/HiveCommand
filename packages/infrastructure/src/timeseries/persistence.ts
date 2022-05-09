@@ -1,8 +1,9 @@
 import * as k8s from '@pulumi/kubernetes'
 import { Config, Output } from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws'
+import {Provider} from '@pulumi/kubernetes'
 
-export const TimeseriesPersistence = async (vpcId: Output<any>) => {
+export const TimeseriesPersistence = async (provider: Provider, vpcId: Output<any>) => {
     const config = new Config()
 
     const suffix = config.get('suffix');
@@ -67,7 +68,7 @@ export const TimeseriesPersistence = async (vpcId: Output<any>) => {
                 volumeHandle: efsVolume.id
             }
         }
-    })
+    }, {provider})
 
     const storageClaim = new k8s.core.v1.PersistentVolumeClaim(`${efsRoot}-pvc`, {
         metadata: {
@@ -83,7 +84,7 @@ export const TimeseriesPersistence = async (vpcId: Output<any>) => {
                 }
             }
         }   
-    })
+    }, {provider})
     
     return {
         storageClaim,
