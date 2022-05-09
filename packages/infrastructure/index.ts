@@ -7,6 +7,8 @@ import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
 
+import Timeseries from './src/timeseries'
+
 const main = (async () => {
     const config = new Config();
     const org = config.require('org');
@@ -17,6 +19,8 @@ const main = (async () => {
 
     const gatewayRef = new pulumi.StackReference(`${org}/apps/${suffix}`)
 
+    const vpcId = stackRef.getOutput('vpcId');
+
     const kubeconfig = stackRef.getOutput('kubeconfig');
 
     const rootServer = gatewayRef.getOutput('gatewayUrl');
@@ -25,7 +29,9 @@ const main = (async () => {
 
     const provider = new Provider('eks', { kubeconfig });
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass));
+    const { service: timeseriesService } = await Timeseries(provider, vpcId)
+
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name));
     const service = await Service(provider)
 
     return {

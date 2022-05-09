@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, timeseriesHost: Output<any>) => {
 
     const config = new Config();
 
@@ -37,7 +37,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             { name: 'ROOT_SERVER', value: `http://${rootServer}` },
                             {name: "RABBIT_URL",  value: process.env.RABBIT_URL},
                             {name: "VERSION_SHIM", value: '1.0.10'},
-                            {name: "TIMESERIES_HOST", value: process.env.TIMESERIES_HOST},
+                            {name: "TIMESERIES_HOST", value:  timeseriesHost.apply(url => `${url}.default.svc.cluster.local`)},
                             {name: "TIMESERIES_PASSWORD",  value: process.env.TIMESERIES_PASSWORD},
                             {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
                             {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},
