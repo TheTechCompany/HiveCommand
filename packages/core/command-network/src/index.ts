@@ -1,10 +1,8 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
-import { ActionPayload, AssignmentPayload, PayloadResponse } from './types';
+import { ActionPayload, AssignmentPayload, CommandVariable, PayloadResponse } from '@hive-command/data-types';
 import log from 'loglevel'
-
-export * from './types'
 
 export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
@@ -246,10 +244,17 @@ export class CommandNetwork {
 		- Start OPCUA Server and Companions
 		- Load initialState (decouples building the schema from running the server)
 	*/
-	async start(credentials: {
-		hostname: string,
-		discoveryServer?: string
-	}, struct: {layout: AssignmentPayload[], actions: ActionPayload[]} ){
+	async start(
+		credentials: {
+			hostname: string,
+			discoveryServer?: string
+		}, 
+		struct: {
+			layout: AssignmentPayload[], 
+			actions: ActionPayload[],
+			variables: CommandVariable[]
+		} 
+	){
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",

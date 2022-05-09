@@ -17,6 +17,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 				let whereArg : any = {};
 				if(args.where){
 					if(args.where.id) whereArg['id'] = args.where.id;
+					if(args.where.network_name) whereArg['network_name'] = args.where.network_name;
 				}
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
@@ -106,6 +107,14 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					}
 				})
 			},
+			updateCommandDeviceUptime: async (root: any, args: {id: any, uptime: any}, context: any) => {
+				let query : any = {};
+				
+				if(args.id) query.id = args.id;
+
+				return await prisma.device.update({where: query, data: {lastSeen: args.uptime}})
+				
+			},
 			deleteCommandDevice: async (root: any, args: {id: string}, context: any) => {
 				return await prisma.device.delete({where: {id: args.id}});
 			}
@@ -130,6 +139,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 	type Mutation {
 		createCommandDevice(input: CommandDeviceInput!): CommandDevice!
 		updateCommandDevice(id: ID!, input: CommandDeviceInput!): CommandDevice!
+		updateCommandDeviceUptime(id: ID!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(id: ID!): CommandDevice!
 	}
 
@@ -141,6 +151,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 
 	input CommandDeviceWhere {
 		id: ID
+		network_name: String
 	}
 
 	type CommandDevice  {

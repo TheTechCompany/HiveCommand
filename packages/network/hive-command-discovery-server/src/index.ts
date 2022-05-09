@@ -19,6 +19,11 @@ import { Data } from './data';
 import amqp from 'amqplib'
 import { DataType } from 'node-opcua-variant';
 
+export interface DiscoveryServerOptions {
+    apiKey?: string;
+    gatewayURL?: string;
+}
+
 export class DiscoveryServer {
     private app : Express;
     private server : HttpServer;
@@ -36,12 +41,14 @@ export class DiscoveryServer {
 
     private connected: any[] = [];
 
-    constructor(){
+    private options: DiscoveryServerOptions;
+
+    constructor(opts: DiscoveryServerOptions){
+        this.options = opts;
 
         this.dataBroker = new Data({
-            uri: process.env.NEO4J_URI,
-            user: process.env.NEO4J_USER,
-            pass: process.env.NEO4J_PASS
+            gatewayURL: opts.gatewayURL,
+            apiKey: opts.apiKey
         })
 
         this.opcuaDiscovery = new DiscoveryService({

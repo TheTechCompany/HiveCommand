@@ -1,9 +1,17 @@
 export interface PayloadResponse {
 	payload?: {
 		command: CommandPayloadItem[],
+		variables?: CommandVariable[],
 		layout?: AssignmentPayload[],
 		actions?: ActionPayload[]
 	}
+}
+
+export interface CommandVariable {
+	id: string;
+	name: string;
+	type: string;
+	defaultValue: string;
 }
 
 export interface ActionPayload {

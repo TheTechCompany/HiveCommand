@@ -11,7 +11,7 @@ import cleanup from 'node-cleanup'
 import { Controller } from './controller'
 import { Machine } from './machine'
 import path from 'path/posix';
-import { TerminalDisplay } from './display'
+
 import { AlarmEngine } from './alarm-engine'
 
 const pkg = require('../package.json')
@@ -189,14 +189,18 @@ export class CommandClient {
 
 		if(commandPayload.payload){
 
-			const { layout, actions } = commandPayload.payload;
+			const { layout, actions, variables } = commandPayload.payload;
 
 			if(layout){
 
 				await this.controller.start({
 					hostname: self.identity.named, 
 					discoveryServer: this.options.discoveryServer || 'http://localhost:8080',
-				}, {layout: layout || [], actions: actions || []})
+				}, {
+					layout: layout || [], 
+					actions: actions || [],
+					variables: variables || []
+				})
 			}
 			await this.machine?.load(commandPayload)
 		}
