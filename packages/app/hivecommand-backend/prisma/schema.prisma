@@ -24,6 +24,7 @@ model Device {
   reports DeviceReport[] @relation(name: "hasReports")
 
   createdAt DateTime @default(now())
+  
   lastSeen DateTime?
 
   organisation String

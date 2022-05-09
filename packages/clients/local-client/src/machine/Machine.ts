@@ -7,15 +7,15 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/network";
+import { AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
-import { getDeviceFunction } from "../device-types/AsyncType";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
 import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
 import log from "loglevel";
+
 import PID from "../plugins/PID";
 
 export class Machine {
@@ -35,7 +35,8 @@ export class Machine {
 		pluginDir: string
 	}){
 		this.fsm = new CommandStateMachine({
-			processes: []
+			processes: [],
+			variables: []
 		}, {
 			requestState: async (operation) => {
 				log.info("Requesting state to mock resolver", operation)
@@ -163,6 +164,7 @@ export class Machine {
 		// console.log("FLOWS", flows)
 		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
+			variables: [],
 			devices: layout?.map((x) => {
 
 				let plugins = x.plugins?.map((plugin) => {

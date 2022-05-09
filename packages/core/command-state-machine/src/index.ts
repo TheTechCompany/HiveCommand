@@ -1,7 +1,7 @@
 import { ProgramProcess } from "./types/ProgramProcess";
 import { EventEmitter } from 'events'
 import { State } from "./State";
-import { ProgramDevice } from "./types/ProgramDevice";
+import { ProgramDevice, ProgramVariable } from "./types";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
 import { CommandAction, Process, ProcessTransition } from '@hive-command/process'
@@ -30,7 +30,8 @@ export enum CommandStateMachineStatus {
 
 export interface StateProgram {
 	initialState?: any;
-	devices?: ProgramDevice[]
+	devices?: ProgramDevice[],
+	variables: ProgramVariable[],
 	processes: ProgramProcess[],	
 }
 

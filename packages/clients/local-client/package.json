@@ -34,6 +34,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
+    "@hive-command/data-types": "^1.0.0",
     "@hive-command/identity": "^1.4.1-alpha.124",
     "@hive-command/logging": "^1.4.1-alpha.124",
     "@hive-command/network": "^1.4.1-alpha.129",

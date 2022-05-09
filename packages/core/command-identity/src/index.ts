@@ -1,6 +1,7 @@
 import os from 'os';
 import axios, { Axios } from 'axios';
-import { PayloadResponse } from './types';
+
+import { PayloadResponse } from '@hive-command/data-types';
 
 export interface CommandBus {
 	id: string;
@@ -12,6 +13,7 @@ export interface CommandBus {
 		}
 	}}[]
 }
+
 
 export class CommandIdentity {
 
