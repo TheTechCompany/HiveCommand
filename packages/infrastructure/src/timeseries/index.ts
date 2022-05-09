@@ -12,7 +12,7 @@ export default async (provider: Provider, vpcId: Output<any>) => {
 
     const appName = `hive-command-timeseriesdb-${suffix}`
 
-    const { storagePv, storageClaim } = await TimeseriesPersistence(vpcId)
+    const { storagePv, storageClaim } = await TimeseriesPersistence(provider, vpcId)
 
     const deployment = await TimeseriesDeployment(provider, appName, storageClaim);
     const service = await TimeseriesService(provider, appName)
