@@ -190,6 +190,49 @@ export class Data {
 
 	async getDeviceProgram(deviceId: string){
 
+		let programSelector = `
+			id
+			name
+			nodes {
+				id
+				type
+				actions{
+					id
+					request{
+						key
+					}
+					device{
+						id
+					}
+				}
+				subprocess{
+					id
+				}
+			}
+
+			edges {
+				id
+				conditions {
+					id
+					inputDevice{
+						id
+					}
+					inputDeviceKey{
+						key
+					}
+					comparator
+					assertion{
+						id
+						setpoint {
+							value
+						}
+						variable {
+							id
+						}
+					}
+				}
+			}
+		`
 		let doc = gql`
 			query GetProgram($id: ID) {
 				commandDevices(where: {id: $id}){
@@ -204,16 +247,19 @@ export class Data {
 							defaultValue
 						}
 
-						program {
+						devices {
 							id
 							name
-							nodes {
+							type {
 								id
-
 							}
+						}
 
-							edges {
-								id
+						program {
+							${programSelector}
+
+							children {
+								${programSelector}
 							}
 						}
 					}

@@ -1382,10 +1382,10 @@
   resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.13.tgz#4c316bdbb8a6c1489faf4912b26400cdff43be8b"
   integrity sha512-bZcFH+VpAV7MpxTRdK+o+HQyEpWoCCXxA6j21g7JiTr+skzxb+yoMIGUESxJ6FgpTh6HjxYE4gHWIx/YRWxrgQ==
 
-"@hexhive/ui@0.0.12-alpha.11":
-  version "0.0.12-alpha.11"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.12-alpha.11.tgz#e961841417f2eeb69498bd896179ec2f3409dab0"
-  integrity sha512-IbEtUVMoiI6bSm4Qmw4+bOylFCqXZKyGWQYyeO0rN6+nN3WasIV9Wtj4+/4YQ/0dHrIR9IEU+9FzZosVzFxPmg==
+"@hexhive/ui@0.0.12-alpha.13":
+  version "0.0.12-alpha.13"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.12-alpha.13.tgz#22f18814ebe64a09fe798ea65d0a7e92d3b59e32"
+  integrity sha512-EdllqSKOZyYu3wP3PA3RsVP8i6Zy74YoDqukQhXCBEkiYiRRg8p6JcSWwdzZ3sDk3MbBBZ/ApVDsKnr3+R4UAA==
   dependencies:
     "@emotion/react" "^11.9.0"
     "@emotion/styled" "^11.8.1"
