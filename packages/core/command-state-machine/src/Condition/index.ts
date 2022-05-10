@@ -1,4 +1,4 @@
-import { TransitionCondition } from "../types/TransitionCondition";
+import { TransitionCondition } from "@hive-command/data-types";
 
 export class Condition {
     private condition: TransitionCondition;

@@ -3,10 +3,9 @@ import { DeviceModal } from '../../components/modals/device';
 import { useCreateDevice, useUpdateDevice } from '@hive-command/api'
 import { DeploymentList, DeploymentInfo } from '../../components/deployment-list';
 import { Box, TextInput, Button } from 'grommet';
-import * as Icons from 'grommet-icons';
 import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
-
+import { Add } from '@mui/icons-material'
 import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { useAuth } from '@hexhive/auth-ui';
 export interface DevicePageProps {
@@ -188,7 +187,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                      primary 
                      hoverIndicator 
                      label="Add"
-                     icon={<Icons.Add />} />
+                     icon={<Add />} />
             </Box>
             <Box
                 flex

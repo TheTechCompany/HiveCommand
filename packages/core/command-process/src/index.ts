@@ -2,12 +2,11 @@
 // import doT from 'dot';
 import EventEmitter from "events";
 import { ProcessChain } from './chain';
-import { CommandAction, CommandProcess } from './types';
+import { CommandAction, CommandProcess } from '@hive-command/data-types';
 import log from 'loglevel'
 
 log.setLevel('debug')
 
-export * from './types'
 
 export {
     ProcessChain

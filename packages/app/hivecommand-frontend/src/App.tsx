@@ -34,9 +34,7 @@ function App(props: any) {
         <ApolloProvider client={client}>
           <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
             <Box fill height="full" direction="column" flex>
-              <Routes>
-                <Route path={`*`} element={<Dashboard />} />
-              </Routes>
+             <Dashboard />
             </Box>
           </Router>
         </ApolloProvider>

@@ -1,4 +1,4 @@
-import { ProgramAction } from "../../types";
+import { ProgramAction } from "@hive-command/data-types";
 
 export const handler = async (
 	options: {actions: ProgramAction[]} = {actions: []},

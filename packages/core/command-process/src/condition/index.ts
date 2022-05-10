@@ -1,5 +1,5 @@
 import log from "loglevel";
-import { TransitionCondition } from "../types";
+import { TransitionCondition } from "@hive-command/data-types";
 
 export class Condition {
     private condition: TransitionCondition;

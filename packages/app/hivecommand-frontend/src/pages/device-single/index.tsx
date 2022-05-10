@@ -1,4 +1,3 @@
-import { Logout as ExitToApp, Add } from 'grommet-icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Box, List, Text, Button, Select, Collapsible } from 'grommet';
 //import { Map } from '@thetechcompany/live-ui'

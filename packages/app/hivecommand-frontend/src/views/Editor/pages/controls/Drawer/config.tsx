@@ -1,7 +1,7 @@
 import { BumpInput } from "@hexhive/ui";
 import { HMIGroupModal } from "../../../../../components/modals/hmi-group";
 import { Box, Text, Button, Select, CheckBox } from "grommet";
-import { Aggregate, RotateLeft, RotateRight, Subtract, Add } from 'grommet-icons';
+import { TableView as Aggregate, RotateLeft, RotateRight, Remove as Subtract, Add } from '@mui/icons-material';
 import React, { useState } from "react";
 import { useAssignHMINode, useUpdateHMIGroup, useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
@@ -76,7 +76,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     plain
                     hoverIndicator
                     style={{ padding: 6, borderRadius: 3 }}
-                    icon={<Aggregate size="20px" />} />
+                    icon={<Aggregate />} />
             </Box>
             <Select
                 valueKey={{ reduce: true, key: "id" }}
@@ -109,8 +109,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Rotation"
                 type="number"
-                leftIcon={<RotateLeft size="small" />}
-                rightIcon={<RotateRight size="small" />}
+                leftIcon={<RotateLeft  />}
+                rightIcon={<RotateRight />}
                 value={item?.extras?.rotation}
                 onLeftClick={() => {
                     updateHMINode(selected.id, { rotation: (item?.extras?.rotation || 0) - 90 }).then(() => {
@@ -139,8 +139,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Scale X"
                 type="number"
-                leftIcon={<Subtract size="small" />}
-                rightIcon={<Add size="small" />}
+                leftIcon={<Subtract  />}
+                rightIcon={<Add />}
                 value={item?.extras?.scaleX}
                 onLeftClick={() => {
                     updateHMINode(
@@ -179,8 +179,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Scale Y"
                 type="number"
-                leftIcon={<Subtract size="small" />}
-                rightIcon={<Add size="small" />}
+                leftIcon={<Subtract />}
+                rightIcon={<Add />}
                 value={item?.extras?.scaleY}
                 onLeftClick={() => {
                     updateHMINode(

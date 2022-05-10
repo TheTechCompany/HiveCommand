@@ -1,6 +1,6 @@
 import { ProgramConditionModal } from "../../../../../../components/modals/program-condition"
 import { Box, List, Text, Button } from "grommet"
-import { MoreVertical, Add } from 'grommet-icons';
+import { MoreVert, Add } from '@mui/icons-material';
 import { useState } from "react";
 import { useCreatePathCondition, useRemovePathCondition, useUpdatePathCondition } from "@hive-command/api";
 import { useProgramEditor } from "../../context";
@@ -74,7 +74,7 @@ export const ConditionDrawerItem = () => {
                     plain
                     style={{ padding: 6, borderRadius: 3 }}
                     size="small"
-                    icon={<Add size="small" />} />
+                    icon={<Add />} />
             </Box>
             <List
                 pad="none"
@@ -102,7 +102,7 @@ export const ConditionDrawerItem = () => {
                             style={{ padding: 6, borderRadius: 3 }}
                             plain
                             size="small"
-                            icon={<MoreVertical size="small" />} />
+                            icon={<MoreVert />} />
                     </Box>
                 )}
             </List>

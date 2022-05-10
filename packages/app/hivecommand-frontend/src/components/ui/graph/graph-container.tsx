@@ -1,8 +1,7 @@
 import React, { forwardRef } from "react";
 import { Text, Button } from "grommet";
-import { Close } from "grommet-icons";
 import { Graph } from ".";
-import { MoreVert } from "@mui/icons-material";
+import { MoreVert, Close } from "@mui/icons-material";
 import { Menu, MenuItem, Box, IconButton, Paper } from "@mui/material";
 import { BaseStyle } from "@hexhive/styles";
 

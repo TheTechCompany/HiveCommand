@@ -31,6 +31,30 @@ export default (prisma: PrismaClient, pool: Pool) => {
 						},
 						activeProgram: {
 							include: {
+								program: {
+									include: {
+										nodes: {
+											include: {
+												actions: {
+													include: {
+														request: true,
+														device: true
+													}
+												},
+												subprocess: {
+													include: {
+														program: true
+													}
+												},
+											}
+										},
+										edges: {
+											include: {
+												conditions: true
+											}
+										}
+									}
+								},
 								interface: {
 									include: {
 										nodes: {

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Text, List, Button, Select } from 'grommet'
-import { CircleInformation, ShieldSecurity, Plug } from 'grommet-icons';
+import { Info as CircleInformation, Security as ShieldSecurity, Power as Plug } from '@mui/icons-material';
 
 import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { gql, useQuery as useApollo, useApolloClient } from '@apollo/client'
-import { Add, MoreVertical } from 'grommet-icons';
 import { nanoid } from 'nanoid';
 import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 

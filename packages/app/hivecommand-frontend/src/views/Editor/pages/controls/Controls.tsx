@@ -5,7 +5,7 @@ import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { NodeDropdown } from '../../../../components/node-dropdown';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
-import { Nodes, Action, Add, MoreVertical, Aggregate, Subtract, RotateLeft, RotateRight } from 'grommet-icons'
+import { GridView as Nodes, Settings as Action } from '@mui/icons-material'
 import Settings from './Settings'
 import { nanoid } from 'nanoid';
 import { pick } from 'lodash';
@@ -523,7 +523,7 @@ export const Controls = (props) => {
                         active={menuOpen == 'nodes'}
                         onClick={() => changeMenu('nodes')}
                         hoverIndicator
-                        icon={<Nodes color="black" />} />
+                        icon={<Nodes  />} />
                     <Button
                         active={menuOpen == 'config'}
                         onClick={() => changeMenu('config')}
@@ -533,7 +533,7 @@ export const Controls = (props) => {
                         active={menuOpen == 'actions'}
                         onClick={() => changeMenu('actions')}
                         hoverIndicator
-                        icon={<Action color="black" />} />
+                        icon={<Action />} />
                 </Box>
             </Box>
         </HMIContext.Provider>

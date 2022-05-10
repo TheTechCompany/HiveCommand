@@ -1,5 +1,5 @@
 import { Condition } from "../Condition";
-import { ProcessLink } from "../types/ProcessLink";
+import { ProcessLink } from "@hive-command/data-types";
 
 export class Transition {
     private link: ProcessLink;

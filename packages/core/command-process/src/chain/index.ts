@@ -9,7 +9,7 @@ import {
   CommandProcess,
   CommandProcessEdge,
   CommandProcessNode,
-} from "../types";
+} from "@hive-command/data-types";
 
 export interface ProcessChainDescriptor {
   id: string;
