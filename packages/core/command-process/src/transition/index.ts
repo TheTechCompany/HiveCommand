@@ -1,6 +1,5 @@
 import { Condition } from "../condition";
-import { CommandProcessEdge } from "../types";
-import { TransitionCondition } from "../types/transition";
+import { CommandProcessEdge,TransitionCondition } from "@hive-command/data-types";
 
 export class Transition {
     private link: CommandProcessEdge;

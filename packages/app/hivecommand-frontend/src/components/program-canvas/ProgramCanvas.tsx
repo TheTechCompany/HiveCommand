@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Box, Button, Collapsible } from 'grommet'
 import { IconNodeFactory, ActionNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, InfiniteCanvasPosition, ZoomControls } from '@hexhive/ui';
 import { NodeDropdown } from '../node-dropdown';
-import { Action, Trigger } from 'grommet-icons';
 import { nanoid } from 'nanoid';
 
 export interface ProgramCanvasProps {

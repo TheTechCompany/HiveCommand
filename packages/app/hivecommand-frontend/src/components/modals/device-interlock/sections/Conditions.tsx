@@ -2,8 +2,6 @@ import React, {useContext, useMemo} from 'react';
 import { Box, Button, Text } from 'grommet';
 import { FormControl, FormInput } from '@hexhive/ui';
 import { DeviceInterlockContext } from '../context';
-import { Add } from 'grommet-icons';
-
 
 
 const COMPARATORS = [

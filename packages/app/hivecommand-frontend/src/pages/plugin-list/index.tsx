@@ -1,4 +1,3 @@
-import { Add } from 'grommet-icons';
 import { StackModal } from '../../components/modals/stacks';
 import React, {Suspense, useEffect, useState} from 'react';
 import styled from 'styled-components'

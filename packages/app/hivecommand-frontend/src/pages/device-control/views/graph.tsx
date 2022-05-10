@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
-import { Add, Previous, Next } from "grommet-icons";
 import { DateSelector, GridLayoutItem, LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
@@ -14,7 +13,7 @@ import moment from "moment";
 import { Graph, GraphContainer } from "../../../components/ui/graph";
 import { useApolloClient } from "@apollo/client";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
-import { MoreVert } from "@mui/icons-material";
+import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
 import { Menu } from "@mui/material";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
@@ -189,19 +188,19 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
             plain 
             style={{padding: 6, borderRadius: 3}} 
             hoverIndicator 
-            icon={<Previous size="small" />} />
+            icon={<Previous />} />
           <Text>{startOfWeek.format('DD/MM/yy')} - {endOfWeek.format('DD/MM/yy')}</Text>
           <Button 
             onClick={nextWeek}
             plain 
             style={{padding: 6, borderRadius: 3}} 
             hoverIndicator 
-            icon={<Next size="small" />} />
+            icon={<Next />} />
 
         </Box>
         <Button
           onClick={() => openModal(true)}
-          icon={<Add size="small" />}
+          icon={<Add  />}
           plain
           style={{ padding: 6, borderRadius: 3 }}
           hoverIndicator

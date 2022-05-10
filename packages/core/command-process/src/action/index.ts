@@ -1,7 +1,7 @@
 import { Process } from "@hive-command/process";
 import { nanoid } from "nanoid";
 import { ProcessChain } from "../chain";
-import { CommandAction, CommandProcessNode } from "../types";
+import { CommandAction, CommandProcessNode } from "@hive-command/data-types";
 
 export interface CommandProgramAction {
 	device: string;

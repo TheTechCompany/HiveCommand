@@ -37,9 +37,3 @@ export interface CommandAction {
 		node: CommandProcess
 	) => Promise<any>
 }
-
-export interface ProgramAction {
-	device: string;
-	release?: boolean;
-	operation?: string;
-}

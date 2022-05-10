@@ -1,6 +1,6 @@
 import { VariableModal } from "../../../../components/modals/program-variable";
 import { Button, Box, Text, List } from "grommet"
-import { Add, MoreVertical } from 'grommet-icons';
+import { Add, MoreVert } from '@mui/icons-material';
 import { useState } from "react";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
@@ -77,7 +77,7 @@ export const Variables = () => {
                     plain
                     style={{padding: 6, borderRadius: 3}}
                     hoverIndicator
-                    icon={<Add size="small" />} />
+                    icon={<Add />} />
             </Box>
             <Box pad="xsmall" flex>
                 <List
@@ -99,7 +99,7 @@ export const Variables = () => {
                                     setSelected(datum)
                                     openModal(true)
                                 }}
-                                icon={<MoreVertical size="small" />} />
+                                icon={<MoreVert />} />
                         </Box>
                     )}
                 </List>

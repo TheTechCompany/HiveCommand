@@ -1,6 +1,6 @@
 import { ProgramActionModal } from "../../../../../../components/modals/program-action"
 import { Box, List, Text, Button } from "grommet"
-import { MoreVertical, Add } from 'grommet-icons';
+import { MoreVert, Add } from '@mui/icons-material';
 import { useState } from "react";
 import { useCreateNodeAction, useRemoveNodeAction, useUpdateNodeAction } from "@hive-command/api";
 import { useCommandEditor } from "../../../../context";
@@ -73,7 +73,7 @@ export const ActionDrawerItem = () => {
                     plain
                     style={{ padding: 6, borderRadius: 3 }}
                     size="small"
-                    icon={<Add size="small" />} />
+                    icon={<Add  />} />
             </Box>
             <List
                 pad="none"
@@ -101,7 +101,7 @@ export const ActionDrawerItem = () => {
                             style={{ padding: 6, borderRadius: 3 }}
                             plain
                             size="small"
-                            icon={<MoreVertical size="small" />} />
+                            icon={<MoreVert />} />
                     </Box>
                 )}
             </List>

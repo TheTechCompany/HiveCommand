@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Add, Action, MoreVertical } from 'grommet-icons';
+import { Add, Settings as Action, MoreVert } from '@mui/icons-material';
 import { Box, List, Text, Button } from 'grommet';
 
 import { ProgramDeviceModal } from '../../../../components/modals/program-device';
@@ -165,7 +165,7 @@ export const Devices = (props) => {
 				<Button 
 					onClick={() => openModal(true)}
 					size="small"
-					icon={<Add size="small" />} 
+					icon={<Add  />} 
 					hoverIndicator /> 
 			</Box>
 			<Box 
@@ -197,7 +197,7 @@ export const Devices = (props) => {
 									hoverIndicator
 									plain 
 									size="small"
-									style={{padding: 3, borderRadius: 6}} icon={<Action size="20px" />} /> )}
+									style={{padding: 3, borderRadius: 6}} icon={<Action />} /> )}
 			
 							</Box>
 
@@ -207,7 +207,7 @@ export const Devices = (props) => {
 								plain
 								size="small" 
 								style={{padding: 6, borderRadius: 3}} 
-								icon={<MoreVertical size="small" />} />
+								icon={<MoreVert />} />
 						</Box>
 					)}
 				</List>

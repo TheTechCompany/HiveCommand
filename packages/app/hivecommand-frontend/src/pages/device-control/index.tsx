@@ -8,7 +8,7 @@ import { matchPath, Navigate, Route, Routes, useNavigate, useParams } from 'reac
 // import program from 'shared/hexhive-types/src/models/program';
 import * as HMINodes from '../../assets/hmi-elements'
 
-import { Services, Cycle, CloudUpload, Analytics, Dashboard, Action, System, Info, Technology } from 'grommet-icons';
+import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import Controls from './views/control'
@@ -34,7 +34,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         { id: 'controls', icon: <Dashboard /> },
         { id: 'variables', icon: <System />},
         { id: 'graphs', icon: <Analytics /> },
-        { id: 'info', icon: <Action /> },
+        { id: 'info', icon: <Info /> },
         { id: 'devices', icon: <Services /> },
     ]
 
@@ -407,7 +407,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             plain
                             hoverIndicator
                             style={{ padding: 6, borderRadius: 3 }}
-                            icon={<Cycle size="small" />} />)}
+                            icon={<Cycle />} />)}
                     </Box>
                 </Box>
                 <Box

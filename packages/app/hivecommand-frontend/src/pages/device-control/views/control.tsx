@@ -1,7 +1,7 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
-import { Checkmark } from 'grommet-icons';
+import { Check as Checkmark } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
@@ -251,7 +251,7 @@ export default () => {
 							 }}
 							 style={{padding: 6, borderRadius: 3}}
 							 hoverIndicator
-							 icon={<Checkmark size="small" />} />) : ''}
+							 icon={<Checkmark />} />) : ''}
 					  </Box>
 				  ))}
 				 </Box>

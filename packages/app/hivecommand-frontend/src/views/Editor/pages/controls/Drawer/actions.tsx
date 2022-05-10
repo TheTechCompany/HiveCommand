@@ -1,6 +1,6 @@
 import { AssignFlowModal } from "../../../../../components/modals/assign-flow";
 import { Box, Button, List, Text } from "grommet";
-import { MoreVertical, Add } from 'grommet-icons';
+import { MoreVert, Add } from '@mui/icons-material';
 import React, { useState } from "react";
 import { useCreateHMIAction, useDeleteHMIAction } from "@hive-command/api";
 import { useHMIContext } from "../context";
@@ -48,7 +48,7 @@ export const ActionMenu = () => {
                 style={{padding: 6, borderRadius: 3}} 
                 plain 
                 hoverIndicator
-                icon={<Add size="small" />} />
+                icon={<Add  />} />
         </Box>
 
         <List
@@ -65,7 +65,7 @@ export const ActionMenu = () => {
                             openAssignModal(true)
                             setSelectedHMIAction(datum)
                         }}
-                        icon={<MoreVertical size="small" />} />
+                        icon={<MoreVert />} />
                 </Box>
             )}
         </List>

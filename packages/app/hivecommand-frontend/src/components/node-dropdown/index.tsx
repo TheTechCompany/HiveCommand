@@ -1,6 +1,5 @@
 import { Box, Collapsible, Text, Heading, Button } from 'grommet'
 import React, {useState} from 'react' 
-import * as Icons from 'grommet-icons';
 import { Block, BlockTray } from '@hexhive/ui';
 import styled from 'styled-components'
 

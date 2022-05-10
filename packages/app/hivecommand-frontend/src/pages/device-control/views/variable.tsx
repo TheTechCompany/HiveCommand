@@ -1,6 +1,5 @@
 import { Box, TextInput, Text, Button } from "grommet"
 import React, { useContext } from "react"
-import { MoreVertical } from 'grommet-icons'
 import { DeviceControlContext } from "../context";
 
 export const ControlVariable = () => {

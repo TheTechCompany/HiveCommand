@@ -3,7 +3,7 @@ import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
 import { Condition } from "../Condition";
 import { State } from "../State";
-import { ProgramDevice } from "../types/ProgramDevice";
+import { ProgramDevice } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
 

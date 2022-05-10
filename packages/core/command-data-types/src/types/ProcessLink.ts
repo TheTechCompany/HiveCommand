@@ -1,5 +1,5 @@
 import { ProgramAction, ProgramActionType } from "./ProgramProcess";
-import { TransitionCondition } from "./TransitionCondition";
+import { TransitionCondition } from ".";
 
 export interface ProcessNode {
 	id: string

@@ -1,12 +1,11 @@
-import { ProgramProcess } from "./types/ProgramProcess";
+import { ProgramProcess } from "@hive-command/data-types";
 import { EventEmitter } from 'events'
 import { State } from "./State";
-import { ProgramDevice, ProgramVariable } from "./types";
+import { ProgramDevice, CommandVariable } from "@hive-command/data-types";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-import { CommandAction, Process, ProcessTransition } from '@hive-command/process'
+import { Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'
-export * from './types'
 
 export interface CommandClient { 
 	requestState: (ev: { device: string, state: any | {[key: string]: any} }) => Promise<any>;
@@ -31,7 +30,7 @@ export enum CommandStateMachineStatus {
 export interface StateProgram {
 	initialState?: any;
 	devices?: ProgramDevice[],
-	variables: ProgramVariable[],
+	variables: CommandVariable[],
 	processes: ProgramProcess[],	
 }
 

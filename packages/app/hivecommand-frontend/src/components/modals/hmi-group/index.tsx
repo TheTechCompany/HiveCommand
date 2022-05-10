@@ -1,6 +1,5 @@
 import { InfiniteCanvas, RetractingPort } from '@hexhive/ui';
 import { Box, Button } from 'grommet';
-import { Node } from 'grommet-icons';
 import { nanoid } from 'nanoid';
 import React, {useState, useEffect} from 'react';
 import { HMINodeFactory } from '../../hmi-node';

@@ -1,9 +1,8 @@
 import React from 'react';
 import { Box, Button, Text } from 'grommet';
 import styled from 'styled-components'
-import * as Icons from 'grommet-icons';
 import { useNavigate } from 'react-router-dom';
-
+import { Storage as Device, Logout, Language as Globe, Memory as Cpu } from '@mui/icons-material'
 export interface DeploymentInfoProps {
     className?: string;
 
@@ -27,7 +26,7 @@ export const BaseDeploymentInfo : React.FC<DeploymentInfoProps> = (props) => {
                 pad="small"
                 direction="row">
                 <Box>
-                    <Icons.Device color="accent-2"/>
+                    <Device />
                 </Box>
                 <Box flex margin={{left: 'small'}}>
                     <Text color={'accent-2'}>Device ID</Text>
@@ -44,7 +43,7 @@ export const BaseDeploymentInfo : React.FC<DeploymentInfoProps> = (props) => {
                 margin={{left: 'small', right: 'small'}}
                     primary
                     title="Go to HMI"
-                     icon={<Icons.Logout />} 
+                     icon={<Logout />} 
                      label="Controls" />
 
             <Box 
@@ -52,7 +51,7 @@ export const BaseDeploymentInfo : React.FC<DeploymentInfoProps> = (props) => {
                 pad="small"
                 direction="row">
                 <Box>
-                    <Icons.Globe color={'accent-2'} /> 
+                    <Globe  /> 
                 </Box>
                 <Box flex direction="column" margin={{left: 'small'}}>
 
@@ -74,7 +73,7 @@ export const BaseDeploymentInfo : React.FC<DeploymentInfoProps> = (props) => {
                 pad="small"
                 direction="row">
                 <Box>
-                    <Icons.Cpu color={'accent-2'} /> 
+                    <Cpu  /> 
                 </Box>
                 <Box flex direction="column" margin={{left: 'small'}}>
                     <Text color={'accent-2'}>Control Platform</Text>

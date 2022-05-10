@@ -6,7 +6,7 @@ import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, Infi
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
 import { NodeDropdown } from '../../../../components/node-dropdown';
-import { Connect, Action, Trigger, PowerShutdown, Add, Clock, Cycle } from 'grommet-icons';
+import { SubdirectoryArrowRight as Connect, Settings as Action, PlayArrow as Trigger, PowerSettingsNew as PowerShutdown, Add, Timer } from '@mui/icons-material';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { ProgramCanvas } from '../../../../components/program-canvas';
 
@@ -110,7 +110,7 @@ export const Program = (props) => {
         //     }
         // },
         {
-            icon: <Clock />,
+            icon: <Timer />,
             label: "Timer",
             extras: {
                 label: "Timer",
@@ -491,7 +491,7 @@ export const Program = (props) => {
 
                             <Button
                                 size="small"
-                                icon={<Add size="small" />} />
+                                icon={<Add />} />
                         </Box>
 
                     </Box>
@@ -507,7 +507,7 @@ export const Program = (props) => {
                             <Button
                                 onClick={() => openModal(true)}
                                 hoverIndicator
-                                icon={<Add size="small" />} />
+                                icon={<Add />} />
                         </Box>
                         <Box>
                             <List

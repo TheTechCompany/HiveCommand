@@ -1,5 +1,5 @@
-import { CommandAction, Process, ProcessChain } from "@hive-command/process";
-import { ProgramProcess } from "../../types";
+import { Process, ProcessChain } from "@hive-command/process";
+import { ProgramProcess, CommandAction } from "@hive-command/data-types";
 
 export const handler = async (
 	options: any, 

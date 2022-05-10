@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Text, List } from 'grommet'
-import { Add } from 'grommet-icons';
+import { Add } from '@mui/icons-material';
 import { useQuery, gql } from '@apollo/client';
 
 export const Alarms = (props) => {
@@ -30,7 +30,7 @@ export const Alarms = (props) => {
 					style={{padding: 6, borderRadius: 3}}	
 					plain
 					size="small"
-					icon={<Add size="small" />} />
+					icon={<Add />} />
 			</Box>
 			<List
 				data={alarms} />

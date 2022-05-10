@@ -1,5 +1,6 @@
 import { ProcessLink, ProcessNode } from "./ProcessLink";
-import { CommandProcessNode, CommandProcessEdge } from "@hive-command/process";
+import { CommandProcessNode, CommandProcessEdge } from ".";
+
 export type ProgramActionType = "action" | "timer"  | "sub-process" | "pid"
 
 export interface ProgramAction {

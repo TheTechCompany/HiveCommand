@@ -5,22 +5,15 @@ import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
 //const Editor = lazy(() => import('@hive-flow/editor'));
-import { ZoomControls } from '../../components/zoom-controls';
-import { NodeDropdown } from '../../components/node-dropdown';
-import { nanoid } from 'nanoid';
-import { Action, Add, Trigger, Menu } from 'grommet-icons'
-import { BallValve, Blower, Conductivity, DiaphragmValve, Filter, FlowSensor, PressureSensor, Pump, SpeedController, Tank } from '../../assets/hmi-elements';
-import * as HMIIcons from '../../assets/hmi-elements'
-import { HMINodeFactory } from '../../components/hmi-node/HMINodeFactory';
-import { ProgramCanvasModal } from '../../components/modals/program-canvas';
+
+import {  Menu } from '@mui/icons-material'
 
 import { Routes, Route } from 'react-router-dom';
 import {Program} from './pages/program'
 import {Controls} from './pages/controls'
 import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
-import { Documentation } from './pages/documentation';
-import { ObjectTypeDefinitionNode } from 'graphql'
+
 import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
@@ -294,7 +287,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                             plain 
                             hoverIndicator 
                             style={{padding: 6, borderRadius: 3}} 
-                            icon={<Menu size="small" />} />
+                            icon={<Menu  />} />
                         <Text>{program.name}</Text>
                     </Box>
 
