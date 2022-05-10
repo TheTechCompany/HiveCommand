@@ -6,7 +6,7 @@ import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, Infi
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
 import { NodeDropdown } from '../../../../components/node-dropdown';
-import { SubdirectoryArrowRight as Connect, Settings as Action, PlayArrow as Trigger, PowerSettingsNew as PowerShutdown, Add, Timer } from '@mui/icons-material';
+import { SubdirectoryArrowRight as Connect, GridView as Action, PlayArrow as Trigger, PowerSettingsNew as PowerShutdown, Add, Timer } from '@mui/icons-material';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { ProgramCanvas } from '../../../../components/program-canvas';
 

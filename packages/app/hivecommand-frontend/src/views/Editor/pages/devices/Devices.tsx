@@ -7,6 +7,7 @@ import { ProgramDeviceModal } from '../../../../components/modals/program-device
 import { useQuery as useApollo , gql, useApolloClient} from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCreateProgramPlaceholder, useDeleteProgramPlaceholder, useUpdateProgramPlaceholder } from '@hive-command/api';
+import { IconButton } from '@mui/material';
 export const Devices = (props) => {
 
 	const navigate = useNavigate()
@@ -162,11 +163,15 @@ export const Devices = (props) => {
 				justify="between"
 				direction="row">
 				<Text size="small"></Text>
-				<Button 
+				<IconButton
+					onClick={() => openModal(true)}>
+					<Add  fontSize="small" />
+				</IconButton>
+				{/* <Button 
 					onClick={() => openModal(true)}
 					size="small"
-					icon={<Add  />} 
-					hoverIndicator /> 
+					icon={} 
+					hoverIndicator />  */}
 			</Box>
 			<Box 
 				overflow="scroll"
@@ -179,7 +184,7 @@ export const Devices = (props) => {
 					primaryKey="name"
 					data={devices}>
 					{(datum) => (
-						<Box direction="row">
+						<Box direction="row" align='center'>
 							<Box 
 								pad="small" 
 								flex
@@ -201,13 +206,16 @@ export const Devices = (props) => {
 			
 							</Box>
 
-							<Button 
-								onClick={() => onEdit(datum)}
+							<IconButton 
+								onClick={() => onEdit(datum)}>
+								<MoreVert fontSize='small' />
+							</IconButton> 
+								{/* onClick={() => onEdit(datum)}
 								hoverIndicator 
 								plain
 								size="small" 
 								style={{padding: 6, borderRadius: 3}} 
-								icon={<MoreVert />} />
+								icon={} /> */}
 						</Box>
 					)}
 				</List>

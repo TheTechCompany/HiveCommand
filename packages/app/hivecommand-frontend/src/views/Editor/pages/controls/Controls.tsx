@@ -5,7 +5,7 @@ import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { NodeDropdown } from '../../../../components/node-dropdown';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
-import { GridView as Nodes, Settings as Action } from '@mui/icons-material'
+import { GridView as Nodes, Construction as Action } from '@mui/icons-material'
 import Settings from './Settings'
 import { nanoid } from 'nanoid';
 import { pick } from 'lodash';
@@ -485,7 +485,7 @@ export const Controls = (props) => {
                             })
                 
                     }}
-                    onDrop={(position, data) => {
+                    onNodeCreate={(position, data) => {
           
                         createHMINode(
                             data.extras?.id,

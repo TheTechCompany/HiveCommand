@@ -18,6 +18,7 @@ import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { Variables } from './pages/variables';
+import { IconButton } from '@mui/material';
 export interface EditorProps {
 
 }
@@ -280,14 +281,12 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     <Box 
                         align="center"
                         direction="row">
-                        <Button 
+                        <IconButton
                             onClick={() => {
                                 openSidebar(!sidebarOpen)
-                            }}
-                            plain 
-                            hoverIndicator 
-                            style={{padding: 6, borderRadius: 3}} 
-                            icon={<Menu  />} />
+                            }}>
+                            <Menu fontSize='small' style={{color: 'white'}} />
+                        </IconButton>
                         <Text>{program.name}</Text>
                     </Box>
 

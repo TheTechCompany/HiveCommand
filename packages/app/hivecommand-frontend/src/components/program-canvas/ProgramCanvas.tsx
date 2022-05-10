@@ -121,6 +121,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
                     updateRef.current?.updatePath(path)
                 }}
                 onNodeUpdate={(node) => {
+					console.log("Update", {node})
 					let n = nodes.slice()
 					let ix = n.map((x) => x.id).indexOf(node.id)
 
@@ -133,7 +134,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 
 					props.onNodeUpdate?.(node)
 				}}
-                onDrop={(position, node) => {
+                onNodeCreate={(position, node) => {
 					
 					let n = nodes.slice()
 					n.push({

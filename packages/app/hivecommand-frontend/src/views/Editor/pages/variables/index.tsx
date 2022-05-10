@@ -5,6 +5,7 @@ import { useState } from "react";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
 import { useCreateProgramVariable, useDeleteProgramVariable, useUpdateProgramVariable } from "@hive-command/api";
+import { IconButton } from "@mui/material";
 
 export const Variables = () => {
 
@@ -72,12 +73,11 @@ export const Variables = () => {
                 />
             <Box  pad="xsmall" background={'accent-1'} direction="row" align="center" justify="between">
                 <Text>Variables</Text>
-                <Button
+                <IconButton
                     onClick={() => openModal(true)}
-                    plain
-                    style={{padding: 6, borderRadius: 3}}
-                    hoverIndicator
-                    icon={<Add />} />
+                 >
+                    <Add  fontSize="small" />
+                </IconButton>
             </Box>
             <Box pad="xsmall" flex>
                 <List
@@ -91,15 +91,15 @@ export const Variables = () => {
                             align="center">
                             <Text size="small">{datum.name}</Text>
 
-                            <Button
-                                style={{padding: 6, borderRadius: 3}}
-                                plain
-                                hoverIndicator 
+                            <IconButton
+                        
                                 onClick={() => {
                                     setSelected(datum)
                                     openModal(true)
-                                }}
-                                icon={<MoreVert />} />
+                                }}>
+
+                                <MoreVert fontSize="small" />
+                            </IconButton>
                         </Box>
                     )}
                 </List>

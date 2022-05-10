@@ -5,6 +5,7 @@ import { RetractingPort } from '@hexhive/ui';
 import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
+import * as Icons from '../../assets/hmi-elements';
 
 export interface IconNodeProps {
     className?: string;
@@ -37,7 +38,7 @@ export interface IconNodeProps {
     children?: (element: JSX.Element) => JSX.Element;
 }
 
-const _Icons: any = {} //Icons;
+const _Icons: any = Icons;
 
 export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
@@ -57,10 +58,10 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)
 
 
-    const Icon = Box /* getSVGStyle(props.extras?.icon && typeof (props.extras?.icon) === 'string' ? (Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : Icons.Previous, (props) => ({
+    const Icon = getSVGStyle(props.extras?.icon && typeof (props.extras?.icon) === 'string' ? (Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : null, (props) => ({
         stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open?.trim() == 'true' || options?.on?.trim() == 'true' || parseFloat(options?.speed) > 0) ? 'green' : 'gray'
 
-    }))*/
+    }))
 
     //Array.isArray(props.extras.icon) ?
     //: () => <HMIGroup icons={props.extras.icon} />
@@ -78,7 +79,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
             height={props.height || '72px'}
             round="small"
             className={props.className}>
-            {/*props.children?.(
+            {props.children?.(
                 <Icon
                     device={props.extras?.devicePlaceholder}
                     scaleX={props.extras?.scaleX}
@@ -86,7 +87,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
                     conf={conf}
                     options={options}
                     size="medium" />
-            )*/}
+            )}
         </Box>
     )
 }
