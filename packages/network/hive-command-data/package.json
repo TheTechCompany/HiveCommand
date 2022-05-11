@@ -16,6 +16,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "mongoose": "^6.3.0"
+    "mongoose": "^6.3.0",
+    "moniker": "^0.1.2"
   }
 }
