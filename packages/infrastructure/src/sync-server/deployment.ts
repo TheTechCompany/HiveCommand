@@ -38,7 +38,12 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         env: [
                             { name: 'TIMESERIES_HOST', value: timeseriesHost.apply(url => `${url}.default.svc.cluster.local`) },
                             { name: 'TIMESERIES_PASSWORD', value: process.env.TIMESERIES_PASSWORD },
-                            { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}.default.svc.cluster.local`)}
+                            { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}.default.svc.cluster.local`)},
+                            {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
+                            {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},
+                            {name: "MONGO_USER", value: process.env.COMMAND_MONGO_USER},
+                            {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
+                            {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
                         ],
                         resources: {
                             limits: {
