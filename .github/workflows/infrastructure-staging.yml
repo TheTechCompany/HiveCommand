@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - staging
-    paths: ["packages/app/**", "packages/infrastructure/**"]
+    paths: ["packages/app/**", "packages/network/**", "packages/infrastructure/**"]
 
 concurrency: hivecommand-infra-${{ github.ref }}
 
