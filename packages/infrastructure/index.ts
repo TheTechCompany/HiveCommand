@@ -8,6 +8,7 @@ import { Deployment } from './src/deployment'
 import { Service } from './src/service'
 import SyncServer from './src/sync-server'
 import Timeseries from './src/timeseries'
+import RabbitMQ from './src/rabbitmq'
 
 const main = (async () => {
     const config = new Config();
@@ -29,11 +30,12 @@ const main = (async () => {
 
     const provider = new Provider('eks', { kubeconfig });
 
+    const { service: rabbitMQService } = await RabbitMQ(provider)
     const { service: timeseriesService } = await Timeseries(provider, vpcId)
 
-    // const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name)
+    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name, rabbitMQService.metadata.name)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name));
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name, rabbitMQService.metadata.name));
     const service = await Service(provider)
 
     return {
