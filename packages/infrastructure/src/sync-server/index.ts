@@ -10,9 +10,9 @@ export default async (provider: Provider, timeseriesHost: Output<any>) => {
 
     const appName = `hive-command-sync-${suffix}`
 
-    const deployment = await Deployment(provider, appName, timeseriesHost)
+    // const deployment = await Deployment(provider, appName, timeseriesHost)
 
     return {
-        deployment
+        // deployment
     }
 }
