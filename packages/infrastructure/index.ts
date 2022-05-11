@@ -31,7 +31,7 @@ const main = (async () => {
 
     const { service: timeseriesService } = await Timeseries(provider, vpcId)
 
-    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name)
+    // const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name));
     const service = await Service(provider)
@@ -40,7 +40,7 @@ const main = (async () => {
         service,
         deployment,
         timeseriesService,
-        syncServer
+        // syncServer
     }
 })()
 
