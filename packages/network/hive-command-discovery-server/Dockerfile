@@ -25,4 +25,4 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/package.js
 COPY --from=build /app/_node_modules/ ./node_modules/
 # WORKDIR /app/packages/network/hive-command-discovery-server
 
-# CMD ["yarn", "start", "--fqdn", "discovery.hexhive.io"]
+CMD ["yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
