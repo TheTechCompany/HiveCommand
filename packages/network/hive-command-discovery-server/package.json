@@ -23,6 +23,7 @@
   "scripts": {
     "build": "tsc -b",
     "start": "ts-node src/cli.ts",
+    "start:prod": "node cli.js",
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
