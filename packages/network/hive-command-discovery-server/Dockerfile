@@ -18,6 +18,8 @@ FROM node:alpine
 
 WORKDIR /app
 
+RUN apk add openssl
+
 COPY --from=build /app/packages/network/hive-command-discovery-server/dist .
 
 COPY --from=build /app/packages/network/hive-command-discovery-server/package.json ./package.json
