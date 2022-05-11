@@ -122,8 +122,11 @@ export class DiscoveryServer {
     }
 
     async onSocketDisconnect(socket: Socket){
-        await this.data.updateLiveness((socket as any)?.networkName, false)
-        await this.data.updateMode((socket as any)?.networkName, 'disabled')
+        //TODO add graphql update
+        
+        // await this.data.updateLiveness((socket as any)?.networkName, false)
+        // await this.data.updateMode((socket as any)?.networkName, 'disabled')
+
         // await Device.updateOne({_id: (socket as any)?.machine_info.id}, {$set: {connected: false}})
         socket.removeAllListeners();
     }
