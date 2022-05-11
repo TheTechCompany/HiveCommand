@@ -3,7 +3,7 @@
   "version": "1.4.1-alpha.144",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
-  "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
+  "homepage": "https://github.com/TheTechCompany/HiveCommand#readme",
   "license": "ISC",
   "main": "dist/index.js",
   "bin": {
@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TheTechCompany/sudbuster.git"
+    "url": "git+https://github.com/TheTechCompany/HiveCommand.git"
   },
   "scripts": {
     "build": "tsc -b",
@@ -27,7 +27,7 @@
     "test": "echo \"Error: run tests from root\" && exit 1"
   },
   "bugs": {
-    "url": "https://github.com/TheTechCompany/sudbuster/issues"
+    "url": "https://github.com/TheTechCompany/HiveCommand/issues"
   },
   "dependencies": {
     "@hive-command/data": "^1.4.1-alpha.133",

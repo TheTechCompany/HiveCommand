@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = async (provider: Provider, appName: string, timeseriesHost: Output<any>) => {
+export const Deployment = async (provider: Provider, appName: string, timeseriesHost: Output<any>, rabbitHost: Output<any>) => {
 
     const config = new Config()
     
@@ -37,6 +37,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         env: [
                             { name: 'TIMESERIES_HOST', value: timeseriesHost.apply(url => `${url}.default.svc.cluster.local`) },
                             { name: 'TIMESERIES_PASSWORD', value: process.env.TIMESERIES_PASSWORD },
+                            { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}.default.svc.cluster.local`)}
                         ],
                         resources: {
                             limits: {
