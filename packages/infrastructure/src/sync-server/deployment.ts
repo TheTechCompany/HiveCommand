@@ -22,7 +22,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
             template: {
                 metadata: { labels: appLabels },
                 spec: {
-                    hostname: syncHostname,
+                    // hostname: syncHostname,
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
