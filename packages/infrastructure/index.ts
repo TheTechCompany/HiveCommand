@@ -6,7 +6,7 @@ import { Config } from "@pulumi/pulumi";
 import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
-
+import SyncServer from './src/sync-server'
 import Timeseries from './src/timeseries'
 
 const main = (async () => {
@@ -31,12 +31,16 @@ const main = (async () => {
 
     const { service: timeseriesService } = await Timeseries(provider, vpcId)
 
+    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name)
+
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name));
     const service = await Service(provider)
 
     return {
         service,
-        deployment
+        deployment,
+        timeseriesService,
+        syncServer
     }
 })()
 

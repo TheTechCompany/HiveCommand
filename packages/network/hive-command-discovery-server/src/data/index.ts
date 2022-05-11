@@ -1,5 +1,4 @@
 import { nanoid } from 'nanoid';
-import neo4j, { Driver, Session, Transaction } from 'neo4j-driver'
 import { request, gql, RequestDocument, Variables } from 'graphql-request'
 
 export interface DataOptions {
