@@ -8,6 +8,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
     const config = new Config()
     
     const suffix = config.require('suffix');
+    const imageTag = process.env.IMAGE_TAG 
 
     const syncHostname = config.require('sync-host');
 
@@ -26,7 +27,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
-                        image: `thetechcompany/hive-command-sync:${suffix}`,
+                        image: `thetechcompany/hive-command-sync:${imageTag}`,
                         // ports: [{ name: "postgres", containerPort: 5432 }],
                         // volumeMounts: [
                         //     {
