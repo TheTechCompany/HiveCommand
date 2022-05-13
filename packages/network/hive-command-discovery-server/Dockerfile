@@ -29,4 +29,4 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/package.js
 COPY --from=build /app/_node_modules/ ./node_modules/
 # WORKDIR /app/packages/network/hive-command-discovery-server
 
-CMD ["./run.sh"]
+CMD ["openvpn", "--config", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
