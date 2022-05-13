@@ -1,6 +1,6 @@
 FROM node:alpine as build
 
-RUN apk add openssl
+RUN apk add openssl 
 
 WORKDIR /app
 
@@ -18,7 +18,9 @@ FROM node:alpine
 
 WORKDIR /app
 
-RUN apk add openssl
+RUN apk add openssl openvpn
+
+COPY --from=build /app/packages/network/hive-command-discovery-server/run.sh .
 
 COPY --from=build /app/packages/network/hive-command-discovery-server/dist .
 
@@ -27,4 +29,4 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/package.js
 COPY --from=build /app/_node_modules/ ./node_modules/
 # WORKDIR /app/packages/network/hive-command-discovery-server
 
-CMD ["yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
+CMD ["./run.sh"]

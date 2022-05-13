@@ -14,6 +14,17 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
 
     const appLabels = { appClass: appName };
 
+    const ovpnKey = new k8s.core.v1.Secret(`sync-server-ovpn-${suffix}`, {
+        metadata: {
+            name: `sync-server-ovpn-${suffix}`
+        },
+        stringData: {
+            'openvpn.conf': process.env[`${suffix.toUpperCase()}_SYNC_OVPN`] || ''
+        }
+    }, {
+        provider
+    })
+
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
         metadata: { labels: appLabels },
         spec: {
@@ -29,12 +40,12 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         name: appName,
                         image: `thetechcompany/hive-command-sync:${imageTag}`,
                         // ports: [{ name: "postgres", containerPort: 5432 }],
-                        // volumeMounts: [
-                        //     {
-                        //         name: 'persistence',
-                        //         mountPath: `/var/lib/postgresql/data`
-                        //     }
-                        // ],
+                        volumeMounts: [
+                            {
+                                name: 'ovpn',
+                                mountPath: `/etc/openvpn`,
+                            }
+                        ],
                         env: [
                             { name: 'TIMESERIES_HOST', value: timeseriesHost.apply(url => `${url}.default.svc.cluster.local`) },
                             { name: 'TIMESERIES_PASSWORD', value: process.env.TIMESERIES_PASSWORD },
@@ -51,14 +62,15 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                             }
                         }
                     }],
-                    // volumes: [
-                    //     {
-                    //         name: 'persistence',
-                    //         persistentVolumeClaim: {
-                    //             claimName: storageClaim.metadata.name
-                    //         }
-                    //     }
-                    // ]
+                    volumes: [
+                        {
+                            name: 'ovpn',
+                            secret: {
+                                secretName: ovpnKey.metadata.name,
+                                
+                            }
+                        }
+                    ]
                 }
             }
         },
