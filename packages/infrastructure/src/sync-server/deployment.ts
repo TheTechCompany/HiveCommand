@@ -62,6 +62,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                             }
                         },
                         securityContext: {
+                            privileged: true,
                             capabilities: {
                                 add: ["NET_ADMIN"]
                             }
