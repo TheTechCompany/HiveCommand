@@ -31,9 +31,13 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
             replicas: 1,
             strategy: { type: "RollingUpdate" },
             selector: { matchLabels: appLabels },
+            
             template: {
                 metadata: { labels: appLabels },
                 spec: {
+                    nodeSelector: {
+                        'eks.amazonaws.com/nodegroup': 'managed-nodes'
+                    },
                     // hostname: syncHostname,
                     containers: [{
                         imagePullPolicy: "Always",
