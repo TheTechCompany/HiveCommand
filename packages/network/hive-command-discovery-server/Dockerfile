@@ -27,7 +27,6 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/dist .
 COPY --from=build /app/packages/network/hive-command-discovery-server/package.json ./package.json
 
 COPY --from=build /app/_node_modules/ ./node_modules/
-# WORKDIR /app/packages/network/hive-command-discovery-server
 
 ENTRYPOINT [ "/app/run.sh" ]
 # CMD ["openvpn", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
