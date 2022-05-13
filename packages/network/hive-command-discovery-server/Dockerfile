@@ -20,7 +20,7 @@ WORKDIR /app
 
 RUN apk update; apk add openssl openvpn
 
-COPY run.sh .
+COPY ./packages/network/hive-command-discovery-server/run.sh .
 
 COPY --from=build /app/packages/network/hive-command-discovery-server/run.sh .
 
