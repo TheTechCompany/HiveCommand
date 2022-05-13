@@ -25,7 +25,10 @@ import { cleanTree } from '../../utils';
 import { EmptyView } from '../../components/empty-view';
 import { TreeItem, TreeView } from '@mui/lab';
 import { TreeMenu } from '../../components/tree-menu';
-import { ProgramFlowModal } from 'app/hivecommand-frontend/src/components/modals/program-flow';
+import { ProgramFlowModal } from '../../../../components/modals/program-flow';
+
+import { ACTION_TYPES } from '@hive-command/data-types'
+import { IconMap } from '../../../../asset-map';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -78,27 +81,30 @@ export const Program = (props) => {
 
     const nodeMenu = [
         {
-            icon: <Action />,
-            label: "Action",
+            icon: IconMap[ACTION_TYPES.ACTION]?.icon,
+            label: IconMap[ACTION_TYPES.ACTION]?.label,
             extras: {
-                label: "Action",
-                icon: 'Action'
+                type: ACTION_TYPES.ACTION,
+                // label: "Action",
+                // icon: 'Action'
             },
         },
         {
-            icon: <Trigger />,
-            label: "Trigger",
+            icon: IconMap[ACTION_TYPES.TRIGGER]?.icon,
+            label:  IconMap[ACTION_TYPES.TRIGGER]?.label,
             extras: {
-                label: "Trigger",
-                icon: 'Trigger'
+                type: ACTION_TYPES.TRIGGER,
+                // label: "Trigger",
+                // icon: 'Trigger'
             }
         },
         {
-            icon: <PowerShutdown />,
-            label: "Shutdown",
+            icon: IconMap[ACTION_TYPES.SHUTDOWN_TRIGGER]?.icon,
+            label: IconMap[ACTION_TYPES.SHUTDOWN_TRIGGER]?.label,
             extras: {
-                label: "Shutdown",
-                icon: "PowerShutdown"
+                type: ACTION_TYPES.SHUTDOWN_TRIGGER,
+                // label: "Shutdown",
+                // icon: "PowerShutdown"
             }
         },
         // {
@@ -110,11 +116,12 @@ export const Program = (props) => {
         //     }
         // },
         {
-            icon: <Timer />,
-            label: "Timer",
+            icon: IconMap[ACTION_TYPES.TIMER]?.icon,
+            label: IconMap[ACTION_TYPES.TIMER]?.label,
             extras: {
-                label: "Timer",
-                icon: "Clock"
+                type: ACTION_TYPES.TIMER,
+                // label: "Timer",
+                // icon: "Clock"
             }
         },
    
@@ -314,7 +321,7 @@ export const Program = (props) => {
                 x: x.x,
                 y: x.y,
                 extras: {
-                    icon: x.type,
+                    icon: IconMap[x.type]?.icon,
                     label: x.subprocess?.name,
                     configuration: [
                         ...(x.configuration || []),
@@ -740,16 +747,16 @@ export const Program = (props) => {
                             icon: <Action />,
                             panel: (
                                 <NodeDropdown
-                                    items={nodeMenu.concat((flow?.children || []).map((x) => ({
-                                        icon: <Connect />,
-                                        label: x.name,
-                                        
-                                        extras: {
+                                    items={nodeMenu.concat(
+                                        (flow?.children || []).map((x) => ({
+                                            icon: IconMap[ACTION_TYPES.SUBPROCESS]?.icon,
                                             label: x.name,
-                                            icon: "Connect",
-                                            subprocess: x.id
-                                        }
-                                    })))}
+                                            extras: {
+                                                type: ACTION_TYPES.SUBPROCESS,
+                                                subprocess: x.id
+                                            }
+                                        }))
+                                    )}
                                 />
                             )
                         },
@@ -775,7 +782,7 @@ export const Program = (props) => {
                         // }})
 
                         createProgramNode(
-                            node.extras.icon, 
+                            node.extras.type, 
                             position.x, 
                             position.y, 
                             node.extras.subprocess

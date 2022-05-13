@@ -74,6 +74,7 @@ export const Variables = () => {
             <Box  pad="xsmall" background={'accent-1'} direction="row" align="center" justify="between">
                 <Text>Variables</Text>
                 <IconButton
+                    size="small"
                     onClick={() => openModal(true)}
                  >
                     <Add  fontSize="small" />
@@ -81,11 +82,13 @@ export const Variables = () => {
             </Box>
             <Box pad="xsmall" flex>
                 <List
+                    pad={'none'}
                     data={variables}
                     
                     >
                     {(datum) => (
                         <Box 
+                            pad="xsmall"
                             justify="between"
                             direction="row" 
                             align="center">

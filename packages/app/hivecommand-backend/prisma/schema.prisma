@@ -438,7 +438,7 @@ model ProgramFlowNode {
   subprocess ProgramFlow? @relation(name: "useSubprocess", fields: [subprocessId], references: [id])
   subprocessId String?
 
-  programFlow ProgramFlow @relation(name: "forFlow", fields: [programFlowId], references: [id]) 
+  programFlow ProgramFlow @relation(name: "forFlow", fields: [programFlowId], references: [id], onDelete: Cascade) 
   programFlowId String
 
   inputs ProgramFlowEdge[] @relation(name: "to")
@@ -454,7 +454,7 @@ model ProgramFlowNodeAction {
   request IOTemplateAction @relation(name: "deviceAction", fields: [requestId], references: [id], onDelete: Cascade)
   requestId String  
 
-  node ProgramFlowNode @relation(name: "useAction", fields: [nodeId], references: [id])
+  node ProgramFlowNode @relation(name: "useAction", fields: [nodeId], references: [id], onDelete: Cascade)
   nodeId String
 }
 
@@ -472,7 +472,7 @@ model ProgramFlowEdgeCondition {
   assertion ProgramAssertion @relation(name: "edgeCondition", fields: [assertionId], references: [id])
   assertionId String
 
-  edge ProgramFlowEdge @relation(name: "useEdgeCondition", fields: [edgeId], references: [id])
+  edge ProgramFlowEdge @relation(name: "useEdgeCondition", fields: [edgeId], references: [id], onDelete: Cascade)
   edgeId String
 }
 
@@ -492,6 +492,6 @@ model ProgramFlowEdge {
 
   conditions ProgramFlowEdgeCondition[] @relation(name: "useEdgeCondition")
 
-  programFlow ProgramFlow @relation(fields: [programFlowId], references: [id])
+  programFlow ProgramFlow @relation(fields: [programFlowId], references: [id], onDelete: Cascade)
   programFlowId String
 }

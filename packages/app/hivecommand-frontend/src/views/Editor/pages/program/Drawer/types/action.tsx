@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCreateNodeAction, useRemoveNodeAction, useUpdateNodeAction } from "@hive-command/api";
 import { useCommandEditor } from "../../../../context";
 import { useProgramEditor } from "../../context";
+import { IconButton } from "@mui/material";
 
 export const ActionDrawerItem = () => {
 
@@ -62,18 +63,18 @@ export const ActionDrawerItem = () => {
                 align="center"
                 direction="row">
                 <Text size="small">Actions</Text>
-                <Button
+                <IconButton
+                    size="small"
                     onClick={() => {
                         openModal(true);
                         // let schema = form_type.find((a) => a.name == field.type)
                         // setCreateSchema(schema.object)
 
                     }}
-                    hoverIndicator
-                    plain
-                    style={{ padding: 6, borderRadius: 3 }}
-                    size="small"
-                    icon={<Add  />} />
+                >
+                    <Add fontSize="inherit" />
+                </IconButton>
+            
             </Box>
             <List
                 pad="none"
@@ -88,7 +89,8 @@ export const ActionDrawerItem = () => {
                             <Text size="small">{datum.device?.name} {datum.request?.key}</Text>
                             {/* <Text size="small">{renderListItem(datum, form_type.find((a) => a.name == field.type))}</Text> */}
                         </Box>
-                        <Button
+                        <IconButton
+                            size="small"
                             onClick={() => {
                                 openModal(true)
                                 // let schema = form_type.find((a) => a.name == field.type)
@@ -97,11 +99,10 @@ export const ActionDrawerItem = () => {
                                 setSelected(datum)
 
                             }}
-                            hoverIndicator
-                            style={{ padding: 6, borderRadius: 3 }}
-                            plain
-                            size="small"
-                            icon={<MoreVert />} />
+                        >
+                            <MoreVert fontSize="inherit" />
+                        </IconButton>
+                          
                     </Box>
                 )}
             </List>
