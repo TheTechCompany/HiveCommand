@@ -16,6 +16,8 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
         metadata: {
             name: `hivecommand-sync-${suffix}`
         }
+    }, {
+        provider
     })
 
     const appLabels = { appClass: appName };
