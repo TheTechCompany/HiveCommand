@@ -1,9 +1,9 @@
 #!/bin/sh
-mkdir -p /dev/net 
+#mkdir -p /dev/net 
 
-mknod /dev/net/tun c 10 200
+#mknod /dev/net/tun c 10 200
 
-chmod 600 /dev/net/tun
+#chmod 600 /dev/net/tun
 
 openvpn --config /etc/openvpn/openvpn.conf &
 
