@@ -10,7 +10,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
     const suffix = config.require('suffix');
     const imageTag = process.env.IMAGE_TAG 
 
-    const syncHostname = config.require('sync-host');
+    // const syncHostname = config.require('sync-host');
 
     const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
         metadata: {
