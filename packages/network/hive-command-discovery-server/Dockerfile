@@ -18,7 +18,7 @@ FROM node:alpine
 
 WORKDIR /app
 
-RUN apk add openssl openvpn
+RUN apk update; apk add openssl openvpn
 
 COPY --from=build /app/packages/network/hive-command-discovery-server/run.sh .
 
@@ -29,4 +29,4 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/package.js
 COPY --from=build /app/_node_modules/ ./node_modules/
 # WORKDIR /app/packages/network/hive-command-discovery-server
 
-CMD ["openvpn", "--config", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
+CMD ["openvpn", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
