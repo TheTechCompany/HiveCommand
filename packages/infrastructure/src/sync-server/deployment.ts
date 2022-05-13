@@ -60,6 +60,11 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                             limits: {
                                 cpu: '0.25'
                             }
+                        },
+                        securityContext: {
+                            capabilities: {
+                                add: ["NET_ADMIN"]
+                            }
                         }
                     }],
                     volumes: [
