@@ -4,6 +4,7 @@ import { MoreVert, Add } from '@mui/icons-material';
 import React, { useState } from "react";
 import { useCreateHMIAction, useDeleteHMIAction } from "@hive-command/api";
 import { useHMIContext } from "../context";
+import { IconButton } from "@mui/material";
 
 export const ActionMenu = () => {
     const [ assignModalOpen, openAssignModal ] = useState<boolean>(false);
@@ -41,14 +42,19 @@ export const ActionMenu = () => {
                     })
                 }}
                 open={assignModalOpen} />
-        <Box  pad="xsmall" background={"accent-1"} direction="row" justify="between">
+        <Box 
+            pad="xsmall" 
+            background={"accent-1"} 
+            direction="row" 
+            align='center'
+            justify="between">
             <Text>Action Palette</Text>
-            <Button 
+            <IconButton 
+                size="small"
                 onClick={() => openAssignModal(true)}
-                style={{padding: 6, borderRadius: 3}} 
-                plain 
-                hoverIndicator
-                icon={<Add  />} />
+            >
+                <Add fontSize="inherit" />
+            </IconButton>
         </Box>
 
         <List

@@ -1,8 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Box, Button, Collapsible } from 'grommet'
-import { IconNodeFactory, ActionNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, InfiniteCanvasPosition, ZoomControls } from '@hexhive/ui';
+import { ActionNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, InfiniteCanvasPosition, ZoomControls } from '@hexhive/ui';
 import { NodeDropdown } from '../node-dropdown';
 import { nanoid } from 'nanoid';
+import { IconMap } from '../../asset-map'
+
+import { IconNodeFactory } from './icon-node';
 
 export interface ProgramCanvasProps {
 	nodes: InfiniteCanvasNode[],
@@ -47,6 +50,8 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
             setPaths(p)
         },
         addPath: (path) => {
+			console.log("Add Path");
+
             let p = pathRef.current.paths.slice()
 			
 			localPaths.current.paths = [...localPaths.current.paths, path.id];
@@ -105,12 +110,14 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 				onDelete={props.onDelete}
                 factories={[new IconNodeFactory()]}
                 onPathCreate={(path) => {
-            
+					console.log("path create", {path})
                     updateRef.current?.addPath(path);
                 }}
                 onPathUpdate={(path) => {
+					console.log("Path Update", {path})
 
 					if(path.source && path.target){
+
 						let mod = path;
 						if(localPaths.current.paths.includes(path.id)){
 							mod.id = undefined;
@@ -142,7 +149,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 						x: position.x,
 						y: position.y,
 						extras: {
-                            icon: node.extras.icon
+                            icon: IconMap[node.extras.type]?.icon
                         },
                         type: IconNodeFactory.TAG
 					})

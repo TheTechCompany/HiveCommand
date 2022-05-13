@@ -108,7 +108,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                       
                         // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
                         // configuration: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.conf.reduce((prev,curr) => ({...prev, [curr.conf.key]: curr.value}), {}),
-                        ports: x?.type?.ports.map((x) => ({...x, id: x.key})),
+                        ports: (x?.type?.ports || []).map((x) => ({...x, id: x.key})),
                         rotation: x?.rotation || 0,
                         scaleX: x?.scaleX || 1,
                         scaleY: x?.scaleY || 1,

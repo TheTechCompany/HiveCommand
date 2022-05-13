@@ -12,6 +12,7 @@ export interface NodeDropdownProps {
 export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
     const [ expanded, setExpanded ] = useState(false)
 
+    console.log({items: props.items})
     return (
             <Box flex>
                     

@@ -109,8 +109,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Rotation"
                 type="number"
-                leftIcon={<RotateLeft  />}
-                rightIcon={<RotateRight />}
+                leftIcon={<RotateLeft  fontSize="small"  />}
+                rightIcon={<RotateRight  fontSize="small" />}
                 value={item?.extras?.rotation}
                 onLeftClick={() => {
                     updateHMINode(selected.id, { rotation: (item?.extras?.rotation || 0) - 90 }).then(() => {
@@ -139,8 +139,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Scale X"
                 type="number"
-                leftIcon={<Subtract  />}
-                rightIcon={<Add />}
+                leftIcon={<Subtract fontSize="small"   />}
+                rightIcon={<Add fontSize="small"  />}
                 value={item?.extras?.scaleX}
                 onLeftClick={() => {
                     updateHMINode(
@@ -179,8 +179,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
             <BumpInput
                 placeholder="Scale Y"
                 type="number"
-                leftIcon={<Subtract />}
-                rightIcon={<Add />}
+                leftIcon={<Subtract fontSize="small"  />}
+                rightIcon={<Add fontSize="small"  />}
                 value={item?.extras?.scaleY}
                 onLeftClick={() => {
                     updateHMINode(

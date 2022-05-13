@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCreatePathCondition, useRemovePathCondition, useUpdatePathCondition } from "@hive-command/api";
 import { useProgramEditor } from "../../context";
 import { useCommandEditor } from "../../../../context";
+import { IconButton } from "@mui/material";
 
 export const ConditionDrawerItem = () => {
 
@@ -63,18 +64,18 @@ export const ConditionDrawerItem = () => {
                 align="center"
                 direction="row">
                 <Text size="small">Conditions</Text>
-                <Button
+                <IconButton
+                    size="small"
                     onClick={() => {
                         openModal(true);
                         // let schema = form_type.find((a) => a.name == field.type)
                         // setCreateSchema(schema.object)
 
                     }}
-                    hoverIndicator
-                    plain
-                    style={{ padding: 6, borderRadius: 3 }}
-                    size="small"
-                    icon={<Add />} />
+                    >
+                    <Add fontSize="inherit"/>
+                </IconButton>
+        
             </Box>
             <List
                 pad="none"
@@ -89,7 +90,8 @@ export const ConditionDrawerItem = () => {
                             <Text size='small'>{datum.inputDevice?.name} {datum.comparator} {renderItemValue(datum)} </Text>
                             {/* <Text size="small">{renderListItem(datum, form_type.find((a) => a.name == field.type))}</Text> */}
                         </Box>
-                        <Button
+                        <IconButton
+                            size="small"
                             onClick={() => {
                                 openModal(true)
                                 // let schema = form_type.find((a) => a.name == field.type)
@@ -98,11 +100,9 @@ export const ConditionDrawerItem = () => {
                                 setSelected(datum)
 
                             }}
-                            hoverIndicator
-                            style={{ padding: 6, borderRadius: 3 }}
-                            plain
-                            size="small"
-                            icon={<MoreVert />} />
+                           > 
+                            <MoreVert fontSize="inherit" />
+                        </IconButton>
                     </Box>
                 )}
             </List>
