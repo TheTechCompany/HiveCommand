@@ -20,6 +20,8 @@ WORKDIR /app
 
 RUN apk update; apk add openssl openvpn
 
+COPY run.sh .
+
 COPY --from=build /app/packages/network/hive-command-discovery-server/run.sh .
 
 COPY --from=build /app/packages/network/hive-command-discovery-server/dist .
@@ -28,5 +30,5 @@ COPY --from=build /app/packages/network/hive-command-discovery-server/package.js
 
 COPY --from=build /app/_node_modules/ ./node_modules/
 
-ENTRYPOINT [ "/app/run.sh" ]
+ENTRYPOINT [ "sh", "/app/run.sh" ]
 # CMD ["openvpn", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
