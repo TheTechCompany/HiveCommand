@@ -12,11 +12,18 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
 
     const syncHostname = config.require('sync-host');
 
+    const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
+        metadata: {
+            name: `hivecommand-sync-${suffix}`
+        }
+    })
+
     const appLabels = { appClass: appName };
 
     const ovpnKey = new k8s.core.v1.Secret(`sync-server-ovpn-${suffix}`, {
         metadata: {
-            name: `sync-server-ovpn-${suffix}`
+            name: `sync-server-ovpn-${suffix}`,
+            namespace: namespace.metadata.name
         },
         stringData: {
             'openvpn.conf': process.env[`${suffix.toUpperCase()}_SYNC_OVPN`] || ''
@@ -26,7 +33,10 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
     })
 
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
-        metadata: { labels: appLabels },
+        metadata: { 
+            labels: appLabels,
+            namespace: namespace.metadata.name
+        },
         spec: {
             replicas: 1,
             strategy: { type: "RollingUpdate" },
