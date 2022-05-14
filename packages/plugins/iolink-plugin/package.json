@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/plugin-iolink",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
@@ -19,10 +19,10 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@hive-command/plugin-base": "^1.4.1",
-    "@hive-command/subscription-lock": "^1.4.1",
-    "@io-link/core": "^1.4.1",
-    "@io-link/iodd": "^1.4.1",
+    "@hive-command/plugin-base": "^1.4.2",
+    "@hive-command/subscription-lock": "^1.4.2",
+    "@io-link/core": "^1.4.2",
+    "@io-link/iodd": "^1.4.2",
     "body-parser": "^1.19.1",
     "express": "^4.17.1"
   },
