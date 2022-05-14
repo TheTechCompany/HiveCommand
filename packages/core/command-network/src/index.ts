@@ -122,7 +122,7 @@ export class CommandNetwork {
 	}
 
 	//Turn buses into OPC map
-	async initOPC({layout, actions, variables} : {variables: CommandVariable[], layout: AssignmentPayload[], actions: ActionPayload[]}){
+	async initOPC({layout = [], actions = [], variables = []} : {variables: CommandVariable[], layout: AssignmentPayload[], actions: ActionPayload[]}){
 
 		// await this.opc?.setComandEndpoint(this.request.bind(this))
 		
