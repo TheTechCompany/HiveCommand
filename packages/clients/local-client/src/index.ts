@@ -171,20 +171,24 @@ export class CommandClient {
 	}
 
 	async setup(){
+		console.log("Discovering environment")
 		this.environment = await this.machine?.discoverEnvironment() || []
 
 		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
 		const self = await this.identity.whoami()
+		console.log("Identity", {self})
 
 		if(!self.identity?.named) throw new Error("No self found, check credentials");
 
+		console.log("Sending context");
 		await this.identity.provideContext(this.environment, this.identity.identity)
 
 		// this.logs.log(`Found self ${JSON.stringify(self)}`)
 
 		const credentials = await this.controller.becomeSelf(self)
+		console.log({credentials})
 
 		// this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 
@@ -192,6 +196,7 @@ export class CommandClient {
 
 		const commandPayload = await this.identity.getPurpose()
 
+		console.log("Purpose", {commandPayload})
 		if(commandPayload.payload){
 
 			const { layout, actions, variables } = commandPayload.payload;
