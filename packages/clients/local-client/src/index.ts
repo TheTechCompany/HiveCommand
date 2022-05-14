@@ -105,6 +105,9 @@ export class CommandClient {
 				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
 				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action}),
 
+				getVariable: (key) => this.machine?.getVariable(key),
+				setVariabe: (key, value) => this.machine?.setVariable(key, value),
+
 				runOneshot: async (flow) => await this.machine?.runOneshot(flow),
 				stopOneshot: async (flow) => await this.machine?.stopOneshot(flow),
 				isRunning: (flow) => this.machine?.isRunning(flow) != undefined,

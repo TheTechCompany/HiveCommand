@@ -44,6 +44,7 @@ export default class Server {
     public namespace?: Namespace;
 
     public deviceFolder? : UAObject //Stores all the device for a program
+    public variableFolder? : UAObject //Stores all the device for a program
     public controllerFolder?: UAObject; //Contains all the major actions for controlling the program
     
     public plantFolder?: UAObject; //Stores all high-level plant information
@@ -129,8 +130,10 @@ export default class Server {
 
             const objectsFolder = addressSpace.rootFolder.objects;
             this.controllerFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Controller'})
+
             this.deviceFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Devices'})
-           
+            this.variableFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Variables'});
+
             this.plantFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Plant'})
             this.plantActions = this.namespace.addFolder(this.plantFolder, {browseName: 'Actions'})
             // this.namespace.addMethod
@@ -142,6 +145,50 @@ export default class Server {
 
     getDeviceTypes(){
         return this.objectTypes;    
+    }
+
+    async addVariable(name: string, type: string, getter: () => any, setter: (value: any) => void){
+        let dataType : DataType;
+        switch(type){
+            case 'String':
+                dataType = DataType.String;
+                break;
+            case 'Number':
+                dataType = DataType.Float;
+                break;
+            case 'Boolean':
+                dataType = DataType.Boolean;
+                break;
+            default:
+                dataType = DataType.String;
+                break;
+        }
+
+        const variable = this.namespace?.addObject({
+            browseName: name
+        })
+
+        const variableValue = this.namespace?.addAnalogDataItem({
+            browseName: `value`,
+            modellingRule: "Mandatory",
+            dataType,
+            componentOf: variable,
+        })
+
+        variableValue?.bindVariable({
+            get: () => new Variant({dataType: dataType, value: getter()}),
+            set: (value: Variant) => {
+                if(!setter) return StatusCodes.BadNotWritable;
+                            
+                try{
+                    setter?.(value)
+                }catch(e){
+                    console.error("Error writing port value", value)
+                }
+
+                return StatusCodes.Good;
+            }
+        })
     }
 
     async addDevice(
