@@ -80,6 +80,7 @@ export class CommandNetwork {
 
 	becomeSelf(self: {error?: any, identity?: any}){
 		if(!self.error){
+			console.log("become self")
 			this.identity = self.identity.named;
 		}
 	}
