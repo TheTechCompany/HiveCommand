@@ -359,7 +359,7 @@ export class Data {
 // 			id: deviceId
 // 		})
 
-		return program?.commandDevices?.[0]
+		return program?.commandDevices?.[0]?.activeProgram
 	}
 
 	async updateDeviceUptime(deviceId: string, uptime: number){

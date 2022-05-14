@@ -52,7 +52,18 @@ export default (prisma: PrismaClient, pool: Pool) => {
 												},
 												edges: {
 													include: {
-														conditions: true
+														conditions: {
+															include: {
+																inputDevice: true,
+																inputDeviceKey: true,
+																assertion: {
+																	include: {
+																		setpoint: true,
+																		variable: true
+																	}
+																}
+															}
+														}
 													}
 												}
 											}
