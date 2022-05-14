@@ -3,10 +3,13 @@ import { handleAuthRequest } from '../utils/auth';
 import { promises } from 'dns';
 import { Data } from '../data';
 
+
 export default (dataBroker: Data) => {
     const router = Router();
 
     router.get('/whoami', async (req, res) => {
+        await promises.setServers(['192.168.200.1']);
+        
         let ip = (req.ip || req.socket.remoteAddress)?.replace('::ffff:', '')
         if(!ip) return res.send({error: "No IP, strange"});
         const [host] = await promises.reverse(ip)
