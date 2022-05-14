@@ -60,8 +60,6 @@ export class CommandNetwork {
 	private httpInstance : AxiosInstance;
 
 	private identity? : string;
-
-
 	private valueBank : ValueBankInterface = {}
 
 	private options : CommandNetworkOptions;
