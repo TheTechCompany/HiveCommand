@@ -1,7 +1,7 @@
 import { Mutex } from "locks";
 import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
-import { Condition } from "../condition";
+import { Condition } from "@hive-command/process";
 import { State } from "../state";
 import { ProgramDevice } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
@@ -177,7 +177,7 @@ export class StateDevice {
 	}
 
 	checkCondition(state: State, device: string, deviceKey: string, comparator: string, value: any){
-		let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
+		let cond = new Condition({inputDevice: device, inputDeviceKey: deviceKey, comparator, assertion})
 
 		let input = state?.get(device)?.[deviceKey]
 		// console.log("Check condition", {input, value}, {device, deviceKey})
@@ -192,6 +192,8 @@ export class StateDevice {
 		let locks = this.device.interlock?.locks || [];
 			
 		const lockedUp = await Promise.all(locks.map((lock) => {
+
+			const condition = new Condition({}, this.fsm.getVariable)
 			return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
 
 		}))
