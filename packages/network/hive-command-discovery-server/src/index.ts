@@ -12,7 +12,6 @@ import { DiscoveryService } from '@hive-command/opcua-lds'
 import { promises } from 'dns';
 import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
-const { Device, Program } = Models;
 import os from 'os';
 import { Data } from './data';
 
@@ -41,7 +40,7 @@ export class DiscoveryServer {
 
     private connected: any[] = [];
 
-    // private options: DiscoveryServerOptions;
+    private options: DiscoveryServerOptions;
 
     constructor(opts: DiscoveryServerOptions){
         this.options = opts;
