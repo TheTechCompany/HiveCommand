@@ -27,19 +27,17 @@ export default (dataBroker: Data) => {
         let deviceId = host?.replace(".hexhive.io", '')
 
 
-        const [ commandPayload, deviceAssignment, deviceActions] = await Promise.all([
-            dataBroker.getDeviceProgram(deviceId), 
-            dataBroker.getDeviceAssignment(deviceId),
-            dataBroker.getDeviceActions(deviceId),
-        ])
+        const payload = await dataBroker.getDeviceProgram(deviceId);
+
+        // const [ commandPayload, deviceAssignment, deviceActions] = await Promise.all([
+        //     dataBroker.getDeviceProgram(deviceId), 
+        //     dataBroker.getDeviceAssignment(deviceId),
+        //     dataBroker.getDeviceActions(deviceId),
+        // ])
         
 
 
-        res.send({payload: {
-            command: commandPayload,
-            layout: deviceAssignment,
-            actions: deviceActions
-        }})
+        res.send({payload: payload})
     })
 
     router.post('/context', async (req, res) => {

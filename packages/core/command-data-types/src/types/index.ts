@@ -9,7 +9,7 @@ export * from './ActionTypes'
 
 export interface PayloadResponse {
 	payload?: {
-		command: CommandPayloadItem[],
+		program: CommandPayloadItem[],
 		variables?: CommandVariable[],
 		layout?: AssignmentPayload[],
 		actions?: ActionPayload[]
@@ -36,10 +36,11 @@ export interface CommandPayloadItem {
 	
 		name: string,
 		id: string,
-		parent: {
-			id: string,
-			name: string
-		} | null,
+		// parent: {
+		// 	id: string,
+		// 	name: string
+		// } | null,
+		children: CommandPayloadItem[];
 		nodes: {
 			id: string;
 			type: string;
