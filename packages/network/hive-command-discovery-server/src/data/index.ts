@@ -180,7 +180,7 @@ export class Data {
 		// `, {
 		// 	id: deviceId
 		// })
-		return actions //.records.map((x) => x.get(0))
+		return actions?.commandDevices?.[0]?.activeProgram?.interface?.actions || [] //.records.map((x) => x.get(0))
 	}
 
 	async getDeviceProgram(deviceId: string){
