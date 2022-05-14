@@ -21,6 +21,8 @@ import { DataType } from 'node-opcua-variant';
 export interface DiscoveryServerOptions {
     apiKey?: string;
     gatewayURL?: string;
+
+    fqdn?: string;
 }
 
 export class DiscoveryServer {
@@ -54,6 +56,7 @@ export class DiscoveryServer {
             port: 4840,
             automaticallyAcceptUnknownCertificate: true,
             force: false,
+            fqdn: this.options.fqdn,
             applicationName: "HexHive OPCUA Global Discovery Service"
         })
         

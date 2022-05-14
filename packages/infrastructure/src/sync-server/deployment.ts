@@ -10,7 +10,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
     const suffix = config.require('suffix');
     const imageTag = process.env.IMAGE_TAG 
 
-    // const syncHostname = config.require('sync-host');
+    const syncHostname = config.require('sync-host');
 
     const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
         metadata: {
@@ -70,6 +70,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         env: [
                             {name: 'HEXHIVE_API_URL', value: process.env.HEXHIVE_API_URL},
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
+                            { name: 'SYNC_HOST', value: syncHostname },
                             { name: 'TIMESERIES_HOST', value: timeseriesHost.apply(url => `${url}.default.svc.cluster.local`) },
                             { name: 'TIMESERIES_PASSWORD', value: process.env.TIMESERIES_PASSWORD },
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}.default.svc.cluster.local`)},

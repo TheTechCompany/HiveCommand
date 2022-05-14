@@ -2,6 +2,8 @@ import os from "os";
 import path from "path";
 import fs from "fs";
 
+// import {  } from './discovery-server'
+
 import { assert, OPCUACertificateManager, OPCUADiscoveryServer, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
 
 // Create a new instance of vantage.
@@ -90,7 +92,12 @@ export class DiscoveryService {
 		if(!this.applicationName) return;
 		this.fqdn = this.opts.fqdn || process.env.HOSTNAME || await extractFullyQualifiedDomainName();
 		
+        console.log({fqdn: this.fqdn});
+        
 		this.applicationUri = makeApplicationUrn(this.fqdn, this.applicationName)
+
+        console.log({applicationUri: this.applicationUri});
+
         await serverCertificateManager.initialize();
 
 		const certificateFile = path.join(pkiFolder, "local_discovery_server_certificate.pem");
