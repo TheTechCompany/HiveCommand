@@ -200,7 +200,7 @@ export class CommandClient {
 
 				await this.controller.start({
 					hostname: self.identity.named, 
-					discoveryServer: `opc.tcp://${this.options.discoveryServer}` || 'http://localhost:8080',
+					discoveryServer: `opc.tcp://${this.options.discoveryServer}:4840` || 'http://localhost:8080',
 				}, {
 					layout: layout || [], 
 					actions: actions || [],
