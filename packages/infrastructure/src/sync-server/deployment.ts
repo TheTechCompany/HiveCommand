@@ -51,7 +51,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         'eks.amazonaws.com/nodegroup': 'managed-nodes'
                     },
                     // hostname: syncHostname,
-                    hostname: 'staging_discovery.hexhive.io',
+                    // hostname: 'staging_discovery.hexhive.io',
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
