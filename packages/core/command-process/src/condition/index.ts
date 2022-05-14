@@ -24,13 +24,12 @@ export class Condition {
             return this.condition.assertion?.setpoint.value
         }else if(this.condition.assertion.variable){
             return this.getVariable?.(this.condition.assertion.variable.key)
-            return this.condition.assertion.variable
         }else if(this.condition.assertion.value){
             return this.condition.assertion.value;
         }
     }
 
-    check(input: any, value: any){
+    check(input: any, value: any = this.value_id){
         //console.log(input, value)
         try{
             let val = parseFloat(input)

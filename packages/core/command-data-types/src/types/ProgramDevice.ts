@@ -1,3 +1,15 @@
+import { EdgeConditionAssertion } from "./Condition";
+
+export interface ProgramInterlock {
+	inputDevice: {id: string}, 
+	deviceKey: {key: string}, 
+	comparator: string, 
+	assertion: EdgeConditionAssertion, 
+
+	action: {
+		key: string
+	}
+}
 export interface ProgramDevice {
 	name: string;
 	requiresMutex?: boolean;
@@ -5,7 +17,7 @@ export interface ProgramDevice {
 	state?: {key: string, type: string}[] //e.g. {key: "on", type: "boolean"}
 	interlock?: {
 		state: {[key: string]: any};
-		locks: {device: string, deviceKey: string, comparator: string, value: any, fallback: string}[]
+		locks: ProgramInterlock[]
 		// fallback: {operation: string, release?: boolean }[]
 		// fallforward: {operation: string }[]
 	}

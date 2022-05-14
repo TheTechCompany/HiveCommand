@@ -185,6 +185,25 @@ export class Data {
 
 	async getDeviceProgram(deviceId: string){
 
+		let assertionSelector = `
+			inputDevice {
+				id
+				name
+			}	
+			inputDeviceKey {
+				key
+			}
+			comparator
+			assertion {
+				setpoint {
+					value
+				}
+				variable {
+					name
+				}
+				value
+			}
+		`
 		let programSelector = `
 			id
 			name
@@ -215,22 +234,7 @@ export class Data {
 				}
 				conditions {
 					id
-					inputDevice{
-						id
-					}
-					inputDeviceKey{
-						key
-					}
-					comparator
-					assertion{
-						id
-						setpoint {
-							value
-						}
-						variable {
-							name
-						}
-					}
+					${assertionSelector}
 				}
 			}
 		`
@@ -271,22 +275,7 @@ export class Data {
 							} 
 											
 							interlocks {
-								inputDevice {
-									id
-								}	
-								inputDeviceKey {
-									key
-								}
-								comparator
-								assertion {
-									setpoint {
-										value
-									}
-									variable {
-										name
-									}
-									value
-								}
+								${assertionSelector}
 								action {
 									id
 								}
