@@ -18,15 +18,20 @@ export class Data {
 	async requestGraphQL(document: RequestDocument, variables: Variables){
 		if(!this.options.gatewayURL) return console.error('No gatewayURL set');
 		
-		const response = await request(
-			this.options.gatewayURL, 
-			document, 
-			variables, 
-			{
-				'Authorization': `API-Key ${this.options.apiKey}`
-			}
-		)
-		return response
+		try{
+			const response = await request(
+				this.options.gatewayURL, 
+				document, 
+				variables, 
+				{
+					'Authorization': `API-Key ${this.options.apiKey}`
+				}
+			)
+			return response
+
+		}catch(error){
+			console.error(`Error sending GraphQL: `, error)
+		}
 	}
 
 
@@ -62,10 +67,7 @@ export class Data {
 				commandDevices(where: {network_name: $networkName}) {
 					id
 
-					assignedDevices {
-						id
-
-					}
+				
 					activeProgram {
 
 						devices {
