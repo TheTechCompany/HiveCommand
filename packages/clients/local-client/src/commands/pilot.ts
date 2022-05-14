@@ -9,7 +9,6 @@ type Options = {
 	storagePath: string | undefined;
 	privateKey?: string;
 	networkInterface: string | undefined;
-	commandCenter: string | undefined
 	healthCenter: string | undefined,
 	discoveryServer?: string;
 	ignorePlugins?: string;
