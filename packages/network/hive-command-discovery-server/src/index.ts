@@ -41,7 +41,7 @@ export class DiscoveryServer {
 
     private connected: any[] = [];
 
-    private options: DiscoveryServerOptions;
+    // private options: DiscoveryServerOptions;
 
     constructor(opts: DiscoveryServerOptions){
         this.options = opts;
