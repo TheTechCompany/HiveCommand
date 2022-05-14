@@ -52,6 +52,8 @@ export default (prisma: PrismaClient, pool: Pool) => {
 												},
 												edges: {
 													include: {
+														from: true,
+														to: true,
 														conditions: {
 															include: {
 																inputDevice: true,
