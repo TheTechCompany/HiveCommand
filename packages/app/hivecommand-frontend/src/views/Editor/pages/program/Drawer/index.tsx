@@ -12,7 +12,7 @@ export const ProgramDrawer = () => {
     const renderDrawer = () => {
         switch(selectedType){
             case 'node':
-                return selected.extras.icon == "Clock" ? (
+                return selected.extras.type == "timer" ? (
                     <TimerDrawerItem />
                 ) : (
                     <ActionDrawerItem />
