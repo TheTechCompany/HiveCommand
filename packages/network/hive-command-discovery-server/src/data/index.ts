@@ -154,7 +154,7 @@ export class Data {
 	// 	`, {
 	// 		id: deviceId
 	// 	})
-		return assignment //.records.map((x) => x.get(0))
+		return [] //assignment //.records.map((x) => x.get(0))
 	}
 
 	async getDeviceActions(deviceId: string){
