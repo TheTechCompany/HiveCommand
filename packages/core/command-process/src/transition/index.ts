@@ -1,11 +1,14 @@
 import { Condition } from "../condition";
-import { CommandProcessEdge,TransitionCondition } from "@hive-command/data-types";
+import { CommandProcessEdge, EdgeCondition } from "@hive-command/data-types";
 
 export class Transition {
     private link: CommandProcessEdge;
 
-    constructor(link: CommandProcessEdge){
+    private getVariable?: (key: string) => any;
+
+    constructor(link: CommandProcessEdge, getVariable?: (key: string) => any){
         this.link = link
+        this.getVariable = getVariable;
     }
 
     get source(){
@@ -17,6 +20,6 @@ export class Transition {
     }
 
     get conditions() : Condition[]{
-        return (this.link.options?.conditions || []).map((x: TransitionCondition) => new Condition(x));
+        return (this.link.options?.conditions || []).map((x: EdgeCondition) => new Condition(x, this.getVariable));
     }
 }

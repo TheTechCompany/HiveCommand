@@ -207,6 +207,12 @@ export class Data {
 
 			edges {
 				id
+				from {
+					id
+				}
+				to {
+					id
+				}
 				conditions {
 					id
 					inputDevice{

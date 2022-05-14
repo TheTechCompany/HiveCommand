@@ -55,6 +55,14 @@ export class Machine {
 		// this.requestOperation = this.requestOperation.bind(this)
 	}
 
+	getVariable(key: string){
+		return this.fsm.getVariable(key)
+	}
+
+	setVariable(key: string, value: any){
+		return this.fsm.setVariable(key, value)
+	}
+
 	loadFlow = (payload: CommandPayloadItem[], id: string) => {
 		let flow = payload.find((a) => a.id == id);
 
@@ -94,10 +102,10 @@ export class Machine {
 					target: next.target,
 					options: {
 						conditions: next.conditions?.map((cond) => ({
-							input: cond.input,
-							inputKey: cond.inputKey,
+							inputDevice: cond.inputDevice,
+							inputDeviceKey: cond.inputDeviceKey,
 							comparator: cond.comparator,
-							value: cond.assertion
+							assertion: cond.assertion
 						}))
 	
 					}
@@ -146,9 +154,6 @@ export class Machine {
 
 		const { command : payload, layout, actions } = commandPayload.payload || {};
 
-		// let payload = commandPayload.payload?.command;
-		// let layout = commandPayload.payload?.layout;
-
 		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 
 		await this.loadPlugins(commandPayload.payload?.layout || []);
@@ -156,13 +161,8 @@ export class Machine {
 		const flows = payload?.filter((a) => a.parent == null).map((flow) => {
 			if(!payload) return {id: '', name: '', nodes: [], links: []};
 			return this.loadFlow(payload, flow.id)
-
 		}).filter((a) => a != undefined)
 
-		console.log(flows, payload)
-		
-		// console.log("FLOWS", flows)
-		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
 			variables: [],
 			devices: layout?.map((x) => {
