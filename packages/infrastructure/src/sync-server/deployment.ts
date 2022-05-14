@@ -50,6 +50,9 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                     nodeSelector: {
                         'eks.amazonaws.com/nodegroup': 'managed-nodes'
                     },
+                    dnsConfig: {
+                        nameservers: ['192.168.200.1']
+                    },
                     // hostname: syncHostname,
                     // hostname: 'staging_discovery.hexhive.io',
                     containers: [{
@@ -57,6 +60,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         name: appName,
                         image: `thetechcompany/hive-command-sync:${imageTag}`,
                         // ports: [{ name: "postgres", containerPort: 5432 }],
+                        
                         volumeMounts: [
                             {
                                 name: 'ovpn',
