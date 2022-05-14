@@ -82,9 +82,8 @@ export class SyncClient {
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
 
 					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
-					// console.log(devices);
-					// console.log(`Connected to ${server.discoveryUrls?.[0]?.toString()}, found ${devices?.references?.length}`)
-
+			
+					
 					let items = [];
 					for(var i = 0; i < (devices?.references || []).length; i++){
 						let ref = devices?.references?.[i];
