@@ -168,11 +168,11 @@ export default class Server {
             browseName: name
         })
 
-        const variableValue = this.namespace?.addAnalogDataItem({
+        const variableValue = this.namespace?.addVariable({
             browseName: `value`,
             modellingRule: "Mandatory",
             dataType,
-            componentOf: variable,
+            componentOf: variable
         })
 
         variableValue?.bindVariable({
