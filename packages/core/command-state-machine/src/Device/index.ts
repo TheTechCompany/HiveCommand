@@ -41,9 +41,6 @@ export class StateDevice {
 			}
 		}, {})
 
-		// console.log(device.plugins)
-
-
 		console.log("Setting up plugins for ", device.name, this.state)
 
 		let plugins = (device.plugins || []).map((plugin) => {
