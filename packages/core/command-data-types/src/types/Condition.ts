@@ -1,6 +1,7 @@
 export interface EdgeCondition {
 	inputDevice: {
 		id: string
+		name: string;
 	};
 	inputDeviceKey: {
 		key: string;
