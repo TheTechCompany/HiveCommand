@@ -132,6 +132,7 @@ export default (prisma: PrismaClient) => {
         type CommandProgramDeviceAction {
             id: ID! 
             key: String
+            func: String
 
             device: CommandProgramDevice 
 

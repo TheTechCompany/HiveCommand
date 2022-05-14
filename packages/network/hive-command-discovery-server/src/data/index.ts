@@ -253,15 +253,23 @@ export class Data {
 							name
 							type {
 								id
+
+								state {
+									key
+									type
+								}
+
+								actions {
+									key
+									func
+								}
 							}
 
 							units {
 								inputUnit
 								displayUnit
 							} 
-							
-							requiresMutex: Boolean
-				
+											
 							interlocks {
 								inputDevice {
 									id
