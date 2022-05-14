@@ -201,7 +201,7 @@ export class CommandClient {
 
 			const { layout, actions, variables } = commandPayload.payload;
 
-			if(layout){
+			// if(layout){
 
 				await this.controller.start({
 					hostname: self.identity.named, 
@@ -211,7 +211,7 @@ export class CommandClient {
 					actions: actions || [],
 					variables: variables || []
 				})
-			}
+			// }
 			await this.machine?.load(commandPayload)
 		}
 	}
