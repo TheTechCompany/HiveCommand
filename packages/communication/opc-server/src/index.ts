@@ -148,6 +148,7 @@ export default class Server {
     }
 
     async addVariable(name: string, type: string, getter: () => any, setter: (value: any) => void){
+        console.log(`Add variable ${name} ${type}`)
         let dataType : DataType;
         switch(type){
             case 'String':
@@ -165,7 +166,8 @@ export default class Server {
         }
 
         const variable = this.namespace?.addObject({
-            browseName: name
+            browseName: name,
+            organizedBy: this.variableFolder
         })
 
         const variableValue = this.namespace?.addVariable({
