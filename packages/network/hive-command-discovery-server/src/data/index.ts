@@ -229,8 +229,8 @@ export class Data {
 			}
 		`
 		let doc = gql`
-			query GetProgram($id: ID) {
-				commandDevices(where: {network_name: $id}){
+			query GetProgram($networkName: String) {
+				commandDevices(where: {network_name: $networkName}){
 					activeProgram {
 						id
 						name
