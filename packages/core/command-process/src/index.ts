@@ -1,4 +1,6 @@
 
+export * from './condition'
+
 // import doT from 'dot';
 import EventEmitter from "events";
 import { ProcessChain } from './chain';

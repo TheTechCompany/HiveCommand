@@ -2,7 +2,6 @@ import { CommandProcess, ProgramProcess } from "@hive-command/data-types";
 import { EventEmitter } from 'events'
 import { State } from "./state";
 import { ProgramDevice, CommandVariable } from "@hive-command/data-types";
-import { Condition } from "./condition";
 import { StateDevice } from "./device";
 import { Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'

@@ -228,7 +228,7 @@ export class Data {
 							value
 						}
 						variable {
-							id
+							name
 						}
 					}
 				}
@@ -253,6 +253,53 @@ export class Data {
 							name
 							type {
 								id
+							}
+
+							units {
+								inputUnit
+								displayUnit
+							} 
+							
+							requiresMutex: Boolean
+				
+							interlocks {
+								inputDevice {
+									id
+								}	
+								inputDeviceKey {
+									key
+								}
+								comparator
+								assertion {
+									setpoint {
+										value
+									}
+									variable {
+										name
+									}
+									value
+								}
+								action {
+									id
+								}
+							}
+							setpoints {
+								id
+								value
+							} 
+							plugins {
+								id
+								plugin {
+									name
+									tick
+								}
+								rules {
+									id
+								}
+								config {
+									key
+									value
+								}
 							}
 						}
 
