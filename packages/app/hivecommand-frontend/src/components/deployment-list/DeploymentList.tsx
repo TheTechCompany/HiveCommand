@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box, DataTable, Text, CheckBox, Button } from 'grommet';
+import { Box, DataTable, Text, Button } from 'grommet';
 import moment from 'moment';
 import {MoreVert} from '@mui/icons-material'
-import { Table, TableBody, TableContainer, TableCell, TableRow, Paper, TableHead } from '@mui/material'
+import { Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead } from '@mui/material'
 import { BaseStyle } from '@hexhive/styles';
 
 export interface DeploymentListProps {
@@ -21,8 +21,8 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
     const columns = [
         {
             property: 'selected',
-            render: (datum) => <CheckBox checked={(props.selected || []).indexOf(datum.id) > -1} />,
-            header: <CheckBox />
+            render: (datum) => <Checkbox checked={(props.selected || []).indexOf(datum.id) > -1} />,
+            header: <Checkbox />
         },
         {
             property: 'name',
@@ -87,13 +87,13 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
             elevation="small"
             flex>
             <TableContainer
-                style={{flex: 1}}
+                style={{flex: 1, borderRadius: 0, background: BaseStyle.global.colors['neutral-1']}}
                 component={Paper}>
                 <Table size="medium">
                     <TableHead style={{background: BaseStyle.global.colors['accent-2']}}>
                         <TableRow>
                             {columns.map((column) => (
-                                <TableCell style={{color: 'white'}}>{column.header}</TableCell>  
+                                <TableCell style={{color: 'white', padding: 0}}>{column.header}</TableCell>  
                             ))}
                         </TableRow>
                     </TableHead>
