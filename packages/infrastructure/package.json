@@ -1,5 +1,6 @@
 {
     "name": "hivecommand-app",
+    "private": true,
     "devDependencies": {
         "@types/node": "^17.0.31"
     },
