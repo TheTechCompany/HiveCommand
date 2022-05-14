@@ -1,7 +1,8 @@
+import { EdgeCondition } from './Condition'
+
 export * from './process'
-export * from './ProcessLink'
 export * from './ProgramProcess'
-export * from './TransitionCondition'
+export * from './Condition'
 export * from './ProgramDevice'
 export * from './ActionTypes'
 
@@ -59,12 +60,7 @@ export interface CommandPayloadItem {
 				id: string,
 				sourceHandle: string,
 				targetHandle: string,
-				conditions?: {
-					input: string,
-					inputKey: string,
-					comparator: string,
-					assertion: string,
-				}[]
+				conditions?: EdgeCondition[]
 			}[]
 		}[]
 	

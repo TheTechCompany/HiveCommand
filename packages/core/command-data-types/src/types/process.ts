@@ -24,6 +24,7 @@ export interface CommandHub {
 	actions?: CommandAction[];
 	getState: (key: string) => {[key: string]: any} | any;
 	setState: (key: string, value: {[key: string]: any} | any) => void;
+	getVariable: (key: string) => any;
 }
 
 export type CommandActionEntry = (options: any, hub: CommandHub, node: CommandProcess) => Promise<{promise: Promise<any>, cancel: () => void}>;

@@ -1,5 +1,5 @@
 import { CommandStateMachine, CommandStateMachineMode } from '../src'
-import { StateDevice } from '../src/Device'
+// import { StateDevice } from '../src/device'
 import PIDPlugin from './pid-plugin'
 
 // const commandClient = {

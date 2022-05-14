@@ -1,11 +1,11 @@
 name: Publish
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - development
       - master
+      - staging
+    paths: ["packages/core/**", "packages/clients/**", "packages/communication/**", ]
 
 jobs:
   publish:
@@ -30,7 +30,7 @@ jobs:
         npx lerna bootstrap --no-ci
 
     - name: Build # Build all packages
-      run: npx lerna exec npm run build
+      run: npx lerna run build
 
     - name: "Version and publish" # Interesting step
       env:
@@ -39,7 +39,7 @@ jobs:
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor}}@users.noreply.github.com"
 
-        if [ ${{ github.base_ref }} = development ]; then
+        if [ ${{ github.base_ref }} = staging ]; then
           npx lerna version --conventional-commits --conventional-prerelease --preid beta --yes
         else
           npx lerna version --conventional-commits --conventional-graduate --yes

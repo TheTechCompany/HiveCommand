@@ -12,6 +12,9 @@ export interface ValueBankInterface {
 	stopOneshot?: (flowId: string) => Promise<void | Error>;
 	isRunning?: (flowId: string) => boolean;
 
+	getVariable?: (key: string) => any;
+	setVariabe?: (key: string, value: any) => any;
+
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
 	get?: (device: string, key:string ) => any;
@@ -121,13 +124,23 @@ export class CommandNetwork {
 	}
 
 	//Turn buses into OPC map
-	async initOPC({layout, actions} : {layout: AssignmentPayload[], actions: ActionPayload[]}){
+	async initOPC({layout, actions, variables} : {variables: CommandVariable[], layout: AssignmentPayload[], actions: ActionPayload[]}){
 
 		// await this.opc?.setComandEndpoint(this.request.bind(this))
 		
 		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
+
+		await Promise.all(variables.map(async (variable) => {
+			console.log(`Adding variable ${variable.name} to OPC-UA`);
+
+			await this.opc?.addVariable(variable.name, variable.type, () => {
+				return this.valueBank.getVariable?.(variable.name)
+			}, (value: Variant) => {
+				return this.valueBank.setVariabe?.(variable.name, value.value)
+			})
+		}))
 
 		await Promise.all(actions.map(async (action) => {
 			console.log("Adding Plant Action", action.name)
