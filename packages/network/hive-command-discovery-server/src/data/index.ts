@@ -30,12 +30,6 @@ export class Data {
 	}
 
 
-	// async readTransaction(transaction: (tx: Transaction) => Promise<any>){
-	// 	return await this.session.readTransaction(async (tx) => {
-	// 		return await transaction(tx)
-	// 	})
-	// }
-
 	async getDeviceByNetID(deviceId: string){
 
 		const devices = await this.requestGraphQL(gql`
