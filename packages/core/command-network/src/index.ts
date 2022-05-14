@@ -267,6 +267,8 @@ export class CommandNetwork {
 		} 
 	){
 
+		console.log("Starting network")
+
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
             hostname: credentials.hostname,
