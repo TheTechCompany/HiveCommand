@@ -230,7 +230,7 @@ export class Data {
 		`
 		let doc = gql`
 			query GetProgram($id: ID) {
-				commandDevices(where: {id: $id}){
+				commandDevices(where: {network_name: $id}){
 					activeProgram {
 						id
 						name
@@ -359,7 +359,7 @@ export class Data {
 // 			id: deviceId
 // 		})
 
-		return program
+		return program?.commandDevices?.[0]
 	}
 
 	async updateDeviceUptime(deviceId: string, uptime: number){
