@@ -176,13 +176,6 @@ export class StateDevice {
 		return exists
 	}
 
-	checkCondition(state: State, device: string, deviceKey: string, comparator: string, value: any){
-		let cond = new Condition({inputDevice: device, inputDeviceKey: deviceKey, comparator, assertion})
-
-		let input = state?.get(device)?.[deviceKey]
-		// console.log("Check condition", {input, value}, {device, deviceKey})
-		return cond.check(input, value)
-	}
 
 	get interlock () {
 		return this.device.interlock?.locks
@@ -193,8 +186,17 @@ export class StateDevice {
 			
 		const lockedUp = await Promise.all(locks.map((lock) => {
 
-			const condition = new Condition({}, this.fsm.getVariable)
-			return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
+			const condition = new Condition({
+				inputDevice: lock.inputDevice,
+				inputDeviceKey: lock.deviceKey,
+				assertion: lock.assertion,
+				comparator: lock.comparator
+			}, this.fsm.getVariable)
+
+			const input = state?.get(lock.inputDevice.id)?.[lock.deviceKey.key];
+
+			return condition.check(input)
+			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
 
 		}))
 

@@ -192,14 +192,7 @@ export class Machine {
 					interlock: {
 						state: {on: 'true'},
 						// state: {on: true},
-						locks: (x.interlocks || []).map((lock) => ({
-							device: lock.input.name,
-							deviceKey: lock.inputKey.key,
-							comparator: lock.comparator,
-							value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
-
-							fallback: lock.action.key
-						}))
+						locks: x.interlocks || []
 					}
 				}
 			}),
