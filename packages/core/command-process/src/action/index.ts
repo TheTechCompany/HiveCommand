@@ -72,6 +72,7 @@ export class ProcessAction {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
             setState: this.process.setState,
+            getVariable: this.process.getVariable,
 			actions: this.actions
 		}, this.process.getProcess) || {}
 
@@ -161,6 +162,7 @@ export class ProcessAction {
                 performOperation: this.process.performOperation,
                 getState: this.process.getState,
                 setState: this.process.setState,
+                getVariable: this.process.getVariable,
                 actions: this.actions
             }, this.process.getProcess)
 

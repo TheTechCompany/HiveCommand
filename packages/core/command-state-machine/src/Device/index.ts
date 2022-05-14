@@ -1,8 +1,8 @@
 import { Mutex } from "locks";
 import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
-import { Condition } from "../Condition";
-import { State } from "../State";
+import { Condition } from "../condition";
+import { State } from "../state";
 import { ProgramDevice } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
