@@ -1,15 +1,12 @@
-import { EdgeConditionAssertion } from "./Condition";
+import { EdgeCondition } from "./Condition";
 
-export interface ProgramInterlock {
-	inputDevice: {id: string}, 
-	deviceKey: {key: string}, 
-	comparator: string, 
-	assertion: EdgeConditionAssertion, 
+export interface ProgramInterlock extends EdgeCondition {
 
 	action: {
 		key: string
 	}
 }
+
 export interface ProgramDevice {
 	name: string;
 	requiresMutex?: boolean;

@@ -188,12 +188,12 @@ export class StateDevice {
 
 			const condition = new Condition({
 				inputDevice: lock.inputDevice,
-				inputDeviceKey: lock.deviceKey,
+				inputDeviceKey: lock.inputDeviceKey,
 				assertion: lock.assertion,
 				comparator: lock.comparator
 			}, this.fsm.getVariable)
 
-			const input = state?.get(lock.inputDevice.id)?.[lock.deviceKey.key];
+			const input = state?.get(lock.inputDevice.name)?.[lock.inputDeviceKey.key];
 
 			return condition.check(input)
 			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
