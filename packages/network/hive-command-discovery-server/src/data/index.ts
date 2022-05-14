@@ -160,7 +160,7 @@ export class Data {
 	async getDeviceActions(deviceId: string){
 		const actions = await this.requestGraphQL(gql`
 		query GetDeviceActions($id: String){
-			commandDevices(where: {networkName: $id}){
+			commandDevices(where: {network_name: $id}){
 				activeProgram {
 					id
 
