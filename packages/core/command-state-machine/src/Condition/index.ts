@@ -1,18 +1,18 @@
-import { TransitionCondition } from "@hive-command/data-types";
+import { EdgeCondition } from "@hive-command/data-types";
 
 export class Condition {
-    private condition: TransitionCondition;
+    private condition: EdgeCondition;
 
-    constructor(condition: TransitionCondition){
+    constructor(condition: EdgeCondition){
         this.condition = condition
     }
 
     get input_id(){
-        return this.condition.input
+        return this.condition.inputDevice?.id
     }
 
     get input_key(){
-        return this.condition.inputKey
+        return this.condition.inputDeviceKey?.key
     }
 
     get value_id(){
