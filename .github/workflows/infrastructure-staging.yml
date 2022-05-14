@@ -153,6 +153,7 @@ jobs:
     needs: [build_server, build_discovery_server, build_coreapps]
     env:
       HEXHIVE_API_KEY: ${{ secrets.STAGING_SYNC_KEY }}
+      HEXHIVE_API_URL: ${{ secrets.STAGING_API_URL }}
       STAGING_SYNC_OVPN: ${{ secrets.STAGING_SYNC_OVPN }}
       COMMAND_MONGO_URL: ${{ secrets.COMMAND_MONGO_URL }}
       COMMAND_MONGO_DB: ${{ secrets.COMMAND_MONGO_DB }}
