@@ -26,11 +26,13 @@ export interface CommandEnvironment {
 export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
-	commandCenter? : string //Web server to connect to
+
+	// commandCenter? : string //Web server to connect to
+	discoveryServer?: string
+
 	// healthCenter?: string; //Health montior endpoint potentially same as commandCenter
 
 	privateKey?: string
-	discoveryServer?: string
 
 	healthCheck: {
 		number: string,
@@ -76,7 +78,7 @@ export class CommandClient {
 		// this.logs.log(`Starting Command Client...`);
 
 		this.identity = new CommandIdentity({
-			identityServer: opts.commandCenter || 'http://localhost:8080',
+			identityServer: `http://${opts.discoveryServer}:8080` || 'http://localhost:8080',
 		});
 		
 		if(!this.identity) throw new Error("Unable to find credentials");
@@ -97,7 +99,7 @@ export class CommandClient {
 
 
 		this.controller = new Controller({
-			commandCenter: opts.commandCenter || '',
+			commandCenter: `http://${opts.discoveryServer}:8080` || '',
 			valueBank: {
 				get: (dev, key) => this.machine?.getByKey(dev, key),
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
@@ -198,7 +200,7 @@ export class CommandClient {
 
 				await this.controller.start({
 					hostname: self.identity.named, 
-					discoveryServer: this.options.discoveryServer || 'http://localhost:8080',
+					discoveryServer: `opc.tcp://${this.options.discoveryServer}` || 'http://localhost:8080',
 				}, {
 					layout: layout || [], 
 					actions: actions || [],
