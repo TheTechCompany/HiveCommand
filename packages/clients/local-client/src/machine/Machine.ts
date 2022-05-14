@@ -116,8 +116,8 @@ export class Machine {
 			return prev.concat(curr)
 		}, []).filter((a) => a)
 
-		let subprocs : any = payload.filter((a) => a.parent?.id == id).map((proc) => {
-			return {...this.loadFlow(payload, proc.id)}
+		let subprocs : any = flow?.children?.map((proc) => {
+			return {...this.loadFlow(flow?.children || [], proc.id)}
 		})
 
 		// let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
@@ -152,50 +152,54 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		const { command : payload, layout, actions } = commandPayload.payload || {};
+		const { program, variables, actions } = commandPayload.payload || {};
 
-		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
+		//TODO add device mapping
+		// if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 
 		await this.loadPlugins(commandPayload.payload?.layout || []);
 
-		const flows = payload?.filter((a) => a.parent == null).map((flow) => {
-			if(!payload) return {id: '', name: '', nodes: [], links: []};
-			return this.loadFlow(payload, flow.id)
+		//TODO add filter for top level or make children = subprocess
+		//?.filter((a) => a.parent == null)
+		const flows = program?.map((flow) => {
+			if(!program) return {id: '', name: '', nodes: [], links: []};
+			return this.loadFlow(program, flow.id)
 		}).filter((a) => a != undefined)
 
 		this.fsm = new CommandStateMachine({
 			variables: [],
-			devices: layout?.map((x) => {
+			devices: [],
+			// devices: layout?.map((x) => {
 
-				let plugins = x.plugins?.map((plugin) => {
-					let configuration = plugin.configuration.reduce((prev, curr) => {
-						return {
-							...prev,
-							[curr.key]: curr.value
-						}
-					}, {})
+			// 	let plugins = x.plugins?.map((plugin) => {
+			// 		let configuration = plugin.configuration.reduce((prev, curr) => {
+			// 			return {
+			// 				...prev,
+			// 				[curr.key]: curr.value
+			// 			}
+			// 		}, {})
 
-					return {
-						classString: PID, //plugin.classString,
-						imports: [{key: 'PIDController', module: 'node-pid-controller'}],
-						options: configuration,
-						actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
-						activeWhen: plugin.rules?.id
-					}
-				});
+			// 		return {
+			// 			classString: PID, //plugin.classString,
+			// 			imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+			// 			options: configuration,
+			// 			actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
+			// 			activeWhen: plugin.rules?.id
+			// 		}
+			// 	});
 
-				return {
-					name: x.name, 
-					requiresMutex: x.requiresMutex,
-					actions: x.actions,
-					plugins,
-					interlock: {
-						state: {on: 'true'},
-						// state: {on: true},
-						locks: x.interlocks || []
-					}
-				}
-			}),
+			// 	return {
+			// 		name: x.name, 
+			// 		requiresMutex: x.requiresMutex,
+			// 		actions: x.actions,
+			// 		plugins,
+			// 		interlock: {
+			// 			state: {on: 'true'},
+			// 			// state: {on: true},
+			// 			locks: x.interlocks || []
+			// 		}
+			// 	}
+			// }),
 			processes: flows || []
 		}, {
 			requestState: this.requestState
