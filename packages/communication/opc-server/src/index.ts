@@ -359,6 +359,7 @@ export default class Server {
     }
 
     async start(){
+        console.log("Starting OPC-UA")
         await this.server.initialize();
         await this.initializeFolders();
 
