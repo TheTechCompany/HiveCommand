@@ -5,7 +5,7 @@ import { gql, useQuery as useApollo } from '@apollo/client'
 import { Box, Text, Button  } from 'grommet';
 import { StackItemModal } from '../../components/modals/stacks/item';
 import { useEffect } from 'react';
-import * as Icons from 'grommet-icons'
+import { Add, NavigateBefore as Previous } from '@mui/icons-material'
 import { Title } from '../../components/ui/title';
 import { GridList } from '@hexhive/ui';
 
@@ -59,7 +59,7 @@ export const PluginSingle = styled((props: any) => {
                     <Box 
                         direction="row">
                         <Button onClick={() => props.history.push(`/plugins`)}>
-                            <Icons.Previous />
+                            <Previous />
                         </Button>
                         <Title 
                             title={plugin?.name || ''} 
@@ -79,7 +79,7 @@ export const PluginSingle = styled((props: any) => {
                             label="Editor" primary></Button>
                         <Button
                             hoverIndicator
-                            icon={<Icons.Add />} />
+                            icon={<Add />} />
                     </Box>
                    
                   

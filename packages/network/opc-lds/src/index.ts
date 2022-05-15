@@ -2,11 +2,14 @@ import os from "os";
 import path from "path";
 import fs from "fs";
 
-import { assert, OPCUACertificateManager, OPCUADiscoveryServer, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
+import { OPCUADiscoveryServer } from './discovery-server'
+
+import { assert, OPCUACertificateManager, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
 
 // Create a new instance of vantage.
 
 import envPaths from "env-paths";
+import { makeSubject } from "node-opcua";
 
 
 const paths = envPaths("node-opcua-local-discovery-server");
@@ -45,11 +48,6 @@ async function getIpAddresses() {
     });
     return ipAddresses;
 }
-
-const applicationUri = "";
-
-
-
 
 export interface DiscoveryServerOpts {
 	applicationName?: string;
@@ -90,21 +88,51 @@ export class DiscoveryService {
 		if(!this.applicationName) return;
 		this.fqdn = this.opts.fqdn || process.env.HOSTNAME || await extractFullyQualifiedDomainName();
 		
+        console.log({fqdn: this.fqdn});
+
 		this.applicationUri = makeApplicationUrn(this.fqdn, this.applicationName)
+
+        console.log({applicationUri: this.applicationUri});
+
         await serverCertificateManager.initialize();
 
 		const certificateFile = path.join(pkiFolder, "local_discovery_server_certificate.pem");
         const privateKeyFile = serverCertificateManager.privateKey;
+
         assert(fs.existsSync(privateKeyFile), "expecting private key");
+
+        if(!fs.existsSync(certificateFile) || this.opts.force){
+            console.log({opts: this.opts})
+            console.log("Creating self-signed certificate", certificateFile);
+
+            console.log({applicationName: this.applicationName})
+            const subject = makeSubject(this.applicationName, this.fqdn);
+
+            console.log({subject});
+            
+            await serverCertificateManager.createSelfSignedCertificate({
+                applicationUri: this.applicationUri,
+                dns: [this.fqdn],
+                // ip: await getIpAddresses(),
+                outputFile: certificateFile,
+                subject: subject, //"/CN=HiveCommand/DC=Discovery-Server",
+                startDate: new Date(),
+                validity: 365 * 10
+            })
+        }
+
+        // assert(fs.existsSync(certificateFile));
 
 		this.discoveryServer = new OPCUADiscoveryServer({
             // register
+            hostname: this.fqdn,
             port: this.opts.port,
             certificateFile,
             privateKeyFile,
             serverCertificateManager,
             serverInfo: {
-                discoveryUrls: ['opc.tcp://192.168.200.6:4840'],
+                discoveryUrls: [`opc.tcp://${this.opts.fqdn}:${this.opts.port}`],
+                productUri: this.applicationName,
                 applicationUri: this.applicationUri
             }
         });

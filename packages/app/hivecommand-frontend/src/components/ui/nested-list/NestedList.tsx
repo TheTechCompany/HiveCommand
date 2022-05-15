@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Button, List } from 'grommet';
-import * as Icons from 'grommet-icons';
+import { NavigateNext as Next, Add, NavigateBefore as Previous } from '@mui/icons-material'
 
 export interface NestedListProps {
     onAdd?: () => void;
@@ -24,14 +24,24 @@ export const NestedList : React.FC<NestedListProps> = (props) => {
                 border={{side: 'bottom', color: '#dfdfdf', size: '1px'}}
                 direction="row">
                 <Box direction="row">
-                    <Button hoverIndicator icon={<Icons.Previous size="15px" />} />
-                    <Button hoverIndicator icon={<Icons.Next size="15px" />} />
+                    <Button     
+                        plain
+                        style={{padding: 6, borderRadius: 3}}
+                        hoverIndicator 
+                        icon={<Previous fontSize="small"  />} />
+                    <Button 
+                        plain
+                        style={{padding: 6, borderRadius: 3}}
+                        hoverIndicator 
+                        icon={<Next  fontSize="small" />} />
                 </Box>
 
                 <Button 
+                    plain
+                    style={{padding: 6, borderRadius: 3}}
                     onClick={props.onAdd}
                     hoverIndicator
-                    icon={<Icons.Add size="15px" />} />
+                    icon={<Add fontSize="small" />} />
             </Box>
             <Box flex>
                 <List

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Text, List, Button, Select } from 'grommet'
-import { CircleInformation, ShieldSecurity, Plug } from 'grommet-icons';
+import { Info as CircleInformation, Security as ShieldSecurity, Power as Plug } from '@mui/icons-material';
 
 import { Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { gql, useQuery as useApollo, useApolloClient } from '@apollo/client'
-import { Add, MoreVertical } from 'grommet-icons';
 import { nanoid } from 'nanoid';
 import { NamedTypeNode, ObjectTypeDefinitionNode } from 'graphql';
 
@@ -66,9 +65,8 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	// }
 
 
+	/*
 
-	const { data } = useApollo(gql`
-		query Q ($id: ID!, $programId: ID) {
 			commandProgramDevicePlugins {
 				id
 				name
@@ -84,36 +82,6 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 								key
 							}
 						}
-					}
-				}
-			}
-
-			commandPrograms(where: {id: $programId}){
-				devices {
-					id
-					name
-
-				
-					type {
-						state {
-							id 
-							key
-							type
-						}
-					}
-
-					setpoints {
-						id
-						name
-					}
-				}
-
-				program {
-					id
-					name
-					children {
-						id
-						name
 					}
 				}
 			}
@@ -224,6 +192,144 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 			
 
 			}
+	*/
+
+	const { data } = useApollo(gql`
+		query Q ($id: ID!, $programId: ID) {
+			
+			commandProgramDevicePlugins {
+				id
+				name
+				config {
+					key
+					type
+
+					order
+
+					requires {
+						id
+
+						key
+						type
+					}
+				}
+			}
+
+			commandPrograms(where: {id: $programId}){
+				
+				variables {
+					id
+					name
+				}
+
+				devices(where: {id: $id}) {
+					id
+					name
+
+				
+					type {
+						state {
+							id 
+							key
+							type
+						}
+
+						actions {
+							id
+							key
+						}
+					}
+
+					plugins {
+						id
+
+						plugin {
+							id
+							name
+						}
+
+						rules {
+							id
+						}
+
+						config {
+							id
+						}
+
+					}
+
+					setpoints {
+						id
+						name
+						type
+						key {
+							id
+							key
+						}
+						value
+					}
+					interlocks {
+						id
+	
+						state {
+							
+							device {
+								id
+								name
+							}
+	
+							deviceKey {
+								id
+								key
+							}
+	
+							comparator
+							assertion {
+								value
+							}
+	
+						}
+	
+						inputDevice {
+							id 
+							name
+						}
+						inputDeviceKey { 
+							id
+							key
+						}
+	
+						action {
+							id
+						}
+	
+						comparator
+						assertion {
+							type
+							value
+							setpoint {
+								id
+								name
+							}
+							variable {
+								id
+								name
+							}
+						}
+					}
+				}
+
+				program {
+					id
+					name
+					children {
+						id
+						name
+					}
+				}
+			}
+
+			
 		}
 	`, {
 		variables: {
@@ -236,10 +342,13 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 		return client.refetchQueries({ include: ['Q'] })
 	}
 
-	const device = data?.commandProgramDevicePlaceholders?.[0];
+	console.log({data})
+
+	const device = data?.commandPrograms?.[0]?.devices?.[0];
 
 	const flows = data?.commandPrograms?.[0]?.program?.map((item) => [item, ...(item.children || []).map((x) => ({ ...x, name: `${item.name} - ${x.name}` }))]).reduce((prev, curr) => prev.concat(curr), [])
 	const devices = data?.commandPrograms?.[0]?.devices;
+	const variables = data?.commandPrograms?.[0]?.variables;
 	const plugins = data?.commandProgramDevicePlugins || [];
 
 	return (
@@ -249,6 +358,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 			deviceId,
 			programId: props.program,
 			devices,
+			variables,
 			plugins,
 			flows,
 			refetch

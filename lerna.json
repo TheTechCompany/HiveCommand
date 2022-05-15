@@ -1,6 +1,5 @@
 {
   "packages": [
-    "packages/*",
     "packages/core/*",
     "packages/communication/*",
     "packages/clients/*",
@@ -10,5 +9,5 @@
     "packages/app/*"
   ],
   "npmClient": "yarn",
-  "version": "1.4.1-alpha.151"
+  "version": "1.4.14"
 }

@@ -1,9 +1,9 @@
 import { Mutex } from "locks";
 import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
-import { Condition } from "../Condition";
+import { Condition } from "@hive-command/process";
 import { State } from "../State";
-import { ProgramDevice } from "../types/ProgramDevice";
+import { ProgramDevice } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
 
@@ -40,9 +40,6 @@ export class StateDevice {
 				[action.key]: getDeviceFunction(action.func)
 			}
 		}, {})
-
-		// console.log(device.plugins)
-
 
 		console.log("Setting up plugins for ", device.name, this.state)
 
@@ -176,13 +173,6 @@ export class StateDevice {
 		return exists
 	}
 
-	checkCondition(state: State, device: string, deviceKey: string, comparator: string, value: any){
-		let cond = new Condition({input: device, inputKey: deviceKey, comparator, value})
-
-		let input = state?.get(device)?.[deviceKey]
-		// console.log("Check condition", {input, value}, {device, deviceKey})
-		return cond.check(input, value)
-	}
 
 	get interlock () {
 		return this.device.interlock?.locks
@@ -192,7 +182,18 @@ export class StateDevice {
 		let locks = this.device.interlock?.locks || [];
 			
 		const lockedUp = await Promise.all(locks.map((lock) => {
-			return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
+
+			const condition = new Condition({
+				inputDevice: lock.inputDevice,
+				inputDeviceKey: lock.inputDeviceKey,
+				assertion: lock.assertion,
+				comparator: lock.comparator
+			}, this.fsm.getVariable)
+
+			const input = state?.get(lock.inputDevice.name)?.[lock.inputDeviceKey.key];
+
+			return condition.check(input)
+			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
 
 		}))
 

@@ -1,6 +1,7 @@
 {
   "name": "@hive-command/frontend",
   "private": true,
+  "version": "1.4.6",
   "scripts": {
     "start": "webpack serve --port 8504",
     "start:standalone": "webpack serve --env standalone",
@@ -51,10 +52,16 @@
   },
   "dependencies": {
     "@apollo/client": "^3.5.6",
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
     "@hexhive/auth-ui": "0.0.6-alpha.10",
     "@hexhive/styles": "^0.0.6-alpha.0",
-    "@hexhive/ui": "0.0.6-alpha.64",
-    "@hive-command/api": "^1.4.1-alpha.2",
+    "@hexhive/ui": "0.0.12-alpha.14",
+    "@hive-command/api": "^1.4.3",
+    "@hive-command/data-types": "^1.4.6",
+    "@mui/icons-material": "^5.6.2",
+    "@mui/lab": "^5.0.0-alpha.80",
+    "@mui/material": "^5.6.4",
     "@neo4j/graphql-ogm": "^2.5.5",
     "@svgr/core": "^6.1.2",
     "@types/jest": "^26.0.23",

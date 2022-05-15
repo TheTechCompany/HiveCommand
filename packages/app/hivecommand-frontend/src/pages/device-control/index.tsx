@@ -8,7 +8,7 @@ import { matchPath, Navigate, Route, Routes, useNavigate, useParams } from 'reac
 // import program from 'shared/hexhive-types/src/models/program';
 import * as HMINodes from '../../assets/hmi-elements'
 
-import { Services, Cycle, Analytics, Info, Technology } from 'grommet-icons';
+import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import Controls from './views/control'
@@ -16,6 +16,7 @@ import { DeviceControlGraph } from './views/graph'
 import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, usePerformDeviceAction } from '@hive-command/api';
+import { ControlVariable } from './views/variable';
 
 export interface DeviceControlProps {
 
@@ -30,10 +31,11 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
 
     const toolbar_menu = [
-        { id: 'info', icon: <Info /> },
-        { id: 'controls', icon: <Services /> },
+        { id: 'controls', icon: <Dashboard /> },
+        { id: 'variables', icon: <System />},
         { id: 'graphs', icon: <Analytics /> },
-        { id: 'devices', icon: <Technology /> }
+        { id: 'info', icon: <Info /> },
+        { id: 'devices', icon: <Services /> },
     ]
 
     const view = toolbar_menu.find((a) => {
@@ -65,60 +67,21 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     max
                 }
 
-                reporting {
-                    id
-                    x
-                    y
-                    w
-                    h
-
-                    total
-
-                    device {
-                        id
-                        name
-                    }
-                    templateDevice {
-                        id
-                        name
-                    }
-                    templateKey {
-                        id
-                        key
-                    }
-                }
+          
 
                 peripherals {
                     id
                     name
                     type
 
-                    mappedDevicesConnection {
-                        edges{
-                            port
-
-                            node {
-                                device {
-                                    name
-                                }
-
-                                key {
-                                    key
-                                }
-                                value {
-                                    key
-                                }
-                                
-                            }
-                        }
-                    }
+                    
                 }
                
                 activeProgram {
                     id
                     name
                     
-                    hmi{
+                    interface{
                         id
                         name
 
@@ -131,91 +94,22 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             }
                         }
 
-                        paths {
-                            source {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                        edges {
+                            from {
+                                id
                             }
-                            sourceHandle
-                            target {
-                                ... on CommandHMINode {
-                                    id
-                                }
-                                ... on CommandHMIGroup {
-                                    id
-                                }
+                            fromHandle
+                            to {
+                               id
                             }
-                            targetHandle
+                            toHandle
                             points {
                                 x
                                 y
                             }
 
                         }
-                        groups {
-                            id
-                            x
-                            y
-
-                            width
-                            height
-
-                            nodes {
-                                    id
-                                    type {
-                                        name
-                                    }
-                                    x
-                                    y
-
-                                    z
-                                    scaleX
-                                    scaleY
-                                    rotation
-
-                                    devicePlaceholder {
-                                        id
-                                        name
-                                        type {
-                                            actions {
-                                                key
-                                            }
-        
-                                            state {
-                                                units
-                                                inputUnits
-                                                key
-                                                writable
-                                            }
-                                        }
-
-
-                                        setpoints {
-                                            id
-                                            name
-                                            key {
-                                                id
-                                                key
-                                            }
-                                            value
-                                            type
-                                        }
-        
-                                    }
-                                
-                            }
-                            ports {
-                                id
-                                x
-                                y
-                                rotation
-                                length
-                            }
-                        }
+                        
                         nodes{
        
                                 id
@@ -277,9 +171,35 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     
                                 }
                             
+                            children {
+                                id
+                                type {
+                                    name
+                                    width
+                                    height
+                                }
+                                scaleX
+                                scaleY
+                                x
+                                y
+                            }
+
+                            ports {
+                                id
+                                x
+                                y
+                                length
+                                rotation
+                            }
                             
                         }
                             
+                    }
+
+                    variables {
+                        id
+                        name
+                        type
                     }
 
                     devices {
@@ -376,7 +296,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
-    const reporting = rootDevice?.reporting || [];
+    const reporting = rootDevice?.reports || [];
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
@@ -389,10 +309,10 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const program = data?.commandDevices?.[0]?.activeProgram || {};
 
-    const actions = program?.hmi?.[0]?.actions || [];
+    const actions = program?.interface?.actions || [];
 
-    const hmi = program?.hmi?.[0]?.nodes || [];
-    const groups = program?.hmi?.[0]?.groups || [];
+    const hmi = program?.interface?.nodes?.filter((a) => !a.children || a.children.length == 0) || [];
+    const groups = program?.interface?.nodes?.filter((a) => a.children && a.children.length > 0) || [];
 
 
     // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
@@ -487,7 +407,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                             plain
                             hoverIndicator
                             style={{ padding: 6, borderRadius: 3 }}
-                            icon={<Cycle size="small" />} />)}
+                            icon={<Cycle />} />)}
                     </Box>
                 </Box>
                 <Box
@@ -501,6 +421,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                         items={toolbar_menu} />
                     <Box flex>
                         <Routes>
+                            <Route path={`variables`} element={<ControlVariable />} />
                             <Route path={`info`}  element={<DeviceSingle/>} />
                             <Route path={`controls`} element={<Controls/>} />
                             <Route path={`graphs`} element={<DeviceControlGraph/>} />

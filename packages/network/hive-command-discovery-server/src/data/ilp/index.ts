@@ -14,14 +14,7 @@ export const publishToILP = async (
 		value : string,
 		valueKey : string
 	}[]) => {
-		// let port : number;
-		// if(typeof(host.port) == "string") {
-		// 	try{
-		// 		port = parseInt(host.port)
-		// 	}catch(e){
-		// 		port = 9009;
-		// 	}
-		// }
+	
 
 		await Promise.all(rows.map(async (row) => {
 			await socket.query(`

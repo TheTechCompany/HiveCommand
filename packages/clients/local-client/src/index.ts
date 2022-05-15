@@ -11,7 +11,7 @@ import cleanup from 'node-cleanup'
 import { Controller } from './controller'
 import { Machine } from './machine'
 import path from 'path/posix';
-import { TerminalDisplay } from './display'
+
 import { AlarmEngine } from './alarm-engine'
 
 const pkg = require('../package.json')
@@ -26,11 +26,13 @@ export interface CommandEnvironment {
 export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
-	commandCenter? : string //Web server to connect to
+
+	// commandCenter? : string //Web server to connect to
+	discoveryServer?: string
+
 	// healthCenter?: string; //Health montior endpoint potentially same as commandCenter
 
 	privateKey?: string
-	discoveryServer?: string
 
 	healthCheck: {
 		number: string,
@@ -76,7 +78,7 @@ export class CommandClient {
 		// this.logs.log(`Starting Command Client...`);
 
 		this.identity = new CommandIdentity({
-			identityServer: opts.commandCenter || 'http://localhost:8080',
+			identityServer: `http://${opts.discoveryServer}:8080` || 'http://localhost:8080',
 		});
 		
 		if(!this.identity) throw new Error("Unable to find credentials");
@@ -97,13 +99,16 @@ export class CommandClient {
 
 
 		this.controller = new Controller({
-			commandCenter: opts.commandCenter || '',
+			commandCenter: `http://${opts.discoveryServer}:8080` || '',
 			valueBank: {
 				get: (dev, key) => this.machine?.getByKey(dev, key),
 				getDeviceMode: this.machine.getDeviceMode.bind(this),
 				setDeviceMode: this.machine.setDeviceMode.bind(this), 
 				requestState: async (device, key, value) => await this.machine?.requestState({device: device, state: {[key]: value}}),
 				requestAction: async (device, action) => await this.machine?.requestOperation({device, operation: action}),
+
+				getVariable: (key) => this.machine?.getVariable(key),
+				setVariabe: (key, value) => this.machine?.setVariable(key, value),
 
 				runOneshot: async (flow) => await this.machine?.runOneshot(flow),
 				stopOneshot: async (flow) => await this.machine?.stopOneshot(flow),
@@ -166,20 +171,24 @@ export class CommandClient {
 	}
 
 	async setup(){
+		console.log("Discovering environment")
 		this.environment = await this.machine?.discoverEnvironment() || []
 
 		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
 		const self = await this.identity.whoami()
+		console.log("Identity", {self})
 
 		if(!self.identity?.named) throw new Error("No self found, check credentials");
 
+		console.log("Sending context");
 		await this.identity.provideContext(this.environment, this.identity.identity)
 
 		// this.logs.log(`Found self ${JSON.stringify(self)}`)
 
 		const credentials = await this.controller.becomeSelf(self)
+		console.log({credentials})
 
 		// this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 
@@ -187,17 +196,22 @@ export class CommandClient {
 
 		const commandPayload = await this.identity.getPurpose()
 
+		console.log("Purpose", {commandPayload})
 		if(commandPayload.payload){
 
-			const { layout, actions } = commandPayload.payload;
+			const { layout, actions, variables } = commandPayload.payload;
 
-			if(layout){
+			// if(layout){
 
 				await this.controller.start({
 					hostname: self.identity.named, 
-					discoveryServer: this.options.discoveryServer || 'http://localhost:8080',
-				}, {layout: layout || [], actions: actions || []})
-			}
+					discoveryServer: `opc.tcp://${this.options.discoveryServer}:4840` || 'http://localhost:8080',
+				}, {
+					layout: layout || [], 
+					actions: actions || [],
+					variables: variables || []
+				})
+			// }
 			await this.machine?.load(commandPayload)
 		}
 	}

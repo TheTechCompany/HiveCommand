@@ -4,7 +4,7 @@ import async, { AsyncFunction, series } from 'async';
 import { ApplicationDescription, DataType, ReferenceDescription, ServerOnNetwork, Variant } from 'node-opcua';
 import os from 'os';
 import { DiscoveryServer } from '..';
-import { Models } from '@hive-command/data-types'
+import { Models } from '@hive-command/data'
 import { Pool, PoolClient } from "pg";
 import { publishToILP } from '../data/ilp';
 
@@ -73,7 +73,7 @@ export class SyncClient {
 					let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
 
 					if(!networkName) return console.error("Could not find network name for server", serverUrl)
-					const controlDevice = await this.dataBroker.getDevice(networkName)
+					const controlDevice = await this.dataBroker.getDeviceByNetID(networkName)
 
 					//New server
 					this.clients[serverUri] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
@@ -82,9 +82,8 @@ export class SyncClient {
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
 
 					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
-					// console.log(devices);
-					// console.log(`Connected to ${server.discoveryUrls?.[0]?.toString()}, found ${devices?.references?.length}`)
-
+			
+					
 					let items = [];
 					for(var i = 0; i < (devices?.references || []).length; i++){
 						let ref = devices?.references?.[i];

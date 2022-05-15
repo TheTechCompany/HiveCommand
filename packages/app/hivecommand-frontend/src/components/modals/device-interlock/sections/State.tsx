@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { Box, Button, CheckBox, TextInput } from 'grommet';
-import { Add } from 'grommet-icons';
+import { Add } from '@mui/icons-material';
 import { DeviceInterlockContext } from '../context';
 
 import { FormControl, FormInput } from '@hexhive/ui';
@@ -60,7 +60,7 @@ export const StateSection = (props) => {
 					onClick={() => setInterlock({...interlock, state: [...(interlock.state || []), {id: nanoid(), device: '', deviceKey: '', comparator: '', assertion: ''}]})}
 					hoverIndicator 
 					plain 
-					style={{padding: 6, borderRadius: 3}} icon={<Add size='small' />} />
+					style={{padding: 6, borderRadius: 3}} icon={<Add />} />
 			</Box>
 			{interlock?.state?.map((lock, ix) => (
 				<Box direction='row' align='center'>

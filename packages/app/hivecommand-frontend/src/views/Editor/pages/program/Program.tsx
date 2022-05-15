@@ -1,14 +1,16 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Button, Collapsible, List, Text } from 'grommet';
-import { useConnectProgramNode, useCreateProgramFlow, useCreateProgramNode, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramNode } from '@hive-command/api';
+import { useConnectProgramNode, useCreateProgramFlow, useCreateProgramNode, useDeleteProgramFlow, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramFlow, useUpdateProgramNode } from '@hive-command/api';
 
 import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath, HyperTree } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { nanoid } from 'nanoid';
 import { NodeDropdown } from '../../../../components/node-dropdown';
-import { Connect, Action, Trigger, PowerShutdown, Add, Clock, Cycle } from 'grommet-icons';
+import { SubdirectoryArrowRight as Connect, GridView as Action, PlayArrow as Trigger, PowerSettingsNew as PowerShutdown, Add, Timer } from '@mui/icons-material';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { ProgramCanvas } from '../../../../components/program-canvas';
+
+import { ChevronRight, ExpandMore } from '@mui/icons-material'
 
 import Settings from './Settings';
 import { ProgramEditorProvider } from './context';
@@ -21,6 +23,12 @@ import { ProgramCanvasModal } from '../../../../components/modals/program-canvas
 import { ObjectTypeDefinitionNode } from 'graphql';
 import { cleanTree } from '../../utils';
 import { EmptyView } from '../../components/empty-view';
+import { TreeItem, TreeView } from '@mui/lab';
+import { TreeMenu } from '../../components/tree-menu';
+import { ProgramFlowModal } from '../../../../components/modals/program-flow';
+
+import { ACTION_TYPES } from '@hive-command/data-types'
+import { IconMap } from '../../../../asset-map';
 
 const reducer = (state, action) => {
     switch (action.type) {
@@ -39,13 +47,17 @@ export const Program = (props) => {
 
     const { id } = useParams()
 
-    const { sidebarOpen, program } = useCommandEditor()
+    const { sidebarOpen, refetch: refetchProgram } = useCommandEditor()
 
     const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
+    const [ parentItem, setParentItem ] = useState<{id?: string} | undefined>(undefined)
+    
     const [ activeProgram, setActiveProgram ] = useState<string>(undefined)
 
 
     const createProgramFlow = useCreateProgramFlow(id)
+    const updateProgramFlow = useUpdateProgramFlow(id);
+    const deleteProgramFlow = useDeleteProgramFlow(id);
 
     const [state, dispatch] = useEditor(reducer, {
         nodes: [],
@@ -69,27 +81,30 @@ export const Program = (props) => {
 
     const nodeMenu = [
         {
-            icon: <Action />,
-            label: "Action",
+            icon: IconMap[ACTION_TYPES.ACTION]?.icon,
+            label: IconMap[ACTION_TYPES.ACTION]?.label,
             extras: {
-                label: "Action",
-                icon: 'Action'
+                type: ACTION_TYPES.ACTION,
+                // label: "Action",
+                // icon: 'Action'
             },
         },
         {
-            icon: <Trigger />,
-            label: "Trigger",
+            icon: IconMap[ACTION_TYPES.TRIGGER]?.icon,
+            label:  IconMap[ACTION_TYPES.TRIGGER]?.label,
             extras: {
-                label: "Trigger",
-                icon: 'Trigger'
+                type: ACTION_TYPES.TRIGGER,
+                // label: "Trigger",
+                // icon: 'Trigger'
             }
         },
         {
-            icon: <PowerShutdown />,
-            label: "Shutdown",
+            icon: IconMap[ACTION_TYPES.SHUTDOWN_TRIGGER]?.icon,
+            label: IconMap[ACTION_TYPES.SHUTDOWN_TRIGGER]?.label,
             extras: {
-                label: "Shutdown",
-                icon: "PowerShutdown"
+                type: ACTION_TYPES.SHUTDOWN_TRIGGER,
+                // label: "Shutdown",
+                // icon: "PowerShutdown"
             }
         },
         // {
@@ -101,27 +116,165 @@ export const Program = (props) => {
         //     }
         // },
         {
-            icon: <Clock />,
-            label: "Timer",
+            icon: IconMap[ACTION_TYPES.TIMER]?.icon,
+            label: IconMap[ACTION_TYPES.TIMER]?.label,
             extras: {
-                label: "Timer",
-                icon: "Clock"
+                type: ACTION_TYPES.TIMER,
+                // label: "Timer",
+                // icon: "Clock"
             }
         },
    
     ]
 
+    const { data: flowData } = useQuery(gql`
+        query FlowData ($program: ID){ 
+            commandProgramFlows (where: {id: $program}) {
+                    id
+                    name
+
+                    children {
+                        id
+                        name
+                    }
+
+                    parent {
+                        id
+                    }
+
+
+                    edges {
+                        id
+
+                        from {
+                            id
+                        }
+                        fromHandle
+                        
+                        to {
+                            id
+                        }
+
+                        conditions {
+                            id
+
+                            inputDevice {
+                                id
+                                name
+                            }
+                            inputDeviceKey {
+                                id
+                                key
+                            }
+                            comparator
+                            assertion {
+                                id
+                                type
+                                value
+                                setpoint {
+                                    id
+                                    name
+                                    value
+                                }
+                                variable {
+                                    id
+                                    name
+                                    value
+                                }
+                            }
+                        }
+
+                        toHandle
+
+                        points{
+                            x
+                            y
+                        }
+                    }
+
+                    nodes {
+                        id
+                        type
+                        x 
+                        y
+
+                        inputs {
+                            id
+                        }
+                        
+                        outputs {
+                            id
+                        }
+
+                        subprocess {
+                            id
+                            name
+                        }
+
+                        actions {
+                            id
+                            release
+
+                            device {
+                                id
+                                name
+                            }
+                            request {
+                                id
+                                key
+                            }
+                        }
+                        configuration {
+                            id
+                            key
+                            
+                            value
+                        }
+
+                    
+                    }
+                
+            }
+        }
+
+    `, {
+        variables: {
+            program: activeProgram
+        }
+    });
+    
+
     const { data } = useQuery(gql`
-    query Q ($id: ID, $program: ID!){
+    query ProgramEditor ($id: ID){
         commandPrograms(where: {id: $id}){
             id
             name
 
+            program {
+                id
+                name
+                children {
+                    id
+                    name
+                }
+            }
+
+
+            variables {
+                id
+                name
+            }
 
             devices {
                 id
                 name
                 requiresMutex
+
+                setpoints {
+                    id
+                    name
+                }
+
                 type {
                     id
                     name
@@ -139,99 +292,21 @@ export const Program = (props) => {
 
         }
 
-        commandProgramFlows (where: {id: $program}) {
-                id
-                name
-
-                children {
-                    id
-                    name
-                }
-
-                parent {
-                    id
-                }
-
-                conditions {
-                    id
-                    inputDevice {
-                        id
-                        name
-                    }
-                    inputDeviceKey {
-                        id
-                        key
-                    }
-                    comparator
-                    assertion
-                }
-                nodes {
-                    id
-                    type
-                    x 
-                    y
-
-
-                    subprocess {
-                        id
-                        name
-                    }
-
-                    actions {
-                        id
-                        release
-
-                        device {
-                            id
-                            name
-                        }
-                        request {
-                            id
-                            key
-                        }
-                    }
-                    configuration {
-                        id
-                        key
-                        
-                        value
-                    }
-
-                    nextConnection {
-                        edges {
-                            conditions
-
-                            id
-                            sourceHandle
-                            targetHandle
-
-
-                            points {
-                                x
-                                y
-                            }
-                            node {
-                                id
-                            }
-                        }
-                    }
-                }
-            
-        }
+    
     }
 `, {
         variables: {
             id: id,
-            program: activeProgram
         }
     })
 
     const refetch = () => {
-        client.refetchQueries({ include: ['Q'] })
+        client.refetchQueries({ include: ['ProgramEditor', 'FlowData'] })
     }
 
-    let flow = data?.commandProgramFlows?.[0]
+    let flow = flowData?.commandProgramFlows?.[0]
 
+    const program = data?.commandPrograms?.[0];
 
     const createProgramNode = useCreateProgramNode(id, activeProgram, flow?.parent?.id)
     const updateProgramNode = useUpdateProgramNode(id, activeProgram, flow?.parent?.id)
@@ -246,10 +321,10 @@ export const Program = (props) => {
                 x: x.x,
                 y: x.y,
                 extras: {
-                    icon: x.type,
+                    icon: IconMap[x.type]?.icon,
                     label: x.subprocess?.name,
                     configuration: [
-                        ...x.configuration,
+                        ...(x.configuration || []),
                         { key: "actions", value: x.actions }
                     ]
                     // actions: x.actions
@@ -259,22 +334,22 @@ export const Program = (props) => {
             })))
 
             
-            setPaths(flow.nodes.map((x) => {
-                console.log("NEXT", x)
-                return x.nextConnection.edges.map((conn) => ({
+            setPaths(flow?.edges?.map((conn) => {
+                return {
                     id: conn.id,
-                    source: x.id,
-                    sourceHandle: conn.sourceHandle,
-                    target: conn.node.id,
-                    targetHandle: conn.targetHandle,
+                    source: conn.from?.id,
+                    sourceHandle: conn.fromHandle,
+                    target: conn.to?.id,
+                    targetHandle: conn.toHandle,
                     points: conn.points,
                     extras: {
+                        conditions: conn.conditions,
                         configuration: {
                             conditions: conn.conditions
                         }
                     }
-                }))
-            }).reduce((prev, curr) => prev.concat(curr), []))
+                }
+            }))
         }
     }, [flow, activeProgram])
 
@@ -353,7 +428,7 @@ export const Program = (props) => {
             let path = paths.find((a) => a.id == _paths[0]);
 
             queries.push(
-                disconnectProgramNode(path.source, path.sourceHandle, path.target, path.targetHandle)
+                disconnectProgramNode(_paths[0]) //, path.sourceHandle, path.target, path.targetHandle)
             )
     
             // return {
@@ -423,7 +498,7 @@ export const Program = (props) => {
 
                             <Button
                                 size="small"
-                                icon={<Add size="small" />} />
+                                icon={<Add />} />
                         </Box>
 
                     </Box>
@@ -439,7 +514,7 @@ export const Program = (props) => {
                             <Button
                                 onClick={() => openModal(true)}
                                 hoverIndicator
-                                icon={<Add size="small" />} />
+                                icon={<Add />} />
                         </Box>
                         <Box>
                             <List
@@ -475,6 +550,14 @@ export const Program = (props) => {
 
 
     const devices = data?.commandPrograms?.[0].devices || []
+    const variables = data?.commandPrograms?.[0]?.variables || [];
+
+
+    const tree = useMemo(() => {
+        console.log({program: program?.program})
+        return cleanTree(program?.program)
+    }, [program])
+
 
     useEffect(() => {
         setConditions(flow?.conditions)
@@ -488,7 +571,7 @@ export const Program = (props) => {
                 flow,
                 refresh: refetch,
                 devices,
-                conditions: conditions,
+                variables,
                 program,
                 activeProgram: activeProgram,
                 selectedType: selected.key,
@@ -529,27 +612,106 @@ export const Program = (props) => {
                                 icon={<Add size="small" />} />
                         </Box> */}
 
-                <ProgramCanvasModal
+                <ProgramFlowModal 
+                    open={modalOpen}
+                    selected={selectedItem}
+                    onDelete={() => {
+                        deleteProgramFlow(selectedItem.id).then(() => {
+                            refetchProgram()
+                            openModal(false)
+                            setSelectedItem({})
+                            setParentItem(undefined)
+                        })
+                    }}
+                    onClose={() => {
+                        setSelectedItem({})
+                        setParentItem(undefined)
+
+                        openModal(false)
+                    }}
+                    onSubmit={(item) => {
+                        let parent = parentItem?.id !== 'root' ? parentItem?.id : undefined;
+
+                        if(item.id){
+                            updateProgramFlow(item.id, item.name, parent).then(() => {
+                                refetchProgram()
+                                openModal(false)
+                                setParentItem(undefined)
+                                setSelectedItem({})
+                            })
+                        }else{
+                            createProgramFlow(item.name, parent).then(() => {
+                                refetchProgram()
+                                openModal(false)
+                                setParentItem(undefined)
+
+                                setSelectedItem({})
+                                
+                            })
+                        }
+                    }}
+                    />
+                {/* <ProgramCanvasModal
                     open={modalOpen}
                     onSubmit={(item) => {
-                            let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                            createProgramFlow(item.name, parent).then(() => {
-                                refetch()
-                            })
-          
-                        
-                        openModal(false)
+                        let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
+                        createProgramFlow(item.name, parent).then(() => {
+                            refetchProgram()
+                            openModal(false)
+                            
+                        })
                     }}
                     onClose={() => {
                         setSelectedItem(undefined)
                         openModal(false)
                     }}
-                    modal={(gql`
-                        type Project {
-                            name: String
-                        }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "Project") as ObjectTypeDefinitionNode} />
-                        <HyperTree 
+                    
+                    /> */}
+                        <TreeMenu
+                            label='Flows'
+                            onAdd={(nodeId) => {
+                                let item = tree.reduce((prev, curr) => [...prev, curr, ...curr.children], [])
+                                setParentItem(item.find((a) => a.id == nodeId))
+                                openModal(true)
+                            }}
+                            onEdit={(nodeId) => {
+                                let item = tree.reduce((prev, curr) => [...prev, curr, ...curr.children], [])
+                                setSelectedItem(item.find((a) => a.id == nodeId));
+                                openModal(true);
+                                
+                            }}
+                            onNodeSelect={(nodeId) => {
+                                setActiveProgram(nodeId)
+                            }}
+                            selected={activeProgram}
+                            items={tree}
+                            />
+                        {/* <TreeView
+                            onNodeSelect={(event, nodeId) => {
+                                setActiveProgram(nodeId)
+                            }}
+                            selected={activeProgram}
+                            sx={{flex: 1, userSelect: 'none', maxWidth: `100%`}}
+                            defaultCollapseIcon={<ExpandMore />}
+                            defaultExpandIcon={<ChevronRight />}
+                            >
+                            {tree.map((item) => (
+                                <TreeItem
+                                    ContentProps={{style: {width: 'unset'}}}
+                                    ContentComponent={Box}
+                                    nodeId={item.id}
+                                    label={item.name}
+                                    >
+                                    {item.children.map((row) => (
+                                        <TreeItem
+                                            ContentProps={{style: {width: 'unset'}}}
+                                            nodeId={row.id} 
+                                            label={row.name} />
+                                    ))}
+                                </TreeItem>
+                            ))}
+                        </TreeView> */}
+                        {/* <HyperTree 
                             id="editor-menu"
                             onCreate={(node) => {
                                 console.log("CREATE", node)
@@ -564,8 +726,8 @@ export const Program = (props) => {
                             data={[{
                                 id: 'root',
                                 name: `Program`,
-                                children: cleanTree(program?.program) || []
-                            }]} />
+                                children: tree || []
+                            }]} /> */}
                         {/* <List 
                             onClickItem={({item}) => {
                                 console.log(item)
@@ -585,16 +747,16 @@ export const Program = (props) => {
                             icon: <Action />,
                             panel: (
                                 <NodeDropdown
-                                    items={nodeMenu.concat((flow?.children || []).map((x) => ({
-                                        icon: <Connect />,
-                                        label: x.name,
-                                        
-                                        extras: {
+                                    items={nodeMenu.concat(
+                                        (flow?.children || []).map((x) => ({
+                                            icon: IconMap[ACTION_TYPES.SUBPROCESS]?.icon,
                                             label: x.name,
-                                            icon: "Connect",
-                                            subprocess: x.id
-                                        }
-                                    })))}
+                                            extras: {
+                                                type: ACTION_TYPES.SUBPROCESS,
+                                                subprocess: x.id
+                                            }
+                                        }))
+                                    )}
                                 />
                             )
                         },
@@ -620,7 +782,7 @@ export const Program = (props) => {
                         // }})
 
                         createProgramNode(
-                            node.extras.icon, 
+                            node.extras.type, 
                             position.x, 
                             position.y, 
                             node.extras.subprocess
@@ -645,7 +807,8 @@ export const Program = (props) => {
                             path.sourceHandle,
                             path.target,
                             path.targetHandle,
-                            path.points
+                            path.points,
+                            path.id != 'temp' && path.id
                         ).then(() => {
                             refetch()
                         })
