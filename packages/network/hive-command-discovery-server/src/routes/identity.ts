@@ -3,10 +3,13 @@ import { handleAuthRequest } from '../utils/auth';
 import { promises } from 'dns';
 import { Data } from '../data';
 
+
 export default (dataBroker: Data) => {
     const router = Router();
 
     router.get('/whoami', async (req, res) => {
+        await promises.setServers(['192.168.200.1']);
+        
         let ip = (req.ip || req.socket.remoteAddress)?.replace('::ffff:', '')
         if(!ip) return res.send({error: "No IP, strange"});
         const [host] = await promises.reverse(ip)
@@ -26,20 +29,18 @@ export default (dataBroker: Data) => {
        
         let deviceId = host?.replace(".hexhive.io", '')
 
-        const [ commandPayload, deviceAssignment, deviceActions] = await dataBroker.readTransaction(async (tx) => {
-            return await Promise.all([
-                dataBroker.getDeviceProgram(tx, deviceId), 
-                dataBroker.getDeviceAssignment(tx, deviceId),
-                dataBroker.getDeviceActions(tx, deviceId),
-            ])
-        })
+
+        const payload = await dataBroker.getDeviceProgram(deviceId);
+
+        // const [ commandPayload, deviceAssignment, deviceActions] = await Promise.all([
+        //     dataBroker.getDeviceProgram(deviceId), 
+        //     dataBroker.getDeviceAssignment(deviceId),
+        //     dataBroker.getDeviceActions(deviceId),
+        // ])
+        
 
 
-        res.send({payload: {
-            command: commandPayload,
-            layout: deviceAssignment,
-            actions: deviceActions
-        }})
+        res.send({payload: payload})
     })
 
     router.post('/context', async (req, res) => {
@@ -57,13 +58,13 @@ export default (dataBroker: Data) => {
 
         let buses = req.body.buses;
 
-        await dataBroker.updateDeviceUptime(deviceId, identity.uptime)
+        // await dataBroker.updateDeviceUptime(deviceId, identity.uptime)
 
-        await dataBroker.upsertDevicePeripherals(
-            deviceId,
-            buses
-        )
-        console.log(req.body, host);
+        // await dataBroker.upsertDevicePeripherals(
+        //     deviceId,
+        //     buses
+        // )
+        // console.log(req.body, host);
 
         res.send({success: 200})
     })

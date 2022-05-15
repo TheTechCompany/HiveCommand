@@ -1,0 +1,36 @@
+Arguments: 
+  /usr/local/bin/node /opt/homebrew/bin/yarn add @pulumi/kubernetes
+
+PATH: 
+  /opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/Users/thekid/Library/Android/sdk/emulator:/Users/thekid/Library/Android/sdk/platform-tools:/Users/thekid/Library/Android/sdk/emulator:/Users/thekid/Library/Android/sdk/platform-tools
+
+Yarn version: 
+  1.22.17
+
+Node version: 
+  16.13.0
+
+Platform: 
+  darwin arm64
+
+Trace: 
+  Error: ENOENT: no such file or directory, open '/Users/thekid/Library/Caches/Yarn/v6/npm-@types-node-17.0.31-a5bb84ecfa27eec5e1c802c6bbf8139bdb163a5d-integrity/node_modules/@types/node/.yarn-tarball.tgz'
+
+npm manifest: 
+  {
+      "name": "hivecommand-app",
+      "devDependencies": {
+          "@types/node": "^14"
+      },
+      "dependencies": {
+          "@pulumi/pulumi": "^3.0.0",
+          "@pulumi/aws": "^5.0.0",
+          "@pulumi/awsx": "^0.40.0"
+      }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

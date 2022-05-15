@@ -9,7 +9,6 @@ type Options = {
 	storagePath: string | undefined;
 	privateKey?: string;
 	networkInterface: string | undefined;
-	commandCenter: string | undefined
 	healthCenter: string | undefined,
 	discoveryServer?: string;
 	ignorePlugins?: string;
@@ -28,12 +27,11 @@ type Options = {
 		commander: { type: 'string' },
 		storagePath: {type: 'string'},
 		discoveryServer: {type: 'string', description: 'OPCUA Server to connect to', default: 'opc.tcp://discovery.hexhive.io:4840'},
-		commandCenter: {type: 'string', description: 'Websocket having endpoint for healthchecks and program info', default: 'http://discovery.hexhive.io:8080'},
+		// commandCenter: {type: 'string', description: 'Websocket having endpoint for healthchecks and program info', default: 'http://discovery.hexhive.io:8080'},
 		// healthCenter: {type: 'string', description: '', default: ''},
 		ignorePlugins: {type: 'string'},
 		pluginDir: {type: 'string', default: '/tmp/plugins'},
 		networkInterface: {type: 'string', description: 'network interface to scan for IO-Link masters on', default: 'eth0'},
-		jesus: {type: 'boolean', description: 'In case the code is un-tested run in Jesus mode so at any point Jesus can take the wheel'}
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
@@ -49,7 +47,7 @@ type Options = {
 	const hostCommander = new CommandClient({
 		storagePath,
 		logLevel: logLevel ? (log.levels as any)[logLevel.toUpperCase()] : log.levels.INFO,
-		commandCenter,
+		// commandCenter,
 		// healthCenter: healthCenter,
 		healthCheck: {
 			number: process.env.HEALTH_CHECK_NUMBER || '',

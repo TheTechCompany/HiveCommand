@@ -13,6 +13,7 @@ export interface IDeviceSingleContext {
     },
     programId?: string;
     deviceId?: string;
+    variables?: any[],
     plugins?: {}[]
     devices?: {}[]
     flows?: {}[]

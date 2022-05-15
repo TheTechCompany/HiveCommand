@@ -1,7 +1,7 @@
 import React, {useState, useContext} from 'react';
 
-import { Box, Button, Collapsible, List, Text, TextInput } from 'grommet'
-import { Nodes, Subtract, Connect, Add } from 'grommet-icons';
+import { Box, Button, Collapsible, List, Select, Text, TextInput } from 'grommet'
+import { GridView as Nodes, Remove as Subtract, ImportExport as Connect, Add } from '@mui/icons-material';
 import { NodeDropdown } from '../../node-dropdown';
 import SvgSettings from '../../../views/Editor/pages/program/Settings';
 import { BumpInput } from '@hexhive/ui';
@@ -12,11 +12,12 @@ export const HMIGroupMenu = (props) => {
 
 	const [ selected, setSelected ] = useState<any>()
 
-	const { selected: selectedNode, nodes, ports, updateNode, addPort, updatePort } = useContext(HMIGroupContext)
+	const { selected: selectedNode, devices, nodes, ports, updateNode, addPort, updatePort } = useContext(HMIGroupContext)
 
 	const renderMenu = () => {
 		let node = nodes.find((a) => a.id == selectedNode)
 
+		console.log({node, devices})
 		switch(selectedMenu){
 			case 'nodes':
 				return (
@@ -25,9 +26,23 @@ export const HMIGroupMenu = (props) => {
 				)
 			case 'settings':
 				return <Box>
+					<Select
+						valueKey={{ reduce: true, key: "id" }}
+						labelKey="name"
+						value={node?.extras?.devicePlaceholder?.id || node?.extras?.device}
+						onChange={({ value }) => {
+							// assignHMINode(selected.id, value).then(() => {
+							// 	refetch()
+							// })
+							updateNode(selectedNode, {
+								device: value
+							})
+						}}
+						options={devices.filter((a) => a.type?.name.replace(/ /, '').indexOf(node?.extras?.iconString || node?.extras?.iconStr ) > -1)}
+						placeholder="Device" />
 					<BumpInput	
 						value={node?.extras?.rotation || 0}
-						leftIcon={<Subtract size="small" />}
+						leftIcon={<Subtract fontSize="small" />}
 						onLeftClick={() => {
 							updateNode(selectedNode, {
 								rotation: (node?.extras?.rotation || 0) - 90
@@ -43,7 +58,7 @@ export const HMIGroupMenu = (props) => {
 								rotation: e
 							})
 						}}
-						rightIcon={<Add size="small" />}
+						rightIcon={<Add fontSize="small" />}
 						placeholder="Rotation" />
 					<BumpInput 
 						type="number"
@@ -63,8 +78,8 @@ export const HMIGroupMenu = (props) => {
 								scaleX: parseFloat(e)
 							})
 						}}
-						leftIcon={<Subtract size="small" />}
-						rightIcon={<Add size="small" />}
+						leftIcon={<Subtract fontSize="small" />}
+						rightIcon={<Add fontSize="small" />}
 						placeholder="Scale X" />
 					<BumpInput 
 						type="number"
@@ -85,8 +100,8 @@ export const HMIGroupMenu = (props) => {
 							})
 						}}
 						value={node?.extras?.scaleY || 0}
-						leftIcon={<Subtract size="small" />}
-						rightIcon={<Add size="small" />}
+						leftIcon={<Subtract fontSize="small"  />}
+						rightIcon={<Add fontSize="small" />}
 						placeholder="Scale Y" />
 				</Box>
 			case 'ports':
@@ -99,7 +114,7 @@ export const HMIGroupMenu = (props) => {
 								hoverIndicator
 								plain 
 								style={{padding: 6, borderRadius: 3}} 
-								icon={<Add size="small" />} />
+								icon={<Add  fontSize="small"  />} />
 						</Box>
 						<Box flex overflow="scroll">
 							<List 
@@ -179,7 +194,7 @@ export const HMIGroupMenu = (props) => {
 				active={selectedMenu == 'settings'}
 				hoverIndicator
 				onClick={() => setSelectedMenu(selectedMenu == 'settings' ? undefined : 'settings')}
-				icon={<SvgSettings />} />
+				icon={<SvgSettings  width={30} height={30}/>} />
 
 			<Button
 				active={selectedMenu == 'ports'}

@@ -43,6 +43,8 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
 				},
 				x: node.x,
 				y: node.y,
+				width: node.type.width,
+				height: node.type.height,
 				device: node.devicePlaceholder,
 				rotation: node.rotation,
 				scaleX: node.scaleX,
@@ -74,8 +76,8 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
 				<div
 					style={{
 						position: 'absolute', 
-						width: '55px', 
-						height: '55px', 
+						width: Node.width || '55px', 
+						height: Node.height || '55px', 
 						transform: `rotate(${Node.rotation || 0}deg) scaleX(${Node.scaleX || 1}) scaleY(${Node.scaleY || 1})`, 
 						left: Node.x, 
 						top: Node.y

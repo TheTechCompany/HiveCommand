@@ -1,6 +1,5 @@
 import { nanoid } from 'nanoid';
 import vm from 'vm';
-import { StateDevice } from '.';
 
 //		const PIDController = require("node-pid-controller");
 

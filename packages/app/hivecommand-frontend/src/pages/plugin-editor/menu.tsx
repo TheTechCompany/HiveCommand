@@ -1,11 +1,12 @@
 import { Box, Text, Button, List } from 'grommet';
 // import { VariableSizeNodeData, VariableSizeTree as Tree, TreeWalker  } from 'react-vtree'
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
-import * as Icons from 'grommet-icons'
 // import { StackItemModal } from '../../modals/stacks/item'
 import useResizeAware from 'react-resize-aware'
 import { size } from 'lodash';
 import { TreeView } from '@hexhive/ui';
+
+import { NavigateNext as Next, KeyboardArrowDown as Down, Folder, Add, Article as Document } from '@mui/icons-material'
 
 type TreeNode = Readonly<{
     children?: TreeNode[];
@@ -73,7 +74,7 @@ return (
         <Button
             plain
             size="small"
-            icon={isOpen ? <Icons.Down size="small" /> : <Icons.Next size="small" />}
+            icon={isOpen ? <Down  /> : <Next  />}
             onClick={(e) => {
                 e.stopPropagation();
                 setOpen(!isOpen)
@@ -86,7 +87,7 @@ return (
         align="center"
         margin={{left: 'small'}}
         direction="row">
-        {!isLeaf ? <Icons.Folder size="small" /> : <Icons.Document size="small"/> } 
+        {!isLeaf ? <Folder /> : <Document /> } 
         <div style={defaultGapStyle}>{name}</div>
     </Box>
 
@@ -95,7 +96,7 @@ return (
             onClick={onRightAction}
             style={{padding: 4}}
             hoverIndicator
-            icon={<Icons.Add  size="small"/>} />
+            icon={<Add  />} />
     )}
    
  
@@ -151,7 +152,7 @@ export const PluginEditorMenu : React.FC<PluginEditorMenuProps> = (props) => {
                 plain
                 style={{padding: 6, borderRadius: 3}}
                 size="small" 
-                icon={<Icons.Add size="small" />} />
+                icon={<Add  />} />
             </Box>
             
             {/* <StackItemModal 

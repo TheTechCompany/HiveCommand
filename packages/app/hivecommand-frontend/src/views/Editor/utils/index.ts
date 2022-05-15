@@ -1,6 +1,8 @@
 export const cleanTree = (nodes: any[]) => {
-	return (nodes || []).map((node) => ({
+	const response = (nodes || []).map((node) => ({
 		...node,
 		children: cleanTree(node.children)
 	}))
+
+	return response
 }

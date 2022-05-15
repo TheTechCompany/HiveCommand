@@ -1,26 +1,35 @@
 import log from "loglevel";
-import { TransitionCondition } from "../types";
+import { EdgeCondition } from "@hive-command/data-types";
 
 export class Condition {
-    private condition: TransitionCondition;
+    private condition: EdgeCondition;
 
-    constructor(condition: TransitionCondition){
+    private getVariable?: (key: string) => any;
+
+    constructor(condition: EdgeCondition, getVariable?: (key: string) => any){
         this.condition = condition
     }
 
     get input_id(){
-        return this.condition.input
+        return this.condition.inputDevice.id
     }
 
     get input_key(){
-        return this.condition.inputKey
+        return this.condition.inputDeviceKey.key
     }
 
     get value_id(){
-        return this.condition.value
+        if(this.condition.assertion.setpoint){
+            //TODO map setpoints to variables
+            return this.condition.assertion?.setpoint.value
+        }else if(this.condition.assertion.variable){
+            return this.getVariable?.(this.condition.assertion.variable.key)
+        }else if(this.condition.assertion.value){
+            return this.condition.assertion.value;
+        }
     }
 
-    check(input: any, value: any){
+    check(input: any, value: any = this.value_id){
         //console.log(input, value)
         try{
             let val = parseFloat(input)

@@ -4,6 +4,7 @@ import React from 'react';
 
 export const HMIGroupContext = React.createContext<{
 	selected?: string;
+	devices?: any[];
 	nodes?: InfiniteCanvasNode[]
 	ports?: {
 		id?: string;

@@ -1,13 +1,14 @@
 
+export * from './condition'
+
 // import doT from 'dot';
 import EventEmitter from "events";
 import { ProcessChain } from './chain';
-import { CommandAction, CommandProcess } from './types';
+import { ACTION_TYPES, CommandAction, CommandProcess } from '@hive-command/data-types';
 import log from 'loglevel'
 
 log.setLevel('debug')
 
-export * from './types'
 
 export {
     ProcessChain
@@ -67,6 +68,7 @@ export class Process extends EventEmitter{
 
     private perform: (device: string, release: boolean, operation: string) => Promise<any>
 
+    public getVariable: (key: string) => any;
     public getState: (key: string) => {[key: string]: any};
     public setState: (key: string, value: {[key: string]: any} | any) => void;
 
@@ -78,11 +80,13 @@ export class Process extends EventEmitter{
         performOperation: (device: string, release: boolean, operation: string) => Promise<any>, 
         getState: ((key: string) => {[key: string]: any}),
         setState: (key: string, value: {[key: string]: any} | any) => void,
+        getVariable: (key: string) => any,
         parent?: CommandProcess
     ){
         super();
 
         console.log({getState: getState})
+        this.getVariable = getVariable;
         this.getState = getState
         this.setState = setState;
 
@@ -102,12 +106,12 @@ export class Process extends EventEmitter{
         this.process = process
 
         // console.log({nodes: this.process})
-        this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == 'trigger').map((node) => {
-            return new ProcessChain(this, process, node.id, this.actions)
+        this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == ACTION_TYPES.TRIGGER).map((node) => {
+            return new ProcessChain(this, process, node.id, this.actions, this.getVariable)
         }) || []
 
-        this.chains.shutdown = this.process.nodes?.filter((a) => a.type == 'shutdown').map((node) => {
-            return new ProcessChain(this, process, node.id, this.actions)
+        this.chains.shutdown = this.process.nodes?.filter((a) => a.type == ACTION_TYPES.SHUTDOWN_TRIGGER).map((node) => {
+            return new ProcessChain(this, process, node.id, this.actions, this.getVariable)
         }) || []
 
         this.chains.entrypoints.forEach((entrypoint) => {

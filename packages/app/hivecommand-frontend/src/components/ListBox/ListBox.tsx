@@ -1,5 +1,5 @@
 import { Box, List, Text, Button } from 'grommet';
-import { MoreVertical, Add } from 'grommet-icons';
+import { MoreVert, Add } from '@mui/icons-material';
 import React from 'react';
 
 export interface ListBoxProps {
@@ -23,7 +23,7 @@ export const ListBox : React.FC<ListBoxProps> = (props) => {
 				justify={props.onAdd ? 'between' : 'start'}
 				direction="row">
 				<Text>{props.label}</Text>
-				{props.onAdd && <Button style={{padding: 6, borderRadius: 3}} hoverIndicator onClick={props.onAdd} plain icon={<Add size="small" />} />}
+				{props.onAdd && <Button style={{padding: 6, borderRadius: 3}} hoverIndicator onClick={props.onAdd} plain icon={<Add  />} />}
 			</Box>
 			<List data={props.data}>
 				{(datum) => (
@@ -33,7 +33,7 @@ export const ListBox : React.FC<ListBoxProps> = (props) => {
 						<Box flex>
 							{props.renderItem(datum)}
 						</Box>
-						{props.onItemEdit && <Button style={{padding: 6, borderRadius: 3}} hoverIndicator onClick={() => props.onItemEdit(datum)} plain icon={<MoreVertical size="small" />} />}
+						{props.onItemEdit && <Button style={{padding: 6, borderRadius: 3}} hoverIndicator onClick={() => props.onItemEdit(datum)} plain icon={<MoreVert />} />}
 					</Box>
 				)}
 			</List>

@@ -1,7 +1,7 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
-import { Checkmark } from 'grommet-icons';
+import { Check as Checkmark } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
@@ -11,7 +11,6 @@ import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
 
 const ActionButton = (props) => {
-	console.log(props)
 	return (
 		<Box background="accent-1" direction='row' round="xsmall" width={'100%'} align='center' justify='center' elevation="small">
 			<Button 
@@ -42,14 +41,9 @@ export default () => {
 		{
 			label: 'Manual',
 			key: 'manual'
-		},
-		// {
-		// 	label: 'Timer',
-		// 	key: 'timer'
-		// }
+		}
 	]
 
-	// const [operating, setOperating] = useState<string>('disabled')
 
     const [ infoTarget, setInfoTarget ] = useState<{x?: number, y?: number}>(undefined);
     const [ selected, setSelected ] = useState<{key?: string, id?: string}>(undefined)
@@ -257,15 +251,12 @@ export default () => {
 							 }}
 							 style={{padding: 6, borderRadius: 3}}
 							 hoverIndicator
-							 icon={<Checkmark size="small" />} />) : ''}
+							 icon={<Checkmark />} />) : ''}
 					  </Box>
 				  ))}
 				 </Box>
   
-  {/* 
-  
-				  {deviceValues(node?.devicePlaceholder?.name)} */}
-				  <Box align="center" justify="around" direction="row">
+  				  <Box align="center" justify="around" direction="row">
 				  	{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
 					  <Button
 						  plain
@@ -337,10 +328,11 @@ export default () => {
 				setInfoTarget(undefined)
 			}}
 			onSelect={(select) => {
-				let node = program.hmi?.[0]?.nodes?.concat(program?.hmi?.[0]?.groups).find((a) => a.id == select.id)
+				console.log({hmi: program.interface});
+				let node = program.interface?.nodes?.find((a) => a.id == select.id)
 
 				const { x, y, scaleX, scaleY} = node;
-				setInfoTarget({x: x + (node.width || node?.type?.width), y: y})
+				setInfoTarget({x: x + (node.type.width || node?.type?.width), y: y})
 				
 				setSelected(select)
 			}}

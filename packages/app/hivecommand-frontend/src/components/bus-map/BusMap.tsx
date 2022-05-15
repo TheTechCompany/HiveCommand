@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box } from 'grommet'
 import { Bus } from './Bus';
-import { Add } from 'grommet-icons';
 
 export interface BusMapProps {
 	buses?: {

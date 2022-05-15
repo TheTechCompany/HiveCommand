@@ -1,6 +1,6 @@
 import { BaseModal, FormControl } from "@hexhive/ui";
 import { TextInput, CheckBox, Box } from "grommet";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export const ControlGraphModal = (props) => {
   const [graph, setGraph] = useState<{
@@ -8,6 +8,15 @@ export const ControlGraphModal = (props) => {
     keyID?: string;
     totalize?: boolean;
   }>({});
+
+  useEffect(() => {
+    setGraph({
+      ...props.selected,
+      deviceID: props.selected?.dataDevice?.id,
+      keyID: props.selected?.dataKey?.id,
+      totalize: props.selected?.total
+    })
+  }, [props.selected])
 
   const onSubmit = () => {
     props.onSubmit(graph);
