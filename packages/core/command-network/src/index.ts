@@ -1,10 +1,8 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
-import { ActionPayload, AssignmentPayload, PayloadResponse } from './types';
+import { ActionPayload, AssignmentPayload, CommandVariable, PayloadResponse } from '@hive-command/data-types';
 import log from 'loglevel'
-
-export * from './types'
 
 export interface ValueBankInterface {
 	getDeviceMode?: (device: string) => any;
@@ -13,6 +11,9 @@ export interface ValueBankInterface {
 	runOneshot?: (flowId: string) => Promise<void | Error>;
 	stopOneshot?: (flowId: string) => Promise<void | Error>;
 	isRunning?: (flowId: string) => boolean;
+
+	getVariable?: (key: string) => any;
+	setVariabe?: (key: string, value: any) => any;
 
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
@@ -59,8 +60,6 @@ export class CommandNetwork {
 	private httpInstance : AxiosInstance;
 
 	private identity? : string;
-
-
 	private valueBank : ValueBankInterface = {}
 
 	private options : CommandNetworkOptions;
@@ -81,6 +80,7 @@ export class CommandNetwork {
 
 	becomeSelf(self: {error?: any, identity?: any}){
 		if(!self.error){
+			console.log("become self")
 			this.identity = self.identity.named;
 		}
 	}
@@ -123,13 +123,23 @@ export class CommandNetwork {
 	}
 
 	//Turn buses into OPC map
-	async initOPC({layout, actions} : {layout: AssignmentPayload[], actions: ActionPayload[]}){
+	async initOPC({layout = [], actions = [], variables = []} : {variables: CommandVariable[], layout: AssignmentPayload[], actions: ActionPayload[]}){
 
 		// await this.opc?.setComandEndpoint(this.request.bind(this))
 		
 		// await this.opc?.addControllerInfo(`CommandAction`, DataType.String, () => {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
+
+		await Promise.all(variables.map(async (variable) => {
+			console.log(`Adding variable ${variable.name} to OPC-UA`);
+
+			await this.opc?.addVariable(variable.name, variable.type, () => {
+				return this.valueBank.getVariable?.(variable.name)
+			}, (value: Variant) => {
+				return this.valueBank.setVariabe?.(variable.name, value.value)
+			})
+		}))
 
 		await Promise.all(actions.map(async (action) => {
 			console.log("Adding Plant Action", action.name)
@@ -246,10 +256,19 @@ export class CommandNetwork {
 		- Start OPCUA Server and Companions
 		- Load initialState (decouples building the schema from running the server)
 	*/
-	async start(credentials: {
-		hostname: string,
-		discoveryServer?: string
-	}, struct: {layout: AssignmentPayload[], actions: ActionPayload[]} ){
+	async start(
+		credentials: {
+			hostname: string,
+			discoveryServer?: string
+		}, 
+		struct: {
+			layout: AssignmentPayload[], 
+			actions: ActionPayload[],
+			variables: CommandVariable[]
+		} 
+	){
+
+		console.log("Starting network")
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",

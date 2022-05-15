@@ -1,4 +1,4 @@
-import { AssignmentPayload } from "@hive-command/network";
+import { AssignmentPayload } from "@hive-command/data-types";
 import PIDController from "node-pid-controller";
 
 export class DeviceMap {

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Button, Text, List } from 'grommet'
-import { Add } from 'grommet-icons';
+import { Add } from '@mui/icons-material';
 import { useQuery, gql } from '@apollo/client';
+import { IconButton } from '@mui/material';
 
 export const Alarms = (props) => {
 	// const [ alarms, setAlarms ] = useState<any[]>([])
@@ -25,12 +26,9 @@ export const Alarms = (props) => {
 
 			<Box align="center" justify="between" direction="row">
 				<Text></Text>
-				<Button 
-					hoverIndicator
-					style={{padding: 6, borderRadius: 3}}	
-					plain
-					size="small"
-					icon={<Add size="small" />} />
+				<IconButton>
+					<Add fontSize='small' />
+				</IconButton>
 			</Box>
 			<List
 				data={alarms} />

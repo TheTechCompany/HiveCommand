@@ -4,7 +4,7 @@ import { Server, Socket } from "socket.io";
 import jwt from 'jsonwebtoken'
 import jwt_decode from 'jwt-decode';
 import bodyParser from 'body-parser'
-import { Models, connect_data, disconnect_data } from '@hive-command/data-types'
+import { Models, connect_data, disconnect_data } from '@hive-command/data'
 import routes from './routes';
 import { handleSocket } from './socket-handler';
 import { HiveCommandData } from '@hive-command/data'
@@ -12,12 +12,18 @@ import { DiscoveryService } from '@hive-command/opcua-lds'
 import { promises } from 'dns';
 import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
-const { Device, Program } = Models;
 import os from 'os';
 import { Data } from './data';
 
 import amqp from 'amqplib'
 import { DataType } from 'node-opcua-variant';
+
+export interface DiscoveryServerOptions {
+    apiKey?: string;
+    gatewayURL?: string;
+
+    fqdn?: string;
+}
 
 export class DiscoveryServer {
     private app : Express;
@@ -36,19 +42,22 @@ export class DiscoveryServer {
 
     private connected: any[] = [];
 
-    constructor(){
+    private options: DiscoveryServerOptions;
+
+    constructor(opts: DiscoveryServerOptions){
+        this.options = opts;
 
         this.dataBroker = new Data({
-            uri: process.env.NEO4J_URI,
-            user: process.env.NEO4J_USER,
-            pass: process.env.NEO4J_PASS
+            gatewayURL: opts.gatewayURL,
+            apiKey: opts.apiKey
         })
 
         this.opcuaDiscovery = new DiscoveryService({
             port: 4840,
             automaticallyAcceptUnknownCertificate: true,
-            force: false,
-            applicationName: "HexHive OPCUA Global Discovery Service"
+            force: true,
+            fqdn: this.options.fqdn,
+            applicationName: "HiveCommand OPCUA"
         })
         
         this.syncClient = new SyncClient({discoveryServer: this.opcuaDiscovery, broker: this.dataBroker})
@@ -115,8 +124,11 @@ export class DiscoveryServer {
     }
 
     async onSocketDisconnect(socket: Socket){
-        await this.data.updateLiveness((socket as any)?.networkName, false)
-        await this.data.updateMode((socket as any)?.networkName, 'disabled')
+        //TODO add graphql update
+        
+        // await this.data.updateLiveness((socket as any)?.networkName, false)
+        // await this.data.updateMode((socket as any)?.networkName, 'disabled')
+
         // await Device.updateOne({_id: (socket as any)?.machine_info.id}, {$set: {connected: false}})
         socket.removeAllListeners();
     }

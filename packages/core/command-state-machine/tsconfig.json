@@ -99,7 +99,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../command-process"}
+    {"path": "../command-process"},
+    {"path": "../command-data-types"}
   ],
   "exclude": ["example/", "dist/", "**/*.test.ts", "__tests__/*"]
 }

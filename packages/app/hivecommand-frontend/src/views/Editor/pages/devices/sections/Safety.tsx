@@ -8,7 +8,7 @@ import { useCreatePlaceholderInterlock, useCreatePlaceholderSetpoint, useDeleteP
 
 export const SafetySection = (props) => {
 
-    const { programId, device, devices, deviceId, refetch } = useContext(DeviceSingleContext);
+    const { programId, variables, device, devices, deviceId, refetch } = useContext(DeviceSingleContext);
 
     const [selectedInterlock, setSelectedInterlock] = useState<any>()
     const [selectedSetpoint, setSelectedSetpoint] = useState<any>()
@@ -27,7 +27,8 @@ export const SafetySection = (props) => {
 
     return (
         <>
-         <DeviceInterlock
+         <DeviceInterlock   
+            variables={variables}
                 devices={devices}
                 device={device}
                 actions={device?.type?.actions || []}

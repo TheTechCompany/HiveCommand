@@ -1,7 +1,7 @@
 import { Process } from "@hive-command/process";
 import { nanoid } from "nanoid";
 import { ProcessChain } from "../chain";
-import { CommandAction, CommandProcessNode } from "../types";
+import { CommandAction, CommandProcessNode } from "@hive-command/data-types";
 
 export interface CommandProgramAction {
 	device: string;
@@ -72,6 +72,7 @@ export class ProcessAction {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
             setState: this.process.setState,
+            getVariable: this.process.getVariable,
 			actions: this.actions
 		}, this.process.getProcess) || {}
 
@@ -161,6 +162,7 @@ export class ProcessAction {
                 performOperation: this.process.performOperation,
                 getState: this.process.getState,
                 setState: this.process.setState,
+                getVariable: this.process.getVariable,
                 actions: this.actions
             }, this.process.getProcess)
 

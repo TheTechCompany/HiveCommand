@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { ProgramAction } from "../../types";
+import { ProgramAction } from "@hive-command/data-types";
 
 export const handler = async (
 	options?: {actions: ProgramAction[]},
@@ -10,7 +10,7 @@ export const handler = async (
 
 	let promise =  Promise.all(actions.map(async (action: ProgramAction) => {
 		const id = nanoid()
-		const res = await hub?.performOperation(action.device, action.release || false, action.operation)
+		const res = await hub?.performOperation(action.device.name, action.release || false, action.request.key)
 
 	}))
 	

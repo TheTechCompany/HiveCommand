@@ -9,6 +9,8 @@ const server = new OPCServer({
 (async () => {
     
     await server.start()
+    
+    await server.addVariable('Sudbuster Permeate', 'Number', () => 123, (value) => console.log({value}));
 
     await server.addDevice({name: 'AV101', type: 'valve'}, {state: {
         serial: {
