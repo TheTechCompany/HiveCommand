@@ -9,6 +9,7 @@ import { assert, OPCUACertificateManager, OPCUADiscoveryServer, extractFullyQual
 // Create a new instance of vantage.
 
 import envPaths from "env-paths";
+import { makeSubject } from "node-opcua";
 
 
 const paths = envPaths("node-opcua-local-discovery-server");
@@ -47,11 +48,6 @@ async function getIpAddresses() {
     });
     return ipAddresses;
 }
-
-const applicationUri = "";
-
-
-
 
 export interface DiscoveryServerOpts {
 	applicationName?: string;
@@ -105,20 +101,26 @@ export class DiscoveryService {
 
         assert(fs.existsSync(privateKeyFile), "expecting private key");
 
-        if(!fs.existsSync(certificateFile)){
+        if(!fs.existsSync(certificateFile) || this.opts.force){
             console.log("Creating self-signed certificate", certificateFile);
 
+            console.log({applicationName: this.applicationName})
+            const subject = makeSubject(this.applicationName, this.fqdn);
+
+            console.log({subject});
+            
             await serverCertificateManager.createSelfSignedCertificate({
-                applicationUri,
+                applicationUri: this.applicationUri,
                 dns: [this.fqdn],
-                ip: await getIpAddresses(),
+                // ip: await getIpAddresses(),
                 outputFile: certificateFile,
-                subject: "/CN=HiveCommand/DC=Discovery-Server",
+                subject: subject, //"/CN=HiveCommand/DC=Discovery-Server",
                 startDate: new Date(),
                 validity: 365 * 10
             })
         }
-        assert(fs.existsSync(certificateFile));
+
+        // assert(fs.existsSync(certificateFile));
 
 		this.discoveryServer = new OPCUADiscoveryServer({
             // register
@@ -127,8 +129,8 @@ export class DiscoveryService {
             privateKeyFile,
             serverCertificateManager,
             serverInfo: {
-                discoveryUrls: ['opc.tcp://192.168.200.6:4840'],
-                
+                discoveryUrls: [`opc.tcp://${this.opts.fqdn}:${this.opts.port}`],
+                productUri: this.applicationName,
                 applicationUri: this.applicationUri
             }
         });
