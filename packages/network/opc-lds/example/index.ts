@@ -4,8 +4,8 @@ const discoveryServer = new DiscoveryService({
     port: 4840,
     automaticallyAcceptUnknownCertificate: true,
     force: true,
-    applicationName: 'Discovery-Server',
-    fqdn: 'dev.hexhive.io'
+    applicationName: 'HiveCommand OPCUA',
+    fqdn: 'staging_discovery.hexhive.io'
 })
 
 discoveryServer.init().then(() => {

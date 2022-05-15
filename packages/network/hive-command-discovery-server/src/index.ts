@@ -55,9 +55,9 @@ export class DiscoveryServer {
         this.opcuaDiscovery = new DiscoveryService({
             port: 4840,
             automaticallyAcceptUnknownCertificate: true,
-            force: false,
+            force: true,
             fqdn: this.options.fqdn,
-            applicationName: "HexHive OPCUA Global Discovery Service"
+            applicationName: "HiveCommand OPCUA"
         })
         
         this.syncClient = new SyncClient({discoveryServer: this.opcuaDiscovery, broker: this.dataBroker})
