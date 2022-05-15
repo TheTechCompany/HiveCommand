@@ -2,7 +2,7 @@ name: Build Apps (HiveCommand)
 on:
   push:
     branches:
-      - master
+      - old_master
 
 jobs: 
 
