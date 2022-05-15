@@ -1,6 +1,6 @@
-FROM node:alpine as build
+FROM node:lts-slim as build
 
-RUN apk add openssl 
+RUN apt-get update; apt-get install openssl -y
 
 WORKDIR /app
 
@@ -14,11 +14,13 @@ RUN npx lerna run build --scope @hive-command/discovery-server --include-depende
 
 RUN cp -Lr /app/packages/network/hive-command-discovery-server/node_modules/ _node_modules/
 
-FROM node:alpine
+FROM node:lts-slim
 
 WORKDIR /app
 
-RUN apk update; apk add openssl openvpn
+RUN apt-get update; apt-get install openssl openvpn -y
+
+# RUN apk update; apk add openssl openvpn
 
 COPY ./packages/network/hive-command-discovery-server/run.sh .
 
