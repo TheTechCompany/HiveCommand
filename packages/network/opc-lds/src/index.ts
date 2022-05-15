@@ -102,6 +102,7 @@ export class DiscoveryService {
         assert(fs.existsSync(privateKeyFile), "expecting private key");
 
         if(!fs.existsSync(certificateFile) || this.opts.force){
+            console.log({opts: this.opts})
             console.log("Creating self-signed certificate", certificateFile);
 
             console.log({applicationName: this.applicationName})
