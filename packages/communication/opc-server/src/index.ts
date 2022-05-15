@@ -149,6 +149,7 @@ export default class Server {
 
     async addVariable(name: string, type: string, getter: () => any, setter: (value: any) => void){
         console.log(`Add variable ${name} ${type}`)
+
         let dataType : DataType;
         switch(type){
             case 'String':
@@ -165,19 +166,24 @@ export default class Server {
                 break;
         }
 
-        const variable = this.namespace?.addObject({
-            browseName: name,
-            organizedBy: this.variableFolder
+        const objectType = this.namespace?.addObjectType({
+            browseName: `${type}-Variable`,
         })
 
         const variableValue = this.namespace?.addVariable({
             browseName: `value`,
             modellingRule: "Mandatory",
             dataType,
-            componentOf: variable
+            componentOf: objectType
         })
 
-        variableValue?.bindVariable({
+        const variable = objectType?.instantiate({
+            browseName: name,
+            organizedBy: this.variableFolder
+        });
+        
+
+        (variable?.getComponentByName(name) as UAVariable)?.bindVariable({
             get: () => new Variant({dataType: dataType, value: getter()}),
             set: (value: Variant) => {
                 if(!setter) return StatusCodes.BadNotWritable;
