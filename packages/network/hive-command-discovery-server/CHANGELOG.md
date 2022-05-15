@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.13](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.12...v1.4.13) (2022-05-15)
+
+**Note:** Version bump only for package @hive-command/discovery-server
+
+
+
+
+
 ## [1.4.9](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.8...v1.4.9) (2022-05-14)
 
 **Note:** Version bump only for package @hive-command/discovery-server
