@@ -2,9 +2,9 @@ import os from "os";
 import path from "path";
 import fs from "fs";
 
-// import {  } from './discovery-server'
+import { OPCUADiscoveryServer } from './discovery-server'
 
-import { assert, OPCUACertificateManager, OPCUADiscoveryServer, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
+import { assert, OPCUACertificateManager, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
 
 // Create a new instance of vantage.
 
@@ -125,6 +125,7 @@ export class DiscoveryService {
 
 		this.discoveryServer = new OPCUADiscoveryServer({
             // register
+            hostname: this.fqdn,
             port: this.opts.port,
             certificateFile,
             privateKeyFile,
