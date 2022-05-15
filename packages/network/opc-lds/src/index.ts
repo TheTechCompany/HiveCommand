@@ -93,7 +93,7 @@ export class DiscoveryService {
 		this.fqdn = this.opts.fqdn || process.env.HOSTNAME || await extractFullyQualifiedDomainName();
 		
         console.log({fqdn: this.fqdn});
-        
+
 		this.applicationUri = makeApplicationUrn(this.fqdn, this.applicationName)
 
         console.log({applicationUri: this.applicationUri});
@@ -102,7 +102,23 @@ export class DiscoveryService {
 
 		const certificateFile = path.join(pkiFolder, "local_discovery_server_certificate.pem");
         const privateKeyFile = serverCertificateManager.privateKey;
+
         assert(fs.existsSync(privateKeyFile), "expecting private key");
+
+        if(!fs.existsSync(certificateFile)){
+            console.log("Creating self-signed certificate", certificateFile);
+
+            await serverCertificateManager.createSelfSignedCertificate({
+                applicationUri,
+                dns: [this.fqdn],
+                ip: await getIpAddresses(),
+                outputFile: certificateFile,
+                subject: "/CN=HiveCommand/DC=Discovery-Server",
+                startDate: new Date(),
+                validity: 365 * 10
+            })
+        }
+        assert(fs.existsSync(certificateFile));
 
 		this.discoveryServer = new OPCUADiscoveryServer({
             // register
@@ -112,6 +128,7 @@ export class DiscoveryService {
             serverCertificateManager,
             serverInfo: {
                 discoveryUrls: ['opc.tcp://192.168.200.6:4840'],
+                
                 applicationUri: this.applicationUri
             }
         });
