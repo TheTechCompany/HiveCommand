@@ -138,9 +138,14 @@ export const UnstyledIconNode = (props : IconNodeProps) => {
         </BaseIconNode>
         {props.extras?.devicePlaceholder?.name && (
                         <Box
-                            style={{transform: `
-                            scaleX(${1 / (props.extras?.scaleX || 1)})
-                            scaleY(${1 / (props.extras?.scaleY || 1)})`}}
+                            style={{
+                                transform: `
+                                    scaleX(${1 / (props.extras?.scaleX || 1)})
+                                    scaleY(${1 / (props.extras?.scaleY || 1)})
+                                `,
+                                textAlign: 'center',
+                                position: 'absolute'
+                            }}
                             direction="row"
                             justify="center"
                             flex>

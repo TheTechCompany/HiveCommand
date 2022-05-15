@@ -40,27 +40,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         return matchPath(window.location.pathname, `${a.id}`) != null;
     })
 
-    const { data: deviceValueData } = useQuery(gql`
-    query DeviceValues( $idStr: String, $id: ID) {
-        commandDeviceValue(device: $idStr){
-            device
-            deviceId
-            value
-            valueKey
-        }
-
-        commandDevices (where: {id: $id}){
-            waitingForActions {
-                id
-            }
-        }
-    }
-    `, {
-        variables: {
-            id: id,
-            idStr: id
-        }
-    })
+   
 
     const { data } = useQuery(gql`
             query Q ($id: ID){
@@ -261,6 +241,15 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 devicePlaceholder {
                                     id
                                     name
+                                    units {
+                                        inputUnit
+                                        displayUnit
+                                        state {
+                                            id
+                                            key
+                                        }
+                                    }
+
                                     type {
                                         actions {
                                             key
@@ -296,8 +285,17 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     devices {
                         id
                         name
+                        units {
+                            inputUnit
+                            displayUnit
+                            state {
+                                id
+                                key
+                            }
+                        }
                         type {
                             state {
+                                id
                                 inputUnits
                                 units
                                 key
@@ -382,24 +380,12 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
 
-    const values : {deviceId: string, valueKey: string, value: string}[] = deviceValueData?.commandDeviceValue || []
 
-    const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {}) // deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
+    // const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {}) // deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
 
     const refetch = () => {
         client.refetchQueries({ include: ['Q'] })
     }
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            client.refetchQueries({ include: ['DeviceValues'] })
-        }, 2 * 1000)
-
-        return () => {
-            clearInterval(timer)
-        }
-    }, [])
-
 
     const program = data?.commandDevices?.[0]?.activeProgram || {};
 
@@ -409,48 +395,33 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     const groups = program?.hmi?.[0]?.groups || [];
 
 
-    const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
-        //Find map between P&ID tag and bus-port
+    // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
+    //     //Find map between P&ID tag and bus-port
 
-        if (!name) return;
+    //     if (!name) return;
 
 
-        let v = values.filter((a) => a?.deviceId == name);
-        let state = program?.devices?.find((a) => a.name == name).type?.state;
+    //     let v = values.filter((a) => a?.deviceId == name);
+    //     let state = program?.devices?.find((a) => a.name == name).type?.state;
 
-        return v.reduce((prev, curr) => {
-            let unit = units?.find((a) => a.key == curr.valueKey);
-            let stateItem = state.find((a) => a.key == curr.valueKey);
-            let value = curr.value;
+    //     return v.reduce((prev, curr) => {
+    //         let unit = units?.find((a) => a.key == curr.valueKey);
+    //         let stateItem = state.find((a) => a.key == curr.valueKey);
+    //         let value = curr.value;
 
-            if (!stateItem) return prev;
+    //         if (!stateItem) return prev;
 
-            if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
-                value = parseFloat(value).toFixed(2)
-            }
-            return {
-                ...prev,
-                [curr.valueKey]: value //`${value} ${unit && unit.units ? unit.units : ''}`
-            }
-        }, {})
+    //         if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
+    //             value = parseFloat(value).toFixed(2)
+    //         }
+    //         return {
+    //             ...prev,
+    //             [curr.valueKey]: value //`${value} ${unit && unit.units ? unit.units : ''}`
+    //         }
+    //     }, {})
 
-    }
-    const hmiNodes = useMemo(() => {
-        return hmi.concat(groups.map((x) => x.nodes).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
-
-            let device = node?.devicePlaceholder?.name;
-            let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
-            let conf = data?.commandDevices?.[0]?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
-
-            // console.log("CONF", conf)
-            return {
-                ...node,
-                values: value,
-                conf
-            }
-        })
-    }, [data, deviceValueData])
-
+    // }
+   
 
         const refresh = () => {
             return client.refetchQueries({ include: ['Q'] })
@@ -468,24 +439,24 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         })
     }
 
-    console.log({values, state: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")})
+    // console.log({values, state: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")})
 
     return (
         <DeviceControlProvider value={{
             actions,
-            waitingForActions,
+            // waitingForActions,
             changeOperationMode,
             changeOperationState,
             // operatingMode: rootDevice?.operatingMode,
             // operatingState: rootDevice?.operatingState,
-            operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
-            operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
+            // operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
+            // operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
             controlId: id,
             program,
-            values,
+            // values,
+            device: rootDevice,
             reporting,
             hmi,
-            hmiNodes,
             groups,
             changeDeviceMode,
             changeDeviceValue,

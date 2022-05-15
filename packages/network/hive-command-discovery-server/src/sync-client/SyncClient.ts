@@ -197,9 +197,9 @@ export class SyncClient {
 
 
 	async createLogEntry(device: string, key: string, value: Variant){
-		if(!this.influxClient){
-			this.influxClient = await this.influxPool.connect()
-		}
+		// if(!this.influxClient){
+		// 	this.influxClient = await this.influxPool.connect()
+		// }
 
 		console.log("Create log entry", key)
 
@@ -218,7 +218,7 @@ export class SyncClient {
 		// let port = portAndKey.split('-')[0]
 		// let valueKey = portAndKey.split('-')[1]
 
-		if(value?.value?.toString() == "NaN" || value.value == NaN) return;
+		if(value?.value?.toString() == "NaN" || value.value == NaN || value?.value?.toString() == '{"low":-100,"high":100}') return;
 
 		// console.log("Key ", key, bus, port, valueKey, value.value)
 
@@ -235,7 +235,7 @@ export class SyncClient {
 
 		await Promise.all([
 			publishToILP(	
-				this.influxClient, 
+				this.influxPool, 
 				[{
 					device,
 					deviceId,

@@ -6,6 +6,7 @@ import { DataBroker } from "./data-broker";
 import { KeyenceClient } from "./keyence";
 
 import config from './read-config.json'
+import { transformValue } from './transformer';
 
 export interface HiveRemoteOptions {
 	deviceId: string,
@@ -33,7 +34,11 @@ export class HiveRemoteClient {
 		let results : any = {};
 
 		for(const key in config){
-			const result = await this.client.read((config as any)[key].key, (config as any)[key].signed)
+			let result = await this.client.read((config as any)[key].key, (config as any)[key].signed)
+			if((config as any)[key].transform){
+				result = transformValue((config as any)[key].transform, result)
+			}
+			
 			results[key] = {
 				[(config as any)[key].write]: result
 			}

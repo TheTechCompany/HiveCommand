@@ -45,6 +45,8 @@ export const HMICanvasProvider = (props: any) => {
 				for(var k in vals){
 					let state = deviceValues.devicePlaceholder?.type?.state?.find((a) => a.key == k);
 
+					let units = deviceValues.devicePlaceholder?.units?.find((a) => a.state?.key == k)
+					console.log({units})
 					// if(state.inputUnits == "Pa") vals[k] = 65;
 					// if(state.inputUnits && state.units && state.inputUnits != state.units){
 					
@@ -52,10 +54,11 @@ export const HMICanvasProvider = (props: any) => {
 					// 	console.log({state}, vals[k], newUnit)
 
 					// 	vals[k] =  `${newUnit.toNumber().toFixed(2)} ${newUnit.formatUnits()}`//`${vals[k]} ${state.inputUnits} to ${state.units}`)
-				if(state.units){
-						vals[k] = `${vals[k]} ${state.units}`
+					if(units?.inputUnit || units?.displayUnit || state.units){
+						vals[k] = `${vals[k]} ${units?.displayUnit || units?.inputUnit || state.units}`
 					}
 				}
+
 				// 	let mods = deviceValues.devicePlaceholder?.type.state.find((a) => a.key == k).modifiers || []
 				// 	console.log(mods)
 				// 	if(mods.length > 0){

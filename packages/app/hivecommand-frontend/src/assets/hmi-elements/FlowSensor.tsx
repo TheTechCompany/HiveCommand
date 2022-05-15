@@ -17,8 +17,7 @@ function SvgFlowSensor(props: any) {
         minWidth: 'max-content',
         width: '100%',
         lineHeight: '100%',
-        left: 0, 
-        right: 0
+  
       }}>
       <span style={{fontSize: 12, color: 'white'}}>{props.options?.flow || '16.5 L/min'}</span>
     </div>

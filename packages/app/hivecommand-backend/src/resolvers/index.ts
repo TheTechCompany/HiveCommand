@@ -6,6 +6,9 @@ import { getDeviceActions } from '../data';
 import { DeviceValue } from '@hexhive/types'
 
 import { OGM } from '@neo4j/graphql-ogm'
+import {unit as mathUnit} from 'mathjs';
+import { Driver } from 'neo4j-driver';
+import moment from 'moment';
 
 const getProjection = (fieldASTs: any) => {
 	const { selections } = fieldASTs.selectionSet;
@@ -27,8 +30,9 @@ const getProjection = (fieldASTs: any) => {
 	}, {});
   }
 
-export default async (session: Session, pool: Pool, channel: Channel) => {
+export default async (driver: Driver, pool: Pool, channel: Channel) => {
 
+	const session = driver.session();
 
 	return {
 		Query : {
@@ -38,30 +42,74 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				valueKey?: string,
 				startDate?: string,
 			}) => {
-				const client = await pool.connect()
+				
+				// const client = await pool.connect()
 
 				const { deviceId, device, valueKey, startDate } = args
 
-				console.log({deviceId}, {device}, {valueKey})
+				let beforeTime = moment(startDate).add(1, 'week')
+				const afterTime = moment(startDate).toISOString();
+
+				if(moment(beforeTime).isAfter(moment())){
+					beforeTime = moment();
+				}
+
+				const session = driver.session()
+
+				const unitResult = await session.run(`
+					MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
+					OPTIONAL MATCH (device)-[:MAPS_UNIT]->(unitConfig:CommandProgramDeviceUnit)-[:MAPS_STATE_UNIT]->(stateItem)
+					RETURN unitConfig{.*}
+				`, { id: deviceId, name: device, key: valueKey })
+
+				const unitConfig = unitResult.records?.[0]?.get(0)
+
+				let timeDimension = 60; //divide value by 60 to go from minutes to seconds, divide by 3,600 to go from hours to seconds
+
+				console.log({unitConfig})
+				if(unitConfig && (unitConfig.displayUnit || unitConfig.inputUnit)){
+					let unitRegex = /(.+)\/(.+)/
+					let [ fullText, unit, dimension ] = (unitConfig.displayUnit ? unitConfig.displayUnit.match(unitRegex) : unitConfig.inputUnit.match(unitRegex)) || [];
+					
+
+					if(dimension != undefined){
+						try{
+							let timeUnit = mathUnit(dimension).to('seconds');
+							console.log("Found", {unit, dimension})
+
+							timeDimension = timeUnit.toNumber()
+							console.log({timeDimension})
+						}catch(e) {
+							console.error("Could not parse time unit", {unit, dimension, e})
+						}
+					}
+
+				}
+
+
 				const query = `
-				SELECT 
-					sum(SUB.total) as total
-				FROM 
-					(
-						SELECT (try_cast(value, 0) / 60) * EXTRACT(EPOCH from (LEAD(timestamp) over (order by timestamp) - timestamp)) as total
-						FROM
-							command_device_values
-						WHERE
-							device = $1
-							AND deviceId = $2
-							AND valueKey = $3
-							AND timestamp >= date_trunc('week', NOW())
-						GROUP by deviceId, device, valueKey, timestamp, value
-					) as SUB
+					SELECT 			
+						sum(SUB.total) as total
+					FROM 
+						(
+							SELECT (try_cast(value, 0) / ${timeDimension || 60}) * EXTRACT(EPOCH from (LEAD(timestamp) over (order by timestamp) - timestamp)) as total
+							FROM
+								command_device_values
+							WHERE
+								device = $1
+								AND deviceId = $2
+								AND valueKey = $3
+								AND timestamp >= $4
+								AND timestamp < $5
+							GROUP by deviceId, device, valueKey, timestamp, value
+						) as SUB
 				`//startDate
-				const result = await client.query(query, [deviceId, device, valueKey ])
-				await client.release()
-				console.log(result)
+				//date_trunc('week', NOW()) 
+				const result = await pool.query(query, [deviceId, device, valueKey, afterTime, beforeTime.toISOString() ])
+				// await client.release()
+
+				console.log({rows: result.rows})
+				session.close()
 				return result.rows?.[0]
 			},
 			commandDeviceTimeseries: async (root: any, args: {
@@ -70,14 +118,31 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 				valueKey?: string,
 				startDate?: string,
 			}) => {
-				const client = await pool.connect()
+				// const client = await pool.connect()
 
-				let query = `SELECT * FROM command_device_values WHERE deviceId=$1 AND device=$2`;
+		
+				let query = `SELECT 
+								device,
+								deviceId,
+								valueKey,
+								time_bucket_gapfill('5 minute', "timestamp") as time, 
+								COALESCE(avg(value::float), 0) as value
+							FROM command_device_values 
+								WHERE deviceId=$1 AND device=$2`;
 				let params = [args.device, args.deviceId]
 
 				if(args.startDate){
-					params.push(new Date(args.startDate).toISOString())
-					query += ` AND timestamp >= $${params.length}`
+					// params.push(new Date(args.startDate).toISOString())
+					let beforeTime = moment(args.startDate).add(1, 'week');
+					if(moment(beforeTime).isAfter(moment())){
+						beforeTime = moment();
+					}
+					const afterTime = moment(args.startDate).toISOString();
+					
+					params.push(afterTime)
+					params.push(beforeTime.toISOString());
+
+					query += ` AND timestamp >= $3 AND timestamp < $4`
 				}
 				if(args.valueKey) {
 					params.push(args.valueKey)
@@ -85,18 +150,20 @@ export default async (session: Session, pool: Pool, channel: Channel) => {
 					query += ` AND valueKey=$${params.length}`
 				}
 
-				query += ` ORDER BY timestamp ASC`
-				console.log(query, params)
+				query += ` GROUP BY device, deviceId, valueKey, time ORDER BY time ASC`
 
-				const result = await client.query(
+				const result = await pool.query(
 					query,
 					params
 				)
+				console.log({query, rows: result.rows, params})
+				
 
-				console.log(result)
-
-				await client.release()
-				return result.rows;
+				// await client.release()
+				return result.rows?.map((row) => ({
+					...row,
+					timestamp: row.time
+				}));
 			},
 			commandDeviceValue: async (root: any, args: {
 				bus: string,

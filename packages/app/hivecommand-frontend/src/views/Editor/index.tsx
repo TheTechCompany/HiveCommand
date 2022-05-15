@@ -342,7 +342,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
                                 <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
                                 <Route path={`devices`} element={<Devices/>} />
-                                <Route path={`devices/:id`} element={ <DeviceSingle program={id} />} />
+                                <Route path={`devices/:id*`} element={ <DeviceSingle program={id} />} />
                                 <Route path={`alarms`} element={<Alarms/>} />
                                 <Route path={`documentation`} element={<Documentation/>} />
                             </Route>

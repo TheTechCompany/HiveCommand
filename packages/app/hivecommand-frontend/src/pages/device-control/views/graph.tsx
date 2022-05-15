@@ -1,7 +1,7 @@
-import React, { useMemo, useState, useContext } from "react";
+import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
-import { Add } from "grommet-icons";
-import { GridLayoutItem, LineGraph } from "@hexhive/ui";
+import { Add, Previous, Next } from "grommet-icons";
+import { DateSelector, GridLayoutItem, LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../../../components/modals/device-control-graph";
@@ -12,17 +12,34 @@ import { GraphGrid } from '@hexhive/ui'
 // import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
 import moment from "moment";
 import { Graph } from "../../../components/ui/graph";
+import { useApolloClient } from "@apollo/client";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
   const { reporting, controlId, refresh, program } = useContext(DeviceControlContext);
 
-  const [dayBefore, setDayBefore] = useState<string>(
-    new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
-  );
+  const [datum, setDatum] = useState(new Date())
+  const startOfWeek = moment(datum).startOf('isoWeek');
+  const endOfWeek = moment(datum).endOf('isoWeek');
+
+  const prevWeek = () => {
+    setDatum(moment(datum).subtract(1, 'week').toDate());
+  }
+
+  const nextWeek = () => {
+    setDatum(moment(datum).add(1, 'week').toDate());
+  }
+
+
+
+  // const [dayBefore, setDayBefore] = useState<string>(
+  //   new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString()
+  // );
 
   const [deviceList, setDeviceList] = useState([]);
 
   const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
+
+  const client = useApolloClient()
 
   const { data } = useQuery(
     gql`
@@ -31,10 +48,14 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 		commandDevices{ id } 
 		${reporting.map((graph) => {
       
-			const queryName = graph.templateDevice?.name.replace(/ /, '');
 			const queryKey = graph.templateKey?.key;
+      const deviceKey = graph.templateDevice?.name.replace(/ /, '');
+
+			const queryName = `${deviceKey}${queryKey}`;
+
+      const date = startOfWeek.toISOString()
 		
-      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+      let deviceTimeseries = `${queryName}:commandDeviceTimeseries(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
           timestamp
           value
   
@@ -43,7 +64,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
       let deviceTotal = "";
       if (graph.total) {
         deviceTotal = `
-          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${dayBefore}", device:"${queryName}", valueKey:"${queryKey}"){
+          ${queryName}Total:commandDeviceTimeseriesTotal(deviceId:"${controlId}", startDate:"${date}", device:"${deviceKey}", valueKey:"${queryKey}"){
             total
           }
           `;
@@ -65,6 +86,16 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   console.log("Render", {reporting});
 
+  useEffect(() => {
+      const timer = setInterval(() => {
+          client.refetchQueries({ include: ['TimeSeriesData'] })
+      }, 5 * 1000)
+
+      return () => {
+          clearInterval(timer)
+      }
+  }, [])
+
   const values = useMemo(() => {
     return reporting.map((graph) => {
 
@@ -74,23 +105,37 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     //     (item) => graph.keyID == item.id
     //   )?.key;
 
-    let queryName = graph.templateDevice?.name.replace(/ /, '');
+    let queryKey = graph.templateKey?.key;
+    let deviceKey = graph.templateDevice?.name.replace(/ /, '');
+    let queryName = `${deviceKey}${queryKey}`;
+
       const value = data?.[queryName]?.map((item) => {
         let d = new Date(item.timestamp);
-        let offset = (new Date().getTimezoneOffset() / 60) * -1;
+        let offset = (new Date().getTimezoneOffset() / 60) * -1
+
+        //.add(offset, 'hours')
+
         return {
           ...item,
-          timestamp: moment(d).add(offset, 'hours').format("DD/MM hh:mma "),
+          timestamp: moment(d).format("DD/MM hh:mma "),
         };
       });
 
       const total = data?.[`${queryName}Total`]?.total;
 
+      let dev = program.devices?.find((a) => a.name == graph.templateDevice?.name);
+      let configUnit = dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.displayUnit || dev?.units?.find((a) => a.state.id == graph.templateKey?.id)?.inputUnit;
+      let stateUnit = configUnit || dev?.type?.state?.find((a) => a.key == graph.templateKey?.key)?.units;
+
+      let stateParts = stateUnit?.match(/(.+)\/(.+)/)
+      if(stateParts && stateParts.length == 3){
+        stateUnit = stateParts[1]
+      }
       return {
 		  ...graph,
 		  label: `${graph.templateDevice.name} - ${graph.templateKey.key}`,
 		  values: value,
-		  total: total ?  parseFloat(total).toFixed(2) : undefined
+		  total: total ?  parseFloat(total).toFixed(2) + (stateUnit ? ` ${stateUnit}` : '') : undefined
       };
     });
   }, [reporting, program, data]);
@@ -134,6 +179,22 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         }}
       />
       <Box justify="end" direction="row">
+        <Box direction="row" align="center" justify="center" flex>
+          <Button 
+            onClick={prevWeek}
+            plain 
+            style={{padding: 6, borderRadius: 3}} 
+            hoverIndicator 
+            icon={<Previous size="small" />} />
+          <Text>{startOfWeek.format('DD/MM/yy')} - {endOfWeek.format('DD/MM/yy')}</Text>
+          <Button 
+            onClick={nextWeek}
+            plain 
+            style={{padding: 6, borderRadius: 3}} 
+            hoverIndicator 
+            icon={<Next size="small" />} />
+
+        </Box>
         <Button
           onClick={() => openModal(true)}
           icon={<Add size="small" />}
@@ -142,29 +203,31 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           hoverIndicator
         />
       </Box>
+    <Box flex overflow='auto'>
+      <GraphGrid 
+        onRemoveItem={(item) => {
+          // alert("Remove" + item.id)
+          removeChart(item.id).then(() => {
+            refresh?.()
+          })
+        }}
+        onLayoutChange={(layout) => {
+        updateChartGrid(layout.map((x) => ({
+          ...x,
+          id: x.i
+        })));
 
-	  <GraphGrid 
-		onRemoveItem={(item) => {
-			removeChart(item.id).then(() => {
-				refresh?.()
-			})
-		}}
-	  	onLayoutChange={(layout) => {
-			updateChartGrid(layout.map((x) => ({
-				...x,
-				id: x.i
-			})));
-
-			// console.log(layout)
-		}}
-	  	layout={values}
-		  >
-		{(item: any) => (
-			<Box flex>
-				<Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
-			</Box>
-		)}
-	  </GraphGrid>
+        // console.log(layout)
+      }}
+        layout={values}
+        >
+      {(item: any) => (
+        <Box flex>
+          <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
+        </Box>
+      )}
+      </GraphGrid>
+    </Box>
 {/* 
       <GraphGridLayout
         onLayoutChange={(layout) => {

@@ -23,6 +23,8 @@ export class ProcessAction {
 
 	private actions: CommandAction[] = [];
 
+    private cleanup? : () => void;
+
     constructor(node: CommandProcessNode, process: ProcessChain, actions: CommandAction[]){
         this.node = node
         this.id = this.node.id;
@@ -65,16 +67,24 @@ export class ProcessAction {
 
         console.log("onEnter", action, this.node);
 
-		await action?.onEnter?.(this.node.options, {
+        //First await the action placement
+		const { promise, cancel } = await action?.onEnter?.(this.node.options, {
 			performOperation: this.process.performOperation,
 			getState: this.process.getState,
+            setState: this.process.setState,
 			actions: this.actions
-		}, this.process.getProcess)
-		
+		}, this.process.getProcess) || {}
+
+        //Assign cancel to class
+        this.cleanup = cancel
+
+        //Second await the action completion
+        await promise
+
 		this.hasRun = true;
 		this.isRunning = false;
 
-        console.log("onEnterExit", action, this.node);
+        // console.log("onEnterExit", action, this.node);
         // switch(this.blockType){
         //     case 'action':
         //         this.isRunning = true;
@@ -142,16 +152,29 @@ export class ProcessAction {
         // console.log(`Exiting node ${this.node.type} ${this.node.id}`)
 
         console.log("onExit", this.node);
+        
 		let action = this.actions.find((a) => a.id == this.blockType)
 
-		await action?.onExit?.(this.node.options, {
-			performOperation: this.process.performOperation,
-			getState: this.process.getState,
-			actions: this.actions
-		}, this.process.getProcess)
+        if(action?.onExit){
+
+            await action?.onExit?.(this.node.options, {
+                performOperation: this.process.performOperation,
+                getState: this.process.getState,
+                setState: this.process.setState,
+                actions: this.actions
+            }, this.process.getProcess)
+
+        }else if(this.cleanup){
+            try{
+                this.cleanup();
+                this.cleanup = undefined
+            }catch(e){
+                console.error(`Error cleaning up action ${action?.id}`)
+            }
+        }
 
 		this.hasRun = false;
-        console.log("onExitExit", this.node);
+        // console.log("onExitExit", this.node);
 
         // switch(this.blockType){
         //     case 'timer':

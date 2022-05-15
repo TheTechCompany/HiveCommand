@@ -16,8 +16,6 @@ function SvgSensorBox(props: any) {
         lineHeight: '100%',
         minWidth: 'max-content',
         height: 16,
-        left: 0, 
-        right: 0,
         width: '100%'
       }}>
       <span style={{padding: 2, fontSize: 12, color: 'white'}}>{props?.options?.pressure || '0.0 bar'}</span>

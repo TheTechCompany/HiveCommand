@@ -38,7 +38,6 @@ export const connect_data = () => {
     })
 }
 
-
 export const Models = {
     Device,
     DeviceValue,
@@ -47,6 +46,5 @@ export const Models = {
     Stack,
     DNSRecord
 }
-
 
 export * as Types from './types'
