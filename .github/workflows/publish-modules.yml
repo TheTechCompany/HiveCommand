@@ -38,7 +38,7 @@ jobs:
         git config user.name "${{ github.actor }}"
         git config user.email "${{ github.actor}}@users.noreply.github.com"
 
-        if [ ${{ github.base_ref }} = staging ]; then
+        if [ ${{ github.ref }} = staging ]; then
           npx lerna version --conventional-commits --conventional-prerelease --preid alpha --yes
         else
           npx lerna version --conventional-commits --conventional-graduate --yes
