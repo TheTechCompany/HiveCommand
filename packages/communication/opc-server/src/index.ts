@@ -166,24 +166,23 @@ export default class Server {
                 break;
         }
 
-        const objectType = this.namespace?.addObjectType({
-            browseName: `${type}-Variable`,
+        const variable = this.namespace?.addObject({
+            browseName: name, //`${type}-Variable`,
+            organizedBy: this.variableFolder
         })
 
-        const variableValue = this.namespace?.addVariable({
+        const variableValue = this.namespace?.addAnalogDataItem({
             browseName: `value`,
             modellingRule: "Mandatory",
             dataType,
-            componentOf: objectType
-        })
-
-        const variable = objectType?.instantiate({
-            browseName: name,
-            organizedBy: this.variableFolder
+            minimumSamplingInterval: 500,
+            engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
+            engineeringUnitsRange: {low: -100, high: 100},
+            componentOf: variable
         });
-        
 
-        (variable?.getComponentByName(name) as UAVariable)?.bindVariable({
+
+        (variable?.getComponentByName(`value`) as UAVariable)?.bindVariable({
             get: () => new Variant({dataType: dataType, value: getter()}),
             set: (value: Variant) => {
                 if(!setter) return StatusCodes.BadNotWritable;
