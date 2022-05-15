@@ -71,7 +71,7 @@ export default `
 						console.log({targetDevice: this.targetDevice, id: this.id, runtimeId, actuatorValue});
 
 						if(this.device.fsm.state.getByKey(this.device.name, 'on') && !this.stopping){
-							console.log("WRITING PID STATE", this.device.name, {actuatorValue}, {addValue});
+							// console.log("WRITING PID STATE", this.device.name, {actuatorValue}, {addValue});
 						// console.log({targetDevice: this.targetDevice, targetKey: this.targetKey})
 							await this.device.requestState({speed: actuatorValue += addValue}); 
 						}

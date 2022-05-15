@@ -96,6 +96,10 @@ export class ProcessChain extends EventEmitter {
     return this.process.getState(key);
   }
 
+  setState(key: string, value: {[key: string]: any} | any){
+    return this.process.setState(key, value);
+  }
+
   changePosition(current: string[]) {
     // this.current = current
   }
@@ -128,6 +132,10 @@ export class ProcessChain extends EventEmitter {
         resolve(false);
       }
     });
+  }
+
+  async stop(){
+    await Promise.all(this.current.map(async (x) => await x.onExit()))
   }
 
   next() {

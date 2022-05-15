@@ -14,8 +14,7 @@ function SvgSensor(props: any) {
         position: 'absolute', 
         top: 0, 
         height: 16,
-        left: 0, 
-        right: 0,
+
         width: '100%',
         minWidth: 'max-content',
         lineHeight: '100%',

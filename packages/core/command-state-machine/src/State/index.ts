@@ -1,4 +1,6 @@
-export class State {
+import { EventEmitter } from 'events'
+
+export class State extends EventEmitter {
 
 	private internalState: {
 		[key: string]: {
@@ -7,6 +9,8 @@ export class State {
 	};
 
 	constructor(state?: {[key: string]: any}) {
+		super();
+		
 		this.internalState = state || {};
 		
 		this.update = this.update.bind(this);
@@ -19,7 +23,7 @@ export class State {
 	}	
 
 	public getByKey(key: string, subKey: string): any {
-		return this.internalState?.[key]?.[subKey];
+		return this.get(key)?.[subKey] || 0;
 	}	
 
 	public update(key: string, value: any): void {
@@ -32,5 +36,7 @@ export class State {
 		}else{
 			this.internalState[key] = value;
 		}
+
+		this.emit(`${key}:changed`, this.internalState[key])
 	}
 }

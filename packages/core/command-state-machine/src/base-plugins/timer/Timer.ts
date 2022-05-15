@@ -20,6 +20,12 @@ export class Timer {
         }
     }
 
+    stop(){
+        if(this.timer){
+            clearTimeout(this.timer)
+        }
+    }
+
     async countDown(){
         return new Promise((resolve, reject) => {
             this.success = resolve;

@@ -93,6 +93,66 @@ export const useUpdateProgramPlaceholder = (programId: string) => {
 	}
 }
 
+export const useConfigureProgramPlaceholder = (programId: string, placeholderId: string) => {
+
+	const [ mutateFn ] = useMutation((mutation, args: {units: {id?: string, inputUnit: string, displayUnit: string, state: string}}) => {
+		let update = {};
+
+		if(args.units.id){
+			update = {
+				where: {node: {id: args.units.id}},
+				update: {
+					inputUnit: args.units.inputUnit,
+					displayUnit: args.units.displayUnit,
+					state: {
+						connect: {
+							where: {node: {id: args.units.state}}
+						},
+						disconnect: {
+							where: {node: {id_NOT: args.units.state}}
+						}
+					}
+				}
+			}
+		}else{
+			update = {
+				create: [{
+					node: {
+						inputUnit: args.units.inputUnit,
+						displayUnit: args.units.displayUnit,
+						state: {
+							connect: {
+								where: {node: {id: args.units.state}}
+							}
+						}
+					}
+				}]
+			}
+		}
+		const result = mutation.updateCommandProgramDevicePlaceholders({
+			where: {id: placeholderId, program: {id: programId}},
+			update: {
+				units: [update]
+			}
+		})
+		return {
+			item: {
+				...result.commandProgramDevicePlaceholders?.[0]
+			}
+		}
+	})
+	
+
+	return (units: {id?: string, inputUnit: string, displayUnit: string, state: string}) => {
+		if(!units.state) return;
+		return mutateFn({
+			args: {
+				units
+			}
+		})
+	}
+}
+
 
 
 export const useDeleteProgramPlaceholder = (programId: string) => {
@@ -464,6 +524,32 @@ export const useUpdatePlaceholderInterlock = (programId: string, deviceId: strin
 	}
 }
 
+export const useDeletePlaceholderInterlock  = (programId: string, deviceId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {interlockId: string}) => {
+		const item = mutation.updateCommandProgramDevicePlaceholders({
+			where: {id: deviceId, program: {id: programId}},
+			update: {
+				interlocks: [{
+					delete: [{where: {node: {id: args.interlockId}}}]
+				}]
+			}
+		})
+
+		return {
+			item: {
+				...item.commandProgramDevicePlaceholders?.[0]
+			}
+		}
+	})
+
+	return async (id: string) => {
+		return await mutateFn({
+			args: {
+				interlockId: id
+			}
+		})
+	}
+}
 export const useCreatePlaceholderPlugin = (programId: string, deviceId: string) => {
 
 	const [mutateFn] = useMutation((mutation, args: { 

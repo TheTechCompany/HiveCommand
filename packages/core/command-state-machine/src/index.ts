@@ -4,7 +4,7 @@ import { State } from "./State";
 import { ProgramDevice } from "./types/ProgramDevice";
 import { Condition } from "./Condition";
 import { StateDevice } from "./Device";
-import { Process, ProcessTransition } from '@hive-command/process'
+import { CommandAction, Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'
 export * from './types'
 
@@ -40,7 +40,7 @@ import { nanoid } from "nanoid";
 const base_actions = [
 	{
 		id: 'action',
-		onEnter: actions.action
+		onEnter: actions.action,
 	},
 	{
 		id: 'sub-process',
@@ -59,6 +59,8 @@ const base_actions = [
 export interface CommandStateMachineEvents{
 	'transition': (transition: ProcessTransition) => void;
 	'event_loop': () => void;
+	'started': () => void;
+	'stopped': () => void;
 }
 
 export declare interface CommandStateMachine {
@@ -122,9 +124,16 @@ export class CommandStateMachine extends EventEmitter {
 		this.state = new State(program.initialState || {});
 
 		this.processes = program.processes.map((process) => {
-			return new Process(process, base_actions as any, this.performOperation, (key: string) => {
-				return this.state?.get(key)
-			})
+			return new Process(
+					process, 
+					base_actions as any, 
+					this.performOperation, 
+					(key: string) => {
+						return this.state?.get(key)
+					},
+					(key: string, value) => {
+						return this.state?.update(key, value);
+					})
 		})
 
 		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client));
@@ -134,8 +143,13 @@ export class CommandStateMachine extends EventEmitter {
 			log.debug('Listening to process')
 			process.on('transition', (ev) => this.onProcessTransition(process, ev))
 		})
+	}
 
-
+	reload(){
+		if(this.program) {
+			log.debug(`Reloading program`)
+			this.load(this.program)
+		}
 	}
 
 
@@ -245,7 +259,7 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
 			if(!this.state) return;
-			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get)
+			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
 			console.timeEnd(runTag)
@@ -301,6 +315,10 @@ export class CommandStateMachine extends EventEmitter {
 
 			this.status = CommandStateMachineStatus.ON;
 
+			this.emit('started')
+
+			//TODO change while clause to protect non disabled modes
+			//move out of start to ensure manual mode has safety interlocks
 			while(this.status == CommandStateMachineStatus.ON){
 				await this.checkInterlocks();
 
@@ -319,13 +337,16 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.AUTO && this.status != CommandStateMachineStatus.OFF && this.status != CommandStateMachineStatus.STOPPING){
 			this.status = CommandStateMachineStatus.STOPPING;
 
-			await Promise.all(this.processes.map(async (process) => await process.stop()))
-
+			console.log("Stopping")
+			await Promise.all(this.processes.map(async (process) => process.stop()))
+			console.log("Stopped")
 			this.mode = CommandStateMachineMode.DISABLED
 		
 			this.status = CommandStateMachineStatus.OFF
 
 			log.info('State Machine - Stopped')
+
+			this.emit('stopped')
 		}else{
 			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
 		}

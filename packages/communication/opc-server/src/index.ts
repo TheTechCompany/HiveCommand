@@ -184,7 +184,6 @@ export default class Server {
                 organizedFolder = this.deviceFolder;
                 break;
         }
-        // let organizedFolder = organizedBy ? this.controllerFolder : this.deviceFolder;
 
         if(organizedFolder){
 
@@ -323,10 +322,10 @@ export default class Server {
             organizedBy: this.controllerFolder
         });
 
-        const plant = await this.plant?.instantiate({
-            browseName: "Plant",
-            organizedBy: this.controllerFolder
-        })
+        // const plant = await this.plant?.instantiate({
+        //     browseName: "Plant",
+        //     organizedBy: this.controllerFolder
+        // })
 
         const that = this;
 

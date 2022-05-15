@@ -62,7 +62,10 @@ ${devices}
 	type CommandProgramDevicePlaceholder {
 		id: ID! @id
 		name: String
+
 		type: CommandProgramDevice @relationship(type: "USES_TEMPLATE", direction: OUT)
+
+		units: [CommandProgramDeviceUnit] @relationship(type: "MAPS_UNIT", direction: OUT)
 
 		requiresMutex: Boolean
 
@@ -71,6 +74,17 @@ ${devices}
 		plugins: [CommandDevicePlugin] @relationship(type: "HAS_PLUGIN", direction: OUT)
 
 		program: CommandProgram @relationship(type: "USES_DEVICE", direction: IN)
+	}
+
+	type CommandProgramDeviceUnit {
+		id: ID! @id
+
+		inputUnit: String
+		displayUnit: String
+		
+		state: CommandProgramDeviceState @relationship(type: "MAPS_STATE_UNIT", direction: OUT)
+
+		device: CommandProgramDevicePlaceholder @relationship(type: "MAPS_UNIT", direction: IN)
 	}
 
 	type CommandDeviceSetpoint {
@@ -146,7 +160,7 @@ ${devices}
 		
 		inputUnits: String
 		units: String
-		
+
 		writable: Boolean
 
 		min: String

@@ -6,6 +6,8 @@ export const sendSMS = async (recipient: string, message: string, username?: str
 	if(username && password){
 		authBlob = `username=${username}&password=${password}`
 	}
+	console.log("Sending...");
 	const data = await axios.get(`http://${host}/cgi-bin/sms_send?number=${recipient}&text=${message}${authBlob ? `&${authBlob}` : ''}`)
+	console.log("Sent!");
 	return data.data;
 }
