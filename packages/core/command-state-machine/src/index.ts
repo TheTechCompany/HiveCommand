@@ -1,12 +1,10 @@
-import { ProgramProcess } from "./types/ProgramProcess";
+import { CommandProcess, ProgramProcess } from "@hive-command/data-types";
 import { EventEmitter } from 'events'
 import { State } from "./State";
-import { ProgramDevice } from "./types/ProgramDevice";
-import { Condition } from "./Condition";
+import { ProgramDevice, CommandVariable } from "@hive-command/data-types";
 import { StateDevice } from "./Device";
-import { CommandAction, Process, ProcessTransition } from '@hive-command/process'
+import { Process, ProcessTransition } from '@hive-command/process'
 import log from 'loglevel'
-export * from './types'
 
 export interface CommandClient { 
 	requestState: (ev: { device: string, state: any | {[key: string]: any} }) => Promise<any>;
@@ -30,12 +28,14 @@ export enum CommandStateMachineStatus {
 
 export interface StateProgram {
 	initialState?: any;
-	devices?: ProgramDevice[]
-	processes: ProgramProcess[],	
+	devices?: ProgramDevice[],
+	variables: CommandVariable[],
+	processes: CommandProcess[],	
 }
 
 import * as actions from './base-plugins'
 import { nanoid } from "nanoid";
+import { VariableManager } from "./variables";
 
 const base_actions = [
 	{
@@ -78,6 +78,8 @@ export class CommandStateMachine extends EventEmitter {
 
 	public state? : State;
 
+	private variables?: VariableManager;
+
 	private status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
 	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED; //Determines available actions
 
@@ -117,11 +119,21 @@ export class CommandStateMachine extends EventEmitter {
 
 	}
 
+	getVariable(key: string){
+		return this.variables?.getVar(key)
+	}
+
+	setVariable(key: string, value: any){
+		return this.variables?.updateVar(key, value);
+	}
+
 	load(program: StateProgram){
 		log.debug(`Loading new program ${program.processes.length} processes`)
 		this.program = program;
 
 		this.state = new State(program.initialState || {});
+
+		this.variables = new VariableManager(program.variables);
 
 		this.processes = program.processes.map((process) => {
 			return new Process(
@@ -133,6 +145,9 @@ export class CommandStateMachine extends EventEmitter {
 					},
 					(key: string, value) => {
 						return this.state?.update(key, value);
+					},
+					(key: string) => {
+						return this.variables?.getVar(key);
 					})
 		})
 
@@ -197,7 +212,7 @@ export class CommandStateMachine extends EventEmitter {
 			// console.log("Checked", {locked, lock})
 			if(locked){
 				// console.log("Reacting to lock");
-				log.info(`Interlock ${lock.device} ${device.name} locked`)
+				log.info(`Interlock ${lock.inputDevice.name} ${device.name} locked`)
 				await device.doFallback(lock)
 			}
 			// console.log("DEVICE", device.name, "LOCKED", locked)
@@ -258,8 +273,8 @@ export class CommandStateMachine extends EventEmitter {
 
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
-			if(!this.state) return;
-			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update)
+			if(!this.state || !this.variables) return;
+			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update, this.variables?.getVar)
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
 			console.timeEnd(runTag)
@@ -347,8 +362,10 @@ export class CommandStateMachine extends EventEmitter {
 			log.info('State Machine - Stopped')
 
 			this.emit('stopped')
+			return true;
 		}else{
 			log.warn(`FSM: STOP - No processes will be stopped because starting conditions are not met.`)
+			return false;
 		}
 
 	}

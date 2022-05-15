@@ -7,15 +7,15 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/network";
+import { AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
-import { getDeviceFunction } from "../device-types/AsyncType";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
 import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
 import log from "loglevel";
+
 import PID from "../plugins/PID";
 
 export class Machine {
@@ -35,7 +35,8 @@ export class Machine {
 		pluginDir: string
 	}){
 		this.fsm = new CommandStateMachine({
-			processes: []
+			processes: [],
+			variables: []
 		}, {
 			requestState: async (operation) => {
 				log.info("Requesting state to mock resolver", operation)
@@ -52,6 +53,14 @@ export class Machine {
 
 		this.requestState = this.requestState.bind(this)
 		// this.requestOperation = this.requestOperation.bind(this)
+	}
+
+	getVariable(key: string){
+		return this.fsm.getVariable(key)
+	}
+
+	setVariable(key: string, value: any){
+		return this.fsm.setVariable(key, value)
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) => {
@@ -93,10 +102,10 @@ export class Machine {
 					target: next.target,
 					options: {
 						conditions: next.conditions?.map((cond) => ({
-							input: cond.input,
-							inputKey: cond.inputKey,
+							inputDevice: cond.inputDevice,
+							inputDeviceKey: cond.inputDeviceKey,
 							comparator: cond.comparator,
-							value: cond.assertion
+							assertion: cond.assertion
 						}))
 	
 					}
@@ -107,8 +116,8 @@ export class Machine {
 			return prev.concat(curr)
 		}, []).filter((a) => a)
 
-		let subprocs : any = payload.filter((a) => a.parent?.id == id).map((proc) => {
-			return {...this.loadFlow(payload, proc.id)}
+		let subprocs : any = flow?.children?.map((proc) => {
+			return {...this.loadFlow(flow?.children || [], proc.id)}
 		})
 
 		// let subprocs : any = (flow || {nodes: []}).nodes.filter((a) => a.subprocess != undefined).map((subproc) => {
@@ -143,64 +152,54 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		const { command : payload, layout, actions } = commandPayload.payload || {};
+		const { program, variables, actions } = commandPayload.payload || {};
 
-		// let payload = commandPayload.payload?.command;
-		// let layout = commandPayload.payload?.layout;
-
-		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
+		//TODO add device mapping
+		// if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 
 		await this.loadPlugins(commandPayload.payload?.layout || []);
 
-		const flows = payload?.filter((a) => a.parent == null).map((flow) => {
-			if(!payload) return {id: '', name: '', nodes: [], links: []};
-			return this.loadFlow(payload, flow.id)
-
+		//TODO add filter for top level or make children = subprocess
+		//?.filter((a) => a.parent == null)
+		const flows = program?.map((flow) => {
+			if(!program) return {id: '', name: '', nodes: [], links: []};
+			return this.loadFlow(program, flow.id)
 		}).filter((a) => a != undefined)
 
-		console.log(flows, payload)
-		
-		// console.log("FLOWS", flows)
-		// console.log(`Received command payload, starting state machine`)
 		this.fsm = new CommandStateMachine({
-			devices: layout?.map((x) => {
+			variables: [],
+			devices: [],
+			// devices: layout?.map((x) => {
 
-				let plugins = x.plugins?.map((plugin) => {
-					let configuration = plugin.configuration.reduce((prev, curr) => {
-						return {
-							...prev,
-							[curr.key]: curr.value
-						}
-					}, {})
+			// 	let plugins = x.plugins?.map((plugin) => {
+			// 		let configuration = plugin.configuration.reduce((prev, curr) => {
+			// 			return {
+			// 				...prev,
+			// 				[curr.key]: curr.value
+			// 			}
+			// 		}, {})
 
-					return {
-						classString: PID, //plugin.classString,
-						imports: [{key: 'PIDController', module: 'node-pid-controller'}],
-						options: configuration,
-						actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
-						activeWhen: plugin.rules?.id
-					}
-				});
+			// 		return {
+			// 			classString: PID, //plugin.classString,
+			// 			imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+			// 			options: configuration,
+			// 			actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
+			// 			activeWhen: plugin.rules?.id
+			// 		}
+			// 	});
 
-				return {
-					name: x.name, 
-					requiresMutex: x.requiresMutex,
-					actions: x.actions,
-					plugins,
-					interlock: {
-						state: {on: 'true'},
-						// state: {on: true},
-						locks: (x.interlocks || []).map((lock) => ({
-							device: lock.input.name,
-							deviceKey: lock.inputKey.key,
-							comparator: lock.comparator,
-							value: (lock.assertion.type == "value" ? lock.assertion.value : (lock.assertion.setpoint?.type == 'ratio' ? lock.assertion.setpoint.value : lock.assertion.setpoint?.value)),
-
-							fallback: lock.action.key
-						}))
-					}
-				}
-			}),
+			// 	return {
+			// 		name: x.name, 
+			// 		requiresMutex: x.requiresMutex,
+			// 		actions: x.actions,
+			// 		plugins,
+			// 		interlock: {
+			// 			state: {on: 'true'},
+			// 			// state: {on: true},
+			// 			locks: x.interlocks || []
+			// 		}
+			// 	}
+			// }),
 			processes: flows || []
 		}, {
 			requestState: this.requestState
@@ -324,8 +323,10 @@ export class Machine {
 	}
 
 	async stopProgram(){
-		await this.fsm.stop()
-		await this.fsm.reload()
+		const stopped = await this.fsm.stop()
+		if(stopped){
+			await this.fsm.reload()
+		}
 	}
 
 	async start(){

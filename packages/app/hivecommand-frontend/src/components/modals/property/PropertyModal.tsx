@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BaseModal } from '../base';
 import { TextInput, List, Button, Box, Select } from 'grommet';
-import * as Icons from 'grommet-icons';
+import { Close } from '@mui/icons-material'
 
 export interface PropertyModalProps {
     open: boolean;
@@ -60,9 +60,7 @@ export const PropertyModal : React.FC<PropertyModalProps> = (props) => {
                                         en.splice(index, 1)
                                         setEnum(en)
                                     }}
-                                     icon={<Icons.Close 
-                                        
-                                         size="small" />} />
+                                     icon={<Close  />} />
                             </Box>
                     ))}
 

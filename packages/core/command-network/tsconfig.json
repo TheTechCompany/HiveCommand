@@ -100,6 +100,7 @@
   },
   "exclude": ["__tests__", "dist/"],
   "references": [
-    {"path": "../../communication/opc-server"}
+    {"path": "../../communication/opc-server"},
+    {"path": "../command-data-types"}
   ]
 }

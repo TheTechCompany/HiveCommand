@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Add, Action, MoreVertical } from 'grommet-icons';
+import { Add, Settings as Action, MoreVert } from '@mui/icons-material';
 import { Box, List, Text, Button } from 'grommet';
 
 import { ProgramDeviceModal } from '../../../../components/modals/program-device';
@@ -7,6 +7,7 @@ import { ProgramDeviceModal } from '../../../../components/modals/program-device
 import { useQuery as useApollo , gql, useApolloClient} from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCreateProgramPlaceholder, useDeleteProgramPlaceholder, useUpdateProgramPlaceholder } from '@hive-command/api';
+import { IconButton } from '@mui/material';
 export const Devices = (props) => {
 
 	const navigate = useNavigate()
@@ -120,10 +121,14 @@ export const Devices = (props) => {
 				onDelete={() => {
 					deleteDevice(selected.id).then(() => {
 						openModal(false)
+						setSelected(undefined)
+						refetch()
 					})
 				}}
 				onClose={() => {
 					openModal(false);
+					setSelected(undefined)
+
 				}}
 				onSubmit={(device) => {
 					if(device.id){
@@ -132,7 +137,11 @@ export const Devices = (props) => {
 							device.name,
 							device.type,
 							device.requiresMutex,
-						)
+						).then(() => {
+							refetch();
+							openModal(false)
+							setSelected(undefined)
+						})
 					}else{
 						createDevice(
 							device.name,
@@ -141,6 +150,8 @@ export const Devices = (props) => {
 						).then(() => {
 							openModal(false)
 							refetch()
+							setSelected(undefined)
+
 						})
 					}
 
@@ -152,11 +163,15 @@ export const Devices = (props) => {
 				justify="between"
 				direction="row">
 				<Text size="small"></Text>
-				<Button 
+				<IconButton
+					onClick={() => openModal(true)}>
+					<Add  fontSize="small" />
+				</IconButton>
+				{/* <Button 
 					onClick={() => openModal(true)}
 					size="small"
-					icon={<Add size="small" />} 
-					hoverIndicator /> 
+					icon={} 
+					hoverIndicator />  */}
 			</Box>
 			<Box 
 				overflow="scroll"
@@ -169,7 +184,7 @@ export const Devices = (props) => {
 					primaryKey="name"
 					data={devices}>
 					{(datum) => (
-						<Box direction="row">
+						<Box direction="row" align='center'>
 							<Box 
 								pad="small" 
 								flex
@@ -180,24 +195,27 @@ export const Devices = (props) => {
 								justify="between"
 								align="center"
 								direction="row">
-								<Text size="small">{datum.name}</Text>
+								<Text size="small">{datum.name} - {datum.type?.name}</Text>
 							{datum.plugins?.length > 0 && (
 								<Button 
 									disabled
 									hoverIndicator
 									plain 
 									size="small"
-									style={{padding: 3, borderRadius: 6}} icon={<Action size="20px" />} /> )}
+									style={{padding: 3, borderRadius: 6}} icon={<Action />} /> )}
 			
 							</Box>
 
-							<Button 
-								onClick={() => onEdit(datum)}
+							<IconButton 
+								onClick={() => onEdit(datum)}>
+								<MoreVert fontSize='small' />
+							</IconButton> 
+								{/* onClick={() => onEdit(datum)}
 								hoverIndicator 
 								plain
 								size="small" 
 								style={{padding: 6, borderRadius: 3}} 
-								icon={<MoreVertical size="small" />} />
+								icon={} /> */}
 						</Box>
 					)}
 				</List>

@@ -4,7 +4,7 @@ import { Route, Routes, matchPath, useNavigate, Outlet } from 'react-router-dom'
 
 import { Box, List, Spinner } from 'grommet';
 import { Header } from '../../components/ui/header'
-import {Map, Tools, Previous, Plug, GraphQl} from 'grommet-icons';
+import {Map, Handyman} from '@mui/icons-material';
 import { EditorPage } from '../Editor';
 import { Sidebar } from '@hexhive/ui'
 import { DeviceDevices } from '../../pages/device-devices';
@@ -20,13 +20,13 @@ const PluginSingle = React.lazy(() => import('../../pages/plugin-single').then((
 
 const pages = [
     {
-        icon: <Map color="neutral-1" />,
+        icon: <Map />,
         label: "Deployments",
         path: 'devices',
         component: <Devices/>
     },
     {
-        icon: <Tools color="neutral-1" />,
+        icon: <Handyman />,
         label: "Programs",
         path: 'programs',
         component: <Outlet />,
@@ -39,12 +39,13 @@ const pages = [
             path: ':id/*',
             component: <EditorPage />
         }]
-    }, {
-        icon: <Plug  color="neutral-1" />,
-        label: "Plugins",
-        path: "plugins",
-        component: <PluginList/>
-    },
+    }
+    // }, {
+    //     icon: <Plug  color="neutral-1" />,
+    //     label: "Plugins",
+    //     path: "plugins",
+    //     component: <PluginList/>
+    // },
     // {
     //     icon: <GraphQl color="neutral-1"  />,
     //     label: "Reports",

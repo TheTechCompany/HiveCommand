@@ -9,13 +9,14 @@
 */
 import log from 'loglevel'
 
-import { ActionPayload, AssignmentPayload, CommandNetwork, ValueBankInterface } from "@hive-command/network";
+import { CommandNetwork, ValueBankInterface } from "@hive-command/network";
 import { CommandStateMachineMode } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
 import e from 'express';
 import { AlarmEngine } from '../alarm-engine';
+import { CommandVariable, ActionPayload, AssignmentPayload } from '@hive-command/data-types';
 
 export class Controller {
 
@@ -212,7 +213,8 @@ export class Controller {
 		}, 
 		struct: {
 			layout: AssignmentPayload[], 
-			actions: ActionPayload[]
+			actions: ActionPayload[],
+			variables: CommandVariable[]
 		}
 	){
 		await this.network.start(credentials, struct)

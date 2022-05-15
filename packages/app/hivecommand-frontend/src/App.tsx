@@ -16,7 +16,7 @@ const authServer = process.env.REACT_APP_API
 const client = new ApolloClient({
   uri: `${process.env.NODE_ENV == 'production'
     ? `${API_URL || process.env.REACT_APP_API}/graphql`
-    : "http://localhost:7000/graphql"}?appliance=HiveCommand`,
+    : "http://localhost:7000/graphql"}`,
   cache: new InMemoryCache(),
   credentials: "include",
 });
@@ -34,9 +34,7 @@ function App(props: any) {
         <ApolloProvider client={client}>
           <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
             <Box fill height="full" direction="column" flex>
-              <Routes>
-                <Route path={`*`} element={<Dashboard />} />
-              </Routes>
+             <Dashboard />
             </Box>
           </Router>
         </ApolloProvider>

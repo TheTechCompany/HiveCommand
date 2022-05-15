@@ -1,4 +1,3 @@
-import { ProgramAction } from "../../types";
 
 export const handler = async (
 	options: any,

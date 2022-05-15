@@ -1,5 +1,5 @@
 import { Socket } from "socket.io";
-import { Models } from '@hive-command/data-types'
+import { Models } from '@hive-command/data'
 const { Device } = Models;
 
 import { HiveCommandData } from '@hive-command/data'
@@ -9,7 +9,9 @@ export const handleHeartbeat = async (dataManager: HiveCommandData, socket: Sock
 
     let id = (socket as any)?.networkName
    
-    await dataManager.updateLiveness(id, true)
+    //TODO add graphql version
+    // await dataManager.updateLiveness(id, true)
+    
     // const device = await Device.findById(id)
 
     // if(device){
@@ -23,5 +25,6 @@ export const handleHeartbeat = async (dataManager: HiveCommandData, socket: Sock
 export const handleTransition = async (dataManager: HiveCommandData, socket: Socket, data: any) => {
     let id = (socket as any)?.networkName;
 
-    await dataManager.updateProcess(id, {process: data.process, target: data.target})
+    //TODO add graphql version
+    // await dataManager.updateProcess(id, {process: data.process, target: data.target})
 }

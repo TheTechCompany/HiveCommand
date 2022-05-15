@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import { Box, Button, Heading, TextInput } from 'grommet';
-import * as Icons from 'grommet-icons';
 import { useEffect } from 'react';
 
 export interface TitleProps {

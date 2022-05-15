@@ -161,14 +161,7 @@ export const DeviceDevices : React.FC<any> = (props) => {
 					onClickItem={({item}) => {
 						let calibration = device.calibrations?.filter((a) => a.device.id == item.id);
 
-						// item.calibrated = calibration;
-
-						// let configuration = device.configuredDevices.filter((a) => a.device.id == item.id)
-
-						// console.log("Item", configuration)
-
-						// item.configuration = configuration;
-
+					
 						openModal(true)
 						setSelected({...item, calibrated: calibration})
 					}}

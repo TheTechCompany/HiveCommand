@@ -63,16 +63,17 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 	const renderPluginFormItem = (item: any) => {
 
 		let requirements : any = {};
-		if(item.requiresConnection?.edges.length > 0){
-
+		if(item.requires?.length > 0){
 			let values = [];
-			item.requiresConnection?.edges?.forEach((i) => {
-				requirements[i.key] = plugin?.configuration?.[i.node.key]
-				values.push(plugin?.configuration?.[i.node.key])
+			item.requires.forEach((req: any) => {
+				requirements[req.type?.toLowerCase()] = plugin?.configuration?.[req.key]
+				values.push(plugin?.configuration?.[req.key])
 			})
-
-			if(values.indexOf(undefined) > -1){ return }
+			if(values.indexOf(undefined) > -1) return;
 		}
+
+		console.log({requirements})
+
 		switch(item.type) {
 			case "Number":
 				return (<TextInput 
@@ -97,7 +98,11 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 		}
 	}
 	const renderPluginForm = () => {
-		return props.plugins.find((a) => a.id === plugin?.plugin)?.config.map((conf) => (
+		const config = props.plugins.find((a) => a.id === plugin?.plugin)?.config?.slice() || []
+		
+		return config?.sort((a, b) => {
+			return a.order - b.order;
+		}).map((conf) => (
 			<Box 
 				align="center"
 				justify="between"
@@ -113,7 +118,6 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 		));
 	}
 
-	console.log(props.selected)
 	return (
 		<BaseModal
 			open={props.open}

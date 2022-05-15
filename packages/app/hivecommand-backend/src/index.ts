@@ -10,24 +10,23 @@ import neo4j from "neo4j-driver"
 import { Neo4jGraphQL } from "@neo4j/graphql"
 import { graphqlHTTP } from "express-graphql"
 import { connect_data } from '@hexhive/types';
-import typeDefs from './schema'
-import resolvers from './resolvers';
+import schema from './schema'
+
 import { Pool, types } from 'pg';
+
+import { PrismaClient } from '@prisma/client'
+import gql from 'graphql-tag';
 
 types.setTypeParser(1114, (value) => {
 	// console.log({value})
 	return new Date(`${value}+0000`)
 });
 
+const prisma = new PrismaClient();
+
 (async () => {
 
-
 	await connect_data()
-	
-	const driver = neo4j.driver(
-		process.env.NEO4J_URI || "localhost",
-		neo4j.auth.basic(process.env.NEO4J_USER || "neo4j", process.env.NEO4J_PASSWORD || "test")
-	)
 
 	const pool = new Pool({
 		host: process.env.TIMESERIES_HOST || 'localhost',
@@ -37,6 +36,10 @@ types.setTypeParser(1114, (value) => {
 		keepAlive: true,
 		// connectionTimeoutMillis: 60 * 1000,
 		max: 10
+	})
+
+	pool.on('connect', () => {
+		console.log("pool connect")
 	})
 
 	const mq = await amqp.connect(
@@ -54,32 +57,40 @@ types.setTypeParser(1114, (value) => {
 	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
-	//TODO figure out the race condition to get the OGM with merged models from hive-graph
 
-	const resolved = await resolvers(driver, pool, mqChannel)
+	const { typeDefs, resolvers } = schema(prisma, pool, mqChannel);
 
-	// const neoSchema : Neo4jGraphQL = new Neo4jGraphQL({ typeDefs, resolvers: resolved, driver })
+	console.log({typeDefs})
+	console.log("Setting up graph")
 
 	const graphServer = new HiveGraph({
 		dev: false,
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
 		schema: {
 			typeDefs: typeDefs,
-			resolvers: resolved,
-			driver
+			resolvers: resolvers,
 		}
 	})
 
+	console.log("Graph server setup")
+
 	await graphServer.init()
 
-	const app = express()
+	console.log("Graph server init")
 
+	const app = express()
 	
 	app.use(cors())
 
 	app.use(graphServer.middleware)
 
 	
-	app.listen('9010')
+	app.listen('9010', () => {
+		console.log("Listening on 9010")
+	})
 
-})()
+})().catch(async (err) => {
+	console.error("error ", err)
+}).finally(async () => {
+	await prisma.$disconnect();
+})

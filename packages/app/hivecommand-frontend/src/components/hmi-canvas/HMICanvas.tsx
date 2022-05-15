@@ -91,10 +91,13 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     useEffect(() => {
         let program = props.program
         if(program){
-            let hmi = program.hmi?.[0] //TODO change to a default flag on the HMI
-            console.log("Loading HMI", program)
-            setNodes(hmi?.nodes?.map((x) => {
-                // console.log( "VAL", x.devicePlaceholder, props.deviceValues, props.deviceValues.find((a) => a.device == x.devicePlaceholder))
+            let hmi = program.interface //TODO change to a default flag on the HMI
+
+            const nodes = hmi?.nodes?.filter((a) => !a.children || a.children.length == 0);
+            const groups = hmi?.nodes?.filter((a) => a.children && a.children.length > 0);
+
+            setNodes(nodes?.map((x) => {
+
                 return {
                     id: x.id,
                     x: x.x,
@@ -105,7 +108,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                       
                         // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
                         // configuration: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.conf.reduce((prev,curr) => ({...prev, [curr.conf.key]: curr.value}), {}),
-                        ports: x?.type?.ports.map((x) => ({...x, id: x.key})),
+                        ports: (x?.type?.ports || []).map((x) => ({...x, id: x.key})),
                         rotation: x?.rotation || 0,
                         scaleX: x?.scaleX || 1,
                         scaleY: x?.scaleY || 1,
@@ -117,7 +120,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     type: 'hmi-node',
                 }
                 
-            }).concat(hmi?.groups.map((group) => ({
+            }).concat((groups || []).map((group) => ({
                 id: group.id,
                 x: group.x || 0,
                 y: group.y || 0,
@@ -125,7 +128,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 height: `${group.height}px`,
                 type: 'hmi-node',
                 extras: {
-                    nodes: group.nodes?.map((x) => ({
+                    nodes: group.children?.map((x) => ({
                         id: x.id,
                         x: x.x,
                         y: x.y,
@@ -146,13 +149,13 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 }
             }))))
 
-            setPaths(hmi?.paths?.map((x) => {
+            setPaths(hmi?.edges?.map((x) => {
                 return {
                     id: x.id,
-                    source: x?.source?.id,
-                    sourceHandle: x.sourceHandle,
-                    target: x?.target?.id,
-                    targetHandle: x.targetHandle,
+                    source: x?.from?.id,
+                    sourceHandle: x.fromHandle,
+                    target: x?.to?.id,
+                    targetHandle: x.toHandle,
                     points: x.points
                 }
 
@@ -214,11 +217,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     paths={pathRef.current.paths}
                     factories={[new IconNodeFactory(), new HMINodeFactory()]}
                     onPathCreate={(path) => {
-                        // console.log("CREATE", path)
-                        // setPat'hs([...paths, path])
-
-
-
+        
                         updateRef.current?.addPath(path);
                     }}
                 
