@@ -1,4 +1,4 @@
-import { Config, Output } from "@pulumi/pulumi";
+import { all, Config, Output } from "@pulumi/pulumi";
 import { Provider } from '@pulumi/kubernetes'
 import { TimeseriesDeployment } from "./deployment"
 import { TimeseriesService } from "./service";
@@ -21,6 +21,7 @@ export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.cor
     return {
         deployment,
         service,
+        url: all([service.metadata.name, namespace.metadata.name]).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
         storagePv
     }
 }
