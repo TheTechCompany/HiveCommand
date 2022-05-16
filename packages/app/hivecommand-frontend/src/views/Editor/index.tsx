@@ -170,6 +170,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 plain 
                                 label={menu_item} />
                         ))}
+                        
                         */}
                         
                     </Box>
