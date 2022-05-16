@@ -82,7 +82,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const refetch = () => {
         client.refetchQueries({include: ['EditorCommandProgram']})
     }
-    // const program = gqless.commandPrograms
    
     const program = data?.commandPrograms?.[0] || {};
 
