@@ -169,8 +169,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 active={view == menu_item} 
                                 plain 
                                 label={menu_item} />
-                        ))}
-                        
+                        ))}\
+
                         */}
                         
                     </Box>
