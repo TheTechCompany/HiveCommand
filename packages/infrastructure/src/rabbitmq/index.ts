@@ -1,4 +1,4 @@
-import { Config, Output } from "@pulumi/pulumi";
+import { all, Config, Output } from "@pulumi/pulumi";
 import { Provider } from '@pulumi/kubernetes'
 import { RabbitMQDeployment } from "./deployment"
 import { RabbitMQService } from "./service"
@@ -22,6 +22,7 @@ export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.cor
 
     return {
         deployment,
-        service
+        service,
+        url: all([service.metadata.name, namespace.metadata.name]).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
     }
 }

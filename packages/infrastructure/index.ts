@@ -39,12 +39,12 @@ const main = (async () => {
         provider
     })
 
-    const { service: rabbitMQService } = await RabbitMQ(provider, vpcId, namespace)
-    const { service: timeseriesService } = await Timeseries(provider, vpcId, namespace)
+    const { service: rabbitMQService, url: rabbitURL } = await RabbitMQ(provider, vpcId, namespace)
+    const { service: timeseriesService, url: timeseriesURL } = await Timeseries(provider, vpcId, namespace)
 
-    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name, rabbitMQService.metadata.name, namespace)
+    const { deployment: syncServer } = await SyncServer(provider, timeseriesURL, rabbitURL, namespace)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name, rabbitMQService.metadata.name));
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesURL, rabbitURL));
     const service = await Service(provider)
 
     return {
