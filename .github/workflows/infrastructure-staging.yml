@@ -241,6 +241,9 @@ jobs:
           stack-name: ${{env.STACK_NAME}}
           work-dir: ./packages/infrastructure
         env:
+          STAGING_SYNC_OVPN: ${{ env.STAGING_SYNC_OVPN }}
+          HEXHIVE_API_KEY: ${{ env.HEXHIVE_API_KEY }}
+          HEXHIVE_API_URL: ${{ env.HEXHIVE_API_URL }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
 
