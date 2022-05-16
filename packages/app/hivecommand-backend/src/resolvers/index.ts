@@ -30,13 +30,3 @@ const getProjection = (fieldASTs: any) => {
 	  }
 	}, {});
   }
-
-export default async (driver: Driver, prisma: PrismaClient, pool: Pool, channel: Channel) => {
-
-	const session = driver.session();
-
-	return {
-		
-		
-	}
-}
