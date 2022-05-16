@@ -181,8 +181,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build_server, build_discovery_server, build_coreapps]
     env:
-      HEXHIVE_API_KEY: ${{ secrets.STAGING_SYNC_KEY }}
-      HEXHIVE_API_URL: ${{ secrets.STAGING_API_URL }}
       COMMAND_MONGO_URL: ${{ secrets.COMMAND_MONGO_URL }}
       COMMAND_MONGO_DB: ${{ secrets.COMMAND_MONGO_DB }}
       COMMAND_MONGO_USER: ${{ secrets.COMMAND_MONGO_USER }}
@@ -216,18 +214,24 @@ jobs:
         run: |
           echo "STACK_NAME=ultraviolet/hivecommand-staging" >> $GITHUB_ENV
           echo "STAGING_SYNC_OVPN=${{ secrets.STAGING_SYNC_OVPN }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_KEY=${{ secrets.STAGING_SYNC_KEY }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_URL=${{ secrets.STAGING_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/staging' }}
 
       - name: Setup stack
         run: |
           echo "STACK_NAME=ultraviolet/hivecommand-next" >> $GITHUB_ENV
           echo "STAGING_SYNC_OVPN=${{ secrets.STAGING_SYNC_OVPN }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_KEY=${{ secrets.STAGING_SYNC_KEY }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_URL=${{ secrets.STAGING_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/next' }}
 
       - name: Setup stack
         run: |
           echo "STACK_NAME=ultraviolet/hivecommand-prod" >> $GITHUB_ENV
           echo "STAGING_SYNC_OVPN=${{ secrets.PROD_SYNC_OVPN }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_KEY=${{ secrets.PROD_SYNC_KEY }}" >> $GITHUB_ENV
+          echo "HEXHIVE_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/master' }}
         
       - name: Update infrastructure
