@@ -2,7 +2,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { Config } from '@pulumi/pulumi';
 import { Provider } from '@pulumi/kubernetes'
 
-export const TimeseriesService = async (provider: Provider, appName: string) => {
+export const TimeseriesService = async (provider: Provider, appName: string, namespace: k8s.core.v1.Namespace) => {
 
     const appLabels = { appClass: appName };
 

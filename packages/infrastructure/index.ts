@@ -9,6 +9,7 @@ import { Service } from './src/service'
 import SyncServer from './src/sync-server'
 import Timeseries from './src/timeseries'
 import RabbitMQ from './src/rabbitmq'
+import * as k8s from '@pulumi/kubernetes'
 
 const main = (async () => {
     const config = new Config();
@@ -30,10 +31,18 @@ const main = (async () => {
 
     const provider = new Provider('eks', { kubeconfig });
 
-    const { service: rabbitMQService } = await RabbitMQ(provider)
-    const { service: timeseriesService } = await Timeseries(provider, vpcId)
+    const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
+        metadata: {
+            name: `hivecommand-sync-${suffix}`
+        }
+    }, {
+        provider
+    })
 
-    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name, rabbitMQService.metadata.name)
+    const { service: rabbitMQService } = await RabbitMQ(provider, vpcId, namespace)
+    const { service: timeseriesService } = await Timeseries(provider, vpcId, namespace)
+
+    const { deployment: syncServer } = await SyncServer(provider, timeseriesService.metadata.name, rabbitMQService.metadata.name, namespace)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesService.metadata.name, rabbitMQService.metadata.name));
     const service = await Service(provider)

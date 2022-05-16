@@ -3,12 +3,12 @@ import { Config, Output } from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws'
 import {Provider} from '@pulumi/kubernetes'
 
-export const TimeseriesPersistence = async (provider: Provider, vpcId: Output<any>,  namespace: k8s.core.v1.Namespace) => {
+export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>,  namespace: k8s.core.v1.Namespace) => {
     const config = new Config()
 
     const suffix = config.get('suffix');
 
-    let efsRoot = `hivecommand-timeseries-storage-${suffix}`;
+    let efsRoot = `hivecommand-mq-storage-${suffix}`;
 
     const efsVolume =  new aws.efs.FileSystem(efsRoot)
     
