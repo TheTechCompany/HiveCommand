@@ -3,12 +3,15 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const TimeseriesDeployment = async (provider: Provider, appName: string, storageClaim: k8s.core.v1.PersistentVolumeClaim) => {
+export const TimeseriesDeployment = async (provider: Provider, appName: string, storageClaim: k8s.core.v1.PersistentVolumeClaim,  namespace: k8s.core.v1.Namespace) => {
 
     const appLabels = { appClass: appName };
 
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
-        metadata: { labels: appLabels },
+        metadata: { 
+            labels: appLabels,
+            namespace: namespace.metadata.name
+         },
         spec: {
             replicas: 1,
             strategy: { type: "RollingUpdate" },
@@ -16,6 +19,9 @@ export const TimeseriesDeployment = async (provider: Provider, appName: string, 
             template: {
                 metadata: { labels: appLabels },
                 spec: {
+                    nodeSelector: {
+                        'eks.amazonaws.com/nodegroup': 'managed-nodes'
+                    },
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
