@@ -1,12 +1,19 @@
 import {Provider} from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
+import { Config } from '@pulumi/pulumi';
 
-export const RabbitMQDeployment = async (provider: Provider, appName: string) => {
+export const RabbitMQDeployment = async (provider: Provider, appName: string, storageClaim: k8s.core.v1.PersistentVolumeClaim, namespace: k8s.core.v1.Namespace) => {
+
+    const config = new Config();
+    const suffix = config.require('suffix');
 
     const appLabels = { appClass: appName };
 
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
-        metadata: { labels: appLabels },
+        metadata: { 
+            labels: appLabels,
+            namespace: namespace.metadata.name
+        },
         spec: {
             replicas: 1,
             strategy: { type: "RollingUpdate" },
@@ -14,17 +21,21 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string) =>
             template: {
                 metadata: { labels: appLabels },
                 spec: {
+                    nodeSelector: {
+                        'eks.amazonaws.com/nodegroup': 'managed-nodes'
+                    },
+                    hostname: `hive-command-mq-${suffix}`,
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
                         image: `rabbitmq:3.9`,
                         ports: [{ name: "amqp", containerPort: 5672 }],
-                        // volumeMounts: [
-                        //     {
-                        //         name: 'persistence',
-                        //         mountPath: `/var/lib/postgresql/data`
-                        //     }
-                        // ],
+                        volumeMounts: [
+                            {
+                                name: 'persistence',
+                                mountPath: `/var/lib/rabbitmq/mnesia/`
+                            }
+                        ],
                         // env: [
                         //     {name: 'POSTGRES_PASSWORD', value: process.env.TIMESERIES_PASSWORD},
                         // ],
@@ -34,6 +45,14 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string) =>
                             }
                         }
                     }],
+                    volumes: [
+                        {
+                            name: 'persistence',
+                            persistentVolumeClaim: {
+                                claimName: storageClaim.metadata.name
+                            }
+                        }
+                    ]
                     // volumes: [
                     //     {
                     //         name: 'persistence',

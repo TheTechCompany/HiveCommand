@@ -3,7 +3,10 @@ import { Provider } from '@pulumi/kubernetes'
 import { RabbitMQDeployment } from "./deployment"
 import { RabbitMQService } from "./service"
 
-export default async (provider: Provider) => {
+import * as k8s from '@pulumi/kubernetes'
+import { RabbitMQPersistence } from "./persistence";
+
+export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 
@@ -12,9 +15,10 @@ export default async (provider: Provider) => {
     const appName = `hive-command-mq-${suffix}`
 
 
-    const deployment = await RabbitMQDeployment(provider, appName);
+    const { storageClaim } = await RabbitMQPersistence(provider, vpcId, namespace)
+    const deployment = await RabbitMQDeployment(provider, appName, storageClaim, namespace);
 
-    const service = await RabbitMQService(provider, appName)
+    const service = await RabbitMQService(provider, appName, namespace)
 
     return {
         deployment,

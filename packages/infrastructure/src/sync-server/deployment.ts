@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = async (provider: Provider, appName: string, timeseriesHost: Output<any>, rabbitHost: Output<any>) => {
+export const Deployment = async (provider: Provider, appName: string, timeseriesHost: Output<any>, rabbitHost: Output<any>,  namespace: k8s.core.v1.Namespace) => {
 
     const config = new Config()
     
@@ -11,14 +11,6 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
     const imageTag = process.env.IMAGE_TAG 
 
     const syncHostname = config.require('sync-host');
-
-    const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
-        metadata: {
-            name: `hivecommand-sync-${suffix}`
-        }
-    }, {
-        provider
-    })
 
     const appLabels = { appClass: appName };
 
