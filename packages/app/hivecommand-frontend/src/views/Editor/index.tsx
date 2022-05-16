@@ -30,11 +30,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
 
     const match = useMatch(`*/:path`)
-    console.log({location, match})
 
-    // const match = useMatch()
-    // alert(match)
-    
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
     const [ selectedItem, setSelectedItem ] = useState<any>(undefined);
@@ -82,146 +78,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
 
-    // const [ addProgramNode, addInfo ] = useMutation((mutation, args: {type: string, x: number, y: number}) => {
-    //     const program = mutation.updateCommandPrograms({
-    //         where: {id: id},
-    //         update: {
-    //             program: [{
-    //                 where: {node: {id: activeProgram}},
-    //                 update: {
-    //                     node: {
-    //                         nodes: [{create: [{node: {
-    //                             type: args.type,
-    //                             x: args.x,
-    //                             y: args.y
-    //                         }}]}]
-    //                     }
-    //                 }
-    //             }]
-    //         }
-    //     })
-    //     return {
-    //         item: {
-    //             ...program.commandPrograms[0]
-    //         }
-    //     }
-    // })
-
-
-    // const [ addProgram, addProgramInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
-    //    let update : any = {};
-
-    //    if(!args.parent){
-    //     update = {
-    //         program: [{
-    //             create: [{node: {
-    //                 name: args.name || "Default"
-    //             }}]
-    //         }]
-    //     }
-    //    }else{
-    //        update = {
-    //         program: [{
-    //             where: {node: {id: args.parent}},
-    //             update: {
-    //                 node: {
-    //                     children: [{
-    //                         create: [{node: {
-    //                             name: args.name || "Default"
-    //                         }}]
-    //                     }]
-    //                 }
-    //             }
-    //         }]
-    //        }
-    //    }
-    //     const program = mutation.updateCommandPrograms({
-    //         where: {id: id},
-    //         update: update
-    //     })
-    //     return {
-    //         item: {
-    //             ...program.commandPrograms[0]
-    //         }
-    //     }
-    // })
-
-
-    // const [ addHMI, addHMIParentInfo ] = useMutation((mutation, args: {name: string, parent?: string}) => {
-    //     let update : any = {};
-
-    //     if(!args.parent || args.parent === "root"){
-    //         update = {
-    //             hmi: [{create: [{node: {
-    //                 name: args.name || "Default"
-    //             }}]}]
-    //         }
-    //     }else{
-    //         // update = {
-    //         //     hmi: [{
-    //         //         where: {node: {id: args.parent}},
-    //         //         update: {
-    //         //             node: {
-    //         //                 children: [{
-    //         //                     create: [{node: {
-    //         //                         name: args.name || "Default"
-    //         //                     }}]
-    //         //                 }]
-    //         //             }
-    //         //         }
-    //         //     }]
-    //         // }
-    //     }
-    //     const program = mutation.updateCommandPrograms({
-    //         where: {id: id},
-    //         update: update
-    //     })
-    //     return {
-    //         item: {
-    //             ...program.commandPrograms[0]
-    //         }
-    //     }
-    // })
-
-
-    // useEffect(() => {
-    //     let program = data?.commandPrograms?.[0]
-    //     if(program && activeProgram){
-    //         console.log(program, activeProgram, program.program.find((a) => a.id == activeProgram))
-    //         setNodes((view == "Program" ? program.program : program.hmi).find((a) => a.id == activeProgram).nodes.map((x) => ({
-    //             id: x.id,
-    //             x: x.x,
-    //             y: x.y,
-    //             extras: {
-    //                 icon: view == "Program" ? x.type : HMIIcons[x.type],
-    //             },
-    //             type: view == "Program" ? 'icon-node' : 'hmi-node',
-                
-    //         })))
-    //     }
-    // }, [data?.commandPrograms?.[0], activeProgram])
-
+   
     const refetch = () => {
         client.refetchQueries({include: ['EditorCommandProgram']})
     }
     // const program = gqless.commandPrograms
    
     const program = data?.commandPrograms?.[0] || {};
-
-    // const [ program, setProgram ] = useAutomergeDoc<{program: Program[]} & any>('Program', props.match.params.id)
-
-    // const shardQuery = useQuery(GET_PROGRAM_SHARDS, { variables: { parent: props.match.params.id } })
-    // const programQuery = useQuery(GET_PROGRAM, { variables: { id: props.match.params.id } })
-    // const stackQuery = useQuery(GET_STACKS)
-    
-    // const gqless = useQLess({suspense: false, staleWhileRevalidate: true})
-
-    // const Processes = (shardQuery.data || {}).FlowShardMany || []
-    // const program_root = (programQuery.data || {}).ProgramOne;
-
-    // console.log("PROGRAM", program)
-    
-    // const [ updateProject, updateInfo ] = programActions.useUpdateProgram(props.match.params.id)
 
     const query = qs.parse(location.search, {ignoreQueryPrefix: true})
 
@@ -237,14 +100,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         menu.forEach((item, ix) => {
             console.log(item, window.location.pathname)
-            // const resolvedPath = useResolvedPath(item.toLowerCase())
-
-            // // const match =  matchPath(resolvedPath.pathname, location.pathname)
-
-            // console.log(match)
-            // if(match){
-            //     setView(item as any)
-            // }
+           
 
         })
 
