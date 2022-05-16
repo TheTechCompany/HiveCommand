@@ -213,9 +213,7 @@ jobs:
       - name: Setup stack
         run: |
           echo "STACK_NAME=ultraviolet/hivecommand-staging" >> $GITHUB_ENV
-          echo 'STAGING_SYNC_OVPN<<EOF' >> $GITHUB_ENV
-          echo ${{ secrets.STAGING_SYNC_OVPN }} >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV    
+          echo "STAGING_SYNC_OVPN=$(echo ${{ secrets.STAGING_SYNC_OVPN }})" >> $GITHUB_ENV
           echo "HEXHIVE_API_KEY=${{ secrets.STAGING_SYNC_KEY }}" >> $GITHUB_ENV
           echo "HEXHIVE_API_URL=${{ secrets.STAGING_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/staging' }}
@@ -234,7 +232,7 @@ jobs:
         run: |
           echo "STACK_NAME=ultraviolet/hivecommand-prod" >> $GITHUB_ENV
           echo 'STAGING_SYNC_OVPN<<EOF' >> $GITHUB_ENV
-          echo ${{ secrets.PROD_SYNC_OVPN }} >> $GITHUB_ENV
+          echo "${{ secrets.PROD_SYNC_OVPN }}" >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
           echo "HEXHIVE_API_KEY=${{ secrets.PROD_SYNC_KEY }}" >> $GITHUB_ENV
           echo "HEXHIVE_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV

@@ -50,13 +50,6 @@ const Dashboard : React.FC<any> = (props) => {
     const navigate = useNavigate()
 
      const [drawerOpen, openDrawer] = useState<boolean>(false)
-    /*
-                   <img    
-                            style={{height: 50, filter: 'invert(1)'}}
-                            src={HiveFlowLogo}/>
-    */
-
-   
 
 
     return (
