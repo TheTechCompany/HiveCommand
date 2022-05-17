@@ -2,6 +2,7 @@ import * as React from "react";
 
 function SvgTank(props: {device?: {setpoints?: {name: string, key: {key: string}, value: string, type: string}[]}, width: string, height: string, conf?: {level: {min: number, max: number}}, options?: {level: number}}) {
   
+  console.log({props})
   const getLevel = (percent?: string) => {
     let level = parseFloat(`${percent || props.options?.level || 0}`);
 
