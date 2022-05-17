@@ -288,14 +288,14 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					}	
 				}
 
-				if(args.input.deviceSnapshot && args.where.id) {
+				if(args.input.deviceSnapshot && args.where.network_name) {
 					deviceUpdate['deviceSnapshot'] = {
 						upsert: args.input.deviceSnapshot.map((snapshot) => ({
 							where: {
 								key_placeholder_deviceId: {
 									key: snapshot.key,
 									placeholder: snapshot.placeholder,
-									deviceId: args.where.id,
+									deviceId: args.where.network_name,
 								}
 							},
 							update: {
@@ -305,7 +305,6 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								id: nanoid(),
 								key: snapshot.key,
 								placeholder: snapshot.placeholder,
-								deviceId: args.where.id,
 								value: snapshot.value
 							}
 						}))
