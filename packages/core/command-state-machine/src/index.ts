@@ -1,4 +1,4 @@
-import { CommandProcess, ProgramProcess } from "@hive-command/data-types";
+import { ACTION_TYPES, CommandProcess, ProgramProcess } from "@hive-command/data-types";
 import { EventEmitter } from 'events'
 import { State } from "./State";
 import { ProgramDevice, CommandVariable } from "@hive-command/data-types";
@@ -39,19 +39,19 @@ import { VariableManager } from "./variables";
 
 const base_actions = [
 	{
-		id: 'action',
+		id: ACTION_TYPES.ACTION,
 		onEnter: actions.action,
 	},
 	{
-		id: 'sub-process',
+		id: ACTION_TYPES.SUBPROCESS,
 		onEnter: actions.sub_process
 	},
 	{
-		id: 'timer',
+		id: ACTION_TYPES.TIMER,
 		onEnter: actions.timer
 	},
 	{
-		id: 'trigger',
+		id: ACTION_TYPES.TRIGGER,
 		onEnter: actions.trigger
 	}
 ]

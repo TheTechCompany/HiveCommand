@@ -69,7 +69,15 @@ export interface CommandAssertionInput {
 export interface CommandDeviceInput {
   name?: InputMaybe<Scalars["String"]>;
   network_name?: InputMaybe<Scalars["String"]>;
+  peripherals?: InputMaybe<Array<InputMaybe<CommandDevicePeripheralInput>>>;
   program?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandDevicePeripheralInput {
+  id?: InputMaybe<Scalars["String"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  ports?: InputMaybe<Scalars["Int"]>;
+  type?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandDevicePluginConfigurationInput {
@@ -98,6 +106,7 @@ export interface CommandDeviceReportInput {
 
 export interface CommandDeviceWhere {
   id?: InputMaybe<Scalars["ID"]>;
+  network_name?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandHMIPortInput {
@@ -268,6 +277,7 @@ export const generatedSchema = {
   CommandDeviceInput: {
     name: { __type: "String" },
     network_name: { __type: "String" },
+    peripherals: { __type: "[CommandDevicePeripheralInput]" },
     program: { __type: "String" },
   },
   CommandDevicePeripheral: {
@@ -276,6 +286,12 @@ export const generatedSchema = {
     device: { __type: "CommandDevice" },
     id: { __type: "ID!" },
     mappedDevices: { __type: "[CommandDevicePeripheralMap]" },
+    name: { __type: "String" },
+    ports: { __type: "Int" },
+    type: { __type: "String" },
+  },
+  CommandDevicePeripheralInput: {
+    id: { __type: "String" },
     name: { __type: "String" },
     ports: { __type: "Int" },
     type: { __type: "String" },
@@ -376,7 +392,10 @@ export const generatedSchema = {
     value: { __type: "String" },
     valueKey: { __type: "String" },
   },
-  CommandDeviceWhere: { id: { __type: "ID" } },
+  CommandDeviceWhere: {
+    id: { __type: "ID" },
+    network_name: { __type: "String" },
+  },
   CommandHMIDevice: {
     __typename: { __type: "String!" },
     height: { __type: "Float" },
@@ -535,6 +554,7 @@ export const generatedSchema = {
   CommandProgramDeviceAction: {
     __typename: { __type: "String!" },
     device: { __type: "CommandProgramDevice" },
+    func: { __type: "String" },
     id: { __type: "ID!" },
     key: { __type: "String" },
   },
@@ -863,7 +883,10 @@ export const generatedSchema = {
       __type: "CommandProgramVariable!",
       __args: { input: "CommandProgramVariableInput!", program: "ID!" },
     },
-    deleteCommandDevice: { __type: "CommandDevice!", __args: { id: "ID!" } },
+    deleteCommandDevice: {
+      __type: "CommandDevice!",
+      __args: { where: "CommandDeviceWhere!" },
+    },
     deleteCommandDeviceReport: {
       __type: "CommandDeviceReport",
       __args: { id: "ID" },
@@ -931,7 +954,7 @@ export const generatedSchema = {
     },
     updateCommandDevice: {
       __type: "CommandDevice!",
-      __args: { id: "ID!", input: "CommandDeviceInput!" },
+      __args: { input: "CommandDeviceInput!", where: "CommandDeviceWhere!" },
     },
     updateCommandDeviceReport: {
       __type: "CommandDeviceReport",
@@ -940,6 +963,10 @@ export const generatedSchema = {
     updateCommandDeviceReportGrid: {
       __type: "[CommandDeviceReport]",
       __args: { device: "ID", grid: "[CommandDeviceReportInput]" },
+    },
+    updateCommandDeviceUptime: {
+      __type: "CommandDevice!",
+      __args: { uptime: "DateTime", where: "CommandDeviceWhere!" },
     },
     updateCommandProgram: {
       __type: "CommandProgram!",
@@ -1395,6 +1422,7 @@ export interface CommandProgramDevice {
 export interface CommandProgramDeviceAction {
   __typename?: "CommandProgramDeviceAction";
   device?: Maybe<CommandProgramDevice>;
+  func?: Maybe<ScalarsEnums["String"]>;
   id: ScalarsEnums["ID"];
   key?: Maybe<ScalarsEnums["String"]>;
 }
@@ -1659,7 +1687,7 @@ export interface Mutation {
     input: CommandProgramVariableInput;
     program: Scalars["ID"];
   }) => CommandProgramVariable;
-  deleteCommandDevice: (args: { id: Scalars["ID"] }) => CommandDevice;
+  deleteCommandDevice: (args: { where: CommandDeviceWhere }) => CommandDevice;
   deleteCommandDeviceReport: (args?: {
     id?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
@@ -1738,8 +1766,8 @@ export interface Mutation {
     deviceId?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
   updateCommandDevice: (args: {
-    id: Scalars["ID"];
     input: CommandDeviceInput;
+    where: CommandDeviceWhere;
   }) => CommandDevice;
   updateCommandDeviceReport: (args?: {
     id?: Maybe<Scalars["ID"]>;
@@ -1749,6 +1777,10 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     grid?: Maybe<Array<Maybe<CommandDeviceReportInput>>>;
   }) => Maybe<Array<Maybe<CommandDeviceReport>>>;
+  updateCommandDeviceUptime: (args: {
+    uptime?: Maybe<Scalars["DateTime"]>;
+    where: CommandDeviceWhere;
+  }) => CommandDevice;
   updateCommandProgram: (args: {
     id: Scalars["ID"];
     input: CommandProgramInput;

@@ -29,6 +29,18 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								device: true,
 							}
 						},
+						peripherals: {
+							include: {
+								connectedDevices: true,
+								mappedDevices: {
+									include: {
+										device: true,
+										key: true,
+										value: true
+									}
+								}
+							}
+						},
 						activeProgram: {
 							include: {
 								program: {
@@ -156,28 +168,68 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					}
 				})
 			},
-			updateCommandDevice: async (root: any, args: {id: string, input: {name: string, network_name: string, program: string}}, context: any) => {
+			updateCommandDevice: async (root: any, args: {where: {id: string, network_name: string}, input: {name: string, network_name: string, program: string, peripherals: any[]}}, context: any) => {
+				let deviceUpdate : any = {};
+				let peripheralUpdate : any = {};
+				
+				let deviceWhere : any = {};
+				if(args.where.id) deviceWhere.id = args.where.id
+				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
+
+				if(args.input.peripherals){
+					peripheralUpdate['peripherals'] = {
+						upsert: args.input.peripherals.map((peripheral) => {
+							let id = peripheral.id || nanoid()
+							return {
+								where: {id},
+								update: {
+									name: peripheral.name,
+									type: peripheral.type,
+									ports: peripheral.ports
+								},
+								create: {
+									id,
+									name: peripheral.name,
+									type: peripheral.type,
+									ports: peripheral.ports
+								}
+							}
+						})
+					}	
+				}
+
+				if(args.input.name) deviceUpdate['name'] = args.input.name;
+				if(args.input.network_name) deviceUpdate['network_name'] = args.input.network_name;
+				if(args.input.program) deviceUpdate['activeProgram'] = {connect: {id: args.input.program}}
+
 				return await prisma.device.update({
-					where: {id: args.id},
+					where: {
+						...deviceWhere
+					},
 					data: {
-						name: args.input.name,
-						network_name: args.input.network_name,
-						activeProgram: {
-							connect: {id: args.input.program}
-						}
+						...deviceUpdate,
+						...peripheralUpdate
 					}
 				})
 			},
-			updateCommandDeviceUptime: async (root: any, args: {id: any, uptime: any}, context: any) => {
-				let query : any = {};
-				
-				if(args.id) query.id = args.id;
+			updateCommandDeviceUptime: async (root: any, args: {where: {id: any, network_name: string}, uptime: any}, context: any) => {
+		
 
-				return await prisma.device.update({where: query, data: {lastSeen: args.uptime}})
+				let deviceWhere : any = {};
+				if(args.where.id) deviceWhere.id = args.where.id
+				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
+
+
+				return await prisma.device.update({where: deviceWhere, data: {lastSeen: args.uptime}})
 				
 			},
-			deleteCommandDevice: async (root: any, args: {id: string}, context: any) => {
-				return await prisma.device.delete({where: {id: args.id}});
+			deleteCommandDevice: async (root: any, args: {where: {id: any, network_name: string}}, context: any) => {
+			
+				let deviceWhere : any = {};
+				if(args.where.id) deviceWhere.id = args.where.id
+				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
+
+				return await prisma.device.delete({where: deviceWhere});
 			}
 		}
 	}])
@@ -199,15 +251,16 @@ export default (prisma: PrismaClient, pool: Pool) => {
 
 	type Mutation {
 		createCommandDevice(input: CommandDeviceInput!): CommandDevice!
-		updateCommandDevice(id: ID!, input: CommandDeviceInput!): CommandDevice!
-		updateCommandDeviceUptime(id: ID!, uptime: DateTime): CommandDevice!
-		deleteCommandDevice(id: ID!): CommandDevice!
+		updateCommandDevice(where: CommandDeviceWhere!, input: CommandDeviceInput!): CommandDevice!
+		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
+		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 	}
 
 	input CommandDeviceInput {
 		name: String
 		network_name: String
 		program: String
+		peripherals: [CommandDevicePeripheralInput]
 	}
 
 	input CommandDeviceWhere {
@@ -240,6 +293,13 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		organisation: HiveOrganisation 
 	}
 
+	input CommandDevicePeripheralInput {
+		id: String
+		name: String
+		type: String
+
+		ports: Int
+	}
 
 
 	type CommandDevicePeripheral {
