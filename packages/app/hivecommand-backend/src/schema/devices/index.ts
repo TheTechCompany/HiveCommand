@@ -480,6 +480,8 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		vendorId: String
 		name: String
 
+		port: String
+
 		peripheral: CommandDevicePeripheral 
 
 		connections: [CommandPeripheralProductDatapoint]
