@@ -40,17 +40,6 @@ const pages = [
             component: <EditorPage />
         }]
     }
-    // }, {
-    //     icon: <Plug  color="neutral-1" />,
-    //     label: "Plugins",
-    //     path: "plugins",
-    //     component: <PluginList/>
-    // },
-    // {
-    //     icon: <GraphQl color="neutral-1"  />,
-    //     label: "Reports",
-    //     path: "/reports"
-    // }
 ]
 
 const drawerWidth = 240;
@@ -61,13 +50,6 @@ const Dashboard : React.FC<any> = (props) => {
     const navigate = useNavigate()
 
      const [drawerOpen, openDrawer] = useState<boolean>(false)
-    /*
-                   <img    
-                            style={{height: 50, filter: 'invert(1)'}}
-                            src={HiveFlowLogo}/>
-    */
-
-   
 
 
     return (

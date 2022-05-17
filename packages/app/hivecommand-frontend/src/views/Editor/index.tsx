@@ -82,7 +82,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const refetch = () => {
         client.refetchQueries({include: ['EditorCommandProgram']})
     }
-    // const program = gqless.commandPrograms
    
     const program = data?.commandPrograms?.[0] || {};
 
@@ -170,7 +169,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 active={view == menu_item} 
                                 plain 
                                 label={menu_item} />
-                        ))}
+                        ))}\
+
                         */}
                         
                     </Box>

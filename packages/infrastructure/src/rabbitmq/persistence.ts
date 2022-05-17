@@ -3,7 +3,7 @@ import { Config, Output } from '@pulumi/pulumi';
 import * as aws from '@pulumi/aws'
 import {Provider} from '@pulumi/kubernetes'
 
-export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>,  namespace: k8s.core.v1.Namespace) => {
+export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>) => {
     const config = new Config()
 
     const suffix = config.get('suffix');
@@ -54,7 +54,6 @@ export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>
     const storagePv = new k8s.core.v1.PersistentVolume(`${efsRoot}-pv`, {
         metadata: {
             name: `${efsRoot}-pv`,
-            namespace: namespace.metadata.name
         },
         spec: {
             capacity: {
@@ -74,7 +73,6 @@ export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>
     const storageClaim = new k8s.core.v1.PersistentVolumeClaim(`${efsRoot}-pvc`, {
         metadata: {
             name: `${efsRoot}-pvc`,
-            namespace: namespace.metadata.name
         },
         spec: {
             accessModes: ['ReadWriteMany'],
