@@ -475,6 +475,7 @@ export class Data {
 		}[]
 	}[]){
 
+
 		await this.requestGraphQL(gql`
 			mutation UsertDevicePeripherals($network_name: String, $peripherals: [CommandDevicePeripheralInput]){
 				updateCommandDevice(where: {network_name: $network_name}, input: {peripherals: $peripherals}){
@@ -487,6 +488,17 @@ export class Data {
 				id: conn.id,
 				name: conn.name,
 				type: conn.type,
+				connectedDevices: conn.devices?.map((device) => ({
+					port: device.port,
+					vendorId: device.vendorId,
+					deviceId: device.deviceId,
+					id: device.serial,
+					connections: device.inputs.map((x) => ({...x, direction: 'input'})).concat(device.outputs.map((x) => ({...x, direction: 'output'}))).map((dev_conn) => ({
+						key: dev_conn.key,
+						type: dev_conn.type,
+						direction: dev_conn.direction
+					}))
+				})),
 				ports: 0
 			}))
 		});
