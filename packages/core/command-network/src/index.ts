@@ -137,6 +137,7 @@ export class CommandNetwork {
 			await this.opc?.addVariable(variable.name, variable.type, () => {
 				return this.valueBank.getVariable?.(variable.name)
 			}, (value: Variant) => {
+				console.log("Set value", variable.name, {value: value.value})
 				return this.valueBank.setVariabe?.(variable.name, value.value)
 			})
 		}))
