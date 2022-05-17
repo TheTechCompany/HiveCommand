@@ -162,7 +162,7 @@ mappedDevicesConnection {
 
             
             <DeviceBusConnectionModal
-                connections={selected?.node?.connections.map((connection) => ({
+                connections={selected?.connections.map((connection) => ({
                     ...connection,
                     subindex: connection.key.match(/(.+?)-(.+)/)?.[2] || 0
                 }))}
@@ -254,8 +254,8 @@ mappedDevicesConnection {
                             return {
                                 id: x.id,
                                 name: x.name,
-                                connectedDevices: [] || x.connectedDevices.map((connection) => ({...connection, port: connection.port})),
-                                mappedDevices: [] || x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevices[ix].port})),
+                                connectedDevices: x.connectedDevices.map((connection) => ({...connection, port: connection.port})),
+                                mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevices[ix].port})) || [],
                                 ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevices : {inputs: 14, outputs: 14})
                             }
                         })}/>
