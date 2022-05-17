@@ -1,6 +1,6 @@
 FROM node:lts-slim as build
 
-RUN apt-get update; apt-get install openssl -y
+RUN apt-get update; apt-get install openssl openvpn -y
 
 WORKDIR /app
 
