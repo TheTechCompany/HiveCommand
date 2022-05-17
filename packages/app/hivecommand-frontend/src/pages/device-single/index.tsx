@@ -46,6 +46,12 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                         vendorId
                         name
                         port
+
+                        connections {
+                            key
+                            direction
+                            type
+                        }
                     }
 
                     mappedDevices {
@@ -162,7 +168,7 @@ mappedDevicesConnection {
 
             
             <DeviceBusConnectionModal
-                connections={selected?.connections.map((connection) => ({
+                connections={selected?.connections?.map((connection) => ({
                     ...connection,
                     subindex: connection.key.match(/(.+?)-(.+)/)?.[2] || 0
                 }))}
