@@ -180,6 +180,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 }
                                 scaleX
                                 scaleY
+                                rotation
                                 x
                                 y
                             }
