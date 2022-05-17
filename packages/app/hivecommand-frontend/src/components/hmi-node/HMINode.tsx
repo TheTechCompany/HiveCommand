@@ -43,7 +43,8 @@ const _Icons: any = Icons;
 
 export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
-
+    console.log("base", {props});
+    
     const { getDeviceConf, getDeviceOptions } = useContext(HMICanvasContext)
 
     let options: any = {};
