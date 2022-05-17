@@ -116,6 +116,21 @@ export default (prisma: PrismaClient, pool: Pool) => {
 																actions: true,
 																state: true
 															}
+														},
+														setpoints: true,
+														interlocks: {
+															include: {
+																device: true,
+																inputDevice: true,
+																inputDeviceKey: true,
+																assertion: {
+																	include: {
+																		setpoint: true,
+																		variable: true
+																	}
+																},
+																action: true
+															}
 														}
 													}
 												},
@@ -128,6 +143,21 @@ export default (prisma: PrismaClient, pool: Pool) => {
 																	include: {
 																		actions: true,
 																		state: true
+																	}
+																},
+																setpoints: true,
+																interlocks: {
+																	include: {
+																		device: true,
+																		inputDevice: true,
+																		inputDeviceKey: true,
+																		assertion: {
+																			include: {
+																				setpoint: true,
+																				variable: true
+																			}
+																		},
+																		action: true
 																	}
 																}
 															}
