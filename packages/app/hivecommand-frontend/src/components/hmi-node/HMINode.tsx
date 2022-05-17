@@ -8,6 +8,7 @@ import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
 import * as Icons from '../../assets/hmi-elements';
 
 export interface IconNodeProps {
+    building?: boolean;
     className?: string;
     extras?: {
         options?: any;
@@ -73,7 +74,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
     return (
         <Box
-            style={{ position: 'relative' }}
+            style={{ position: 'relative', pointerEvents: props.building ? 'none' : undefined }}
             onClick={props.onClick}
             width={props.width || '72px'}
             height={props.height || '72px'}
@@ -96,6 +97,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 export const UnstyledIconNode = (props: IconNodeProps) => {
     const [actionsOpen, openActions] = useState<boolean>(false);
 
+    console.log({props})
     return (
         <>
             {/* {props.extras?.showTotalizer && (
@@ -108,9 +110,10 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
             </Box>
         )} */}
             <BaseIconNode
-                onClick={() => {
+                onClick={!props.building && (() => {
+                    console.log("Open")
                     openActions(!actionsOpen)
-                }}
+                })}
                 width={props.extras?.label ? '96px' : '55px'}
                 height={props.extras?.label ? '42px' : '55px'}
                 {...props}>

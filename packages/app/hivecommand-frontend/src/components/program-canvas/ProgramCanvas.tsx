@@ -105,6 +105,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 				paths={pathRef.current.paths}
 				selected={props.selected}
 				onSelect={(key, id) => {
+					console.log("SELECT", key, id)
 					props.onSelect?.({key, id})
 				}}
 				onDelete={props.onDelete}

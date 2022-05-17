@@ -278,8 +278,8 @@ export const Controls = (props) => {
                 extras: {
                     devicePlaceholder: x.devicePlaceholder,
                     rotation: x.rotation || 0,
-                    scaleX: x.scaleX || 1,
-                    scaleY: x.scaleY || 1,
+                    scaleX: x.scaleX != undefined ? x.scaleX : 1,
+                    scaleY: x.scaleY != undefined ? x.scaleY : 1,
                     showTotalizer: x.showTotalizer || false,
                     iconString: x.type?.name,
                     icon: HMIIcons[x.type?.name],
@@ -394,7 +394,7 @@ export const Controls = (props) => {
                     snapToGrid={false}
                     onDelete={watchEditorKeys}
                     onSelect={(key, id) => {
-
+                        console.log("Select", key, id)
                         setSelected({
                             key,
                             id
@@ -411,7 +411,7 @@ export const Controls = (props) => {
                     editable={true}
                     nodes={nodes}
                     paths={pathRef.current.paths}
-                    factories={[new IconNodeFactory(), new HMINodeFactory()]}
+                    factories={[new HMINodeFactory(true)]}
                     onPathCreate={(path) => {
                         updateRef.current?.addPath(path);
                     }}
