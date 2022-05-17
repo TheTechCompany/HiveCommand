@@ -5,7 +5,7 @@ import { TimeseriesService } from "./service";
 import { TimeseriesPersistence } from "./persistence";
 import * as k8s from '@pulumi/kubernetes'
 
-export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.core.v1.Namespace) => {
+export default async (provider: Provider, vpcId: Output<any>) => {
 
     const config = new Config();
 
@@ -13,15 +13,15 @@ export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.cor
 
     const appName = `hive-command-timeseriesdb-${suffix}`
 
-    const { storagePv, storageClaim } = await TimeseriesPersistence(provider, vpcId, namespace)
+    const { storagePv, storageClaim } = await TimeseriesPersistence(provider, vpcId)
 
-    const deployment = await TimeseriesDeployment(provider, appName, storageClaim, namespace);
-    const service = await TimeseriesService(provider, appName, namespace)
+    const deployment = await TimeseriesDeployment(provider, appName, storageClaim);
+    const service = await TimeseriesService(provider, appName)
 
     return {
         deployment,
         service,
-        url: all([service.metadata.name, namespace.metadata.name]).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
+        url: all([service.metadata.name, 'default']).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
         storagePv
     }
 }
