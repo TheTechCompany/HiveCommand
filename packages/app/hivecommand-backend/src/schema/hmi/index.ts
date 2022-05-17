@@ -45,11 +45,15 @@ export default (prisma: PrismaClient) => {
 						connect: { id: args.input.devicePlaceholder }
 					}
 				}
-				if (args.input.z) deviceUpdate['z'] = args.input.z;
-				if (args.input.showTotalizer) deviceUpdate['showTotalizer'] = args.input.showTotalizer;
-				if (args.input.x) deviceUpdate['x'] = args.input.x;
-				if (args.input.y) deviceUpdate['y'] = args.input.y;
-				if (args.input.rotation) deviceUpdate['rotation'] = args.input.rotation;
+				if (args.input.z != undefined) deviceUpdate['z'] = args.input.z;
+				if (args.input.showTotalizer != undefined) deviceUpdate['showTotalizer'] = args.input.showTotalizer;
+				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
+				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
+
+				if (args.input.scaleX != undefined) deviceUpdate['scaleX'] = args.input.scaleX;
+				if (args.input.scaleY != undefined) deviceUpdate['scaleY'] = args.input.scaleY;
+
+				if (args.input.rotation != undefined) deviceUpdate['rotation'] = args.input.rotation;
 				if (args.input.type) deviceUpdate['type'] = { connect: { id: args.input.type } };
 
 				if(args.input.children){
