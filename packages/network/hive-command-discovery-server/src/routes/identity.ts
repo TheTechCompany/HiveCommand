@@ -60,10 +60,10 @@ export default (dataBroker: Data) => {
 
         // await dataBroker.updateDeviceUptime(deviceId, identity.uptime)
 
-        // await dataBroker.upsertDevicePeripherals(
-        //     deviceId,
-        //     buses
-        // )
+        await dataBroker.upsertDevicePeripherals(
+            deviceId,
+            buses
+        )
         // console.log(req.body, host);
 
         res.send({success: 200})

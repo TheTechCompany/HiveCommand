@@ -18,6 +18,8 @@ model Device {
 
   network_name String
 
+  peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
+
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
   program String?
 
@@ -29,6 +31,66 @@ model Device {
 
   organisation String
 }
+
+model DevicePeripheral {
+  id String @id
+  name String
+  type String
+
+  ports Int
+
+  connectedDevices PeripheralProduct[] @relation(name: "hasPeripheralProducts")
+
+  mappedDevices PeripheralMap[] @relation(name: "hasPeripheralMaps")
+
+  device Device @relation(name: "hasPeripherals", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+model PeripheralProduct {
+	id String @id
+	deviceId String
+	vendorId String
+	name String
+
+  port String
+
+	connections PeripheralProductDatapoint[] @relation(name: "hasDatapoints")
+
+	peripheral DevicePeripheral @relation(name: "hasPeripheralProducts", fields: [peripheralId], references: [id])
+  peripheralId String
+
+}
+
+	model PeripheralProductDatapoint {
+    id String @id
+		direction String
+		key String
+		type String
+
+		product PeripheralProduct @relation(name: "hasDatapoints", fields: [productId], references: [id])
+    productId String
+
+    usedInMap PeripheralMap[] @relation(name: "mapsDatapoint")
+	}
+
+	model PeripheralMap {
+		id String @id 
+
+		key PeripheralProductDatapoint @relation(name: "mapsDatapoint", fields: [keyId], references: [id])
+    keyId String
+
+		device ProgramFlowIO @relation(name: "mapsFlowIO", fields: [deviceId], references: [id])
+    deviceId String
+
+		value IOTemplateState @relation(name: "mapsTo", fields: [valueId], references: [id])
+    valueId String
+
+    port String
+
+    peripheral DevicePeripheral @relation(name: "hasPeripheralMaps", fields: [peripheralId], references: [id])
+    peripheralId String
+	}
 
 model DeviceReport {
   id String @id
@@ -100,6 +162,8 @@ model IOTemplateState {
   usedByInterlock ProgramInterlock[] @relation(name: "observesDeviceState")
 
   reportedBy DeviceReport[] @relation(name: "hasDataKey")
+
+  mappedBy PeripheralMap[] @relation(name: "mapsTo")
 
   device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
@@ -185,6 +249,8 @@ model ProgramFlowIO {
   usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
 
   reportedBy DeviceReport[] @relation(name: "hasDataDevice")
+
+  mappedBy PeripheralMap[] @relation(name: "mapsFlowIO")
 
   program Program @relation(fields: [programId], references: [id])
   programId String

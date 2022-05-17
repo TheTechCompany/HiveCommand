@@ -457,6 +457,20 @@ export class Data {
 		}[]
 	}[]){
 
+		await this.requestGraphQL(gql`
+			mutation UsertDevicePeripherals($network_name: String, $peripherals: [DevicePeripheralInput]){
+				updateCommandDevices(where: {network_name: $network_name}, input: {peripherals: $peripherals}){
+					id
+				}
+			}
+		`, {
+			network_name: deviceId,
+			peripherals: connected.map((conn) => ({
+				id: conn.id,
+				name: conn.name,
+				type: conn.type
+			}))
+		});
 		// const device = await this.session.writeTransaction(async (tx) => {
 		// 	const peripheral_result = await tx.run(`
 		// 		MATCH (device:CommandDevice {network_name: $id})-[:HAS_PERIPHERAL]->(peripherals:CommandDevicePeripheral)
