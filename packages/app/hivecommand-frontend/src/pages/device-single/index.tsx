@@ -254,7 +254,7 @@ mappedDevicesConnection {
                             return {
                                 id: x.id,
                                 name: x.name,
-                                connectedDevices: [] || x.connectedDevices.map((connection) => ({...connection.node, port: connection.port})),
+                                connectedDevices: [] || x.connectedDevices.map((connection) => ({...connection, port: connection.port})),
                                 mappedDevices: [] || x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevices[ix].port})),
                                 ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevices : {inputs: 14, outputs: 14})
                             }
