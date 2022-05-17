@@ -63,6 +63,8 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
     // 	}));
 	// })
 
+	console.log("GROUP", {nodes: props.extras.nodes})
+
 	// console.log(Icons)
 	const ports = useMemo(() => {
 		return props.extras?.ports?.map((port) => ({
