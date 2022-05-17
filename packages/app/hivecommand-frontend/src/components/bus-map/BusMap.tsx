@@ -23,6 +23,7 @@ export interface BusMapProps {
 
 export const BusMap : React.FC<BusMapProps> = (props) => {
 
+	console.log({bus: props.buses})
 
 	return (
 		<Box
