@@ -45,7 +45,7 @@ model DeviceSnapshotValue {
 
   lastUpdated DateTime @default(now())
 
-  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
+  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [network_name])
   deviceId String 
 
   @@unique([key, placeholder, deviceId])
@@ -79,8 +79,6 @@ model PeripheralProduct {
 
 	peripheral DevicePeripheral @relation(name: "hasPeripheralProducts", fields: [peripheralId], references: [id])
   peripheralId String
-
-  @@unique([vendorId, deviceId, peripheralId])
 
 }
 
