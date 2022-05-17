@@ -242,18 +242,19 @@ export class SyncClient {
 					valueKey
 				}]
 			),
-			DeviceValue.updateOne({
-				device,
-				deviceId,
-				valueKey
-			}, {
-				$set: {
-					device: device,
-					deviceId,
-					value: value.value,
-					valueKey: valueKey
-				}
-			}, {upsert: true})
+			this.dataBroker.updateDeviceValue(device,  deviceId, valueKey, value.value)
+			// DeviceValue.updateOne({
+			// 	device,
+			// 	deviceId,
+			// 	valueKey
+			// }, {
+			// 	$set: {
+			// 		device: device,
+			// 		deviceId,
+			// 		value: value.value,
+			// 		valueKey: valueKey
+			// 	}
+			// }, {upsert: true})
 		])
 
 		// await client.query("COMMIT")
