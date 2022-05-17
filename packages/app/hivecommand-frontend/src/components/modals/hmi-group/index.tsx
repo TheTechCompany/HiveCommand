@@ -185,21 +185,24 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 							const iconStr = data.extras.icon;
 							const icon = HMIIcons[iconStr];
 
-							console.log("Drop", {data});
-
-							setNodes([...nodes, {
+							console.log("Drop", {data, HMIIcons, iconStr});
+							const newElem =  {
 								id: `tmp-${nanoid()}`,
 								x: position.x, 
 								y: position.y,
-								width: data.extras.width,
-								height: data.extras.height,
+								width: typeof(data.extras.width) == "number" ? `${data.extras.width}px` :data.extras.width,
+								height: typeof(data.extras.height) == "number" ? `${data.extras.height}px` : data.extras.height,
 								extras: {
 									icon: icon,
 									iconStr,
-									rotation: 0
+									rotation: 0,
+									
 								},
 								type: HMINodeFactory.TAG
-							}])
+							};
+							console.log({newElem})
+
+							setNodes([...nodes, newElem])
 						}}
 						nodes={nodes.concat([{id: 'root', x: 300, y: 50, extras: {
 							ports: ports || [],

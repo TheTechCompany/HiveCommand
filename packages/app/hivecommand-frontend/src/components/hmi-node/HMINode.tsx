@@ -43,7 +43,8 @@ const _Icons: any = Icons;
 
 export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
-
+    console.log("base", {props});
+    
     const { getDeviceConf, getDeviceOptions } = useContext(HMICanvasContext)
 
     let options: any = {};
@@ -59,7 +60,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)
 
 
-    const Icon = getSVGStyle(props.extras?.icon && typeof (props.extras?.icon) === 'string' ? (Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : null, (props) => ({
+    const Icon = getSVGStyle(props.extras?.icon && typeof (props.extras?.icon) === 'string' ? (_Icons as any)[props.extras.icon] : (props.extras?.icon) ? props.extras?.icon : null, (props) => ({
         stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open?.trim() == 'true' || options?.on?.trim() == 'true' || parseFloat(options?.speed) > 0) ? 'green' : 'gray'
 
     }))

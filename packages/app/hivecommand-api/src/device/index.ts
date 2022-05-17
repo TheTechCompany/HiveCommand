@@ -113,7 +113,7 @@ export const useUpdateDevice = (user: string) => {
       }
 
 	  const item = mutation.updateCommandDevice({
-      id: args.id,
+      where: {id: args.id},
       input: {
         name: args.name,
         network_name: args.network_name,
@@ -164,6 +164,33 @@ export const useUpdateDevice = (user: string) => {
     });
   };
 };
+
+export const useSetDevicePeripherals = (deviceId: string) => {
+  const [ mutateFn ] = useMutation((mutation, args: {
+    peripherals: any[]
+  }) => {
+    const item = mutation.updateCommandDevice({
+      where: {id: deviceId}, 
+      input: {
+        peripherals: args.peripherals
+      }
+    })
+
+    return {
+      item: {
+        ...item,
+      }
+    }
+  })
+
+  return (peripherals: any[]) => {
+    return mutateFn({
+      args: {
+        peripherals
+      }
+    })
+  }
+}
 
 /*
 	Map a program device to the actualized device bus
