@@ -45,9 +45,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                     dnsConfig: {
                         nameservers: ['192.168.200.1', '8.8.8.8']
                     },
-                    // hostname: syncHostname,
-                    // hostname: 'staging_discovery.hexhive.io',
-                    containers: [{
+                   containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
                         image: `thetechcompany/hive-command-sync:${imageTag}`,
