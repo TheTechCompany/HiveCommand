@@ -14,6 +14,8 @@ export const HMIGroupMenu = (props) => {
 
 	const { selected: selectedNode, devices, nodes, ports, updateNode, addPort, updatePort } = useContext(HMIGroupContext)
 
+	console.log({ports});
+	
 	const renderMenu = () => {
 		let node = nodes.find((a) => a.id == selectedNode)
 
