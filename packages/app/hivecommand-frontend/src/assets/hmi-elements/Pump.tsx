@@ -20,7 +20,6 @@ function SvgPump(props: {rotation: number, scaleX?: number, width: string, heigh
     let left = (props.rotation == -90 || props.rotation == 90) ? -45 : 0
     let transform = `rotate(${-1 * props.rotation}deg)`
     return {
-      position: 'absolute', 
       width: '100%', 
       border: '2px solid gray', 
       borderRadius: 5, 
@@ -51,7 +50,7 @@ function SvgPump(props: {rotation: number, scaleX?: number, width: string, heigh
         <path d="M88.64 1.55H38.3c-20.1 0-36.68 16.13-36.75 36.22a36.35 36.35 0 1072.7.13v-1h14.4a4.13 4.13 0 004.13-4.14v-27a4.13 4.13 0 00-4.14-4.21z" />
       </g>
     </svg>
-    <div style={speedStyle()}>
+    <div style={{...speedStyle(), position: 'absolute'}}>
       <span style={{color: 'white', fontSize: 12}}>{getSpeed()}%</span>
     </div>
     </>
