@@ -234,7 +234,29 @@ export default (prisma: PrismaClient, pool: Pool) => {
 													}
 												},
 												update: {
-													port: dev.port
+													port: dev.port,
+													connections: {
+														upsert: dev.connections.map((connection: any) => ({
+															where: {
+																key_productId: {
+																	key: connection.key,
+																	productId: connection.productId
+																}
+															},
+															update: {
+																direction: connection.direction,
+																key: connection.key,
+																type: connection.type
+															},
+															create: {
+																id: nanoid(),
+																key: connection.key,
+																productId: connection.productId,
+																type: connection.type,
+																direction: connection.direction
+															}
+														}))
+													}
 												},
 												create: {
 													id: nanoid(),
