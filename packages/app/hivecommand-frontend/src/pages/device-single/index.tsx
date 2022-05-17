@@ -162,7 +162,7 @@ mappedDevicesConnection {
 
             
             <DeviceBusConnectionModal
-                connections={selected?.node?.connections.map((connection) => ({
+                connections={selected?.connections.map((connection) => ({
                     ...connection,
                     subindex: connection.key.match(/(.+?)-(.+)/)?.[2] || 0
                 }))}
