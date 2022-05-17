@@ -45,6 +45,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                         deviceId
                         vendorId
                         name
+                        port
                     }
 
                     mappedDevices {
