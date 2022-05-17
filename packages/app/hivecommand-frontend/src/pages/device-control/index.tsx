@@ -180,8 +180,48 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 }
                                 scaleX
                                 scaleY
+                                rotation
                                 x
                                 y
+
+                                devicePlaceholder {
+                                    id
+                                    name
+                                    units {
+                                        inputUnit
+                                        displayUnit
+                                        state {
+                                            id
+                                            key
+                                        }
+                                    }
+
+                                    type {
+                                        actions {
+                                            key
+                                        }
+    
+                                        state {
+                                            units
+                                            inputUnits
+                                            key
+                                            writable
+                                        }
+                                    }
+
+
+                                    setpoints {
+                                        id
+                                        name
+                                        key {
+                                            id
+                                            key
+                                        }
+                                        value
+                                        type
+                                    }
+    
+                                }
                             }
 
                             ports {
