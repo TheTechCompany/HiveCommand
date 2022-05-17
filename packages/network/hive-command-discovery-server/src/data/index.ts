@@ -493,7 +493,7 @@ export class Data {
 					vendorId: device.vendorId,
 					deviceId: device.deviceId,
 					id: device.serial,
-					connections: device.inputs.map((x) => ({...x, direction: 'input'})).concat(device.outputs.map((x) => ({...x, direction: 'output'}))).map((dev_conn) => ({
+					connections: (device.inputs || []).map((x) => ({...x, direction: 'input'})).concat((device.outputs || []).map((x) => ({...x, direction: 'output'}))).map((dev_conn) => ({
 						key: dev_conn.key,
 						type: dev_conn.type,
 						direction: dev_conn.direction
