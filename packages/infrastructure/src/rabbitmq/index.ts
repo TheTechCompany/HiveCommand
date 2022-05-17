@@ -6,7 +6,7 @@ import { RabbitMQService } from "./service"
 import * as k8s from '@pulumi/kubernetes'
 import { RabbitMQPersistence } from "./persistence";
 
-export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.core.v1.Namespace) => {
+export default async (provider: Provider, vpcId: Output<any>) => {
 
     const config = new Config();
 
@@ -15,14 +15,14 @@ export default async (provider: Provider, vpcId: Output<any>, namespace: k8s.cor
     const appName = `hive-command-mq-${suffix}`
 
 
-    const { storageClaim } = await RabbitMQPersistence(provider, vpcId, namespace)
-    const deployment = await RabbitMQDeployment(provider, appName, storageClaim, namespace);
+    const { storageClaim } = await RabbitMQPersistence(provider, vpcId)
+    const deployment = await RabbitMQDeployment(provider, appName, storageClaim);
 
-    const service = await RabbitMQService(provider, appName, namespace)
+    const service = await RabbitMQService(provider, appName)
 
     return {
         deployment,
         service,
-        url: all([service.metadata.name, namespace.metadata.name]).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
+        url: all([service.metadata.name, 'default']).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),
     }
 }
