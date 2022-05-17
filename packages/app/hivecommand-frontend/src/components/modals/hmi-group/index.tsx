@@ -125,6 +125,8 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 				setPorts(p)
 			},
 			updateNode: (id, update) => {
+				console.log({id, update});
+
 				let n = nodes.slice()
 				let ix = n.map((x) => x.id).indexOf(id);
 				if(ix > -1){
@@ -152,7 +154,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 							console.log("DELETE")
 						}}
 						editable={true}
-						factories={[new HMINodeFactory()]}
+						factories={[new HMINodeFactory(true)]}
 						menu={(
 							<HMIGroupMenu 
 								selected={selected}
@@ -179,7 +181,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 							setNodes(n)
 						}}
 						
-						onDrop={(position, data) => {
+						onNodeCreate={(position, data) => {
 							const iconStr = data.extras.icon;
 							const icon = HMIIcons[iconStr];
 
