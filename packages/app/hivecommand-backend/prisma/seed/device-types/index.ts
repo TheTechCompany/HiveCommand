@@ -11,11 +11,11 @@ export default async (prisma: PrismaClient) => {
     // await prisma.iOTemplate.deleteMany({});
     // await prisma.canvasNodeTemplate.deleteMany({});
     
-    await membranes(prisma)
+    // await membranes(prisma)
     await sensors(prisma);
-    await valves(prisma);
-    await pumps(prisma);
-    await blower(prisma)
-    await virtual(prisma)
-    await tank(prisma);
+    // await valves(prisma);
+    // await pumps(prisma);
+    // await blower(prisma)
+    // await virtual(prisma)
+    // await tank(prisma);
 }

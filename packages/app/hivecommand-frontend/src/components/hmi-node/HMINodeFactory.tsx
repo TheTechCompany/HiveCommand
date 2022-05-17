@@ -6,8 +6,12 @@ import { HMIGroup } from "./HMIGroup";
 export class HMINodeFactory extends AbstractWidgetFactory {
 
     public static TAG : string = 'hmi-node';
-    constructor(){
+
+    private building = false;
+
+    constructor(building?: boolean){
         super('hmi-node')
+        this.building = building;
     }
 
     public generateWidget(event: any): JSX.Element {
@@ -16,6 +20,7 @@ export class HMINodeFactory extends AbstractWidgetFactory {
     public parseModel(model: any) {
         return {
             ...model,
+            building: this.building,
             ports: model.ports ? model.ports : [
                 {
                     name: "in",

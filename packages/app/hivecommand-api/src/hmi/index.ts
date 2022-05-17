@@ -288,14 +288,14 @@ export const useUpdateHMINode = (programId: string) => {
       }
     ) => {
       let hmiUpdate: any = {};
-      if (args.x) hmiUpdate.x = args.x;
-      if (args.y) hmiUpdate.y = args.y;
+      if (args.x != undefined) hmiUpdate.x = args.x;
+      if (args.y != undefined) hmiUpdate.y = args.y;
       if (args.scale) {
-        if (args.scale.x) hmiUpdate.scaleX = args.scale.x;
-        if (args.scale.y) hmiUpdate.scaleY = args.scale.y;
+        if (args.scale.x != undefined) hmiUpdate.scaleX = args.scale.x;
+        if (args.scale.y != undefined) hmiUpdate.scaleY = args.scale.y;
       }
 
-      if(args.rotation) hmiUpdate.rotation = args.rotation;
+      if(args.rotation != undefined) hmiUpdate.rotation = args.rotation;
 
       const item = mutation.updateCommandProgramInterfaceNode({
         id: args.nodeId,
@@ -349,8 +349,8 @@ export const useUpdateHMINode = (programId: string) => {
         nodeId: node_id,
         x: update.x,
         y: update.y,
-		scale: update.scale,
-		rotation: update.rotation,
+        scale: update.scale,
+        rotation: update.rotation,
       },
     });
   };
