@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function SvgPump(props: {rotation: number, scaleX?: number, width: string, height: string, conf?: {minSpeed: number, maxSpeed: number}, options?: {on: boolean, speed: number}}) {
+function SvgPump(props: {rotation?: number, scaleX?: number, width: string, height: string, conf?: {minSpeed: number, maxSpeed: number}, options?: {on: boolean, speed: number}}) {
 
   console.log("PUMP", {props})
   const getSpeed = () => {
@@ -19,6 +19,7 @@ function SvgPump(props: {rotation: number, scaleX?: number, width: string, heigh
 
     let left = (props.rotation == -90 || props.rotation == 90) ? -45 : 0
     let transform = `rotate(${-1 * props.rotation}deg)`
+    
     return {
       width: '100%', 
       border: '2px solid gray', 
