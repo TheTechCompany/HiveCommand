@@ -122,11 +122,13 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                     <>
                         <Box
                             flex
-                            style={{ pointerEvents: props.building ? 'all' : undefined}}
+                            // style={{ pointerEvents: props.building ? 'all' : undefined}}
                             justify={props.extras?.label ? 'between' : 'center'}
                             align={props.extras?.label ? 'center' : 'center'}
                             direction={props.extras?.label ? 'row' : 'column'}>
 
+                            <div 
+                                 style={{ pointerEvents: props.building ? 'all' : undefined}}>
                             {props.extras.ports && props.extras.ports.map((port) => (
                                 <RetractingPort
                                     id="in"
@@ -135,6 +137,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                     scaleY={props.extras.scaleY}
                                     direction="center" />
                             ))}
+                            </div>
 
                             {icon}
 
