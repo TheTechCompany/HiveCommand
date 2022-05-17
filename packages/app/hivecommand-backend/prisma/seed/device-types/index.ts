@@ -12,7 +12,7 @@ export default async (prisma: PrismaClient) => {
     // await prisma.canvasNodeTemplate.deleteMany({});
     
     await membranes(prisma)
-    // await sensors(prisma);
+    await sensors(prisma);
     await valves(prisma);
     await pumps(prisma);
     await blower(prisma)
