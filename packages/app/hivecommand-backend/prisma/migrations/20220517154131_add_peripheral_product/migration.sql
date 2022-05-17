@@ -5,4 +5,4 @@
 
 */
 -- CreateIndex
-CREATE UNIQUE INDEX "PeripheralProduct_vendorId_deviceId_peripheralId_key" ON "PeripheralProduct"("vendorId", "deviceId", "peripheralId");
+-- CREATE UNIQUE INDEX "PeripheralProduct_vendorId_deviceId_peripheralId_key" ON "PeripheralProduct"("vendorId", "deviceId", "peripheralId");
