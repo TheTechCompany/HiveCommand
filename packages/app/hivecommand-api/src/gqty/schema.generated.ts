@@ -67,6 +67,7 @@ export interface CommandAssertionInput {
 }
 
 export interface CommandDeviceInput {
+  deviceSnapshot?: InputMaybe<Array<InputMaybe<CommandDeviceSnapshotInput>>>;
   name?: InputMaybe<Scalars["String"]>;
   network_name?: InputMaybe<Scalars["String"]>;
   peripherals?: InputMaybe<Array<InputMaybe<CommandDevicePeripheralInput>>>;
@@ -74,7 +75,11 @@ export interface CommandDeviceInput {
 }
 
 export interface CommandDevicePeripheralInput {
+  connectedDevices?: InputMaybe<
+    Array<InputMaybe<CommandPeripheralProductInput>>
+  >;
   id?: InputMaybe<Scalars["String"]>;
+  mappedDevices?: InputMaybe<Array<InputMaybe<PeripheralMapInput>>>;
   name?: InputMaybe<Scalars["String"]>;
   ports?: InputMaybe<Scalars["Int"]>;
   type?: InputMaybe<Scalars["String"]>;
@@ -104,6 +109,12 @@ export interface CommandDeviceReportInput {
   y?: InputMaybe<Scalars["Int"]>;
 }
 
+export interface CommandDeviceSnapshotInput {
+  key?: InputMaybe<Scalars["String"]>;
+  placeholder?: InputMaybe<Scalars["String"]>;
+  value?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandDeviceWhere {
   id?: InputMaybe<Scalars["ID"]>;
   network_name?: InputMaybe<Scalars["String"]>;
@@ -116,6 +127,22 @@ export interface CommandHMIPortInput {
   rotation?: InputMaybe<Scalars["Float"]>;
   x?: InputMaybe<Scalars["Float"]>;
   y?: InputMaybe<Scalars["Float"]>;
+}
+
+export interface CommandPeripheralDatapointInput {
+  direction?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["String"]>;
+  key?: InputMaybe<Scalars["String"]>;
+  type?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandPeripheralProductInput {
+  connections?: InputMaybe<Array<InputMaybe<CommandPeripheralDatapointInput>>>;
+  deviceId?: InputMaybe<Scalars["String"]>;
+  id?: InputMaybe<Scalars["String"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  port?: InputMaybe<Scalars["String"]>;
+  vendorId?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandProgramDeviceInput {
@@ -194,6 +221,13 @@ export interface CommandProgramWhere {
   id?: InputMaybe<Scalars["ID"]>;
 }
 
+export interface PeripheralMapInput {
+  device?: InputMaybe<Scalars["String"]>;
+  key?: InputMaybe<Scalars["String"]>;
+  port?: InputMaybe<Scalars["String"]>;
+  value?: InputMaybe<Scalars["String"]>;
+}
+
 export interface PointInput {
   x?: InputMaybe<Scalars["Float"]>;
   y?: InputMaybe<Scalars["Float"]>;
@@ -262,6 +296,7 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     activeProgram: { __type: "CommandProgram" },
     calibrations: { __type: "[CommandProgramDeviceCalibration]" },
+    deviceSnapshot: { __type: "[CommandDeviceSnapshot]" },
     id: { __type: "ID!" },
     lastOnline: { __type: "DateTime" },
     name: { __type: "String" },
@@ -275,6 +310,7 @@ export const generatedSchema = {
     waitingForActions: { __type: "[CommandProgramAction]" },
   },
   CommandDeviceInput: {
+    deviceSnapshot: { __type: "[CommandDeviceSnapshotInput]" },
     name: { __type: "String" },
     network_name: { __type: "String" },
     peripherals: { __type: "[CommandDevicePeripheralInput]" },
@@ -291,7 +327,9 @@ export const generatedSchema = {
     type: { __type: "String" },
   },
   CommandDevicePeripheralInput: {
+    connectedDevices: { __type: "[CommandPeripheralProductInput]" },
     id: { __type: "String" },
+    mappedDevices: { __type: "[PeripheralMapInput]" },
     name: { __type: "String" },
     ports: { __type: "Int" },
     type: { __type: "String" },
@@ -301,6 +339,7 @@ export const generatedSchema = {
     device: { __type: "CommandProgramDevicePlaceholder" },
     id: { __type: "ID!" },
     key: { __type: "CommandPeripheralProductDatapoint" },
+    port: { __type: "String" },
     value: { __type: "CommandProgramDeviceState" },
   },
   CommandDevicePeripheralPort: {
@@ -314,6 +353,7 @@ export const generatedSchema = {
     id: { __type: "ID" },
     name: { __type: "String" },
     peripheral: { __type: "CommandDevicePeripheral" },
+    port: { __type: "String" },
     vendorId: { __type: "String" },
   },
   CommandDevicePlugin: {
@@ -371,6 +411,17 @@ export const generatedSchema = {
     key: { __type: "CommandProgramDeviceState" },
     name: { __type: "String" },
     type: { __type: "String" },
+    value: { __type: "String" },
+  },
+  CommandDeviceSnapshot: {
+    __typename: { __type: "String!" },
+    key: { __type: "String" },
+    placeholder: { __type: "String" },
+    value: { __type: "String" },
+  },
+  CommandDeviceSnapshotInput: {
+    key: { __type: "String" },
+    placeholder: { __type: "String" },
     value: { __type: "String" },
   },
   CommandDeviceTimeseriesData: {
@@ -507,12 +558,27 @@ export const generatedSchema = {
     key: { __type: "String" },
     value: { __type: "String" },
   },
+  CommandPeripheralDatapointInput: {
+    direction: { __type: "String" },
+    id: { __type: "String" },
+    key: { __type: "String" },
+    type: { __type: "String" },
+  },
   CommandPeripheralProductDatapoint: {
     __typename: { __type: "String!" },
     direction: { __type: "String" },
+    id: { __type: "ID" },
     key: { __type: "String" },
     product: { __type: "CommandDevicePeripheralProduct" },
     type: { __type: "String" },
+  },
+  CommandPeripheralProductInput: {
+    connections: { __type: "[CommandPeripheralDatapointInput]" },
+    deviceId: { __type: "String" },
+    id: { __type: "String" },
+    name: { __type: "String" },
+    port: { __type: "String" },
+    vendorId: { __type: "String" },
   },
   CommandProgram: {
     __typename: { __type: "String!" },
@@ -756,6 +822,12 @@ export const generatedSchema = {
     id: { __type: "ID!" },
   },
   HiveUser: { __typename: { __type: "String!" }, id: { __type: "ID!" } },
+  PeripheralMapInput: {
+    device: { __type: "String" },
+    key: { __type: "String" },
+    port: { __type: "String" },
+    value: { __type: "String" },
+  },
   Point: {
     __typename: { __type: "String!" },
     x: { __type: "Float" },
@@ -1151,6 +1223,7 @@ export interface CommandDevice {
   __typename?: "CommandDevice";
   activeProgram?: Maybe<CommandProgram>;
   calibrations?: Maybe<Array<Maybe<CommandProgramDeviceCalibration>>>;
+  deviceSnapshot?: Maybe<Array<Maybe<CommandDeviceSnapshot>>>;
   id: ScalarsEnums["ID"];
   lastOnline?: Maybe<ScalarsEnums["DateTime"]>;
   name?: Maybe<ScalarsEnums["String"]>;
@@ -1180,6 +1253,7 @@ export interface CommandDevicePeripheralMap {
   device?: Maybe<CommandProgramDevicePlaceholder>;
   id: ScalarsEnums["ID"];
   key?: Maybe<CommandPeripheralProductDatapoint>;
+  port?: Maybe<ScalarsEnums["String"]>;
   value?: Maybe<CommandProgramDeviceState>;
 }
 
@@ -1195,6 +1269,7 @@ export interface CommandDevicePeripheralProduct {
   id?: Maybe<ScalarsEnums["ID"]>;
   name?: Maybe<ScalarsEnums["String"]>;
   peripheral?: Maybe<CommandDevicePeripheral>;
+  port?: Maybe<ScalarsEnums["String"]>;
   vendorId?: Maybe<ScalarsEnums["String"]>;
 }
 
@@ -1232,6 +1307,13 @@ export interface CommandDeviceSetpoint {
   key?: Maybe<CommandProgramDeviceState>;
   name?: Maybe<ScalarsEnums["String"]>;
   type?: Maybe<ScalarsEnums["String"]>;
+  value?: Maybe<ScalarsEnums["String"]>;
+}
+
+export interface CommandDeviceSnapshot {
+  __typename?: "CommandDeviceSnapshot";
+  key?: Maybe<ScalarsEnums["String"]>;
+  placeholder?: Maybe<ScalarsEnums["String"]>;
   value?: Maybe<ScalarsEnums["String"]>;
 }
 
@@ -1374,6 +1456,7 @@ export interface CommandKeyValue {
 export interface CommandPeripheralProductDatapoint {
   __typename?: "CommandPeripheralProductDatapoint";
   direction?: Maybe<ScalarsEnums["String"]>;
+  id?: Maybe<ScalarsEnums["ID"]>;
   key?: Maybe<ScalarsEnums["String"]>;
   product?: Maybe<CommandDevicePeripheralProduct>;
   type?: Maybe<ScalarsEnums["String"]>;
@@ -1913,6 +1996,7 @@ export interface SchemaObjectTypes {
   CommandDevicePlugin: CommandDevicePlugin;
   CommandDeviceReport: CommandDeviceReport;
   CommandDeviceSetpoint: CommandDeviceSetpoint;
+  CommandDeviceSnapshot: CommandDeviceSnapshot;
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
   CommandDeviceTimeseriesTotal: CommandDeviceTimeseriesTotal;
   CommandDeviceValue: CommandDeviceValue;
@@ -1965,6 +2049,7 @@ export type SchemaObjectTypesNames =
   | "CommandDevicePlugin"
   | "CommandDeviceReport"
   | "CommandDeviceSetpoint"
+  | "CommandDeviceSnapshot"
   | "CommandDeviceTimeseriesData"
   | "CommandDeviceTimeseriesTotal"
   | "CommandDeviceValue"
