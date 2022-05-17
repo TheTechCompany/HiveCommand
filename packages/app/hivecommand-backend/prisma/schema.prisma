@@ -21,6 +21,9 @@ model Device {
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
+  
+  deviceSnapshot DeviceSnapshotValue[] @relation(name: "hasSnapshots")
+
   program String?
 
   reports DeviceReport[] @relation(name: "hasReports")
@@ -30,6 +33,18 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+model DeviceSnapshotValue {
+  id String @id
+
+  key String
+  value String
+
+  lastUpdated DateTime @default(now())
+
+  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
+  deviceId String 
 }
 
 model DevicePeripheral {
