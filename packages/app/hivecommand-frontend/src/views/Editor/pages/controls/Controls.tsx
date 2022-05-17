@@ -188,6 +188,7 @@ export const Controls = (props) => {
 
                         ports {
                             id
+                            key
                             x
                             y
                             rotation
@@ -309,6 +310,7 @@ export const Controls = (props) => {
                         devicePlaceholder: x.devicePlaceholder,
                     })),
                     ports: group.ports?.map((x) => ({
+                        ...x,
                         id: x.id,
                         x: x.x,
                         y: x.y,
