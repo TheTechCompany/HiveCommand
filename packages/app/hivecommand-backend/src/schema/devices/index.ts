@@ -305,7 +305,6 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								id: nanoid(),
 								key: snapshot.key,
 								placeholder: snapshot.placeholder,
-								deviceId: args.where.id,
 								value: snapshot.value
 							}
 						}))
