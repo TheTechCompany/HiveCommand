@@ -16,7 +16,7 @@ model Device {
 
   online Boolean?
 
-  network_name String
+  network_name String @unique
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
 
