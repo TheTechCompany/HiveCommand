@@ -32,7 +32,11 @@ export default (prisma: PrismaClient, pool: Pool) => {
 						deviceSnapshot: true,
 						peripherals: {
 							include: {
-								connectedDevices: true,
+								connectedDevices: {
+									include: {
+										connections: true 
+									}
+								},
 								mappedDevices: {
 									include: {
 										device: true,
