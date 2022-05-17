@@ -48,6 +48,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                         port
 
                         connections {
+                            id
                             key
                             direction
                             type
