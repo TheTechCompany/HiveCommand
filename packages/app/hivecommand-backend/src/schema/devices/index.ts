@@ -487,6 +487,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 	}
 
 	type CommandPeripheralProductDatapoint {
+		id: ID
 		direction: String
 		key: String
 		type: String
