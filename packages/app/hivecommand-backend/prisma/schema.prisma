@@ -38,13 +38,17 @@ model Device {
 model DeviceSnapshotValue {
   id String @id
 
+  placeholder String
   key String
   value String
+
 
   lastUpdated DateTime @default(now())
 
   device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
+
+  @@unique([key, placeholder, deviceId])
 }
 
 model DevicePeripheral {

@@ -436,6 +436,22 @@ export class Data {
 		// })
 	}
 
+	async updateDeviceValue(deviceId: string, placeholder: string, key: string, value: string){
+		console.log({deviceId, placeholder, key, value});
+		await this.requestGraphQL(gql`
+			mutation UpdateDeviceValue($deviceId: String, $placeholder: String, $key: String, $value: String){
+				updateCommandDevice(where: {id: $deviceId}, input: {deviceSnapshot: [{placeholder: $placeholder, key: $key, value: $value}]}){
+					id
+				}
+			}
+		`, {
+			deviceId,
+			placeholder,
+			key,
+			value
+		})
+	}
+
 	async upsertDevicePeripherals(deviceId: string, connected: {
 		id: string, 
 		name: string, 

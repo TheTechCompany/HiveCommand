@@ -29,6 +29,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								device: true,
 							}
 						},
+						deviceSnapshot: true,
 						peripherals: {
 							include: {
 								connectedDevices: true,
@@ -198,7 +199,13 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					}
 				})
 			},
-			updateCommandDevice: async (root: any, args: {where: {id: string, network_name: string}, input: {name: string, network_name: string, program: string, peripherals: any[]}}, context: any) => {
+			updateCommandDevice: async (root: any, args: {
+				where: {
+					id: string, network_name: string
+				}, input: {
+					name: string, network_name: string, program: string, peripherals: any[], deviceSnapshot: any[]
+				}
+			}, context: any) => {
 				let deviceUpdate : any = {};
 				let peripheralUpdate : any = {};
 				
@@ -228,6 +235,30 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					}	
 				}
 
+				if(args.input.deviceSnapshot && args.where.id) {
+					deviceUpdate['deviceSnapshot'] = {
+						upsert: args.input.deviceSnapshot.map((snapshot) => ({
+							where: {
+								key_placeholder_deviceId: {
+									key: snapshot.key,
+									placeholder: snapshot.placeholder,
+									deviceId: args.where.id,
+								}
+							},
+							update: {
+								value: snapshot.value
+							},
+							create: {
+								id: nanoid(),
+								key: snapshot.key,
+								placeholder: snapshot.placeholder,
+								deviceId: args.where.id,
+								value: snapshot.value
+							}
+						}))
+					}
+				}
+
 				if(args.input.name) deviceUpdate['name'] = args.input.name;
 				if(args.input.network_name) deviceUpdate['network_name'] = args.input.network_name;
 				if(args.input.program) deviceUpdate['activeProgram'] = {connect: {id: args.input.program}}
@@ -238,7 +269,8 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					},
 					data: {
 						...deviceUpdate,
-						...peripheralUpdate
+						...peripheralUpdate,
+						
 					}
 				})
 			},
@@ -291,6 +323,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		network_name: String
 		program: String
 		peripherals: [CommandDevicePeripheralInput]
+		deviceSnapshot: [CommandDeviceSnapshotInput]
 	}
 
 	input CommandDeviceWhere {
@@ -310,6 +343,8 @@ export default (prisma: PrismaClient, pool: Pool) => {
 
 		peripherals: [CommandDevicePeripheral] 
 		
+		deviceSnapshot: [CommandDeviceSnapshot]
+
 		operatingMode: String
 		operatingState: String
 
@@ -321,6 +356,18 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		reports: [CommandDeviceReport] 
 
 		organisation: HiveOrganisation 
+	}
+
+	input CommandDeviceSnapshotInput {
+		key: String
+		value: String
+		placeholder: String
+	}
+
+	type CommandDeviceSnapshot {
+		key: String
+		value: String
+		placeholder: String
 	}
 
 	input CommandDevicePeripheralInput {
