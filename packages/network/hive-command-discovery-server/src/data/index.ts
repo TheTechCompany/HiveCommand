@@ -490,8 +490,8 @@ export class Data {
 				type: conn.type,
 				connectedDevices: conn.devices?.map((device) => ({
 					port: device.port,
-					vendorId: device.vendorId,
-					deviceId: device.deviceId,
+					vendorId: `${device.vendorId}`,
+					deviceId: `${device.deviceId}`,
 					id: device.serial,
 					connections: (device.inputs || []).map((x) => ({...x, direction: 'input'})).concat((device.outputs || []).map((x) => ({...x, direction: 'output'}))).map((dev_conn) => ({
 						key: dev_conn.key,
