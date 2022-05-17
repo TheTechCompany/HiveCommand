@@ -475,7 +475,7 @@ export class Data {
 
 		await this.requestGraphQL(gql`
 			mutation UsertDevicePeripherals($network_name: String, $peripherals: [CommandDevicePeripheralInput]){
-				updateCommandDevices(where: {network_name: $network_name}, input: {peripherals: $peripherals}){
+				updateCommandDevice(where: {network_name: $network_name}, input: {peripherals: $peripherals}){
 					id
 				}
 			}
