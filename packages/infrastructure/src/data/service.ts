@@ -1,8 +1,9 @@
-import * as k8s from '@pulumi/kubernetes'
-import { Config } from '@pulumi/pulumi';
-import { Provider } from '@pulumi/kubernetes'
 
-export const TimeseriesService = async (provider: Provider, appName: string) => {
+import { Provider } from '@pulumi/kubernetes'
+import { Config } from '@pulumi/pulumi';
+import * as k8s from '@pulumi/kubernetes'
+
+export const Service = (provider: Provider, appName: string) => {
 
     const appLabels = { appClass: appName };
 
@@ -17,15 +18,17 @@ export const TimeseriesService = async (provider: Provider, appName: string) => 
                 // 'service.beta.kubernetes.io/aws-load-balancer-type': 'internal',
                 // 'service.beta.kubernetes.io/aws-load-balancer-nlb-target-type': 'ip',
                 // 'service.beta.kubernetes.io/aws-load-balancer-scheme': 'internet-facing',
-            },
-            // namespace: namespace.metadata.name
+            }
         },
         spec: {
             type: "ClusterIP",
-            ports: [{ name: "postgres", port: 5432, targetPort: "postgres" }],
+            ports: [
+                { name: "amqp", port: 5672, targetPort: "amqp" }, 
+                {name: "postgres", port: 5432, targetPort: "postgres"}
+            ],
             selector: appLabels,
         },
     }, { provider: provider });
 
-    return service;
+    return service
 }
