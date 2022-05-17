@@ -122,6 +122,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                     <>
                         <Box
                             flex
+                            style={{ pointerEvents: props.building ? 'all' : undefined}}
                             justify={props.extras?.label ? 'between' : 'center'}
                             align={props.extras?.label ? 'center' : 'center'}
                             direction={props.extras?.label ? 'row' : 'column'}>
