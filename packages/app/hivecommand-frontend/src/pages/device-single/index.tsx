@@ -40,6 +40,13 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                     name
                     type
 
+                    connectedDevices {
+                        id
+                        deviceId
+                        vendorId
+                        name
+                    }
+
                     mappedDevices {
                         id
                         device {
@@ -142,7 +149,7 @@ mappedDevicesConnection {
         props.history.push(`${props.match.url}/controls`)
     }
 
-    console.log(device)
+    console.log({device})
     return (
         <Box 
             flex
