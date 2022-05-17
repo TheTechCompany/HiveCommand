@@ -35,7 +35,6 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
             replicas: 1,
             strategy: { type: "RollingUpdate" },
             selector: { matchLabels: appLabels },
-            
             template: {
                 metadata: { labels: appLabels },
                 spec: {
