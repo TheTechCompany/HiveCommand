@@ -83,6 +83,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
             className={props.className}>
             {props.children?.(
                 <Icon
+                    rotation={props.extras.rotation}
                     device={props.extras?.devicePlaceholder}
                     scaleX={props.extras?.scaleX}
                     scaleY={props.extras?.scaleY}
