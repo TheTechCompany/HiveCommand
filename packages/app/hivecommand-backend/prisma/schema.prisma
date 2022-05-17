@@ -112,6 +112,8 @@ model PeripheralProduct {
 
     peripheral DevicePeripheral @relation(name: "hasPeripheralMaps", fields: [peripheralId], references: [id])
     peripheralId String
+
+    @@unique([peripheralId, port, keyId])
 	}
 
 model DeviceReport {
