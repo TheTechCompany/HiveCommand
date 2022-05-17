@@ -22,7 +22,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
     const updateHMINode = useUpdateHMINode(programId)
 
     const item = nodes?.find((a) => a.id == selected.id);
-    console.log({item})
+
+    console.log({selected})
 
     return (
 
@@ -143,6 +144,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 rightIcon={<Add fontSize="small"  />}
                 value={item?.extras?.scaleX}
                 onLeftClick={() => {
+                    console.log("left click", item.extras)
+                    
                     updateHMINode(
                         selected.id,
                         {
