@@ -57,6 +57,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
 
                     mappedDevices {
                         id
+                        port
                         device {
                             id
                             name
@@ -262,7 +263,7 @@ mappedDevicesConnection {
                                 id: x.id,
                                 name: x.name,
                                 connectedDevices: x.connectedDevices.map((connection) => ({...connection, port: connection.port})),
-                                mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevices[ix].port})) || [],
+                                mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.port})) || [],
                                 ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevices : {inputs: 14, outputs: 14})
                             }
                         })}/>
