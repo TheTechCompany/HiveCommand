@@ -46,6 +46,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 				...port,
 				x: PORT_ANCHOR.x + port.x,
 				y: PORT_ANCHOR.y + port.y,
+				// height: port.length,
 				id: port.id.indexOf('tmp-') > -1 ? undefined : port.id
 			}))
 		}
@@ -76,6 +77,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 
 				setPorts(props.base.extras.ports.map((port) => ({
 					...port,
+					height: port.length,
 					x: port.x - PORT_ANCHOR.x,
 					y: port.y - PORT_ANCHOR.y,
 				})))
