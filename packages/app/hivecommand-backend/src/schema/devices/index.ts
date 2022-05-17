@@ -231,11 +231,12 @@ export default (prisma: PrismaClient, pool: Pool) => {
 													vendorId_deviceId_peripheralId: {
 														vendorId: dev.vendorId,
 														deviceId: dev.deviceId,
-														peripheralid: id
+														peripheralId: id
 													}
 												},
 												update: {
 													port: dev.port,
+													name: dev.name || '',
 													connections: {
 														upsert: dev.connections.map((connection: any) => ({
 															where: {
@@ -261,27 +262,17 @@ export default (prisma: PrismaClient, pool: Pool) => {
 												},
 												create: {
 													id: dev.id || nanoid(),
+													name: dev.name || '',
 													vendorId: dev.vendorId,
 													deviceId: dev.deviceId,
 													peripheralid: id,
 													port: dev.port,
 													connections: {
-														upsert: dev.connections.map((connection: any) => ({
-															where: {
-																key_productId: {
-																	key: connection.key,
-																	productId: connection.productId
-																}
-															},
-															update: {
-																direction: connection.direction,
-																key: connection.key,
-																type: connection.type
-															},
-															create: {
+														createMany: dev.connections.map((connection: any) => ({
+															data: {
 																id: nanoid(),
 																key: connection.key,
-																productId: connection.productId,
+																// productId: connection.productId,
 																type: connection.type,
 																direction: connection.direction
 															}
