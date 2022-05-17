@@ -222,16 +222,18 @@ export default (prisma: PrismaClient, pool: Pool) => {
 						upsert: args.input.peripherals.map((peripheral) => {
 							let id = peripheral.id || nanoid()
 							
-							let peripheralUpdate : any = {};
+							let upsertPeripheral : any = {};
 							
-							if(peripheral.name) peripheralUpdate.name = peripheral.name;
-							if(peripheral.type) peripheralUpdate.type = peripheral.type;
-							if(peripheral.ports) peripheralUpdate.ports = peripheral.ports;
+							if(peripheral.name) upsertPeripheral.name = peripheral.name;
+							if(peripheral.type) upsertPeripheral.type = peripheral.type;
+							if(peripheral.ports) upsertPeripheral.ports = peripheral.ports;
+
+							console.log("Upsert", id, {upsertPeripheral})
 
 							return {
 								where: {id},
 								update: {
-									...peripheralUpdate,
+									...upsertPeripheral,
 									mappedDevices: {
 										upsert: peripheral.mappedDevices?.map((map: any) => {
 											return {
