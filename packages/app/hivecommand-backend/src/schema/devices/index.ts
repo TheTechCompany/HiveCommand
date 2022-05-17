@@ -253,7 +253,6 @@ export default (prisma: PrismaClient, pool: Pool) => {
 															create: {
 																id: nanoid(),
 																key: connection.key,
-																productId: product_id,
 																type: connection.type,
 																direction: connection.direction
 															}
@@ -265,7 +264,6 @@ export default (prisma: PrismaClient, pool: Pool) => {
 													name: dev.name || '',
 													vendorId: dev.vendorId,
 													deviceId: dev.deviceId,
-													peripheralid: id,
 													port: dev.port,
 													connections: {
 														createMany: dev.connections.map((connection: any) => ({
