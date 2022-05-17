@@ -266,15 +266,15 @@ export default (prisma: PrismaClient, pool: Pool) => {
 													deviceId: dev.deviceId,
 													port: dev.port,
 													connections: {
-														createMany: dev.connections.map((connection: any) => ({
-															data: {
+														createMany: {
+															data: dev.connections.map((connection: any) => ({
 																id: nanoid(),
 																key: connection.key,
 																// productId: connection.productId,
 																type: connection.type,
 																direction: connection.direction
-															}
-														}))
+															}))
+														}
 													}
 												}
 											}
