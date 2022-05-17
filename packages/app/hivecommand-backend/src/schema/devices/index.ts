@@ -222,7 +222,52 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								update: {
 									name: peripheral.name,
 									type: peripheral.type,
-									ports: peripheral.ports
+									ports: peripheral.ports,
+									connectedDevices: {
+										upsert: peripheral.connectedDevices?.map((dev: any) => {
+											return {
+												where: {
+													vendorId_deviceId_peripheralId: {
+														vendorId: dev.vendorId,
+														deviceId: dev.deviceId,
+														peripheralid: dev.peripheralId
+													}
+												},
+												update: {
+													port: dev.port
+												},
+												create: {
+													id: nanoid(),
+													vendorId: dev.vendorId,
+													deviceId: dev.deviceId,
+													peripheralid: dev.peripheralId,
+													port: dev.port,
+													connections: {
+														upsert: dev.connections.map((connection: any) => ({
+															where: {
+																key_productId: {
+																	key: connection.key,
+																	productId: connection.productId
+																}
+															},
+															update: {
+																direction: connection.direction,
+																key: connection.key,
+																type: connection.type
+															},
+															create: {
+																id: nanoid(),
+																key: connection.key,
+																productId: connection.productId,
+																type: connection.type,
+																direction: connection.direction
+															}
+														}))
+													}
+												}
+											}
+										})
+									}
 								},
 								create: {
 									id,
@@ -270,7 +315,6 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					data: {
 						...deviceUpdate,
 						...peripheralUpdate,
-						
 					}
 				})
 			},
@@ -376,6 +420,25 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		type: String
 
 		ports: Int
+
+		connectedDevices: [CommandPeripheralProductInput]
+	}
+
+	input CommandPeripheralProductInput {
+		id: String
+		deviceId: String
+		vendorId: String
+		name: String
+
+		port: String
+		connections: [CommandPeripheralDatapointInput]
+	}
+
+	input CommandPeripheralDatapointInput {
+		id: String
+		direction: String
+		key: String
+		type: String
 	}
 
 
