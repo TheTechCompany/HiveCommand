@@ -80,8 +80,6 @@ model PeripheralProduct {
 	peripheral DevicePeripheral @relation(name: "hasPeripheralProducts", fields: [peripheralId], references: [id])
   peripheralId String
 
-  @@unique([vendorId, deviceId, peripheralId])
-
 }
 
 	model PeripheralProductDatapoint {
