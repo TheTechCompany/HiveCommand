@@ -273,8 +273,10 @@ export const Controls = (props) => {
                 id: x.id,
                 x: x.x,
                 y: x.y,
-                width: `${x?.type?.width || 50}px`,
-                height: `${x?.type?.height || 50}px`,
+                width: x.type.width ? `${x.type.width}px` : '55px',
+                height: x.type.height ? `${x.type.height}px` : '55px',
+                //  width: `${x?.type?.width || 50}px`,
+                // height: `${x?.type?.height || 50}px`,
                 extras: {
                     devicePlaceholder: x.devicePlaceholder,
                     rotation: x.rotation || 0,
@@ -298,6 +300,8 @@ export const Controls = (props) => {
                         x: x.x,
                         y: x.y,
                         z: x.z,
+                        width: x.type.width || 55,
+                        height: x.type.height || 55,
                         scaleX: x.scaleX || 1,
                         scaleY: x.scaleY || 1,
                         rotation: x.rotation || 0,
@@ -473,6 +477,10 @@ export const Controls = (props) => {
                         n[ix] = node;
                         setNodes(n)
 
+                        setSelected({
+                            key: 'node',
+                            id: node.id
+                        })
 
                             updateHMINode(
                                 node.id,

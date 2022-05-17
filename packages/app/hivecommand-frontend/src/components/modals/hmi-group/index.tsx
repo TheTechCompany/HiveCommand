@@ -206,7 +206,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 						}}
 						nodes={nodes.concat([{id: 'root', x: 300, y: 50, extras: {
 							ports: ports || [],
-							icon: () => <div />
+							icon: () => <div style={{background: 'red', width: 50, height: 50}}/>
 						}, type: 'hmi-node'}])}
 						
 						paths={[]}
