@@ -64,6 +64,7 @@ model DevicePeripheral {
 
   device Device @relation(name: "hasPeripherals", fields: [deviceId], references: [id])
   deviceId String
+
 }
 
 model PeripheralProduct {
@@ -79,6 +80,8 @@ model PeripheralProduct {
 	peripheral DevicePeripheral @relation(name: "hasPeripheralProducts", fields: [peripheralId], references: [id])
   peripheralId String
 
+  @@unique([vendorId, deviceId, peripheralId])
+
 }
 
 	model PeripheralProductDatapoint {
@@ -91,6 +94,8 @@ model PeripheralProduct {
     productId String
 
     usedInMap PeripheralMap[] @relation(name: "mapsDatapoint")
+
+    @@unique([key, productId])
 	}
 
 	model PeripheralMap {
