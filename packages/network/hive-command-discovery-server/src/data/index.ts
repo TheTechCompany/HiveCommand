@@ -312,7 +312,9 @@ export class Data {
 			}
 		`
 
-		const program = await this.requestGraphQL(doc, {id: deviceId})
+		const program = await this.requestGraphQL(doc, {networkName: deviceId})
+
+		console.log({deviceId, program})
 		/*
 		MATCH (device:CommandDevice {network_name: $id})-[:RUNNING_PROGRAM]->(program:CommandProgram)-[*..]->(flow:CommandProgramFlow)
 			MATCH (flow)-[:USES_NODE]->(nodes:CommandProgramNode)
@@ -484,7 +486,8 @@ export class Data {
 			peripherals: connected.map((conn) => ({
 				id: conn.id,
 				name: conn.name,
-				type: conn.type
+				type: conn.type,
+				ports: 0
 			}))
 		});
 		// const device = await this.session.writeTransaction(async (tx) => {
