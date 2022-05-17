@@ -138,6 +138,7 @@ export class CommandNetwork {
 				return this.valueBank.getVariable?.(variable.name)
 			}, (value: Variant) => {
 				console.log("Set value", variable.name, {value: value.value})
+				
 				return this.valueBank.setVariabe?.(variable.name, value.value)
 			})
 		}))
