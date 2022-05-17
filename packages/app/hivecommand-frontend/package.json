@@ -56,7 +56,7 @@
     "@emotion/styled": "^11.8.1",
     "@hexhive/auth-ui": "0.0.6-alpha.10",
     "@hexhive/styles": "^0.0.6-alpha.0",
-    "@hexhive/ui": "0.0.12-alpha.14",
+    "@hexhive/ui": "0.0.12-alpha.19",
     "@hive-command/api": "^1.4.15-alpha.1",
     "@hive-command/data-types": "^1.4.6",
     "@mui/icons-material": "^5.6.2",

@@ -320,6 +320,7 @@ export const Controls = (props) => {
                 }
             }))))
 
+            console.log({intf: program.interface})
             setPaths((program.interface)?.edges?.map((x) => {
                 return {
                     id: x.id,
@@ -422,6 +423,7 @@ export const Controls = (props) => {
                         updateRef.current?.addPath(path);
                     }}
                     onPathUpdate={(path) => {
+                        console.log("CREATE PATH", {path})
 
                         if (path.source && path.target && path.targetHandle) {
 
@@ -431,8 +433,6 @@ export const Controls = (props) => {
                                 (p[ix] as any).draft = false;
                                 setPaths(p)
                             }
-
-                            debounce((path: any) => {
 
                                 if (!path.draft) {
                                     updateHMIEdge(
@@ -467,7 +467,6 @@ export const Controls = (props) => {
 
                                 //     refetch()
                                 // })
-                            }, 1000)(path)
 
                         }
 
