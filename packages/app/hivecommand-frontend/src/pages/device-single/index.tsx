@@ -9,7 +9,9 @@ import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
 import { DeviceControlContext } from '../device-control/context';
-import { useMapPort } from '@hive-command/api';
+import { useMapPort, useSetDevicePeripherals } from '@hive-command/api';
+import { IconButton } from '@mui/material';
+import { Add } from '@mui/icons-material';
 export interface DeviceSingleProps {
     match?: any;
     history?: any;
@@ -26,7 +28,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
     const [ selectedMap, setSelectedMap ] = useState<any[]>([])
     // const [ selectedBus, setSelectedBus ] = useState<{id?: string, name: string}>({})
     const [ modalOpen, openModal ] = useState<boolean>(false);
-    
+    const [busOpen, openBus ] = useState(false);
 
     const { data } = useApollo(gql`
         query Q ($id: ID) {
@@ -54,7 +56,36 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             key
                         }
                     }
-                    mappedDevicesConnection {
+                    
+                }
+
+                activeProgram {
+                    devices {
+                        id
+                        name
+                        type {
+                            id
+                            name
+
+                            state {
+                                key
+                                type
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+    `, {
+        variables: {
+            id: controlId
+        }
+    })
+
+    /*
+mappedDevicesConnection {
                         edges{
                             port
 
@@ -94,33 +125,8 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             }
                         }
                     }
-                }
-
-                activeProgram {
-                    devices {
-                        id
-                        name
-                        type {
-                            id
-                            name
-
-                            state {
-                                key
-                                type
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-    `, {
-        variables: {
-            id: controlId
-        }
-    })
-
+    */
+    const setDevicePeripherals = useSetDevicePeripherals(controlId)
     const mapPort = useMapPort(controlId)
 
     const refetch = () => {
@@ -143,9 +149,10 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
             elevation="small"
             round="xsmall"
             overflow="hidden"
-            background="neutral-2"
+            background="neutral-1"
             style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 
+            
             <DeviceBusConnectionModal
                 connections={selected?.node?.connections.map((connection) => ({
                     ...connection,
@@ -169,17 +176,26 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                 open={modalOpen} />
            
 
-            {/* <DeviceBusModal
-                open={modalOpen}
-                onClose={() => {
-                    openModal(false)
+            <DeviceBusModal
+                open={busOpen}
+                onSubmit={(bus) => {
+                    setDevicePeripherals([...(device.peripherals || []), bus])
                 }}
-                /> */}
+                onClose={() => {
+                    openBus(false)
+                }}
+                />
+             <Box justify='end' direction='row'>
+                    <IconButton onClick={() => openBus(true)}>
+                        <Add />
+                    </IconButton>
+                </Box>
             <Box 
                 style={{position: 'relative'}}
                 direction="row"
                 background="#dfdfdf"
                 flex>
+               
                 <Box flex>
                     <BusMap
                         add
@@ -188,11 +204,11 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
 
                             setSelectedPort({bus, port})
 
-                            let connected = device?.peripherals?.find((a) => a.id == bus)?.connectedDevicesConnection?.edges?.find((a) => a.port == port);
+                            let connected = device?.peripherals?.find((a) => a.id == bus)?.connectedDevices?.find((a) => a.port == port);
                             
-                            let mapped = device?.peripherals?.find((a) => a.id == bus)?.mappedDevicesConnection?.edges?.filter((a) => a.port == port);
+                            let mapped = device?.peripherals?.find((a) => a.id == bus)?.mappedDevices?.filter((a) => a.port == port);
                             
-                            setSelectedMap(mapped)
+                            setSelectedMap(mapped || [])
 
                             // connected.peripheral = bus
                             // connected.node.peripheral = bus;
@@ -226,13 +242,13 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                         }}
                         devices={device?.activeProgram?.devices}
                         buses={(device?.peripherals || []).map((x) => {
-                            console.log(x.connectedDevicesConnection)
+                            // console.log(x.connectedDevicesConnection)
                             return {
                                 id: x.id,
                                 name: x.name,
-                                connectedDevices: x.connectedDevicesConnection.edges.map((connection) => ({...connection.node, port: connection.port})),
-                                mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevicesConnection.edges[ix].port})),
-                                ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevicesConnection.edges.length : {inputs: 14, outputs: 14})
+                                connectedDevices: [] || x.connectedDevices.map((connection) => ({...connection.node, port: connection.port})),
+                                mappedDevices: [] || x.mappedDevices.map((dev, ix) => ({...dev, port: x.mappedDevices[ix].port})),
+                                ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevices : {inputs: 14, outputs: 14})
                             }
                         })}/>
                 </Box>
