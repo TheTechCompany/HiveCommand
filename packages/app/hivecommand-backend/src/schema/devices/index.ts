@@ -227,6 +227,29 @@ export default (prisma: PrismaClient, pool: Pool) => {
 									name: peripheral.name,
 									type: peripheral.type,
 									ports: peripheral.ports,
+									mappedDevices: {
+										upsert: peripheral.mappedDevices?.map((map: any) => {
+											return {
+												where: {
+													peripheralId_port_keyId: {
+														peripheralId: id,
+														port: map.port,
+														keyId: map.key
+													}
+												},
+												update: {
+													valueId: map.value,
+													port: map.port,
+													keyId: map.key
+												},
+												create: {
+													valueId: map.value,
+													port: map.port,
+													keyId: map.key
+												}
+											}
+										})
+									},
 									connectedDevices: {
 										upsert: peripheral.connectedDevices?.map((dev: any) => {
 											let product_id = `${id}-${dev.id || nanoid()}`;
@@ -431,7 +454,8 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		type: String
 
 		ports: Int
-
+		
+		mappedDevices: [PeripheralMapInput]
 		connectedDevices: [CommandPeripheralProductInput]
 	}
 
@@ -499,8 +523,16 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		product: CommandDevicePeripheralProduct
 	}
 
+	input PeripheralMapInput {
+		port: String
+		key: String
+		device: String
+		value: String
+	}
+
 	type CommandDevicePeripheralMap {
 		id: ID! 
+		port: String
 		key: CommandPeripheralProductDatapoint 
 		device: CommandProgramDevicePlaceholder
 		value: CommandProgramDeviceState

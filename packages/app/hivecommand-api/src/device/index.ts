@@ -212,6 +212,21 @@ export const useMapPort = (deviceId: string) => {
       }
     ) => {
 
+    
+      const item = mutation.updateCommandDevice({
+        where: {id: deviceId}, 
+        input: {
+          peripherals: [
+            {
+              id: args.peripheralId,
+              mappedDevices: args.connections.map((connection) => ({
+                ...connection,
+                port: args.port
+              }))
+            }
+          ] 
+        }
+      })
     //   let deviceMapping: any[] = [
     //     {
     //       create: args.connections
@@ -367,8 +382,13 @@ export const useMapPort = (deviceId: string) => {
 		// 	  ...item.commandDevices?.[0]
 		//   }
 	  // }
+
+    return {
+      item: {
+        ...item
+      }
     }
-  );
+  });
 
   return async (
     peripheralId: string,
