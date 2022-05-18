@@ -35,7 +35,9 @@ export default async (prisma: PrismaClient) => {
                             id: nanoid(),
                             key: 'level',
                             type: 'UIntegerT',
-                            writable: false
+                            min: '4',
+                            max: '20',
+                            writable: false,
                         }
                     ]
                 }

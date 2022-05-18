@@ -64,6 +64,8 @@ export default async (prisma: PrismaClient) => {
                         {
                             id: nanoid(),
                             key: 'speed',
+                            min: '4',
+                            max: '20',
                             type: 'IntegerT',
                             writable: true
                         },
