@@ -88,8 +88,8 @@ export interface AssignmentPayload {
 	state?: AssignmentState[]
 	requiresMutex: boolean;
 	type: string;
-	port: string
-	bus: string
+	// port: string
+	// bus: string
 	id: string
 	name: string
 }
@@ -122,6 +122,9 @@ export interface AssignmentPayload {
 // }
 
 export interface AssignmentState {
+	bus: string;
+	port: string;
+
 	id: string;
 	key: string;
 	type: string;

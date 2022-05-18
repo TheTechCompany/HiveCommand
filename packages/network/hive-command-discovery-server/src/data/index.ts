@@ -493,7 +493,41 @@ export class Data {
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
-		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev.device?.type, ...dev.device, type: dev.device?.type?.name, actions: dev.device?.type?.actions, state: dev.device?.type?.state, bus: x.id, port: x.port }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
+
+		const devices =  (activeProgram?.devices || []).map((device: any) => {
+			let mappedDevice = device?.peripherals?.map((x: any) => x.mappedDevices.map((map: any) => ({...map, bus: x.id}))).reduce((prev: any, curr: any) => prev.concat(curr), [])
+
+			return {
+				name: device?.name,
+				type: device?.type?.name,
+				actions: device?.type?.actions || [],
+				state: device?.type?.state?.map((state_item: any) => {
+					return {
+						...state_item,
+						foreignKey: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.key?.key,
+						bus: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.bus,
+						port: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.port
+					}
+				}),
+				plugins: device?.plugins || [],
+				interlocks: device?.interlocks || []
+			}
+		});
+		
+		// device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({
+		// 	...dev.device?.type, 
+		// 	...dev.device, 
+		// 	type: dev.device?.type?.name, 
+		// 	actions: dev.device?.type?.actions, 
+		// 	state: dev.device?.type?.state?.map((state: any) => {
+		// 		return {
+		// 			...state, 
+		// 			foreignKey: s
+		// 		}
+		// 	}), 
+		// 	bus: x.id, 
+		// 	port: x.port
+		// }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
 		const variables = activeProgram?.variables || [];
 
 		console.log({activeProgram: JSON.stringify(device) })
