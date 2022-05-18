@@ -492,7 +492,7 @@ export class Data {
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
-		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev.device?.type, ...dev.device, bus: x.id, port: x.port }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
+		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev.device?.type, ...dev.device, type: dev.device?.type?.name, bus: x.id, port: x.port }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
 		const variables = activeProgram?.variables || [];
 
 		console.log({activeProgram: activeProgram.program })
