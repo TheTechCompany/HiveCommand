@@ -196,7 +196,7 @@ export class CommandClient {
 
 		const commandPayload = await this.identity.getPurpose()
 
-		console.log("Purpose", {commandPayload})
+		console.log("Purpose", JSON.stringify({commandPayload}))
 		if(commandPayload.payload){
 
 			const { layout, actions, variables } = commandPayload.payload;
