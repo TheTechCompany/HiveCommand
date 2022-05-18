@@ -39,7 +39,16 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								},
 								mappedDevices: {
 									include: {
-										device: true,
+										device: {
+											include: {
+												type: {
+													include: {
+														actions: true,
+														state: true
+													}
+												}
+											}
+										},
 										key: true,
 										value: true
 									}
