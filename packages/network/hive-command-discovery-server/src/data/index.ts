@@ -272,17 +272,19 @@ export class Data {
 
 								type {
 									id
+
+									actions {
+										key
+										func
+									}
+	
+									state { 
+										key
+										type
+									}
 								}
 								
-								actions {
-									key
-									func
-								}
-
-								state { 
-									key
-									type
-								}
+							
 
 								interlocks {
 									inputDevice {
@@ -310,6 +312,7 @@ export class Data {
 									id
 								}
 							}
+
 							value {
 								id
 								key
@@ -489,11 +492,11 @@ export class Data {
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
-		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev.device, bus: x.id, port: x.port }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
+		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev.device?.type, ...dev.device, bus: x.id, port: x.port }))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
 		const variables = activeProgram?.variables || [];
 
 		console.log({activeProgram: activeProgram.program })
-		
+
 		return {program: (activeProgram?.program || []), variables, layout: devices}
 	}
 
