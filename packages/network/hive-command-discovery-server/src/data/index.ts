@@ -504,11 +504,14 @@ export class Data {
 				type: device?.type?.name,
 				actions: device?.type?.actions || [],
 				state: device?.type?.state?.map((state_item: any) => {
+					const mapped = mappedDevice?.find((a: any) => a.value?.id == state_item.id)
+					console.log("STATE", JSON.stringify({mappedDevice, id: state_item.id, mapped})
+					)
 					return {
 						...state_item,
-						foreignKey: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.key?.key,
-						bus: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.bus,
-						port: mappedDevice?.find((a: any) => a.value?.id == state_item.id)?.port
+						foreignKey: mapped?.key?.key,
+						bus: mapped?.bus,
+						port: mapped?.port
 					}
 				}),
 				plugins: device?.plugins || [],
