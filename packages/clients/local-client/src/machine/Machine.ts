@@ -152,10 +152,10 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		const { program, variables, actions } = commandPayload.payload || {};
+		const { program, variables, actions, layout } = commandPayload.payload || {};
 
 		//TODO add device mapping
-		// if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
+		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
 
 		await this.loadPlugins(commandPayload.payload?.layout || []);
 
@@ -167,39 +167,38 @@ export class Machine {
 		}).filter((a) => a != undefined)
 
 		this.fsm = new CommandStateMachine({
-			variables: [],
-			devices: [],
-			// devices: layout?.map((x) => {
+			variables: variables || [],
+			devices: layout?.map((x) => {
 
-			// 	let plugins = x.plugins?.map((plugin) => {
-			// 		let configuration = plugin.configuration.reduce((prev, curr) => {
-			// 			return {
-			// 				...prev,
-			// 				[curr.key]: curr.value
-			// 			}
-			// 		}, {})
+				let plugins = x.plugins?.map((plugin) => {
+					let configuration = plugin.configuration.reduce((prev, curr) => {
+						return {
+							...prev,
+							[curr.key]: curr.value
+						}
+					}, {})
 
-			// 		return {
-			// 			classString: PID, //plugin.classString,
-			// 			imports: [{key: 'PIDController', module: 'node-pid-controller'}],
-			// 			options: configuration,
-			// 			actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
-			// 			activeWhen: plugin.rules?.id
-			// 		}
-			// 	});
+					return {
+						classString: PID, //plugin.classString,
+						imports: [{key: 'PIDController', module: 'node-pid-controller'}],
+						options: configuration,
+						actions: [{key: 'Start', func: 'start'}, {key: 'Stop', func: 'stop'}],
+						activeWhen: plugin.rules?.id
+					}
+				});
 
-			// 	return {
-			// 		name: x.name, 
-			// 		requiresMutex: x.requiresMutex,
-			// 		actions: x.actions,
-			// 		plugins,
-			// 		interlock: {
-			// 			state: {on: 'true'},
-			// 			// state: {on: true},
-			// 			locks: x.interlocks || []
-			// 		}
-			// 	}
-			// }),
+				return {
+					name: x.name, 
+					requiresMutex: x.requiresMutex,
+					actions: x.actions,
+					plugins,
+					interlock: {
+						state: {on: 'true'},
+						// state: {on: true},
+						locks: x.interlocks || []
+					}
+				}
+			}),
 			processes: flows || []
 		}, {
 			requestState: this.requestState
@@ -424,7 +423,7 @@ export class Machine {
 					if(value < stateItem.min) value = stateItem.min
 				}
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
-				
+
 				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
 
 			}
