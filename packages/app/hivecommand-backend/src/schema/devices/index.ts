@@ -217,6 +217,10 @@ export default (prisma: PrismaClient, pool: Pool) => {
 				if(args.where.id) deviceWhere.id = args.where.id
 				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
 
+				const peripheral = await prisma.devicePeripheral.findFirst({where: {id: args.input.peripherals?.[0]?.id}});
+
+				console.log({peripheral})
+
 				if(args.input.peripherals){
 					peripheralUpdate['peripherals'] = {
 						upsert: args.input.peripherals.map((peripheral) => {
@@ -228,10 +232,13 @@ export default (prisma: PrismaClient, pool: Pool) => {
 							if(peripheral.type) upsertPeripheral.type = peripheral.type;
 							if(peripheral.ports) upsertPeripheral.ports = peripheral.ports;
 
-							console.log("Upsert", id, {upsertPeripheral})
+							console.log("Upsert", id, {mapped: peripheral.mappedDevices})
 
+						
 							return {
-								where: {id},
+								where: {
+									id
+								},
 								update: {
 									...upsertPeripheral,
 									mappedDevices: {
@@ -316,9 +323,9 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								},
 								create: {
 									id,
-									name: peripheral.name,
-									type: peripheral.type,
-									ports: peripheral.ports
+									name: peripheral.name || '',
+									type: peripheral.type  || '',
+									ports: peripheral.ports || 0,
 								}
 							}
 						})
