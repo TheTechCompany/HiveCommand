@@ -124,8 +124,16 @@ export default (prisma: PrismaClient) => {
 
             usedIn: [CommandProgramDevicePlaceholder]
 
+            config: [CommandProgramDeviceConfiguration]
+
             state: [CommandProgramDeviceState]
             actions: [CommandProgramDeviceAction] 
+        }
+
+        type CommandProgramDeviceConfiguration {
+            id: ID
+            key: String
+            type: String
         }
 
 

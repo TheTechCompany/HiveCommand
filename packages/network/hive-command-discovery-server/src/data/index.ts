@@ -254,6 +254,16 @@ export class Data {
 			query GetProgram($networkName: String) {
 				commandDevices(where: {network_name: $networkName}){
 
+					calibrations {
+						placeholder {
+							id
+						}
+						stateItem {
+							id
+						}
+						min
+						max
+					}
 					peripherals {
 						id
 						name
@@ -496,6 +506,8 @@ export class Data {
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
 
+		const calibrations = device?.calibrations;
+
 		const devices =  (activeProgram?.devices || []).map((active_device: any) => {
 			let mappedDevice = device?.peripherals?.map((x: any) => x.mappedDevices.map((map: any) => ({...map, bus: x.id}))).reduce((prev: any, curr: any) => prev.concat(curr), [])
 
@@ -506,14 +518,19 @@ export class Data {
 				state: active_device?.type?.state?.map((state_item: any) => {
 					
 					const mapped = mappedDevice?.find((a: any) => a.device?.id == active_device.id && a.value?.id == state_item.id)
+					const calibration = calibrations?.find((a: any) => a.placeholder?.id == active_device.id && a.stateItem?.id == state_item.id)
+					// console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
 
-					console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
+					let calibrationUpdate : any = {};
+					if(calibration.min)calibrationUpdate.min = calibration.min;
+					if(calibration.max)calibrationUpdate.max = calibration.max;
 
 					return {
 						...state_item,
+						...calibrationUpdate,
 						foreignKey: mapped?.key?.key,
 						bus: mapped?.bus,
-						port: mapped?.port
+						port: mapped?.port,
 					}
 				}),
 				plugins: active_device?.plugins || [],

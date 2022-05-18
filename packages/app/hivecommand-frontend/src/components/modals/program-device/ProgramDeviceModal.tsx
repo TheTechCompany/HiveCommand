@@ -43,7 +43,7 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 
 				return {
 					...item,
-					key: item.deviceKey?.key
+					key: item.stateItem?.id
 				}
 				// let value = props.selected?.configuration?.find((a) => a?.conf?.id == item.id)
 				
@@ -85,6 +85,8 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 			})
 		}
 
+		console.log({calibrations})
+
 		setDevice({...device, calibrated: calibrations})
 		// let conf = device.configuration.slice();
 		// let ix = conf.map((x) => x.key).indexOf(key);
@@ -99,7 +101,7 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 	}
 
 	const renderInput = (key: string, type: string, selector : string) => {
-		let defaultValue = device?.state?.find((a) => a.key == key)?.[selector] || ''
+		let defaultValue = device?.state?.find((a) => a.id == key)?.[selector] || ''
 		let value = device?.calibrated?.find((a) => a.key == key)?.[selector] || defaultValue
 
 		switch(type){
@@ -152,14 +154,14 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 						align="center"
 						direction="row">
 						<Box flex><Text>min{conf.key}</Text></Box>
-						<Box flex>{renderInput(conf.key, conf.type, 'min')}</Box>
+						<Box flex>{renderInput(conf.id, conf.type, 'min')}</Box>
 					</Box>
 					<Box
 						gap="xsmall"
 						align="center"
 						direction="row">
 						<Box flex><Text>max{conf.key}</Text></Box>
-						<Box flex>{renderInput(conf.key, conf.type, 'max')}</Box>
+						<Box flex>{renderInput(conf.id, conf.type, 'max')}</Box>
 					</Box>
 					</>
 				))}
