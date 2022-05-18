@@ -4,12 +4,13 @@ import React, {useState, useEffect} from 'react';
 
 export const DeviceBusConnectionModal = (props) => {
 
-	const [ connection, setConnection ] = useState<{key?: string, subindex?: number, device?: string, value?: string}[]>([])
+	const [ connection, setConnection ] = useState<{id?: string, key?: string, subindex?: number, device?: string, value?: string}[]>([])
 
 	const [connectionValues, setConnectionValues ] = useState<({key?: string} & any)[]>([]);
 
 	console.log("Connections", connection)
 
+	console.log({connections: props.connections})
 	useEffect(() => {
 		setConnection(props.connections)
 	}, [props.connections])
@@ -30,14 +31,14 @@ export const DeviceBusConnectionModal = (props) => {
 	useEffect(() => {
 		if(props.selected){
 			console.log("SELECTED", props.selected)
-			setConnectionValues(props.selected.map((x) => ({...x, key: x?.key?.key, device: x.device?.id, value: x.value?.key})))
+			setConnectionValues(props.selected.map((x) => ({...x, keyName: x?.key?.key, key: x?.key?.id, device: x.device?.id, value: x.value?.id})))
 		}
 	}, [props.selected])
 
 	const onSubmit = () => {
-		props.onSubmit(connectionValues)
+		props.onSubmit(connectionValues.map((x) => ({key: x.key, device: x.device, port: x.port, value: x.value})))
 	}
-console.log(connectionValues)
+console.log({connectionValues, connection, values: connectionValues?.find((b) => b.key == connection?.[0]?.id), device: props.devices?.find((a) => a.id == connectionValues?.find((b) => b.id == connection?.[0]?.id)?.device), devices: props.devices})
 	return (
 		<BaseModal
 			title="Create Mapping"
@@ -58,19 +59,19 @@ console.log(connectionValues)
 										labelKey="name"
 										valueKey={{reduce: true, key: 'id'}}
 										placeholder="Device"
-										onChange={({value}) => onChange(connection.key, 'device', value)}
-										value={connectionValues?.find((a) => a.key == connection.key)?.device}
+										onChange={({value}) => onChange(connection.id, 'device', value)}
+										value={connectionValues?.find((a) => a.key == connection.id)?.device}
 										options={props.devices || []} />
 								</Box>
 								<Box direction="row" flex>
 									<Select
 										clear
 										labelKey="key"
-										valueKey={{reduce: true, key: 'key'}}
-										value={connectionValues?.find((a) => a.key == connection.key)?.value}
+										valueKey={{reduce: true, key: 'id'}}
+										value={connectionValues?.find((a) => a.key == connection.id)?.value}
 										placeholder="Device Key"
-										onChange={({value}) => onChange(connection.key, 'value', value)}
-										options={props.devices?.find((a) => a.id == connectionValues?.find((a) => a.key == connection.key)?.device)?.type?.state || []} />
+										onChange={({value}) => onChange(connection.id, 'value', value)}
+										options={props.devices?.find((a) => a.id == connectionValues?.find((b) => b.key == connection.id)?.device)?.type?.state || []} />
 								</Box>
                             </Box>
                         ))}
