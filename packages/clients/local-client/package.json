@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-client",
-  "version": "1.4.15-alpha.6",
+  "version": "1.4.15-alpha.7",
   "description": "",
   "main": "dist/index.js",
   "files": [
