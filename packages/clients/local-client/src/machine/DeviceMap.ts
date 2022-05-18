@@ -88,6 +88,7 @@ export class DeviceMap {
 	}
 
 	public getDevicesByBusPort(bus: string, port: string): AssignmentPayload[] {
+		console.log({bus, port}, JSON.stringify(this.assignment))
 		return this.assignment.filter(assignment => (assignment.state || []).map((x) => x.bus).indexOf(bus) > -1 && (assignment.state || []).map((x) => x.port).indexOf(port) > -1)
 	}
 
