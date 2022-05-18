@@ -54,12 +54,12 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
                 online
                 calibrations {
-                    device {
+                    placeholder {
                         id
                         name
                     }
 
-                    deviceKey {
+                    stateItem {
                         key
                     }
 
