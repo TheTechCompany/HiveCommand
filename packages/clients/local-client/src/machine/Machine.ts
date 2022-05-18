@@ -393,22 +393,30 @@ export class Machine {
 	async requestState(event: {device: string, state: any | {[key: string]: any}}){
 		// log.debug("request state - (LC Machine)", event)
 
-		let busPort = this.deviceMap.getDeviceBusPort(event.device)
+		// let busPort = this.deviceMap.getDeviceBusPort(event.device. event.s)
 
-		let busDevice = this.env.find((a) => a.id == busPort?.bus)
-		if(!busDevice) return;
 	
-		if(!busPort?.bus) return;
+		// if(!busPort?.bus) return;
 		
 		let writeOp: any;
 		if(typeof(event.state) == 'object'){
 
 			writeOp = {};
 			for(var k in event.state){
-				let stateItem = busPort?.state?.find((a) => a.key == k)
+				let stateItem = this.deviceMap.getDeviceBusPort(event.device, k)
+				let busDevice = this.env.find((a) => a.id == stateItem?.bus)
+
+				if(!busDevice) {
+					console.log("No bus device found");
+					continue;
+				}
+
+				// let stateItem = busPort?.state?.find((a) => a.key == k)
 
 				if(!stateItem) continue;
+
 				let value = event.state[k];
+
 				if(stateItem.max && stateItem.min){
 					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
 
@@ -416,13 +424,21 @@ export class Machine {
 					if(value < stateItem.min) value = stateItem.min
 				}
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
+				
+				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
+
 			}
 		}else{
+			let stateItem = this.deviceMap.getDeviceBusPort(event.device)
+
 			writeOp = event.state;
+
+			this.busMap.request(stateItem.bus, stateItem.port, writeOp)
+
 		}
 
 		// let busPort = this.deviceMap.getDeviceByBusPort(event.bus, event.port) 
-		this.busMap.request(busPort.bus, busPort.port, writeOp)
+		// this.busMap.request(busPort.bus, busPort.port, writeOp)
 	}
 
 	async requestOperation(ev : {device: string, operation: string}){
