@@ -496,17 +496,19 @@ export class Data {
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
 
-		const devices =  (activeProgram?.devices || []).map((device: any) => {
+		const devices =  (activeProgram?.devices || []).map((active_device: any) => {
 			let mappedDevice = device?.peripherals?.map((x: any) => x.mappedDevices.map((map: any) => ({...map, bus: x.id}))).reduce((prev: any, curr: any) => prev.concat(curr), [])
 
 			return {
-				name: device?.name,
-				type: device?.type?.name,
-				actions: device?.type?.actions || [],
-				state: device?.type?.state?.map((state_item: any) => {
+				name: active_device?.name,
+				type: active_device?.type?.name,
+				actions: active_device?.type?.actions || [],
+				state: active_device?.type?.state?.map((state_item: any) => {
+					
 					const mapped = mappedDevice?.find((a: any) => a.value?.id == state_item.id)
-					console.log("STATE", JSON.stringify({mappedDevice, id: state_item.id, mapped})
-					)
+
+					console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
+
 					return {
 						...state_item,
 						foreignKey: mapped?.key?.key,
@@ -514,8 +516,8 @@ export class Data {
 						port: mapped?.port
 					}
 				}),
-				plugins: device?.plugins || [],
-				interlocks: device?.interlocks || []
+				plugins: active_device?.plugins || [],
+				interlocks: active_device?.interlocks || []
 			}
 		});
 		
