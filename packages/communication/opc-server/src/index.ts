@@ -248,10 +248,13 @@ export default class Server {
                 
                 //No template ready, make one now
                 if(!this.objectTypes[device.type]) {
-
-                    type = this.namespace?.addObjectType({
-                        browseName: device.type,
-                    })
+                    try{
+                        type = this.namespace?.addObjectType({
+                            browseName: device.type,
+                        })
+                    }catch(e){
+                        console.log("Add Device Error", {e})
+                    }
                 
                     if(!type) return;
 
