@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/discovery-server",
-  "version": "1.4.15-alpha.4",
+  "version": "1.4.15-alpha.5",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/HiveCommand#readme",
@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@hive-command/data": "^1.4.3",
-    "@hive-command/opcua-client": "^1.4.3",
+    "@hive-command/opcua-client": "^1.4.15-alpha.5",
     "@hive-command/opcua-lds": "^1.4.15-alpha.3",
     "amqplib": "^0.8.0",
     "dotenv": "^10.0.0",
