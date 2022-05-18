@@ -7,7 +7,8 @@ import { DiscoveryServer } from "./index";
 	const server = new DiscoveryServer({
 		apiKey: process.env.HEXHIVE_API_KEY,
 		gatewayURL: process.env.HEXHIVE_API_URL,
-		fqdn: process.env.SYNC_HOST
+		fqdn: process.env.SYNC_HOST,
+		rootFolder: process.env.ROOT_FOLDER
 	});
 
 	await server.listen(8080);

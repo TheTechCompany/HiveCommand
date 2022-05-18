@@ -6,6 +6,7 @@ const vorpal_repl = require("vorpal-repl");
 
 type Options = {
 	port?: number;
+	rootFolder?: string;
 	tolerant?: boolean;
 	force?: boolean;
 	alternateHostname?: string;
@@ -20,6 +21,7 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
 	yargs
 		.options({
 			fqdn: { type: "string" },
+			rootFolder: {type: "string"},
 			port: { type: "number", description: "port to listen to (default: 4840)", default: 4840 },
 			tolerant: { type: "boolean", description: "automatically accept unknown registering server certificate", default: true },
 			force: { type: "boolean", description: "force recreation of LDS self-signed certification (taking into account alternateHostname) ", default: false },
@@ -34,7 +36,7 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
 
 
 export const handler = (argv: Arguments<Options>) => {
-	const { port, tolerant, force, applicationName, fqdn } = argv;
+	const { port, tolerant, force, applicationName, rootFolder, fqdn } = argv;
 
 	console.log("port                                    ", port);
 	console.log("automatically accept unknown certificate", tolerant);
@@ -46,7 +48,8 @@ export const handler = (argv: Arguments<Options>) => {
 		automaticallyAcceptUnknownCertificate: tolerant,
 		force,
 		applicationName,
-		fqdn
+		fqdn,
+		rootFolder
 	})
 
 	discoveryServer.init().then(() => {
