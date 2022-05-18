@@ -145,6 +145,13 @@ export interface CommandPeripheralProductInput {
   vendorId?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandProgramDeviceCalibrationInput {
+  max?: InputMaybe<Scalars["String"]>;
+  min?: InputMaybe<Scalars["String"]>;
+  placeholder?: InputMaybe<Scalars["String"]>;
+  stateItem?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandProgramDeviceInput {
   name?: InputMaybe<Scalars["String"]>;
   template?: InputMaybe<Scalars["String"]>;
@@ -611,6 +618,7 @@ export const generatedSchema = {
   CommandProgramDevice: {
     __typename: { __type: "String!" },
     actions: { __type: "[CommandProgramDeviceAction]" },
+    config: { __type: "[CommandProgramDeviceConfiguration]" },
     id: { __type: "ID!" },
     name: { __type: "String" },
     state: { __type: "[CommandProgramDeviceState]" },
@@ -626,12 +634,24 @@ export const generatedSchema = {
   },
   CommandProgramDeviceCalibration: {
     __typename: { __type: "String!" },
-    device: { __type: "CommandProgramDevicePlaceholder" },
-    deviceKey: { __type: "CommandProgramDeviceState" },
+    device: { __type: "CommandDevice" },
     id: { __type: "ID" },
     max: { __type: "String" },
     min: { __type: "String" },
-    rootDevice: { __type: "CommandDevice" },
+    placeholder: { __type: "CommandProgramDevicePlaceholder" },
+    stateItem: { __type: "CommandProgramDeviceState" },
+  },
+  CommandProgramDeviceCalibrationInput: {
+    max: { __type: "String" },
+    min: { __type: "String" },
+    placeholder: { __type: "String" },
+    stateItem: { __type: "String" },
+  },
+  CommandProgramDeviceConfiguration: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID" },
+    key: { __type: "String" },
+    type: { __type: "String" },
   },
   CommandProgramDeviceInput: {
     name: { __type: "String" },
@@ -861,6 +881,10 @@ export const generatedSchema = {
       __type: "CommandDevice!",
       __args: { input: "CommandDeviceInput!" },
     },
+    createCommandDeviceCalibration: {
+      __type: "CommandProgramDeviceCalibration",
+      __args: { device: "ID!", input: "CommandProgramDeviceCalibrationInput" },
+    },
     createCommandDeviceReport: {
       __type: "CommandDeviceReport",
       __args: { input: "CommandDeviceReportInput" },
@@ -959,6 +983,10 @@ export const generatedSchema = {
       __type: "CommandDevice!",
       __args: { where: "CommandDeviceWhere!" },
     },
+    deleteCommandDeviceCalibration: {
+      __type: "CommandProgramDeviceCalibration",
+      __args: { device: "ID!", id: "ID!" },
+    },
     deleteCommandDeviceReport: {
       __type: "CommandDeviceReport",
       __args: { id: "ID" },
@@ -1027,6 +1055,14 @@ export const generatedSchema = {
     updateCommandDevice: {
       __type: "CommandDevice!",
       __args: { input: "CommandDeviceInput!", where: "CommandDeviceWhere!" },
+    },
+    updateCommandDeviceCalibration: {
+      __type: "CommandProgramDeviceCalibration",
+      __args: {
+        device: "ID!",
+        id: "ID!",
+        input: "CommandProgramDeviceCalibrationInput",
+      },
     },
     updateCommandDeviceReport: {
       __type: "CommandDeviceReport",
@@ -1495,6 +1531,7 @@ export interface CommandProgramAlarm {
 export interface CommandProgramDevice {
   __typename?: "CommandProgramDevice";
   actions?: Maybe<Array<Maybe<CommandProgramDeviceAction>>>;
+  config?: Maybe<Array<Maybe<CommandProgramDeviceConfiguration>>>;
   id: ScalarsEnums["ID"];
   name?: Maybe<ScalarsEnums["String"]>;
   state?: Maybe<Array<Maybe<CommandProgramDeviceState>>>;
@@ -1512,12 +1549,19 @@ export interface CommandProgramDeviceAction {
 
 export interface CommandProgramDeviceCalibration {
   __typename?: "CommandProgramDeviceCalibration";
-  device?: Maybe<CommandProgramDevicePlaceholder>;
-  deviceKey?: Maybe<CommandProgramDeviceState>;
+  device?: Maybe<CommandDevice>;
   id?: Maybe<ScalarsEnums["ID"]>;
   max?: Maybe<ScalarsEnums["String"]>;
   min?: Maybe<ScalarsEnums["String"]>;
-  rootDevice?: Maybe<CommandDevice>;
+  placeholder?: Maybe<CommandProgramDevicePlaceholder>;
+  stateItem?: Maybe<CommandProgramDeviceState>;
+}
+
+export interface CommandProgramDeviceConfiguration {
+  __typename?: "CommandProgramDeviceConfiguration";
+  id?: Maybe<ScalarsEnums["ID"]>;
+  key?: Maybe<ScalarsEnums["String"]>;
+  type?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandProgramDevicePlaceholder {
@@ -1702,6 +1746,10 @@ export interface Mutation {
     state?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
   createCommandDevice: (args: { input: CommandDeviceInput }) => CommandDevice;
+  createCommandDeviceCalibration: (args: {
+    device: Scalars["ID"];
+    input?: Maybe<CommandProgramDeviceCalibrationInput>;
+  }) => Maybe<CommandProgramDeviceCalibration>;
   createCommandDeviceReport: (args?: {
     input?: Maybe<CommandDeviceReportInput>;
   }) => Maybe<CommandDeviceReport>;
@@ -1771,6 +1819,10 @@ export interface Mutation {
     program: Scalars["ID"];
   }) => CommandProgramVariable;
   deleteCommandDevice: (args: { where: CommandDeviceWhere }) => CommandDevice;
+  deleteCommandDeviceCalibration: (args: {
+    device: Scalars["ID"];
+    id: Scalars["ID"];
+  }) => Maybe<CommandProgramDeviceCalibration>;
   deleteCommandDeviceReport: (args?: {
     id?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
@@ -1852,6 +1904,11 @@ export interface Mutation {
     input: CommandDeviceInput;
     where: CommandDeviceWhere;
   }) => CommandDevice;
+  updateCommandDeviceCalibration: (args: {
+    device: Scalars["ID"];
+    id: Scalars["ID"];
+    input?: Maybe<CommandProgramDeviceCalibrationInput>;
+  }) => Maybe<CommandProgramDeviceCalibration>;
   updateCommandDeviceReport: (args?: {
     id?: Maybe<Scalars["ID"]>;
     input?: Maybe<CommandDeviceReportInput>;
@@ -2017,6 +2074,7 @@ export interface SchemaObjectTypes {
   CommandProgramDevice: CommandProgramDevice;
   CommandProgramDeviceAction: CommandProgramDeviceAction;
   CommandProgramDeviceCalibration: CommandProgramDeviceCalibration;
+  CommandProgramDeviceConfiguration: CommandProgramDeviceConfiguration;
   CommandProgramDevicePlaceholder: CommandProgramDevicePlaceholder;
   CommandProgramDevicePlugin: CommandProgramDevicePlugin;
   CommandProgramDevicePluginCompatibility: CommandProgramDevicePluginCompatibility;
@@ -2070,6 +2128,7 @@ export type SchemaObjectTypesNames =
   | "CommandProgramDevice"
   | "CommandProgramDeviceAction"
   | "CommandProgramDeviceCalibration"
+  | "CommandProgramDeviceConfiguration"
   | "CommandProgramDevicePlaceholder"
   | "CommandProgramDevicePlugin"
   | "CommandProgramDevicePluginCompatibility"

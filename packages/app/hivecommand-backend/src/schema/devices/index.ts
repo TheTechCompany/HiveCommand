@@ -22,6 +22,12 @@ export default (prisma: PrismaClient, pool: Pool) => {
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						calibrations: {
+							include: {
+								placeholder: true,
+								stateItem: true
+							}
+						},
 						reports: {
 							include: {
 								dataKey: true,
@@ -396,7 +402,34 @@ export default (prisma: PrismaClient, pool: Pool) => {
 				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
 
 				return await prisma.device.delete({where: deviceWhere});
+			},
+			createCommandDeviceCalibration: async (root: any, args: any, context: any) => {
+				return await prisma.deviceCalibration.create({
+					data: {
+						id: nanoid(),
+						device: {connect: {id: args.device}},
+						placeholder: {connect: {id: args.input.placeholder}},
+						stateItem: {connect: {id: args.input.stateItem}},
+						min: args.input.min,
+						max: args.input.max
+					}
+				})
+			},
+			updateCommandDeviceCalibration: async (root: any, args: any, context: any) => {
+				return await prisma.deviceCalibration.update({
+					where: {
+						id: args.id
+					},
+					data: {
+						min: args.input.min,
+						max: args.input.max
+					}
+				})
+			},
+			deleteCommandDeviceCalibration: async (root: any, args: any, context: any) => {
+				return await prisma.deviceCalibration.delete({where: {id: args.id}})
 			}
+
 		}
 	}])
 
@@ -420,6 +453,10 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		updateCommandDevice(where: CommandDeviceWhere!, input: CommandDeviceInput!): CommandDevice!
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
+
+		createCommandDeviceCalibration(device: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
+		updateCommandDeviceCalibration(device: ID!, id: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
+		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
 	}
 
 	input CommandDeviceInput {
@@ -516,12 +553,19 @@ export default (prisma: PrismaClient, pool: Pool) => {
 		device: CommandDevice 
 	}
 
+	input CommandProgramDeviceCalibrationInput {
+		placeholder: String
+		stateItem: String
+		min: String
+		max: String
+	}
+
 	type CommandProgramDeviceCalibration {
 		id: ID 
-		rootDevice: CommandDevice 
+		device: CommandDevice 
 
-		device: CommandProgramDevicePlaceholder 
-		deviceKey: CommandProgramDeviceState 
+		placeholder: CommandProgramDevicePlaceholder 
+		stateItem: CommandProgramDeviceState 
 
 		min: String
 		max: String

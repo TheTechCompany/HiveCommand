@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Box, List, Text } from 'grommet'
 import { useQuery, gql } from '@apollo/client';
-import { updateDeviceCalibrations  } from '@hive-command/api';
+import { useUpdateDeviceCalibrations  } from '@hive-command/api';
 import { ProgramDeviceModal } from '../../components/modals/program-device';
 import { useParams } from 'react-router-dom';
 
@@ -23,12 +23,12 @@ export const DeviceDevices : React.FC<any> = (props) => {
 				name
 				calibrations {
 					id
-					device {
+					placeholder {
 						id
 						name
 					}
 
-					deviceKey {
+					stateItem {
 						id
 						type
 						key
@@ -63,6 +63,8 @@ export const DeviceDevices : React.FC<any> = (props) => {
 			id: id
 		}
 	})
+
+	const updateDeviceCalibration = useUpdateDeviceCalibrations(id);
 
 	// const [ updateDeviceConfiguration, updateInfo ] = useMutation((mutation, args: {
 	// 	conf: {
@@ -124,18 +126,19 @@ export const DeviceDevices : React.FC<any> = (props) => {
 				onSubmit={(device) => {
 					console.log("DEVICE", device)
 					if(device.calibrated){
-						console.log("CALIBRATED", device.calibrated)
-						updateDeviceCalibrations(
-							id,
-							device.calibrated.map((x) => ({
-									id: x.id,
-									device: device.id,
-									deviceKey: x.key,
-									min: x.min,
-									max: x.max
-								}))
-							
-						)
+						console.log("CALIBRATED", device.calibrated);
+						let calibrated = device.calibrated?.[0];
+						let calibration = {
+							id: calibrated.id,
+							placeholder: device.id,
+							stateItem: calibrated.key,
+							min: calibrated.min,
+							max: calibrated.max
+						}
+
+						updateDeviceCalibration(calibration).then(() => {
+							openModal(false)
+						});
 
 					}
 					// if(device.configuration){
@@ -159,7 +162,8 @@ export const DeviceDevices : React.FC<any> = (props) => {
 				<List
 					pad="none" 
 					onClickItem={({item}) => {
-						let calibration = device.calibrations?.filter((a) => a.device.id == item.id);
+						console.log({calibrations: device.calibrations, item})
+						let calibration = device.calibrations?.filter((a) => a.placeholder?.id == item.id);
 
 					
 						openModal(true)

@@ -19,6 +19,7 @@ model Device {
   network_name String @unique
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
+  calibrations DeviceCalibration[] @relation(name: "hasCalibration")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
   
@@ -33,6 +34,22 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+model DeviceCalibration {
+  id String @id
+
+  placeholder ProgramFlowIO @relation(name: "calibratesPlaceholder", fields: [placeholderId], references: [id])
+  placeholderId String
+
+  stateItem IOTemplateState @relation(name: "calibratesState", fields: [stateId], references: [id])
+  stateId String
+
+  min String
+  max String
+
+  device Device @relation(name: "hasCalibration", fields: [deviceId], references: [id])
+  deviceId String
 }
 
 model DeviceSnapshotValue {
@@ -147,11 +164,22 @@ model IOTemplate {
   state IOTemplateState[] @relation(name: "hasState")
   actions IOTemplateAction[] @relation(name: "hasAction")
 
+  // config IOTemplateConfig[] @relation(name: "hasIOConfig")
+
   createdAt DateTime @default(now())
   
   usedBy ProgramFlowIO[] @relation(name: "useTemplate")
 
 }
+
+// model IOTemplateConfig {
+//   id String @id
+//   key String
+//   type String
+
+//   device IOTemplate @relation(name: "hasIOConfig", references: [id], fields: [deviceId], onDelete: Cascade)
+//   deviceId String
+// }
 
 model IOTemplateAction {
   id String @id 
@@ -188,6 +216,7 @@ model IOTemplateState {
   reportedBy DeviceReport[] @relation(name: "hasDataKey")
 
   mappedBy PeripheralMap[] @relation(name: "mapsTo")
+  calibratedBy DeviceCalibration[] @relation(name: "calibratesState")
 
   device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
@@ -271,6 +300,8 @@ model ProgramFlowIO {
 
   usedBy ProgramFlowNodeAction[] @relation(name: "useDevice")
   usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
+
+  calibratedBy DeviceCalibration[] @relation(name: "calibratesPlaceholder")
 
   reportedBy DeviceReport[] @relation(name: "hasDataDevice")
 
