@@ -299,7 +299,7 @@ export class Data {
 											value
 										}
 										variable {
-											key
+											name
 										}
 										value
 									}

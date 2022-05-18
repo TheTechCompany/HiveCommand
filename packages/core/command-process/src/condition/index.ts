@@ -23,7 +23,7 @@ export class Condition {
             //TODO map setpoints to variables
             return this.condition.assertion?.setpoint.value
         }else if(this.condition.assertion.variable){
-            return this.getVariable?.(this.condition.assertion.variable.key)
+            return this.getVariable?.(this.condition.assertion.variable.name)
         }else if(this.condition.assertion.value){
             return this.condition.assertion.value;
         }
