@@ -507,7 +507,7 @@ export class Data {
 					
 					const mapped = mappedDevice?.find((a: any) => a.device?.id == active_device.id && a.value?.id == state_item.id)
 
-					console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
+					// console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
 
 					return {
 						...state_item,
