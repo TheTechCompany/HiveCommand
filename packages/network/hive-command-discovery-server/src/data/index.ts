@@ -337,8 +337,10 @@ export class Data {
 							name
 							type {
 								id
+								name
 
 								state {
+									id
 									key
 									type
 								}
