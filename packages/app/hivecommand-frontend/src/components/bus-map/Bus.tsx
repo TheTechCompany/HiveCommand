@@ -46,7 +46,7 @@ export const Bus : React.FC<BusProps> = (props) => {
 							props.onPortSelect(portKey)
 						}}
 						connectedDevices={props.connectedDevices}
-						map={props.mappedDevices}
+						mappedDevices={props.mappedDevices}
 						onPortsChanged={props.onPortsChanged}
 						devices={props.devices || []}
 						ports={props.ports} />
