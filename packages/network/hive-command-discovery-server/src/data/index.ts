@@ -449,7 +449,7 @@ export class Data {
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram?.program || [];
-		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev, peripheral: x}))).reduce((prev: any, curr: any) => prev.concat(curr), []) || [], // mappedDevices || [];
+		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev, peripheral: x}))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
 		const variables = activeProgram?.variables || [];
 
 		return {program, variables, devices}
