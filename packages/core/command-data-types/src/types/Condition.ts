@@ -15,7 +15,7 @@ export interface EdgeConditionAssertion {
 		value: string;
 	}
 	variable: {
-		key: string;
+		name: string;
 	}
 	value: any;
 }
