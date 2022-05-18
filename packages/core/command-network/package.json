@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/network",
-  "version": "1.4.15-alpha.2",
+  "version": "1.4.15-alpha.3",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -19,8 +19,8 @@
   },
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b",
   "dependencies": {
-    "@hive-command/data-types": "^1.4.15-alpha.2",
-    "@hive-command/opcua-server": "^1.4.15-alpha.2",
+    "@hive-command/data-types": "^1.4.15-alpha.3",
+    "@hive-command/opcua-server": "^1.4.15-alpha.3",
     "axios": "^0.23.0"
   }
 }
