@@ -66,9 +66,11 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             }
                         }
                         key {
+                            id
                             key
                         }
                         value{
+                            id
                             key
                         }
                     }
@@ -84,6 +86,7 @@ export const DeviceSingle : React.FC<DeviceSingleProps> = (props) => {
                             name
 
                             state {
+                                id
                                 key
                                 type
                             }
@@ -180,14 +183,17 @@ mappedDevicesConnection {
                     openModal(false);
                 }}
                 onSubmit={(connections) => {
+                    console.log({selectedPort, connections})
                     mapPort(
                         selectedPort.bus,
                         selectedPort.port,
                         connections
                     ).then(() => {
                         refetch()
+                        openModal(false)
+                        setSelected(undefined)
                     })
-                    console.log({connections})
+                    // console.log({connections})
                 }}
                 open={modalOpen} />
            
@@ -263,7 +269,7 @@ mappedDevicesConnection {
                                 id: x.id,
                                 name: x.name,
                                 connectedDevices: x.connectedDevices.map((connection) => ({...connection, port: connection.port})),
-                                mappedDevices: x.mappedDevices.map((dev, ix) => ({...dev, port: x.port})) || [],
+                                mappedDevices: x.mappedDevices || [],
                                 ports: (x.type == "IO-LINK" ? 8 : (x.type == "BLESSED") ? x.connectedDevices : {inputs: 14, outputs: 14})
                             }
                         })}/>

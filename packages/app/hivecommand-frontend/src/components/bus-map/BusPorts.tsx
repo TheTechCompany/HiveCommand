@@ -6,11 +6,10 @@ export type BusPortRail  = number | {inputs: number, outputs: number};
 export interface BusPortsProps {
 	ports: BusPortRail
 	devices?: {id?: string, name: string, type: string}[]
-	map: any[];
 	onSelect?: (portKey: string, ix: number) => void;
 	onPortsChanged?: (port: string, device: string[]) => void;
 	connectedDevices?: {id: string, name: string, port: string}[]
-
+	mappedDevices: {port: string, device: any}[];
 }
 
 export const BusPorts: React.FC<BusPortsProps> = (props) => {
@@ -43,9 +42,13 @@ export const BusPorts: React.FC<BusPortsProps> = (props) => {
 		}
 	}
 
-	console.log("CONNECTED", props.connectedDevices)
+	console.log("CONNECTED", props.connectedDevices, props.mappedDevices)
+
 	return renderPorts((ix, key, reverse) => {
 		let portKey =  `${key ? key+'_' : ''}${ix + 1}`
+
+		console.log({mapped: props.mappedDevices.filter((a) => a.port == portKey), map: props.mappedDevices, portKey})
+
 		return (
 		<Box
 			focusIndicator={true}
@@ -66,7 +69,7 @@ export const BusPorts: React.FC<BusPortsProps> = (props) => {
 
 			</Box>
 			<Box width="small" align="center">
-				<Text size="small">{props.map.filter((a) => a.port == portKey)?.filter((a) => a.device).map((x) => x?.device?.name).join(', ')}</Text>
+				<Text size="small">{props.mappedDevices.filter((a) => a.port == portKey)?.filter((a) => a.device).map((x) => x?.device?.name).join(', ')}</Text>
 				{/* <Select
 					clear={true}
 					multiple
