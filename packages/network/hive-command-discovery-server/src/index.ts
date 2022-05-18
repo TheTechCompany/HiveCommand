@@ -21,7 +21,7 @@ import { DataType } from 'node-opcua-variant';
 export interface DiscoveryServerOptions {
     apiKey?: string;
     gatewayURL?: string;
-
+    rootFolder?: string;
     fqdn?: string;
 }
 
@@ -54,6 +54,7 @@ export class DiscoveryServer {
 
         this.opcuaDiscovery = new DiscoveryService({
             port: 4840,
+            rootFolder: opts.rootFolder,
             automaticallyAcceptUnknownCertificate: true,
             force: true,
             fqdn: this.options.fqdn,
