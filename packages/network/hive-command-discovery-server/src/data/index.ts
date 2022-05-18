@@ -254,21 +254,26 @@ export class Data {
 			query GetProgram($networkName: String) {
 				commandDevices(where: {network_name: $networkName}){
 
-					mappedDevices {
+					peripherals {
 						id
-						port
+						name
 					
-						key {
+						mappedDevices {
 							id
-							key
-						}
-						device {
-							id
-							name
-						}
-						value {
-							id
-							key
+							port
+						
+							key {
+								id
+								key
+							}
+							device {
+								id
+								name
+							}
+							value {
+								id
+								key
+							}
 						}
 					}
 
@@ -444,7 +449,7 @@ export class Data {
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram?.program || [];
-		const devices = device?.mappedDevices || [];
+		const devices = device?.peripherals?.map((x: any) => x.mappedDevices.map((dev: any) => ({...dev, peripheral: x}))).reduce((prev: any, curr: any) => prev.concat(curr), []) || []; // mappedDevices || [];
 		const variables = activeProgram?.variables || [];
 
 		return {program, variables, devices}
