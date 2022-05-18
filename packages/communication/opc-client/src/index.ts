@@ -70,6 +70,14 @@ export default class Client {
     async connect(endpoint: string){
         await this.client.connect(endpoint)
         this.session = await this.client.createSession()
+
+        this.session.on('keepalive', () => {
+            console.log("keep alive packet");
+        })
+
+        this.session.on('keepalive_failure', () => {
+            console.log("keep alive failed");
+        })
         
         this.subscription = ClientSubscription.create(this.session, {
             requestedPublishingInterval: 1000,
