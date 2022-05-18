@@ -88,17 +88,19 @@ export class DeviceMap {
 	}
 
 	public getDevicesByBusPort(bus: string, port: string): AssignmentPayload[] {
-		return this.assignment.filter(assignment => assignment.bus === bus && assignment.port === port)
+		return this.assignment.filter(assignment => (assignment.state || []).map((x) => x.bus).indexOf(bus) > -1 && (assignment.state || []).map((x) => x.port).indexOf(port) > -1)
 	}
 
 	//Get assignment by bus and port
 	public getDeviceByBusPort(bus: string, port: string): AssignmentPayload | undefined {
-		return this.assignment.find(assignment => assignment.bus === bus && assignment.port === port)
+		return this.assignment.find(assignment => (assignment.state || []).map((x) => x.bus).indexOf(bus) > -1 && (assignment.state || []).map((x) => x.port).indexOf(port) > -1)
 	}
 
 	//Get assignment by device name
-	public getDeviceBusPort(name: string): AssignmentPayload | undefined {
-		let device = this.assignment.find(assignment => assignment.name === name);
-		return device
+	public getDeviceBusPort(name: string, key?: string): any | undefined {
+		let device = key ? this.assignment.find(assignment => assignment.name === name && (assignment.state || []).map((x) => x.key).indexOf(key) > -1) : this.assignment.find(assignment => assignment.name == name);
+		const stateItem = key ? device?.state?.find((a) => a.key == key) || {} : device?.state?.find((a) => a.port && a.bus)
+
+		return stateItem
 	}
 }
