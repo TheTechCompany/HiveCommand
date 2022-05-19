@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import gql from "graphql-tag";
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
@@ -35,7 +35,7 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								device: true,
 							}
 						},
-						deviceSnapshot: true,
+						values: true,
 						peripherals: {
 							include: {
 								connectedDevices: {

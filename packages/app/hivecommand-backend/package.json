@@ -30,6 +30,7 @@
   "dependencies": {
     "@hexhive/graphql-server": "1.0.2-beta.2",
     "@hexhive/types": "^0.0.6-alpha.0",
+    "@hive-command/data": "^1.0.0",
     "@neo4j/graphql": "^2.5.4",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",

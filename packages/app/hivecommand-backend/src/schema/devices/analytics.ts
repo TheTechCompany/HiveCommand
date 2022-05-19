@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';

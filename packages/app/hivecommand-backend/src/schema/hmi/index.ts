@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import gql from "graphql-tag";
 import { nanoid } from 'nanoid';
 
