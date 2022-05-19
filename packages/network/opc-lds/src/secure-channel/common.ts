@@ -2,8 +2,8 @@
  * @module node-opcua-secure-channel
  */
 import { makeSHA1Thumbprint, split_der } from "node-opcua-crypto";
-import { TypeSchemaBase } from "node-opcua-factory";
-import { CloseSecureChannelRequest, MessageSecurityMode, RequestHeader, ResponseHeader } from "node-opcua-service-secure-channel";
+import { TypeSchemaBase } from "../factory";
+import { CloseSecureChannelRequest, MessageSecurityMode, RequestHeader, ResponseHeader } from "../service-secure-channel";
 import { ServiceFault } from "./services";
 
 export interface ResponseB {

@@ -25,7 +25,7 @@ import { Message, Response, ServerSecureChannelLayer, ServerSecureChannelParent 
 import { FindServersRequest, FindServersResponse } from "node-opcua-service-discovery";
 import { ApplicationType, GetEndpointsResponse } from "node-opcua-service-endpoints";
 import { ApplicationDescription } from "node-opcua-service-endpoints";
-import { ServiceFault } from "node-opcua-service-secure-channel";
+import { ServiceFault } from "../secure-channel";
 import { StatusCode, StatusCodes } from "../status-codes";
 import { ApplicationDescriptionOptions } from "node-opcua-types";
 import { EndpointDescription, GetEndpointsRequest } from "node-opcua-types";

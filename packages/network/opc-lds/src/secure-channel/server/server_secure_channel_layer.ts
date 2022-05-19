@@ -20,20 +20,20 @@ import {
 } from "node-opcua-crypto";
 
 import { checkDebugFlag, make_debugLog, make_warningLog } from "node-opcua-debug";
-import { BaseUAObject } from "node-opcua-factory";
+import { BaseUAObject } from "../../factory";
 import { analyze_object_binary_encoding } from "node-opcua-packet-analyzer";
 import {
     ChannelSecurityToken,
     hasTokenExpired,
     MessageSecurityMode,
     SymmetricAlgorithmSecurityHeader
-} from "node-opcua-service-secure-channel";
+} from "../../service-secure-channel";
 
 import { StatusCode, StatusCodes } from "../../status-codes";
 
 import { ServerTCP_transport } from "node-opcua-transport";
 import { get_clock_tick, timestamp } from "node-opcua-utils";
-import { Callback2, ErrorCallback } from "node-opcua-status-code";
+import { Callback2, ErrorCallback } from "../../status-codes";
 
 import { EndpointDescription } from "node-opcua-service-endpoints";
 import { ICertificateManager } from "node-opcua-certificate-manager";

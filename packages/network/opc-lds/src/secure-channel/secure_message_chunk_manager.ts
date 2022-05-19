@@ -7,7 +7,7 @@ import { assert } from "node-opcua-assert";
 import { UInt16 } from "node-opcua-basic-types";
 import { BinaryStream } from "node-opcua-binary-stream";
 import { ChunkManager, EncryptBufferFunc, IChunkManagerOptions, SequenceHeader, SignBufferFunc } from "node-opcua-chunkmanager";
-import { AsymmetricAlgorithmSecurityHeader, SymmetricAlgorithmSecurityHeader } from "node-opcua-service-secure-channel";
+import { AsymmetricAlgorithmSecurityHeader, SymmetricAlgorithmSecurityHeader } from "../service-secure-channel";
 import { SequenceNumberGenerator } from "./sequence_number_generator";
 
 export type SecurityHeader = AsymmetricAlgorithmSecurityHeader | SymmetricAlgorithmSecurityHeader;

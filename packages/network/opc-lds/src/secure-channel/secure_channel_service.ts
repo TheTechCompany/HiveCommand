@@ -9,7 +9,7 @@
 export {
     AsymmetricAlgorithmSecurityHeader,
     SymmetricAlgorithmSecurityHeader,
-} from "node-opcua-service-secure-channel";
+} from "../service-secure-channel";
 
 export {
     AcknowledgeMessage,
@@ -21,7 +21,7 @@ export {
     CloseSecureChannelRequest,
     CloseSecureChannelResponse,
     ServiceFault
-} from "node-opcua-service-secure-channel";
+} from "../service-secure-channel";
 
 export { MessageChunker } from "./message_chunker";
 export { chooseSecurityHeader } from "./secure_message_chunk_manager";
