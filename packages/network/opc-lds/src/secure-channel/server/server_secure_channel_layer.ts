@@ -1024,7 +1024,7 @@ export class ServerSecureChannelLayer extends EventEmitter {
 
     private _process_certificates(message: Message, callback: Callback2<StatusCode>): void {
         const asymmSecurityHeader = message.securityHeader as AsymmetricAlgorithmSecurityHeader;
-        console.log("PROCESS CERTIFICATE")
+        console.log("PROCESS CERTIFICATE", asymmSecurityHeader)
         // verify certificate
         const certificate = asymmSecurityHeader ? asymmSecurityHeader.senderCertificate : null;
         this.checkCertificateCallback(certificate!, (err: Error | null, statusCode?: StatusCode) => {
@@ -1032,6 +1032,8 @@ export class ServerSecureChannelLayer extends EventEmitter {
                 console.log("Check cert fail", err)
                 return callback(err);
             }
+
+            console.log("CHECK CERT CALLBAACK", {err, statusCode})
             //
             this.receiverPublicKey = null;
             this.receiverPublicKeyLength = 0;
@@ -1044,7 +1046,7 @@ export class ServerSecureChannelLayer extends EventEmitter {
             if (this.receiverCertificate && this.receiverCertificate.length === 0) {
                 this.receiverCertificate = null;
             }
-
+            console.log("RECEIVER CERT", this.receiverCertificate)
             if (this.receiverCertificate) {
                 // extract public key
                 extractPublicKeyFromCertificate(this.receiverCertificate, (err, key) => {
