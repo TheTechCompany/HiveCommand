@@ -26,7 +26,7 @@ import { FindServersRequest, FindServersResponse } from "node-opcua-service-disc
 import { ApplicationType, GetEndpointsResponse } from "node-opcua-service-endpoints";
 import { ApplicationDescription } from "node-opcua-service-endpoints";
 import { ServiceFault } from "node-opcua-service-secure-channel";
-import { StatusCode, StatusCodes } from "node-opcua-status-code";
+import { StatusCode, StatusCodes } from "../status-codes";
 import { ApplicationDescriptionOptions } from "node-opcua-types";
 import { EndpointDescription, GetEndpointsRequest } from "node-opcua-types";
 import { matchUri } from "node-opcua-utils";

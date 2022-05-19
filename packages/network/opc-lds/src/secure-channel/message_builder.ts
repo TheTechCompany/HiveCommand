@@ -29,7 +29,7 @@ import {
     MessageSecurityMode,
     CloseSecureChannelRequest
 } from "node-opcua-service-secure-channel";
-import { decodeStatusCode } from "node-opcua-status-code";
+import { decodeStatusCode } from "../status-codes";
 import { MessageBuilderBase } from "node-opcua-transport";
 import { timestamp } from "node-opcua-utils";
 import { SequenceHeader } from "node-opcua-chunkmanager";
