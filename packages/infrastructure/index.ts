@@ -43,7 +43,7 @@ const main = (async () => {
     const { service: rabbitMQService, url: rabbitURL } = await RabbitMQ(provider, vpcId)
     const { service: timeseriesService, url: timeseriesURL } = await Timeseries(provider, vpcId)
 
-    const { deployment: syncServer } = await SyncServer(provider, timeseriesURL, rabbitURL, namespace)
+    const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, namespace)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesURL, rabbitURL));
     const service = await Service(provider)
