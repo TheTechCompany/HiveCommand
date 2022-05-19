@@ -16,6 +16,11 @@ const paths = envPaths("node-opcua-local-discovery-server");
 const configFolder = paths.config;
 const pkiFolder = path.join(configFolder, "PKI");
 
+const serverCertificateManager = new OPCUACertificateManager({
+    automaticallyAcceptUnknownCertificate: true,
+    rootFolder: pkiFolder,
+    name: "PKI"
+});
 
 async function getIpAddresses() {
 
@@ -51,7 +56,6 @@ export interface DiscoveryServerOpts {
 	tolerant?: boolean;
 	force?: boolean;
     fqdn?: string;
-    rootFolder?: string;
 }
 
 export class DiscoveryService {
@@ -64,19 +68,11 @@ export class DiscoveryService {
 	private applicationUri?: string;
 	private applicationName?: string;
 
-    private serverCertManager: OPCUACertificateManager;
-
 	constructor(opts: DiscoveryServerOpts){
 		
 		this.opts = opts;
 		this.applicationName = this.opts.applicationName
   
-        this.serverCertManager = new OPCUACertificateManager({
-            automaticallyAcceptUnknownCertificate: true,
-            rootFolder: opts.rootFolder || '/tmp/opc-lds/',
-            name: "PKI"
-        });
-        
         console.log("New Discovery Service ", this.applicationName)
 	}
 
@@ -98,10 +94,10 @@ export class DiscoveryService {
 
         console.log({applicationUri: this.applicationUri});
 
-        await this.serverCertManager.initialize();
+        await serverCertificateManager.initialize();
 
 		const certificateFile = path.join(pkiFolder, "local_discovery_server_certificate.pem");
-        const privateKeyFile = this.serverCertManager.privateKey;
+        const privateKeyFile = serverCertificateManager.privateKey;
 
         assert(fs.existsSync(privateKeyFile), "expecting private key");
 
@@ -114,7 +110,7 @@ export class DiscoveryService {
 
             console.log({subject});
             
-            await this.serverCertManager.createSelfSignedCertificate({
+            await serverCertificateManager.createSelfSignedCertificate({
                 applicationUri: this.applicationUri,
                 dns: [this.fqdn],
                 // ip: await getIpAddresses(),
@@ -133,7 +129,7 @@ export class DiscoveryService {
             port: this.opts.port,
             certificateFile,
             privateKeyFile,
-            serverCertificateManager: this.serverCertManager,
+            serverCertificateManager,
             serverInfo: {
                 discoveryUrls: [`opc.tcp://${this.opts.fqdn}:${this.opts.port}`],
                 productUri: this.applicationName,
