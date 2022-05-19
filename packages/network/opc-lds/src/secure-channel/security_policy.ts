@@ -7,7 +7,7 @@
 
 import { assert } from "node-opcua-assert";
 
-import { MessageSecurityMode, SignatureData } from "node-opcua-service-secure-channel";
+import { MessageSecurityMode, SignatureData } from "../service-secure-channel";
 
 import {
     Certificate,

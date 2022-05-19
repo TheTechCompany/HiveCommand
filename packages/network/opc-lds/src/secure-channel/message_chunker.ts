@@ -7,8 +7,8 @@ import { assert } from "node-opcua-assert";
 import { encodeExpandedNodeId } from "node-opcua-basic-types";
 import { BinaryStream } from "node-opcua-binary-stream";
 import { DerivedKeys } from "node-opcua-crypto";
-import { BaseUAObject } from "node-opcua-factory";
-import { AsymmetricAlgorithmSecurityHeader, SymmetricAlgorithmSecurityHeader } from "node-opcua-service-secure-channel";
+import { BaseUAObject } from "../factory";
+import { AsymmetricAlgorithmSecurityHeader, SymmetricAlgorithmSecurityHeader } from "../service-secure-channel";
 import { timestamp } from "node-opcua-utils";
 import { make_errorLog, make_warningLog} from "node-opcua-debug";
 

@@ -11,7 +11,7 @@ export {
     ResponseHeader,
     RequestHeader,
     SignatureData
-} from "node-opcua-service-secure-channel";
+} from "../service-secure-channel";
 export {
     AcknowledgeMessage
 } from "node-opcua-transport";

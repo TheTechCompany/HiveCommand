@@ -20,7 +20,7 @@ import {
     verifyChunkSignatureWithDerivedKeys
 } from "node-opcua-crypto";
 import { checkDebugFlag, hexDump, make_debugLog, make_warningLog } from "node-opcua-debug";
-import { BaseUAObject, constructObject, hasConstructor } from "node-opcua-factory";
+import { BaseUAObject, constructObject, hasConstructor } from "../factory";
 import { ExpandedNodeId, NodeId } from "node-opcua-nodeid";
 import { analyseExtensionObject } from "node-opcua-packet-analyzer";
 import {
@@ -28,7 +28,7 @@ import {
     coerceMessageSecurityMode,
     MessageSecurityMode,
     CloseSecureChannelRequest
-} from "node-opcua-service-secure-channel";
+} from "../service-secure-channel";
 import { decodeStatusCode } from "../status-codes";
 import { MessageBuilderBase } from "node-opcua-transport";
 import { timestamp } from "node-opcua-utils";
