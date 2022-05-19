@@ -586,7 +586,7 @@ export class Data {
 	async updateDeviceValue(deviceId: string, placeholder: string, key: string, value: string) {
 		console.log({ deviceId, placeholder, key, value });
 		await this.requestGraphQL(gql`
-			mutation UpdateDeviceValue($deviceId: String, $placeholder: String, $key: String, $value: String){
+			mutation UpdateDeviceValue($deviceId: ID, $placeholder: String, $key: String, $value: String){
 				updateCommandDevice(where: {id: $deviceId}, input: {deviceSnapshot: [{placeholder: $placeholder, key: $key, value: $value}]}){
 					id
 				}
