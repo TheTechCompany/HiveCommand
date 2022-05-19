@@ -3,4 +3,4 @@ config:
   hivecommand-app:org: ultraviolet
   hivecommand-app:suffix: staging 
 
-  hivecommand-app:sync-host: staging_discovery.hexhive.io
+  hivecommand-app:sync-host: staging-discovery.hexhive.io
