@@ -884,13 +884,18 @@ export class ServerSecureChannelLayer extends EventEmitter {
         this._process_certificates(message, (err: Error | null, statusCode?: StatusCode) => {
             // istanbul ignore next
             if (err || !statusCode) {
+                console.log("PROCESS", {err, statusCode})
                 description = "Internal Error " + err?.message;
                 return this._on_OpenSecureChannelRequestError(StatusCodes.BadInternalError, description, message, callback);
             }
 
             if (statusCode !== StatusCodes.Good) {
+
                 const description = "Sender Certificate Error";
                 debugLog(chalk.cyan(description), chalk.bgCyan.yellow(statusCode!.toString()));
+
+                console.log("PROCESS 2", {description, statusCode})
+
                 // OPCUA specification v1.02 part 6 page 42 $6.7.4
                 // If an error occurs after the  Server  has verified  Message  security  it  shall  return a  ServiceFault  instead
                 // of a OpenSecureChannel  response. The  ServiceFault  Message  is described in  Part  4,   7.28.
@@ -902,8 +907,12 @@ export class ServerSecureChannelLayer extends EventEmitter {
                 ) {
                     statusCode = StatusCodes.BadSecurityChecksFailed;
                 }
+                console.log("PROCESS 3", {description, statusCode, message})
+
                 return this._on_OpenSecureChannelRequestError(statusCode, description, message, callback);
             }
+            console.log("PROCESS 4", {statusCode, message})
+
             this._handle_OpenSecureChannelRequest(statusCode!, message, callback);
         });
     }
