@@ -522,8 +522,8 @@ export class Data {
 					// console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
 
 					let calibrationUpdate : any = {};
-					if(calibration?.min)calibrationUpdate.min = calibration?.min;
-					if(calibration?.max)calibrationUpdate.max = calibration?.max;
+					if(calibration?.min)calibrationUpdate.min = calibration?.min || state_item?.min;
+					if(calibration?.max)calibrationUpdate.max = calibration?.max || state_item?.max;
 
 					return {
 						...state_item,
