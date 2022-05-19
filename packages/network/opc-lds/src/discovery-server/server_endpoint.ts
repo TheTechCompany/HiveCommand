@@ -5,7 +5,7 @@
 import { EventEmitter } from "events";
 import * as net from "net";
 import { Server, Socket } from "net";
-import * as chalk from "chalk";
+import chalk from "chalk";
 import * as async from "async";
 
 import { assert } from "node-opcua-assert";
@@ -668,6 +668,7 @@ export class OPCUAServerEndPoint extends EventEmitter implements ServerSecureCha
             })
             .on("error", (err: Error) => {
                 // this could be because the port is already in use
+                // chalk.red.bo
                 debugLog(chalk.red.bold("server error: "), err.message);
             });
     }
