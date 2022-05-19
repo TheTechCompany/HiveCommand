@@ -60,6 +60,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                             {name: 'HEXHIVE_API_URL', value: process.env.HEXHIVE_API_URL},
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
                             { name: 'SYNC_HOST', value: syncHostname },
+                            { name: 'HOSTNAME', value: syncHostname },
                             { name: 'TIMESERIES_HOST', value: timeseriesHost.apply(url => `${url}`) },
                             { name: 'TIMESERIES_PASSWORD', value: process.env.TIMESERIES_PASSWORD },
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
