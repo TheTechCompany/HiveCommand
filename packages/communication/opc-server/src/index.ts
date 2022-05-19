@@ -413,7 +413,13 @@ export default class Server {
             })
         })
 
-
+        this.server.on('serverRegistered', () => {
+            console.log("Server Registered");
+        })
+        this.server.on('serverRegistrationPending', () => {
+            console.log("Server registration pending")
+        })
+        
         console.log(`=> OPC-UA Server Start: Access = ${this.server.getEndpointUrl()}`)
     }
 
