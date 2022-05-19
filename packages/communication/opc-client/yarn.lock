@@ -4176,7 +4176,7 @@ node-opcua-xml2json@2.68.0:
     node-opcua-utils "2.67.0"
     xml-writer "^1.7.0"
 
-node-opcua@^2.50.0:
+node-opcua@^2.68.1:
   version "2.68.1"
   resolved "https://registry.yarnpkg.com/node-opcua/-/node-opcua-2.68.1.tgz#6be6117b9054e3069444a14375eb66da22f20615"
   integrity sha512-ATdqbA3y5D0PmQL6MFG6qGXqTlbByUdm6x04jb3c7YGG5HMZFmoo0lJKhZmZdWbzwgq/pm7oVsU17ikv04mq1Q==
