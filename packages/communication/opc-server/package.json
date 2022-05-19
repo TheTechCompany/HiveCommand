@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@hive-command/opcua-utils": "^1.4.3",
-    "node-opcua": "2.42.0"
+    "node-opcua": "2.68.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.3",

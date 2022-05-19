@@ -23,7 +23,7 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "node-opcua": "^2.50.0",
+    "node-opcua": "^2.68.1",
     "vorpal": "^1.12.0",
     "vorpal-repl": "^1.1.8",
     "yargs": "^17.2.1"
