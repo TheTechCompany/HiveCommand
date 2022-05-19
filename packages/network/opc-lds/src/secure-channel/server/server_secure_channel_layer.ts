@@ -796,6 +796,7 @@ export class ServerSecureChannelLayer extends EventEmitter {
         requestId: number,
         channelId: number
     ) {
+        console.log("INITIAL OPEN SECURE CHANNEL")
         /* istanbul ignore next */
         if (doTraceServerMessage) {
             traceRequestMessage(request, channelId, this._counter);
@@ -876,6 +877,8 @@ export class ServerSecureChannelLayer extends EventEmitter {
                     this._tick0 = get_clock_tick();
                 }
             });
+        
+        console.log("PROCESS CERTIFICATES IN INITIAL HANDLER")
 
         // handle initial OpenSecureChannelRequest
         this._process_certificates(message, (err: Error | null, statusCode?: StatusCode) => {
@@ -1021,7 +1024,7 @@ export class ServerSecureChannelLayer extends EventEmitter {
 
     private _process_certificates(message: Message, callback: Callback2<StatusCode>): void {
         const asymmSecurityHeader = message.securityHeader as AsymmetricAlgorithmSecurityHeader;
-
+        console.log("PROCESS CERTIFICATE")
         // verify certificate
         const certificate = asymmSecurityHeader ? asymmSecurityHeader.senderCertificate : null;
         this.checkCertificateCallback(certificate!, (err: Error | null, statusCode?: StatusCode) => {
