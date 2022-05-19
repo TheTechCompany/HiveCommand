@@ -28,7 +28,9 @@ import {
     MessageSecurityMode,
     SymmetricAlgorithmSecurityHeader
 } from "node-opcua-service-secure-channel";
-import { StatusCode, StatusCodes } from "node-opcua-status-code";
+
+import { StatusCode, StatusCodes } from "node-opcua";
+
 import { ServerTCP_transport } from "node-opcua-transport";
 import { get_clock_tick, timestamp } from "node-opcua-utils";
 import { Callback2, ErrorCallback } from "node-opcua-status-code";
@@ -889,7 +891,8 @@ export class ServerSecureChannelLayer extends EventEmitter {
                 return this._on_OpenSecureChannelRequestError(StatusCodes.BadInternalError, description, message, callback);
             }
 
-            if (statusCode.value !== 0) {
+            console.log("GOOD VALUE", {statusCode, Good: StatusCodes.Good}, statusCode === StatusCodes.Good)
+            if (statusCode.name !== "Good") {
 
                 const description = "Sender Certificate Error";
                 debugLog(chalk.cyan(description), chalk.bgCyan.yellow(statusCode!.toString()));
@@ -910,6 +913,8 @@ export class ServerSecureChannelLayer extends EventEmitter {
                 console.log("PROCESS 3", {description, statusCode, message})
 
                 return this._on_OpenSecureChannelRequestError(statusCode, description, message, callback);
+            }else{
+                statusCode = StatusCodes.Good;
             }
             console.log("PROCESS 4", {statusCode, message})
 
@@ -1172,6 +1177,8 @@ export class ServerSecureChannelLayer extends EventEmitter {
         const request = message.request as OpenSecureChannelRequest;
         const requestId: number = message.requestId;
         assert(requestId !== 0 && requestId > 0);
+
+        console.log("OPEN CHANNEL", {serviceResult})
 
         // let prepare self.securityHeader;
         this.securityHeader = this._prepare_security_header(request, message);
