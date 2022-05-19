@@ -32,7 +32,7 @@
  } from "node-opcua-service-discovery";
  import { ApplicationDescription } from "node-opcua-service-endpoints";
  import { ApplicationDescriptionOptions, ApplicationType } from "node-opcua-service-endpoints";
- import { ErrorCallback, StatusCode, StatusCodes } from "node-opcua-status-code";
+ import { ErrorCallback, StatusCode, StatusCodes } from "../status-codes";
  
  import { MDNSResponder } from "./mdns_responder";
  import { OPCUACertificateManager } from "node-opcua-certificate-manager";

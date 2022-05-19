@@ -35,7 +35,7 @@ import {
     ActivateSessionResponse,
     PublishRequest
 } from "node-opcua-types";
-import { StatusCode, StatusCodes } from "node-opcua-status-code";
+import { StatusCode, StatusCodes } from "../status-codes";
 import { Request, Response } from "./common";
 import { SecurityPolicy } from ".";
 

@@ -19,7 +19,7 @@ import { get_clock_tick, timestamp } from "node-opcua-utils";
 import { readMessageHeader, verify_message_chunk } from "node-opcua-chunkmanager";
 import { checkDebugFlag, hexDump, make_debugLog, make_errorLog, make_warningLog } from "node-opcua-debug";
 import { ChannelSecurityToken, coerceMessageSecurityMode, MessageSecurityMode } from "node-opcua-service-secure-channel";
-import { CallbackT, StatusCodes } from "node-opcua-status-code";
+import { CallbackT, StatusCodes } from "../../status-codes";
 import { ClientTCP_transport } from "node-opcua-transport";
 import { ErrorCallback } from "node-opcua-status-code";
 import { BaseUAObject } from "node-opcua-factory";

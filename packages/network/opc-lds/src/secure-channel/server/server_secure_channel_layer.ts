@@ -29,7 +29,7 @@ import {
     SymmetricAlgorithmSecurityHeader
 } from "node-opcua-service-secure-channel";
 
-import { StatusCode, StatusCodes } from "node-opcua";
+import { StatusCode, StatusCodes } from "../../status-codes";
 
 import { ServerTCP_transport } from "node-opcua-transport";
 import { get_clock_tick, timestamp } from "node-opcua-utils";
