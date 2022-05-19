@@ -6,9 +6,6 @@
 import { assert } from "node-opcua-assert";
 import { BinaryStream, OutputBinaryStream } from "node-opcua-binary-stream";
 
-import { StatusCodes } from "./_generated_status_codes";
-export { StatusCodes } from "./_generated_status_codes";
-
 function warnLog(...args: [any?, ...any[]]) {
     /* istanbul ignore next */
     // tslint:disable-next-line:no-console
@@ -240,45 +237,8 @@ Object.defineProperty(ConstantStatusCode.prototype, "value", { enumerable: true 
 Object.defineProperty(ConstantStatusCode.prototype, "description", { enumerable: true });
 Object.defineProperty(ConstantStatusCode.prototype, "name", { enumerable: true });
 
-export function encodeStatusCode(statusCode: StatusCode | ConstantStatusCode, stream: OutputBinaryStream): void {
-    stream.writeUInt32(statusCode.value);
-}
 
-/** @internal construct status codes fast search indexes */
-const statusCodesReversedMap: any = {};
 
-/**
- * returns the StatusCode corresponding to the provided value, if any
- * @note: if code is not known , then StatusCodes.Bad will be returned
- * @param code
- */
-export function getStatusCodeFromCode(code: number): StatusCode {
-    const codeWithoutInfoBits = (code & 0xffff0000) >>> 0;
-    const infoBits = code & 0x0000ffff;
-    let sc = statusCodesReversedMap[codeWithoutInfoBits];
-
-    /* istanbul ignore if */
-    if (!sc) {
-        sc = StatusCodes.Bad;
-        // tslint:disable-next-line: no-console
-        console.log(
-            "expecting a known StatusCode but got 0x" + codeWithoutInfoBits.toString(16),
-            " code was 0x" + code.toString(16)
-        );
-        warnLog("expecting a known StatusCode but got 0x" + codeWithoutInfoBits.toString(16), " code was 0x" + code.toString(16));
-    }
-    if (infoBits) {
-        const tmp = new ModifiableStatusCode({ _base: sc });
-        tmp.set(infoBits);
-        sc = tmp;
-    }
-    return sc;
-}
-
-export function decodeStatusCode(stream: BinaryStream, _value?: StatusCode): StatusCode {
-    const code = stream.readUInt32();
-    return getStatusCodeFromCode(code);
-}
 
 export class ModifiableStatusCode extends StatusCode {
     private readonly _base: StatusCode;
@@ -366,8 +326,53 @@ export class ModifiableStatusCode extends StatusCode {
 Object.defineProperty(ModifiableStatusCode.prototype, "_base", { enumerable: false, writable: true });
 Object.defineProperty(ModifiableStatusCode.prototype, "_extraBits", { enumerable: false, writable: true });
 
+
+import { StatusCodes } from "./_generated_status_codes";
+export { StatusCodes } from "./_generated_status_codes";
+
+
+export function encodeStatusCode(statusCode: StatusCode | ConstantStatusCode, stream: OutputBinaryStream): void {
+    stream.writeUInt32(statusCode.value);
+}
+
+/** @internal construct status codes fast search indexes */
+const statusCodesReversedMap: any = {};
+
+/**
+ * returns the StatusCode corresponding to the provided value, if any
+ * @note: if code is not known , then StatusCodes.Bad will be returned
+ * @param code
+ */
+export function getStatusCodeFromCode(code: number): StatusCode {
+    const codeWithoutInfoBits = (code & 0xffff0000) >>> 0;
+    const infoBits = code & 0x0000ffff;
+    let sc = statusCodesReversedMap[codeWithoutInfoBits];
+
+    /* istanbul ignore if */
+    if (!sc) {
+        sc = StatusCodes.Bad;
+        // tslint:disable-next-line: no-console
+        console.log(
+            "expecting a known StatusCode but got 0x" + codeWithoutInfoBits.toString(16),
+            " code was 0x" + code.toString(16)
+        );
+        warnLog("expecting a known StatusCode but got 0x" + codeWithoutInfoBits.toString(16), " code was 0x" + code.toString(16));
+    }
+    if (infoBits) {
+        const tmp = new ModifiableStatusCode({ _base: sc });
+        tmp.set(infoBits);
+        sc = tmp;
+    }
+    return sc;
+}
+
+export function decodeStatusCode(stream: BinaryStream, _value?: StatusCode): StatusCode {
+    const code = stream.readUInt32();
+    return getStatusCodeFromCode(code);
+}
+
 export function coerceStatusCode(statusCode: StatusCode | number | string | { value: number }): StatusCode {
-    console.log("Coerce", {stringStatus: statusCode as string, statusCode, type: typeof(statusCode), instanceof: statusCode instanceof StatusCodes,instanceof2: statusCode instanceof StatusCode })
+    console.log("Coerce", {stringStatus: statusCode as string, statusCode, type: typeof(statusCode), instanceof2: statusCode instanceof StatusCode })
 
     if (statusCode instanceof StatusCode) {
         return statusCode;
