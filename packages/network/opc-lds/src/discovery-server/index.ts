@@ -13,7 +13,7 @@
  import { makeApplicationUrn } from "node-opcua-common";
  import { checkDebugFlag, make_debugLog } from "node-opcua-debug";
  import { extractFullyQualifiedDomainName, resolveFullyQualifiedDomainName } from "node-opcua-hostname";
- import { Message, Response, ServerSecureChannelLayer } from "node-opcua-secure-channel";
+ import { Message, Response, ServerSecureChannelLayer } from "../secure-channel";
  import { OPCUABaseServer, OPCUABaseServerOptions, OPCUAServerEndPoint } from "node-opcua-server";
  
  import {
