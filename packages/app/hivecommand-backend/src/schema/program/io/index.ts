@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import { nanoid } from "nanoid";
 
 export default (prisma: PrismaClient) => {

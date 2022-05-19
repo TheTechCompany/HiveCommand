@@ -4,16 +4,15 @@ import { Server, Socket } from "socket.io";
 import jwt from 'jsonwebtoken'
 import jwt_decode from 'jwt-decode';
 import bodyParser from 'body-parser'
-import { Models, connect_data, disconnect_data } from '@hive-command/data'
 import routes from './routes';
 import { handleSocket } from './socket-handler';
-import { HiveCommandData } from '@hive-command/data'
 import { DiscoveryService } from '@hive-command/opcua-lds'
 import { promises } from 'dns';
 import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
 import os from 'os';
 import { Data } from './data';
+import { PrismaClient } from '@hive-command/data'
 
 import amqp from 'amqplib'
 import { DataType } from 'node-opcua-variant';
@@ -30,7 +29,7 @@ export class DiscoveryServer {
     private server : HttpServer;
     private io: Server;
 
-    private data: HiveCommandData;
+    private prisma: PrismaClient;
 
     private opcuaDiscovery : DiscoveryService;
 
@@ -47,6 +46,8 @@ export class DiscoveryServer {
     constructor(opts: DiscoveryServerOptions){
         this.options = opts;
 
+        this.prisma = new PrismaClient()
+
         this.dataBroker = new Data({
             gatewayURL: opts.gatewayURL,
             apiKey: opts.apiKey
@@ -61,18 +62,14 @@ export class DiscoveryServer {
             applicationName: "HiveCommand OPCUA"
         })
         
-        this.syncClient = new SyncClient({discoveryServer: this.opcuaDiscovery, broker: this.dataBroker})
+        this.syncClient = new SyncClient({prisma: this.prisma, discoveryServer: this.opcuaDiscovery, broker: this.dataBroker})
 
         this.app = express();
         this.server = createServer(this.app);
         this.io = new Server(this.server)
 
-        this.data = new HiveCommandData()
-
         console.log("Construct")
         this.initListeners()
-
-        connect_data()
     }
 
     initListeners(){
@@ -119,7 +116,7 @@ export class DiscoveryServer {
     onSocketConnect(socket: Socket){
         console.log("Socket Connected ", socket.id)
 
-        handleSocket(this.data, socket)
+        handleSocket(this.prisma, socket)
 
         socket.on('disconnect', this.onSocketDisconnect.bind(this, socket))
     }

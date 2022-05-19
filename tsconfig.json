@@ -11,6 +11,7 @@
 		"node-opcua": ["../node_modules/node-opcua"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
 
+		"@hive-command/data": ["./core/command-data/src"],
 		/* Runtime */
 		"@hive-command/data-types": ["./core/command-data-types/src"],
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],
@@ -27,7 +28,6 @@
 		"@hive-command/plugin-base": ["./plugins/base-plugin/src"],
 
 		/* Discovery server */
-		"@hive-command/data": ["./network/hive-command-data/src"],
 		"@hive-command/discovery-server": ["./network/hive-command-discovery-server/src"],
 	
 		/* OPCUA Libraries */

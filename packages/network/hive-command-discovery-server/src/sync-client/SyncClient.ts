@@ -4,14 +4,13 @@ import async, { AsyncFunction, series } from 'async';
 import { ApplicationDescription, DataType, ReferenceDescription, ServerOnNetwork, Variant } from 'node-opcua';
 import os from 'os';
 import { DiscoveryServer } from '..';
-import { Models } from '@hive-command/data'
 import { Pool, PoolClient } from "pg";
 import { publishToILP } from '../data/ilp';
 
 import net from "net"
 import { Data } from '../data';
+import { PrismaClient } from '@hive-command/data';
 
-const { DeviceValue } = Models;
 
 export class SyncClient {
 
@@ -21,7 +20,7 @@ export class SyncClient {
 
 	private discoveryInterval: any;
 
-	private influxPool: Pool;
+	// private influxPool: Pool;
 	
 	private discoveryServer: DiscoveryService
 
@@ -31,21 +30,25 @@ export class SyncClient {
 
 	private client = new net.Socket();
 
-	constructor(opts: {discoveryServer: DiscoveryService, broker: Data}){
+	private prisma: PrismaClient;
+
+	constructor(opts: {prisma: PrismaClient, discoveryServer: DiscoveryService, broker: Data}){
 		// this.client = new Client(opts.discoveryServer)
 		this.discoveryServer = opts.discoveryServer
+		
+		this.prisma = opts.prisma;
 
 		this.dataBroker = opts.broker;
 
 		this.discover = this.discover.bind(this);
 
-		this.influxPool = new Pool({
-			// database: 'qdb',
-			host: process.env.TIMESERIES_HOST,
-			port: 5432,
-			user: 'postgres',
-			password: process.env.TIMESERIES_PASSWORD,
-		})
+		// this.influxPool = new Pool({
+		// 	// database: 'qdb',
+		// 	host: process.env.TIMESERIES_HOST,
+		// 	port: 5432,
+		// 	user: 'postgres',
+		// 	password: process.env.TIMESERIES_PASSWORD,
+		// })
 
 
 		this.createLogEntry = this.createLogEntry.bind(this);
@@ -238,7 +241,7 @@ export class SyncClient {
 
 		await Promise.all([
 			publishToILP(	
-				this.influxPool, 
+				this.prisma, 
 				[{
 					device,
 					deviceId,

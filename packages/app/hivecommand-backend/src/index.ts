@@ -14,7 +14,7 @@ import schema from './schema'
 
 import { Pool, types } from 'pg';
 
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@hive-command/data";
 import gql from 'graphql-tag';
 
 types.setTypeParser(1114, (value) => {

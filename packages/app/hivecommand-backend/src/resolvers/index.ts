@@ -9,7 +9,7 @@ import { OGM } from '@neo4j/graphql-ogm'
 import {unit as mathUnit} from 'mathjs';
 import { Driver } from 'neo4j-driver';
 import moment from 'moment';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@hive-command/data';
 
 const getProjection = (fieldASTs: any) => {
 	const { selections } = fieldASTs.selectionSet;
