@@ -65,6 +65,7 @@ export class SyncClient {
 				if(!serverUrl) return;
 				let serverUri = serverUrl;
 
+				console.log("Found server", {server})
 				if(!this.clients[serverUri] && serverUrl){
 					
 					// console.log("new server ", serverUri, server)
@@ -74,6 +75,8 @@ export class SyncClient {
 
 					if(!networkName) return console.error("Could not find network name for server", serverUrl)
 					const controlDevice = await this.dataBroker.getDeviceByNetID(networkName)
+
+					console.log("Connecting to server", {serverUrl, serverUri})
 
 					//New server
 					this.clients[serverUri] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
