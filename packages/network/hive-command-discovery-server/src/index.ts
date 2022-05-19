@@ -54,7 +54,7 @@ export class DiscoveryServer {
 
         this.opcuaDiscovery = new DiscoveryService({
             port: 4840,
-            rootFolder: opts.rootFolder,
+            // rootFolder: opts.rootFolder,
             automaticallyAcceptUnknownCertificate: true,
             force: true,
             fqdn: this.options.fqdn,

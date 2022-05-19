@@ -15,7 +15,7 @@ RUN npx lerna run build --scope @hive-command/discovery-server --include-depende
 WORKDIR /app/packages/network/hive-command-discovery-server
 
 
-ENV ROOT_FOLDER /tmp/
+RUN mkdir -p /root/.config/
 # RUN cp -Lr /app/packages/network/hive-command-discovery-server/node_modules/ _node_modules/
 
 # FROM node:lts-slim
