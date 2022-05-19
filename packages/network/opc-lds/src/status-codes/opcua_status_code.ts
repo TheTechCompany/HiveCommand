@@ -6,6 +6,9 @@
 import { assert } from "node-opcua-assert";
 import { BinaryStream, OutputBinaryStream } from "node-opcua-binary-stream";
 
+import { StatusCodes } from "./_generated_status_codes";
+export { StatusCodes } from "./_generated_status_codes";
+
 function warnLog(...args: [any?, ...any[]]) {
     /* istanbul ignore next */
     // tslint:disable-next-line:no-console
@@ -362,9 +365,6 @@ export class ModifiableStatusCode extends StatusCode {
 // hide private properties
 Object.defineProperty(ModifiableStatusCode.prototype, "_base", { enumerable: false, writable: true });
 Object.defineProperty(ModifiableStatusCode.prototype, "_extraBits", { enumerable: false, writable: true });
-
-import { StatusCodes } from "./_generated_status_codes";
-export { StatusCodes } from "./_generated_status_codes";
 
 export function coerceStatusCode(statusCode: StatusCode | number | string | { value: number }): StatusCode {
     console.log("Coerce", {stringStatus: statusCode as string, statusCode, type: typeof(statusCode), instanceof: statusCode instanceof StatusCodes,instanceof2: statusCode instanceof StatusCode })
