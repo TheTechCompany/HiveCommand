@@ -889,7 +889,7 @@ export class ServerSecureChannelLayer extends EventEmitter {
                 return this._on_OpenSecureChannelRequestError(StatusCodes.BadInternalError, description, message, callback);
             }
 
-            if (statusCode !== StatusCodes.Good) {
+            if (statusCode.value !== 0) {
 
                 const description = "Sender Certificate Error";
                 debugLog(chalk.cyan(description), chalk.bgCyan.yellow(statusCode!.toString()));
