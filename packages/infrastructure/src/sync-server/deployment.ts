@@ -42,8 +42,9 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                         'eks.amazonaws.com/nodegroup': 'managed-nodes'
                     },
                     dnsConfig: {
-                        nameservers: ['192.168.200.1', '8.8.8.8']
+                        nameservers: ['192.168.200.1']
                     },
+                    dnsPolicy: 'Default',
                    containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
