@@ -49,7 +49,7 @@ export const handler = (argv: Arguments<Options>) => {
 		force,
 		applicationName,
 		fqdn,
-		rootFolder
+		// rootFolder
 	})
 
 	discoveryServer.init().then(() => {
