@@ -115,7 +115,7 @@ export class DiscoveryService {
                 dns: [this.fqdn],
                 // ip: await getIpAddresses(),
                 outputFile: certificateFile,
-                subject: subject, //"/CN=HiveCommand/DC=Discovery-Server",
+                subject: `/CN=${this.fqdn}/DC=${this.applicationName}/O=Ultraviolet`, //"/CN=HiveCommand/DC=Discovery-Server",
                 startDate: new Date(),
                 validity: 365 * 10
             })
