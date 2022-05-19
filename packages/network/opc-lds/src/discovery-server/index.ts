@@ -14,8 +14,8 @@
  import { checkDebugFlag, make_debugLog } from "node-opcua-debug";
  import { extractFullyQualifiedDomainName, resolveFullyQualifiedDomainName } from "node-opcua-hostname";
  import { Message, Response, ServerSecureChannelLayer } from "../secure-channel";
- import { OPCUABaseServer, OPCUABaseServerOptions, OPCUAServerEndPoint } from "node-opcua-server";
- 
+ import { OPCUABaseServer, OPCUABaseServerOptions } from "./base_server";
+ import { OPCUAServerEndPoint } from './server_endpoint'
  import {
      Announcement,
      BonjourHolder,

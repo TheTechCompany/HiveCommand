@@ -4,8 +4,8 @@ import fs from "fs";
 
 import { OPCUADiscoveryServer } from './discovery-server'
 
-import { assert, OPCUACertificateManager, extractFullyQualifiedDomainName, makeApplicationUrn, ServerSecureChannelLayer } from "node-opcua";
-
+import { assert, OPCUACertificateManager, extractFullyQualifiedDomainName, makeApplicationUrn } from "node-opcua";
+import { ServerSecureChannelLayer } from './secure-channel'
 // Create a new instance of vantage.
 
 import envPaths from "env-paths";
@@ -130,6 +130,7 @@ export class DiscoveryService {
             certificateFile,
             privateKeyFile,
             serverCertificateManager,
+            
             serverInfo: {
                 discoveryUrls: [`opc.tcp://${this.opts.fqdn}:${this.opts.port}`],
                 productUri: this.applicationName,
