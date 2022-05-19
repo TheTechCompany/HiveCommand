@@ -13,9 +13,9 @@
  import { makeApplicationUrn } from "node-opcua-common";
  import { checkDebugFlag, make_debugLog } from "node-opcua-debug";
  import { extractFullyQualifiedDomainName, resolveFullyQualifiedDomainName } from "node-opcua-hostname";
- import { Message, Response, ServerSecureChannelLayer } from "node-opcua-secure-channel";
- import { OPCUABaseServer, OPCUABaseServerOptions, OPCUAServerEndPoint } from "node-opcua-server";
- 
+ import { Message, Response, ServerSecureChannelLayer } from "../secure-channel";
+ import { OPCUABaseServer, OPCUABaseServerOptions } from "./base_server";
+ import { OPCUAServerEndPoint } from './server_endpoint'
  import {
      Announcement,
      BonjourHolder,
@@ -32,7 +32,7 @@
  } from "node-opcua-service-discovery";
  import { ApplicationDescription } from "node-opcua-service-endpoints";
  import { ApplicationDescriptionOptions, ApplicationType } from "node-opcua-service-endpoints";
- import { ErrorCallback, StatusCode, StatusCodes } from "node-opcua-status-code";
+ import { ErrorCallback, StatusCode, StatusCodes } from "../status-codes";
  
  import { MDNSResponder } from "./mdns_responder";
  import { OPCUACertificateManager } from "node-opcua-certificate-manager";
