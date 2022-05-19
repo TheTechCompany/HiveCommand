@@ -44,7 +44,7 @@ export const Deployment = async (provider: Provider, appName: string, timeseries
                     dnsConfig: {
                         nameservers: ['192.168.200.1']
                     },
-                    dnsPolicy: 'Default',
+                    // dnsPolicy: 'Default',
                    containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
