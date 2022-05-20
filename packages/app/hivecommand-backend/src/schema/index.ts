@@ -59,60 +59,6 @@ export default (prisma: PrismaClient, channel: Channel) => {
 	 ])
 	
 
-	/*
-	
-	type CommandKeyValue {
-		id: ID 
-		key: String
-		value: String
-	}
-
-
-
-
-	interface CommandProgramDevicePluginAssignment {
-		configuration: [String]
-	}
-
-	
-	interface CommandProgramDevicePluginRequires  {
-		key: String
-	}
-
-	type CommandProgramDocumentation {
-		id: ID! 
-		name: String
-		blocks: [String]
-
-		program: CommandProgram 
-	}
-
-
-
-
-
-	type CommandPlugin {
-		id: ID! 
-		name: String
-		items: [CommandPluginItem] 
-
-	}
-
-	type CommandPluginItem {
-		id: ID! 
-		name: String
-		type: String
-		value: String
-
-		usedIn: [CommandPlugin] 
-	}
-
-
-	*/
-/*
-	${programTypeDefs}
-	${hmiTypeDefs}
-*/
 
 
 	return {
