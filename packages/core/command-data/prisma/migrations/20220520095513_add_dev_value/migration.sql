@@ -1,3 +1,4 @@
+
 -- CreateTable
 CREATE TABLE "DeviceValue" (
     "id" SERIAL NOT NULL,

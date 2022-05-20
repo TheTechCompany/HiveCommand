@@ -27,7 +27,8 @@ const main = (async () => {
     const rootServer = gatewayRef.getOutput('gatewayUrl');
 
     const rabbitURL = dbRef.getOutput('rabbitURL');
-    const dbUrl = dbRef.getOutput('postgres_name');
+    
+    const dbUrl = dbRef.getOutput('timeseries_name');
     const dbPass = dbRef.getOutput('postgres_pass');
 
     const provider = new Provider('eks', { kubeconfig });
