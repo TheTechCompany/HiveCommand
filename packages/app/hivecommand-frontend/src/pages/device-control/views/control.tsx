@@ -71,14 +71,13 @@ export default () => {
 
 	const { data: deviceValueData } = useQuery(gql`
 		query DeviceValues( $idStr: String, $id: ID) {
-			commandDeviceValue(device: $idStr){
-				device
-				deviceId
-				value
-				valueKey
-			}
-
+		
 			commandDevices (where: {id: $id}){
+				deviceSnapshot {
+					placeholder
+					key
+					value
+				}
 				waitingForActions {
 					id
 				}
@@ -92,9 +91,9 @@ export default () => {
     })
 
 
-	const values : {deviceId: string, valueKey: string, value: string}[] = deviceValueData?.commandDeviceValue || []
+	const values : {placeholder: string, key: string, value: string}[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 	
-	const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {})
+	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({[action.key]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {})
 
 	const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
         //Find map between P&ID tag and bus-port
@@ -102,13 +101,13 @@ export default () => {
         if(!name) return;
 
     
-        let v = values.filter((a) => a?.deviceId == name);
+        let v = values.filter((a) => a?.placeholder == name);
         let state = program?.devices?.find((a) => a.name == name).type?.state;
 
          
         return v.reduce((prev, curr) => {
-            let unit = units?.find((a) => a.key == curr.valueKey);
-            let stateItem = state.find((a) => a.key == curr.valueKey);
+            let unit = units?.find((a) => a.key == curr.key);
+            let stateItem = state.find((a) => a.key == curr.key);
             let value = curr.value;
 
             if(!stateItem) return prev;
@@ -118,7 +117,7 @@ export default () => {
             }
             return {
                 ...prev,
-                [curr.valueKey]: value
+                [curr.key]: value
             }
         }, {})
     
@@ -142,8 +141,8 @@ export default () => {
     }, [device, deviceValueData])
 
 
-	const operatingMode = values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase();
-	const operatingState = values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off";
+	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase();
+	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
    
 
     useEffect(() => {
@@ -280,9 +279,9 @@ export default () => {
 
 
 	 const deviceModes = program?.devices?.map((a) => {
-        let vals = values.filter((b) => b?.deviceId == a.name);
+        let vals = values.filter((b) => b?.placeholder == a.name);
         // if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-        return {name: a.name, mode: vals.find((a) => a.valueKey == 'mode')?.value};
+        return {name: a.name, mode: vals.find((a) => a.key == 'mode')?.value};
     }) || [];
 
 
