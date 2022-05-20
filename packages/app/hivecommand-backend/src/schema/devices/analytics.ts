@@ -208,8 +208,7 @@ export default (prisma: PrismaClient) => {
 								AND "lastUpdated" < ${beforeTime.toISOString()}
 							GROUP by deviceId, placeholder, key, "lastUpdated", value
 						) as SUB
-				`//startDate
-				//date_trunc('week', NOW()) 
+				`
 
 				const result = await prisma.$queryRaw<any[]>`${query}`;
 
