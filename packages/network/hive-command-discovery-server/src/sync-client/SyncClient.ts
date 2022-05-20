@@ -249,7 +249,7 @@ export class SyncClient {
 					valueKey
 				}]
 			),
-			this.dataBroker.updateDeviceValue(device,  deviceId, valueKey, value.value)
+			// this.dataBroker.updateDeviceValue(device,  deviceId, valueKey, value.value)
 			// DeviceValue.updateOne({
 			// 	device,
 			// 	deviceId,

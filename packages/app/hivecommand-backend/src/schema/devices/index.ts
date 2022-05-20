@@ -35,10 +35,10 @@ export default (prisma: PrismaClient) => {
 								device: true,
 							}
 						},
-						values: {
-							where: {lastUpdated: {gt: new Date()}},
-							orderBy: {lastUpdated: 'desc'},
-						},
+						// values: {
+						// 	where: {lastUpdated: {gt: new Date()}},
+						// 	orderBy: {lastUpdated: 'desc'},
+						// },
 						peripherals: {
 							include: {
 								connectedDevices: {
