@@ -24,7 +24,7 @@ export const publishToILP = async (
 					deviceId: row.device,
 					placeholder: row.deviceId,
 					key: row.valueKey,
-					value: row.value
+					value: `${row.value}`
 				}
 			})
 

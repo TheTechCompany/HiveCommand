@@ -207,7 +207,7 @@ export class SyncClient {
 		// 	this.influxClient = await this.influxPool.connect()
 		// }
 
-		console.log("Create log entry", key)
+		// console.log("Create log entry", key)
 
 		// let parts = key.match(/(.+)\|(.+)\|(.+)/)
 		// console.log("Parts", key, parts)
