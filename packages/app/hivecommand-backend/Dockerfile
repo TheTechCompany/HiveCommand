@@ -11,11 +11,11 @@ COPY . .
 
 RUN yarn
 
-RUN npx lerna bootstrap --scope @hive-command/backend
+RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
 
 ENV NODE_ENV="production"
 
-RUN npx lerna run build --scope @hive-command/backend
+RUN npx lerna run build --scope @hive-command/backend --include-dependencies
 
 WORKDIR /app/packages/app/hivecommand-backend
 
