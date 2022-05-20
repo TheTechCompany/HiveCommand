@@ -31,7 +31,6 @@
     "@hexhive/graphql-server": "1.0.2-beta.2",
     "@hexhive/types": "^0.0.6-alpha.0",
     "@hive-command/data": "^1.0.0",
-    "@neo4j/graphql": "^2.5.4",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
     "cors": "^2.8.5",
@@ -43,7 +42,6 @@
     "mathjs": "^10.1.1",
     "moment": "^2.29.1",
     "nanoid": "^3.1.30",
-    "neo4j-driver": "^4.4.1",
     "pg": "^8.7.1"
   }
 }
