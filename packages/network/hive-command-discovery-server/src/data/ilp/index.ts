@@ -18,18 +18,18 @@ export const publishToILP = async (
 	
 
 		await Promise.all(rows.map(async (row) => {
-			// await prisma.deviceValue.create({
-			// 	data: {
-			// 		lastUpdated: new Date(),
-			// 		deviceId: row.device,
-			// 		placeholder: row.deviceId,
-			// 		key: row.valueKey,
-			// 		value: row.value
-			// 	}
-			// })
+			await prisma.deviceValue.create({
+				data: {
+					lastUpdated: new Date(),
+					deviceId: row.device,
+					placeholder: row.deviceId,
+					key: row.valueKey,
+					value: row.value
+				}
+			})
 
 
-			
+
 			// await .query(`
 			// 	INSERT INTO command_device_values 
 			// 	(timestamp, device, deviceId, valueKey, value) 
