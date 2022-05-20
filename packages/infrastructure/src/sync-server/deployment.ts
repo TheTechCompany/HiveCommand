@@ -45,9 +45,7 @@ export const Deployment = async (provider: Provider, appName: string, dbUrl: Out
                    containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
-                        image: `thetechcompany/hive-command-sync:${imageTag}`,
-                        // ports: [{ name: "postgres", containerPort: 5432 }],
-                        
+                        image: `thetechcompany/hive-command-sync:${imageTag}`,                        
                         volumeMounts: [
                             {
                                 name: 'ovpn',
