@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers } from '@graphql-tools/merge'
 import io from './io'
 import variables from "./variables";

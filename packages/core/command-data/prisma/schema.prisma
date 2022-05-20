@@ -23,7 +23,7 @@ model Device {
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
   
-  deviceSnapshot DeviceSnapshotValue[] @relation(name: "hasSnapshots")
+  values DeviceValue[] @relation(name: "hasSnapshots")
 
   program String?
 
@@ -52,20 +52,19 @@ model DeviceCalibration {
   deviceId String
 }
 
-model DeviceSnapshotValue {
-  id String @id
+model DeviceValue {
+  id Int @default(autoincrement())
 
   placeholder String
   key String
   value String
 
-
   lastUpdated DateTime @default(now())
 
-  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [network_name])
+  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
 
-  @@unique([key, placeholder, deviceId])
+  @@unique([id, lastUpdated, deviceId, placeholder, key])
 }
 
 model DevicePeripheral {

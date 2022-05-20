@@ -1,5 +1,6 @@
 "use strict"
 
+import { PrismaClient } from "@hive-command/data"
 import net from "net"
 import { Pool, PoolClient } from "pg"
 
@@ -7,7 +8,7 @@ import { Pool, PoolClient } from "pg"
 
 
 export const publishToILP = async (
-	socket: Pool,
+	prisma: PrismaClient,
 	rows: {
 		device : string,
 		deviceId : string,
@@ -17,12 +18,21 @@ export const publishToILP = async (
 	
 
 		await Promise.all(rows.map(async (row) => {
-			await socket.query(`
-				INSERT INTO command_device_values 
-				(timestamp, device, deviceId, valueKey, value) 
-				VALUES 
-				(NOW(), $1, $2, $3, $4)
-			`, [row.device, row.deviceId, row.valueKey, row.value])
+			await prisma.deviceValue.create({
+				data: {
+					lastUpdated: new Date(),
+					deviceId: row.device,
+					placeholder: row.deviceId,
+					key: row.valueKey,
+					value: row.value
+				}
+			})
+			// await .query(`
+			// 	INSERT INTO command_device_values 
+			// 	(timestamp, device, deviceId, valueKey, value) 
+			// 	VALUES 
+			// 	(NOW(), $1, $2, $3, $4)
+			// `, [row.device, row.deviceId, row.valueKey, row.value])
 		}))	
 
 		// return new Promise((resolve, reject) => {
