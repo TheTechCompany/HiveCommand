@@ -12,6 +12,21 @@ export default (prisma: PrismaClient) => {
 	const resolvers = mergeResolvers([
 		analyticResolvers,
 		{
+			CommandDevice: {
+				deviceSnapshot: async (root: any, args: any, context: any) => {
+					return await prisma.$queryRaw`
+						SELECT latest.* FROM (
+							SELECT DISTINCT placeholder, key, "deviceId", MAX("lastUpdated") as latest FROM "DeviceValue"
+							WHERE "deviceId"=${root.id}
+							GROUP BY placeholder, key, "deviceId"
+						) unique
+						JOIN "DeviceValue" latest ON unique.placeholder = latest.placeholder 
+						AND unique."deviceId" = latest."deviceId" 
+						AND unique.latest = latest."lastUpdated" 
+						AND unique.key = latest.key					
+					`
+				}
+			},
 		Query: {
 			commandDevices: async (root: any, args: any, context: any) => {
 				let whereArg : any = {};
