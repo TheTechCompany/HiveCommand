@@ -26,7 +26,7 @@ FROM node:16-alpine
 WORKDIR /app
 
 COPY --from=build /app/packages/app/hivecommand-backend/package.json .
-COPY --from=build /app/packages/app/hivecommand-backend/dist/* .
+COPY --from=build /app/packages/app/hivecommand-backend/dist .
 COPY --from=build /app/packages/app/hivecommand-backend/_node_modules node_modules/
 
 CMD ["yarn", "run", "start:prod"]
