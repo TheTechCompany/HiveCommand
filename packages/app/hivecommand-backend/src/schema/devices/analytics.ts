@@ -204,8 +204,8 @@ export default (prisma: PrismaClient) => {
 								deviceId = ${root.device?.id}
 								AND placeholder = ${root.dataDevice?.id}
 								AND key = ${root.dataKey?.key}
-								AND timestamp >= ${afterTime}
-								AND timestamp < ${beforeTime.toISOString()}
+								AND "lastUpdated" >= ${afterTime}
+								AND "lastUpdated" < ${beforeTime.toISOString()}
 							GROUP by deviceId, placeholder, key, "lastUpdated", value
 						) as SUB
 				`//startDate
