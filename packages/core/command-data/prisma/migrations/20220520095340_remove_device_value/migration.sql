@@ -6,5 +6,3 @@
 */
 -- DropTable
 DROP TABLE "DeviceValue";
-
-DROP EXTENSION timescaledb;
