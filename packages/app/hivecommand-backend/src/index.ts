@@ -24,19 +24,19 @@ const prisma = new PrismaClient();
 
 	await connect_data()
 
-	const pool = new Pool({
-		host: process.env.TIMESERIES_HOST || 'localhost',
-		user: process.env.TIMESERIES_USER || 'postgres',
-		password: process.env.TIMESERIES_PASSWORD || 'quest',
-		port: 5432,
-		keepAlive: true,
-		// connectionTimeoutMillis: 60 * 1000,
-		max: 10
-	})
+	// const pool = new Pool({
+	// 	host: process.env.TIMESERIES_HOST || 'localhost',
+	// 	user: process.env.TIMESERIES_USER || 'postgres',
+	// 	password: process.env.TIMESERIES_PASSWORD || 'quest',
+	// 	port: 5432,
+	// 	keepAlive: true,
+	// 	// connectionTimeoutMillis: 60 * 1000,
+	// 	max: 10
+	// })
 
-	pool.on('connect', () => {
-		console.log("pool connect")
-	})
+	// pool.on('connect', () => {
+	// 	console.log("pool connect")
+	// })
 
 	const mq = await amqp.connect(
 		process.env.RABBIT_URL || 'amqp://localhost'
@@ -54,7 +54,7 @@ const prisma = new PrismaClient();
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
 
-	const { typeDefs, resolvers } = schema(prisma, pool, mqChannel);
+	const { typeDefs, resolvers } = schema(prisma, mqChannel);
 
 	console.log({typeDefs})
 	console.log("Setting up graph")

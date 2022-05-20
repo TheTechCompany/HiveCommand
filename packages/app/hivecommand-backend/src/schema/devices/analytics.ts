@@ -4,7 +4,7 @@ import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
 import { nanoid } from "nanoid";
 
-export default (prisma: PrismaClient, pool: Pool) => {
+export default (prisma: PrismaClient) => {
 
     const typeDefs = `
 	    type Query {
@@ -79,17 +79,29 @@ export default (prisma: PrismaClient, pool: Pool) => {
     const resolvers = {
 		CommandDeviceReport: {
 			values: async (root: any, args: {startDate: Date}) => {
-				const client = await pool.connect()
+				// const client = await pool.connect()
 				// console.log("Analaytics values")
 		
+				/*
+
+  placeholder String
+  key String
+  value String
+
+  lastUpdated DateTime @default(now())
+
+  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
+  deviceId String 
+				*/
 				let query = `SELECT 
-								device,
+								placeholder,
 								deviceId,
-								valueKey,
-								time_bucket_gapfill('5 minute', "timestamp") as time, 
+								key,
+								time_bucket_gapfill('5 minute', "lastUpdated") as time, 
 								COALESCE(avg(value::float), 0) as value
-							FROM command_device_values 
-								WHERE deviceId=$1 AND device=$2`;
+							FROM "DeviceValue" 
+								WHERE deviceId=${root.device?.id} AND placeholder=${root.dataDevice?.id}`;
+
 				let params = [root.device?.id, root.dataDevice?.id]
 				// console.log("Analaytics values")
 
@@ -104,34 +116,110 @@ export default (prisma: PrismaClient, pool: Pool) => {
 					params.push(afterTime)
 					params.push(beforeTime.toISOString());
 
-					query += ` AND timestamp >= $3 AND timestamp < $4`
+					query += ` AND "lastUpdated" >= ${afterTime} AND "lastUpdated" < ${beforeTime.toISOString()}`
 				}
 				if(root.dataKey?.key) {
 					params.push(root.dataKey?.key)
 
-					query += ` AND valueKey=$${params.length}`
+					query += ` AND key=$${params.length}`
 				}
 
-				query += ` GROUP BY device, deviceId, valueKey, time ORDER BY time ASC`
+				query += ` GROUP BY placeholder, deviceId, key, time ORDER BY time ASC`
 				// console.log("Analaytics values", JSON.stringify({pool}))
 
 				// console.log(query, params)
 
-				const result = await client.query(
-					query,
-					params
-				)				
+				const result = await prisma.$queryRaw<any[]>`${query}`
+
+
+				// const result = await client.query(
+				// 	query,
+				// 	params
+				// )				
 
 				// console.log("Analaytics values")
 
-				await client.release()
-				return (result.rows || []).map((row) => ({
+				// await client.release()
+				return (result || []).map((row) => ({
 					...row,
 					timestamp: row.time
 				}));
 			},
-			totalValue: () => {
+			totalValue: async (root: any, args: any, context: any) => {
+					// const client = await pool.connect()
 
+				const { startDate } = args
+
+				let beforeTime = moment(startDate).add(1, 'week')
+				const afterTime = moment(startDate).toISOString();
+
+				if(moment(beforeTime).isAfter(moment())){
+					beforeTime = moment();
+				}
+
+				// const session = driver.session()
+
+				//TODO get time dimension
+
+				// const unitResult = await session.run(`
+				// 	MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
+				// 	OPTIONAL MATCH (device)-[:MAPS_UNIT]->(unitConfig:CommandProgramDeviceUnit)-[:MAPS_STATE_UNIT]->(stateItem)
+				// 	RETURN unitConfig{.*}
+				// `, { id: deviceId, name: device, key: valueKey })
+
+				// const unitConfig = unitResult.records?.[0]?.get(0)
+
+				// let timeDimension = 60; //divide value by 60 to go from minutes to seconds, divide by 3,600 to go from hours to seconds
+
+				// console.log({unitConfig})
+				// if(unitConfig && (unitConfig.displayUnit || unitConfig.inputUnit)){
+				// 	let unitRegex = /(.+)\/(.+)/
+				// 	let [ fullText, unit, dimension ] = (unitConfig.displayUnit ? unitConfig.displayUnit.match(unitRegex) : unitConfig.inputUnit.match(unitRegex)) || [];
+					
+
+				// 	if(dimension != undefined){
+				// 		try{
+				// 			let timeUnit = mathUnit(dimension).to('seconds');
+				// 			console.log("Found", {unit, dimension})
+
+				// 			timeDimension = timeUnit.toNumber()
+				// 			console.log({timeDimension})
+				// 		}catch(e) {
+				// 			console.error("Could not parse time unit", {unit, dimension, e})
+				// 		}
+				// 	}
+
+				// }
+
+
+				const query = `
+					SELECT 			
+						sum(SUB.total) as total
+					FROM 
+						(
+							SELECT (try_cast(value, 0) / ${/*timeDimension ||*/ 60}) * EXTRACT(EPOCH from (LEAD("lastUpdated") over (order by "lastUpdated") - "lastUpdated")) as total
+							FROM
+								DeviceValue
+							WHERE
+								deviceId = ${root.device?.id}
+								AND placeholder = ${root.dataDevice?.id}
+								AND key = ${root.dataKey?.key}
+								AND timestamp >= ${afterTime}
+								AND timestamp < ${beforeTime.toISOString()}
+							GROUP by deviceId, placeholder, key, "lastUpdated", value
+						) as SUB
+				`//startDate
+				//date_trunc('week', NOW()) 
+
+				const result = await prisma.$queryRaw<any[]>`${query}`;
+
+				// const result = await pool.query(query, [deviceId, device, valueKey, afterTime, beforeTime.toISOString() ])
+				
+				// await client.release()
+
+				console.log({rows: result})
+				// session.close()
+				return result?.[0]
 			}
 		},
 		Mutation: {

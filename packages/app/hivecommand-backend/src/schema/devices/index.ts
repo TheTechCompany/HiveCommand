@@ -5,9 +5,9 @@ import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
 
-export default (prisma: PrismaClient, pool: Pool) => {
+export default (prisma: PrismaClient) => {
 
-	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma, pool)
+	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
 	
 	const resolvers = mergeResolvers([
 		analyticResolvers,
