@@ -9,9 +9,9 @@ import operations from './operations'
 import { Channel } from 'amqplib';
 import { Pool } from 'pg';
 
-export default (prisma: PrismaClient, pool: Pool, channel: Channel) => {
+export default (prisma: PrismaClient, channel: Channel) => {
 
-	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, pool);
+	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
