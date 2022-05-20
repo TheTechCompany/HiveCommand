@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/remote-client",
-  "version": "1.4.15-alpha.11",
+  "version": "1.4.15-alpha.12",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
