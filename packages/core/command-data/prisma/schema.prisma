@@ -52,20 +52,20 @@ model DeviceCalibration {
   deviceId String
 }
 
-// model DeviceValue {
-//   id Int @default(autoincrement())
+model DeviceValue {
+  id Int @default(autoincrement())
 
-//   placeholder String
-//   key String
-//   value String
+  placeholder String
+  key String
+  value String
 
-//   lastUpdated DateTime @default(now())
+  lastUpdated DateTime @default(now())
 
-//   // device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
-//   deviceId String 
+  // device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
+  deviceId String 
 
-//   @@unique([id, lastUpdated, deviceId, placeholder, key])
-// }
+  @@unique([id, lastUpdated, deviceId, placeholder, key])
+}
 
 model DevicePeripheral {
   id String @id
