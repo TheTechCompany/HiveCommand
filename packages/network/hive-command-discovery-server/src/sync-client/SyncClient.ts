@@ -58,7 +58,7 @@ export class SyncClient {
 		const servers = this.discoveryServer.registeredServers
 		// const findServersOnNetwork = await this.client.discoverOnNetwork()
 
-		console.log("discover", {servers})
+		// console.log("discover", {servers})
 		
 		await Promise.all((servers || []).map(async (server) => {
 			if(server.productUri?.toString() == "NodeOPCUA-Server"){
@@ -69,7 +69,7 @@ export class SyncClient {
 				if(!serverUrl) return;
 				let serverUri = serverUrl;
 
-				console.log("Found server", {server})
+				// console.log("Found server", {server})
 				if(!this.clients[serverUri] && serverUrl){
 					
 					// console.log("new server ", serverUri, server)
