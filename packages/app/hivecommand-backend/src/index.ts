@@ -6,16 +6,12 @@ import { HiveGraph } from '@hexhive/graphql-server'
 import amqp from 'amqplib'
 import cors from 'cors';
 import express from 'express';
-import neo4j from "neo4j-driver"
-import { Neo4jGraphQL } from "@neo4j/graphql"
-import { graphqlHTTP } from "express-graphql"
 import { connect_data } from '@hexhive/types';
 import schema from './schema'
 
 import { Pool, types } from 'pg';
 
 import { PrismaClient } from "@hive-command/data";
-import gql from 'graphql-tag';
 
 types.setTypeParser(1114, (value) => {
 	// console.log({value})
