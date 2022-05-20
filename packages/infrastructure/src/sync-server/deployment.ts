@@ -41,11 +41,7 @@ export const Deployment = async (provider: Provider, appName: string, dbUrl: Out
                     nodeSelector: {
                         'eks.amazonaws.com/nodegroup': 'managed-nodes'
                     },
-                    // dnsConfig: {
-                    //     nameservers: ['192.168.200.1'],
-                    //     searches: ['']
-                    // },
-                    // dnsPolicy: 'Default',
+            
                    containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
@@ -63,7 +59,7 @@ export const Deployment = async (provider: Provider, appName: string, dbUrl: Out
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
                             { name: 'SYNC_HOST', value: syncHostname },
                             { name: 'HOSTNAME', value: syncHostname },
-                            
+
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
                             {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
                             {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},

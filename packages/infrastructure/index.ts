@@ -54,9 +54,12 @@ const main = (async () => {
         service,
         deployment,
         // timeseriesService,
+        rabbitURL,
         syncServer
     }
 })()
+
+export const rabbitURL = main.then((res) => res.rabbitURL)
 
 export const deployment = main.then((res) => res.deployment.metadata.name)
 
