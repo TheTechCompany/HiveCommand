@@ -213,12 +213,8 @@ export default (prisma: PrismaClient) => {
 
 				const result = await prisma.$queryRaw<any[]>`${query}`;
 
-				// const result = await pool.query(query, [deviceId, device, valueKey, afterTime, beforeTime.toISOString() ])
 				
-				// await client.release()
-
 				console.log({rows: result})
-				// session.close()
 				return result?.[0]
 			}
 		},
