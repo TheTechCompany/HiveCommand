@@ -199,7 +199,7 @@ export default (prisma: PrismaClient) => {
 						(
 							SELECT (try_cast(value, 0) / ${/*timeDimension ||*/ 60}) * EXTRACT(EPOCH from (LEAD("lastUpdated") over (order by "lastUpdated") - "lastUpdated")) as total
 							FROM
-								DeviceValue
+								"DeviceValue"
 							WHERE
 								deviceId = ${root.device?.id}
 								AND placeholder = ${root.dataDevice?.id}
