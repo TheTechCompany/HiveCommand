@@ -1,11 +1,15 @@
 {
-  "name": "@hive-command/old-data",
+  "name": "@hive-command/data",
   "version": "1.4.15-alpha.11",
   "description": "",
   "main": "dist/index.js",
+  "private": true,
   "files": [
     "dist/"
   ],
+  "prisma": {
+    "seed": "ts-node prisma/seed"
+  },
   "scripts": {
     "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,10 +17,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^4.4.3"
+    "prisma": "^3.14.0",
+    "typescript": "^4.6.4"
   },
   "dependencies": {
-    "mongoose": "^6.3.0",
-    "moniker": "^0.1.2"
+    "@prisma/client": "^3.14.0"
   }
 }

@@ -1,10 +1,7 @@
 import { Socket } from "socket.io";
-import { Models } from '@hive-command/data'
-const { Device } = Models;
 
-import { HiveCommandData } from '@hive-command/data'
 
-export const handleHeartbeat = async (dataManager: HiveCommandData, socket: Socket, data: any) => {
+export const handleHeartbeat = async (socket: Socket, data: any) => {
     // console.log(`Heartbeat`, (socket as any).networkName)
 
     let id = (socket as any)?.networkName
@@ -22,7 +19,7 @@ export const handleHeartbeat = async (dataManager: HiveCommandData, socket: Sock
     // }
 }
 
-export const handleTransition = async (dataManager: HiveCommandData, socket: Socket, data: any) => {
+export const handleTransition = async (socket: Socket, data: any) => {
     let id = (socket as any)?.networkName;
 
     //TODO add graphql version

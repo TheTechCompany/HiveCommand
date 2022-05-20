@@ -1,13 +1,13 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@hive-command/data";
 import gql from "graphql-tag";
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
 
-export default (prisma: PrismaClient, pool: Pool) => {
+export default (prisma: PrismaClient) => {
 
-	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma, pool)
+	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
 	
 	const resolvers = mergeResolvers([
 		analyticResolvers,
@@ -35,7 +35,10 @@ export default (prisma: PrismaClient, pool: Pool) => {
 								device: true,
 							}
 						},
-						deviceSnapshot: true,
+						values: {
+							where: {lastUpdated: {gt: new Date()}},
+							orderBy: {lastUpdated: 'desc'},
+						},
 						peripherals: {
 							include: {
 								connectedDevices: {

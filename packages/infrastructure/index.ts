@@ -7,8 +7,7 @@ import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
 import SyncServer from './src/sync-server'
-import Timeseries from './src/timeseries'
-import RabbitMQ from './src/rabbitmq'
+
 import * as k8s from '@pulumi/kubernetes'
 
 const main = (async () => {
@@ -26,6 +25,8 @@ const main = (async () => {
     const kubeconfig = stackRef.getOutput('kubeconfig');
 
     const rootServer = gatewayRef.getOutput('gatewayUrl');
+
+    const rabbitURL = dbRef.getOutput('rabbitURL');
     const dbUrl = dbRef.getOutput('postgres_name');
     const dbPass = dbRef.getOutput('postgres_pass');
 
@@ -40,21 +41,25 @@ const main = (async () => {
     })
     
 
-    const { service: rabbitMQService, url: rabbitURL } = await RabbitMQ(provider, vpcId)
-    const { service: timeseriesService, url: timeseriesURL } = await Timeseries(provider, vpcId)
+    
+    // const { service: rabbitMQService, url: rabbitURL } = await RabbitMQ(provider, vpcId)
+    // const { service: timeseriesService, url: timeseriesURL } = await Timeseries(provider, vpcId)
 
-    const { deployment: syncServer } = await SyncServer(provider, timeseriesURL, rabbitURL, namespace)
+    const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, namespace)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, timeseriesURL, rabbitURL));
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL));
     const service = await Service(provider)
 
     return {
         service,
         deployment,
-        timeseriesService,
+        // timeseriesService,
+        rabbitURL,
         syncServer
     }
 })()
+
+export const rabbitURL = main.then((res) => res.rabbitURL)
 
 export const deployment = main.then((res) => res.deployment.metadata.name)
 

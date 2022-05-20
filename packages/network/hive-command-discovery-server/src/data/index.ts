@@ -585,6 +585,7 @@ export class Data {
 
 	async updateDeviceValue(deviceId: string, placeholder: string, key: string, value: string) {
 		console.log({ deviceId, placeholder, key, value });
+		//TODO do this locally to save graphql from dying
 		await this.requestGraphQL(gql`
 			mutation UpdateDeviceValue($deviceId: ID, $placeholder: String, $key: String, $value: String){
 				updateCommandDevice(where: {id: $deviceId}, input: {deviceSnapshot: [{placeholder: $placeholder, key: $key, value: $value}]}){
@@ -595,7 +596,7 @@ export class Data {
 			deviceId,
 			placeholder,
 			key,
-			value
+			value: `${value}`
 		})
 	}
 

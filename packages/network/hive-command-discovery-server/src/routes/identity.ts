@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { handleAuthRequest } from '../utils/auth';
+// import { handleAuthRequest } from '../utils/auth';
 import { promises } from 'dns';
 import { Data } from '../data';
 
@@ -69,14 +69,14 @@ export default (dataBroker: Data) => {
         res.send({success: 200})
     })
 
-    router.post('/', async (req, res) => {
-        let ip = req.ip.replace('::ffff:', '')
-        console.log("IP", ip)
+    // router.post('/', async (req, res) => {
+    //     let ip = req.ip.replace('::ffff:', '')
+    //     console.log("IP", ip)
 
-        const response = await handleAuthRequest(ip, {did:req.body.did})
-        if(response.error) return res.status(400).send(response)
-        res.send(response)
-    })
+    //     const response = await handleAuthRequest(ip, {did:req.body.did})
+    //     if(response.error) return res.status(400).send(response)
+    //     res.send(response)
+    // })
 
 
     return router;

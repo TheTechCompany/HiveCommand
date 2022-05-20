@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:16-alpine as build
 
 ARG BUILD_ENV=github
 
@@ -11,10 +11,22 @@ COPY . .
 
 RUN yarn
 
+RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
+
 ENV NODE_ENV="production"
 
-RUN yarn build
+RUN npx lerna run build --scope @hive-command/backend --include-dependencies
+
+WORKDIR /app/packages/app/hivecommand-backend
+
+RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
+
+FROM node:16-alpine
 
 WORKDIR /app
+
+COPY --from=build /app/packages/app/hivecommand-backend/package.json .
+COPY --from=build /app/packages/app/hivecommand-backend/dist .
+COPY --from=build /app/packages/app/hivecommand-backend/_node_modules node_modules/
 
 CMD ["yarn", "run", "start:prod"]

@@ -1,4 +1,4 @@
-import { prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 
 import devices from './devices';
@@ -9,9 +9,9 @@ import operations from './operations'
 import { Channel } from 'amqplib';
 import { Pool } from 'pg';
 
-export default (prisma: PrismaClient, pool: Pool, channel: Channel) => {
+export default (prisma: PrismaClient, channel: Channel) => {
 
-	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, pool);
+	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
@@ -59,60 +59,6 @@ export default (prisma: PrismaClient, pool: Pool, channel: Channel) => {
 	 ])
 	
 
-	/*
-	
-	type CommandKeyValue {
-		id: ID 
-		key: String
-		value: String
-	}
-
-
-
-
-	interface CommandProgramDevicePluginAssignment {
-		configuration: [String]
-	}
-
-	
-	interface CommandProgramDevicePluginRequires  {
-		key: String
-	}
-
-	type CommandProgramDocumentation {
-		id: ID! 
-		name: String
-		blocks: [String]
-
-		program: CommandProgram 
-	}
-
-
-
-
-
-	type CommandPlugin {
-		id: ID! 
-		name: String
-		items: [CommandPluginItem] 
-
-	}
-
-	type CommandPluginItem {
-		id: ID! 
-		name: String
-		type: String
-		value: String
-
-		usedIn: [CommandPlugin] 
-	}
-
-
-	*/
-/*
-	${programTypeDefs}
-	${hmiTypeDefs}
-*/
 
 
 	return {
