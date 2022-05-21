@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid";
 import { Channel } from 'amqplib'
+import { PrismaClient } from "@hive-command/data";
 
-export default (channel: Channel) => {
+export default (prisma: PrismaClient, channel: Channel) => {
 
     const typeDefs = `
         type Mutation {
@@ -46,33 +47,82 @@ export default (channel: Channel) => {
 			
 			},
 			performDeviceAction: async (root: any, args: any, context: any) => {
-				// console.log(args)
+				const device = await prisma.device.findFirst({
+					where: {
+						id: args.deviceId,
+						organisation: context?.jwt?.organisation
+					},
+					include: {
+						activeProgram: {
+							include: {
+								devices: {
+									where: {name: args.deviceName},
+									include: {
+										type: {
+											include: {
+												actions: true,
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				})
+
+				const actions = device?.activeProgram?.devices?.find((a) => a.name == args.deviceName)?.type?.actions
+
+				// consoledlog(args)
 				// const device = await session.readTransaction(async (tx) => {
 
 				// 	return await getDeviceActions(tx, args.deviceId, args.deviceName)
 					
 				// })
 
-				// let action = device.actions?.find((a: any) => a.key == args.action)
+				let action = actions?.find((a: any) => a.key == args.action)
 
-				// if(action){
-				// 	let actionRequest = {
-				// 		address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
-				// 		deviceId: args.deviceId,
-				// 		deviceName: args.deviceName,
-				// 		action: action.key,
-				// 		authorizedBy: context.jwt?.name
-				// 	}
+				if(action && device){
+					let actionRequest = {
+						address: `opc.tcp://${device?.network_name}.hexhive.io:8440`,
+						deviceId: args.deviceId,
+						deviceName: args.deviceName,
+						action: action.key,
+						authorizedBy: context.jwt?.name
+					}
 
-				// 	// channel.
-				// 	return await channel.sendToQueue(`COMMAND:DEVICE:CONTROL`, Buffer.from(JSON.stringify(actionRequest)))
-				// }
+					// channel.
+					return await channel.sendToQueue(`COMMAND:DEVICE:CONTROL`, Buffer.from(JSON.stringify(actionRequest)))
+				}else{
+					return new Error("No device control found")
+				}
 				
 			},
 			changeMode: async (root: any, args: {
 				deviceId: string,
 				mode: string
 			}, context: any) => {
+
+				const device = await prisma.device.findFirst({
+					where: {id: args.deviceId, organisation: context?.jwt?.organisation}
+				})
+
+				if(!device) return new Error("No device found")
+
+				let actionRequest = {
+					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
+					deviceId: args.deviceId,
+					mode: args.mode,
+					authorizedBy: context.jwt?.name
+				}
+
+				return await channel.sendToQueue(`COMMAND:MODE`, Buffer.from(JSON.stringify(actionRequest)))
+				// return await prisma.device.update({
+				// 	where: {id: args.deviceId},
+				// 	data: {
+				// 		mode: args.mode
+				// 	}
+				// })
+
 
 				// const device = await session.readTransaction(async (tx) => {
 
@@ -86,13 +136,7 @@ export default (channel: Channel) => {
 				
 				// })
 
-				// let actionRequest = {
-				// 	address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
-				// 	deviceId: args.deviceId,
-				// 	mode: args.mode,
-				// 	authorizedBy: context.jwt?.name
-				// }
-
+				
 				// await session.writeTransaction(async (tx) => {
 				// 	await tx.run(`
 				// 		MATCH (device:CommandDevice {id: $id})
