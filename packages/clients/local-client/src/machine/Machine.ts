@@ -420,10 +420,15 @@ export class Machine {
 				let value = event.state[k];
 
 				if(stateItem.max && stateItem.min){
-					value = (((stateItem.max - stateItem.min) / 100) * value) + stateItem.min
+					let min = parseFloat(`${stateItem.min}`)
+					let max = parseFloat(`${stateItem.max}`)
+					console.log({min, max, value})
+					value = (((max - min) / 100) * value) + min
+					console.log({min, max, value})
 
-					if(value > stateItem.max) value = stateItem.max
-					if(value < stateItem.min) value = stateItem.min
+					if(value > max) value = max
+					if(value < min) value = min
+					console.log({min, max, value})
 
 					console.log("Max Mining", {stateItem, value})
 				}
@@ -431,7 +436,7 @@ export class Machine {
 
 				console.log({writeOp})
 
-				
+
 				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
 
 			}

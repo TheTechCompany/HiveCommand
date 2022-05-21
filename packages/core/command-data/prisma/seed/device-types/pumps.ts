@@ -12,8 +12,8 @@ export default async (prisma: PrismaClient) => {
                 {
                     "key": "out",
                     "rotation": 180,
-                    "y": 45,
-                    "x": 90
+                    "y": 38,
+                    "x": 96
                   },
                   {
                     "key": "in",
