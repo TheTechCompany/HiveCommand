@@ -430,6 +430,8 @@ export class Machine {
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
 
 				console.log({writeOp})
+
+				
 				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
 
 			}
