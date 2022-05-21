@@ -28,12 +28,16 @@ export const HMIGroup : React.FC<HMIGroupProps> = (props) => {
 		return props.extras.nodes?.sort((a, b) => (a.z || 0) - (b.z || 0)).map((node) => {
 			let options : any = {};
 			let conf : any = {};
+
 			if(getDeviceOptions) {
 				options = getDeviceOptions(node.devicePlaceholder?.name);
 			}
 			if(getDeviceConf) {
 				conf = getDeviceConf(node.devicePlaceholder?.name);
 			}
+
+			console.log("Device", {options, conf})
+
 			
 			// const options = getDeviceOptions(node?.devicePlaceholder?.name)
 			// const conf = getDeviceConf(node?.devicePlaceholder?.name)
