@@ -15,7 +15,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
-	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(channel)
+	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, channel)
 
 	const resolvers = mergeResolvers([
 		deviceResolvers,
