@@ -353,6 +353,8 @@ export class Data {
 									id
 									key
 									type
+									min
+									max
 								}
 
 								actions {
