@@ -150,6 +150,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                         }
     
                                         state {
+                                            type
                                             units
                                             inputUnits
                                             key
