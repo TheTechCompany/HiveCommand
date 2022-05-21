@@ -7,7 +7,7 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/data-types";
+import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, PayloadResponse } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
@@ -82,9 +82,9 @@ export class Machine {
 	
 			return {
 				id: action.id, //action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
-				type: getBlockType(action.type) || 'action',
+				type: action.type || ACTION_TYPES.ACTION,
 				options: {
-					blockType: getBlockType(action.type) || 'action',
+					blockType: action.type || ACTION_TYPES.ACTION,
 					["sub-process"]: action?.subprocess?.id || undefined,
 					timer: action.configuration?.find((a) => a.key == 'timeout')?.value,
 					actions: actions
