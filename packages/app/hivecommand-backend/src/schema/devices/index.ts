@@ -19,11 +19,11 @@ export default (prisma: PrismaClient) => {
 							SELECT DISTINCT placeholder, key, "deviceId", MAX("lastUpdated") as latest FROM "DeviceValue"
 							WHERE "deviceId"=${root.id}
 							GROUP BY placeholder, key, "deviceId"
-						) unique
-						JOIN "DeviceValue" latest ON unique.placeholder = latest.placeholder 
-						AND unique."deviceId" = latest."deviceId" 
-						AND unique.latest = latest."lastUpdated" 
-						AND unique.key = latest.key					
+						) AS uniq
+						JOIN "DeviceValue" latest ON uniq.placeholder = latest.placeholder 
+						AND uniq."deviceId" = latest."deviceId" 
+						AND uniq.latest = latest."lastUpdated" 
+						AND uniq.key = latest.key					
 					`
 				}
 			},
