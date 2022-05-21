@@ -151,10 +151,18 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				// return await channel.sendToQueue(`COMMAND:MODE`, Buffer.from(JSON.stringify(actionRequest)))
 			},
 			changeState: async (root: any, args: {deviceId: string, state: string}, context: any) => {
-				// if(args.state != "on" && args.state != "off" && args.state != "standby"){
-				// 	throw new Error("Invalid state")
-				// } 
+				if(args.state != "on" && args.state != "off" && args.state != "standby"){
+					return new Error("Invalid state")
+				} 
 
+				const device = await prisma.device.findFirst({
+					where: {
+						id: args.deviceId,
+						organisation: context?.jwt?.organisation
+					}
+				})
+
+				if(!device) return new Error("No device found")
 				// const device = await session.readTransaction(async (tx) => {
 
 				// 	const res = await tx.run(`
@@ -166,13 +174,12 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				// 	return res.records?.[0]?.get(0)
 				// })
 
-				// let actionRequest = {
-				// 	address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
-				// 	deviceId: args.deviceId,
-				// 	state: args.state,
-				// 	authorizedBy: context.jwt?.name
-
-				// }
+				let actionRequest = {
+					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
+					deviceId: args.deviceId,
+					state: args.state,
+					authorizedBy: context.jwt?.name
+				}
 
 				// await session.writeTransaction(async (tx) => {
 				// 	await tx.run(`
@@ -185,7 +192,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				// 	})
 				// })
 
-				// return await channel.sendToQueue(`COMMAND:STATE`, Buffer.from(JSON.stringify(actionRequest)))
+				return await channel.sendToQueue(`COMMAND:STATE`, Buffer.from(JSON.stringify(actionRequest)))
 
 			},
 			changeDeviceMode: async (root: any, args: {
@@ -216,7 +223,23 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				value: string
 			}, context: any) => {
 				
-				
+				const device = await prisma.device.findFirst({
+					where: {
+						id: args.deviceId,
+						organisation: context?.jwt?.organisation
+					}
+				})	
+
+				if(!device) return new Error("No device found")
+
+				let stateChange = {
+					address: `opc.tcp://${device?.network_name}.hexhive.io:8440`,
+					busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`,
+					value: args.value
+				}
+
+				return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
+
 				// const device = await session.readTransaction(async (tx) => {
 
 				// 	const result = await tx.run(`
