@@ -187,8 +187,16 @@ export default () => {
                     size="small" 
                     plain 
                     placeholder={state.key} 
-                    onChange={(e) => setWorkingState({...workingState, [state.key]: parseFloat(e.target.value)})}
-                    value={workingState[state.key] ?? parseFloat(value)} />
+                    onChange={(e) => {
+						setWorkingState({
+							...workingState, 
+							[deviceName]: {
+								...workingState[deviceName],
+								[state.key]: parseFloat(e.target.value)
+							}
+						})
+					}}
+                    value={workingState?.[deviceName]?.[state.key] ?? parseFloat(value)} />
             )
         }else{
             return <Text size="small">{value}</Text>
@@ -246,10 +254,10 @@ export default () => {
 					  <Box direction="row" align="center">
 						 <Box flex><Text size="small">{state.key}</Text></Box>
 						 <Box flex>{renderActionValue(deviceName, deviceInfo, deviceMode, state)}</Box>
-						 {workingState[state.key] != undefined ? (<Button 
+						 {workingState?.[deviceName]?.[state.key] != undefined ? (<Button 
 							 plain
 							 onClick={() => {
-								 sendChanges(deviceName, state.key, workingState[state.key])
+								 sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
 							 }}
 							 style={{padding: 6, borderRadius: 3}}
 							 hoverIndicator
