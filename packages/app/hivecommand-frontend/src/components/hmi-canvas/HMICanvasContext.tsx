@@ -42,6 +42,8 @@ export const HMICanvasProvider = (props: any) => {
 				let deviceValues = values.find((a) => a.devicePlaceholder?.name == device);
 				// return deviceValues?.values;
 				let vals = Object.assign({}, deviceValues?.values || {});
+				console.log({device, vals})
+				
 				for(var k in vals){
 					let state = deviceValues.devicePlaceholder?.type?.state?.find((a) => a.key == k);
 
