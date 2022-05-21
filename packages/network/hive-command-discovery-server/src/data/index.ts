@@ -527,8 +527,11 @@ export class Data {
 					// console.log("STATE", JSON.stringify({mappedDevice, peripherals: device.peripherals, id: state_item.id, mapped}))
 
 					let calibrationUpdate : any = {};
-					if(calibration?.min)calibrationUpdate.min = calibration?.min || state_item?.min;
-					if(calibration?.max)calibrationUpdate.max = calibration?.max || state_item?.max;
+					if(calibration?.min) calibrationUpdate.min = calibration?.min || state_item?.min;
+					if(calibration?.max) calibrationUpdate.max = calibration?.max || state_item?.max;
+					
+					if(typeof(calibration.min) == "string") calibration.min = parseFloat(calibration.min)
+					if(typeof(calibration.max) == "string") calibration.max = parseFloat(calibration.max)
 
 					return {
 						...state_item,
