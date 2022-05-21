@@ -124,8 +124,10 @@ export default () => {
     }
 
 
+	console.log({hmi: hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), []))})
+
 	const hmiNodes = useMemo(() => {
-        return hmi.concat(groups.map((x) => x.nodes).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
+        return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
 
             let device = node?.devicePlaceholder?.name;
             let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
@@ -308,6 +310,8 @@ export default () => {
 			
 		})
 	}
+
+	console.log({hmiNodes})
  
 	return (
 		<Box flex direction="row">
