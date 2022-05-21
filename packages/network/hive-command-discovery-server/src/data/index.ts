@@ -529,9 +529,9 @@ export class Data {
 					let calibrationUpdate : any = {};
 					if(calibration?.min) calibrationUpdate.min = calibration?.min || state_item?.min;
 					if(calibration?.max) calibrationUpdate.max = calibration?.max || state_item?.max;
-					
-					if(typeof(calibration.min) == "string") calibration.min = parseFloat(calibration.min)
-					if(typeof(calibration.max) == "string") calibration.max = parseFloat(calibration.max)
+
+					if(typeof(calibration?.min) == "string") calibration.min = parseFloat(calibration.min)
+					if(typeof(calibration?.max) == "string") calibration.max = parseFloat(calibration.max)
 
 					return {
 						...state_item,
