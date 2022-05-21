@@ -1,6 +1,6 @@
 export const getDevicesForNode = (node: any) => {
-	if(node.nodes){
-		return node.nodes?.map((x) => ({...x.devicePlaceholder}))
+	if(node.children){
+		return node.children?.map((x) => ({...x.devicePlaceholder}))
 	}else{
 		return [node?.devicePlaceholder];
 	}
