@@ -29,13 +29,13 @@ export default async (prisma: PrismaClient) => {
             ports: [
                 {
                     "key": "in",
-                    "y": 35,
+                    "y": 30,
                     "x": -55
                   },
                   {
                     "key": "out",
                     "x": 100,
-                    "y": 55,
+                    "y": 70,
                     "rotation": 180
                   }
             ]
