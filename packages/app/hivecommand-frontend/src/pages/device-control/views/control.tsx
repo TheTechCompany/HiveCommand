@@ -207,6 +207,7 @@ export default () => {
 			let deviceInfo = device?.type || {};
 			let deviceName = device?.name || '';
 		 
+			console.log({deviceInfo})
 			let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
  
 			return (
