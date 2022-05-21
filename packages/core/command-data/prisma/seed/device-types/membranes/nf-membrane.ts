@@ -6,6 +6,8 @@ export default async (prisma: PrismaClient) => {
         data: {
             id: nanoid(),
             name: "NfMembrane",
+            width: 60,
+            height: 40,
             ports: [
                 {
                     key: 'in',

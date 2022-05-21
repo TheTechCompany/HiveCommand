@@ -137,7 +137,20 @@ export default (prisma: PrismaClient) => {
 										},
 										edges: {
 											include: {
-												conditions: true
+												from: true,
+												to: true,
+												conditions: {
+													include: {
+														inputDevice: true,
+														inputDeviceKey: true,
+														assertion: {
+															include: {
+																setpoint: true,
+																variable: true
+															}
+														}
+													}
+												}
 											}
 										}
 									}
