@@ -12,7 +12,9 @@ export class DeviceMap {
 
 	public setAssignment(assignment: AssignmentPayload[]){
 		this.assignment = assignment
-		this.modeSet = (assignment.map((assignment) => ({...assignment, mode: (assignment as any).mode || "Automatic"})) || []);
+		this.modeSet = (assignment.map((assignment) => ({
+			...assignment, 
+			mode: (assignment as any).mode || "Automatic"})) || []);
 	}
 
 	//Init plugin by device id

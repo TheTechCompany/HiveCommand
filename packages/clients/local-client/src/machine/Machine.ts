@@ -400,6 +400,8 @@ export class Machine {
 		let writeOp: any;
 		if(typeof(event.state) == 'object'){
 
+			console.log("Requesting", {event})
+
 			writeOp = {};
 			for(var k in event.state){
 				let stateItem = this.deviceMap.getDeviceBusPort(event.device, k)
@@ -410,6 +412,7 @@ export class Machine {
 					continue;
 				}
 
+				console.log("State", {stateItem, busDevice, k})
 				// let stateItem = busPort?.state?.find((a) => a.key == k)
 
 				if(!stateItem) continue;
@@ -421,9 +424,14 @@ export class Machine {
 
 					if(value > stateItem.max) value = stateItem.max
 					if(value < stateItem.min) value = stateItem.min
+
+					console.log("Max Mining", {stateItem, value})
 				}
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
 
+				console.log({writeOp})
+
+				
 				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
 
 			}
