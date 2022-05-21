@@ -70,7 +70,7 @@ export default () => {
 	const client = useApolloClient()
 
 	const { data: deviceValueData } = useQuery(gql`
-		query DeviceValues( $idStr: String, $id: ID) {
+		query DeviceValues($id: ID) {
 		
 			commandDevices (where: {id: $id}){
 				deviceSnapshot {
