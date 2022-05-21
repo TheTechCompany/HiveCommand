@@ -71,8 +71,8 @@ export class Machine {
 			let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
 
 			let actions = action.actions?.map((action) => ({
-				device: action.target,
-				operation: action.key,
+				device: action.device.name,
+				operation: action.request.key,
 				release: action.release
 			}))
 
@@ -93,17 +93,19 @@ export class Machine {
 		})
 
 
-		let paths = flow?.nodes.map((action) => {
+		let paths = (flow?.nodes || []).map((action) => {
 
-			return action.next?.map((next) => {
+			const next = flow?.edges?.filter((a) => a.from.id == action.id)
+
+			return (next || []).map((next) => {
 				return {
 					id: nanoid(),
-					source: action.id, //action.type == "Trigger" ? 'origin' : action.id,
-					target: next.target,
+					source: action?.id, //action.type == "Trigger" ? 'origin' : action.id,
+					target: next?.to?.id,
 					options: {
-						conditions: next.conditions?.map((cond) => ({
-							inputDevice: cond.inputDevice,
-							inputDeviceKey: cond.inputDeviceKey,
+						conditions: next?.conditions?.map((cond) => ({
+							inputDevice: cond.inputDevice.name,
+							inputDeviceKey: cond.inputDeviceKey.key,
 							comparator: cond.comparator,
 							assertion: cond.assertion
 						}))

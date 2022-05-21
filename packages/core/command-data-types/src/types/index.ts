@@ -53,17 +53,16 @@ export interface CommandPayloadItem {
 				name: string,
 			}
 			actions?: {
-				key: string,
-				target: string
+				request: {key: string},
+				device: {name: string}
 				release?: boolean;
-			}[],
-			next: {
-				target: string,
-				id: string,
-				sourceHandle: string,
-				targetHandle: string,
-				conditions?: EdgeCondition[]
 			}[]
+		}[]
+		edges: {
+			id: string,
+			from: {id: string},
+			to: {id: string},
+			conditions?: EdgeCondition[]
 		}[]
 	
 }
