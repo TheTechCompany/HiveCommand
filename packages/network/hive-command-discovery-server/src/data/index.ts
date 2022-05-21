@@ -229,6 +229,7 @@ export class Data {
 					}
 					device{
 						id
+						name
 					}
 				}
 				subprocess{
