@@ -100,7 +100,8 @@ export default (prisma: PrismaClient) => {
 
 				const afterTime = args.startDate ? moment(args.startDate).set('hour', 0).set('minute', 0) : undefined
 
-				let beforeTime = args.startDate ? moment(args.startDate).add(1, 'week').set('hour', 23).set('minute', 0) : undefined;
+				let beforeTime = args.startDate ? moment(args.startDate).add(1, 'week').set('hour', 0).set('minute', 0) : undefined;
+
 				if(beforeTime && moment(beforeTime).isAfter(moment())){
 					beforeTime = moment();
 				}
@@ -171,7 +172,7 @@ export default (prisma: PrismaClient) => {
 				
 				const { startDate } = args
 
-				let beforeTime = moment(startDate).add(1, 'week').set('hour', 23).set('minute', 0)
+				let beforeTime = moment(startDate).add(1, 'week').set('hour', 23).set('minute', 59)
 				const afterTime = moment(startDate).set('hour', 0).set('minute', 0)
 
 				if(moment(beforeTime).isAfter(moment())){
