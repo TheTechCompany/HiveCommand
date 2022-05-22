@@ -1,7 +1,7 @@
 {
   "name": "@hive-command/frontend",
   "private": true,
-  "version": "1.4.15-alpha.21",
+  "version": "1.4.15-alpha.22",
   "scripts": {
     "start": "webpack serve --port 8504",
     "start:standalone": "webpack serve --env standalone",
@@ -57,8 +57,8 @@
     "@hexhive/auth-ui": "0.0.6-alpha.10",
     "@hexhive/styles": "^0.0.6-alpha.0",
     "@hexhive/ui": "0.0.12-alpha.19",
-    "@hive-command/api": "^1.4.15-alpha.9",
-    "@hive-command/data-types": "^1.4.15-alpha.21",
+    "@hive-command/api": "^1.4.15-alpha.22",
+    "@hive-command/data-types": "^1.4.15-alpha.22",
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.80",
     "@mui/material": "^5.6.4",
