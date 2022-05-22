@@ -96,7 +96,7 @@ export class Machine {
 
 			return (next || []).map((next) => {
 				return {
-					id: nanoid(),
+					id: next.id,
 					source: action?.id, //action.type == "Trigger" ? 'origin' : action.id,
 					target: next?.to?.id,
 					options: {
