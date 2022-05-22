@@ -115,6 +115,8 @@ export class Machine {
 			return prev.concat(curr)
 		}, []).filter((a) => a)
 
+		console.log(JSON.stringify({paths}))
+
 		let subprocs : any = flow?.children?.map((proc) => {
 			return {...this.loadFlow(flow?.children || [], proc.id)}
 		})

@@ -2,6 +2,7 @@ import { Condition } from "../condition";
 import { CommandProcessEdge, EdgeCondition } from "@hive-command/data-types";
 
 export class Transition {
+    
     private link: CommandProcessEdge;
 
     private getVariable?: (key: string) => any;
@@ -9,6 +10,10 @@ export class Transition {
     constructor(link: CommandProcessEdge, getVariable?: (key: string) => any){
         this.link = link
         this.getVariable = getVariable;
+    }
+
+    get id(){
+        return this.link.id;
     }
 
     get source(){

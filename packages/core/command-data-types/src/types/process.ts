@@ -11,6 +11,7 @@ export interface CommandProcess {
 }
 
 export interface CommandProcessEdge {
+	id: string;
 	source: string;
 	target: string;
 	options?: {
