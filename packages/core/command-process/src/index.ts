@@ -114,6 +114,8 @@ export class Process extends EventEmitter{
             return new ProcessChain(this, process, node.id, this.actions, this.getVariable)
         }) || []
 
+        console.log(`Loaded ${this.chains.entrypoints.length} entrypoints and ${this.chains.shutdown.length} exits`)
+        
         this.chains.entrypoints.forEach((entrypoint) => {
             entrypoint.on('transition', (ev) => {
                 this.emit('transition', {

@@ -53,6 +53,7 @@ export interface CommandPayloadItem {
 				name: string,
 			}
 			actions?: {
+				id: string,
 				request: {key: string},
 				device: {name: string}
 				release?: boolean;

@@ -5,13 +5,8 @@ export type ProgramActionType = "action" | "timer"  | "sub-process" | "pid"
 export interface ProgramAction {
 	id: string;
 	release: boolean;
-	request: {
-		key: string
-	},
-	device: {
-		id: string
-		name: string;
-	}
+	request: string;
+	device:string;
 }
 
 

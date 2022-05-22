@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/identity",
-  "version": "1.4.15-alpha.4",
+  "version": "1.4.15-alpha.19",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -17,7 +17,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@hive-command/data-types": "^1.4.15-alpha.4",
+    "@hive-command/data-types": "^1.4.15-alpha.19",
     "axios": "^0.23.0"
   },
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b"

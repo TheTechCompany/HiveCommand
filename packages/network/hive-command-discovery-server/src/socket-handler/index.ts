@@ -13,6 +13,6 @@ export const handleSocket = (dataManager: PrismaClient, socket: Socket) => {
     }
 
     socket.on(PROCESS_TRANSITION, async (data) => await handleTransition(socket, data))
-    socket.on(HEARTBEAT, async (data) => await handleHeartbeat(socket, data))
+    socket.on(HEARTBEAT, async (data) => await handleHeartbeat(dataManager, socket, data))
 
 }
