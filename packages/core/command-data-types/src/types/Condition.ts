@@ -1,11 +1,6 @@
 export interface EdgeCondition {
-	inputDevice: {
-		id: string
-		name: string;
-	};
-	inputDeviceKey: {
-		key: string;
-	}
+	inputDevice: string;
+	inputDeviceKey: string
 	comparator: string;
 	assertion: EdgeConditionAssertion;
 }

@@ -1,5 +1,5 @@
 import log from "loglevel";
-import { EdgeCondition } from "@hive-command/data-types";
+import { CommandProcessEdge, EdgeCondition } from "@hive-command/data-types";
 
 export class Condition {
     private condition: EdgeCondition;
@@ -11,11 +11,11 @@ export class Condition {
     }
 
     get input_id(){
-        return this.condition.inputDevice.id
+        return this.condition.inputDevice
     }
 
     get input_key(){
-        return this.condition.inputDeviceKey.key
+        return this.condition.inputDeviceKey
     }
 
     get value_id(){
