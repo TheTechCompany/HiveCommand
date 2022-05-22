@@ -10,7 +10,7 @@ export const handler = async (
 
 	let promise =  Promise.all(actions.map(async (action: ProgramAction) => {
 		const id = nanoid()
-		const res = await hub?.performOperation(action.device.name, action.release || false, action.request.key)
+		const res = await hub?.performOperation(action.device, action.release || false, action.request)
 
 	}))
 	
