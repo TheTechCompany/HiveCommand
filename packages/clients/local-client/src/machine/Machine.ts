@@ -429,20 +429,12 @@ export class Machine {
 				if(stateItem.max && stateItem.min){
 					let min = parseFloat(`${stateItem.min}`)
 					let max = parseFloat(`${stateItem.max}`)
-					console.log({min, max, value})
 					value = (((max - min) / 100) * value) + min
-					console.log({min, max, value})
 
 					if(value > max) value = max
 					if(value < min) value = min
-					console.log({min, max, value})
-
-					console.log("Max Mining", {stateItem, value})
 				}
 				writeOp[stateItem?.foreignKey] = value //event.value[k];
-
-				console.log({writeOp})
-
 
 				this.busMap.request(stateItem.bus, stateItem.port, writeOp)
 
