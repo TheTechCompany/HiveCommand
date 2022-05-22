@@ -2,6 +2,7 @@ import { Process } from "@hive-command/process";
 import { nanoid } from "nanoid";
 import { ProcessChain } from "../chain";
 import { CommandAction, CommandProcessNode } from "@hive-command/data-types";
+import { debug } from "loglevel";
 
 export interface CommandProgramAction {
 	device: string;
@@ -65,7 +66,7 @@ export class ProcessAction {
 
 		let action = this.actions.find((a) => a.id == this.blockType)
 
-        console.log("onEnter", action, this.node);
+        debug("onEnter", action, this.node);
 
         //First await the action placement
 		const { promise, cancel } = await action?.onEnter?.(this.node.options, {
@@ -152,7 +153,7 @@ export class ProcessAction {
     async onExit(){
         // console.log(`Exiting node ${this.node.type} ${this.node.id}`)
 
-        console.log("onExit", this.node);
+        debug("onExit", this.node);
         
 		let action = this.actions.find((a) => a.id == this.blockType)
 

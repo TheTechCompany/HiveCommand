@@ -1,4 +1,4 @@
-import { PrismaClient } from "@hive-command/data";
+import { PrismaClient, Prisma } from "@hive-command/data";
 import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
@@ -93,44 +93,78 @@ export default (prisma: PrismaClient) => {
   device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
 				*/
-				let query = `SELECT 
-								placeholder,
-								deviceId,
-								key,
-								time_bucket_gapfill('5 minute', "lastUpdated") as time, 
-								COALESCE(avg(value::float), 0) as value
-							FROM "DeviceValue" 
-								WHERE deviceId=${root.device?.id} AND placeholder=${root.dataDevice?.id}`;
+				let query = ``;
 
 				let params = [root.device?.id, root.dataDevice?.id]
 				// console.log("Analaytics values")
 
-				if(args.startDate){
-					// params.push(new Date(args.startDate).toISOString())
-					let beforeTime = moment(args.startDate).add(1, 'week');
-					if(moment(beforeTime).isAfter(moment())){
-						beforeTime = moment();
-					}
-					const afterTime = moment(args.startDate).toISOString();
+				const afterTime = moment(args.startDate)
+
+				let beforeTime = moment(args.startDate).add(1, 'week');
+				if(moment(beforeTime).isAfter(moment())){
+					beforeTime = moment();
+				}
+				
+				// if(args.startDate){
+				// 	// params.push(new Date(args.startDate).toISOString())
+				// 	let beforeTime = moment(args.startDate).add(1, 'week');
+				// 	if(moment(beforeTime).isAfter(moment())){
+				// 		beforeTime = moment();
+				// 	}
+				// 	const afterTime = moment(args.startDate).toISOString();
 					
-					params.push(afterTime)
-					params.push(beforeTime.toISOString());
+				// 	params.push(afterTime)
+				// 	params.push(beforeTime.toISOString());
 
-					query += ` AND "lastUpdated" >= ${afterTime} AND "lastUpdated" < ${beforeTime.toISOString()}`
-				}
-				if(root.dataKey?.key) {
-					params.push(root.dataKey?.key)
+				// 	query += ` `
+				// }
+				// if(root.dataKey?.key) {
+				// 	params.push(root.dataKey?.key)
 
-					query += ` AND key=${root.dataKey?.key}`
-				}
+				// 	query += ` `
+				// }
 
-				query += ` GROUP BY placeholder, deviceId, key, time ORDER BY time ASC`
+				// query += ` `
 				// console.log("Analaytics values", JSON.stringify({pool}))
 
 				// console.log(query, params)
 
-				const result = await prisma.$queryRaw<any[]>`${query}`
+				console.log({query: `
+				SELECT 
+					placeholder,
+					"deviceId",
+					key,
+					time_bucket_gapfill('5 minute', "lastUpdated") as time, 
+					COALESCE(avg(value::float), 0) as value
+				FROM "DeviceValue" 
+					WHERE "deviceId"=${root.device?.id} AND placeholder=${root.dataDevice?.id}
+					${afterTime ? Prisma.sql` AND "lastUpdated" >= (${afterTime.toISOString()})::date` : Prisma.empty} ${beforeTime ? Prisma.sql` AND "lastUpdated" < (${beforeTime.toISOString()})::date` : Prisma.empty} ${root.dataKey?.key ? Prisma.sql` AND key=${root.dataKey?.key}` : Prisma.empty}
+					GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`})
 
+				console.log({root, args})
+				try{
+					const result = await prisma.$queryRaw<any[]>`
+					SELECT 
+						placeholder,
+						"deviceId",
+						key,
+						time_bucket_gapfill('5 minute', "lastUpdated") as time, 
+						COALESCE(avg(value::float), 0) as value
+					FROM "DeviceValue" 
+						WHERE "deviceId"=${root.device?.id} AND placeholder=${root.dataDevice?.id}
+						 AND "lastUpdated" >= ${afterTime.toDate()}
+						 AND "lastUpdated" < ${beforeTime.toDate()}
+						 AND key=${root.dataKey?.key}
+						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
+
+
+						return (result || []).map((row) => ({
+							...row,
+							timestamp: row.time
+						}));
+				}catch(e){
+					console.log({e})
+				}
 
 				// const result = await client.query(
 				// 	query,
@@ -140,10 +174,7 @@ export default (prisma: PrismaClient) => {
 				// console.log("Analaytics values")
 
 				// await client.release()
-				return (result || []).map((row) => ({
-					...row,
-					timestamp: row.time
-				}));
+			
 			},
 			totalValue: async (root: any, args: any, context: any) => {
 					// const client = await pool.connect()
@@ -201,12 +232,12 @@ export default (prisma: PrismaClient) => {
 							FROM
 								"DeviceValue"
 							WHERE
-								deviceId = ${root.device?.id}
+								"deviceId" = ${root.device?.id}
 								AND placeholder = ${root.dataDevice?.id}
 								AND key = ${root.dataKey?.key}
 								AND "lastUpdated" >= ${afterTime}
 								AND "lastUpdated" < ${beforeTime.toISOString()}
-							GROUP by deviceId, placeholder, key, "lastUpdated", value
+							GROUP by "deviceId", placeholder, key, "lastUpdated", value
 						) as SUB
 				`
 
