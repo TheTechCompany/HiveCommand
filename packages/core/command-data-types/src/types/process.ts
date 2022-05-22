@@ -1,3 +1,4 @@
+import { EdgeConditionAssertion } from "./Condition";
 import { ProgramAction, ProgramTimer } from "./ProgramProcess";
 
 export interface CommandProcess {
@@ -12,7 +13,14 @@ export interface CommandProcess {
 export interface CommandProcessEdge {
 	source: string;
 	target: string;
-	options?: any;
+	options?: {
+		conditions?: {
+			inputDevice: string;
+			inputDeviceKey: string;
+			comparator: string;
+			assertion: EdgeConditionAssertion
+		}[]
+	};
 }
 
 export interface CommandProcessNode {

@@ -7,7 +7,7 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessNode, PayloadResponse, ProgramAction } from "@hive-command/data-types";
+import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessEdge, CommandProcessNode, PayloadResponse, ProgramAction } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
@@ -90,7 +90,7 @@ export class Machine {
 		})
 
 
-		let paths = (flow?.nodes || []).map((action) => {
+		let paths : CommandProcessEdge[] = (flow?.nodes || []).map((action) => {
 
 			const next = flow?.edges?.filter((a) => a.from.id == action.id)
 
@@ -100,7 +100,7 @@ export class Machine {
 					source: action?.id, //action.type == "Trigger" ? 'origin' : action.id,
 					target: next?.to?.id,
 					options: {
-						conditions: next?.conditions?.map((cond) => ({
+						conditions: (next?.conditions || []).map((cond) => ({
 							inputDevice: cond.inputDevice.name,
 							inputDeviceKey: cond.inputDeviceKey.key,
 							comparator: cond.comparator,
