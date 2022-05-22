@@ -173,7 +173,7 @@ export class Machine {
 					let configuration = plugin.configuration.reduce((prev, curr) => {
 						return {
 							...prev,
-							[curr.key.name]: curr.value
+							[curr.key.key]: curr.value
 						}
 					}, {})
 

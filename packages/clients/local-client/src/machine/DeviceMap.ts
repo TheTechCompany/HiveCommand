@@ -28,7 +28,7 @@ export class DeviceMap {
 				i?: string,
 				d?: string,
 				target?: string;
-			}>((prev, curr) => ({...prev, [curr.key.name]: curr.value}), {})
+			}>((prev, curr) => ({...prev, [curr.key.key]: curr.value}), {})
 
 			console.log("Plugin configuration", {pluginObject})
 

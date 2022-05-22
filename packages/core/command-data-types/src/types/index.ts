@@ -80,7 +80,7 @@ export interface AssignmentPayload {
 		}
 		rules: {id: string, name: string},
 		configuration: {
-			key: {id: string, name: string},
+			key: {id: string, key: string},
 			value: string
 		}[]
 	}[]
