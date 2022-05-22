@@ -211,6 +211,11 @@ export const Program = (props) => {
                             name
                         }
 
+                        timer {
+                            unit
+                            value
+                        }
+
                         actions {
                             id
                             release
@@ -321,10 +326,11 @@ export const Program = (props) => {
                 x: x.x,
                 y: x.y,
                 extras: {
+                    type: x.type,
                     icon: IconMap[x.type]?.icon,
                     label: x.subprocess?.name,
                     configuration: [
-                        ...(x.configuration || []),
+                        { key: "timer", value: x.timer },
                         { key: "actions", value: x.actions }
                     ]
                     // actions: x.actions

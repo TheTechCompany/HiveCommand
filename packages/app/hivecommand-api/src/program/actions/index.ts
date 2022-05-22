@@ -164,6 +164,39 @@ export const useUpdateNodeAction = (programId: string, flowId: string, parent?: 
 	}
 }
 
+export const useUpdateNodeTimer = (programId: string, flowId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {
+		id: string,
+		value: string,
+		unit: string
+	}) => {
+		const item = mutation.updateCommandProgramFlowNode({
+			flow: flowId,
+			program: programId,
+			id: args.id,
+			input: {
+				timer: args.value,
+				timerUnit: args.unit
+			}
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+
+	return (id: string, value: string, unit: string) => {
+		return mutateFn({
+			args: {
+				id,
+				value,
+				unit
+			}
+		})
+	}
+}
+
 // export const useUpdateNodeConfiguration = (programId: string, flowId: string, parent?: string) => {
 
 // 	const [ mutateFn ] = useMutation((mutation, args: {

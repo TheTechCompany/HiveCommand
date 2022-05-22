@@ -7,7 +7,7 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, PayloadResponse, ProgramAction } from "@hive-command/data-types";
+import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessNode, PayloadResponse, ProgramAction } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
@@ -63,12 +63,12 @@ export class Machine {
 		return this.fsm.setVariable(key, value)
 	}
 
-	loadFlow = (payload: CommandPayloadItem[], id: string) => {
+	loadFlow = (payload: CommandPayloadItem[], id: string) : CommandProcess => {
 		let flow = payload.find((a) => a.id == id);
 
-		let nodes = (flow)?.nodes.map((action) => {
-			let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
-			let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
+		let nodes : CommandProcessNode[] = ((flow)?.nodes || []).map((action) => {
+			// let deviceId = action.configuration?.find((a) => a.key == 'device')?.value;
+			// let operation = action.configuration?.find((a) => a.key == 'operation')?.value;
 
 			let actions : ProgramAction[] = (action.actions || []).map((action) => ({
 				id: action.id,
@@ -77,17 +77,13 @@ export class Machine {
 				release: action.release || false
 			}))
 
-			// if(deviceId && operation){
-			// 	actions.push({device: deviceId, operation})
-			// }
-	
 			return {
 				id: action.id, //action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
 				type: action.type || ACTION_TYPES.ACTION,
 				options: {
 					blockType: action.type || ACTION_TYPES.ACTION,
 					["sub-process"]: action?.subprocess?.id || undefined,
-					timer: action.configuration?.find((a) => a.key == 'timeout')?.value,
+					timer: action?.timer, // action.configuration?.find((a) => a.key == 'timeout')?.value,
 					actions: actions
 				}
 			}

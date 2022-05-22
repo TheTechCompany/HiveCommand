@@ -204,6 +204,8 @@ export interface CommandProgramFlowNodeActionInput {
 
 export interface CommandProgramFlowNodeInput {
   subprocess?: InputMaybe<Scalars["String"]>;
+  timer?: InputMaybe<Scalars["String"]>;
+  timerUnit?: InputMaybe<Scalars["String"]>;
   type?: InputMaybe<Scalars["String"]>;
   x?: InputMaybe<Scalars["Float"]>;
   y?: InputMaybe<Scalars["Float"]>;
@@ -305,7 +307,7 @@ export const generatedSchema = {
     calibrations: { __type: "[CommandProgramDeviceCalibration]" },
     deviceSnapshot: { __type: "[CommandDeviceSnapshot]" },
     id: { __type: "ID!" },
-    lastOnline: { __type: "DateTime" },
+    lastSeen: { __type: "DateTime" },
     name: { __type: "String" },
     network_name: { __type: "String" },
     online: { __type: "Boolean" },
@@ -779,6 +781,8 @@ export const generatedSchema = {
   },
   CommandProgramFlowNodeInput: {
     subprocess: { __type: "String" },
+    timer: { __type: "String" },
+    timerUnit: { __type: "String" },
     type: { __type: "String" },
     x: { __type: "Float" },
     y: { __type: "Float" },
@@ -803,6 +807,7 @@ export const generatedSchema = {
     inputs: { __type: "[CommandProgramNode]" },
     outputs: { __type: "[CommandProgramNode]" },
     subprocess: { __type: "CommandProgramFlow" },
+    timer: { __type: "CommandProgramNodeTimer" },
     type: { __type: "String" },
     x: { __type: "Float" },
     y: { __type: "Float" },
@@ -821,6 +826,12 @@ export const generatedSchema = {
     id: { __type: "ID!" },
     inputDevice: { __type: "CommandProgramDevicePlaceholder" },
     inputDeviceKey: { __type: "CommandProgramDeviceState" },
+  },
+  CommandProgramNodeTimer: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID!" },
+    unit: { __type: "String" },
+    value: { __type: "String" },
   },
   CommandProgramVariable: {
     __typename: { __type: "String!" },
@@ -1261,7 +1272,7 @@ export interface CommandDevice {
   calibrations?: Maybe<Array<Maybe<CommandProgramDeviceCalibration>>>;
   deviceSnapshot?: Maybe<Array<Maybe<CommandDeviceSnapshot>>>;
   id: ScalarsEnums["ID"];
-  lastOnline?: Maybe<ScalarsEnums["DateTime"]>;
+  lastSeen?: Maybe<ScalarsEnums["DateTime"]>;
   name?: Maybe<ScalarsEnums["String"]>;
   network_name?: Maybe<ScalarsEnums["String"]>;
   online?: Maybe<ScalarsEnums["Boolean"]>;
@@ -1676,6 +1687,7 @@ export interface CommandProgramNode {
   inputs?: Maybe<Array<Maybe<CommandProgramNode>>>;
   outputs?: Maybe<Array<Maybe<CommandProgramNode>>>;
   subprocess?: Maybe<CommandProgramFlow>;
+  timer?: Maybe<CommandProgramNodeTimer>;
   type?: Maybe<ScalarsEnums["String"]>;
   x?: Maybe<ScalarsEnums["Float"]>;
   y?: Maybe<ScalarsEnums["Float"]>;
@@ -1696,6 +1708,13 @@ export interface CommandProgramNodeFlowConfiguration {
   id: ScalarsEnums["ID"];
   inputDevice?: Maybe<CommandProgramDevicePlaceholder>;
   inputDeviceKey?: Maybe<CommandProgramDeviceState>;
+}
+
+export interface CommandProgramNodeTimer {
+  __typename?: "CommandProgramNodeTimer";
+  id: ScalarsEnums["ID"];
+  unit?: Maybe<ScalarsEnums["String"]>;
+  value?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandProgramVariable {
@@ -2088,6 +2107,7 @@ export interface SchemaObjectTypes {
   CommandProgramNode: CommandProgramNode;
   CommandProgramNodeConfiguration: CommandProgramNodeConfiguration;
   CommandProgramNodeFlowConfiguration: CommandProgramNodeFlowConfiguration;
+  CommandProgramNodeTimer: CommandProgramNodeTimer;
   CommandProgramVariable: CommandProgramVariable;
   HiveOrganisation: HiveOrganisation;
   HiveUser: HiveUser;
@@ -2142,6 +2162,7 @@ export type SchemaObjectTypesNames =
   | "CommandProgramNode"
   | "CommandProgramNodeConfiguration"
   | "CommandProgramNodeFlowConfiguration"
+  | "CommandProgramNodeTimer"
   | "CommandProgramVariable"
   | "HiveOrganisation"
   | "HiveUser"
