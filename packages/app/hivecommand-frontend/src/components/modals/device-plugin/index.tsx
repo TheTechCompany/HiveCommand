@@ -9,6 +9,7 @@ export interface DevicePluginModalProps {
 	onSubmit?: (plugin: any) => void;
 	plugins?: any[];
 	devices?: any[];
+	device?: any;
 	flows?: any[];
 	selected?: any;
 }
@@ -39,9 +40,9 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 	useEffect(() => {
 		if(props.selected){
 			console.log(props.selected)
-			let conf = props.selected.configuration?.reduce((prev, curr) => ({
+			let conf = props.selected.config?.reduce((prev, curr) => ({
 					...prev,
-					[curr.key]: curr.value
+					[curr.key?.id]: curr.value
 				}), {})
 
 			setPlugin({
@@ -66,8 +67,8 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 		if(item.requires?.length > 0){
 			let values = [];
 			item.requires.forEach((req: any) => {
-				requirements[req.type?.toLowerCase()] = plugin?.configuration?.[req.key]
-				values.push(plugin?.configuration?.[req.key])
+				requirements[req.type?.toLowerCase()] = plugin?.configuration?.[req.id]
+				values.push(plugin?.configuration?.[req.id])
 			})
 			if(values.indexOf(undefined) > -1) return;
 		}
@@ -77,29 +78,30 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 		switch(item.type) {
 			case "Number":
 				return (<TextInput 
-						value={plugin.configuration?.[item.key] || ''}	
-						onChange={(e) => onChangeConfiguration(item.key, e.target.value)}
+						value={plugin.configuration?.[item.id] || ''}	
+						onChange={(e) => onChangeConfiguration(item.id, e.target.value)}
 					type="number" />);
 			case "Device":
 				return( <Select
 					labelKey="name"	
-					value={plugin?.configuration?.[item.key]}
+					value={plugin?.configuration?.[item.id]}
 					valueKey={{key: 'name', reduce: true}}
-					onChange={({value}) => onChangeConfiguration(item.key, value)}
+					onChange={({value}) => onChangeConfiguration(item.id, value)}
 					options={props.devices || []} />)
 			case "DeviceState":
 				return (<Select 	
 						labelKey="key"
-						value={plugin?.configuration?.[item.key]}
+						value={plugin?.configuration?.[item.id]}
 						valueKey={{key: 'key', reduce: true}}
-						onChange={({value}) => onChangeConfiguration(item.key, value)}
+						onChange={({value}) => onChangeConfiguration(item.id, value)}
 						options={props.devices.find((a) =>  a.name == requirements?.device)?.type?.state || []} />)
 			default: return;
 		}
 	}
 	const renderPluginForm = () => {
 		const config = props.plugins.find((a) => a.id === plugin?.plugin)?.config?.slice() || []
-		
+
+		console.log({config})
 		return config?.sort((a, b) => {
 			return a.order - b.order;
 		}).map((conf) => (
@@ -109,7 +111,6 @@ export const DevicePluginModal : React.FC<DevicePluginModalProps> = (props) => {
 				direction="row">
 				<Box flex>
 					<Text>{conf.key}</Text>
-
 				</Box>
 				<Box flex>
 					{renderPluginFormItem(conf)}
