@@ -235,6 +235,10 @@ export class Data {
 				subprocess{
 					id
 				}
+				timer {
+					value
+					unit
+				}
 			}
 
 			edges {
@@ -569,6 +573,7 @@ export class Data {
 	}
 
 	async updateDeviceUptime(deviceId: string, uptime: number) {
+
 		await this.requestGraphQL(gql`
 			mutation UpdateDeviceUptime ($id: ID, $uptime: DateTime) {
 				updateCommandDeviceUptime(id: $id, uptime: $uptime){

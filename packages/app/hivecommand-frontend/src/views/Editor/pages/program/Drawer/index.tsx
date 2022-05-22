@@ -1,3 +1,4 @@
+import { ACTION_TYPES } from '@hive-command/data-types';
 import { Box } from 'grommet';
 import React from 'react';
 import { useProgramEditor } from '../context';
@@ -10,9 +11,10 @@ export const ProgramDrawer = () => {
     const { devices, refresh, selected, selectedType, flow } = useProgramEditor()
 
     const renderDrawer = () => {
+        console.log({selected, selectedType})
         switch(selectedType){
             case 'node':
-                return selected.extras.type == "timer" ? (
+                return selected.extras.type == ACTION_TYPES.TIMER ? (
                     <TimerDrawerItem />
                 ) : (
                     <ActionDrawerItem />

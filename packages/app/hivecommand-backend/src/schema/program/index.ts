@@ -252,12 +252,27 @@ export default (prisma: PrismaClient) => {
 					return flowNode
 				},
 				updateCommandProgramFlowNode: async (root: any, args: any) => {
+
+					let timerQuery : any = {};
+					if(args.input?.timer && args.input.timerUnit){
+						timerQuery = {
+							timer: {
+								value: args.input.timer,
+								unit: args.input.timerUnit
+							}
+						};
+					}
+
+					let update : any = {};
+					if(args.input.x) update.x = args.input.x;
+					if(args.input.y) update.y = args.input.y;
+					if(args.input.type) update.type = args.input.type;
+
 					const flowNode = await prisma.programFlowNode.update({
 						where: {id: args.id},
 						data: {
-							x: args.input.x,
-							y: args.input.y,
-							type: args.input.type
+							...update,
+							...timerQuery
 						}
 					})
 					return flowNode
@@ -542,6 +557,9 @@ export default (prisma: PrismaClient) => {
 			x: Float
 			y: Float
 
+			timer: String
+			timerUnit: String
+
 			subprocess: String
 
 			type: String
@@ -607,11 +625,19 @@ export default (prisma: PrismaClient) => {
 		actions: [CommandActionItem] 
 		subprocess: CommandProgramFlow 
 
+		timer: CommandProgramNodeTimer
+
 		configuration: [CommandProgramNodeConfiguration]
 
 
 		inputs: [CommandProgramNode]
 		outputs: [CommandProgramNode]
+	}
+
+	type CommandProgramNodeTimer {
+		id: ID!
+		value: String
+		unit: String	  
 	}
 
 	input CommandProgramFlowNodeActionInput {

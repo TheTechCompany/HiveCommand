@@ -60,7 +60,7 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
             align: 'end',
             size: 'small',
             header: <Text>Last Seen</Text>,
-            render: (datum) => moment(datum.lastOnline).fromNow()
+            render: (datum) => moment(datum.lastSeen).fromNow()
         },
         {
             property: 'edit',
