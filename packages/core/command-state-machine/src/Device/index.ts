@@ -3,7 +3,7 @@ import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
 import { Condition } from "@hive-command/process";
 import { State } from "../State";
-import { ProgramDevice } from "@hive-command/data-types";
+import { ProgramDevice, ProgramInterlock } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
 
@@ -225,9 +225,9 @@ export class StateDevice {
 	}
 
 
-	async doFallback(lock: any){
+	async doFallback(lock: ProgramInterlock){
 		// await this.device.interlock?.locfallback.map(async (operation) => {
-			await this.performOperation?.(lock.fallback)
+			await this.performOperation?.(lock.action)
 		// })
 	}
 }
