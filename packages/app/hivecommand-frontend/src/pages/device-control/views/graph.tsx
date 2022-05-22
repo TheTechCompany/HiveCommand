@@ -84,6 +84,9 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         
         reports {
           id
+          totalValue {
+            total
+          }
           values (startDate: $startDate){
             timestamp
             value
@@ -111,7 +114,6 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     client.refetchQueries({include: ["ReportData"]})
   }
 
-  console.log("Render", {reporting});
 
   useEffect(() => {
       const timer = setInterval(() => {
@@ -136,7 +138,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         ...value,
         timestamp: moment(value.timestamp).format("DD/MM hh:mma")
       })),
-      total: report.totalValue
+      total: reportValue?.totalValue?.total
     }
   })
 
@@ -238,7 +240,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         }}
         dataKey={item.dataKey?.key}
         label={`${item.dataDevice?.name} - ${item.dataKey?.key}`}
-        total={item.totalValue?.total}>
+        total={item.total}>
           <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
         </GraphContainer>
       )}
