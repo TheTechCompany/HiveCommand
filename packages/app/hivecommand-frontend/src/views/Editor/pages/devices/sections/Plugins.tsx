@@ -1,4 +1,4 @@
-import { useCreatePlaceholderPlugin } from '@hive-command/api';
+import { useCreatePlaceholderPlugin, useUpdatePlaceholderPlugin } from '@hive-command/api';
 import { Box, Text } from 'grommet';
 import React, { useContext, useState } from 'react';
 import { ListBox } from '../../../../../components/ListBox';
@@ -12,8 +12,9 @@ export const PluginSection = (props) => {
 
     const [selected, selectPlugin] = useState()
 
-    const createPlaceholderPlugin = useCreatePlaceholderPlugin(programId, deviceId)
-
+    const createPlaceholderPlugin = useCreatePlaceholderPlugin(programId, deviceId);
+    const updatePlaceholderPlugin = useUpdatePlaceholderPlugin(programId, deviceId);
+    
     return (
         <Box flex>
 
@@ -21,13 +22,19 @@ export const PluginSection = (props) => {
                 selected={selected}
                 open={modalOpen}
                 onSubmit={(config) => {
-
-                    createPlaceholderPlugin(config.plugin, config.rules, config.configuration, config.id).then(() => {
-                        refetch()
-                    })
+                    if(config.id){
+                        updatePlaceholderPlugin(config.id, config.plugin, config.rules, config.configuration).then(() => {
+                            refetch()
+                        })
+                    }else{
+                        createPlaceholderPlugin(config.plugin, config.rules, config.configuration).then(() => {
+                            refetch()
+                        })
+                    }
                 }}
                 onClose={() => openModal(false)}
                 devices={devices}
+                device={device}
                 plugins={plugins}
                 flows={flows}
             />
@@ -37,7 +44,10 @@ export const PluginSection = (props) => {
                 label="Controllers"
                 onAdd={() => openModal(true)}
                 data={device?.plugins || []}
-                onItemEdit={(item) => { selectPlugin(item) }}
+                onItemEdit={(item) => { 
+                    selectPlugin(item) 
+                    openModal(true)
+                }}
                 renderItem={(item) => {
                     return (
                         <Text size="small">{item.plugin?.name} {item?.rules && `- ${item?.rules?.name}`}</Text>

@@ -190,6 +190,7 @@ export default (prisma: PrismaClient) => {
         }
 
         input CommandDevicePluginConfigurationInput {
+            id: ID
             key: String
             value: String
         }
@@ -204,7 +205,13 @@ export default (prisma: PrismaClient) => {
             id: ID! 
             plugin: CommandProgramDevicePlugin 
             rules: CommandProgramFlow 
-            config: [CommandKeyValue] 
+            config: [CommandDevicePluginConfiguration] 
+        }
+
+        type CommandDevicePluginConfiguration {
+            id: ID
+            key: CommandProgramDevicePluginConfiguration
+            value: String
         }
 
     
@@ -417,27 +424,30 @@ export default (prisma: PrismaClient) => {
                 return await prisma.programSetpoint.delete({where: {id: args.id}})
             },
             createCommandProgramDevicePlugin: async (root: any, args: any, context: any) => {
+                let rulesInput : any = {};
+
+                if(args.input.rules){
+                    rulesInput.rules = {connect: {id: args.input.rules}}
+                }
                 return await prisma.iOPlugin.create({
                     data: {
                         id: nanoid(),
-                        rules: {
-                            connect: {id: args.input.rules}
-                        },
+                        ...rulesInput,
                         plugin: {
                             connect: {
                                 id: args.input.plugin
                             }
                         },
                         config: {
-                            createMany: args.input.config.map((config: any) => {
-                                return {
-                                    id: nanoid(),
-                                    key: {
-                                        connect: {id: config.key},
-                                    },
-                                    value: config.value
-                                }  
-                            })
+                            createMany: {
+                                data: args.input.config.map((config: any) => {
+                                    return {
+                                        id: nanoid(),
+                                        configId: config.key,
+                                        value: config.value
+                                    }  
+                                })
+                            }
                         },
                         device: {
                             connect: {id: args.device}
@@ -446,19 +456,28 @@ export default (prisma: PrismaClient) => {
                 })
             },
             updateCommandProgramDevicePlugin: async (root: any, args: any, context: any) => {
+                let rulesInput : any = {};
+
+                if(args.input.rules){
+                    rulesInput.rules = {connect: {id: args.input.rules}}
+                }
                 return await prisma.iOPlugin.update({
                     where: {id: args.id},
                     data: {
-                        rules: {
-                            connect: {id: args.input.rules}
-                        },
+                        ...rulesInput,
                         plugin: {
                             connect: { id: args.input.plugin }
                         },
                         config: {
-                            updateMany: args.input.config.map((config: any) => {
-
-                            })
+                            // updateMany: [{where: }] ,
+                            updateMany: args.input.config.map((config: any) => ({
+                                where: {
+                                    configId: config.key
+                                },
+                                data: {
+                                    value: config.value
+                                }
+                            }))
                         }
                     }
                 })

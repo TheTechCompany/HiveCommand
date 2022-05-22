@@ -195,12 +195,13 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	*/
 
 	const { data } = useApollo(gql`
-		query Q ($id: ID!, $programId: ID) {
+		query GetDeviceInfo ( $programId: ID) {
 			
 			commandProgramDevicePlugins {
 				id
 				name
 				config {
+					id
 					key
 					type
 
@@ -222,7 +223,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 					name
 				}
 
-				devices(where: {id: $id}) {
+				devices {
 					id
 					name
 
@@ -250,10 +251,15 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 
 						rules {
 							id
+							name
 						}
 
 						config {
 							id
+							key {
+								id
+							}
+							value
 						}
 
 					}
@@ -333,7 +339,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 		}
 	`, {
 		variables: {
-			id: deviceId,
+			// id: deviceId,
 			programId: props.program
 		}
 	})
@@ -344,7 +350,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 
 	console.log({data})
 
-	const device = data?.commandPrograms?.[0]?.devices?.[0];
+	const device = data?.commandPrograms?.[0]?.devices?.find((a) => a.id == deviceId);
 
 	const flows = data?.commandPrograms?.[0]?.program?.map((item) => [item, ...(item.children || []).map((x) => ({ ...x, name: `${item.name} - ${x.name}` }))]).reduce((prev, curr) => prev.concat(curr), [])
 	const devices = data?.commandPrograms?.[0]?.devices;
