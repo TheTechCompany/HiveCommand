@@ -555,6 +555,8 @@ model ProgramFlowNode {
 
   actions ProgramFlowNodeAction[] @relation(name: "useAction")
 
+  timer Json? 
+
   subprocess ProgramFlow? @relation(name: "useSubprocess", fields: [subprocessId], references: [id])
   subprocessId String?
 

@@ -1,3 +1,5 @@
+import { ProgramAction, ProgramTimer } from "./ProgramProcess";
+
 export interface CommandProcess {
 	id?: string;
 	name?: string;
@@ -16,7 +18,12 @@ export interface CommandProcessEdge {
 export interface CommandProcessNode {
 	id: string;
 	type: string;
-	options?: any;
+	options?: {
+		blockType: string;
+		["sub-process"]?: string;
+		timer?: ProgramTimer;
+		actions?: ProgramAction[]
+	};
 }
 
 export interface CommandHub {

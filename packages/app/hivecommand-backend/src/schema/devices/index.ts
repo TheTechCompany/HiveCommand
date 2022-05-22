@@ -523,7 +523,7 @@ export default (prisma: PrismaClient) => {
 		waitingForActions: [CommandProgramAction]
 
 		online: Boolean
-		lastOnline: DateTime
+		lastSeen: DateTime
 
 		reports: [CommandDeviceReport] 
 
