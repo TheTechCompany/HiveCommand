@@ -8,7 +8,7 @@ export class Condition {
 
     constructor(condition: EdgeCondition, getVariable?: (key: string) => any){
         this.condition = condition
-        console.log(this.condition)
+        // console.log(this.condition)
     }
 
     get input_id(){
