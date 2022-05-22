@@ -186,7 +186,7 @@ export class ProcessChain extends EventEmitter {
     let next = this.getNext(id);
 
     let results = next.map((next_id: string) => {
-      let transition = this.transitions.find((a) => a.source == id && a.target == next_id);
+      let transition = this.transitions.find((a) => a.id == next_id);
 
       let conds = transition?.conditions || [];
 
@@ -235,7 +235,7 @@ export class ProcessChain extends EventEmitter {
 
   getNext(id: string) {
     return (
-      this.program.edges?.filter((a) => a.source == id).map((x) => x.target) ||
+      this.program.edges?.filter((a) => a.source == id).map((x) => x.id) ||
       []
     );
   }
