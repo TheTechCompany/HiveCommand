@@ -20,7 +20,6 @@ export class Condition {
     }
 
     get value_id(){
-        console.log("Value ID", this.condition)
         if(this.condition.assertion.setpoint){
             //TODO map setpoints to variables
             return this.condition.assertion?.setpoint.value
