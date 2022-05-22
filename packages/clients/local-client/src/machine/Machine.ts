@@ -77,10 +77,6 @@ export class Machine {
 				release: action.release || false
 			}))
 
-			// if(deviceId && operation){
-			// 	actions.push({device: deviceId, operation})
-			// }
-	
 			return {
 				id: action.id, //action.type == "Trigger" ? "origin" : action.type == "PowerShutdown" ? 'shutdown' : action.id,
 				type: action.type || ACTION_TYPES.ACTION,
