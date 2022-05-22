@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/process",
-  "version": "1.4.15-alpha.20",
+  "version": "1.4.15-alpha.27",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
