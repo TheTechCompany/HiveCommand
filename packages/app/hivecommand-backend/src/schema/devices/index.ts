@@ -231,7 +231,7 @@ export default (prisma: PrismaClient) => {
 						}
 					}
 				}) || []
-				console.log({devices})
+
 				return devices;
 			}
 		},

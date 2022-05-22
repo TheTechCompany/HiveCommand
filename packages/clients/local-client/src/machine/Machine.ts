@@ -14,7 +14,7 @@ import { DeviceMap } from "./DeviceMap";
 import { PluginBank } from "./PluginBank";
 import { getBlockType } from "./utils";
 import { CommandEnvironment } from "..";
-import log from "loglevel";
+import log, { debug } from "loglevel";
 
 import PID from "../plugins/PID";
 
@@ -407,7 +407,7 @@ export class Machine {
 		let writeOp: any;
 		if(typeof(event.state) == 'object'){
 
-			console.log("Requesting", {event})
+			// console.log("Requesting", {event})
 
 			writeOp = {};
 			for(var k in event.state){
@@ -419,7 +419,7 @@ export class Machine {
 					continue;
 				}
 
-				console.log("State", {stateItem, busDevice, k})
+				// console.log("State", {stateItem, busDevice, k})
 				// let stateItem = busPort?.state?.find((a) => a.key == k)
 
 				if(!stateItem) continue;
@@ -487,7 +487,7 @@ export class Machine {
 					}
 				}
 				
-				console.log("WRITE PLUGIN", bus, port.port, {writeOp})
+				debug("WRITE PLUGIN", bus, port.port, {writeOp})
 				// log.debug(`Writing state to ${bus} ${port.port}`, {writeOp})
 				await plugin?.write(bus, port.port, writeOp);
 
