@@ -27,8 +27,6 @@ export interface BaseGraphProps {
 
 const BaseGraph: React.FC<BaseGraphProps> = (props) => {
 
-  console.log((props.data || []).map((x) => typeof(x[props.yKey])))
-
   return (
     <ResponsiveContainer>
       <LineChart

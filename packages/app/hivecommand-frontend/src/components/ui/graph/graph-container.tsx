@@ -8,7 +8,7 @@ import { BaseStyle } from "@hexhive/styles";
 export interface GraphContainerProps {
   dataKey: string;
   label: string;
-  total: string;
+  total: number;
   // onRemove: () => void;
 
   onEdit?: () => void;
@@ -25,7 +25,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  console.log({props})
   return (
     <Paper
       elevation={1}
@@ -49,9 +49,9 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
         }}
 
       >
-        <Box style={{paddingLeft: 8}}>
+        <Box style={{display: 'flex', flexDirection: 'column', paddingLeft: 8}}>
           <Text>{props.label}</Text>
-          <Text size="small">{props.total && `total: ${props.total}`}</Text>
+          <Text size="small">{props.total && `total: ${props.total?.toFixed(2)}`}</Text>
         </Box>
 
         <IconButton
