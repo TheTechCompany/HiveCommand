@@ -41,7 +41,7 @@ export class StateDevice {
 			}
 		}, {})
 
-		console.log("Setting up plugins for ", device.name, this.state)
+		if(device.plugins && device.plugins.length > 0) console.log("Setting up plugins for ", device.name, this.state)
 
 		let plugins = (device.plugins || []).map((plugin) => {
 			const newClass = getPluginClass(plugin.classString, plugin.imports || [])
