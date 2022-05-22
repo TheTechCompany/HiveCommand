@@ -1,7 +1,8 @@
+import { PrismaClient } from "@hive-command/data";
 import { Socket } from "socket.io";
 
 
-export const handleHeartbeat = async (socket: Socket, data: any) => {
+export const handleHeartbeat = async (dataManager: PrismaClient, socket: Socket, data: any) => {
     // console.log(`Heartbeat`, (socket as any).networkName)
 
     let id = (socket as any)?.networkName
@@ -11,6 +12,15 @@ export const handleHeartbeat = async (socket: Socket, data: any) => {
     
     // const device = await Device.findById(id)
 
+    await dataManager.device.update({
+        where: {
+            network_name: id,
+        },
+        data: {
+            online: true,
+            lastSeen: new Date()
+        }
+    })
     // if(device){
     //     s
     //     device.connected = true;
@@ -22,6 +32,7 @@ export const handleHeartbeat = async (socket: Socket, data: any) => {
 export const handleTransition = async (socket: Socket, data: any) => {
     let id = (socket as any)?.networkName;
 
+    // await data
     //TODO add graphql version
     // await dataManager.updateProcess(id, {process: data.process, target: data.target})
 }
