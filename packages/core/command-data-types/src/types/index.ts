@@ -44,10 +44,10 @@ export interface CommandPayloadItem {
 		nodes: {
 			id: string;
 			type: string;
-			configuration?: {
-				key: string;
+			timer?: {
+				unit: string;
 				value: string;
-			}[];
+			};
 			subprocess?: {
 				id: string,
 				name: string,

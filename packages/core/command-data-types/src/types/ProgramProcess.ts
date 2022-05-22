@@ -9,6 +9,11 @@ export interface ProgramAction {
 	device:string;
 }
 
+export interface ProgramTimer {
+	unit: string;
+	value: string;
+}
+
 
 export interface ProgramProcess {
 	id: string;
