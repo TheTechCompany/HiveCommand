@@ -28,7 +28,9 @@ export class DeviceMap {
 				i?: string,
 				d?: string,
 				target?: string;
-			}>((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+			}>((prev, curr) => ({...prev, [curr.key.name]: curr.value}), {})
+
+			console.log("Plugin configuration", {pluginObject})
 
 			const portIx = this.getDeviceIndexById(deviceId)
 

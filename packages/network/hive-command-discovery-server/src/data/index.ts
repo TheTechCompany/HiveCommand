@@ -396,7 +396,10 @@ export class Data {
 									id
 								}
 								config {
-									key
+									key {
+										id
+										name
+									}
 									value
 								}
 							}

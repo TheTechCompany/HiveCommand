@@ -138,7 +138,7 @@ export class Machine {
 	async loadPlugins(payload: AssignmentPayload[]){
 		//Init all plugins for all ports
 		await Promise.all(this.deviceMap.getDevicesWithPlugins().map(async (device) => {
-
+			console.log("Setting up plugins for: ", device.name)
 			this.deviceMap.setupDevicePlugins(device.id)
 			
 		}))
@@ -173,7 +173,7 @@ export class Machine {
 					let configuration = plugin.configuration.reduce((prev, curr) => {
 						return {
 							...prev,
-							[curr.key]: curr.value
+							[curr.key.name]: curr.value
 						}
 					}, {})
 
