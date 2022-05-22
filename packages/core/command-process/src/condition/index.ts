@@ -8,6 +8,7 @@ export class Condition {
 
     constructor(condition: EdgeCondition, getVariable?: (key: string) => any){
         this.condition = condition
+        console.log(this.condition)
     }
 
     get input_id(){
@@ -56,8 +57,7 @@ export class Condition {
             value = `${value}`
         }
 
-        console.log(this.condition)
-        console.log("Checked", this.condition.comparator, "input", input, "value", value)
+        // console.log("Checked", this.condition.comparator, "input", input, "value", value)
         
         // console.log("Type", typeof(input), typeof(value))
         switch(this.condition.comparator){
