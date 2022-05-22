@@ -89,7 +89,13 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
-	interlocks?: ProgramInterlock[]
+	interlocks?: {
+		inputDevice: {name: string},
+		inputDeviceKey: {key: string},
+		comparator: string,
+		assertion: EdgeConditionAssertion,
+		action: { key: string } 
+	}[]
 	state?: AssignmentState[]
 	requiresMutex: boolean;
 	type: string;

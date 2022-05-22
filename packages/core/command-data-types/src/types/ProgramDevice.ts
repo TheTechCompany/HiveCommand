@@ -2,9 +2,7 @@ import { EdgeCondition } from "./Condition";
 
 export interface ProgramInterlock extends EdgeCondition {
 
-	action: {
-		key: string
-	}
+	action: string
 }
 
 export interface ProgramDevice {
