@@ -84,7 +84,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         
         reports {
           id
-          totalValue {
+          totalValue(startDate: $startDate) {
             total
           }
           values (startDate: $startDate){
