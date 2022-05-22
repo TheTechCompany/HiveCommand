@@ -124,6 +124,17 @@ export class DiscoveryServer {
     async onSocketDisconnect(socket: Socket){
         //TODO add graphql update
         
+        const networkName = (socket as any)?.networkName;
+
+        await this.prisma.device.update({
+            where: {
+                network_name: networkName
+            },
+            data: {
+                online: false,
+                lastSeen: new Date()
+            }
+        })
         // await this.data.updateLiveness((socket as any)?.networkName, false)
         // await this.data.updateMode((socket as any)?.networkName, 'disabled')
 
