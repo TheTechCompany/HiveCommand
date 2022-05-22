@@ -398,7 +398,7 @@ export class Data {
 								config {
 									key {
 										id
-										name
+										key
 									}
 									value
 								}
