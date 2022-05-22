@@ -28,6 +28,17 @@ export default (prisma: PrismaClient) => {
 									state: true
 								}
 							},
+							plugins: {
+								include: {
+									plugin: true,
+									rules: true,
+									config: {
+										include: {
+											key: true,
+										}
+									}
+								}
+							},
 							interlocks: {
 								include: {
 									action: true,
@@ -107,8 +118,22 @@ export default (prisma: PrismaClient) => {
 									}
 								}
 							}
-						}
-						// devices: {include: {type: {include: {actions: true, state: true}}}}
+						},
+						// devices: {
+						// 	include: {
+						// 		type: {include: {actions: true, state: true}},
+						// 		plugins: {
+						// 			include: {
+						// 				plugin: true,
+						// 				config: {
+						// 					include: {
+						// 						key: true
+						// 					}
+						// 				}
+						// 			}
+						// 		}
+						// 	}
+						// }
 					}});
 				},
 				commandProgramFlows: async (root: any, args: any) => {

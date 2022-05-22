@@ -364,6 +364,8 @@ model IOPluginConfig {
 
   plugin IOPlugin @relation(name: "usePluginConfig", fields: [pluginId], references: [id])
   pluginId String
+
+  @@unique([configId, pluginId])
 }
 
 model ProgramSetpoint {
