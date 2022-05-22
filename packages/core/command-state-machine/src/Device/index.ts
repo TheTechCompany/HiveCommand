@@ -41,7 +41,7 @@ export class StateDevice {
 			}
 		}, {})
 
-		if(device.plugins && device.plugins.length > 0) console.log("Setting up plugins for ", device.name, this.state, device.plugins)
+		if(device.plugins && device.plugins.length > 0) console.log("Setting up plugins for ", device.name)
 
 		let plugins = (device.plugins || []).map((plugin) => {
 			const newClass = getPluginClass(plugin.classString, plugin.imports || [])
@@ -58,7 +58,7 @@ export class StateDevice {
 			}
 		})
 
-		console.log({plugins})
+		// console.log({plugins})
 
 		this.plugins = plugins //.map((x) => x.instance)
 		
@@ -71,7 +71,7 @@ export class StateDevice {
 		this.setState = this.setState.bind(this);
 		this.requestState = this.requestState.bind(this);
 
-		console.log(this.actions)
+		// console.log(this.actions)
 	}
 
 	//Give plugins a chance to gather data before starting
