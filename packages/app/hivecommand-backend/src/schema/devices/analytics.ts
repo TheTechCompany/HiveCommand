@@ -121,7 +121,7 @@ export default (prisma: PrismaClient) => {
 				if(root.dataKey?.key) {
 					params.push(root.dataKey?.key)
 
-					query += ` AND key=$${params.length}`
+					query += ` AND key=${root.dataKey?.key}`
 				}
 
 				query += ` GROUP BY placeholder, deviceId, key, time ORDER BY time ASC`
