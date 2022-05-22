@@ -19,6 +19,7 @@ export class Condition {
     }
 
     get value_id(){
+        console.log("Value ID", this.condition)
         if(this.condition.assertion.setpoint){
             //TODO map setpoints to variables
             return this.condition.assertion?.setpoint.value
@@ -55,7 +56,8 @@ export class Condition {
             value = `${value}`
         }
 
-        // console.log("Checked", this.condition.comparator, "input", input, "value", value)
+        console.log(this.condition)
+        console.log("Checked", this.condition.comparator, "input", input, "value", value)
         
         // console.log("Type", typeof(input), typeof(value))
         switch(this.condition.comparator){
