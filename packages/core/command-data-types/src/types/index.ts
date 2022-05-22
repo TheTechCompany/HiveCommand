@@ -1,4 +1,4 @@
-import { EdgeCondition } from './Condition'
+import { EdgeCondition, EdgeConditionAssertion } from './Condition'
 import { ProgramInterlock } from './ProgramDevice'
 
 export * from './process'
@@ -63,7 +63,12 @@ export interface CommandPayloadItem {
 			id: string,
 			from: {id: string},
 			to: {id: string},
-			conditions?: EdgeCondition[]
+			conditions?: {
+				inputDevice: {name: string},
+				inputDeviceKey: {key: string},
+				comparator: string,
+				assertion: EdgeConditionAssertion
+			}[]
 		}[]
 	
 }
@@ -84,7 +89,13 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
-	interlocks?: ProgramInterlock[]
+	interlocks?: {
+		inputDevice: {name: string},
+		inputDeviceKey: {key: string},
+		comparator: string,
+		assertion: EdgeConditionAssertion,
+		action: { key: string } 
+	}[]
 	state?: AssignmentState[]
 	requiresMutex: boolean;
 	type: string;

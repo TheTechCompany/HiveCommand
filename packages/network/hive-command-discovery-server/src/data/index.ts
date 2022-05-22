@@ -380,6 +380,7 @@ export class Data {
 								${assertionSelector}
 								action {
 									id
+									key
 								}
 							}
 							setpoints {
