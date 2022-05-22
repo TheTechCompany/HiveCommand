@@ -170,7 +170,7 @@ export class Machine {
 			devices: layout?.map((x) => {
 
 				let plugins = x.plugins?.map((plugin) => {
-					let configuration = plugin.configuration.reduce((prev, curr) => {
+					let configuration = plugin.config.reduce((prev, curr) => {
 						return {
 							...prev,
 							[curr.key.key]: curr.value

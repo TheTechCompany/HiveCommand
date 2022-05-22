@@ -79,7 +79,7 @@ export interface AssignmentPayload {
 			tick: string
 		}
 		rules: {id: string, name: string},
-		configuration: {
+		config: {
 			key: {id: string, key: string},
 			value: string
 		}[]

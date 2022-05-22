@@ -23,7 +23,7 @@ export class DeviceMap {
 
 		await Promise.all((device?.plugins || []).map(async (plugin, ix) => {
 
-			let pluginObject = plugin.configuration.reduce<{
+			let pluginObject = plugin.config.reduce<{
 				p?: string,
 				i?: string,
 				d?: string,
