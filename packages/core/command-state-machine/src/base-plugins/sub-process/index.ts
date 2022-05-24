@@ -1,9 +1,9 @@
-import { Process, ProcessChain } from "@hive-command/process";
-import { ProgramProcess, CommandAction, CommandProcess } from "@hive-command/data-types";
+import {  Process, ProcessChain } from "@hive-command/process";
+import { ProgramProcess, ConditionValueBank,  CommandAction, CommandProcess } from "@hive-command/data-types";
 
 export const handler = async (
 	options: any, 
-	hub: {actions: CommandAction[], performOperation: any, getState: any, setState: any, getVariable: any},
+	hub: {actions: CommandAction[], performOperation: any, getState: any, setState: any, valueBank: ConditionValueBank},
 	node: CommandProcess
 ) => {
 
@@ -14,7 +14,7 @@ export const handler = async (
 
 	if(sub_process){
 
-		process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState, hub.setState, hub.getVariable)
+		process = new Process(sub_process, hub.actions, hub.performOperation, hub.getState, hub.setState, hub.valueBank)
 
 		process.on('transition', (transition) => {
 			console.log("Subprocess transition", transition)

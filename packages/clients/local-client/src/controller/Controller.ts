@@ -16,7 +16,7 @@ import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
 import e from 'express';
 import { AlarmEngine } from '../alarm-engine';
-import { CommandVariable, ActionPayload, AssignmentPayload } from '@hive-command/data-types';
+import { CommandVariable, ActionPayload, AssignmentPayload, CommandSetpoint } from '@hive-command/data-types';
 
 export class Controller {
 
@@ -213,6 +213,7 @@ export class Controller {
 		}, 
 		struct: {
 			layout: AssignmentPayload[], 
+			setpoints: CommandSetpoint[],
 			actions: ActionPayload[],
 			variables: CommandVariable[]
 		}

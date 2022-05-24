@@ -2,6 +2,7 @@ import React from 'react'
 import { Box } from 'grommet';
 import styled from 'styled-components'
 import { BaseStyle } from '@hexhive/styles';
+import useResizeAware from 'react-resize-aware'
 
 export interface BubbleProps {
   	children: React.ReactNode
@@ -10,6 +11,8 @@ export interface BubbleProps {
 }
 
 export const UnstyledBubble : React.FC<BubbleProps> = (props) => {
+	const [elem, {width, height}] = useResizeAware()
+
 	return (
 		<Box 
 			onMouseDown={(e) => e.stopPropagation()}
@@ -17,9 +20,10 @@ export const UnstyledBubble : React.FC<BubbleProps> = (props) => {
 			height={{min: "121px"}}
 			width={{min: '200px'}}
 			round="xsmall"
-			style={props.style}
+			style={{...props.style, top: props.style.top - (height / 2) }}
 			background="neutral-1"
 			className={props.className}>
+			{elem}
 			{props.children}
 		</Box>
 	)

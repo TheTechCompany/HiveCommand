@@ -11,9 +11,17 @@ export interface PayloadResponse {
 	payload?: {
 		program: CommandPayloadItem[],
 		variables?: CommandVariable[],
+		setpoints?: CommandSetpoint[],
 		layout?: AssignmentPayload[],
 		actions?: ActionPayload[]
 	}
+}
+
+export interface CommandSetpoint {
+	id: string;
+	name: string;
+	device: {id: string, name: string};
+	value: string;
 }
 
 export interface CommandVariable {

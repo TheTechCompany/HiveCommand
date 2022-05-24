@@ -36,7 +36,8 @@ export class Machine {
 	}){
 		this.fsm = new CommandStateMachine({
 			processes: [],
-			variables: []
+			variables: [],
+			setpoints: []
 		}, {
 			requestState: async (operation) => {
 				log.info("Requesting state to mock resolver", operation)
@@ -61,6 +62,14 @@ export class Machine {
 
 	setVariable(key: string, value: any){
 		return this.fsm.setVariable(key, value)
+	}
+
+	getSetpoint(id: string){
+		return this.fsm.getSetpoint(id);
+	}
+
+	setSetpoint(id: string, value: string){
+		return this.fsm.setSetpoint(id, value);
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) : CommandProcess => {
@@ -153,7 +162,7 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		const { program, variables, actions, layout } = commandPayload.payload || {};
+		const { program, variables, actions, setpoints, layout } = commandPayload.payload || {};
 
 		//TODO add device mapping
 		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
@@ -169,6 +178,7 @@ export class Machine {
 
 		this.fsm = new CommandStateMachine({
 			variables: variables || [],
+			setpoints: setpoints || [],
 			devices: layout?.map((x) => {
 
 				let plugins = x.plugins?.map((plugin) => {

@@ -51,6 +51,8 @@ const prisma = new PrismaClient();
 
 	await mqChannel.assertQueue(`COMMAND:DEVICE:CONTROL`)
 	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
+	await mqChannel.assertQueue(`COMMAND:DEVICE:SETPOINT`);
+	
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
 

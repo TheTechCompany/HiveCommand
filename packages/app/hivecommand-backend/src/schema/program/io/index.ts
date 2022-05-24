@@ -112,6 +112,7 @@ export default (prisma: PrismaClient) => {
             id: ID! 
             name: String
             key: CommandProgramDeviceState 
+            device: CommandProgramDevice
             type: String
             value: String
         }

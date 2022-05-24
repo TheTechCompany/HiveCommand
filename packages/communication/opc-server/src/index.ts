@@ -201,6 +201,13 @@ export default class Server {
     async addDevice(
             device: {name: string, type: string}, 
             definition?: {
+                setpoints?: {
+                    [key: string]: {
+                        type: DataType,
+                        get: (() => any),
+                        set: (value: Variant) => void
+                    }
+                },
                 state: {
                     [key: string]: {
                         type: DataType, 
@@ -288,7 +295,43 @@ export default class Server {
                     browseName: device.name,
                     organizedBy: organizedFolder
                 })
+
+                if(Object.keys(definition?.setpoints || {}).length > 0){
+                    const setpointFolder = this.namespace?.addObject({
+                        browseName: `Setpoints`,
+                        componentOf: obj,
+                        modellingRule: "Mandatory"
+                    })
+
+                            
+                    for(var k in definition?.setpoints){
                 
+                        const setpoint = this.namespace?.addAnalogDataItem({
+                            browseName: k,
+                            componentOf: setpointFolder,
+                            dataType: definition?.setpoints[k].type,
+                            minimumSamplingInterval: 500,
+                            engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
+                            engineeringUnitsRange: {low: -100, high: 100},
+                            
+                        })
+
+                        setpoint?.bindVariable({
+                            get: () => {
+                                return definition?.setpoints?.[k].get?.();
+                            },
+                            set: (value: Variant) => {
+                                try{
+                                    definition?.setpoints?.[k]?.set(value);
+                                }catch(e){
+                                    return StatusCodes.Bad;
+                                }
+                                return StatusCodes.Good;
+                            }
+                        })
+                    }
+                }
+        
            
 
                 for(var k in definition?.actions){

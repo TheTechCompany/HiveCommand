@@ -19,6 +19,8 @@ model Device {
   network_name String @unique
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
+
+  setpoints DeviceSetpoint[] @relation(name: "hasSetpoints")
   calibrations DeviceCalibration[] @relation(name: "hasCalibration")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
@@ -34,6 +36,20 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+model DeviceSetpoint {
+  id String @id
+
+  setpoint ProgramSetpoint @relation(name: "forSetpoint", fields: [setpointId], references: [id])
+  setpointId String
+
+  value String
+
+  device Device @relation(name: "hasSetpoints", fields: [deviceId], references: [id])
+  deviceId String
+
+  @@unique([setpointId, deviceId])
 }
 
 model DeviceCalibration {
@@ -379,6 +395,8 @@ model ProgramSetpoint {
   value String
 
   usedBy ProgramAssertion[] @relation(name: "usesSetpoint")
+
+  passedBy DeviceSetpoint[] @relation(name: "forSetpoint")
 
   device ProgramFlowIO @relation(name: "useSetpoint", fields: [deviceId], references: [id])
   deviceId String

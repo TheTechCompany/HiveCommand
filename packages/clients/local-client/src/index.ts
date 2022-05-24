@@ -110,6 +110,9 @@ export class CommandClient {
 				getVariable: (key) => this.machine?.getVariable(key),
 				setVariabe: (key, value) => this.machine?.setVariable(key, value),
 
+				getSetpoint: (id) => this.machine?.getSetpoint(id),
+				setSetpoint: (id, value) => this.machine?.setSetpoint(id, value),
+
 				runOneshot: async (flow) => await this.machine?.runOneshot(flow),
 				stopOneshot: async (flow) => await this.machine?.stopOneshot(flow),
 				isRunning: (flow) => this.machine?.isRunning(flow) != undefined,
@@ -199,7 +202,7 @@ export class CommandClient {
 		console.log("Purpose", JSON.stringify({commandPayload}))
 		if(commandPayload.payload){
 
-			const { layout, actions, variables } = commandPayload.payload;
+			const { layout, actions, setpoints, variables } = commandPayload.payload;
 
 			// if(layout){
 
@@ -209,6 +212,7 @@ export class CommandClient {
 				}, {
 					layout: layout || [], 
 					actions: actions || [],
+					setpoints: setpoints || [],
 					variables: variables || []
 				})
 			// }
