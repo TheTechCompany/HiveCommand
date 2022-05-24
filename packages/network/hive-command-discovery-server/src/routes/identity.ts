@@ -40,7 +40,7 @@ export default (dataBroker: Data) => {
         
 
 
-        res.send({payload: payload})
+        res.send({payload})
     })
 
     router.post('/context', async (req, res) => {

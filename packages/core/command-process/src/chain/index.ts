@@ -9,6 +9,7 @@ import {
   CommandProcess,
   CommandProcessEdge,
   CommandProcessNode,
+  ConditionValueBank,
 } from "@hive-command/data-types";
 
 export interface ProcessChainDescriptor {
@@ -34,20 +35,20 @@ export class ProcessChain extends EventEmitter {
   private actions: ProcessAction[] = [];
   private transitions: Transition[] = [];
 
-  public getVariable: (key: string) => any;
+  public valueBank: ConditionValueBank
      
   constructor(
     process: Process,
     chain: CommandProcess,
     entry: string,
     actions: CommandAction[],
-    getVariable: (key: string) => any
+    valueBank: ConditionValueBank
   ) {
 	  super()
     this.program = chain;
     this.process = process;
 
-    this.getVariable = getVariable;
+    this.valueBank = valueBank;
 
     // console.log("EDGES", JSON.stringify(this.program.edges))
 
@@ -62,7 +63,7 @@ export class ProcessChain extends EventEmitter {
 
     this.transitions =
       chain.edges?.map((edge) => {
-        return new Transition(edge, getVariable);
+        return new Transition(edge, valueBank);
       }) || [];
 
     let entryNode = this.actions?.find((a) => a.id == entry);

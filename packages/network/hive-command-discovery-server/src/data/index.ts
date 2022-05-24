@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import { request, gql, RequestDocument, Variables } from 'graphql-request'
+import { PayloadResponse } from '@hive-command/data-types'
 
 export interface DataOptions {
 	gatewayURL?: string;
@@ -195,7 +196,7 @@ export class Data {
 		return actions?.commandDevices?.[0]?.activeProgram?.interface?.actions || [] //.records.map((x) => x.get(0))
 	}
 
-	async getDeviceProgram(deviceId: string) {
+	async getDeviceProgram(deviceId: string) : Promise<PayloadResponse> {
 
 		let assertionSelector = `
 			inputDevice {
@@ -269,6 +270,19 @@ export class Data {
 						min
 						max
 					}
+
+					setpoints {
+						id
+						setpoint {
+							id
+							name
+							device {
+								id
+							}
+						}
+						value
+					}
+
 					peripherals {
 						id
 						name
@@ -312,6 +326,7 @@ export class Data {
 									comparator
 									assertion {
 										setpoint {
+											id
 											value
 										}
 										variable {
@@ -385,6 +400,7 @@ export class Data {
 							}
 							setpoints {
 								id
+								name
 								value
 							} 
 							plugins {
@@ -420,106 +436,25 @@ export class Data {
 
 		const program = await this.requestGraphQL(doc, { networkName: deviceId })
 
-		console.log({ deviceId, program })
-		/*
-		MATCH (device:CommandDevice {network_name: $id})-[:RUNNING_PROGRAM]->(program:CommandProgram)-[*..]->(flow:CommandProgramFlow)
-			MATCH (flow)-[:USES_NODE]->(nodes:CommandProgramNode)
-			OPTIONAL MATCH (nodes)-[next:USE_NEXT]->(n)
-			OPTIONAL MATCH (nodes)-[:HAS_ACTION]->(actionItem:CommandActionItem), (actionItem)-[:USES_ACTION]->(actions), (actionItem)-[:ACTIONS]->(target)
-			CALL {
-				WITH next, nodes
-				OPTIONAL MATCH (nodes)-[:HAS_CONF]->(configuration:CommandProgramNodeConfiguration)
-				OPTIONAL MATCH (conf:CommandProgramNodeFlowConfiguration)-[:HAS_INPUT]->(input), (conf)-[:HAS_INPUT_KEY]->(inputKey)
-				WHERE conf.id IN next.conditions
-				RETURN collect(conf{
-					.*, 
-					input: input.name,
-					inputKey: inputKey.key
-				}) as conditions, configuration
-			}
-			OPTIONAL MATCH (nodes)-[:USES_SUBFLOW]->(subflow:CommandProgramFlow)
-			OPTIONAL MATCH (flow)<-[:USES_SUBFLOW]-()<-[:USES_NODE]-(parent:CommandProgramFlow)
-			WITH nodes{
-					.*, 
-					configuration: collect(
-						configuration{
-							.*
-						}
-					),
-					subprocess: subflow{
-						.*
-					},
-					actions: collect(
-						actions{
-							.*,
-							target: target.name
-						}
-					),
-					next: collect(
-						next{
-							.*, 
-							target: n.id,
-							conditions: conditions
-						}
-					) 
-				} as flowNodes, flow, parent
-			RETURN flow{
-				.*,
-				parent: parent{.*},
-				nodes: collect(flowNodes)
-			}
-
-		*/
-		// 		const program = await tx.run(`
-
-		// MATCH (device:CommandDevice {network_name: $id})-[:RUNNING_PROGRAM]->(program:CommandProgram)-[:USES_FLOW|HAS_SUBFLOW *..]->(flow:CommandProgramFlow)
-		// CALL {
-		// 	WITH flow
-		// 	OPTIONAL MATCH (flow)-[:USES_NODE]->(nodes:CommandProgramNode)
-
-		// 	CALL {
-		// 		WITH nodes
-		// 		OPTIONAL MATCH (nodes)-[:HAS_CONF]->(configuration:CommandProgramNodeConfiguration)
-		// 		OPTIONAL MATCH (nodes)-[:HAS_ACTION]->(actionItem:CommandActionItem), (actionItem)-[:USES_ACTION]->(actions), (actionItem)-[:ACTIONS]->(target)
-		// 		OPTIONAL MATCH (nodes)-[:USES_SUBFLOW]->(subflow:CommandProgramFlow)
-
-		// 		RETURN collect(actions{.*, target: target.name, release: actionItem.release}) as _actions, collect(configuration{.*}) as _configuration, subflow{.*} as _subflow
-		// 	}
-
-		// 	CALL {
-		// 		WITH nodes
-		// 		OPTIONAL MATCH (nodes)-[next:USE_NEXT]->(nextNodes)
-		// 		OPTIONAL MATCH (conf:CommandProgramNodeFlowConfiguration)-[:HAS_INPUT]->(input), (conf)-[:HAS_INPUT_KEY]->(inputKey)
-		// 				WHERE conf.id IN next.conditions
-		// 				RETURN nextNodes{ 
-		// 					.*, 
-		// 					target: nextNodes.id,
-		// 					conditions: collect(conf{
-		// 						.*, 
-		// 						input: input.name,
-		// 						inputKey: inputKey.key
-		// 					}) 
-		// 				} as next
-		// 	}
-
-		// 	RETURN nodes{.*, next: collect(next), actions: _actions, configuration: _configuration, subprocess: _subflow} as flowNodes
-		// }
-
-		// OPTIONAL MATCH (flow)<-[:HAS_SUBFLOW]-(parent:CommandProgramFlow)
-
-		// RETURN flow{
-		// 	.*,
-		// 	parent: parent{.*},
-		// 	nodes: collect(flowNodes)
-		// }
-
-		// 		`, {
-		// 			id: deviceId
-		// 		})
+	
 
 		const device = program?.commandDevices?.[0]
 		const activeProgram = device?.activeProgram || [];
 
+		const setpointOverrides = device?.setpoints || []
+
+		const setpoints = activeProgram?.devices?.map((device: any) => {
+			return device?.setpoints?.map((setpoint: any) => {
+				let value = setpointOverrides?.find((a: any) => a.setpoint?.id == setpoint.id)?.value || setpoint.value;
+				return {
+					id: setpoint.id,
+					name: setpoint.name,
+					device: {id: device.id, name: device.name},
+					value
+				}
+			})
+		})
+		
 		const calibrations = device?.calibrations;
 
 		const devices =  (activeProgram?.devices || []).map((active_device: any) => {
@@ -573,7 +508,14 @@ export class Data {
 
 		console.log({activeProgram: JSON.stringify(device) })
 
-		return {program: (activeProgram?.program || []), variables, layout: devices}
+		return {
+			payload: {
+				program: (activeProgram?.program || []), 
+				variables, 
+				setpoints,
+				layout: devices
+			}
+		}
 	}
 
 	async updateDeviceUptime(deviceId: string, uptime: number) {

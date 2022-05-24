@@ -73,6 +73,7 @@
   "exclude": ["dist/", "node_modules/", "__tests__"],
   "references": [
     {"path": "../../core/command-data"},
+    {"path": "../../core/command-data-types"},
     {"path": "../opc-lds"},
     {"path": "../../communication/opc-client"}
   ]

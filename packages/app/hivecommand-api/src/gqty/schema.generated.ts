@@ -86,6 +86,7 @@ export interface CommandDevicePeripheralInput {
 }
 
 export interface CommandDevicePluginConfigurationInput {
+  id?: InputMaybe<Scalars["ID"]>;
   key?: InputMaybe<Scalars["String"]>;
   value?: InputMaybe<Scalars["String"]>;
 }
@@ -367,12 +368,19 @@ export const generatedSchema = {
   },
   CommandDevicePlugin: {
     __typename: { __type: "String!" },
-    config: { __type: "[CommandKeyValue]" },
+    config: { __type: "[CommandDevicePluginConfiguration]" },
     id: { __type: "ID!" },
     plugin: { __type: "CommandProgramDevicePlugin" },
     rules: { __type: "CommandProgramFlow" },
   },
+  CommandDevicePluginConfiguration: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID" },
+    key: { __type: "CommandProgramDevicePluginConfiguration" },
+    value: { __type: "String" },
+  },
   CommandDevicePluginConfigurationInput: {
+    id: { __type: "ID" },
     key: { __type: "String" },
     value: { __type: "String" },
   },
@@ -1083,6 +1091,10 @@ export const generatedSchema = {
       __type: "[CommandDeviceReport]",
       __args: { device: "ID", grid: "[CommandDeviceReportInput]" },
     },
+    updateCommandDeviceSetpoint: {
+      __type: "String",
+      __args: { device: "ID!", setpoint: "ID!", value: "String" },
+    },
     updateCommandDeviceUptime: {
       __type: "CommandDevice!",
       __args: { uptime: "DateTime", where: "CommandDeviceWhere!" },
@@ -1322,10 +1334,17 @@ export interface CommandDevicePeripheralProduct {
 
 export interface CommandDevicePlugin {
   __typename?: "CommandDevicePlugin";
-  config?: Maybe<Array<Maybe<CommandKeyValue>>>;
+  config?: Maybe<Array<Maybe<CommandDevicePluginConfiguration>>>;
   id: ScalarsEnums["ID"];
   plugin?: Maybe<CommandProgramDevicePlugin>;
   rules?: Maybe<CommandProgramFlow>;
+}
+
+export interface CommandDevicePluginConfiguration {
+  __typename?: "CommandDevicePluginConfiguration";
+  id?: Maybe<ScalarsEnums["ID"]>;
+  key?: Maybe<CommandProgramDevicePluginConfiguration>;
+  value?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandDeviceReport {
@@ -1936,6 +1955,11 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     grid?: Maybe<Array<Maybe<CommandDeviceReportInput>>>;
   }) => Maybe<Array<Maybe<CommandDeviceReport>>>;
+  updateCommandDeviceSetpoint: (args: {
+    device: Scalars["ID"];
+    setpoint: Scalars["ID"];
+    value?: Maybe<Scalars["String"]>;
+  }) => Maybe<ScalarsEnums["String"]>;
   updateCommandDeviceUptime: (args: {
     uptime?: Maybe<Scalars["DateTime"]>;
     where: CommandDeviceWhere;
@@ -2070,6 +2094,7 @@ export interface SchemaObjectTypes {
   CommandDevicePeripheralPort: CommandDevicePeripheralPort;
   CommandDevicePeripheralProduct: CommandDevicePeripheralProduct;
   CommandDevicePlugin: CommandDevicePlugin;
+  CommandDevicePluginConfiguration: CommandDevicePluginConfiguration;
   CommandDeviceReport: CommandDeviceReport;
   CommandDeviceSetpoint: CommandDeviceSetpoint;
   CommandDeviceSnapshot: CommandDeviceSnapshot;
@@ -2125,6 +2150,7 @@ export type SchemaObjectTypesNames =
   | "CommandDevicePeripheralPort"
   | "CommandDevicePeripheralProduct"
   | "CommandDevicePlugin"
+  | "CommandDevicePluginConfiguration"
   | "CommandDeviceReport"
   | "CommandDeviceSetpoint"
   | "CommandDeviceSnapshot"

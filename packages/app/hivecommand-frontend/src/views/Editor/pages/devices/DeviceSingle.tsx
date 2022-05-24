@@ -345,7 +345,7 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 	})
 
 	const refetch = () => {
-		return client.refetchQueries({ include: ['Q'] })
+		return client.refetchQueries({ include: ['GetDeviceInfo'] })
 	}
 
 	console.log({data})
