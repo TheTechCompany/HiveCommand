@@ -127,6 +127,8 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	setSetpoint(id: string, value: string){
+		if(this.mode == CommandStateMachineMode.AUTO) return console.error(`Can't change setpoints while in AUTO mode`);
+		
 		return this.setpoints?.set(id, value)
 	}
 

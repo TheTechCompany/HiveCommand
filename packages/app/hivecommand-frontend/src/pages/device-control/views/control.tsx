@@ -317,7 +317,7 @@ export default () => {
 						<Box align="center" justify={device.setpoints?.length > 0 ? "between" : "start"} direction="row">
 							<Text weight="bold" size="small">{device?.name}</Text>
 							
-							{device.setpoints?.length > 0 && <IconButton 
+							{device.setpoints?.length > 0 && operatingMode != "auto" && <IconButton 
 								onClick={() => {
 									setEditSetpoint(device?.name)
 									setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
