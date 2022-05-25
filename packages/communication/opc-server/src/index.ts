@@ -226,7 +226,6 @@ export default class Server {
             organizedBy?:  "Devices" | "Plant" | "Controller" | "PlantActions"
         ){
 
-        console.log("Add device setpoints", definition?.setpoints)
         let organizedFolder : UAObject | undefined = this.deviceFolder;
 
         switch(organizedBy){
@@ -307,7 +306,8 @@ export default class Server {
                     console.log({setpoints: JSON.stringify(definition?.setpoints)})
                             
                     for(var k in definition?.setpoints){
-                        console.log(JSON.stringify(definition?.setpoints?.[k]))
+
+                        console.log(definition?.setpoints?.[k]?.get())
                         const setpoint = this.namespace?.addAnalogDataItem({
                             browseName: k,
                             componentOf: setpointFolder,
