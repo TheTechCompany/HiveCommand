@@ -304,10 +304,10 @@ export default class Server {
                         modellingRule: "Mandatory"
                     })
 
-                    console.log({setpoints: definition?.setpoints})
+                    console.log({setpoints: JSON.stringify(definition?.setpoints)})
                             
                     for(var k in definition?.setpoints){
-                
+                        console.log(JSON.stringify(definition?.setpoints?.[k]))
                         const setpoint = this.namespace?.addAnalogDataItem({
                             browseName: k,
                             componentOf: setpointFolder,
