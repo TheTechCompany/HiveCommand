@@ -197,6 +197,8 @@ export class DiscoveryServer {
                 value: string
             } = JSON.parse(msg?.content.toString() || '{}')
 
+            console.log({stateUpdate})
+
             if(!stateUpdate.deviceName || !stateUpdate.deviceSetpoint || !stateUpdate.value) return console.error('No device setpoint or value in request');
 
             log(stateUpdate.authorizedBy, `Changing setpoint ${stateUpdate.deviceSetpoint} to ${stateUpdate.value}`)

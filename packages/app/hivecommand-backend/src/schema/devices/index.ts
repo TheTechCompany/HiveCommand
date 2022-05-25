@@ -290,6 +290,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					authorizedBy: context.jwt?.name
 				}
 
+				console.log("Setpoint update", {stateUpdate})
+
 				mq.sendToQueue(`COMMAND:DEVICE:SETPOINT`, Buffer.from(JSON.stringify(stateUpdate)))
 
 				return args.value
