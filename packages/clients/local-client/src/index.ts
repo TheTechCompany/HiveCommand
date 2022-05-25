@@ -206,6 +206,8 @@ export class CommandClient {
 
 			// if(layout){
 
+				console.log({setpoints, variables})
+
 				await this.controller.start({
 					hostname: self.identity.named, 
 					discoveryServer: `opc.tcp://${this.options.discoveryServer}:4840` || 'http://localhost:8080',
