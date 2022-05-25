@@ -51,7 +51,10 @@ export class Controller {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine.isProgramRunning || false})
+
+							const isRunning = this.machine.isProgramRunning || this.machine.isProgramStopping;
+
+							return new Variant({dataType: DataType.Boolean, value: isRunning || false})
 						}
 					},
 					Mode: {
