@@ -220,7 +220,7 @@ export class CommandNetwork {
 							[curr.name]: {
 								type: DataType.Double,
 								get: () => {
-									const value = this.valueBank.getSetpoint?.(curr.id)
+									const value = this.valueBank.getSetpoint?.(curr.id) || 0
 									console.log("Get setpoint", curr, value)
 									return new Variant({dataType: DataType.Double, value})
 								},
