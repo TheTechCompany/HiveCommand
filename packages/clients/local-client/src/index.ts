@@ -206,7 +206,7 @@ export class CommandClient {
 
 			// if(layout){
 
-				console.log({setpoints, variables})
+				// console.log({setpoints, variables})
 
 				await this.controller.start({
 					hostname: self.identity.named, 

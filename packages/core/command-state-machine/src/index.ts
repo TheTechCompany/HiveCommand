@@ -123,7 +123,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	getSetpoint(id: string){
-		console.log({setpoints: this.setpoints})
+		// console.log({setpoints: this.setpoints})
 		return this.setpoints?.get(id);
 	}
 
@@ -151,7 +151,7 @@ export class CommandStateMachine extends EventEmitter {
 		this.setpoints = new SetpointManager(program.setpoints);
 
 		console.log({variables: this.variables, setpoints: this.setpoints});
-		
+
 		this.processes = program.processes.map((process) => {
 			return new Process(
 					process, 
