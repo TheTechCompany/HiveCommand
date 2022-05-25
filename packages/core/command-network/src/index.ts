@@ -311,7 +311,7 @@ export class CommandNetwork {
 			controller: this.options.controller || {},
 		})
 
-
+		console.log("initOPC", {struct})
 		await this.opc.start()
 		console.log("initOPC", {struct})
 		await this.initOPC(struct);
