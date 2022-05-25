@@ -123,6 +123,7 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	getSetpoint(id: string){
+		console.log({setpoints: this.setpoints})
 		return this.setpoints?.get(id);
 	}
 
