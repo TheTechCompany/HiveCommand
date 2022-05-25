@@ -65,7 +65,7 @@ export class Machine {
 	}
 
 	getSetpoint(id: string){
-		return this.fsm.getSetpoint(id);
+		return this.fsm.getSetpoint(id) || 0;
 	}
 
 	setSetpoint(id: string, value: string){
