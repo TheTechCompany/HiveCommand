@@ -321,7 +321,9 @@ export default class Server {
 
                         setpoint?.bindVariable({
                             get: () => {
-                                return definition?.setpoints?.[k]?.get?.();
+                                const result = definition?.setpoints?.[k]?.get?.();
+                                console.log("Get result", result, definition?.setpoints?.[k]?.get?.())
+                                return result || new Variant({dataType: DataType.Double, value: 0});
                             },
                             set: (value: Variant) => {
                                 try{
