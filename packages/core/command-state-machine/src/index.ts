@@ -150,6 +150,8 @@ export class CommandStateMachine extends EventEmitter {
 		this.variables = new VariableManager(program.variables);
 		this.setpoints = new SetpointManager(program.setpoints);
 
+		console.log({variables: this.variables, setpoints: this.setpoints});
+		
 		this.processes = program.processes.map((process) => {
 			return new Process(
 					process, 
