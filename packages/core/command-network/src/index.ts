@@ -201,7 +201,7 @@ export class CommandNetwork {
 			}, 'PlantActions')
 		}))
 
-		console.log({setpoints, layout})
+		// console.log({setpoints, layout})
 
 		await Promise.all(layout.map(async (layout) => {
 
@@ -223,11 +223,9 @@ export class CommandNetwork {
 								type: DataType.Double,
 								get: () => {
 									const value = this.valueBank.getSetpoint?.(setpoint.id) || 0
-									console.log("Get setpoint", {setpoint}, value)
 									return new Variant({dataType: DataType.Double, value})
 								},
 								set: (value: Variant) => {
-									console.log("Set setpoint", curr, value.value)
 									return this.valueBank.setSetpoint?.(curr.id, value.value)
 								}
 							}

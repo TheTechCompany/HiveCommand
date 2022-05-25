@@ -303,7 +303,7 @@ export default class Server {
                         modellingRule: "Mandatory"
                     })
 
-                    console.log({setpoints: JSON.stringify(definition?.setpoints)})
+                    // console.log({setpoints: JSON.stringify(definition?.setpoints)})
                             
                     for(var k in definition?.setpoints){
 
