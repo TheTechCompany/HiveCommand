@@ -285,7 +285,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					}
 				})
 			
-				const setpoint = result?.setpoints?.find((a) => a.id == args.setpoint);
+				const setpoint = result?.setpoints?.find((a) => a.setpoint.id == args.setpoint);
 
 				let stateUpdate = {
 					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
