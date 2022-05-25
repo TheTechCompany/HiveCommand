@@ -226,6 +226,7 @@ export default class Server {
             organizedBy?:  "Devices" | "Plant" | "Controller" | "PlantActions"
         ){
 
+        console.log("Add device setpoints", definition?.setpoints)
         let organizedFolder : UAObject | undefined = this.deviceFolder;
 
         switch(organizedBy){
