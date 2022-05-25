@@ -461,6 +461,7 @@ export class Data {
 			let mappedDevice = device?.peripherals?.map((x: any) => x.mappedDevices.map((map: any) => ({...map, bus: x.id}))).reduce((prev: any, curr: any) => prev.concat(curr), [])
 
 			return {
+				id: active_device?.id,
 				name: active_device?.name,
 				type: active_device?.type?.name,
 				actions: active_device?.type?.actions || [],
