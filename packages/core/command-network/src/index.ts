@@ -313,7 +313,9 @@ export class CommandNetwork {
 
 
 		await this.opc.start()
+		console.log("initOPC", {struct})
 		await this.initOPC(struct);
+		console.log("initOPCEnd", {struct})
 
 
 	}
