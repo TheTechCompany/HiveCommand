@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/network",
-  "version": "1.4.15-alpha.46",
+  "version": "1.4.15-alpha.47",
   "description": "",
   "main": "dist/index.js",
   "files": [
