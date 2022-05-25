@@ -274,7 +274,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					include: {
 						setpoints: {
 							include: {
-								setpoint: true,
+								setpoint: {
+									include: {
+										device: true
+									}
+								},
 								device: true
 							}
 						}
@@ -283,7 +287,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			
 				let stateUpdate = {
 					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
-					deviceName: result?.setpoints?.[0]?.device.name,
+					deviceName: result?.setpoints?.[0]?.setpoint.device?.name,
 					deviceSetpoint:  result?.setpoints?.[0]?.setpoint.name,
 					value: args.value,
 					authorizedBy: context.jwt?.name
