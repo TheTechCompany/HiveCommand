@@ -171,7 +171,14 @@ export class CommandStateMachine extends EventEmitter {
 				)
 		})
 
-		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client));
+		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client, {
+			getVariable: (key: string) => {
+				return this.variables?.getVar(key);
+			},
+			getSetpoint: (id: string) => {
+				return this.setpoints?.get(id);
+			}
+		}));
 
 		this.processes.forEach((process) => {
 			//Flow moves a step

@@ -3,7 +3,7 @@ import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
 import { Condition } from "@hive-command/process";
 import { State } from "../State";
-import { ProgramDevice, ProgramInterlock } from "@hive-command/data-types";
+import { ConditionValueBank, ProgramDevice, ProgramInterlock } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
 
@@ -24,11 +24,15 @@ export class StateDevice {
 
 	private actions: {[key: string]: (state: any, setState: (state: any) => void, requestState: (state: any) => void) => Promise<any>} = {};
 
-	constructor(device: ProgramDevice, fsm: CommandStateMachine, client: CommandClient) {
+	private conditionValueBank : ConditionValueBank;
+
+	constructor(device: ProgramDevice, fsm: CommandStateMachine, client: CommandClient, conditionValueBank: ConditionValueBank) {
 		this.device = device;
 
 		this.client = client;
 		this.fsm = fsm;
+
+		this.conditionValueBank = conditionValueBank;
 
 		if(device.requiresMutex){
 			this.mutexLock = new Mutex();
@@ -188,7 +192,7 @@ export class StateDevice {
 				inputDeviceKey: lock.inputDeviceKey,
 				assertion: lock.assertion,
 				comparator: lock.comparator
-			}, this.fsm.getVariable)
+			}, this.conditionValueBank)
 
 			const input = state?.get(lock.inputDevice)?.[lock.inputDeviceKey];
 
