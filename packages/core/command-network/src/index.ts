@@ -303,6 +303,7 @@ export class CommandNetwork {
 	){
 
 		console.log("Starting network")
+		console.log("initOPC", {struct})
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
