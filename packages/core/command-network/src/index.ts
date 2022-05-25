@@ -135,6 +135,7 @@ export class CommandNetwork {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
 
+		console.log("INIT OPC", {layout, setpoints})
 		await Promise.all(variables.map(async (variable) => {
 			console.log(`Adding variable ${variable.name} to OPC-UA`);
 
@@ -201,7 +202,7 @@ export class CommandNetwork {
 		}))
 
 		console.log({setpoints, layout})
-		
+
 		await Promise.all(layout.map(async (layout) => {
 
 			const sp = setpoints.filter((a) => a.device.id == layout.id);
