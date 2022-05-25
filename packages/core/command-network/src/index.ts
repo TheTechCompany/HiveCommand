@@ -215,13 +215,15 @@ export class CommandNetwork {
 			}, {
 				setpoints: {
 					...(sp || []).reduce((prev, curr) => {
+						const setpoint = curr;
+
 						return {
 							...prev,
 							[curr.name]: {
 								type: DataType.Double,
 								get: () => {
-									const value = this.valueBank.getSetpoint?.(curr.id) || 0
-									console.log("Get setpoint", curr, value)
+									const value = this.valueBank.getSetpoint?.(setpoint.id) || 0
+									console.log("Get setpoint", setpoint, value)
 									return new Variant({dataType: DataType.Double, value})
 								},
 								set: (value: Variant) => {
