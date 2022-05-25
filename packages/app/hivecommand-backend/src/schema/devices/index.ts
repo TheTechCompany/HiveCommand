@@ -248,15 +248,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		},
 		Mutation: {
 			updateCommandDeviceSetpoint: async (root: any, args: {device: string, setpoint: string, value: string}, context: any) => {
-				const setpoint = await prisma.programSetpoint.findFirst({
-					where: {
-						id: args.setpoint,
-						deviceId: args.device
-					},
-					include: {
-						device: true
-					}
-				})
 
 				const result = await prisma.device.update({
 					where: {id: args.device},
@@ -279,13 +270,21 @@ export default (prisma: PrismaClient, mq: Channel) => {
 								}
 							}]
 						}
+					},
+					include: {
+						setpoints: {
+							include: {
+								setpoint: true,
+								device: true
+							}
+						}
 					}
 				})
 			
 				let stateUpdate = {
 					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
-					deviceName: setpoint?.device.name,
-					deviceSetpoint: setpoint?.name,
+					deviceName: result?.setpoints?.[0]?.device.name,
+					deviceSetpoint:  result?.setpoints?.[0]?.setpoint.name,
 					value: args.value,
 					authorizedBy: context.jwt?.name
 				}
