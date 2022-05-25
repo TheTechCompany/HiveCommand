@@ -334,6 +334,10 @@ export class Machine {
 		return this.fsm.isRunning
 	}
 
+	get isProgramStopping(){
+		return this.fsm.isStopping;
+	}
+
 	async startProgram(){
 		await this.fsm.start()
 	}

@@ -162,6 +162,12 @@ export class Process extends EventEmitter{
         return this.running
     }
 
+    get isStopping (){ 
+        return this.chains.shutdown.map((x) => {
+            return x.currentActions.length > 0
+        }).indexOf(true) > -1;
+    }
+
     isActive(id: string){
         let active = this.chains.entrypoints.concat(this.chains.shutdown).map((x) => x.currentActions.map((y) => y.actionId)).reduce((prev, curr) => prev.concat(curr), [])
         // console.log({active})

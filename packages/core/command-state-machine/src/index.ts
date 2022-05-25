@@ -273,6 +273,10 @@ export class CommandStateMachine extends EventEmitter {
 		return this.status == CommandStateMachineStatus.ON || Object.keys(this.running_processes).length > 0
 	}
 
+	get isStopping(){
+		return this.status == CommandStateMachineStatus.STOPPING || Object.keys(this.running_processes)?.map((key) => this.running_processes?.[key]?.isStopping).indexOf(true) > -1;
+	}
+
 	get getMode(){
 		return CommandStateMachineMode[this.mode]
 	}
