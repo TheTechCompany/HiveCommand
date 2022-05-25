@@ -304,6 +304,7 @@ export default class Server {
                         modellingRule: "Mandatory"
                     })
 
+                    console.log({setpoints: definition?.setpoints})
                             
                     for(var k in definition?.setpoints){
                 
@@ -316,10 +317,11 @@ export default class Server {
                             engineeringUnitsRange: {low: -100, high: 100},
                             
                         })
+                        
 
                         setpoint?.bindVariable({
                             get: () => {
-                                return definition?.setpoints?.[k].get?.();
+                                return definition?.setpoints?.[k]?.get?.();
                             },
                             set: (value: Variant) => {
                                 try{
