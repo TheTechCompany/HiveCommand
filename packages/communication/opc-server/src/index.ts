@@ -318,16 +318,19 @@ export default class Server {
                             
                         })
                         
+                        const getter = definition?.setpoints[k]?.get;
+                        const setter = definition?.setpoints[k]?.set;
+
 
                         setpoint?.bindVariable({
                             get: () => {
-                                const result = definition?.setpoints?.[k]?.get?.();
-                                console.log("Get result", result, definition?.setpoints?.[k]?.get?.())
+                                const result = getter?.();
+                                console.log("Get result", result, getter);
                                 return result || new Variant({dataType: DataType.Double, value: 0});
                             },
                             set: (value: Variant) => {
                                 try{
-                                    definition?.setpoints?.[k]?.set(value);
+                                    setter?.(value)
                                 }catch(e){
                                     return StatusCodes.Bad;
                                 }
