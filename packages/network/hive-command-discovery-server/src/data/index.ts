@@ -453,7 +453,7 @@ export class Data {
 					value
 				}
 			})
-		})
+		}).reduce((prev: any[], curr: any[]) => prev.concat(curr), [])
 		
 		const calibrations = device?.calibrations;
 
