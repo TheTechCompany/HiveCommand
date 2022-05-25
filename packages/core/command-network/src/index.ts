@@ -200,6 +200,8 @@ export class CommandNetwork {
 			}, 'PlantActions')
 		}))
 
+		console.log({setpoints, layout})
+		
 		await Promise.all(layout.map(async (layout) => {
 
 			const sp = setpoints.filter((a) => a.device.id == layout.id);
