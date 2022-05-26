@@ -83,7 +83,7 @@ export class CommandStateMachine extends EventEmitter {
 	private variables?: VariableManager;
 	private setpoints?: SetpointManager;
 
-	private status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
+	public status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
 	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED; //Determines available actions
 
 	private processes : Process[] = [];

@@ -10,7 +10,7 @@
 import log from 'loglevel'
 
 import { CommandNetwork, ValueBankInterface } from "@hive-command/network";
-import { CommandStateMachineMode } from "@hive-command/state-machine";
+import { CommandStateMachineMode, CommandStateMachineStatus } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
@@ -55,6 +55,13 @@ export class Controller {
 							const isRunning = this.machine.isProgramRunning || this.machine.isProgramStopping;
 
 							return new Variant({dataType: DataType.Boolean, value: isRunning || false})
+						}
+					},
+					Status: {
+						type: DataType.String,
+						get: () => {
+							const status = CommandStateMachineStatus[this.machine.status];
+							return new Variant({dataType: DataType.String, value: status});
 						}
 					},
 					Mode: {

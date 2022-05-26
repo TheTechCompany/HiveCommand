@@ -151,6 +151,7 @@ export default () => {
 
 	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase();
 	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
+	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
    
 
     useEffect(() => {
@@ -478,8 +479,9 @@ export default () => {
 							onClick={() =>  {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}
-							label={(!operatingState || operatingState == "off") ? "Start" : "Shutdown"} />
+							label={(operatingStatus == "ON" || operatingStatus == "STOPPING") ? (<div>Shutdown {operatingStatus == "STOPPING" && <Spinner />}</div>) : (<div>Start {operatingStatus == "STARTING"}</div>)} />
 					</Box>
+
 					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
 						<Text>Commands</Text>
 						<Box gap="xsmall">
