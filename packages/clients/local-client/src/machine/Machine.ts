@@ -320,6 +320,10 @@ export class Machine {
 
 	}
 
+	get status(){
+		return this.fsm.status;
+	}
+	
 	get state(){
 		return this.fsm.state
 	}

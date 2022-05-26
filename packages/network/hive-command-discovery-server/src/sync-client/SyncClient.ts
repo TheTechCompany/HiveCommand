@@ -107,6 +107,10 @@ export class SyncClient {
 								tag: "Plant-Mode"
 							},
 							{
+								path: `/Objects/1:Controller/1:Machine/1:Status`,
+								tag: "Plant-Status"
+							},
+							{
 								path: `/Objects/1:Controller/1:Machine/1:Running`,
 								tag: "Plant-Running"
 							}
