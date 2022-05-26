@@ -479,7 +479,11 @@ export default () => {
 							onClick={() =>  {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}
-							label={(operatingStatus == "ON" || operatingStatus == "STOPPING") ? (<div>Shutdown {operatingStatus == "STOPPING" && <Spinner />}</div>) : (<div>Start {operatingStatus == "STARTING"}</div>)} />
+							label={
+								(operatingStatus == "ON" || operatingStatus == "STOPPING") ? 
+									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STOPPING" && <Spinner />}Shutdown</div>) : 
+									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STARTING" && <Spinner />}Start</div>)
+							} />
 					</Box>
 
 					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
