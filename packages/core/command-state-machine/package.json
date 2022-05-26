@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/state-machine",
-  "version": "1.4.15-alpha.49",
+  "version": "1.4.15-alpha.50",
   "description": "",
   "main": "dist/index.js",
   "files": [
