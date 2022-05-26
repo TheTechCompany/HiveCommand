@@ -209,6 +209,7 @@ export class Data {
 			comparator
 			assertion {
 				setpoint {
+					id
 					value
 				}
 				variable {

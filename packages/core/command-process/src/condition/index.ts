@@ -27,7 +27,7 @@ export class Condition {
             //TODO map setpoints to variables
             if(!this.valueBank?.getSetpoint) throw new Error("No setpoint getter specified in Condition setup");
             const value = this.valueBank.getSetpoint(this.condition.assertion?.setpoint.id)
-            console.log("Check setpoint value", this.condition.assertion.setpoint.id, value);
+            console.log("Check setpoint value", this.condition.assertion.setpoint, value);
             return value;
         }else if(this.condition.assertion.variable){
             if(!this.valueBank?.getVariable) throw new Error("No variable getter specified in Condition setup");
