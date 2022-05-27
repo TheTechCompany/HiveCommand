@@ -11,9 +11,17 @@ export interface PayloadResponse {
 	payload?: {
 		program: CommandPayloadItem[],
 		variables?: CommandVariable[],
+		setpoints?: CommandSetpoint[],
 		layout?: AssignmentPayload[],
 		actions?: ActionPayload[]
 	}
+}
+
+export interface CommandSetpoint {
+	id: string;
+	name: string;
+	device: {id: string, name: string};
+	value: string;
 }
 
 export interface CommandVariable {
@@ -88,6 +96,13 @@ export interface AssignmentPayload {
 			key: {id: string, key: string},
 			value: string
 		}[]
+	}[]
+	dataInterlocks?: {
+		inputDevice: {name: string},
+		inputDeviceKey: {key: string},
+		comparator: string,
+		assertion: EdgeConditionAssertion,
+		deviceKey: {id: string, key: string}
 	}[]
 	interlocks?: {
 		inputDevice: {name: string},

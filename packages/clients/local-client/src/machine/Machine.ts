@@ -7,7 +7,7 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessEdge, CommandProcessNode, PayloadResponse, ProgramAction, ProgramInterlock } from "@hive-command/data-types";
+import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessEdge, CommandProcessNode, PayloadResponse, ProgramAction, ProgramDataInterlock, ProgramInterlock } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
@@ -36,7 +36,8 @@ export class Machine {
 	}){
 		this.fsm = new CommandStateMachine({
 			processes: [],
-			variables: []
+			variables: [],
+			setpoints: []
 		}, {
 			requestState: async (operation) => {
 				log.info("Requesting state to mock resolver", operation)
@@ -61,6 +62,14 @@ export class Machine {
 
 	setVariable(key: string, value: any){
 		return this.fsm.setVariable(key, value)
+	}
+
+	getSetpoint(id: string){
+		return this.fsm.getSetpoint(id) || 0;
+	}
+
+	setSetpoint(id: string, value: string){
+		return this.fsm.setSetpoint(id, value);
 	}
 
 	loadFlow = (payload: CommandPayloadItem[], id: string) : CommandProcess => {
@@ -153,7 +162,7 @@ export class Machine {
 
 	async load(commandPayload: PayloadResponse){
 
-		const { program, variables, actions, layout } = commandPayload.payload || {};
+		const { program, variables, actions, setpoints, layout } = commandPayload.payload || {};
 
 		//TODO add device mapping
 		if(layout) this.deviceMap.setAssignment(layout); //this.portAssignment = layout;
@@ -169,6 +178,7 @@ export class Machine {
 
 		this.fsm = new CommandStateMachine({
 			variables: variables || [],
+			setpoints: setpoints || [],
 			devices: layout?.map((x) => {
 
 				let plugins = x.plugins?.map((plugin) => {
@@ -203,7 +213,14 @@ export class Machine {
 							assertion: lock.assertion,
 							action: lock.action.key
 						})) || []
-					}
+					},
+					dataInterlocks: x.dataInterlocks?.map((lock) : ProgramDataInterlock => ({
+						inputDevice: lock.inputDevice.name,
+						inputDeviceKey: lock.inputDeviceKey.key,
+						comparator: lock.comparator,
+						assertion: lock.assertion,
+						deviceKey: lock.deviceKey.key
+					})) || []
 				}
 			}),
 			processes: flows || []
@@ -310,6 +327,10 @@ export class Machine {
 
 	}
 
+	get status(){
+		return this.fsm.status;
+	}
+
 	get state(){
 		return this.fsm.state
 	}
@@ -322,6 +343,10 @@ export class Machine {
 
 	get isProgramRunning(){
 		return this.fsm.isRunning
+	}
+
+	get isProgramStopping(){
+		return this.fsm.isStopping;
 	}
 
 	async startProgram(){

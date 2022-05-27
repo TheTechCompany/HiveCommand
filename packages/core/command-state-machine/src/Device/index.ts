@@ -3,7 +3,7 @@ import log from "loglevel";
 import { CommandClient, CommandStateMachine } from "..";
 import { Condition } from "@hive-command/process";
 import { State } from "../State";
-import { ProgramDevice, ProgramInterlock } from "@hive-command/data-types";
+import { ConditionValueBank, ProgramDevice, ProgramInterlock } from "@hive-command/data-types";
 import { getDeviceFunction } from "./actions";
 import { getPluginClass } from "./plugins";
 
@@ -24,11 +24,15 @@ export class StateDevice {
 
 	private actions: {[key: string]: (state: any, setState: (state: any) => void, requestState: (state: any) => void) => Promise<any>} = {};
 
-	constructor(device: ProgramDevice, fsm: CommandStateMachine, client: CommandClient) {
+	private conditionValueBank : ConditionValueBank;
+
+	constructor(device: ProgramDevice, fsm: CommandStateMachine, client: CommandClient, conditionValueBank: ConditionValueBank) {
 		this.device = device;
 
 		this.client = client;
 		this.fsm = fsm;
+
+		this.conditionValueBank = conditionValueBank;
 
 		if(device.requiresMutex){
 			this.mutexLock = new Mutex();
@@ -88,6 +92,10 @@ export class StateDevice {
 
 	get isControlled(){
 		return this.controlled;
+	}
+
+	get hasDataInterlock(){
+		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0;
 	}
 
 	get hasInterlock(){
@@ -178,6 +186,33 @@ export class StateDevice {
 		return this.device.interlock?.locks
 	}
 
+	/*
+		key: -[false breaks]->(OPC)
+
+		true return = dont send data
+		false return = send data
+	*/
+	async checkDataInterlocks(state: State, key: string){
+		let locks = this.device.dataInterlocks?.filter((a) => a.deviceKey == key) || [];
+
+		console.log(`Checking ${locks.length} data-locks for ${this.device.name} ${key}`);
+
+		const lockedUp = await Promise.all(locks.map((lock) => {
+			const condition = new Condition({
+				inputDevice: lock.inputDevice,
+				inputDeviceKey: lock.inputDeviceKey,
+				assertion: lock.assertion,
+				comparator: lock.comparator
+			})
+
+			const input = state?.getByKey(lock.inputDevice, lock.inputDeviceKey);
+
+			return condition.check(input);
+		}))
+
+		return lockedUp.includes(false);
+	}
+
 	async checkInterlock(state: any){
 		let locks = this.device.interlock?.locks || [];
 			
@@ -188,9 +223,9 @@ export class StateDevice {
 				inputDeviceKey: lock.inputDeviceKey,
 				assertion: lock.assertion,
 				comparator: lock.comparator
-			}, this.fsm.getVariable)
+			}, this.conditionValueBank)
 
-			const input = state?.get(lock.inputDevice)?.[lock.inputDeviceKey];
+			const input = state?.getByKey(lock.inputDevice)?.[lock.inputDeviceKey];
 
 			return condition.check(input)
 			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)

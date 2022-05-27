@@ -120,34 +120,42 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     type: 'hmi-node',
                 }
                 
-            }).concat((groups || []).map((group) => ({
-                id: group.id,
-                x: group.x || 0,
-                y: group.y || 0,
-                width: `${group.width}px`,
-                height: `${group.height}px`,
-                type: 'hmi-node',
-                extras: {
-                    nodes: group.children?.map((x) => ({
-                        id: x.id,
-                        x: x.x,
-                        y: x.y,
-                        z: x.z,
-                        devicePlaceholder: x.devicePlaceholder,
-                        scaleX: x.scaleX || 1,
-                        scaleY: x.scaleY || 1,
-                        rotation: x.rotation || 0,
-                        type: x.type
-                    })),
-                    ports: group.ports?.map((x) => ({
-                        id: x.id,
-                        x: x.x,
-                        y: x.y,
-                        length: x.length || 1,
-                        rotation: x.rotation || 0,
-                    }))
-                }
-            }))))
+            }).concat((groups || []).map((group) => {
+
+                let widths =  group.children?.map((x) => x.x + (x.type?.width || 50));
+                let heights =  group.children?.map((x) => x.y + (x.type?.height || 50));
+                let width = Math.max(...widths) - Math.min(...widths)
+                let height = Math.max(...heights) - Math.min(...heights)
+
+                return {
+                    id: group.id,
+                    x: group.x || 0,
+                    y: group.y || 0,
+                    width: `${width}px`,
+                    height: `${height}px`,
+                    type: 'hmi-node',
+                    extras: {
+                        nodes: group.children?.map((x) => ({
+                            id: x.id,
+                            x: x.x,
+                            y: x.y,
+                            z: x.z,
+                            devicePlaceholder: x.devicePlaceholder,
+                            scaleX: x.scaleX || 1,
+                            scaleY: x.scaleY || 1,
+                            rotation: x.rotation || 0,
+                            type: x.type
+                        })),
+                        ports: group.ports?.map((x) => ({
+                            id: x.id,
+                            x: x.x,
+                            y: x.y,
+                            length: x.length || 1,
+                            rotation: x.rotation || 0,
+                        }))
+                    }
+                }   
+            })))
 
             setPaths(hmi?.edges?.map((x) => {
                 return {

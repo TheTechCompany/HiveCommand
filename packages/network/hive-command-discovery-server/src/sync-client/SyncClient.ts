@@ -56,10 +56,7 @@ export class SyncClient {
 
 	async discover(){
 		const servers = this.discoveryServer.registeredServers
-		// const findServersOnNetwork = await this.client.discoverOnNetwork()
-
-		// console.log("discover", {servers})
-		
+	
 		await Promise.all((servers || []).map(async (server) => {
 			if(server.productUri?.toString() == "NodeOPCUA-Server"){
 				// console.log("Server", JSON.stringify(server))
@@ -69,11 +66,8 @@ export class SyncClient {
 				if(!serverUrl) return;
 				let serverUri = serverUrl;
 
-				// console.log("Found server", {server})
 				if(!this.clients[serverUri] && serverUrl){
 					
-					// console.log("new server ", serverUri, server)
-
 					//Match networkName to device id 
 					let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
 
@@ -111,6 +105,10 @@ export class SyncClient {
 							{
 								path: `/Objects/1:Controller/1:Machine/1:Mode`,
 								tag: "Plant-Mode"
+							},
+							{
+								path: `/Objects/1:Controller/1:Machine/1:Status`,
+								tag: "Plant-Status"
 							},
 							{
 								path: `/Objects/1:Controller/1:Machine/1:Running`,

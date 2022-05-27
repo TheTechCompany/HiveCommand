@@ -1,14 +1,16 @@
 import log from "loglevel";
-import { CommandProcessEdge, EdgeCondition } from "@hive-command/data-types";
+import { CommandProcessEdge, ConditionValueBank, EdgeCondition } from "@hive-command/data-types";
+
 
 export class Condition {
     private condition: EdgeCondition;
 
-    private getVariable?: (key: string) => any;
+    private valueBank?: ConditionValueBank;
 
-    constructor(condition: EdgeCondition, getVariable?: (key: string) => any){
+    constructor(condition: EdgeCondition, valueBank?: ConditionValueBank){
         this.condition = condition
-        // console.log(this.condition)
+
+        this.valueBank = valueBank;
     }
 
     get input_id(){
@@ -21,10 +23,12 @@ export class Condition {
 
     get value_id(){
         if(this.condition.assertion.setpoint){
-            //TODO map setpoints to variables
-            return this.condition.assertion?.setpoint.value
+            if(!this.valueBank?.getSetpoint) throw new Error("No setpoint getter specified in Condition setup");
+            const value = this.valueBank.getSetpoint(this.condition.assertion?.setpoint.id)
+            return value;
         }else if(this.condition.assertion.variable){
-            return this.getVariable?.(this.condition.assertion.variable.name)
+            if(!this.valueBank?.getVariable) throw new Error("No variable getter specified in Condition setup");
+            return this.valueBank?.getVariable?.(this.condition.assertion.variable.name)
         }else if(this.condition.assertion.value){
             return this.condition.assertion.value;
         }

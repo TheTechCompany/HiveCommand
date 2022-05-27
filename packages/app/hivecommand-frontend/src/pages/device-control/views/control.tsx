@@ -1,15 +1,16 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
 import React, {useContext, useEffect, useMemo, useState} from 'react';
 import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
-import { Check as Checkmark } from '@mui/icons-material';
+import { Check as Checkmark, ChevronLeft, SettingsEthernet } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
-import { useRequestFlow } from '@hive-command/api';
+import { useRequestFlow, useUpdateDeviceSetpoint } from '@hive-command/api';
 import { FormControl } from '@hexhive/ui';
 import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
-
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { isEqual } from 'lodash'
 const ActionButton = (props) => {
 	return (
 		<Box background="accent-1" direction='row' round="xsmall" width={'100%'} align='center' justify='center' elevation="small">
@@ -50,6 +51,9 @@ export default () => {
 
     const [ workingState, setWorkingState ] = useState<any>({})
 
+	const [ editSetpoint, setEditSetpoint ] = useState();
+	const [ setpointWorkstate, setSetpointWorkstate ] = useState({});
+	
 	const { 
 		changeOperationMode,
 		changeOperationState, 
@@ -61,11 +65,13 @@ export default () => {
 		changeDeviceValue, 
 		performAction, 
 		controlId,
-		device
+		device,
+		refetch
 	} = useContext(DeviceControlContext)
 
 
 	const requestFlow = useRequestFlow(controlId)
+	const updateSetpoint = useUpdateDeviceSetpoint(controlId);
 
 	const client = useApolloClient()
 
@@ -145,6 +151,7 @@ export default () => {
 
 	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase();
 	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
+	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
    
 
     useEffect(() => {
@@ -211,80 +218,161 @@ export default () => {
  
 		let devices =  getDevicesForNode(node)
  
-		return devices.map((device) => {
-			let deviceInfo = device?.type || {};
-			let deviceName = device?.name || '';
-		 
-			console.log({deviceInfo})
-			let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
- 
+		if(editSetpoint){
+			const device = devices.find((a) => a.name == editSetpoint)
+
 			return (
-			 <Box 
-				 border={{side: 'bottom', size: 'small'}}
-				 flex 
-				 direction="column">
-				 <Box
-					  pad="xsmall"
-					  justify="center" 
-					  direction="column">
- 
-					 <Box align="center" justify="between" direction="row">
-						 <Text weight="bold" size="small">{device?.name}</Text>
-						 <CheckBox 
-							 reverse
-							 onChange={(e) => {
-								 changeDeviceMode({
-									 args: {
-										 deviceId: controlId,
-										 deviceName: device?.name,
-										 mode: !e.target.checked ? "Manual" : "Automatic"
-									 }
-								 })
-							 }}
-							 checked={deviceMode != "Manual"}
-							 label={deviceMode}
-							 toggle />
- 
-					 </Box>
-  
-					  <Text size="xsmall">{deviceInfo?.name}</Text>
-				 </Box>
-				 <Box pad="xsmall" flex>
-				  {deviceInfo?.state?.map((state) => (
-					  <Box direction="row" align="center">
-						 <Box flex><Text size="small">{state.key}</Text></Box>
-						 <Box flex>{renderActionValue(deviceName, deviceInfo, deviceMode, state)}</Box>
-						 {workingState?.[deviceName]?.[state.key] != undefined ? (<Button 
-							 plain
-							 onClick={() => {
-								 sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
-							 }}
-							 style={{padding: 6, borderRadius: 3}}
-							 hoverIndicator
-							 icon={<Checkmark />} />) : ''}
-					  </Box>
-				  ))}
-				 </Box>
-  
-  				  <Box align="center" justify="around" direction="row">
-				  	{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
-					  <Button
-						  plain
-						  style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
-						  hoverIndicator={'accent-1'}
-						  onClick={() => {
-							  performAction(
-									deviceName,
-									action.key		  
-							  	)
-						  }}
-						  label={action.key} />
-				  ))}
-				  </Box>
-  
-			  </Box>
-		 )
-		}) 
+				<Box flex>
+					<Box align='center' direction='row'>
+						<IconButton 
+							onClick={() => setEditSetpoint(undefined)}
+							size="small">
+							<ChevronLeft fontSize='inherit'/>
+						</IconButton>
+
+						<Text size='small'>{editSetpoint} Setpoints</Text>
+						
+					</Box>
+					<Box pad="xsmall" flex>
+						{device.setpoints?.map((setpoint) => (
+							<Box margin={{bottom: 'xsmall'}} direction='row' align='center'>
+								<Box flex>
+									<Text size="small">{setpoint.name}</Text>
+								</Box>
+								<Box flex>
+									<TextField 
+										InputProps={{
+											endAdornment: setpoint.type == "ratio"  && <InputAdornment position="end">%</InputAdornment>
+										}}
+										size='small' 
+										label="Value" 
+										onChange={(e) => {
+											setSetpointWorkstate({
+												...setpointWorkstate,
+												[setpoint.id]: {
+													...setpointWorkstate?.[setpoint?.id],
+													value: e.target.value
+												}
+											})
+										}}
+										value={setpointWorkstate?.[setpoint.id]?.value} />
+								</Box>
+							</Box>
+						))}
+					</Box>
+					<Box direction='row'>
+						<Button
+							plain
+							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
+							hoverIndicator={'accent-1'}
+							disabled={isEqual(setpointWorkstate, device?.setpoints?.reduce((prev, curr) => ({
+								...prev,
+								[curr.id]: {
+									...curr
+								}
+							}), {}))}
+							onClick={() => {
+								setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
+									...prev,
+									[curr.id]: {
+										...curr
+									}
+								}), {}))
+							}}
+							label={"Reset"} />
+						<Button
+							plain
+							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
+							hoverIndicator={'accent-1'}
+							onClick={() => {
+								for(var k in setpointWorkstate){
+									updateSetpoint(k, setpointWorkstate[k].value).then(() => {
+										refetch();
+									})
+								}
+								// updateSetpoint()
+							}}
+							label={"Save"} />
+					</Box>
+				</Box>
+			)
+		}else{
+		
+			return devices.map((device) => {
+				let deviceInfo = device?.type || {};
+				let deviceName = device?.name || '';
+			
+				console.log({deviceInfo})
+				let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
+	
+				return (
+				<Box 
+					border={{side: 'bottom', size: 'small'}}
+					flex 
+					direction="column">
+					<Box
+						pad="xsmall"
+						justify="center" 
+						direction="column">
+	
+						<Box align="center" justify={device.setpoints?.length > 0 ? "between" : "start"} direction="row">
+							<Text weight="bold" size="small">{device?.name}</Text>
+							
+							{device.setpoints?.length > 0 && operatingMode != "auto" && <IconButton 
+								onClick={() => {
+									setEditSetpoint(device?.name)
+									setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
+										...prev,
+										[curr.id]: {
+											...curr
+										}
+									}), {}))
+								}}
+								size="small">
+								<SettingsEthernet fontSize='inherit'/>
+							</IconButton>}
+	
+						</Box>
+	
+						<Text size="xsmall">{deviceInfo?.name}</Text>
+					</Box>
+					<Box pad="xsmall" flex>
+					{deviceInfo?.state?.map((state) => (
+						<Box direction="row" align="center">
+							<Box flex><Text size="small">{state.key}</Text></Box>
+							<Box flex>{renderActionValue(deviceName, deviceInfo, deviceMode, state)}</Box>
+							{workingState?.[deviceName]?.[state.key] != undefined ? (<Button 
+								plain
+								onClick={() => {
+									sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
+								}}
+								style={{padding: 6, borderRadius: 3}}
+								hoverIndicator
+								icon={<Checkmark />} />) : ''}
+						</Box>
+					))}
+					</Box>
+	
+					<Box align="center" justify="around" direction="row">
+						{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
+						<Button
+							plain
+							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
+							hoverIndicator={'accent-1'}
+							onClick={() => {
+								performAction(
+										deviceName,
+										action.key		  
+									)
+							}}
+							label={action.key} />
+					))}
+					</Box>
+	
+				</Box>
+			)
+			}) 
+		}
  
 	 }
 
@@ -331,7 +419,8 @@ export default () => {
 			deviceValues={hmiNodes}
 			modes={deviceModes}
 			information={infoTarget != undefined ? (
-				<Bubble style={{position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y}}>
+				<Bubble 
+					style={{position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y}}>
 					{renderActions()}
 				</Bubble>
 			) : null}
@@ -342,10 +431,25 @@ export default () => {
 			onSelect={(select) => {
 				console.log({hmi: program.interface});
 				let node = program.interface?.nodes?.find((a) => a.id == select.id)
-
 				const { x, y, scaleX, scaleY} = node;
-				setInfoTarget({x: x + (node.type.width || node?.type?.width), y: y})
-				
+
+				let width, height;
+				if(node.children && node.children.length > 0){
+					let widths =  node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
+					let xs = node.children?.map((x) => x.x);
+					let heights =  node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
+					let ys = node.children?.map((x) => x.y);
+
+					width = Math.max(...widths) - Math.min(...xs)
+					height = 25// Math.min(...ys) - Math.max(...heights)
+					console.log({width, height, widths, heights, children: node.children})
+				}else{
+					width = node.type.width * scaleX;
+					height = 25 //node.type.height * scaleY;
+				}
+
+				setInfoTarget({x: x + (width), y: y + height})
+				setEditSetpoint(undefined)
 				setSelected(select)
 			}}
 		/>
@@ -371,12 +475,17 @@ export default () => {
 								options={operatingModes} />
 						</Box>
 						<ActionButton 
-							disabled={operatingMode != 'auto'}
+							disabled={operatingMode != 'auto' || (operatingStatus == "STARTING" || operatingStatus == "STOPPING")}
 							onClick={() =>  {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}
-							label={(!operatingState || operatingState == "off") ? "Start" : "Shutdown"} />
+							label={
+								(operatingStatus == "ON" || operatingStatus == "STOPPING") ? 
+									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STOPPING" && <Spinner />}Shutdown</div>) : 
+									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STARTING" && <Spinner />}Start</div>)
+							} />
 					</Box>
+
 					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
 						<Text>Commands</Text>
 						<Box gap="xsmall">

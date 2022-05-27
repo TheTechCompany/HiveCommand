@@ -4,16 +4,19 @@ import React, { useContext, useState } from 'react';
 import { ListBox } from '../../../../../components/ListBox';
 import { DeviceSetpointModal } from '../../../../../components/modals/device-setpoint';
 import { DeviceSingleContext } from '../context';
-import { useCreatePlaceholderInterlock, useCreatePlaceholderSetpoint, useDeletePlaceholderInterlock, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
+import { useCreatePlaceholderDataInterlock, useCreatePlaceholderInterlock, useCreatePlaceholderSetpoint, useDeletePlaceholderDataInterlock, useDeletePlaceholderInterlock, useUpdatePlaceholderDataInterlock, useUpdatePlaceholderInterlock, useUpdatePlaceholderSetpoint } from '@hive-command/api';
+import { DeviceDataInterlockModal } from 'app/hivecommand-frontend/src/components/modals/device-data-interlock';
 
 export const SafetySection = (props) => {
 
     const { programId, variables, device, devices, deviceId, refetch } = useContext(DeviceSingleContext);
 
     const [selectedInterlock, setSelectedInterlock] = useState<any>()
+    const [selectedDataInterlock, setSelectedDataInterlock] = useState<any>()
     const [selectedSetpoint, setSelectedSetpoint] = useState<any>()
 
     const [interlockModalOpen, openInterlockModal] = useState<boolean>(false);
+    const [dataInterlockModalOpen, openDataInterlockModal] = useState<boolean>(false);
     const [setpointModalOpen, openSetpointModal] = useState<boolean>(false);
 
 
@@ -21,12 +24,58 @@ export const SafetySection = (props) => {
     const updatePlaceholderInterlock = useUpdatePlaceholderInterlock(programId, deviceId)
     const deletePlaceholderInterlock = useDeletePlaceholderInterlock(programId, deviceId)
 
+    const createPlaceholderDataInterlock = useCreatePlaceholderDataInterlock(programId, deviceId)
+    const updatePlaceholderDataInterlock = useUpdatePlaceholderDataInterlock(programId, deviceId)
+    const deletePlaceholderDataInterlock = useDeletePlaceholderDataInterlock(programId, deviceId)
+
+
     const createPlaceholderSetpoint = useCreatePlaceholderSetpoint(programId, deviceId)
     const updatePlaceholderSetpoint = useUpdatePlaceholderSetpoint(programId, deviceId)
 
 
     return (
         <>
+            <DeviceDataInterlockModal
+                open={dataInterlockModalOpen}
+                onClose={() => {
+                    openDataInterlockModal(false)
+                }}
+                selected={selectedDataInterlock}
+                device={device}
+                devices={devices}
+                variables={variables}
+                onSubmit={(dataInterlock) => {
+                    if (dataInterlock.id) {
+                        updatePlaceholderDataInterlock(
+                            dataInterlock.id,
+                            dataInterlock.inputDevice,
+                            dataInterlock.inputDeviceKey,
+                            dataInterlock.valueType,
+                            dataInterlock.comparator,
+                            dataInterlock.assertion,
+                            dataInterlock.deviceKey
+                        ).then(() => {
+                            refetch()
+                            openInterlockModal(false)
+
+                        })
+                    } else {
+                        createPlaceholderDataInterlock(
+                            dataInterlock.inputDevice,
+                            dataInterlock.inputDeviceKey,
+                            dataInterlock.valueType,
+                            dataInterlock.comparator,
+                            dataInterlock.assertion,
+                            dataInterlock.deviceKey
+                        ).then(() => {
+                            refetch();
+                            openInterlockModal(false)
+
+                        })
+                    }
+                }}
+
+                />
          <DeviceInterlock   
             variables={variables}
                 devices={devices}
@@ -58,6 +107,8 @@ export const SafetySection = (props) => {
                             lock.state
                         ).then(() => {
                             refetch()
+                            openInterlockModal(false)
+
                         })
                     } else {
                         createPlaceholderInterlock(
@@ -70,6 +121,8 @@ export const SafetySection = (props) => {
                             lock.state
                         ).then(() => {
                             refetch();
+                            openInterlockModal(false)
+
                         })
                     }
 
@@ -107,9 +160,9 @@ export const SafetySection = (props) => {
                 stateItems={device?.type?.state}
                 open={setpointModalOpen} />
         <Box flex direction='row' gap='xsmall'>
-           
+           <Box gap="xsmall" flex>
             <ListBox
-                label="Interlocks"
+                label="Process Interlocks"
                 onAdd={() => openInterlockModal(true)}
                 data={device?.interlocks || []}
                 onItemEdit={(item) => { openInterlockModal(true); setSelectedInterlock(item) }}
@@ -118,7 +171,17 @@ export const SafetySection = (props) => {
                         <Text size="small">{item.inputDevice?.name}</Text>
                     )
                 }} />
-
+            <ListBox
+                label="Data Interlocks"
+                onAdd={() => openDataInterlockModal(true)}
+                data={device?.dataInterlocks || []}
+                onItemEdit={(item) => { openDataInterlockModal(true); setSelectedDataInterlock(item) }}
+                renderItem={(item) => {
+                    return (
+                        <Text size="small">{item.inputDevice?.name}</Text>
+                    )
+                }} />
+            </Box>
 
 
             <ListBox

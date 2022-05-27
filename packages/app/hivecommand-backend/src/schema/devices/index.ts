@@ -4,8 +4,9 @@ import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
+import { Channel } from "amqplib";
 
-export default (prisma: PrismaClient) => {
+export default (prisma: PrismaClient, mq: Channel) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
 	
@@ -37,6 +38,16 @@ export default (prisma: PrismaClient) => {
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						setpoints: {
+							include: {
+								setpoint: {
+									include: {
+										device: true,
+										key: true
+									}
+								}
+							}
+						},
 						calibrations: {
 							include: {
 								placeholder: true,
@@ -236,6 +247,60 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
+			updateCommandDeviceSetpoint: async (root: any, args: {device: string, setpoint: string, value: string}, context: any) => {
+
+				const result = await prisma.device.update({
+					where: {id: args.device},
+					data: {
+						setpoints: {
+							upsert: [{
+								where: {
+									setpointId_deviceId: {
+										setpointId: args.setpoint,
+										deviceId: args.device
+									}
+								},
+								update: {
+									value: args.value
+								},
+								create: {
+									id: nanoid(),
+									value: args.value,
+									setpointId: args.setpoint
+								}
+							}]
+						}
+					},
+					include: {
+						setpoints: {
+							include: {
+								setpoint: {
+									include: {
+										device: true
+									}
+								},
+								device: true
+							}
+						}
+					}
+				})
+			
+				const setpoint = result?.setpoints?.find((a) => a.setpoint.id == args.setpoint);
+
+				let stateUpdate = {
+					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
+					deviceName: setpoint?.setpoint.device?.name,
+					deviceSetpoint:  setpoint?.setpoint.name,
+					value: args.value,
+					authorizedBy: context.jwt?.name
+				}
+
+				console.log("Setpoint update", {stateUpdate})
+
+				mq.sendToQueue(`COMMAND:DEVICE:SETPOINT`, Buffer.from(JSON.stringify(stateUpdate)))
+
+				return args.value
+			},
 			createCommandDevice: async (root: any, args: {input: {name: string, network_name: string, program: string}}, context: any) => {
 				return await prisma.device.create({
 					data: {
@@ -485,6 +550,8 @@ export default (prisma: PrismaClient) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
+		updateCommandDeviceSetpoint(device: ID!, setpoint: ID!, value: String): String
+
 		createCommandDeviceCalibration(device: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
 		updateCommandDeviceCalibration(device: ID!, id: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
 		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
@@ -503,6 +570,11 @@ export default (prisma: PrismaClient) => {
 		network_name: String
 	}
 
+	type CommandDeviceSetpointCalibration {
+		id: ID
+		setpoint: CommandDeviceSetpoint
+		value: String
+	}
 	type CommandDevice  {
 		id: ID! 
 		name: String
@@ -512,6 +584,7 @@ export default (prisma: PrismaClient) => {
 		network_name: String
 
 		calibrations: [CommandProgramDeviceCalibration] 
+		setpoints: [CommandDeviceSetpointCalibration]
 
 		peripherals: [CommandDevicePeripheral] 
 		

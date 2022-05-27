@@ -470,3 +470,30 @@ export const useMapPort = (deviceId: string) => {
 // 		},
 // 	}
 // })
+
+
+export const useUpdateDeviceSetpoint = (deviceId: string) => {
+  const [ mutateFn ] = useMutation((mutation, args: {
+    setpoint: string,
+    value: string
+  }) => {
+    const item = mutation.updateCommandDeviceSetpoint({
+      device: deviceId,
+      setpoint: args.setpoint,
+      value: args.value
+    })
+
+    return {
+      item: item
+    }
+  })
+
+  return (setpoint: string, value: string) => {
+    return mutateFn({
+      args: {
+        setpoint,
+        value
+      }
+    })
+  }
+}

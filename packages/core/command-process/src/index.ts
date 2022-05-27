@@ -4,7 +4,7 @@ export * from './condition'
 // import doT from 'dot';
 import EventEmitter from "events";
 import { ProcessChain } from './chain';
-import { ACTION_TYPES, CommandAction, CommandProcess } from '@hive-command/data-types';
+import { ACTION_TYPES, CommandAction, CommandProcess, ConditionValueBank } from '@hive-command/data-types';
 import log from 'loglevel'
 
 log.setLevel('debug')
@@ -68,7 +68,8 @@ export class Process extends EventEmitter{
 
     private perform: (device: string, release: boolean, operation: string) => Promise<any>
 
-    public getVariable: (key: string) => any;
+    public valueBank: ConditionValueBank;
+
     public getState: (key: string) => {[key: string]: any};
     public setState: (key: string, value: {[key: string]: any} | any) => void;
 
@@ -80,13 +81,13 @@ export class Process extends EventEmitter{
         performOperation: (device: string, release: boolean, operation: string) => Promise<any>, 
         getState: ((key: string) => {[key: string]: any}),
         setState: (key: string, value: {[key: string]: any} | any) => void,
-        getVariable: (key: string) => any,
+        valueBank: ConditionValueBank,
         parent?: CommandProcess
     ){
         super();
 
         console.log({getState: getState})
-        this.getVariable = getVariable;
+        this.valueBank = valueBank;
         this.getState = getState
         this.setState = setState;
 
@@ -107,11 +108,11 @@ export class Process extends EventEmitter{
 
         // console.log({nodes: this.process})
         this.chains.entrypoints = this.process.nodes?.filter((a) => a.type == ACTION_TYPES.TRIGGER).map((node) => {
-            return new ProcessChain(this, process, node.id, this.actions, this.getVariable)
+            return new ProcessChain(this, process, node.id, this.actions, this.valueBank)
         }) || []
 
         this.chains.shutdown = this.process.nodes?.filter((a) => a.type == ACTION_TYPES.SHUTDOWN_TRIGGER).map((node) => {
-            return new ProcessChain(this, process, node.id, this.actions, this.getVariable)
+            return new ProcessChain(this, process, node.id, this.actions, this.valueBank)
         }) || []
 
         console.log(`Loaded ${this.chains.entrypoints.length} entrypoints and ${this.chains.shutdown.length} exits`)
@@ -159,6 +160,12 @@ export class Process extends EventEmitter{
 
     get isRunning (){
         return this.running
+    }
+
+    get isStopping (){ 
+        return this.chains.shutdown.map((x) => {
+            return x.currentActions.length > 0
+        }).indexOf(true) > -1;
     }
 
     isActive(id: string){

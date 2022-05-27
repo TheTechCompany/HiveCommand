@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/data-types",
-  "version": "1.4.15-alpha.31",
+  "version": "1.4.15-alpha.52",
   "description": "",
   "main": "dist/index.js",
   "files": [
