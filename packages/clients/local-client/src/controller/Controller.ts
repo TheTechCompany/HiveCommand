@@ -10,13 +10,13 @@
 import log from 'loglevel'
 
 import { CommandNetwork, ValueBankInterface } from "@hive-command/network";
-import { CommandStateMachineMode } from "@hive-command/state-machine";
+import { CommandStateMachineMode, CommandStateMachineStatus } from "@hive-command/state-machine";
 import { DataType, StatusCodes, Variant } from "node-opcua";
 import client, { Socket } from "socket.io-client";
 import { Machine } from "../machine";
 import e from 'express';
 import { AlarmEngine } from '../alarm-engine';
-import { CommandVariable, ActionPayload, AssignmentPayload } from '@hive-command/data-types';
+import { CommandVariable, ActionPayload, AssignmentPayload, CommandSetpoint } from '@hive-command/data-types';
 
 export class Controller {
 
@@ -51,7 +51,17 @@ export class Controller {
 					Running: {
 						type: DataType.Boolean,
 						get: () => {
-							return new Variant({dataType: DataType.Boolean, value: this.machine.isProgramRunning || false})
+
+							const isRunning = this.machine.isProgramRunning || this.machine.isProgramStopping;
+
+							return new Variant({dataType: DataType.Boolean, value: isRunning || false})
+						}
+					},
+					Status: {
+						type: DataType.String,
+						get: () => {
+							const status = CommandStateMachineStatus[this.machine.status];
+							return new Variant({dataType: DataType.String, value: status});
 						}
 					},
 					Mode: {
@@ -213,6 +223,7 @@ export class Controller {
 		}, 
 		struct: {
 			layout: AssignmentPayload[], 
+			setpoints: CommandSetpoint[],
 			actions: ActionPayload[],
 			variables: CommandVariable[]
 		}

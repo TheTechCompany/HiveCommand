@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events'
+import { CommandStateMachine } from '..';
 
 export class State extends EventEmitter {
 
@@ -8,8 +9,12 @@ export class State extends EventEmitter {
 		}
 	};
 
-	constructor(state?: {[key: string]: any}) {
+	private machine: CommandStateMachine;
+
+	constructor(machine: CommandStateMachine, state?: {[key: string]: any}) {
 		super();
+		
+		this.machine = machine;
 		
 		this.internalState = state || {};
 		
@@ -23,7 +28,11 @@ export class State extends EventEmitter {
 	}	
 
 	public getByKey(key: string, subKey: string): any {
-		return this.get(key)?.[subKey] || 0;
+		if(!this.machine.checkDataInterlocks(key, subKey)){
+			return this.get(key)?.[subKey] || 0;
+		}else{
+			return 0;
+		}
 	}	
 
 	public update(key: string, value: any): void {

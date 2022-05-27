@@ -1,7 +1,7 @@
 import axios, { Axios, AxiosInstance } from 'axios';
 import OPCUAServer from '@hive-command/opcua-server'
 import { ArgumentOptions, DataType, StatusCode, StatusCodes, Variant } from 'node-opcua';
-import { ActionPayload, AssignmentPayload, CommandVariable, PayloadResponse } from '@hive-command/data-types';
+import { ActionPayload, AssignmentPayload, CommandSetpoint, CommandVariable, PayloadResponse } from '@hive-command/data-types';
 import log from 'loglevel'
 
 export interface ValueBankInterface {
@@ -15,10 +15,14 @@ export interface ValueBankInterface {
 	getVariable?: (key: string) => any;
 	setVariabe?: (key: string, value: any) => any;
 
+	getSetpoint?: (id: string) => any;
+	setSetpoint?: (id: string, value: string) => any;
+
 	requestState?: (device: string, key: string, value: any) => void;
 	requestAction?: (device: string, action: string)=> void;
 	get?: (device: string, key:string ) => any;
 }
+
 export interface CommandNetworkOptions{
 	baseURL?: string;
 
@@ -123,7 +127,7 @@ export class CommandNetwork {
 	}
 
 	//Turn buses into OPC map
-	async initOPC({layout = [], actions = [], variables = []} : {variables: CommandVariable[], layout: AssignmentPayload[], actions: ActionPayload[]}){
+	async initOPC({layout = [], actions = [], variables = [], setpoints = []} : {variables: CommandVariable[], setpoints: CommandSetpoint[], layout: AssignmentPayload[], actions: ActionPayload[]}){
 
 		// await this.opc?.setComandEndpoint(this.request.bind(this))
 		
@@ -131,6 +135,7 @@ export class CommandNetwork {
 		// 	return new Variant({dataType: DataType.String, value: "Action"})
 		// })
 
+		console.log("INIT OPC", {layout, setpoints})
 		await Promise.all(variables.map(async (variable) => {
 			console.log(`Adding variable ${variable.name} to OPC-UA`);
 
@@ -196,11 +201,37 @@ export class CommandNetwork {
 			}, 'PlantActions')
 		}))
 
+		// console.log({setpoints, layout})
+
 		await Promise.all(layout.map(async (layout) => {
+
+			const sp = setpoints.filter((a) => a.device.id == layout.id);
+
+			console.log(`Setting up ${sp.length} setpoints for ${layout.name}`);
+
 			await this.opc?.addDevice({
 				name: layout.name,
 				type: layout.type
 			}, {
+				setpoints: {
+					...(sp || []).reduce((prev, curr) => {
+						const setpoint = curr;
+
+						return {
+							...prev,
+							[curr.name]: {
+								type: DataType.Double,
+								get: () => {
+									const value = this.valueBank.getSetpoint?.(setpoint.id) || 0
+									return new Variant({dataType: DataType.Double, value})
+								},
+								set: (value: Variant) => {
+									return this.valueBank.setSetpoint?.(curr.id, value.value)
+								}
+							}
+						}
+					}, {})
+				},
 				actions: {
 					changeMode: {
 						inputs: [{name: 'mode', dataType: DataType.String}],
@@ -265,12 +296,14 @@ export class CommandNetwork {
 		}, 
 		struct: {
 			layout: AssignmentPayload[], 
+			setpoints: CommandSetpoint[],
 			actions: ActionPayload[],
 			variables: CommandVariable[]
 		} 
 	){
 
 		console.log("Starting network")
+		console.log("initOPC", {struct})
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
@@ -279,9 +312,11 @@ export class CommandNetwork {
 			controller: this.options.controller || {},
 		})
 
-
+		console.log("initOPC", {struct})
 		await this.opc.start()
+		console.log("initOPC", {struct})
 		await this.initOPC(struct);
+		console.log("initOPCEnd", {struct})
 
 
 	}

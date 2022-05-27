@@ -1,4 +1,4 @@
-import { ACTION_TYPES, CommandProcess, ProgramProcess } from "@hive-command/data-types";
+import { ACTION_TYPES, CommandProcess, CommandSetpoint, ProgramProcess } from "@hive-command/data-types";
 import { EventEmitter } from 'events'
 import { State } from "./State";
 import { ProgramDevice, CommandVariable } from "@hive-command/data-types";
@@ -29,6 +29,7 @@ export enum CommandStateMachineStatus {
 export interface StateProgram {
 	initialState?: any;
 	devices?: ProgramDevice[],
+	setpoints: CommandSetpoint[];
 	variables: CommandVariable[],
 	processes: CommandProcess[],	
 }
@@ -36,6 +37,7 @@ export interface StateProgram {
 import * as actions from './base-plugins'
 import { nanoid } from "nanoid";
 import { VariableManager } from "./variables";
+import { SetpointManager } from "./setpoints";
 
 const base_actions = [
 	{
@@ -79,8 +81,9 @@ export class CommandStateMachine extends EventEmitter {
 	public state? : State;
 
 	private variables?: VariableManager;
+	private setpoints?: SetpointManager;
 
-	private status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
+	public status : CommandStateMachineStatus = CommandStateMachineStatus.OFF; //Represents a true running status of the state machine
 	public mode: CommandStateMachineMode = CommandStateMachineMode.DISABLED; //Determines available actions
 
 	private processes : Process[] = [];
@@ -119,6 +122,17 @@ export class CommandStateMachine extends EventEmitter {
 
 	}
 
+	getSetpoint(id: string){
+		// console.log({setpoints: this.setpoints})
+		return this.setpoints?.get(id);
+	}
+
+	setSetpoint(id: string, value: string){
+		if(this.mode == CommandStateMachineMode.AUTO) return console.error(`Can't change setpoints while in AUTO mode`);
+		
+		return this.setpoints?.set(id, value)
+	}
+
 	getVariable(key: string){
 		return this.variables?.getVar(key)
 	}
@@ -131,9 +145,12 @@ export class CommandStateMachine extends EventEmitter {
 		log.debug(`Loading new program ${program.processes.length} processes`)
 		this.program = program;
 
-		this.state = new State(program.initialState || {});
+		this.state = new State(this, program.initialState || {});
 
 		this.variables = new VariableManager(program.variables);
+		this.setpoints = new SetpointManager(program.setpoints);
+
+		console.log({variables: this.variables, setpoints: this.setpoints});
 
 		this.processes = program.processes.map((process) => {
 			return new Process(
@@ -146,12 +163,25 @@ export class CommandStateMachine extends EventEmitter {
 					(key: string, value) => {
 						return this.state?.update(key, value);
 					},
-					(key: string) => {
-						return this.variables?.getVar(key);
-					})
+					{
+						getVariable: (key: string) => {
+							return this.variables?.getVar(key);
+						},
+						getSetpoint: (id: string) => {
+							return this.setpoints?.get(id);
+						}
+					}
+				)
 		})
 
-		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client));
+		this.devices = program.devices?.map((x) => new StateDevice(x, this, this.client, {
+			getVariable: (key: string) => {
+				return this.variables?.getVar(key);
+			},
+			getSetpoint: (id: string) => {
+				return this.setpoints?.get(id);
+			}
+		}));
 
 		this.processes.forEach((process) => {
 			//Flow moves a step
@@ -194,6 +224,17 @@ export class CommandStateMachine extends EventEmitter {
 		return (active_proc || running_proc)
 	}
 
+	async checkDataInterlocks(key: string, subKey: string){
+		if(!this.state) return;
+
+		const device = this.devices?.find((a) => a.name == key);
+
+		if(device?.hasDataInterlock){
+			return device.checkDataInterlocks(this.state, subKey);
+		}else{
+			return false;
+		}
+	}
 
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
@@ -253,6 +294,10 @@ export class CommandStateMachine extends EventEmitter {
 		return this.status == CommandStateMachineStatus.ON || Object.keys(this.running_processes).length > 0
 	}
 
+	get isStopping(){
+		return this.status == CommandStateMachineStatus.STOPPING || Object.keys(this.running_processes)?.map((key) => this.running_processes?.[key]?.isStopping).indexOf(true) > -1;
+	}
+
 	get getMode(){
 		return CommandStateMachineMode[this.mode]
 	}
@@ -274,7 +319,14 @@ export class CommandStateMachine extends EventEmitter {
 		if(this.mode == CommandStateMachineMode.MANUAL && this.status == CommandStateMachineStatus.OFF && !this.running_processes[flowId]){
 			console.time(runTag)
 			if(!this.state || !this.variables) return;
-			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update, this.variables?.getVar)
+			this.running_processes[flowId] = new Process(process, base_actions as any, this.performOperation, this.state?.get, this.state?.update, {
+				getVariable: (key: string) => {
+					return this.variables?.getVar(key);
+				},
+				getSetpoint: (id: string) => {
+					return this.setpoints?.get(id);
+				}
+			})
 			const result =  await this.running_processes[flowId].start()
 			delete this.running_processes[flowId]
 			console.timeEnd(runTag)

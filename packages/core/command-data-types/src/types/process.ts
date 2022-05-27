@@ -1,6 +1,14 @@
 import { EdgeConditionAssertion } from "./Condition";
 import { ProgramAction, ProgramTimer } from "./ProgramProcess";
 
+export type GetSetpoint = (id: string) =>  any;
+export type GetVariable = (key: string) => any;
+
+export interface ConditionValueBank {
+    getSetpoint?: GetSetpoint;
+    getVariable?: GetVariable;
+}
+
 export interface CommandProcess {
 	id?: string;
 	name?: string;
@@ -40,7 +48,7 @@ export interface CommandHub {
 	actions?: CommandAction[];
 	getState: (key: string) => {[key: string]: any} | any;
 	setState: (key: string, value: {[key: string]: any} | any) => void;
-	getVariable: (key: string) => any;
+	valueBank: ConditionValueBank;
 }
 
 export type CommandActionEntry = (options: any, hub: CommandHub, node: CommandProcess) => Promise<{promise: Promise<any>, cancel: () => void}>;

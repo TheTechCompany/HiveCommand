@@ -52,6 +52,20 @@ export default (prisma: PrismaClient) => {
 									}
 								}
 							},
+							dataInterlocks: {
+								include: {
+									inputDevice: true,
+									inputDeviceKey: true,
+									assertion: {
+										include: {
+											setpoint: true,
+											variable: true
+										}
+									},
+									device: true,
+									deviceKey: true
+								}
+							},
 							setpoints: {
 								include: {
 									key: true

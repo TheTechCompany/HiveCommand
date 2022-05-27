@@ -154,6 +154,7 @@ export class DiscoveryServer {
         channel.assertQueue(`COMMAND:DEVICE:CONTROL`)
         channel.assertQueue(`COMMAND:DEVICE:MODE`)
         channel.assertQueue(`COMMAND:DEVICE:VALUE`);
+        channel.assertQueue(`COMMAND:DEVICE:SETPOINT`)
         channel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
         channel.assertQueue(`COMMAND:MODE`)
         channel.assertQueue(`COMMAND:STATE`)
@@ -184,6 +185,26 @@ export class DiscoveryServer {
 
             await this.syncClient.write(stateUpdate.address, `/Objects/1:Devices/1:${stateUpdate.deviceName}/1:mode`, DataType.String, stateUpdate.mode)
         },{
+            noAck: true
+        })
+
+        channel.consume(`COMMAND:DEVICE:SETPOINT`, async (msg) => {
+            let stateUpdate : {
+                authorizedBy: string,
+                address: string,
+                deviceName: string,
+                deviceSetpoint: string,
+                value: string
+            } = JSON.parse(msg?.content.toString() || '{}')
+
+            console.log({stateUpdate})
+
+            if(!stateUpdate.deviceName || !stateUpdate.deviceSetpoint || !stateUpdate.value) return console.error('No device setpoint or value in request');
+
+            log(stateUpdate.authorizedBy, `Changing setpoint ${stateUpdate.deviceSetpoint} to ${stateUpdate.value}`)
+
+            await this.syncClient.write(stateUpdate.address, `/Objects/1:Devices/1:${stateUpdate.deviceName}/1:Setpoints/1:${stateUpdate.deviceSetpoint}`, DataType.Double, stateUpdate.value)
+        }, {
             noAck: true
         })
 

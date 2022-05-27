@@ -8,6 +8,7 @@ export interface IDeviceSingleContext {
         },
         plugins: {id: string, key: string}[],
         interlocks: {}[]
+        dataInterlocks: {}[]
         units: {id: string, state: {id: string}, inputUnit: string, displayUnit: string}[]
         setpoints: {}[]
     },

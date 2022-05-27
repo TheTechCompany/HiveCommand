@@ -42,7 +42,36 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
         return matchPath(window.location.pathname, `${a.id}`) != null;
     })
 
-   
+   const { data: deviceInfo } = useQuery(gql`
+        query DeviceInfo($id: ID) {
+            commandDevices(where: {id: $id}){
+                setpoints {
+                    id
+                    setpoint {
+                        id
+                        name
+                        key {
+                            id
+                            key
+                        }
+                        device {
+                            id
+                            name
+                        }
+                    }
+                    value
+                }
+            }
+        }
+    `, {
+       variables: {
+           id
+       }
+    })
+
+    const refetch = () => {
+        client.refetchQueries({include: ['DeviceInfo']})
+    }
 
     const { data } = useQuery(gql`
             query Q ($id: ID){
@@ -53,6 +82,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                 operatingState
 
                 online
+                
+
                 calibrations {
                     placeholder {
                         id
@@ -344,16 +375,65 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     // const waitingForActions = values?.filter((a) => a.deviceId == 'PlantActions')?.map((action) => ({[action.valueKey]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {}) // deviceValueData?.commandDevices?.[0]?.waitingForActions || [];
 
-    const refetch = () => {
-        client.refetchQueries({ include: ['Q'] })
-    }
 
-    const program = data?.commandDevices?.[0]?.activeProgram || {};
+    const activeProgram = data?.commandDevices?.[0]?.activeProgram || {};
 
-    const actions = program?.interface?.actions || [];
 
-    const hmi = program?.interface?.nodes?.filter((a) => !a.children || a.children.length == 0) || [];
-    const groups = program?.interface?.nodes?.filter((a) => a.children && a.children.length > 0) || [];
+    const actions = activeProgram?.interface?.actions || [];
+
+    const hmi = activeProgram?.interface?.nodes?.filter((a) => !a.children || a.children.length == 0)?.map((node) => {
+        const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint) => {
+            let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a) => a.setpoint?.id == setpoint.id);
+            console.log({setpoint, s, deviceInfo})
+            return {
+                ...setpoint,
+                value: s?.value || setpoint.value
+            };
+        });
+
+        return {
+            ...node,
+            devicePlaceholder: {
+                ...node.devicePlaceholder,
+                setpoints: setpoints
+            }
+        }
+    }) || [];
+    
+    const groups = activeProgram?.interface?.nodes?.filter((a) => a.children && a.children.length > 0)?.map((node) => {
+        const children = node.children?.map((children) => {
+            const setpoints = (children?.devicePlaceholder?.setpoints || [])?.map((setpoint) => {
+                let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a) => a.setpoint?.id == setpoint.id);
+                console.log({setpoint, s, deviceInfo})
+                return {
+                    ...setpoint,
+                    value: s?.value || setpoint.value
+                };
+            });
+
+            return {
+                ...children,
+                devicePlaceholder: {
+                    ...children.devicePlaceholder,
+                    setpoints
+                }
+            }
+        })
+
+        return {
+            ...node,
+            children
+        }
+    }) || [];
+
+    const program = {
+        ...activeProgram,
+        interface: {
+            ...activeProgram.interface,
+            nodes: [...hmi, ...groups]
+        }
+    };
+
 
 
     // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
@@ -390,13 +470,13 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
     const changeOperationMode = (mode: string) => {
         changeMode(mode).then(() => {
-            refetch()
+            refresh()
         })
     }
 
     const changeOperationState = (state: "on" | "off" | "standby") => {
         changeState(state).then(() => {
-            refetch()
+            refresh()
         })
     }
 
@@ -422,7 +502,8 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             changeDeviceMode,
             changeDeviceValue,
             performAction: performDeviceAction,
-            refresh
+            refresh,
+            refetch
         }}>
             <Box
                 round="xsmall"

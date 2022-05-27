@@ -19,6 +19,8 @@ model Device {
   network_name String @unique
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
+
+  setpoints DeviceSetpoint[] @relation(name: "hasSetpoints")
   calibrations DeviceCalibration[] @relation(name: "hasCalibration")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
@@ -34,6 +36,20 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+model DeviceSetpoint {
+  id String @id
+
+  setpoint ProgramSetpoint @relation(name: "forSetpoint", fields: [setpointId], references: [id])
+  setpointId String
+
+  value String
+
+  device Device @relation(name: "hasSetpoints", fields: [deviceId], references: [id])
+  deviceId String
+
+  @@unique([setpointId, deviceId])
 }
 
 model DeviceCalibration {
@@ -212,6 +228,9 @@ model IOTemplateState {
   requiredByInterlock ProgramInterlock[] @relation(name: "requiresState")
   usedByInterlock ProgramInterlock[] @relation(name: "observesDeviceState")
 
+  usedByDataInterlock ProgramDataInterlock[] @relation(name: "observesDataDeviceState")
+  requiredByDataInterlock ProgramDataInterlock[] @relation(name: "requiresDataState")
+
   reportedBy DeviceReport[] @relation(name: "hasDataKey")
 
   mappedBy PeripheralMap[] @relation(name: "mapsTo")
@@ -290,12 +309,14 @@ model ProgramFlowIO {
 
   setpoints ProgramSetpoint[] @relation(name: "useSetpoint")
   interlocks ProgramInterlock[] @relation(name: "useInterlock")
+  dataInterlocks ProgramDataInterlock[] @relation(name: "useDataInterlock")
 
   plugins IOPlugin[] @relation(name: "usePlugin")
 
   shownBy CanvasNode[] @relation(name: "shownOn")
 
   observedBy ProgramInterlock[] @relation(name: "observesDevice")
+  observedByData ProgramDataInterlock[] @relation(name: "observesDataDevice")
 
   usedBy ProgramFlowNodeAction[] @relation(name: "useDevice")
   usedIn ProgramFlowEdgeCondition[] @relation(name: "usedByEdgeCondition")
@@ -380,6 +401,8 @@ model ProgramSetpoint {
 
   usedBy ProgramAssertion[] @relation(name: "usesSetpoint")
 
+  passedBy DeviceSetpoint[] @relation(name: "forSetpoint")
+
   device ProgramFlowIO @relation(name: "useSetpoint", fields: [deviceId], references: [id])
   deviceId String
 }
@@ -407,6 +430,27 @@ model ProgramInterlock {
   deviceId String
 }
 
+model ProgramDataInterlock {
+  id String @id
+
+  inputDevice ProgramFlowIO @relation(name: "observesDataDevice", fields: [inputDeviceId], references: [id])
+  inputDeviceId String
+
+  inputDeviceKey IOTemplateState @relation(name: "observesDataDeviceState", fields: [inputDeviceKeyId], references: [id])
+  inputDeviceKeyId String
+
+  comparator String
+
+  assertion ProgramAssertion @relation(name: "assertDataInterlock", fields: [assertionId], references: [id])
+  assertionId String
+
+  deviceKey IOTemplateState @relation(name: "requiresDataState", fields: [deviceKeyId], references: [id])
+  deviceKeyId String
+
+  device ProgramFlowIO @relation(name: "useDataInterlock", fields: [deviceId], references: [id])
+  deviceId String
+}
+
 model ProgramAssertion {
   id String @id
   type String
@@ -420,6 +464,7 @@ model ProgramAssertion {
 
   usedByEdge ProgramFlowEdgeCondition[] @relation(name: "edgeCondition")
   usedByInterlock ProgramInterlock[] @relation(name: "assertInterlock")
+  usedByDataInterlock ProgramDataInterlock[] @relation(name: "assertDataInterlock")
 }
 
 model ProgramHMI {

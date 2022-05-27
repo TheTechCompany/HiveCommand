@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.50](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.49...v1.4.15-alpha.50) (2022-05-26)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.49](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.48...v1.4.15-alpha.49) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.48](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.47...v1.4.15-alpha.48) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.46](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.45...v1.4.15-alpha.46) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.45](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.44...v1.4.15-alpha.45) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.43](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.42...v1.4.15-alpha.43) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.42](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.41...v1.4.15-alpha.42) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.37](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.36...v1.4.15-alpha.37) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
+## [1.4.15-alpha.36](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.35...v1.4.15-alpha.36) (2022-05-25)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
 ## [1.4.15-alpha.15](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.14...v1.4.15-alpha.15) (2022-05-21)
 
 **Note:** Version bump only for package @hive-command/opcua-server

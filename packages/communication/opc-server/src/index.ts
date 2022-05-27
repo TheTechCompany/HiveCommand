@@ -201,6 +201,13 @@ export default class Server {
     async addDevice(
             device: {name: string, type: string}, 
             definition?: {
+                setpoints?: {
+                    [key: string]: {
+                        type: DataType,
+                        get: (() => any),
+                        set: (value: Variant) => void
+                    }
+                },
                 state: {
                     [key: string]: {
                         type: DataType, 
@@ -288,7 +295,51 @@ export default class Server {
                     browseName: device.name,
                     organizedBy: organizedFolder
                 })
-                
+
+                if(Object.keys(definition?.setpoints || {}).length > 0){
+                    const setpointFolder = this.namespace?.addObject({
+                        browseName: `Setpoints`,
+                        componentOf: obj,
+                        modellingRule: "Mandatory"
+                    })
+
+                    // console.log({setpoints: JSON.stringify(definition?.setpoints)})
+                            
+                    for(var k in definition?.setpoints){
+
+                        console.log(definition?.setpoints?.[k]?.get())
+                        const setpoint = this.namespace?.addAnalogDataItem({
+                            browseName: k,
+                            componentOf: setpointFolder,
+                            dataType: definition?.setpoints[k].type,
+                            minimumSamplingInterval: 500,
+                            engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
+                            engineeringUnitsRange: {low: -100, high: 100},
+                            
+                        })
+                        
+                        const getter = definition?.setpoints[k]?.get;
+                        const setter = definition?.setpoints[k]?.set;
+
+
+                        setpoint?.bindVariable({
+                            get: () => {
+                                const result = getter?.();
+                                console.log("Get result", result, getter);
+                                return result || new Variant({dataType: DataType.Double, value: 0});
+                            },
+                            set: (value: Variant) => {
+                                try{
+                                    setter?.(value)
+                                }catch(e){
+                                    return StatusCodes.Bad;
+                                }
+                                return StatusCodes.Good;
+                            }
+                        })
+                    }
+                }
+        
            
 
                 for(var k in definition?.actions){

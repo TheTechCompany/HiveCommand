@@ -7,6 +7,7 @@ export interface EdgeCondition {
 
 export interface EdgeConditionAssertion {
 	setpoint: {
+		id: string;
 		value: string;
 	}
 	variable: {
