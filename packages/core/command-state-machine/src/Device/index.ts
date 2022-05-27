@@ -94,8 +94,8 @@ export class StateDevice {
 		return this.controlled;
 	}
 
-	get hasDataInterlock(){
-		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0;
+	hasDataInterlock(key?: string){
+		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0 && (key && this.device.dataInterlocks.filter(a => a.deviceKey == key).length > 0);
 	}
 
 	get hasInterlock(){

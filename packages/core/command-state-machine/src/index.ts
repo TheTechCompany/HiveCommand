@@ -230,7 +230,7 @@ export class CommandStateMachine extends EventEmitter {
 		const device = this.devices?.find((a) => a.name == key);
 		console.log("Check data interlocks", {device}, key, subKey, this.devices);
 
-		if(device?.hasDataInterlock){
+		if(device?.hasDataInterlock(subKey)){
 			return device.checkDataInterlocks(this.state, subKey);
 		}else{
 			return false;
