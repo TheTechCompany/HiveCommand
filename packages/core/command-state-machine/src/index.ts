@@ -249,6 +249,7 @@ export class CommandStateMachine extends EventEmitter {
 		// console.log({interlocks})
 		await Promise.all(interlocks.map(async (device) => {	
 			// console.log("Checking")
+			if(!this.state) return;
 
 			let {locked, lock} = await device.checkInterlock(this.state)
 			// console.log("Checked", {locked, lock})
