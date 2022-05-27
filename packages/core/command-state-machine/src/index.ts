@@ -224,11 +224,11 @@ export class CommandStateMachine extends EventEmitter {
 		return (active_proc || running_proc)
 	}
 
-	async checkDataInterlocks(key: string, subKey: string){
+	checkDataInterlocks(key: string, subKey: string){
 		if(!this.state) return false;
 
 		const device = this.devices?.find((a) => a.name == key);
-		console.log("Check data interlocks", {device}, key, subKey, this.devices);
+		// console.log("Check data interlocks", {device}, key, subKey, this.devices);
 
 		if(device?.hasDataInterlock(subKey)){
 			return device.checkDataInterlocks(this.state, subKey);
