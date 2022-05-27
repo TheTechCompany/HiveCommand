@@ -94,6 +94,10 @@ export class StateDevice {
 		return this.controlled;
 	}
 
+	get hasDataInterlock(){
+		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0;
+	}
+
 	get hasInterlock(){
 		return this.device.interlock != undefined && this.device.interlock.locks.length > 0;
 	}
@@ -180,6 +184,33 @@ export class StateDevice {
 
 	get interlock () {
 		return this.device.interlock?.locks
+	}
+
+	/*
+		key: -[false breaks]->(OPC)
+
+		true return = dont send data
+		false return = send data
+	*/
+	async checkDataInterlocks(state: State){
+		let locks = this.device.dataInterlocks || [];
+
+		console.log(`Checking ${locks.length} data-locks for ${this.device.name}`);
+
+		const lockedUp = await Promise.all(locks.map((lock) => {
+			const condition = new Condition({
+				inputDevice: lock.inputDevice,
+				inputDeviceKey: lock.inputDeviceKey,
+				assertion: lock.assertion,
+				comparator: lock.comparator
+			})
+
+			const input = state?.get(lock.inputDevice)?.[lock.inputDeviceKey];
+
+			return condition.check(input);
+		}))
+
+		return lockedUp.includes(false);
 	}
 
 	async checkInterlock(state: any){

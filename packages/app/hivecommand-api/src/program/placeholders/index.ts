@@ -328,6 +328,276 @@ export const useCreatePlaceholderSetpoint = (programId: string, deviceId: string
 	}
 }
 
+
+export const useCreatePlaceholderDataInterlock = (programId: string, deviceId: string) => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {
+		type: string,
+		inputDevice: string,
+		inputDeviceKey: string,
+		comparator: string,
+		assertion: CommandAssertionInput,
+		deviceKey: string
+	}) => {
+
+		// let assertionValue = {};
+		// if(args.type == "setpoint"){
+		// 	assertionValue = {
+		// 		setpoint: {connect: {where: {node: {id: args.assertion}}}}
+		// 	}
+		// }else if(args.type == "value"){
+		// 	assertionValue = {
+		// 		value: args.assertion
+		// 	}
+		// }
+
+		const item = mutation.createCommandProgramDataDeviceInterlock({
+			program: programId,
+			device: deviceId,
+			input: {
+				inputDevice: args.inputDevice,
+				inputDeviceKey: args.inputDeviceKey,
+				comparator: args.comparator,
+				assertion: args.assertion,
+				deviceKey: args.deviceKey
+			}	
+			// where: {id: programId},
+			// update: {
+			// 	devices: [{
+			// 		where: {node: {id: deviceId}},
+			// 		update: {
+			// 			node: {
+			// 				interlocks: [{
+			// 					create: [{
+			// 						node: {
+			// 							inputDevice: {connect: {where: {node: {id: args.inputDevice}}}},
+			// 							inputDeviceKey: {connect: {where: {node: {id: args.inputDeviceKey}}}},
+			// 							comparator: args.comparator,
+			// 							assertion: {create: {node: {type: args.type, ...assertionValue}}},
+			// 							action: {connect: {where: {node: {id: args.action}}}},
+			// 							state: {
+			// 								create: args.state?.map(state => {
+			// 									return {
+			// 										node : {
+			// 											device: {connect: {where: {node: {id: state.device}}}},
+			// 											deviceKey: {connect: {where: {node: {id: state.deviceKey}}}},
+			// 											comparator: state.comparator,
+			// 											assertion: {create: {node: {type: 'value', value: state.assertion}}}
+			// 										}
+			// 									}
+			// 								})
+			// 							}
+			// 						}
+			// 					}]
+			// 				}]
+			// 			}
+			// 		}
+			// 	}]
+			// }
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return async (
+		inputDeviceId: string,
+		inputDeviceKeyId: string,
+		type: string,
+		comparator: string,
+		assertion: CommandAssertionInput,
+		deviceKey: string,
+	) => {
+	
+		return await mutateFn({
+			args: {
+				inputDevice: inputDeviceId,
+				inputDeviceKey: inputDeviceKeyId,
+				type,
+				comparator,
+				assertion,
+				deviceKey,
+			}
+		})
+	}
+}
+
+export const useUpdatePlaceholderDataInterlock = (programId: string, deviceId: string) => {
+	
+	const [ mutateFn ] = useMutation((mutation, args: {
+		interlockId: string,
+		inputDevice: string,
+		inputDeviceKey: string,
+		type: string,
+		comparator: string,
+		assertion: CommandAssertionInput,
+		deviceKey: string
+	}) => {
+
+		let assertionValue = {};
+		let notAssertion = {
+			delete: {
+				// where: {node_NOT: {
+				// 	OR: [
+				// 		{setpoint: {id: args.assertion}},
+				// 		{value: args.assertion}
+				// 	]
+				// }}
+			}
+		};
+		if(args.type == "setpoint"){
+			assertionValue = {
+				setpoint: {
+					connect: {where: {node: {id: args.assertion}}},
+					// disconnect: {where: {node: {id_NOT: args.assertion}}}
+				}
+			}
+		
+		}else if(args.type == "value"){
+			assertionValue = {
+				value: args.assertion
+			}
+
+		}
+
+		const item = mutation.updateCommandProgramDataDeviceInterlock({
+			program: programId,
+			device: deviceId,
+			id: args.interlockId,
+			input: {
+				inputDevice: args.inputDevice,
+				inputDeviceKey: args.inputDeviceKey,
+				comparator: args.comparator,
+				assertion: args.assertion,
+				deviceKey: args.deviceKey
+			}
+			// where: {id: programId},
+			// update: {
+			// 	devices: [{
+			// 		where: {node: {id: deviceId}},
+			// 		update: {
+			// 			node: {
+			// 				interlocks: [{
+			// 					where: {node: {id: args.interlockId}},
+			// 					update: {
+			// 						node: {
+			// 							inputDevice: {
+			// 								connect: {where: {node: {id: args.inputDevice}}},
+			// 								disconnect: {where: {node: {id_NOT: args.inputDevice}}}
+			// 							},
+			// 							inputDeviceKey: {
+			// 								connect: {where: {node: {id: args.inputDeviceKey}}},
+			// 								disconnect: {where: {node: {id_NOT: args.inputDeviceKey}}}
+			// 							},
+			// 							comparator: args.comparator,
+			// 							assertion: {
+										
+			// 								...notAssertion,
+			// 								create: {node: {type: args.type, ...assertionValue}},
+			// 							},
+			// 							action: {
+			// 								connect: {where: {node: {id: args.action}}}, 
+			// 								disconnect: {where: {node: {id_NOT: args.action}}}
+			// 							},
+			// 							state: [
+			// 								{
+			// 									create: args.state?.filter((a) => !a.id).map(state => ({
+			// 										node: {
+			// 											device: {connect: {where: {node: {id: state.device}}}},
+			// 											deviceKey: {connect: {where: {node: {id: state.deviceKey}}}},
+			// 											comparator: state.comparator,
+			// 											assertion: {create: {node: {type: 'value', value: state.assertion}}}
+			// 										}
+			// 									}))
+			// 								},
+			// 								...(args.state || []).filter((a) => a.id).map(state => ({
+			// 										where: {node: {id: state.id}},
+			// 										update: {
+			// 											node: {
+			// 												device: {
+			// 													connect: {where: {node: {id: state.device}}},
+			// 													disconnect: {where: {node: {id_NOT: state.device}}}
+			// 												},
+			// 												deviceKey: {
+			// 													connect: {where: {node: {id: state.deviceKey}}},
+			// 													disconnect: {where: {node: {id_NOT: state.deviceKey}}}
+			// 												},
+			// 												comparator: state.comparator,
+			// 												assertion: {update: {node: {value: state.assertion}}}
+			// 											}
+			// 										}
+			// 								}))
+			// 							]
+			// 							// .concat()
+			// 						}
+			// 					}
+			// 				}]
+			// 			}
+			// 		}
+			// 	}]
+			// }
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return async (
+		interlockId: string,
+		inputDeviceId: string,
+		inputDeviceKeyId: string,
+		type: string,
+		comparator: string,
+		assertion: CommandAssertionInput,
+		deviceKey: string,
+	) => {
+		return await mutateFn({
+			args: {
+				interlockId,
+				inputDevice: inputDeviceId,
+				inputDeviceKey: inputDeviceKeyId,
+				type,
+				comparator,
+				assertion,
+				deviceKey
+			}
+		})
+	}
+}
+
+export const useDeletePlaceholderDataInterlock  = (programId: string, deviceId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {interlockId: string}) => {
+
+		const item = mutation.deleteCommandProgramDataDeviceInterlock({
+			program: programId,
+			device: deviceId,
+			id: args.interlockId
+			// where: {id: deviceId, program: {id: programId}},
+			// update: {
+			// 	interlocks: [{
+			// 		delete: [{where: {node: {id: args.interlockId}}}]
+			// 	}]
+			// }
+		})
+
+		return {
+			item: {
+				success: item
+			}
+		}
+	})
+
+	return async (id: string) => {
+		return await mutateFn({
+			args: {
+				interlockId: id
+			}
+		})
+	}
+}
+
 export const useCreatePlaceholderInterlock = (programId: string, deviceId: string) => {
 	
 	const [ mutateFn ] = useMutation((mutation, args: {

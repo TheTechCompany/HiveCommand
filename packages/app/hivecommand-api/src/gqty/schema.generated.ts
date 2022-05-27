@@ -146,6 +146,14 @@ export interface CommandPeripheralProductInput {
   vendorId?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandProgramDataDeviceInterlockInput {
+  assertion?: InputMaybe<CommandAssertionInput>;
+  comparator?: InputMaybe<Scalars["String"]>;
+  deviceKey?: InputMaybe<Scalars["String"]>;
+  inputDevice?: InputMaybe<Scalars["String"]>;
+  inputDeviceKey?: InputMaybe<Scalars["String"]>;
+}
+
 export interface CommandProgramDeviceCalibrationInput {
   max?: InputMaybe<Scalars["String"]>;
   min?: InputMaybe<Scalars["String"]>;
@@ -302,6 +310,16 @@ export const generatedSchema = {
     value: { __type: "String" },
     variable: { __type: "String" },
   },
+  CommandDataInterlock: {
+    __typename: { __type: "String!" },
+    assertion: { __type: "CommandAssertion" },
+    comparator: { __type: "String" },
+    device: { __type: "CommandProgramDevicePlaceholder" },
+    deviceKey: { __type: "CommandProgramDeviceState" },
+    id: { __type: "ID!" },
+    inputDevice: { __type: "CommandProgramDevicePlaceholder" },
+    inputDeviceKey: { __type: "CommandProgramDeviceState" },
+  },
   CommandDevice: {
     __typename: { __type: "String!" },
     activeProgram: { __type: "CommandProgram" },
@@ -317,6 +335,7 @@ export const generatedSchema = {
     organisation: { __type: "HiveOrganisation" },
     peripherals: { __type: "[CommandDevicePeripheral]" },
     reports: { __type: "[CommandDeviceReport]" },
+    setpoints: { __type: "[CommandDeviceSetpointCalibration]" },
     waitingForActions: { __type: "[CommandProgramAction]" },
   },
   CommandDeviceInput: {
@@ -424,10 +443,17 @@ export const generatedSchema = {
   },
   CommandDeviceSetpoint: {
     __typename: { __type: "String!" },
+    device: { __type: "CommandProgramDevice" },
     id: { __type: "ID!" },
     key: { __type: "CommandProgramDeviceState" },
     name: { __type: "String" },
     type: { __type: "String" },
+    value: { __type: "String" },
+  },
+  CommandDeviceSetpointCalibration: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID" },
+    setpoint: { __type: "CommandDeviceSetpoint" },
     value: { __type: "String" },
   },
   CommandDeviceSnapshot: {
@@ -625,6 +651,13 @@ export const generatedSchema = {
     name: { __type: "String" },
     trigger: { __type: "String" },
   },
+  CommandProgramDataDeviceInterlockInput: {
+    assertion: { __type: "CommandAssertionInput" },
+    comparator: { __type: "String" },
+    deviceKey: { __type: "String" },
+    inputDevice: { __type: "String" },
+    inputDeviceKey: { __type: "String" },
+  },
   CommandProgramDevice: {
     __typename: { __type: "String!" },
     actions: { __type: "[CommandProgramDeviceAction]" },
@@ -676,6 +709,7 @@ export const generatedSchema = {
   },
   CommandProgramDevicePlaceholder: {
     __typename: { __type: "String!" },
+    dataInterlocks: { __type: "[CommandDataInterlock]" },
     id: { __type: "ID!" },
     interlocks: { __type: "[CommandInterlock]" },
     name: { __type: "String" },
@@ -912,6 +946,14 @@ export const generatedSchema = {
       __type: "CommandProgram!",
       __args: { input: "CommandProgramInput!" },
     },
+    createCommandProgramDataDeviceInterlock: {
+      __type: "CommandDataInterlock!",
+      __args: {
+        device: "ID!",
+        input: "CommandProgramDataDeviceInterlockInput!",
+        program: "ID!",
+      },
+    },
     createCommandProgramDevice: {
       __type: "CommandProgramDevicePlaceholder!",
       __args: { input: "CommandProgramDeviceInput!", program: "ID!" },
@@ -1011,6 +1053,10 @@ export const generatedSchema = {
       __args: { id: "ID" },
     },
     deleteCommandProgram: { __type: "Boolean!", __args: { id: "ID!" } },
+    deleteCommandProgramDataDeviceInterlock: {
+      __type: "Boolean!",
+      __args: { device: "ID!", id: "ID!", program: "ID!" },
+    },
     deleteCommandProgramDevice: {
       __type: "Boolean!",
       __args: { id: "ID!", program: "ID!" },
@@ -1102,6 +1148,15 @@ export const generatedSchema = {
     updateCommandProgram: {
       __type: "CommandProgram!",
       __args: { id: "ID!", input: "CommandProgramInput!" },
+    },
+    updateCommandProgramDataDeviceInterlock: {
+      __type: "CommandDataInterlock!",
+      __args: {
+        device: "ID!",
+        id: "ID!",
+        input: "CommandProgramDataDeviceInterlockInput!",
+        program: "ID!",
+      },
     },
     updateCommandProgramDevice: {
       __type: "CommandProgramDevicePlaceholder!",
@@ -1278,6 +1333,17 @@ export interface CommandAssertion {
   variable?: Maybe<CommandProgramVariable>;
 }
 
+export interface CommandDataInterlock {
+  __typename?: "CommandDataInterlock";
+  assertion?: Maybe<CommandAssertion>;
+  comparator?: Maybe<ScalarsEnums["String"]>;
+  device?: Maybe<CommandProgramDevicePlaceholder>;
+  deviceKey?: Maybe<CommandProgramDeviceState>;
+  id: ScalarsEnums["ID"];
+  inputDevice?: Maybe<CommandProgramDevicePlaceholder>;
+  inputDeviceKey?: Maybe<CommandProgramDeviceState>;
+}
+
 export interface CommandDevice {
   __typename?: "CommandDevice";
   activeProgram?: Maybe<CommandProgram>;
@@ -1293,6 +1359,7 @@ export interface CommandDevice {
   organisation?: Maybe<HiveOrganisation>;
   peripherals?: Maybe<Array<Maybe<CommandDevicePeripheral>>>;
   reports?: Maybe<Array<Maybe<CommandDeviceReport>>>;
+  setpoints?: Maybe<Array<Maybe<CommandDeviceSetpointCalibration>>>;
   waitingForActions?: Maybe<Array<Maybe<CommandProgramAction>>>;
 }
 
@@ -1369,10 +1436,18 @@ export interface CommandDeviceReport {
 
 export interface CommandDeviceSetpoint {
   __typename?: "CommandDeviceSetpoint";
+  device?: Maybe<CommandProgramDevice>;
   id: ScalarsEnums["ID"];
   key?: Maybe<CommandProgramDeviceState>;
   name?: Maybe<ScalarsEnums["String"]>;
   type?: Maybe<ScalarsEnums["String"]>;
+  value?: Maybe<ScalarsEnums["String"]>;
+}
+
+export interface CommandDeviceSetpointCalibration {
+  __typename?: "CommandDeviceSetpointCalibration";
+  id?: Maybe<ScalarsEnums["ID"]>;
+  setpoint?: Maybe<CommandDeviceSetpoint>;
   value?: Maybe<ScalarsEnums["String"]>;
 }
 
@@ -1596,6 +1671,7 @@ export interface CommandProgramDeviceConfiguration {
 
 export interface CommandProgramDevicePlaceholder {
   __typename?: "CommandProgramDevicePlaceholder";
+  dataInterlocks?: Maybe<Array<Maybe<CommandDataInterlock>>>;
   id: ScalarsEnums["ID"];
   interlocks?: Maybe<Array<Maybe<CommandInterlock>>>;
   name?: Maybe<ScalarsEnums["String"]>;
@@ -1794,6 +1870,11 @@ export interface Mutation {
   createCommandProgram: (args: {
     input: CommandProgramInput;
   }) => CommandProgram;
+  createCommandProgramDataDeviceInterlock: (args: {
+    device: Scalars["ID"];
+    input: CommandProgramDataDeviceInterlockInput;
+    program: Scalars["ID"];
+  }) => CommandDataInterlock;
   createCommandProgramDevice: (args: {
     input: CommandProgramDeviceInput;
     program: Scalars["ID"];
@@ -1866,6 +1947,11 @@ export interface Mutation {
   }) => Maybe<CommandDeviceReport>;
   deleteCommandProgram: (args: {
     id: Scalars["ID"];
+  }) => ScalarsEnums["Boolean"];
+  deleteCommandProgramDataDeviceInterlock: (args: {
+    device: Scalars["ID"];
+    id: Scalars["ID"];
+    program: Scalars["ID"];
   }) => ScalarsEnums["Boolean"];
   deleteCommandProgramDevice: (args: {
     id: Scalars["ID"];
@@ -1968,6 +2054,12 @@ export interface Mutation {
     id: Scalars["ID"];
     input: CommandProgramInput;
   }) => CommandProgram;
+  updateCommandProgramDataDeviceInterlock: (args: {
+    device: Scalars["ID"];
+    id: Scalars["ID"];
+    input: CommandProgramDataDeviceInterlockInput;
+    program: Scalars["ID"];
+  }) => CommandDataInterlock;
   updateCommandProgramDevice: (args: {
     id: Scalars["ID"];
     input: CommandProgramDeviceInput;
@@ -2088,6 +2180,7 @@ export interface Subscription {
 export interface SchemaObjectTypes {
   CommandActionItem: CommandActionItem;
   CommandAssertion: CommandAssertion;
+  CommandDataInterlock: CommandDataInterlock;
   CommandDevice: CommandDevice;
   CommandDevicePeripheral: CommandDevicePeripheral;
   CommandDevicePeripheralMap: CommandDevicePeripheralMap;
@@ -2097,6 +2190,7 @@ export interface SchemaObjectTypes {
   CommandDevicePluginConfiguration: CommandDevicePluginConfiguration;
   CommandDeviceReport: CommandDeviceReport;
   CommandDeviceSetpoint: CommandDeviceSetpoint;
+  CommandDeviceSetpointCalibration: CommandDeviceSetpointCalibration;
   CommandDeviceSnapshot: CommandDeviceSnapshot;
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
   CommandDeviceTimeseriesTotal: CommandDeviceTimeseriesTotal;
@@ -2144,6 +2238,7 @@ export interface SchemaObjectTypes {
 export type SchemaObjectTypesNames =
   | "CommandActionItem"
   | "CommandAssertion"
+  | "CommandDataInterlock"
   | "CommandDevice"
   | "CommandDevicePeripheral"
   | "CommandDevicePeripheralMap"
@@ -2153,6 +2248,7 @@ export type SchemaObjectTypesNames =
   | "CommandDevicePluginConfiguration"
   | "CommandDeviceReport"
   | "CommandDeviceSetpoint"
+  | "CommandDeviceSetpointCalibration"
   | "CommandDeviceSnapshot"
   | "CommandDeviceTimeseriesData"
   | "CommandDeviceTimeseriesTotal"

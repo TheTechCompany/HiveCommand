@@ -274,6 +274,34 @@ export const DeviceSingle: React.FC<DeviceSingleProps> = (props) => {
 						}
 						value
 					}
+					dataInterlocks {
+						id
+						inputDevice {
+							id 
+							name
+						}
+						inputDeviceKey { 
+							id
+							key
+						}
+						comparator
+						assertion {
+							type
+							value
+							setpoint {
+								id
+								name
+							}
+							variable {
+								id
+								name
+							}
+						}
+						deviceKey {
+							id 
+							key
+						}
+					}
 					interlocks {
 						id
 	
