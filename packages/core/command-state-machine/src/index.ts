@@ -238,34 +238,26 @@ export class CommandStateMachine extends EventEmitter {
 	}
 
 	async checkInterlocks(){
-		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))
 
 		let deviceInterlocks = (this.devices || []).filter((a) => a.hasInterlock == true)
-		// console.log({deviceInterlocks})
+
 		let interlocks = deviceInterlocks?.filter((device) => {
 			return device.checkInterlockNeeded(this.state?.get(device.name))
 		}) || []
 		
-		// console.log({interlocks})
 		await Promise.all(interlocks.map(async (device) => {	
-			// console.log("Checking")
 			if(!this.state) return;
 
 			let {locked, lock} = await device.checkInterlock(this.state)
-			// console.log("Checked", {locked, lock})
 			if(locked){
-				// console.log("Reacting to lock");
 				log.info(`Interlock ${lock.inputDevice} ${device.name} locked running ${lock.action}`)
 				await device.doFallback(lock)
 			}
-			// console.log("DEVICE", device.name, "LOCKED", locked)
 		}))
 	}
 
 	async performOperation(deviceName: string, release?: boolean, operation?: string){
 		let device =  this.devices?.find((a) => a.name == deviceName)
-
-		// console.log({device})
 
 		return await new Promise(async (resolve) => {
 			if(device?.requiresMutex){
