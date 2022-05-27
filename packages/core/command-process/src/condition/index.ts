@@ -25,7 +25,6 @@ export class Condition {
         if(this.condition.assertion.setpoint){
             if(!this.valueBank?.getSetpoint) throw new Error("No setpoint getter specified in Condition setup");
             const value = this.valueBank.getSetpoint(this.condition.assertion?.setpoint.id)
-            console.log(`Check setpoint ${JSON.stringify(this.condition.assertion.setpoint)} ${value}`)
             return value;
         }else if(this.condition.assertion.variable){
             if(!this.valueBank?.getVariable) throw new Error("No variable getter specified in Condition setup");
@@ -61,6 +60,7 @@ export class Condition {
             value = `${value}`
         }
 
+        console.log({input, value, cmp: this.condition.comparator})
         // console.log("Checked", this.condition.comparator, "input", input, "value", value)
         
         // console.log("Type", typeof(input), typeof(value))
