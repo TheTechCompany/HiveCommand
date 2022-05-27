@@ -225,7 +225,7 @@ export class StateDevice {
 				comparator: lock.comparator
 			}, this.conditionValueBank)
 
-			const input = state?.get(lock.inputDevice)?.[lock.inputDeviceKey];
+			const input = state?.getByKey(lock.inputDevice)?.[lock.inputDeviceKey];
 
 			return condition.check(input)
 			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
