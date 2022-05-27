@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/state-machine",
-  "version": "1.4.15-alpha.55",
+  "version": "1.4.15-alpha.56",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -23,7 +23,7 @@
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b",
   "dependencies": {
     "@hive-command/data-types": "^1.4.15-alpha.52",
-    "@hive-command/process": "^1.4.15-alpha.53",
+    "@hive-command/process": "^1.4.15-alpha.56",
     "dot": "^1.1.3",
     "locks": "^0.2.2",
     "node-pid-controller": "^1.0.1"
