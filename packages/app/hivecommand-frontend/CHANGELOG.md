@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.52](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.51...v1.4.15-alpha.52) (2022-05-27)
+
+**Note:** Version bump only for package @hive-command/frontend
+
+
+
+
+
 ## [1.4.15-alpha.51](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.50...v1.4.15-alpha.51) (2022-05-26)
 
 **Note:** Version bump only for package @hive-command/frontend
