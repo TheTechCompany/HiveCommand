@@ -29,8 +29,8 @@ export class State extends EventEmitter {
 
 	public getByKey(key: string, subKey: string): any {
 		const dataInterlocks = this.machine.checkDataInterlocks(key, subKey);
-		console.log({key, subKey, dataInterlocks});
-		
+		// console.log({key, subKey, dataInterlocks});
+
 		if(!this.machine.checkDataInterlocks(key, subKey)){
 			return this.get(key)?.[subKey] || 0;
 		}else{

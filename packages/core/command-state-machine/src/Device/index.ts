@@ -192,12 +192,12 @@ export class StateDevice {
 		true return = dont send data
 		false return = send data
 	*/
-	async checkDataInterlocks(state: State, key: string){
+	checkDataInterlocks(state: State, key: string){
 		let locks = this.device.dataInterlocks?.filter((a) => a.deviceKey == key) || [];
 
-		console.log(`Checking ${locks.length} data-locks for ${this.device.name} ${key}`);
+		// console.log(`Checking ${locks.length} data-locks for ${this.device.name} ${key}`);
 
-		const lockedUp = await Promise.all(locks.map((lock) => {
+		const lockedUp = locks.map((lock) => {
 			const condition = new Condition({
 				inputDevice: lock.inputDevice,
 				inputDeviceKey: lock.inputDeviceKey,
@@ -208,7 +208,7 @@ export class StateDevice {
 			const input = state?.getByKey(lock.inputDevice, lock.inputDeviceKey);
 
 			return condition.check(input);
-		}))
+		})
 
 		return lockedUp.includes(false);
 	}
