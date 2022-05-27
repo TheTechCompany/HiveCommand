@@ -224,13 +224,13 @@ export class CommandStateMachine extends EventEmitter {
 		return (active_proc || running_proc)
 	}
 
-	async checkDataInterlocks(key: string){
+	async checkDataInterlocks(key: string, subKey: string){
 		if(!this.state) return;
 
 		const device = this.devices?.find((a) => a.name == key);
 
 		if(device?.hasDataInterlock){
-			return device.checkDataInterlocks(this.state)
+			return device.checkDataInterlocks(this.state, subKey);
 		}else{
 			return false;
 		}

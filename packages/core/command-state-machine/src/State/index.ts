@@ -24,15 +24,15 @@ export class State extends EventEmitter {
 	}
 
 	public get(key: string): any {
-		if(!this.machine.checkDataInterlocks(key)){
-			return this.internalState?.[key]
-		}else{
-			return {};
-		}
+		return this.internalState?.[key]
 	}	
 
 	public getByKey(key: string, subKey: string): any {
-		return this.get(key)?.[subKey] || 0;
+		if(!this.machine.checkDataInterlocks(key, subKey)){
+			return this.get(key)?.[subKey] || 0;
+		}else{
+			return 0;
+		}
 	}	
 
 	public update(key: string, value: any): void {
