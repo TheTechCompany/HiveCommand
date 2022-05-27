@@ -399,6 +399,14 @@ export class Data {
 									key
 								}
 							}
+
+							dataInterlocks {
+								${assertionSelector}
+								deviceKey {
+									id
+									key
+								}
+							}
 							setpoints {
 								id
 								name
@@ -488,7 +496,8 @@ export class Data {
 					}
 				}),
 				plugins: active_device?.plugins || [],
-				interlocks: active_device?.interlocks || []
+				interlocks: active_device?.interlocks || [],
+				dataInterlocks: active_device?.dataInterlocks || []
 			}
 		});
 		

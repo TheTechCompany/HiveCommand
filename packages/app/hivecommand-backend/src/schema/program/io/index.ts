@@ -18,6 +18,10 @@ export default (prisma: PrismaClient) => {
             createCommandProgramDeviceInterlock(program: ID!, device: ID!, input: CommandProgramDeviceInterlockInput!): CommandInterlock!
             updateCommandProgramDeviceInterlock(program: ID!, device: ID!, id: ID!, input: CommandProgramDeviceInterlockInput!): CommandInterlock!
             deleteCommandProgramDeviceInterlock(program: ID!, device: ID!, id: ID!): Boolean!
+            
+            createCommandProgramDataDeviceInterlock(program: ID!, device: ID!, input: CommandProgramDataDeviceInterlockInput!): CommandDataInterlock!
+            updateCommandProgramDataDeviceInterlock(program: ID!, device: ID!, id: ID!, input: CommandProgramDataDeviceInterlockInput!): CommandDataInterlock!
+            deleteCommandProgramDataDeviceInterlock(program: ID!, device: ID!, id: ID!): Boolean!
 
             createCommandProgramDeviceSetpoint(program: ID!, device: ID!, input: CommandProgramDeviceSetpointInput!): CommandDeviceSetpoint!
             updateCommandProgramDeviceSetpoint(program: ID!, device: ID!, id: ID!, input: CommandProgramDeviceSetpointInput!): CommandDeviceSetpoint!
@@ -43,7 +47,9 @@ export default (prisma: PrismaClient) => {
 
             requiresMutex: Boolean
 
+            dataInterlocks: [CommandDataInterlock]
             interlocks: [CommandInterlock] 
+
             setpoints: [CommandDeviceSetpoint] 
             plugins: [CommandDevicePlugin] 
 
@@ -75,6 +81,30 @@ export default (prisma: PrismaClient) => {
 
             device: CommandProgramDevicePlaceholder 
         }
+
+        input CommandProgramDataDeviceInterlockInput {
+            inputDevice: String
+            inputDeviceKey: String
+            comparator: String
+            
+            assertion: CommandAssertionInput
+
+            deviceKey: String
+        }
+
+        type CommandDataInterlock {
+            id: ID! 
+
+            inputDevice: CommandProgramDevicePlaceholder 
+            inputDeviceKey: CommandProgramDeviceState
+            comparator: String
+
+            assertion: CommandAssertion 
+            
+            device: CommandProgramDevicePlaceholder 
+            deviceKey: CommandProgramDeviceState
+        }
+
 
         input CommandAssertionInput {
             type: String
@@ -277,6 +307,128 @@ export default (prisma: PrismaClient) => {
             deleteCommandProgramDevice: async (root: any, args: any) => {
                 const res = await prisma.programFlowIO.delete({where: {id: args.id}})
                 return res != null;
+            },
+            createCommandProgramDataDeviceInterlock: async (root: any, args: any) => {
+                let assertionUpdate : any = {};
+                
+                let assertionType = args.input.assertion.type.toLowerCase();
+
+                if (assertionType == "setpoint") {
+                    assertionUpdate = {
+                        setpoint: {
+                            connect: {id: args.input.assertion.setpoint}
+                        }
+                    }
+                } else if (assertionType == "variable") {
+                    assertionUpdate = {
+                        variable: {
+                            connect: {id: args.input.assertion.variable}
+                        }
+                    }
+
+                } else if (assertionType == "value") {
+                    assertionUpdate = {
+                        value: args.input.assertion.value
+                    }
+                }
+                return await prisma.programDataInterlock.create({
+                    data: {
+                        id: nanoid(),
+                        inputDevice: {
+                            connect: {id: args.input.inputDevice}
+                        },
+                        inputDeviceKey: {
+                            connect: {id: args.input.inputDeviceKey}
+                        },
+                        comparator: args.input.comparator,
+                        assertion: {
+                            create: {
+                                id: nanoid(),
+                                type: args.input.assertion.type,
+                                ...assertionUpdate
+                            }
+                        },
+                        device: {
+                            connect: {
+                                id: args.device
+                            }
+                        },
+                        deviceKey: {
+                            connect: {
+                                id: args.input.deviceKey
+                            }
+                        }
+                    }
+                })
+            },
+            updateCommandProgramDataDeviceInterlock: async (root: any, args: any) => {
+                let assertionUpdate : any = {};
+                
+                let assertionType = args.input.assertion.type.toLowerCase();
+
+                if (assertionType == "setpoint") {
+                    assertionUpdate = {
+                        setpoint: {
+                            connect: {id: args.input.assertion.setpoint}
+                        },
+                        variable: {
+                            disconnect: true
+                        },
+                        value: undefined
+                    }
+                } else if (assertionType == "variable") {
+                    assertionUpdate = {
+                        variable: {
+                            connect: {id: args.input.assertion.variable}
+                        },
+                        setpoint: {
+                            disconnect: true
+                        },
+                        value: undefined
+                    }
+
+                } else if (assertionType == "value") {
+                    assertionUpdate = {
+                        value: args.input.assertion.value,
+                        variable: {
+                            disconnect: true
+                        },
+                        setpoint: {
+                            disconnect: true
+                        }
+                    }
+                }
+
+                return await prisma.programDataInterlock.update({
+                    where: {id: args.id},
+                    data: {
+                        inputDevice: {
+                            connect: {id: args.input.inputDevice}
+                        },
+                        inputDeviceKey: {
+                            connect: {id: args.input.inputDeviceKey}
+                        },
+                        comparator: args.input.comparator,
+                        assertion: {
+                            update: {
+                                type: args.input.assertion.type,
+                                ...assertionUpdate
+                            }
+                        },
+                        deviceKey: {
+                            connect: {
+                                id: args.input.deviceKey
+                            }
+                        }
+                    }
+                })
+            },
+            deleteCommandProgramDataDeviceInterlock: async (root: any, args: any) => {
+                return await prisma.programDataInterlock.delete({
+                    where: {
+                        id: args.id
+                    }
+                })
             },
             createCommandProgramDeviceInterlock: async (root: any, args: any) => {
                 let assertionUpdate : any = {};

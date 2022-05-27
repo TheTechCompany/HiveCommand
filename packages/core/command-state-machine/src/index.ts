@@ -145,7 +145,7 @@ export class CommandStateMachine extends EventEmitter {
 		log.debug(`Loading new program ${program.processes.length} processes`)
 		this.program = program;
 
-		this.state = new State(program.initialState || {});
+		this.state = new State(this, program.initialState || {});
 
 		this.variables = new VariableManager(program.variables);
 		this.setpoints = new SetpointManager(program.setpoints);
@@ -224,6 +224,17 @@ export class CommandStateMachine extends EventEmitter {
 		return (active_proc || running_proc)
 	}
 
+	async checkDataInterlocks(key: string){
+		if(!this.state) return;
+
+		const device = this.devices?.find((a) => a.name == key);
+
+		if(device?.hasDataInterlock){
+			return device.checkDataInterlocks(this.state)
+		}else{
+			return false;
+		}
+	}
 
 	async checkInterlocks(){
 		// console.log("Interlocks", this.devices?.filter((a) => a.hasInterlock).map((x) => x.interlock))

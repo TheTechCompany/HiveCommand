@@ -7,7 +7,7 @@
 */
 
 import { CommandStateMachine, CommandStateMachineMode } from "@hive-command/state-machine";
-import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessEdge, CommandProcessNode, PayloadResponse, ProgramAction, ProgramInterlock } from "@hive-command/data-types";
+import { ACTION_TYPES, AssignmentPayload, CommandPayloadItem, CommandProcess, CommandProcessEdge, CommandProcessNode, PayloadResponse, ProgramAction, ProgramDataInterlock, ProgramInterlock } from "@hive-command/data-types";
 import { nanoid } from "nanoid";
 import { BusMap } from "./BusMap";
 import { DeviceMap } from "./DeviceMap";
@@ -213,7 +213,14 @@ export class Machine {
 							assertion: lock.assertion,
 							action: lock.action.key
 						})) || []
-					}
+					},
+					dataInterlocks: x.dataInterlocks?.map((lock) : ProgramDataInterlock => ({
+						inputDevice: lock.inputDevice.name,
+						inputDeviceKey: lock.inputDeviceKey.key,
+						comparator: lock.comparator,
+						assertion: lock.assertion,
+						deviceKey: lock.deviceKey.key
+					})) || []
 				}
 			}),
 			processes: flows || []
@@ -323,7 +330,7 @@ export class Machine {
 	get status(){
 		return this.fsm.status;
 	}
-	
+
 	get state(){
 		return this.fsm.state
 	}

@@ -5,6 +5,10 @@ export interface ProgramInterlock extends EdgeCondition {
 	action: string
 }
 
+export interface ProgramDataInterlock extends EdgeCondition {
+	deviceKey: string;
+}
+
 export interface ProgramDevice {
 	name: string;
 	requiresMutex?: boolean;
@@ -16,6 +20,7 @@ export interface ProgramDevice {
 		// fallback: {operation: string, release?: boolean }[]
 		// fallforward: {operation: string }[]
 	}
+	dataInterlocks?: ProgramDataInterlock[]
 	plugins?: {
 		classString: string,
 		imports?: {key: string, module: string}[],

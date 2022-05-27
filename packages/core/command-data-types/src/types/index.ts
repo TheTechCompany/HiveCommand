@@ -97,6 +97,13 @@ export interface AssignmentPayload {
 			value: string
 		}[]
 	}[]
+	dataInterlocks?: {
+		inputDevice: {name: string},
+		inputDeviceKey: {key: string},
+		comparator: string,
+		assertion: EdgeConditionAssertion,
+		deviceKey: {id: string, key: string}
+	}[]
 	interlocks?: {
 		inputDevice: {name: string},
 		inputDeviceKey: {key: string},
