@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.59](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.58...v1.4.15-alpha.59) (2022-05-27)
+
+**Note:** Version bump only for package @hive-command/process
+
+
+
+
+
+## [1.4.15-alpha.58](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.57...v1.4.15-alpha.58) (2022-05-27)
+
+**Note:** Version bump only for package @hive-command/process
+
+
+
+
+
+## [1.4.15-alpha.57](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.56...v1.4.15-alpha.57) (2022-05-27)
+
+**Note:** Version bump only for package @hive-command/process
+
+
+
+
+
+## [1.4.15-alpha.56](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.55...v1.4.15-alpha.56) (2022-05-27)
+
+**Note:** Version bump only for package @hive-command/process
+
+
+
+
+
 ## [1.4.15-alpha.53](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.52...v1.4.15-alpha.53) (2022-05-27)
 
 **Note:** Version bump only for package @hive-command/process

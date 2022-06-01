@@ -94,8 +94,8 @@ export class StateDevice {
 		return this.controlled;
 	}
 
-	get hasDataInterlock(){
-		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0;
+	hasDataInterlock(key?: string){
+		return this.device.dataInterlocks != undefined && this.device.dataInterlocks.length > 0 && (key && this.device.dataInterlocks.filter(a => a.deviceKey == key).length > 0);
 	}
 
 	get hasInterlock(){
@@ -192,12 +192,12 @@ export class StateDevice {
 		true return = dont send data
 		false return = send data
 	*/
-	async checkDataInterlocks(state: State, key: string){
+	checkDataInterlocks(state: State, key: string){
 		let locks = this.device.dataInterlocks?.filter((a) => a.deviceKey == key) || [];
 
-		console.log(`Checking ${locks.length} data-locks for ${this.device.name} ${key}`);
+		// console.log(`Checking ${locks.length} data-locks for ${this.device.name} ${key}`);
 
-		const lockedUp = await Promise.all(locks.map((lock) => {
+		const lockedUp = locks.map((lock) => {
 			const condition = new Condition({
 				inputDevice: lock.inputDevice,
 				inputDeviceKey: lock.inputDeviceKey,
@@ -208,12 +208,12 @@ export class StateDevice {
 			const input = state?.getByKey(lock.inputDevice, lock.inputDeviceKey);
 
 			return condition.check(input);
-		}))
+		})
 
 		return lockedUp.includes(false);
 	}
 
-	async checkInterlock(state: any){
+	async checkInterlock(state: State){
 		let locks = this.device.interlock?.locks || [];
 			
 		const lockedUp = await Promise.all(locks.map((lock) => {
@@ -225,7 +225,7 @@ export class StateDevice {
 				comparator: lock.comparator
 			}, this.conditionValueBank)
 
-			const input = state?.getByKey(lock.inputDevice)?.[lock.inputDeviceKey];
+			const input = state?.getByKey(lock.inputDevice, lock.inputDeviceKey);
 
 			return condition.check(input)
 			// return this.checkCondition(state, lock.device, lock.deviceKey, lock.comparator, lock.value)
