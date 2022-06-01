@@ -36,5 +36,5 @@ RUN mkdir -p /root/.config/
 
 # COPY --from=build /app/_node_modules/ ./node_modules/
 
-CMD [ "sh", "./run.sh" ]
+CMD [ "bash", "./run.sh" ]
 # CMD ["openvpn", "/etc/openvpn/openvpn.conf", ">", "/tmp/openvpn.log", "&", "yarn", "start:prod", "--fqdn", "discovery.hexhive.io"]
