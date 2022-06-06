@@ -113,15 +113,12 @@ export class DiscoveryService {
             await serverCertificateManager.createSelfSignedCertificate({
                 applicationUri: this.applicationUri,
                 dns: [this.fqdn],
-                // ip: await getIpAddresses(),
                 outputFile: certificateFile,
                 subject: `/CN=${this.fqdn}/DC=${this.applicationName}/O=Ultraviolet`, //"/CN=HiveCommand/DC=Discovery-Server",
                 startDate: new Date(),
                 validity: 365 * 10
             })
         }
-
-        // assert(fs.existsSync(certificateFile));
 
 		this.discoveryServer = new OPCUADiscoveryServer({
             // register
