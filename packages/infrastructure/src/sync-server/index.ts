@@ -1,5 +1,6 @@
 import { Provider } from '@pulumi/kubernetes'
 import { Config, Output } from '@pulumi/pulumi'
+import { StorageClaim } from './claim';
 import { Deployment } from './deployment'
 import * as k8s from '@pulumi/kubernetes'
 
@@ -11,7 +12,8 @@ export default async (provider: Provider, dbUrl: Output<any>, dbPass: Output<any
 
     const appName = `hive-command-sync-${suffix}`
 
-    const deployment = await Deployment(provider, appName, dbUrl, dbPass, rabbitHost, namespace)
+    const storageClaim = StorageClaim(provider, namespace)
+    const deployment = Deployment(provider, appName, dbUrl, dbPass, rabbitHost, storageClaim, namespace)
 
     return {
         deployment

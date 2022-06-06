@@ -24,13 +24,13 @@ RUN mkdir -p /root/.config/
 
 # RUN apt-get update; apt-get install openssl openvpn -y
 
-# # RUN apk update; apk add openssl openvpn
+# RUN apk update; apk add openssl openvpn
 
 # COPY ./packages/network/hive-command-discovery-server/run.sh .
 
 # COPY --from=build /app/packages/network/hive-command-discovery-server/run.sh .
 
-# COPY --from=build /app/packages/network/hive-command-discovery-server/dist .
+# COPY --from=build /app/packages/network/hive-command-discovery-server/dist/* .
 
 # COPY --from=build /app/packages/network/hive-command-discovery-server/package.json ./package.json
 
