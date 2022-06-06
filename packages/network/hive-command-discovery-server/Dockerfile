@@ -12,7 +12,7 @@ RUN npx lerna bootstrap --scope @hive-command/discovery-server --include-depende
 
 RUN npx lerna run build --scope @hive-command/discovery-server --include-dependencies
 
-WORKDIR /app/packages/network/hive-command-discovery-server
+# WORKDIR /app/packages/network/hive-command-discovery-server
 
 
 RUN mkdir -p /root/.config/
