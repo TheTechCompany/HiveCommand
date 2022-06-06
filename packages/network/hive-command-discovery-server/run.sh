@@ -11,4 +11,4 @@ fi
 
 openvpn --config /etc/openvpn/openvpn.conf > /tmp/openvpn.log &
 
-yarn start:prod --fqdn $SYNC_HOST
+yarn start --fqdn $SYNC_HOST
