@@ -6,7 +6,6 @@ import { HiveGraph } from '@hexhive/graphql-server'
 import amqp from 'amqplib'
 import cors from 'cors';
 import express from 'express';
-import { connect_data } from '@hexhive/types';
 import schema from './schema'
 
 import { Pool, types } from 'pg';
@@ -21,8 +20,6 @@ types.setTypeParser(1114, (value) => {
 const prisma = new PrismaClient();
 
 (async () => {
-
-	await connect_data()
 
 	// const pool = new Pool({
 	// 	host: process.env.TIMESERIES_HOST || 'localhost',
