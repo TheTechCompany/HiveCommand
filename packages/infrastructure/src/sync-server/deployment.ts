@@ -67,7 +67,7 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
                             // {name: "MONGO_USER", value: process.env.COMMAND_MONGO_USER},
                             // {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
                             // {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:6432/hivecommand?connection_limit=100&pool_timeout=20&pgbouncer=true`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:6432/hivecommand?connection_limit=50&pool_timeout=20`) },
 
                         ],
                         resources: {
