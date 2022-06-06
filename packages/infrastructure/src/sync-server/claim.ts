@@ -14,7 +14,7 @@ export const StorageClaim = (provider: Provider, namespace: k8s.core.v1.Namespac
         },
         spec: {
             accessModes: ['ReadWriteOnce'],
-            storageClassName: 'ebs-sc',
+            storageClassName: 'gp2',
             resources: {
                 requests: {
                     storage: '4Gi'
