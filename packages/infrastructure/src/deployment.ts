@@ -39,7 +39,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             {name: "VERSION_SHIM", value: '1.0.10'},
                         
 
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand?connection_limit=50&pool_timeout=20`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand?connection_limit=50`) },
 
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},
