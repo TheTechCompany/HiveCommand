@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = async (provider: Provider, appName: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, claim: k8s.core.v1.PersistentVolumeClaim,  namespace: k8s.core.v1.Namespace) => {
+export const Deployment = (provider: Provider, appName: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, claim: k8s.core.v1.PersistentVolumeClaim,  namespace: k8s.core.v1.Namespace) => {
 
     const config = new Config()
     
@@ -62,11 +62,11 @@ export const Deployment = async (provider: Provider, appName: string, dbUrl: Out
                             { name: 'HOSTNAME', value: syncHostname },
 
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
-                            {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
-                            {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},
-                            {name: "MONGO_USER", value: process.env.COMMAND_MONGO_USER},
-                            {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
-                            {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
+                            // {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
+                            // {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},
+                            // {name: "MONGO_USER", value: process.env.COMMAND_MONGO_USER},
+                            // {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
+                            // {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
                             { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand`) },
 
                         ],
