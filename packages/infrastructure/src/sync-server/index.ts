@@ -12,8 +12,8 @@ export default async (provider: Provider, dbUrl: Output<any>, dbPass: Output<any
 
     const appName = `hive-command-sync-${suffix}`
 
-    const storageClaim = await StorageClaim(provider, namespace)
-    const deployment = await Deployment(provider, appName, dbUrl, dbPass, rabbitHost, storageClaim, namespace)
+    const storageClaim = StorageClaim(provider, namespace)
+    const deployment = Deployment(provider, appName, dbUrl, dbPass, rabbitHost, storageClaim, namespace)
 
     return {
         deployment
