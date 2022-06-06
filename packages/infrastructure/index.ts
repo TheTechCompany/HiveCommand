@@ -13,7 +13,9 @@ import * as k8s from '@pulumi/kubernetes'
 
 config();
 
+
 const main = (async () => {
+
     const config = new Config();
     const org = config.require('org');
 
@@ -45,10 +47,6 @@ const main = (async () => {
     })
     
 
-    
-    // const { service: rabbitMQService, url: rabbitURL } = await RabbitMQ(provider, vpcId)
-    // const { service: timeseriesService, url: timeseriesURL } = await Timeseries(provider, vpcId)
-
     const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, namespace)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL));
@@ -57,7 +55,6 @@ const main = (async () => {
     return {
         service,
         deployment,
-        // timeseriesService,
         rabbitURL,
         syncServer
     }
