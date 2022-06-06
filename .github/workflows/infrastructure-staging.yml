@@ -317,7 +317,7 @@ jobs:
 
       - run: aws eks update-kubeconfig --name hexhive-cluster-eksCluster-506b63f
    
-      - run: kubectl port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:6432 &
+      - run: kubectl port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
       
       - run: sleep 30s
 
