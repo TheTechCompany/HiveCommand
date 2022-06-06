@@ -60,9 +60,7 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
                             { name: 'SYNC_HOST', value: syncHostname },
                             { name: 'HOSTNAME', value: syncHostname },
-
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
-                          
                             { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
 
                         ],
