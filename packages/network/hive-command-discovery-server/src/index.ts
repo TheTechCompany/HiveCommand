@@ -57,7 +57,7 @@ export class DiscoveryServer {
             port: 4840,
             // rootFolder: opts.rootFolder,
             automaticallyAcceptUnknownCertificate: true,
-            force: true,
+            // force: true,
             fqdn: this.options.fqdn,
             applicationName: "HiveCommand OPCUA"
         })
