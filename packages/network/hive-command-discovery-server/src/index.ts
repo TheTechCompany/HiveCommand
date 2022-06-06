@@ -57,7 +57,7 @@ export class DiscoveryServer {
             port: 4840,
             // rootFolder: opts.rootFolder,
             automaticallyAcceptUnknownCertificate: true,
-            force: true,
+            // force: true,
             fqdn: this.options.fqdn,
             applicationName: "HiveCommand OPCUA"
         })
@@ -91,8 +91,6 @@ export class DiscoveryServer {
             (socket as any).networkName = deviceId;
 
             // let token: string | undefined = socket.request.headers.authorization
-            // console.log("Machine info", token);
-
             // if(token){
             //     const info = jwt_decode(token);
 
@@ -135,10 +133,7 @@ export class DiscoveryServer {
                 lastSeen: new Date()
             }
         })
-        // await this.data.updateLiveness((socket as any)?.networkName, false)
-        // await this.data.updateMode((socket as any)?.networkName, 'disabled')
-
-        // await Device.updateOne({_id: (socket as any)?.machine_info.id}, {$set: {connected: false}})
+       
         socket.removeAllListeners();
     }
 

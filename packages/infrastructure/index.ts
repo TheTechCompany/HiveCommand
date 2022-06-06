@@ -7,8 +7,11 @@ import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
 import SyncServer from './src/sync-server'
+import { config } from 'dotenv';
 
 import * as k8s from '@pulumi/kubernetes'
+
+config();
 
 const main = (async () => {
     const config = new Config();
