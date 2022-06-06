@@ -63,7 +63,7 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
 
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
                           
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand?connect_timeout=100`) },
 
                         ],
                         resources: {
