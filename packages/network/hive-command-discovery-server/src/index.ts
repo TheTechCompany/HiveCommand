@@ -91,8 +91,6 @@ export class DiscoveryServer {
             (socket as any).networkName = deviceId;
 
             // let token: string | undefined = socket.request.headers.authorization
-            // console.log("Machine info", token);
-
             // if(token){
             //     const info = jwt_decode(token);
 
