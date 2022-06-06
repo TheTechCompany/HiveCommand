@@ -33,7 +33,7 @@ const main = (async () => {
 
     const rabbitURL = dbRef.getOutput('rabbitURL');
     
-    const dbUrl = dbRef.getOutput('timeseries_name');
+    const dbUrl = dbRef.getOutput('timescale_url');
     const dbPass = dbRef.getOutput('postgres_pass');
 
     const provider = new Provider('eks', { kubeconfig });
