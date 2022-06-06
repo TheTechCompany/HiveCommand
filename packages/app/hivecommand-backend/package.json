@@ -29,7 +29,6 @@
   },
   "dependencies": {
     "@hexhive/graphql-server": "1.0.2-beta.2",
-    "@hexhive/types": "^0.0.6-alpha.0",
     "@hive-command/data": "^1.4.15-alpha.52",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
