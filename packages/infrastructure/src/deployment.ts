@@ -39,14 +39,14 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             {name: "VERSION_SHIM", value: '1.0.10'},
                             // {name: "TIMESERIES_HOST", value:  timeseriesHost.apply(url => `${url}`)},
                             // {name: "TIMESERIES_PASSWORD",  value: process.env.TIMESERIES_PASSWORD},
-                            
+
                             // {name: "MONGO_URL", value: process.env.COMMAND_MONGO_URL},
                             // {name: "MONGO_DB", value: process.env.COMMAND_MONGO_DB},
                             // {name: "MONGO_USER", value: process.env.COMMAND_MONGO_USER},
                             // {name: "MONGO_PASS", value: process.env.COMMAND_MONGO_PASS},
                             // {name: "MONGO_AUTH_DB", value: process.env.COMMAND_MONGO_AUTH_DB},
 
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:5432/hivecommand`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}.default.svc.cluster.local:6432/hivecommand`) },
 
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},
