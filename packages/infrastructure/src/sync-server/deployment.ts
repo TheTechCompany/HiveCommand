@@ -65,8 +65,13 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
 
                         ],
                         resources: {
+                            requests: {
+                                cpu: '0.25',
+                                memory: '0.5Gi'
+                            },
                             limits: {
-                                cpu: '0.25'
+                                cpu: '0.5',
+                                memory: '1Gi'
                             }
                         },
                         securityContext: {
