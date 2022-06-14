@@ -1,6 +1,6 @@
 "use strict"
 
-import { PrismaClient } from "@hive-command/data"
+import { PrismaClient, cache } from "@hive-command/data"
 import net from "net"
 import { Pool, PoolClient } from "pg"
 
@@ -18,15 +18,36 @@ export const publishToILP = async (
 	
 
 		await Promise.all(rows.map(async (row) => {
-			await prisma.deviceValue.create({
-				data: {
-					lastUpdated: new Date(),
-					deviceId: row.device,
-					placeholder: row.deviceId,
-					key: row.valueKey,
-					value: `${row.value}`
+
+			await Promise.all([
+				async () => {
+					await cache.DeviceValue.updateOne({
+						deviceId: row.device,
+						placeholder: row.deviceId,
+						key: row.valueKey
+					}, {
+						$set: {
+							value: `${row.value}`,
+							lastUpdated: new Date()
+						}
+					}, {
+						upsert: true
+					});
+				},
+				async () => {
+					await prisma.deviceValue.create({
+						data: {
+							lastUpdated: new Date(),
+							deviceId: row.device,
+							placeholder: row.deviceId,
+							key: row.valueKey,
+							value: `${row.value}`
+						}
+					})
 				}
-			})
+			])
+
+			
 
 
 
