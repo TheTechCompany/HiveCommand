@@ -58,7 +58,7 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
                         env: [
                             {name: 'HEXHIVE_API_URL', value: process.env.HEXHIVE_API_URL},
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
-                            { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}`) },
+                            { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`) },
                             { name: 'SYNC_HOST', value: syncHostname },
                             { name: 'HOSTNAME', value: syncHostname },
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
