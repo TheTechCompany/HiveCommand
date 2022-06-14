@@ -19,7 +19,7 @@ types.setTypeParser(1114, (value) => {
 
 const prisma = new PrismaClient();
 
-cache.connect_to(process.env.MONGO_URL || '')
+cache.connect_to(process.env.MONGO_URL || '');
 
 (async () => {
 
