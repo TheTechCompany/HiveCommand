@@ -1,4 +1,4 @@
-import { PrismaClient } from "@hive-command/data";
+import { PrismaClient, cache } from "@hive-command/data";
 import gql from "graphql-tag";
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
@@ -15,17 +15,23 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		{
 			CommandDevice: {
 				deviceSnapshot: async (root: any, args: any, context: any) => {
-					return await prisma.$queryRaw`
-						SELECT latest.* FROM (
-							SELECT DISTINCT placeholder, key, "deviceId", MAX("lastUpdated") as latest FROM "DeviceValue"
-							WHERE "deviceId"=${root.id}
-							GROUP BY placeholder, key, "deviceId"
-						) AS uniq
-						JOIN "DeviceValue" latest ON uniq.placeholder = latest.placeholder 
-						AND uniq."deviceId" = latest."deviceId" 
-						AND uniq.latest = latest."lastUpdated" 
-						AND uniq.key = latest.key					
-					`
+
+					const result = await cache.DeviceValue.find({
+						deviceId: root.id
+					})
+					return result;
+
+					// return await prisma.$queryRaw`
+					// 	SELECT latest.* FROM (
+					// 		SELECT DISTINCT placeholder, key, "deviceId", MAX("lastUpdated") as latest FROM "DeviceValue"
+					// 		WHERE "deviceId"=${root.id}
+					// 		GROUP BY placeholder, key, "deviceId"
+					// 	) AS uniq
+					// 	JOIN "DeviceValue" latest ON uniq.placeholder = latest.placeholder 
+					// 	AND uniq."deviceId" = latest."deviceId" 
+					// 	AND uniq.latest = latest."lastUpdated" 
+					// 	AND uniq.key = latest.key					
+					// `
 				}
 			},
 		Query: {
