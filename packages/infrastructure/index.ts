@@ -47,7 +47,6 @@ const main = (async () => {
         provider
     })
     
-
     const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl));
