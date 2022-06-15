@@ -21,7 +21,7 @@ export const publishToILP = async (
 
 			await Promise.all([
 				(async () => {
-					console.log("Mongo upsert");
+					// console.log("Mongo upsert");
 					await cache.DeviceValue.updateOne({
 						deviceId: row.device,
 						placeholder: row.deviceId,
