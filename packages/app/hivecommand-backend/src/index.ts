@@ -23,19 +23,6 @@ cache.connect_to(process.env.MONGO_URL || '');
 
 (async () => {
 
-	// const pool = new Pool({
-	// 	host: process.env.TIMESERIES_HOST || 'localhost',
-	// 	user: process.env.TIMESERIES_USER || 'postgres',
-	// 	password: process.env.TIMESERIES_PASSWORD || 'quest',
-	// 	port: 5432,
-	// 	keepAlive: true,
-	// 	// connectionTimeoutMillis: 60 * 1000,
-	// 	max: 10
-	// })
-
-	// pool.on('connect', () => {
-	// 	console.log("pool connect")
-	// })
 
 	const mq = await amqp.connect(
 		process.env.RABBIT_URL || 'amqp://localhost'
