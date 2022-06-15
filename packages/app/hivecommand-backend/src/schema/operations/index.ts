@@ -72,13 +72,6 @@ export default (prisma: PrismaClient, channel: Channel) => {
 
 				const actions = device?.activeProgram?.devices?.find((a) => a.name == args.deviceName)?.type?.actions
 
-				// consoledlog(args)
-				// const device = await session.readTransaction(async (tx) => {
-
-				// 	return await getDeviceActions(tx, args.deviceId, args.deviceName)
-					
-				// })
-
 				let action = actions?.find((a: any) => a.key == args.action)
 
 				if(action && device){
