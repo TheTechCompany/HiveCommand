@@ -34,6 +34,7 @@ const main = (async () => {
     const rabbitURL = dbRef.getOutput('rabbitURL');
     
     const dbUrl = dbRef.getOutput('timescale_url');
+    const mongoUrl = dbRef.getOutput('mongo_url');
     const dbPass = dbRef.getOutput('postgres_pass');
 
     const provider = new Provider('eks', { kubeconfig });
@@ -47,9 +48,9 @@ const main = (async () => {
     })
     
 
-    const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, namespace)
+    const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL));
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl));
     const service = await Service(provider)
 
     return {

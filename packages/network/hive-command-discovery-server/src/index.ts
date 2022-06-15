@@ -12,7 +12,7 @@ import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
 import os from 'os';
 import { Data } from './data';
-import { PrismaClient } from '@hive-command/data'
+import { PrismaClient, cache } from '@hive-command/data'
 
 import amqp from 'amqplib'
 import { DataType } from 'node-opcua-variant';
@@ -47,6 +47,8 @@ export class DiscoveryServer {
         this.options = opts;
 
         this.prisma = new PrismaClient()
+
+        cache.connect_to(process.env.MONGO_URL || '');
 
         this.dataBroker = new Data({
             gatewayURL: opts.gatewayURL,

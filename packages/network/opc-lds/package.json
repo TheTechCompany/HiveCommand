@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-lds",
-  "version": "1.4.15-alpha.15",
+  "version": "1.4.15-alpha.60",
   "description": "",
   "main": "dist/index.js",
   "files": [
