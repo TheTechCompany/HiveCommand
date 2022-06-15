@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, appName: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, claim: k8s.core.v1.PersistentVolumeClaim,  namespace: k8s.core.v1.Namespace) => {
+export const Deployment = (provider: Provider, appName: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, claim: k8s.core.v1.PersistentVolumeClaim,  namespace: k8s.core.v1.Namespace) => {
 
     const config = new Config()
     
@@ -58,6 +58,7 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
                         env: [
                             {name: 'HEXHIVE_API_URL', value: process.env.HEXHIVE_API_URL},
                             {name: 'HEXHIVE_API_KEY', value: process.env.HEXHIVE_API_KEY},
+                            { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`) },
                             { name: 'SYNC_HOST', value: syncHostname },
                             { name: 'HOSTNAME', value: syncHostname },
                             { name: 'RABBIT_URL', value: rabbitHost.apply(url => `amqp://${url}`)},
