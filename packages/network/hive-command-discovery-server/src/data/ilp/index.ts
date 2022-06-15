@@ -20,21 +20,23 @@ export const publishToILP = async (
 		await Promise.all(rows.map(async (row) => {
 
 			await Promise.all([
-				async () => {
+				(async () => {
+					console.log("Mongo upsert");
 					await cache.DeviceValue.updateOne({
 						deviceId: row.device,
 						placeholder: row.deviceId,
 						key: row.valueKey
 					}, {
-						$set: {
-							value: `${row.value}`,
-							lastUpdated: new Date()
-						}
+						deviceId: row.device,
+						placeholder: row.deviceId,
+						key: row.valueKey,
+						value: `${row.value}`,
+						lastUpdated: new Date()
 					}, {
 						upsert: true
 					});
-				},
-				async () => {
+				})(),
+				(async () => {
 					await prisma.deviceValue.create({
 						data: {
 							lastUpdated: new Date(),
@@ -44,7 +46,7 @@ export const publishToILP = async (
 							value: `${row.value}`
 						}
 					})
-				}
+				})()
 			])
 
 			
