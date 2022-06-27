@@ -4,9 +4,6 @@ import { PrismaClient, cache } from "@hive-command/data"
 import net from "net"
 import { Pool, PoolClient } from "pg"
 
-// const client = new net.Socket()
-
-
 export const publishToILP = async (
 	prisma: PrismaClient,
 	rows: {
