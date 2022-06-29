@@ -6,6 +6,7 @@ import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
 import * as Icons from '../../assets/hmi-elements';
+import { HMIPort } from './HMIPort';
 
 export interface IconNodeProps {
     building?: boolean;
@@ -100,7 +101,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 export const UnstyledIconNode = (props: IconNodeProps) => {
     const [actionsOpen, openActions] = useState<boolean>(false);
 
-    console.log({props})
+    console.log("ICON NODE", {props})
     return (
         <>
             {/* {props.extras?.showTotalizer && (
@@ -161,7 +162,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                     direction="row"
                     justify="center"
                     flex>
-                    <Text size="small" color="white">{props.extras?.devicePlaceholder?.name}</Text>
+                    <Text size="small" color="black">{props.extras?.devicePlaceholder?.name}</Text>
                 </Box>
             )}
 

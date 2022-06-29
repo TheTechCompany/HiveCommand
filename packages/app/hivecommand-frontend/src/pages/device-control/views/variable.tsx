@@ -1,5 +1,6 @@
-import { Box, TextInput, Text, Button } from "grommet"
+import { TextInput, Text, Button } from "grommet"
 import React, { useContext } from "react"
+import { Box } from '@mui/material'
 import { DeviceControlContext } from "../context";
 
 export const ControlVariable = () => {
@@ -16,19 +17,16 @@ export const ControlVariable = () => {
     }
 
     return (
-        <Box 
-            background="light-1"
-            pad="xsmall"
-            flex>
+        <Box>
             <Text>Variables</Text>
             {variables.map((variable) => (
-                <Box align="center" direction="row">
-                    <Box flex>
+                <Box >
+                    <Box>
                         <Text size="small">
                             {variable.name}
                         </Text>
                     </Box>
-                    <Box flex> 
+                    <Box> 
                         {renderVariableInput(variable)}
                     </Box>
                 </Box>

@@ -5,6 +5,7 @@ import { HMINodeFactory } from '../hmi-node/HMINodeFactory';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../assets/hmi-elements'
 import { HMICanvasProvider } from './HMICanvasContext';
+import { CanvasStyle } from '../../style';
 
 export interface HMICanvasProps {
 	id: string;
@@ -209,6 +210,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 direction="row"
                 flex>
                 <InfiniteCanvas
+                    style={CanvasStyle}
                     zoom={120}
                     onBackdropClick={props.onBackdropClick}
                     onSelect={(key, id) => {

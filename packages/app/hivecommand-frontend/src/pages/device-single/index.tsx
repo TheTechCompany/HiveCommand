@@ -1,16 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Box, List, Text, Button, Select, Collapsible } from 'grommet';
 //import { Map } from '@thetechcompany/live-ui'
 import { Graph } from '../../components/ui/graph';
 
-import MarkerIcon from 'leaflet/dist/images/marker-icon.png';
+// import MarkerIcon from 'leaflet/dist/images/marker-icon.png';
 import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
 import { DeviceControlContext } from '../device-control/context';
 import { useMapPort, useSetDevicePeripherals } from '@hive-command/api';
-import { IconButton } from '@mui/material';
+import { IconButton, Box } from '@mui/material';
 import { Add } from '@mui/icons-material';
 export interface DeviceSingleProps {
     match?: any;
@@ -164,12 +163,7 @@ mappedDevicesConnection {
     console.log({device})
     return (
         <Box 
-            flex
-            elevation="small"
-            round="xsmall"
-            overflow="hidden"
-            background="neutral-1"
-            style={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+            sx={{flex: 1, flexDirection: 'column', display: 'flex'}}>
 
             
             <DeviceBusConnectionModal
@@ -207,18 +201,16 @@ mappedDevicesConnection {
                     openBus(false)
                 }}
                 />
-             <Box justify='end' direction='row'>
+             <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-end'}}>
                     <IconButton onClick={() => openBus(true)}>
                         <Add />
                     </IconButton>
                 </Box>
             <Box 
-                style={{position: 'relative'}}
-                direction="row"
-                background="#dfdfdf"
-                flex>
+                sx={{ flexDirection: 'row', flex: 1, display: 'flex', position: 'relative'}}
+                >
                
-                <Box flex>
+                <Box sx={{flex: 1, display: 'flex'}}>
                     <BusMap
                         add
                         onPortSelect={(bus, port) => {

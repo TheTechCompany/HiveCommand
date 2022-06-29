@@ -1,30 +1,34 @@
 import { HMICanvas } from '../../../components/hmi-canvas';
-import React, {useContext, useEffect, useMemo, useState} from 'react';
-import { Box, Text, TextInput, CheckBox, Button, Spinner, Select } from 'grommet';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Spinner } from 'grommet';
 import { Check as Checkmark, ChevronLeft, SettingsEthernet } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
 import { Bubble } from '../../../components/Bubble/Bubble';
 import { useRequestFlow, useUpdateDeviceSetpoint } from '@hive-command/api';
-import { FormControl } from '@hexhive/ui';
+// import { FormControl } from '@hexhive/ui';
 import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
-import { IconButton, InputAdornment, TextField } from '@mui/material';
+import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { isEqual } from 'lodash'
 const ActionButton = (props) => {
 	return (
-		<Box background="accent-1" direction='row' round="xsmall" width={'100%'} align='center' justify='center' elevation="small">
-			<Button 
+		<Box sx={{ display: 'flex' }}>
+			<Button
+				fullWidth
+				color={props.color}
+				size={props.size}
+				variant="contained"
 				disabled={props.waiting || props.disabled}
-				plain
-				hoverIndicator={'accent-2'}
+
 				onClick={props.onClick}
-				style={{padding: 6, borderRadius: 3, width: '100%'}}
-				label={(<Box direction='row' align='center' justify='between'>
-					<Text size="small">{props.label}</Text>	
+			>
+				<Box sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'between' }}>
+					<Typography>{props.label}</Typography>
 					{props.waiting && <Spinner size="xsmall" />}
-				</Box>)} />
-			
+				</Box>
+			</Button>
+
 		</Box>
 	)
 }
@@ -46,24 +50,24 @@ export default () => {
 	]
 
 
-    const [ infoTarget, setInfoTarget ] = useState<{x?: number, y?: number}>(undefined);
-    const [ selected, setSelected ] = useState<{key?: string, id?: string}>(undefined)
+	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number }>(undefined);
+	const [selected, setSelected] = useState<{ key?: string, id?: string }>(undefined)
 
-    const [ workingState, setWorkingState ] = useState<any>({})
+	const [workingState, setWorkingState] = useState<any>({})
 
-	const [ editSetpoint, setEditSetpoint ] = useState();
-	const [ setpointWorkstate, setSetpointWorkstate ] = useState({});
-	
-	const { 
+	const [editSetpoint, setEditSetpoint] = useState();
+	const [setpointWorkstate, setSetpointWorkstate] = useState({});
+
+	const {
 		changeOperationMode,
-		changeOperationState, 
-		program, 
-		actions, 
-		hmi, 
-		groups, 
-		changeDeviceMode, 
-		changeDeviceValue, 
-		performAction, 
+		changeOperationState,
+		program,
+		actions,
+		hmi,
+		groups,
+		changeDeviceMode,
+		changeDeviceValue,
+		performAction,
 		controlId,
 		device,
 		refetch
@@ -90,79 +94,79 @@ export default () => {
 			}
 		}
     `, {
-        variables: {
-            id: controlId,
-            idStr: controlId
-        }
-    })
+		variables: {
+			id: controlId,
+			idStr: controlId
+		}
+	})
 
 
-	const values : {placeholder: string, key: string, value: string}[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
-	
-	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({[action.key]: action.value == 'true'})).reduce((prev, curr) => ({...prev, ...curr}), {})
+	const values: { placeholder: string, key: string, value: string }[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 
-	const getDeviceValue = (name?: string, units?: {key: string, units?: string}[]) => {
-        //Find map between P&ID tag and bus-port
+	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
-        if(!name) return;
+	const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
+		//Find map between P&ID tag and bus-port
 
-    
-        let v = values.filter((a) => a?.placeholder == name);
-        let state = program?.devices?.find((a) => a.name == name).type?.state;
-
-         
-        return v.reduce((prev, curr) => {
-            let unit = units?.find((a) => a.key == curr.key);
-            let stateItem = state.find((a) => a.key == curr.key);
-            let value = curr.value;
-
-            if(!stateItem) return prev;
-
-            if(stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT"){
-                value = parseFloat(value).toFixed(2)
-            }
-            return {
-                ...prev,
-                [curr.key]: value
-            }
-        }, {})
-    
-    }
+		if (!name) return;
 
 
-	console.log({hmi: hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), []))})
+		let v = values.filter((a) => a?.placeholder == name);
+		let state = program?.devices?.find((a) => a.name == name).type?.state;
+
+
+		return v.reduce((prev, curr) => {
+			let unit = units?.find((a) => a.key == curr.key);
+			let stateItem = state.find((a) => a.key == curr.key);
+			let value = curr.value;
+
+			if (!stateItem) return prev;
+
+			if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
+				value = parseFloat(value).toFixed(2)
+			}
+			return {
+				...prev,
+				[curr.key]: value
+			}
+		}, {})
+
+	}
+
+
+	console.log({ hmi: hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])) })
 
 	const hmiNodes = useMemo(() => {
-        return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
+		return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
 
-            let device = node?.devicePlaceholder?.name;
-            let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
-            let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
+			let device = node?.devicePlaceholder?.name;
+			let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
+			let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
 
-            // console.log("CONF", conf)
-            return {
-                ...node,
-                values: value,
-                conf
-            }
-        })
-    }, [device, deviceValueData])
+			// console.log("CONF", conf)
+			return {
+				...node,
+				values: value,
+				conf
+			}
+		})
+	}, [device, deviceValueData])
 
 
 	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase();
 	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
 	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
-   
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            client.refetchQueries({ include: ['DeviceValues'] })
-        }, 2 * 1000)
 
-        return () => {
-            clearInterval(timer)
-        }
-    }, [])
+	useEffect(() => {
+		const timer = setInterval(() => {
+			client.refetchQueries({ include: ['DeviceValues'] })
+		}, 2 * 1000)
+
+		return () => {
+			clearInterval(timer)
+		}
+	}, [])
 
 	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
 	// 	deviceId: string,
@@ -181,90 +185,84 @@ export default () => {
 	// })
 
 	// alert(operatingMode)
-   
 
-    const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
-        let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
 
-        if(state.writable && operatingMode == "manual"){
-            return (
-                <TextInput 
-                    style={{padding: "none"}}
-                    type="number" 
-                    size="small" 
-                    plain 
-                    placeholder={state.key} 
-                    onChange={(e) => {
+	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
+		let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
+
+		if (state.writable && operatingMode == "manual") {
+			return (
+				<TextField
+					style={{ padding: "none" }}
+					type="number"
+					size="small"
+					placeholder={state.key}
+					onChange={(e) => {
 						setWorkingState({
-							...workingState, 
+							...workingState,
 							[deviceName]: {
 								...workingState[deviceName],
 								[state.key]: parseFloat(e.target.value)
 							}
 						})
 					}}
-                    value={workingState?.[deviceName]?.[state.key] ?? parseFloat(value)} />
-            )
-        }else{
-            return <Text size="small">{value}</Text>
-        }
-    }
+					value={workingState?.[deviceName]?.[state.key] ?? parseFloat(value)} />
+			)
+		} else {
+			return <Typography>{value}</Typography>
+		}
+	}
 
 
-    const renderActions = () => {
+	const renderActions = () => {
 		let node = hmi.concat(groups).find((a) => a.id == selected?.id)
- 
-		if(!node) return ;
- 
-		let devices =  getDevicesForNode(node)
- 
-		if(editSetpoint){
+
+		if (!node) return;
+
+		let devices = getDevicesForNode(node)
+
+		if (editSetpoint) {
 			const device = devices.find((a) => a.name == editSetpoint)
 
 			return (
-				<Box flex>
-					<Box align='center' direction='row'>
-						<IconButton 
+				<Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+					<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
+						<IconButton
 							onClick={() => setEditSetpoint(undefined)}
 							size="small">
-							<ChevronLeft fontSize='inherit'/>
+							<ChevronLeft fontSize='inherit' />
 						</IconButton>
 
-						<Text size='small'>{editSetpoint} Setpoints</Text>
-						
+						<Typography >{editSetpoint} Setpoints</Typography>
+
 					</Box>
-					<Box pad="xsmall" flex>
+					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', padding: '3px' }}>
 						{device.setpoints?.map((setpoint) => (
-							<Box margin={{bottom: 'xsmall'}} direction='row' align='center'>
-								<Box flex>
-									<Text size="small">{setpoint.name}</Text>
-								</Box>
-								<Box flex>
-									<TextField 
-										InputProps={{
-											endAdornment: setpoint.type == "ratio"  && <InputAdornment position="end">%</InputAdornment>
-										}}
-										size='small' 
-										label="Value" 
-										onChange={(e) => {
-											setSetpointWorkstate({
-												...setpointWorkstate,
-												[setpoint.id]: {
-													...setpointWorkstate?.[setpoint?.id],
-													value: e.target.value
-												}
-											})
-										}}
-										value={setpointWorkstate?.[setpoint.id]?.value} />
-								</Box>
-							</Box>
+
+							<TextField
+								fullWidth
+								InputProps={{
+									endAdornment: setpoint.type == "ratio" && <InputAdornment position="end">%</InputAdornment>
+								}}
+								size='small'
+								label={setpoint.name}
+								type="number"
+								onChange={(e) => {
+									setSetpointWorkstate({
+										...setpointWorkstate,
+										[setpoint.id]: {
+											...setpointWorkstate?.[setpoint?.id],
+											value: e.target.value
+										}
+									})
+								}}
+								value={setpointWorkstate?.[setpoint.id]?.value} />
+
 						))}
 					</Box>
-					<Box direction='row'>
+					<Box sx={{ flexDirection: 'row', display: 'flex' }}>
 						<Button
-							plain
-							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
-							hoverIndicator={'accent-1'}
+							fullWidth
 							disabled={isEqual(setpointWorkstate, device?.setpoints?.reduce((prev, curr) => ({
 								...prev,
 								[curr.id]: {
@@ -278,47 +276,39 @@ export default () => {
 										...curr
 									}
 								}), {}))
-							}}
-							label={"Reset"} />
+							}}>Reset</Button>
 						<Button
-							plain
-							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
-							hoverIndicator={'accent-1'}
+							fullWidth
 							onClick={() => {
-								for(var k in setpointWorkstate){
+								for (var k in setpointWorkstate) {
 									updateSetpoint(k, setpointWorkstate[k].value).then(() => {
 										refetch();
 									})
 								}
 								// updateSetpoint()
-							}}
-							label={"Save"} />
+							}}>Save</Button>
 					</Box>
 				</Box>
 			)
-		}else{
-		
+		} else {
+
 			return devices.map((device) => {
 				let deviceInfo = device?.type || {};
 				let deviceName = device?.name || '';
-			
-				console.log({deviceInfo})
+
+				console.log({ deviceInfo })
 				let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
-	
+
 				return (
-				<Box 
-					border={{side: 'bottom', size: 'small'}}
-					flex 
-					direction="column">
-					<Box
-						pad="xsmall"
-						justify="center" 
-						direction="column">
-	
-						<Box align="center" justify={device.setpoints?.length > 0 ? "between" : "start"} direction="row">
-							<Text weight="bold" size="small">{device?.name}</Text>
-							
-							{device.setpoints?.length > 0 && operatingMode != "auto" && <IconButton 
+					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+						{/* <Box
+						sx={{display: 'flex'}}
+						> */}
+
+						<Box sx={{ padding: '3px', display: 'flex', alignItems: 'center', justifyContent: device.setpoints?.length > 0 ? "space-between" : "flex-start", flexDirection: 'row' }}>
+							<Typography>{device?.name}</Typography>
+
+							{device.setpoints?.length > 0 && operatingMode != "auto" && <IconButton
 								onClick={() => {
 									setEditSetpoint(device?.name)
 									setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
@@ -329,140 +319,158 @@ export default () => {
 									}), {}))
 								}}
 								size="small">
-								<SettingsEthernet fontSize='inherit'/>
+								<SettingsEthernet fontSize='inherit' />
 							</IconButton>}
-	
+
 						</Box>
-	
-						<Text size="xsmall">{deviceInfo?.name}</Text>
-					</Box>
-					<Box pad="xsmall" flex>
-					{deviceInfo?.state?.map((state) => (
-						<Box direction="row" align="center">
-							<Box flex><Text size="small">{state.key}</Text></Box>
-							<Box flex>{renderActionValue(deviceName, deviceInfo, deviceMode, state)}</Box>
-							{workingState?.[deviceName]?.[state.key] != undefined ? (<Button 
-								plain
-								onClick={() => {
-									sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
-								}}
-								style={{padding: 6, borderRadius: 3}}
-								hoverIndicator
-								icon={<Checkmark />} />) : ''}
+
+						<Divider />
+						{/* <Typography >{deviceInfo?.name}</Typography> */}
+						{/* </Box> */}
+						<Box sx={{ flex: 1, padding: '3px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }} >
+							{deviceInfo?.state?.map((state) => (
+								<Box sx={{ flexDirection: "row", display: 'flex', alignItems: "center" }}>
+									<Box sx={{ flex: 1 }}><Typography >{state.key}</Typography></Box>
+									<Box sx={{ flex: 1 }}>{renderActionValue(deviceName, deviceInfo, deviceMode, state)}</Box>
+									{workingState?.[deviceName]?.[state.key] != undefined ? (
+										<IconButton
+
+											onClick={() => {
+												sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
+											}}>
+											<Checkmark />
+										</IconButton>) : ''}
+								</Box>
+							))}
 						</Box>
-					))}
+
+						<Box sx={{ display: 'flex', flexDirection: 'row' }}>
+							{operatingMode == 'manual' && deviceInfo?.actions?.map((action) => (
+								<Button
+									fullWidth
+									onClick={() => {
+										performAction(
+											deviceName,
+											action.key
+										)
+									}}>{action.key}</Button>
+							))}
+						</Box>
+
 					</Box>
-	
-					<Box align="center" justify="around" direction="row">
-						{operatingMode == "manual" && deviceInfo?.actions?.map((action) => (
-						<Button
-							plain
-							style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 6, borderRadius: 3}}
-							hoverIndicator={'accent-1'}
-							onClick={() => {
-								performAction(
-										deviceName,
-										action.key		  
-									)
-							}}
-							label={action.key} />
-					))}
-					</Box>
-	
-				</Box>
-			)
-			}) 
+				)
+			})
 		}
- 
-	 }
+
+	}
 
 
-	 const deviceModes = program?.devices?.map((a) => {
-        let vals = values.filter((b) => b?.placeholder == a.name);
-        // if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-        return {name: a.name, mode: vals.find((a) => a.key == 'mode')?.value};
-    }) || [];
+	const deviceModes = program?.devices?.map((a) => {
+		let vals = values.filter((b) => b?.placeholder == a.name);
+		// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
+		return { name: a.name, mode: vals.find((a) => a.key == 'mode')?.value };
+	}) || [];
 
 
 	const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-        changeDeviceValue(
-            deviceName,
-            stateKey,
-            `${stateValue}`
-        ).then(() => {
-            let ws = Object.assign({}, workingState);
-            delete ws[stateKey] 
-            setWorkingState(ws)
-        })
-    }
+		changeDeviceValue(
+			deviceName,
+			stateKey,
+			`${stateValue}`
+		).then(() => {
+			let ws = Object.assign({}, workingState);
+			delete ws[stateKey]
+			setWorkingState(ws)
+		})
+	}
 
-    useEffect(() => {
-        setWorkingState({})
-    }, [selected])
+	useEffect(() => {
+		setWorkingState({})
+	}, [selected])
 
 	const controlAction = (action) => {
 		requestFlow(
 			action.id
 		).then(() => {
-			
+
 		})
 	}
 
-	console.log({hmiNodes})
- 
+	console.log({ hmiNodes })
+
 	return (
-		<Box flex direction="row">
-			<Box flex>
-		<HMICanvas 
-			id={program.id}
-			program={program}
-			deviceValues={hmiNodes}
-			modes={deviceModes}
-			information={infoTarget != undefined ? (
-				<Bubble 
-					style={{position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y}}>
-					{renderActions()}
-				</Bubble>
-			) : null}
-			onBackdropClick={() => {
-				setSelected(undefined)
-				setInfoTarget(undefined)
-			}}
-			onSelect={(select) => {
-				console.log({hmi: program.interface});
-				let node = program.interface?.nodes?.find((a) => a.id == select.id)
-				const { x, y, scaleX, scaleY} = node;
+		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
+			<Box sx={{ flex: 1, display: 'flex' }}>
+				<HMICanvas
+					id={program.id}
+					program={program}
+					deviceValues={hmiNodes}
+					modes={deviceModes}
+					information={infoTarget != undefined ? (
+						<Bubble
+							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
+							{renderActions()}
+						</Bubble>
+					) : null}
+					onBackdropClick={() => {
+						setSelected(undefined)
+						setInfoTarget(undefined)
+					}}
+					onSelect={(select) => {
+						console.log({ hmi: program.interface });
+						let node = program.interface?.nodes?.find((a) => a.id == select.id)
+						const { x, y, scaleX, scaleY } = node;
 
-				let width, height;
-				if(node.children && node.children.length > 0){
-					let widths =  node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
-					let xs = node.children?.map((x) => x.x);
-					let heights =  node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
-					let ys = node.children?.map((x) => x.y);
+						let width, height;
+						if (node.children && node.children.length > 0) {
+							let widths = node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
+							let xs = node.children?.map((x) => x.x);
+							let heights = node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
+							let ys = node.children?.map((x) => x.y);
 
-					width = Math.max(...widths) - Math.min(...xs)
-					height = 25// Math.min(...ys) - Math.max(...heights)
-					console.log({width, height, widths, heights, children: node.children})
-				}else{
-					width = node.type.width * scaleX;
-					height = 25 //node.type.height * scaleY;
-				}
+							width = Math.max(...widths) - Math.min(...xs)
+							height = 25// Math.min(...ys) - Math.max(...heights)
+							console.log({ width, height, widths, heights, children: node.children })
+						} else {
+							width = node.type.width * scaleX;
+							height = 25 //node.type.height * scaleY;
+						}
 
-				setInfoTarget({x: x + (width), y: y + height})
-				setEditSetpoint(undefined)
-				setSelected(select)
-			}}
-		/>
-		</Box>
-			<Box elevation="small" background="light-1">
-				<Box background="accent-1" align="center">
-					<Text>Controls</Text>
+						setInfoTarget({ x: x + (width), y: y + height })
+						setEditSetpoint(undefined)
+						setSelected(select)
+					}}
+				/>
+			</Box>
+			<Paper
+				sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', width: '200px', right: 6, top: 6, padding: '6px' }}>
+				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
+					<Typography fontWeight={'bold'}>Controls</Typography>
 				</Box>
-				<Box pad="small"flex>
-					<Box gap="xsmall" pad={{bottom: 'small'}} border={{side: 'bottom', size: 'small'}}>
+				<Divider />
+				<Box sx={{ display: 'flex', flex: 1 }}>
+					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
 
-						<Box direction='row' align="center">
-							<FormControl
+						<Box sx={{ marginTop: '6px', display: 'flex', marginBottom: '6px' }}>
+							<FormControl size="small" fullWidth>
+								<InputLabel id="mode-label">Mode</InputLabel>
+								<Select
+									label="Mode"
+									fullWidth
+									labelId='mode-label'
+									value={operatingMode}
+									onChange={(event) => {
+										changeOperationMode(event.target.value);
+									}}>
+
+									{operatingModes.map((mode) => (
+										<MenuItem value={mode.key}>{mode.label}</MenuItem>
+									))}
+
+								</Select>
+							</FormControl>
+
+							{/* <FormControl
 								value={operatingMode}
 								valueKey='key'
 								onChange={(value) => {
@@ -472,22 +480,24 @@ export default () => {
 								}}
 								placeholder='Mode'
 								labelKey='label'
-								options={operatingModes} />
+								options={operatingModes} /> */}
 						</Box>
-						<ActionButton 
+						<ActionButton
+							size={'small'}
+							color={'secondary'}
 							disabled={operatingMode != 'auto' || (operatingStatus == "STARTING" || operatingStatus == "STOPPING")}
-							onClick={() =>  {
+							onClick={() => {
 								changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
 							}}
 							label={
-								(operatingStatus == "ON" || operatingStatus == "STOPPING") ? 
-									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STOPPING" && <Spinner />}Shutdown</div>) : 
-									(<div style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>{operatingStatus == "STARTING" && <Spinner />}Start</div>)
+								(operatingStatus == "ON" || operatingStatus == "STOPPING") ?
+									(<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>{operatingStatus == "STOPPING" && <Spinner />}Shutdown</div>) :
+									(<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>{operatingStatus == "STARTING" && <Spinner />}Start</div>)
 							} />
 					</Box>
 
-					{operatingMode == "manual" && <Box  border={{side: 'bottom', size: 'small'}}>
-						<Text>Commands</Text>
+					{operatingMode == "manual" && <Box border={{ side: 'bottom', size: 'small' }}>
+						<Typography>Commands</Typography>
 						<Box gap="xsmall">
 							{actions.map((action) => (
 								<ActionButton
@@ -498,7 +508,7 @@ export default () => {
 						</Box>
 					</Box>}
 				</Box>
-			</Box>
+			</Paper>
 		</Box>
 	)
 }

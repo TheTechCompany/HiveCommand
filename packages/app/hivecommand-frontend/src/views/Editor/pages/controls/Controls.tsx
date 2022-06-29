@@ -23,6 +23,7 @@ import { EmptyView } from '../../components/empty-view';
 import { HMIDrawer } from './Drawer';
 import { HMIContext } from './context';
 import NodeMenu from './NodeMenu';
+import { CanvasStyle } from '../../../../style';
 
 export const Controls = (props) => {
 
@@ -398,7 +399,9 @@ export const Controls = (props) => {
                     `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
 
                 {(<InfiniteCanvas
-                    snapToGrid={false}
+                    style={CanvasStyle}
+                    snapToGrid={true}
+                    grid={{divisions: 10, width: 100, height: 100}}
                     onDelete={watchEditorKeys}
                     onSelect={(key, id) => {
                         console.log("Select", key, id)

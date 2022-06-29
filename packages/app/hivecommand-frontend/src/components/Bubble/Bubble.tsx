@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box } from 'grommet';
+import { Box } from '@mui/material';
 import styled from 'styled-components'
 import { BaseStyle } from '@hexhive/styles';
 import useResizeAware from 'react-resize-aware'
@@ -16,12 +16,16 @@ export const UnstyledBubble : React.FC<BubbleProps> = (props) => {
 	return (
 		<Box 
 			onMouseDown={(e) => e.stopPropagation()}
-			elevation="small"
-			height={{min: "121px"}}
-			width={{min: '200px'}}
-			round="xsmall"
+			sx={{
+				borderRadius: '6px',
+				minHeight: '121px',
+				minWidth: '200px',
+				bgcolor: 'primary.light',
+				display: 'flex',
+				flexDirection: 'column'
+			}}
+			
 			style={{...props.style, top: props.style.top - (height / 2) }}
-			background="neutral-1"
 			className={props.className}>
 			{elem}
 			{props.children}
