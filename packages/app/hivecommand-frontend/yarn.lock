@@ -1217,10 +1217,10 @@
   resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-0.0.6-alpha.13.tgz#4c316bdbb8a6c1489faf4912b26400cdff43be8b"
   integrity sha512-bZcFH+VpAV7MpxTRdK+o+HQyEpWoCCXxA6j21g7JiTr+skzxb+yoMIGUESxJ6FgpTh6HjxYE4gHWIx/YRWxrgQ==
 
-"@hexhive/ui@0.0.12-alpha.29":
-  version "0.0.12-alpha.29"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.12-alpha.29.tgz#e9e5c13fcb585522de638b83dd68fa42728ecd76"
-  integrity sha512-4OAIklx5nJtXMo3gaGucMYycqb5UkF/wZVyRLOUrq+xmqsB+RRm+qzsAiG6V3DQIRUNUYbNdlq6mWougqnycOg==
+"@hexhive/ui@0.0.12-alpha.30":
+  version "0.0.12-alpha.30"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-0.0.12-alpha.30.tgz#da464d190566d69a08f16668edbc6f7919478507"
+  integrity sha512-j11phVo9ETjueyQWANo2NWRLHNNx3ORM4ivDYgqyCi1/kSewiKtqFP/wd2u+9JLUim/moVK/shvirnveNydsPw==
   dependencies:
     "@emotion/react" "^11.9.0"
     "@emotion/styled" "^11.8.1"
