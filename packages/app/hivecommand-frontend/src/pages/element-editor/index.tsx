@@ -83,8 +83,8 @@ export const ElementEditor = (props) => {
                             type: "hmi-node",
                             x: 500,
                             y: 200,
-                            width: `${editDevice?.width}px`,
-                            height: `${editDevice?.height}px`,
+                            width: `${editDevice?.width || 50}px`,
+                            height: `${editDevice?.height || 50}px`,
                             // width: `${x?.type?.width || 50}px`,
                             // height: `${x?.type?.height || 50}px`,
                             extras: {
