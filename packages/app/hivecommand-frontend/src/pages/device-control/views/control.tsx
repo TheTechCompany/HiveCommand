@@ -153,7 +153,7 @@ export default () => {
 	}, [device, deviceValueData])
 
 
-	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase();
+	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase() || '';
 	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
 	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
 
