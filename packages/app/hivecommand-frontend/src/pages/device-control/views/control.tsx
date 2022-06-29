@@ -448,7 +448,7 @@ export default () => {
 					<Typography fontWeight={'bold'}>Controls</Typography>
 				</Box>
 				<Divider />
-				<Box sx={{ display: 'flex', flex: 1 }}>
+				<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column'}}>
 					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
 
 						<Box sx={{ marginTop: '6px', display: 'flex', marginBottom: '6px' }}>
