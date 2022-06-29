@@ -31,6 +31,7 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
                 justifyContent: 'space-between',
             }}>
             <Typography
+                color="#fff"
                     component="div"
                 >
                     {props.label}

@@ -121,6 +121,20 @@ export interface CommandDeviceWhere {
   network_name?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandHMIDeviceInput {
+  height?: InputMaybe<Scalars["Float"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  ports?: InputMaybe<Array<InputMaybe<CommandHMIDevicePortInput>>>;
+  width?: InputMaybe<Scalars["Float"]>;
+}
+
+export interface CommandHMIDevicePortInput {
+  key?: InputMaybe<Scalars["String"]>;
+  rotation?: InputMaybe<Scalars["Float"]>;
+  x?: InputMaybe<Scalars["Float"]>;
+  y?: InputMaybe<Scalars["Float"]>;
+}
+
 export interface CommandHMIPortInput {
   id?: InputMaybe<Scalars["String"]>;
   key?: InputMaybe<Scalars["String"]>;
@@ -498,9 +512,21 @@ export const generatedSchema = {
     ports: { __type: "[CommandHMIDevicePort]" },
     width: { __type: "Float" },
   },
+  CommandHMIDeviceInput: {
+    height: { __type: "Float" },
+    name: { __type: "String" },
+    ports: { __type: "[CommandHMIDevicePortInput]" },
+    width: { __type: "Float" },
+  },
   CommandHMIDevicePort: {
     __typename: { __type: "String!" },
     id: { __type: "ID!" },
+    key: { __type: "String" },
+    rotation: { __type: "Float" },
+    x: { __type: "Float" },
+    y: { __type: "Float" },
+  },
+  CommandHMIDevicePortInput: {
     key: { __type: "String" },
     rotation: { __type: "Float" },
     x: { __type: "Float" },
@@ -942,6 +968,10 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { input: "CommandDeviceReportInput" },
     },
+    createCommandInterfaceDevice: {
+      __type: "CommandHMIDevice",
+      __args: { input: "CommandHMIDeviceInput" },
+    },
     createCommandProgram: {
       __type: "CommandProgram!",
       __args: { input: "CommandProgramInput!" },
@@ -1052,6 +1082,10 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { id: "ID" },
     },
+    deleteCommandInterfaceDevice: {
+      __type: "CommandHMIDevice",
+      __args: { id: "ID!" },
+    },
     deleteCommandProgram: { __type: "Boolean!", __args: { id: "ID!" } },
     deleteCommandProgramDataDeviceInterlock: {
       __type: "Boolean!",
@@ -1144,6 +1178,10 @@ export const generatedSchema = {
     updateCommandDeviceUptime: {
       __type: "CommandDevice!",
       __args: { uptime: "DateTime", where: "CommandDeviceWhere!" },
+    },
+    updateCommandInterfaceDevice: {
+      __type: "CommandHMIDevice",
+      __args: { id: "ID!", input: "CommandHMIDeviceInput" },
     },
     updateCommandProgram: {
       __type: "CommandProgram!",
@@ -1867,6 +1905,9 @@ export interface Mutation {
   createCommandDeviceReport: (args?: {
     input?: Maybe<CommandDeviceReportInput>;
   }) => Maybe<CommandDeviceReport>;
+  createCommandInterfaceDevice: (args?: {
+    input?: Maybe<CommandHMIDeviceInput>;
+  }) => Maybe<CommandHMIDevice>;
   createCommandProgram: (args: {
     input: CommandProgramInput;
   }) => CommandProgram;
@@ -1945,6 +1986,9 @@ export interface Mutation {
   deleteCommandDeviceReport: (args?: {
     id?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
+  deleteCommandInterfaceDevice: (args: {
+    id: Scalars["ID"];
+  }) => Maybe<CommandHMIDevice>;
   deleteCommandProgram: (args: {
     id: Scalars["ID"];
   }) => ScalarsEnums["Boolean"];
@@ -2050,6 +2094,10 @@ export interface Mutation {
     uptime?: Maybe<Scalars["DateTime"]>;
     where: CommandDeviceWhere;
   }) => CommandDevice;
+  updateCommandInterfaceDevice: (args: {
+    id: Scalars["ID"];
+    input?: Maybe<CommandHMIDeviceInput>;
+  }) => Maybe<CommandHMIDevice>;
   updateCommandProgram: (args: {
     id: Scalars["ID"];
     input: CommandProgramInput;

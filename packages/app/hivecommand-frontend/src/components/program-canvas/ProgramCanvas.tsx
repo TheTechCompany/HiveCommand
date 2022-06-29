@@ -6,6 +6,7 @@ import { nanoid } from 'nanoid';
 import { IconMap } from '../../asset-map'
 
 import { IconNodeFactory } from './icon-node';
+import { CanvasStyle } from '../../style';
 
 export interface ProgramCanvasProps {
 	nodes: InfiniteCanvasNode[],
@@ -77,6 +78,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 			direction="row"
 			flex>
 			<InfiniteCanvas 
+				style={CanvasStyle}
 			 	menu={(
 				 	<Collapsible 
 						onKeyPress={(e) => {

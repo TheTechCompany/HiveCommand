@@ -52,7 +52,7 @@ function SvgPump(props: {rotation?: number, scaleX?: number, width: string, heig
       </g>
     </svg>
     <div style={{...speedStyle(), position: 'absolute'}}>
-      <span style={{color: 'white', fontSize: 12}}>{getSpeed()}%</span>
+      <span style={{color: 'black', fontSize: 12}}>{getSpeed()}%</span>
     </div>
     </>
   );
