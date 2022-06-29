@@ -103,8 +103,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     id: x.id,
                     x: x.x,
                     y: x.y,
-                    width: `${x?.type?.width || 50}px`,
-                    height: `${x?.type?.height || 50}px`,
+                    width: `${x?.type?.width || 55}px`,
+                    height: `${x?.type?.height || 55}px`,
                     extras: {
                       
                         // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
@@ -123,8 +123,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 
             }).concat((groups || []).map((group) => {
 
-                let widths =  group.children?.map((x) => x.x + (x.type?.width || 50));
-                let heights =  group.children?.map((x) => x.y + (x.type?.height || 50));
+                let widths =  group.children?.map((x) => x.x + (x.type?.width || 55));
+                let heights =  group.children?.map((x) => x.y + (x.type?.height || 55));
                 let width = Math.max(...widths) - Math.min(...widths)
                 let height = Math.max(...heights) - Math.min(...heights)
 
