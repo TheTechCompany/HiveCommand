@@ -48,6 +48,9 @@ export interface HMICanvasProps {
 
 export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     
+    const [ zoom, setZoom ] = useState(120);
+    const [ offset, setOffset ] = useState({x: 0, y: 0})
+
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
     const selectedRef = useRef<{selected?: {key?: "node" | "path", id?: string}}>({})
     const setSelected = (s: {key?: "node" | "path", id?: string}) => {
@@ -103,8 +106,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     id: x.id,
                     x: x.x,
                     y: x.y,
-                    width: `${x?.type?.width || 55}px`,
-                    height: `${x?.type?.height || 55}px`,
+                    width: `${x?.type?.width || 50}px`,
+                    height: `${x?.type?.height || 50}px`,
                     extras: {
                       
                         // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
@@ -123,8 +126,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 
             }).concat((groups || []).map((group) => {
 
-                let widths =  group.children?.map((x) => x.x + (x.type?.width || 55));
-                let heights =  group.children?.map((x) => x.y + (x.type?.height || 55));
+                let widths =  group.children?.map((x) => x.x + (x.type?.width || 50));
+                let heights =  group.children?.map((x) => x.y + (x.type?.height || 50));
                 let width = Math.max(...widths) - Math.min(...widths)
                 let height = Math.max(...heights) - Math.min(...heights)
 
@@ -211,7 +214,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 flex>
                 <InfiniteCanvas
                     style={CanvasStyle}
-                    zoom={120}
+                    zoom={zoom}
+                    offset={offset}
+                    onViewportChanged={({zoom, offset}) => {
+                        setZoom(zoom)
+                        setOffset(offset)
+                    }}
                     onBackdropClick={props.onBackdropClick}
                     onSelect={(key, id) => {
 
