@@ -19,7 +19,7 @@ function SvgFlowSensor(props: any) {
         lineHeight: '100%',
   
       }}>
-      <span style={{fontSize: 12, color: 'white'}}>{props.options?.flow || '16.5 L/min'}</span>
+      <span style={{fontSize: 12, color: 'black'}}>{props.options?.flow || '16.5 L/min'}</span>
     </div>
     <svg
       xmlns="http://www.w3.org/2000/svg"

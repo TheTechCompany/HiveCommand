@@ -396,7 +396,7 @@ export default () => {
 		})
 	}
 
-	console.log({ hmiNodes })
+	console.log({ hmiNodes, operatingMode, operatingModes })
 
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
@@ -462,7 +462,6 @@ export default () => {
 									onChange={(event) => {
 										changeOperationMode(event.target.value);
 									}}>
-
 									{operatingModes.map((mode) => (
 										<MenuItem value={mode.key}>{mode.label}</MenuItem>
 									))}
