@@ -49,7 +49,7 @@ export interface HMICanvasProps {
 export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     
     const [ zoom, setZoom ] = useState(120);
-    const [ offset, setOffset ] = useState({x: 0, y: 0})
+    const [ offset, setOffset ] = useState({x: 250, y: 150})
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
     const selectedRef = useRef<{selected?: {key?: "node" | "path", id?: string}}>({})
