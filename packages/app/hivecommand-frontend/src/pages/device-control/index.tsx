@@ -535,7 +535,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                     borderRadius: 7,
                                     marginRight: '8px',
                                     marginLeft: '8px',
-                                    background: !rootDevice?.online ? '#42e239' : '#db001b'
+                                    background: rootDevice?.online ? '#42e239' : '#db001b'
                                 }} />
                             <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography>
                         </Box>
