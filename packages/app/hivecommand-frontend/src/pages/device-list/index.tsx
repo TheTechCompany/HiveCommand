@@ -2,18 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { DeviceModal } from '../../components/modals/device';
 import { useCreateDevice, useUpdateDevice } from '@hive-command/api'
 import { DeploymentList, DeploymentInfo } from '../../components/deployment-list';
-import { Box, TextInput, Button } from 'grommet';
+import { Box, TextField, Button, IconButton, Paper } from '@mui/material';
 import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
 import { Add } from '@mui/icons-material'
 import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
 import { useAuth } from '@hexhive/auth-ui';
+import { useNavigate } from 'react-router-dom';
 export interface DevicePageProps {
     match?: any;
     history?: any;
 }
 
 export const Devices : React.FC<DevicePageProps> = (props) => {
+    
+    const navigate = useNavigate();
+
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
     const [ selectedDevice, setSelectedDevice ] = useState<any>();
@@ -160,14 +164,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
     }
 
     return (
-        <Box
-        round="xsmall"
-        overflow="hidden"
-            elevation="small"
-            background="neutral-1"
-            flex
-            direction="column" 
-            className="device-list">
+        <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <DeviceModal 
                 selected={editDevice}
                 programs={programs}
@@ -177,34 +174,27 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                     setEditDevice(null)
                     openModal(false)
                 }} />
-            <Box background="accent-1" align="center" direction="row" pad="small">
-                <Box flex background="#ffffff42" round="xsmall">
-                <TextInput plain placeholder="Search Devices..." />
-                </Box>
-                <Button
-                    onClick={() => openModal(true)}
-                     margin={{left: 'small'}} 
-                     primary 
-                     hoverIndicator 
-                     label="Add"
-                     icon={<Add />} />
-            </Box>
+          
             <Box
-                flex
-                direction="row"
+                
+                sx={{ flex: 1, flexDirection: 'row', display: 'flex'}}
                 >
             <DeploymentList
                 devices={devices}
                 programs={programs}
                 selected={[selectedDevice?.id]}
+                
+                onCreate={() => openModal(true)}
+
                 onClickRow={({datum}) => {
                     console.log(datum)
                    
-                    if(isEqual(selectedDevice, datum)){
-                        setSelectedDevice(undefined)
-                    }else{
-                        setSelectedDevice(datum)
-                    }
+                    navigate(`${datum.id}/controls`)
+                    // if(isEqual(selectedDevice, datum)){
+                    //     setSelectedDevice(undefined)
+                    // }else{
+                    //     setSelectedDevice(datum)
+                    // }
                 }}
                 onEditRow={(datum) => {
                     setEditDevice(datum)
@@ -212,12 +202,12 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                     console.log("Edit", datum)
                 }}
                  />
-            <DeploymentInfo 
+            {/* <DeploymentInfo 
                 deployment={selectedDevice}
                 open={Boolean(selectedDevice)}/>
-                
+                 */}
             </Box>
             
-        </Box>
+        </Paper>
     )
 }

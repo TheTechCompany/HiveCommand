@@ -1,5 +1,4 @@
 import { IconNodeFactory } from '@hexhive/ui';
-import { Box, Button, CheckBox, Text, TextInput } from 'grommet';
 import { InfiniteCanvas } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
 import { HMINodeFactory } from '../../components/hmi-node/HMINodeFactory';
@@ -8,7 +7,7 @@ import { matchPath, Navigate, Route, Routes, useNavigate, useParams } from 'reac
 // import program from 'shared/hexhive-types/src/models/program';
 import * as HMINodes from '../../assets/hmi-elements'
 
-import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System } from '@mui/icons-material';
+import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import Controls from './views/control'
@@ -17,6 +16,7 @@ import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, usePerformDeviceAction } from '@hive-command/api';
 import { ControlVariable } from './views/variable';
+import { Paper, Box, Button, Typography, IconButton } from '@mui/material';
 
 export interface DeviceControlProps {
 
@@ -31,11 +31,11 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
 
 
     const toolbar_menu = [
-        { id: 'controls', icon: <Dashboard /> },
-        { id: 'variables', icon: <System />},
-        { id: 'graphs', icon: <Analytics /> },
-        { id: 'info', icon: <Info /> },
-        { id: 'devices', icon: <Services /> },
+        { id: 'controls', label: "Controls", icon: <Dashboard /> },
+        { id: 'variables', label: "Variables", icon: <System />},
+        { id: 'graphs', label: "Graphs", icon: <Analytics /> },
+        { id: 'info', label: "Info", icon: <Info /> },
+        { id: 'devices', label: "Devices", icon: <Services /> },
     ]
 
     const view = toolbar_menu.find((a) => {
@@ -505,43 +505,54 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             refresh,
             refetch
         }}>
-            <Box
-                round="xsmall"
-                overflow="hidden"
-                flex>
-                <Box
-                    pad="xsmall"
-                    align="center"
-                    justify="between"
-                    background="accent-2"
-                    direction="row">
-                    <Box direction="row" align="center">
-                        <Box
-                            margin={{ right: 'small' }}
-                            width="7px"
-                            height="7px"
-                            round="small"
-                            background={rootDevice?.online ? 'lime' : 'red'} />
-                        <Text>{rootDevice?.name} - {program?.name}</Text>
+            <Paper
+                sx={{flex: 1, margin: '6px', display: 'flex', flexDirection: 'column'}}>
+                <Paper
+                    elevation={6}
+                    sx={{
+                        borderRadius: 0,
+                        bgcolor: 'secondary.main',
+                        padding: '3px',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        flexDirection: 'row',
+                        display: 'flex'
+                    }}>
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <IconButton
+                            onClick={() => navigate("/devices")}
+                            sx={{color: 'navigation.main'}}>
+                            <KeyboardArrowLeft />
+                        </IconButton>
+
+                       
                     </Box>
-                    <Box direction="row">
-                        {view?.id == 'controls' && (<Button
-                            plain
-                            hoverIndicator
-                            style={{ padding: 6, borderRadius: 3 }}
-                            icon={<Cycle />} />)}
-                    </Box>
-                </Box>
-                <Box
-                    flex
-                    direction="row">
+                    <Box sx={{display: 'flex', flex: 1, flexDirection:"row", justifyContent: 'center', alignItems:"center"}}>
+                            <Box    
+                                sx={{
+                                    width: 7,
+                                    height: 7,
+                                    borderRadius: 7,
+                                    marginRight: '8px',
+                                    marginLeft: '8px',
+                                    background: !rootDevice?.online ? '#42e239' : '#db001b'
+                                }} />
+                            <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography>
+                        </Box>
                     <Toolbar
                         active={toolbar_menu.find((a) => matchPath(window.location.pathname, `${a?.id}`) != null)?.id}
                         onItemClick={(item) => {
-                            navigate(`${item.id}`)
+                            navigate(`${item}`)
                         }}
                         items={toolbar_menu} />
-                    <Box flex>
+                    <Box sx={{display: 'flex', flexDirection:"row"}}>
+                        {view?.id == 'controls' && (<IconButton><Cycle /></IconButton>)}
+                    </Box>
+                </Paper>
+                <Box
+                    sx={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+       
+                    <Box sx={{flex: 1, display: 'flex'}}>
                         <Routes>
                             <Route path={`variables`} element={<ControlVariable />} />
                             <Route path={`info`}  element={<DeviceSingle/>} />
@@ -570,7 +581,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                 {renderActions()}
             </Box> */}
                 </Box>
-            </Box>
+            </Paper>
         </DeviceControlProvider>
     )
 }

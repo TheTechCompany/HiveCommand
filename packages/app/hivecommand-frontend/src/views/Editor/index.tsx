@@ -1,6 +1,7 @@
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import React, { Suspense, lazy, useEffect, useRef, useState, useCallback } from 'react';
-import { Box, Text, Spinner, Button, Collapsible, List } from 'grommet';
+import { Box, Paper, Typography } from '@mui/material';
+import { Spinner } from 'grommet'
 import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
@@ -114,42 +115,45 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         }}>
             <Suspense fallback={(
                 <Box 
-                    direction="column"
-                    align="center"
-                    justify="center"
-                    flex>
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}>
                     <Spinner size="medium"/>
-                    <Text>Loading Editor ...</Text>
+                    <Typography>Loading Editor ...</Typography>
                 </Box>)}>
-            <Box 
-                elevation='small'
-                overflow="hidden"
-                flex
-                round="xsmall" 
-                background="neutral-1">
+            <Paper 
+                sx={{
+                    flex: 1,
+                    display: 'flex',
+                    flexDirection: 'column'
+                }}>
                 <Box
-                    align="center"
-                    justify="between" 
-                    pad="xsmall" 
-                    direction="row" 
-                    background="accent-2">
+                    sx={{
+                        display: 'flex',
+                        bgcolor: 'secondary.main'
+                    }}>
                     <Box 
-                        align="center"
-                        direction="row">
+                        sx={{display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                         <IconButton
                             onClick={() => {
                                 openSidebar(!sidebarOpen)
                             }}>
                             <Menu fontSize='small' style={{color: 'white'}} />
                         </IconButton>
-                        <Text>{program.name}</Text>
+                        <Typography color="#fff">{program.name}</Typography>
                     </Box>
 
                     <Box 
-                        justify="between"
-                        align="center"
-                        overflow="hidden"
-                        direction="row">
+                        sx={{
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            display: 'flex',
+                            flexDirection: 'row',
+                            overflow: 'hidden'
+                        }}>
                         <RoutedTabs 
                             tabs={menu.map((x) => ({
                                 path: x.toLowerCase(),
@@ -178,10 +182,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
               
                 <Box
-                    flex
-                    direction="row">
+                    sx={{flex: 1, display: 'flex', flexDirection: 'row'}}>
                     
-                    <Box flex>
+                    <Box sx={{flex: 1, display: 'flex'}}>
                         <Routes>
                             <Route path={`/`} element={<Outlet />}>
                                 <Route path={""} element={<Program activeProgram={activeProgram} />} />
@@ -196,7 +199,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     </Box>
                     
                 </Box>
-            </Box>
+            </Paper>
             </Suspense>
         </CommandEditorProvider>
     )
