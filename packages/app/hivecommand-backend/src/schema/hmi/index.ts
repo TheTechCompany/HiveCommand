@@ -11,6 +11,28 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
+			createCommandInterfaceDevice: async (root: any, args: any) => {
+				return await prisma.canvasNodeTemplate.create({
+					data: {
+						id: nanoid(),
+						...args.input
+					}
+				})
+			},
+			updateCommandInterfaceDevice: async (root: any, args: any) => {
+				console.log("UPDATE", args.input)
+				return await prisma.canvasNodeTemplate.update({
+					where: {
+						id: args.id
+					},
+					data: {
+						ports: args.input.ports
+					}
+				})
+			},
+			deleteCommandInterfaceDevice: async (root: any, args: any) => {
+				return await prisma.canvasNodeTemplate.delete({where: {id: args.id}})
+			},
 			createCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
 				let deviceUpdate: any = {};
 				if (args.input.devicePlaceholder) {
@@ -385,6 +407,10 @@ export default (prisma: PrismaClient) => {
 	}
 
 	type Mutation {
+		createCommandInterfaceDevice (input: CommandHMIDeviceInput): CommandHMIDevice
+		updateCommandInterfaceDevice (id: ID!, input: CommandHMIDeviceInput) : CommandHMIDevice
+		deleteCommandInterfaceDevice (id: ID!): CommandHMIDevice
+
 		createCommandProgramInterfaceNode (program: ID, input: ComandProgramInterfaceNodeInput!): CommandHMINode
 		updateCommandProgramInterfaceNode (program: ID, id: ID, input: ComandProgramInterfaceNodeInput!): CommandHMINode
 		deleteCommandProgramInterfaceNode (program: ID, id: ID!): CommandHMINode
@@ -528,6 +554,12 @@ export default (prisma: PrismaClient) => {
 		targetHandle: String
 	}
 
+	input CommandHMIDeviceInput {
+		name: String
+		width: Float
+		height: Float
+		ports: [CommandHMIDevicePortInput]
+	}
 
 	type CommandHMIDevice {
 		id: ID! 
@@ -537,6 +569,13 @@ export default (prisma: PrismaClient) => {
 		height: Float
 
 		ports: [CommandHMIDevicePort]
+	}
+
+	input CommandHMIDevicePortInput {
+		x: Float
+		y: Float
+		key: String
+		rotation: Float
 	}
 
 	type CommandHMIDevicePort {

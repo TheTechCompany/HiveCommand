@@ -1,6 +1,23 @@
 import { BaseModal } from '../base';
-import { Box, Select, CheckBox, Text, TextInput } from 'grommet';
+import { Text, TextInput } from 'grommet';
 import React, {useState, useEffect} from 'react';
+import { 
+	Box,
+	Checkbox,
+	DialogActions, 
+	Button, 
+	TextField, 
+	DialogContent, 
+	Dialog,
+	Select, 
+	MenuItem, 
+	DialogTitle, 
+	InputAdornment,
+	FormControl,
+	InputLabel,
+	Typography,
+	FormControlLabel
+} from '@mui/material';
 
 export interface ProgramDeviceModalProps {
 	open: boolean;
@@ -100,7 +117,7 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 		// setDevice({...device, configuration: conf})
 	}
 
-	const renderInput = (key: string, type: string, selector : string) => {
+	const renderInput = (key: string, label: string, type: string, selector : string) => {
 		let defaultValue = device?.state?.find((a) => a.id == key)?.[selector] || ''
 		let value = device?.calibrated?.find((a) => a.key == key)?.[selector] || defaultValue
 
@@ -108,64 +125,84 @@ export const ProgramDeviceModal : React.FC<ProgramDeviceModalProps> = (props) =>
 			case 'UIntegerT':
 			case 'IntegerT':
 			case 'Int':
-				return (<TextInput 	
+				return (<TextField 	
 						value={value}
+						fullWidth
+						sx={{margin: 0}}
+						size="small"
+						label={label}
 						onChange={(e) => onChangeConf(key, e.target.value, selector)}
-						style={{padding: 3}} 
 						type="number" />)
 			default:
 				return;
 		}
 	}
 	return (
-		<BaseModal	
-			title="Add Device"
-			onSubmit={onSubmit}
+		<Dialog	
 			open={props.open}
-			onDelete={props.selected && props.onDelete}
 			onClose={props.onClose}>
-			<Box flex gap="xsmall">
-				<TextInput	
+			<DialogTitle>Add Device</DialogTitle>
+
+			<DialogContent sx={{minWidth: '420px', display: 'flex', padding: '12px', flexDirection: 'column', '& *': {marginBottom: '8px'}}}>
+				<TextField	
+					sx={{marginTop: '12px'}}
+					fullWidth
+					size="small"
 					value={device?.name}
 					onChange={(e) => setDevice({...device, name: e.target.value})}
-					placeholder="P&ID Label" />
+					label="P&ID Label" />
 				
-				<Select 
-					value={device?.type}
-					onChange={({value}) => setDevice({...device, type: value})}
-					options={props.deviceTypes || []}
+				<FormControl fullWidth size="small">
+					<InputLabel>Device Type</InputLabel>
+					<Select 
+						label="Device Type"
+						value={device?.type}
+						onChange={(evt, value) => setDevice({...device, type: evt.target.value})}>
+						{props.deviceTypes?.map((deviceType) => (
+							<MenuItem value={deviceType.id}>{deviceType.name}</MenuItem>
+						))} 
+					</Select>
+				</FormControl>
+				
+					{/* options={props.deviceTypes || []}
 					labelKey="name"
 					valueKey={{reduce: true, key: 'id'}}
-					placeholder="Device Type" />
+					placeholder="Device Type" /> */}
 				
 				<Box
-					justify="end" 	
-					direction="row">
-					<CheckBox 
+					sx={{display: 'flex', flexDirection: 'row'}}>
+						<FormControlLabel control={
+					<Checkbox 
 						checked={device?.requiresMutex}
-						onChange={(e) => setDevice({...device, requiresMutex: e.target.checked})}
-						reverse 
-						label="Requires Mutex" />
+						onChange={(e) => setDevice({...device, requiresMutex: e.target.checked})} />} label="Requires mutex" />
 				</Box>
 				{device?.state && device?.state?.filter((a) => a.min && a.max).map((conf) => (
 					<>
 					<Box
-						gap="xsmall"
-						align="center"
-						direction="row">
-						<Box flex><Text>min{conf.key}</Text></Box>
-						<Box flex>{renderInput(conf.id, conf.type, 'min')}</Box>
+						sx={{display: 'flex', alignItems: 'center', flexDirection: 'row'}}>
+					
+						<Box sx={{flex: 1, margin: 0}}>
+							{renderInput(conf.id, `min${conf.key}`, conf.type, 'min')}
+						</Box>
 					</Box>
 					<Box
-						gap="xsmall"
-						align="center"
-						direction="row">
-						<Box flex><Text>max{conf.key}</Text></Box>
-						<Box flex>{renderInput(conf.id, conf.type, 'max')}</Box>
+						sx={{
+							alignItems: 'center',
+							flexDirection: 'row',
+							display: 'flex'
+						}}>
+				
+						<Box sx={{flex: 1, margin: 0}}>
+							{renderInput(conf.id, `max${conf.key}`, conf.type, 'max')}
+						</Box>
 					</Box>
 					</>
 				))}
-			</Box>
-		</BaseModal>
+			</DialogContent>
+			<DialogActions>
+				<Button onClick={props.onClose}>Close</Button>
+				<Button onClick={onSubmit} variant="contained">Save</Button>
+			</DialogActions>
+		</Dialog>
 	)
 }
