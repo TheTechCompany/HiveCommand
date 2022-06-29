@@ -550,7 +550,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                     </Box>
                 </Paper>
                 <Box
-                    sx={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+                    sx={{flex: 1, display: 'flex', maxHeight: 'calc(100% - 46px)', flexDirection: 'row'}}>
        
                     <Box sx={{flex: 1, display: 'flex'}}>
                         <Routes>
