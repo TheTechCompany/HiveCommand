@@ -32,9 +32,12 @@ export const MenuItem : React.FC<TreeItemContentProps> = forwardRef<HTMLDivEleme
         expandIcon,
         collapseIcon,
         expansionIcon,
-        displayIcon
+        displayIcon,
+        dontAdd,
+        dontEdit
       } = props as any;
       
+      console.log({props})
 
       const icon = iconProp || expansionIcon || displayIcon;
 
@@ -80,6 +83,7 @@ export const MenuItem : React.FC<TreeItemContentProps> = forwardRef<HTMLDivEleme
                 {icon}
             </div>
             <Typography
+                fontSize={"xsmall"}
                     onClick={handleSelectionClick}
                     component="div"
                     className={classes.label}
@@ -87,18 +91,23 @@ export const MenuItem : React.FC<TreeItemContentProps> = forwardRef<HTMLDivEleme
                     {label}
             </Typography>
 
+            {!dontAdd && (
             <IconButton
                 onClick={() => onAdd?.(props.nodeId)}
                 size="small"
                 sx={{display: 'none'}}>
                 <Add fontSize="small" />
-            </IconButton>
+            </IconButton>)}
+
+            {!dontEdit && (
             <IconButton 
                 onClick={() => onEdit?.(props.nodeId)}
                 size="small"
                 sx={{display: 'none'}}>
                 <MoreVert fontSize='small' />
             </IconButton>
+                )}
+
         </Box>
     )
 })
@@ -110,8 +119,9 @@ export interface MenuItemGroupProps {
 }
 
 export const CustomTreeItem = (props: any) => {
+    console.log({props})
     return (<TreeItem
-            ContentProps={{style: {width: 'unset'}}}
+            ContentProps={{style: {width: 'unset'}, dontAdd: props.dontAdd, dontEdit: props.dontEdit}}
             ContentComponent={MenuItem} 
             {...props} />)
 }

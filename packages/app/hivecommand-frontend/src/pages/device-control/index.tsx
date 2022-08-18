@@ -1,4 +1,4 @@
-import { IconNodeFactory } from '@hexhive/ui';
+import { AvatarList, IconNodeFactory } from '@hexhive/ui';
 import { InfiniteCanvas } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
 import { HMINodeFactory } from '../../components/hmi-node/HMINodeFactory';
@@ -16,7 +16,9 @@ import { DeviceDevices } from '../device-devices';
 import { DeviceSingle } from '../device-single';
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, usePerformDeviceAction } from '@hive-command/api';
 import { ControlVariable } from './views/variable';
-import { Paper, Box, Button, Typography, IconButton } from '@mui/material';
+import { Paper, Box, Button, Typography, IconButton, Popover, Divider, List, ListItem } from '@mui/material';
+import { useSubscription } from '@apollo/client';
+import { stringToColor } from '@hexhive/utils';
 
 export interface DeviceControlProps {
 
@@ -41,6 +43,30 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     const view = toolbar_menu.find((a) => {
         return matchPath(window.location.pathname, `${a.id}`) != null;
     })
+
+    const {data: subscriptionData} = useSubscription(gql`
+        subscription($id: ID!) {
+            watchingDevice(device: $id) {
+                id
+                name
+            }
+        }
+    `, {
+        variables: {
+            id
+        },
+        onSubscriptionData: (data) => {
+            console.log("Received data", {data})
+        }
+    })
+
+    const [anchorEl, setAnchorEl ] = useState<any>();
+
+    console.log({subscriptionData})
+
+    // useEffect(() => {
+    //     if(subscriptionData?.watchingDevice) alert(`${subscriptionData?.watchingDevice} is watching now too`);
+    // }, [subscriptionData])
 
    const { data: deviceInfo } = useQuery(gql`
         query DeviceInfo($id: ID) {
@@ -313,6 +339,44 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
     const changeDeviceValue = useChangeDeviceValue(id)
     const performDeviceAction = usePerformDeviceAction(id)
 
+
+    useEffect(() => {
+        // fetch("http://localhost:7000/graphql", {
+        //     "credentials": "include",
+        //     "headers": {
+        //         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:103.0) Gecko/20100101 Firefox/103.0",
+        //         "Accept": "*/*",
+        //         "Accept-Language": "en-US,en;q=0.5",
+        //         "Content-Type": "application/json",
+        //         "Sec-Fetch-Dest": "empty",
+        //         "Sec-Fetch-Mode": "cors",
+        //         "Sec-Fetch-Site": "same-site",
+        //         "Sec-GPC": "1",
+        //         "Pragma": "no-cache",
+        //         "Cache-Control": "no-cache"
+        //     },
+        //     "referrer": "http://localhost:8000/",
+        //     "body": "{\"query\":\"subscription { watchingDevice(device: \\\"101\\\") }\"}",
+        //     "method": "POST",
+        //     "mode": "cors"
+        // }).then((r) => {
+        //     return r.body
+        // }).then(async (r) => {
+
+        //     const reader = r.getReader();
+        //     let done, value;
+        //     while(!done){
+        //         ({value, done} = await reader.read());
+                
+        //         console.log( new TextDecoder().decode(value) );
+        //     }
+        //     // for await (const chunk of r.getReader()){
+
+        //     // }
+        // });
+    
+    }, [])
+
     // const [performAction, performInfo] = useMutation((mutation, args: {
     //     deviceId: string,
     //     deviceName: string,
@@ -494,6 +558,7 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
             // operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
             controlId: id,
             program,
+            watching: subscriptionData?.watchingDevice || [],
             // values,
             device: rootDevice,
             reporting,
@@ -539,6 +604,47 @@ export const DeviceControl: React.FC<DeviceControlProps> = (props) => {
                                 }} />
                             <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography>
                         </Box>
+                        <Box
+                            onMouseEnter={(evt) => {
+                                setAnchorEl(evt.currentTarget)
+                            }}
+                            onMouseLeave={(evt) => {
+                                setAnchorEl(null)
+                            }}>
+                            <AvatarList
+                                users={subscriptionData?.watchingDevice?.map((x) => ({
+                                    ...x,
+                                    color: stringToColor(x.name)
+                                })) || []} />
+                         
+                            <Popover
+                                open={Boolean(anchorEl)}
+                                anchorEl={anchorEl}
+                                transformOrigin={{
+                                    horizontal: 'center',
+                                    vertical: 'top'
+                                }}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center'
+                                }}
+                               
+                                 sx={{
+                                    pointerEvents: 'none',
+                                  }}
+                                >
+                                    <Box sx={{padding: '6px', display: 'flex', flexDirection: 'column'}}>
+                                        <Typography>Who's watching</Typography>
+                                        <Divider />
+                                        <List disablePadding>
+                                            {subscriptionData?.watchingDevice?.map((x) => (
+                                                <ListItem sx={{marginBottom: '3px'}} dense>{x.name}</ListItem>
+                                            ))}
+                                        </List>
+                                    </Box>
+                            </Popover>
+                        </Box>
+
                     <Toolbar
                         active={toolbar_menu.find((a) => matchPath(window.location.pathname, `${a?.id}`) != null)?.id}
                         onItemClick={(item) => {

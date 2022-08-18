@@ -125,7 +125,13 @@ export const useDeleteProgramFlow = (programId: string) => {
 export const useCreateProgramHMI = (programId: string) => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string}) => {
-		
+
+		const item = mutation.createCommandProgramInterface({
+			program: programId,
+			input: {
+				name: args.name
+			}
+		})
 		// let query = {};
 		// // if(args.parent){
 		// // 	query = {
@@ -159,6 +165,11 @@ export const useCreateProgramHMI = (programId: string) => {
 		// 		...item.commandPrograms?.[0]
 		// 	}
 		// }
+		return {
+			item: {
+				...item
+			}
+		}
 	})
 	return async (name: string, parent?: string) => {
 		return await mutateFn({

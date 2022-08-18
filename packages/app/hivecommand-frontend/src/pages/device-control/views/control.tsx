@@ -159,13 +159,13 @@ export default () => {
 
 
 	useEffect(() => {
-		const timer = setInterval(() => {
-			client.refetchQueries({ include: ['DeviceValues'] })
-		}, 2 * 1000)
+		// const timer = setInterval(() => {
+		// 	client.refetchQueries({ include: ['DeviceValues'] })
+		// }, 2 * 1000)
 
-		return () => {
-			clearInterval(timer)
-		}
+		// return () => {
+		// 	clearInterval(timer)
+		// }
 	}, [])
 
 	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {

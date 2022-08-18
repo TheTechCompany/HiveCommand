@@ -6,8 +6,8 @@ import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
 //const Editor = lazy(() => import('@hive-flow/editor'));
-
-import {  Menu } from '@mui/icons-material'
+import { Home } from './pages/home'
+import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
 
 import { Routes, Route } from 'react-router-dom';
 import {Program} from './pages/program'
@@ -20,6 +20,10 @@ import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { Variables } from './pages/variables';
 import { IconButton } from '@mui/material';
+import { TreeMenu } from './components/tree-menu';
+import { EditorMenuDialog } from '../../components/modals/editor-menu';
+
+
 export interface EditorProps {
 
 }
@@ -32,20 +36,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     const match = useMatch(`*/:path`)
 
-    const [ modalOpen, openModal ] = useState<boolean>(false);
+    const [ menuOpen, setMenuOpen ] = useState<any>();
 
-    const [ selectedItem, setSelectedItem ] = useState<any>(undefined);
-
-    const [ view, setView ] = useState<"Documentation" | "Program" | "HMI" | "Devices" | "Alarms">("Program")
-
-    const [ sidebarOpen, openSidebar ] = useState<boolean>(true);
-
-    const [ nodes, setNodes ] = useState<InfiniteCanvasNode[]>([]);
-    const [ paths, _setPaths ] = useState<InfiniteCanvasPath[]>([]);
-
-
-    const [ activeProgram, setActiveProgram ] = useState<string>('')
-
+    const [ selected, setSelected ] = useState<{
+        id: string,
+        parent?: string,
+        type: 'root' | 'editor'
+    }>()
 
     const client = useApolloClient()
 
@@ -54,10 +51,22 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             commandPrograms(where: {id: $id}){
                 id
                 name
+
+                templatePacks {
+                    id
+                    name
+                }
+                
                 devices {
                     id
                     name
                 }
+
+                interface {
+                    id
+                    name
+                }
+
                 program {
                     id
                     name
@@ -79,6 +88,24 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
 
+    const handleMenuSubmit = async (type: string, data: any) => {
+        let promise : any = null
+
+        switch(type){
+            case 'program':
+                //Add parent opt
+                promise = createProgramFlow(data.name)
+                break;
+            case 'hmi':
+                //Add parent opt
+                promise = createProgramHMI(data.name)
+                break;
+        }
+
+        await promise;
+        setMenuOpen(null);
+        refetch()
+    }
    
     const refetch = () => {
         client.refetchQueries({include: ['EditorCommandProgram']})
@@ -89,9 +116,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const query = qs.parse(location.search, {ignoreQueryPrefix: true})
 
     const menu = [
-        "Program",
-        "Controls",
-        "Devices",
+        "Home",
         "Variables",
         "Alarms"
     ]
@@ -106,13 +131,87 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     }, [window.location.pathname])
 
+    const treeMenu = [
+        {
+            id: 'system-root',
+            name: 'System',
+            dontAdd: true,
+            element: <Home />
+        },
+        {
+            id: 'program-root',
+            name: 'Program',
+            children: program?.program?.map((x) => ({
+                id: x.id,
+                name: x.name,
+                children: x.children?.map((y) => ({
+                    id: y.id,
+                    name: y.name
+                }))
+            })),
+            element: <div>Program</div>,
+            editor: <Program activeProgram={selected?.id} />
+        },
+        {
+            id: 'hmi-root',
+            name: 'HMI',
+            children: program?.interface?.map((x) => ({
+                id: x.id,
+                name: x.name,
+                children: []
+            })),
+            element: <div>HMI</div>,
+            editor: <Controls />
+        },
+        {
+            id: 'devices-root',
+            name: 'Devices',
+            children: program?.devices?.map((x) => ({
+                id: x.id,
+                name: x.name
+            })),
+            element: <Devices />
+        },
+        {
+            id: 'alarms-root',
+            name: 'Alarms',
+            element: <Alarms />
+
+        },
+        {
+            id: 'setpoints-root',
+            name: 'Setpoints',
+            element: <Variables />
+        }
+    ];
+
+    const renderRootPage = () => {
+        let page = treeMenu?.find((a) => a.id == `${selected?.id}-root`)
+        return page.element
+    }
+
+    const renderEditorPage = () => {
+        let root = treeMenu.find((a) => a.id == selected?.parent);
+        let page = root?.children?.find((a) => a.id == selected?.id);
+
+        console.log({root, page, selected})
+        return root?.editor
+    }
 
     return (
         <CommandEditorProvider value={{
-            sidebarOpen: sidebarOpen,
             program,
             refetch: refetch
         }}>
+            <EditorMenuDialog 
+                type={menuOpen}
+                onClose={() => {
+                    setMenuOpen(undefined)
+                }}
+                onSubmit={(item) => {
+                    handleMenuSubmit(menuOpen, item)
+                }}
+                open={Boolean(menuOpen)} />
             <Suspense fallback={(
                 <Box 
                     sx={{
@@ -126,6 +225,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 </Box>)}>
             <Paper 
                 sx={{
+                    margin: '6px',
                     flex: 1,
                     display: 'flex',
                     flexDirection: 'column'
@@ -139,9 +239,10 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                         sx={{display: 'flex', flex: 1, flexDirection: 'row', alignItems: 'center'}}>
                         <IconButton
                             onClick={() => {
-                                openSidebar(!sidebarOpen)
+                                navigate(`/programs`)
+                                // openSidebar(!sidebarOpen)
                             }}>
-                            <Menu fontSize='small' style={{color: 'white'}} />
+                            <ArrowLeft fontSize='small' style={{color: 'white'}} />
                         </IconButton>
                         <Typography color="#fff">{program.name}</Typography>
                     </Box>
@@ -154,12 +255,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                             flexDirection: 'row',
                             overflow: 'hidden'
                         }}>
-                        <RoutedTabs 
-                            tabs={menu.map((x) => ({
-                                path: x.toLowerCase(),
-                                label: x,
-                                default: x == "Program"
-                            }))} />
+                      
                         {/* {menu.map((menu_item) => (
                             <Button 
                             
@@ -184,18 +280,40 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 <Box
                     sx={{flex: 1, display: 'flex', flexDirection: 'row'}}>
                     
+                    <Paper sx={{borderRadius: 0, minWidth: '175px'}}>
+                      
+                        <TreeMenu
+                            onAdd={(parent) => {
+                                setMenuOpen(parent.replace(/-root/, ''))
+                            }}
+                            onNodeSelect={(node) => {
+                                let isRoot = node.match(/(.+)-root/);
+                                if(isRoot){
+                                    setSelected({
+                                        id: isRoot[1],
+                                        type: 'root'
+                                    })
+                                    // setView(node.match(/(.+)-root/)?.[1] as any)
+                                }else{
+
+                                    let elements = treeMenu.reduce((prev, curr) => {
+                                        return [...prev, ...(curr.children || []).map((x) => ({...x, parent: curr.id}))]
+                                    }, [])
+
+                                    let element = elements.find((a) => a?.id == node);
+
+                                    setSelected({
+                                        id: node,
+                                        parent: element?.parent,
+                                        type: 'editor',
+                                    })
+                                }
+                            }}
+                            items={treeMenu}
+                            />
+                    </Paper>
                     <Box sx={{flex: 1, display: 'flex'}}>
-                        <Routes>
-                            <Route path={`/`} element={<Outlet />}>
-                                <Route path={""} element={<Program activeProgram={activeProgram} />} />
-                                <Route path={`program`} element={<Program activeProgram={activeProgram} />} />
-                                <Route path={`controls`} element={<Controls activeProgram={activeProgram} />} />
-                                <Route path={`devices`} element={<Devices/>} />
-                                <Route path={`devices/:id*`} element={ <DeviceSingle program={id} />} />
-                                <Route path={`alarms`} element={<Alarms/>} />
-                                <Route path={`variables`} element={<Variables />} />
-                            </Route>
-                        </Routes>
+                        {selected?.type == 'root' ? renderRootPage() : renderEditorPage()}
                     </Box>
                     
                 </Box>

@@ -1,4 +1,4 @@
-import { Box, Collapsible, Text, Heading, Button } from 'grommet'
+import { Box } from '@mui/material'
 import React, {useState} from 'react' 
 import { Block, BlockTray } from '@hexhive/ui';
 import styled from 'styled-components'
@@ -14,18 +14,21 @@ export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
 
     console.log({items: props.items})
     return (
-            <Box flex>
+            <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
                     
                     <BlockTray 
                         renderItem={(block) => (
                         <Box   
-                            style={{position: 'relative'}}
-                            background="accent-1"
-                            pad="xsmall"
-                            round="xsmall"
-                            justify={block.extras?.dimensions ? "center" : 'start'}
-                            align="center"
-                            direction="row">
+                            sx={{
+                                cursor: 'pointer',
+                                borderRadius: '3px',
+                                padding: '4px',
+                                bgcolor: 'secondary.main',
+                                color: 'white',
+                                alignItems: 'center',
+                                justifyContent: block.extras?.dimensions ? 'center' : 'start',
+                                display: 'flex'
+                            }}>
 
 
                             {/* <Box 

@@ -7,8 +7,13 @@ export const NodeMenu = (props) => {
         <Box flex pad="xsmall">
             <NodeDropdown
                 items={props.nodes.map((node) => ({
+                    extras: {
+                        icon: <></>,
+                    },
+                    label: node.name,
                     ...node,
-                    icon: node.icon
+                    icon: <></>,
+                    // icon: node.icon
                 }))}
             />
         </Box>

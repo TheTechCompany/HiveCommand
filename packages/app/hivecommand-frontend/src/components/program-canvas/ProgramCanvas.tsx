@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { Box, Button, Collapsible } from 'grommet'
+import { Box, Button, Collapse, IconButton } from '@mui/material'
 import { ActionNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, InfiniteCanvasPosition, ZoomControls } from '@hexhive/ui';
 import { NodeDropdown } from '../node-dropdown';
 import { nanoid } from 'nanoid';
@@ -75,32 +75,30 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 
 	return (
 		<Box 
-			direction="row"
-			flex>
+			sx={{flex: 1, display: 'flex'}}>
 			<InfiniteCanvas 
 				style={CanvasStyle}
 			 	menu={(
-				 	<Collapsible 
+				 	<Collapse 
 						onKeyPress={(e) => {
 							console.log("KEY PRESS")
 							e.preventDefault();
 							e.stopPropagation()
 						}}
-						open={Boolean(menu)}
-						direction="horizontal">
+						in={Boolean(menu)}
+						orientation="horizontal">
 						<Box
-							focusIndicator={false}
+							width={'150px'}
+							sx={{padding: '4px', display: 'flex'}}
 							onClick={(e) => {
 								e.stopPropagation()
 								e.preventDefault()
-							}}
-							pad={'xsmall'} 
-							width="small">
+							}}>
 								{/* {renderMenu()} */}
 								{props.menu.find((a) => a.key == menu)?.panel}
 						
 						</Box>
-					</Collapsible>
+					</Collapse>
 				)}
                 editable={true}
                 nodes={nodes}
@@ -173,22 +171,30 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
                     }}  />
             </InfiniteCanvas>
 			<Box
-				elevation="small"
-				background="accent-1"
+				sx={{
+					display: 'flex',
+					flexDirection: 'column',
+					bgcolor: 'secondary.main'
+				}}
 				>
 
 				{props.menu.map((menu_item) => (
-					<Button 
-						hoverIndicator
-						icon={menu_item.icon}
-						active={menu == menu_item.key}
-						onClick={() => {
-							if(menu == menu_item.key){
-								setMenu(undefined)
-							}else{
-								setMenu(menu_item.key)
-							}
-						}} />
+					<div style={{background: menu_item.key == menu ? '#dfdfdfdf' : undefined}}>
+						<IconButton
+							sx={{
+								color: 'white',
+							}}
+							onClick={() => {
+								if(menu == menu_item.key){
+									setMenu(undefined)
+								}else{
+									setMenu(menu_item.key)
+								}
+							}}>
+							{menu_item.icon}
+							
+						</IconButton>
+					</div>
 				))}
 			</Box>
 		</Box>

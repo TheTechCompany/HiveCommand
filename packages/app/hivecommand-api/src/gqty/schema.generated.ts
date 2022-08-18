@@ -128,6 +128,12 @@ export interface CommandHMIDeviceInput {
   width?: InputMaybe<Scalars["Float"]>;
 }
 
+export interface CommandHMIDevicePackInput {
+  description?: InputMaybe<Scalars["String"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  public?: InputMaybe<Scalars["Boolean"]>;
+}
+
 export interface CommandHMIDevicePortInput {
   key?: InputMaybe<Scalars["String"]>;
   rotation?: InputMaybe<Scalars["Float"]>;
@@ -240,6 +246,11 @@ export interface CommandProgramFlowWhere {
 }
 
 export interface CommandProgramInput {
+  name?: InputMaybe<Scalars["String"]>;
+  templatePacks?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+}
+
+export interface CommandProgramInterfaceInput {
   name?: InputMaybe<Scalars["String"]>;
 }
 
@@ -518,6 +529,19 @@ export const generatedSchema = {
     ports: { __type: "[CommandHMIDevicePortInput]" },
     width: { __type: "Float" },
   },
+  CommandHMIDevicePack: {
+    __typename: { __type: "String!" },
+    description: { __type: "String" },
+    elements: { __type: "[CommandHMIDevice]" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    public: { __type: "Boolean" },
+  },
+  CommandHMIDevicePackInput: {
+    description: { __type: "String" },
+    name: { __type: "String" },
+    public: { __type: "Boolean" },
+  },
   CommandHMIDevicePort: {
     __typename: { __type: "String!" },
     id: { __type: "ID!" },
@@ -658,10 +682,11 @@ export const generatedSchema = {
       __args: { where: "CommandProgramDeviceWhere" },
     },
     id: { __type: "ID!" },
-    interface: { __type: "CommandProgramHMI" },
+    interface: { __type: "[CommandProgramHMI]" },
     name: { __type: "String" },
     organisation: { __type: "HiveOrganisation" },
     program: { __type: "[CommandProgramFlow]" },
+    templatePacks: { __type: "[CommandHMIDevicePack]" },
     usedOn: { __type: "CommandDevice" },
     variables: { __type: "[CommandProgramVariable]" },
   },
@@ -860,12 +885,16 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     actions: { __type: "[CommandProgramAction]" },
     edges: { __type: "[CommandHMIEdge]" },
-    id: { __type: "ID!" },
+    id: { __type: "ID" },
     name: { __type: "String" },
     nodes: { __type: "[CommandHMINode]" },
     programs: { __type: "[CommandProgram]" },
   },
-  CommandProgramInput: { name: { __type: "String" } },
+  CommandProgramInput: {
+    name: { __type: "String" },
+    templatePacks: { __type: "[String]" },
+  },
+  CommandProgramInterfaceInput: { name: { __type: "String" } },
   CommandProgramNode: {
     __typename: { __type: "String!" },
     actions: { __type: "[CommandActionItem]" },
@@ -970,7 +999,11 @@ export const generatedSchema = {
     },
     createCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
-      __args: { input: "CommandHMIDeviceInput" },
+      __args: { input: "CommandHMIDeviceInput", pack: "ID" },
+    },
+    createCommandInterfacePack: {
+      __type: "CommandHMIDevicePack",
+      __args: { input: "CommandHMIDevicePackInput" },
     },
     createCommandProgram: {
       __type: "CommandProgram!",
@@ -1050,9 +1083,17 @@ export const generatedSchema = {
         program: "ID",
       },
     },
+    createCommandProgramInterface: {
+      __type: "CommandProgramHMI",
+      __args: { input: "CommandProgramInterfaceInput!", program: "ID" },
+    },
     createCommandProgramInterfaceEdge: {
       __type: "CommandHMIEdge",
-      __args: { input: "ComandProgramInterfaceEdgeInput!", program: "ID" },
+      __args: {
+        hmi: "ID",
+        input: "ComandProgramInterfaceEdgeInput!",
+        program: "ID",
+      },
     },
     createCommandProgramInterfaceGroup: {
       __type: "CommandHMIGroup",
@@ -1064,7 +1105,11 @@ export const generatedSchema = {
     },
     createCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
-      __args: { input: "ComandProgramInterfaceNodeInput!", program: "ID" },
+      __args: {
+        hmi: "ID",
+        input: "ComandProgramInterfaceNodeInput!",
+        program: "ID",
+      },
     },
     createCommandProgramVariable: {
       __type: "CommandProgramVariable!",
@@ -1084,6 +1129,10 @@ export const generatedSchema = {
     },
     deleteCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
+      __args: { id: "ID!", pack: "ID" },
+    },
+    deleteCommandInterfacePack: {
+      __type: "CommandHMIDevicePack",
       __args: { id: "ID!" },
     },
     deleteCommandProgram: { __type: "Boolean!", __args: { id: "ID!" } },
@@ -1127,9 +1176,13 @@ export const generatedSchema = {
       __type: "Boolean!",
       __args: { flow: "ID", id: "ID!", node: "ID", program: "ID" },
     },
+    deleteCommandProgramInterface: {
+      __type: "CommandProgramHMI",
+      __args: { id: "ID!", program: "ID" },
+    },
     deleteCommandProgramInterfaceEdge: {
       __type: "CommandHMIEdge",
-      __args: { id: "ID!", program: "ID" },
+      __args: { hmi: "ID", id: "ID!", program: "ID" },
     },
     deleteCommandProgramInterfaceGroup: {
       __type: "CommandHMIGroup",
@@ -1137,7 +1190,7 @@ export const generatedSchema = {
     },
     deleteCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
-      __args: { id: "ID!", program: "ID" },
+      __args: { hmi: "ID", id: "ID!", program: "ID" },
     },
     deleteCommandProgramVariable: {
       __type: "CommandProgramVariable!",
@@ -1181,7 +1234,11 @@ export const generatedSchema = {
     },
     updateCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
-      __args: { id: "ID!", input: "CommandHMIDeviceInput" },
+      __args: { id: "ID!", input: "CommandHMIDeviceInput", pack: "ID" },
+    },
+    updateCommandInterfacePack: {
+      __type: "CommandHMIDevicePack",
+      __args: { id: "ID!", input: "CommandHMIDevicePackInput" },
     },
     updateCommandProgram: {
       __type: "CommandProgram!",
@@ -1273,9 +1330,18 @@ export const generatedSchema = {
         program: "ID",
       },
     },
+    updateCommandProgramInterface: {
+      __type: "CommandProgramHMI",
+      __args: {
+        id: "ID!",
+        input: "CommandProgramInterfaceInput!",
+        program: "ID",
+      },
+    },
     updateCommandProgramInterfaceEdge: {
       __type: "CommandHMIEdge",
       __args: {
+        hmi: "ID",
         id: "ID",
         input: "ComandProgramInterfaceEdgeInput!",
         program: "ID",
@@ -1293,6 +1359,7 @@ export const generatedSchema = {
     updateCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: {
+        hmi: "ID",
         id: "ID",
         input: "ComandProgramInterfaceNodeInput!",
         program: "ID",
@@ -1336,6 +1403,10 @@ export const generatedSchema = {
     commandDevices: {
       __type: "[CommandDevice]!",
       __args: { where: "CommandDeviceWhere" },
+    },
+    commandInterfaceDevicePacks: {
+      __type: "[CommandHMIDevicePack]",
+      __args: { id: "ID", registered: "Boolean" },
     },
     commandInterfaceDevices: { __type: "[CommandHMIDevice!]!" },
     commandProgramDevicePlugins: { __type: "[CommandProgramDevicePlugin]!" },
@@ -1527,6 +1598,15 @@ export interface CommandHMIDevice {
   width?: Maybe<ScalarsEnums["Float"]>;
 }
 
+export interface CommandHMIDevicePack {
+  __typename?: "CommandHMIDevicePack";
+  description?: Maybe<ScalarsEnums["String"]>;
+  elements?: Maybe<Array<Maybe<CommandHMIDevice>>>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  public?: Maybe<ScalarsEnums["Boolean"]>;
+}
+
 export interface CommandHMIDevicePort {
   __typename?: "CommandHMIDevicePort";
   id: ScalarsEnums["ID"];
@@ -1649,10 +1729,11 @@ export interface CommandProgram {
     where?: Maybe<CommandProgramDeviceWhere>;
   }) => Maybe<Array<Maybe<CommandProgramDevicePlaceholder>>>;
   id: ScalarsEnums["ID"];
-  interface?: Maybe<CommandProgramHMI>;
+  interface?: Maybe<Array<Maybe<CommandProgramHMI>>>;
   name?: Maybe<ScalarsEnums["String"]>;
   organisation?: Maybe<HiveOrganisation>;
   program?: Maybe<Array<Maybe<CommandProgramFlow>>>;
+  templatePacks?: Maybe<Array<Maybe<CommandHMIDevicePack>>>;
   usedOn?: Maybe<CommandDevice>;
   variables?: Maybe<Array<Maybe<CommandProgramVariable>>>;
 }
@@ -1805,7 +1886,7 @@ export interface CommandProgramHMI {
   __typename?: "CommandProgramHMI";
   actions?: Maybe<Array<Maybe<CommandProgramAction>>>;
   edges?: Maybe<Array<Maybe<CommandHMIEdge>>>;
-  id: ScalarsEnums["ID"];
+  id?: Maybe<ScalarsEnums["ID"]>;
   name?: Maybe<ScalarsEnums["String"]>;
   nodes?: Maybe<Array<Maybe<CommandHMINode>>>;
   programs?: Maybe<Array<Maybe<CommandProgram>>>;
@@ -1907,7 +1988,11 @@ export interface Mutation {
   }) => Maybe<CommandDeviceReport>;
   createCommandInterfaceDevice: (args?: {
     input?: Maybe<CommandHMIDeviceInput>;
+    pack?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIDevice>;
+  createCommandInterfacePack: (args?: {
+    input?: Maybe<CommandHMIDevicePackInput>;
+  }) => Maybe<CommandHMIDevicePack>;
   createCommandProgram: (args: {
     input: CommandProgramInput;
   }) => CommandProgram;
@@ -1961,7 +2046,12 @@ export interface Mutation {
     node?: Maybe<Scalars["ID"]>;
     program?: Maybe<Scalars["ID"]>;
   }) => CommandActionItem;
+  createCommandProgramInterface: (args: {
+    input: CommandProgramInterfaceInput;
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandProgramHMI>;
   createCommandProgramInterfaceEdge: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
@@ -1971,6 +2061,7 @@ export interface Mutation {
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIGroup>;
   createCommandProgramInterfaceNode: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceNodeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
@@ -1988,7 +2079,11 @@ export interface Mutation {
   }) => Maybe<CommandDeviceReport>;
   deleteCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
+    pack?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIDevice>;
+  deleteCommandInterfacePack: (args: {
+    id: Scalars["ID"];
+  }) => Maybe<CommandHMIDevicePack>;
   deleteCommandProgram: (args: {
     id: Scalars["ID"];
   }) => ScalarsEnums["Boolean"];
@@ -2042,7 +2137,12 @@ export interface Mutation {
     node?: Maybe<Scalars["ID"]>;
     program?: Maybe<Scalars["ID"]>;
   }) => ScalarsEnums["Boolean"];
+  deleteCommandProgramInterface: (args: {
+    id: Scalars["ID"];
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandProgramHMI>;
   deleteCommandProgramInterfaceEdge: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
@@ -2052,6 +2152,7 @@ export interface Mutation {
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIGroup>;
   deleteCommandProgramInterfaceNode: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
@@ -2097,7 +2198,12 @@ export interface Mutation {
   updateCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandHMIDeviceInput>;
+    pack?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIDevice>;
+  updateCommandInterfacePack: (args: {
+    id: Scalars["ID"];
+    input?: Maybe<CommandHMIDevicePackInput>;
+  }) => Maybe<CommandHMIDevicePack>;
   updateCommandProgram: (args: {
     id: Scalars["ID"];
     input: CommandProgramInput;
@@ -2162,7 +2268,13 @@ export interface Mutation {
     node?: Maybe<Scalars["ID"]>;
     program?: Maybe<Scalars["ID"]>;
   }) => CommandActionItem;
+  updateCommandProgramInterface: (args: {
+    id: Scalars["ID"];
+    input: CommandProgramInterfaceInput;
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandProgramHMI>;
   updateCommandProgramInterfaceEdge: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     id?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
@@ -2174,6 +2286,7 @@ export interface Mutation {
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIGroup>;
   updateCommandProgramInterfaceNode: (args: {
+    hmi?: Maybe<Scalars["ID"]>;
     id?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceNodeInput;
     program?: Maybe<Scalars["ID"]>;
@@ -2209,6 +2322,10 @@ export interface Query {
   commandDevices: (args?: {
     where?: Maybe<CommandDeviceWhere>;
   }) => Array<Maybe<CommandDevice>>;
+  commandInterfaceDevicePacks: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    registered?: Maybe<Scalars["Boolean"]>;
+  }) => Maybe<Array<Maybe<CommandHMIDevicePack>>>;
   commandInterfaceDevices: Array<CommandHMIDevice>;
   commandProgramDevicePlugins: Array<Maybe<CommandProgramDevicePlugin>>;
   commandProgramDevices: Array<Maybe<CommandProgramDevice>>;
@@ -2244,6 +2361,7 @@ export interface SchemaObjectTypes {
   CommandDeviceTimeseriesTotal: CommandDeviceTimeseriesTotal;
   CommandDeviceValue: CommandDeviceValue;
   CommandHMIDevice: CommandHMIDevice;
+  CommandHMIDevicePack: CommandHMIDevicePack;
   CommandHMIDevicePort: CommandHMIDevicePort;
   CommandHMIEdge: CommandHMIEdge;
   CommandHMIGroup: CommandHMIGroup;
@@ -2302,6 +2420,7 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceTimeseriesTotal"
   | "CommandDeviceValue"
   | "CommandHMIDevice"
+  | "CommandHMIDevicePack"
   | "CommandHMIDevicePort"
   | "CommandHMIEdge"
   | "CommandHMIGroup"

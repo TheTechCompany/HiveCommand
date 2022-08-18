@@ -245,10 +245,11 @@ model Program {
 
   name String
 
+  templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
   program ProgramFlow[]
 
-  interface ProgramHMI? @relation(name: "hasInterface")
+  interface ProgramHMI[] @relation(name: "hasInterface")
 
   devices ProgramFlowIO[]
 
@@ -470,6 +471,8 @@ model ProgramAssertion {
 model ProgramHMI {
   id String @id
 
+  name String? 
+
   nodes CanvasNode[] @relation(name: "useNode")
 
   edges CanvasEdge[] @relation(name: "useEdge")
@@ -510,6 +513,34 @@ model CanvasEdge {
   hmiId String
 }
 
+model CanvasNodeTemplatePack {
+  id String @id
+
+  name String
+  type String?
+
+  provider String?
+  url String?
+  
+  version String?
+  description String?
+
+  public Boolean?
+
+  icon String?
+
+  elements CanvasNodeTemplate[] @relation(name: "inPack")
+
+  owner String
+
+  registeredBy String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  usedBy Program[] @relation(name: "useTemplatePack")
+}
+
 model CanvasNodeTemplate {
   id String @id
 
@@ -522,6 +553,8 @@ model CanvasNodeTemplate {
   
   usedBy CanvasNode[] @relation(name: "usedBy")
 
+  pack CanvasNodeTemplatePack? @relation(name: "inPack", fields: [packId], references: [id])
+  packId String?
 }
 
 model CanvasNode {

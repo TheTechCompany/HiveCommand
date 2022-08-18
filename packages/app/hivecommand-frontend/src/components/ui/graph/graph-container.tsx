@@ -3,7 +3,7 @@ import { Text, Button } from "grommet";
 import { Graph } from ".";
 import { MoreVert, Close } from "@mui/icons-material";
 import { Menu, MenuItem, Box, IconButton, Paper } from "@mui/material";
-import { BaseStyle } from "@hexhive/styles";
+import { HexHiveTheme } from "@hexhive/styles";
 
 export interface GraphContainerProps {
   dataKey: string;
@@ -33,7 +33,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
         flex: 1, 
         display: 'flex', 
         flexDirection: 'column',
-        background: BaseStyle.global.colors["neutral-1"], 
+        // background: HexHiveTheme.global.colors["neutral-1"], 
         borderRadius: 6, 
         overflow: 'hidden'}}
     >
@@ -45,7 +45,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
           flexDirection: 'row',
           alignItems: 'center',
           display: 'flex',
-          background: BaseStyle.global.colors["accent-2"]
+          background: HexHiveTheme.palette.secondary.main
         }}
 
       >
