@@ -92,6 +92,11 @@ export default (prisma: PrismaClient) => {
 								children: true
 							}
 						},
+						templatePacks: {
+							include: {
+								elements: true
+							}
+						},
 						interface: {
 							include: {
 								nodes: {
@@ -198,11 +203,14 @@ export default (prisma: PrismaClient) => {
 				}
 			},
 			Mutation: {
-				createCommandProgram: async (root: any, args: {input: {name: string}}, context: any) => {
+				createCommandProgram: async (root: any, args: {input: {name: string, templatePacks: string[]}}, context: any) => {
 					const program = await prisma.program.create({
 						data: {
 							id: nanoid(),
 							name: args.input.name,
+							templatePacks: {
+								connect: (args.input.templatePacks || []).map((x) => ({id: x}))
+							},
 							program: {
 								create: {
 									id: nanoid(),
@@ -211,7 +219,8 @@ export default (prisma: PrismaClient) => {
 							},
 							interface: {
 								create: {
-									id: nanoid()
+									id: nanoid(),
+									name: 'Default'
 								}
 							},
 							organisation: context.jwt.organisation
@@ -219,11 +228,14 @@ export default (prisma: PrismaClient) => {
 					})
 					return program;
 				},
-				updateCommandProgram: async (root: any, args: {id: string, input: {name: string}}, context: any) => {
+				updateCommandProgram: async (root: any, args: {id: string, input: {name: string, templatePacks: string[]}}, context: any) => {
 					const program = await prisma.program.update({
 						where: {id: args.id},
 						data: {
-							name: args.input.name
+							name: args.input.name,
+							templatePacks: {
+								set: args.input.templatePacks.map((x) => ({id: x}))
+							}
 						}
 					})
 
@@ -520,6 +532,8 @@ export default (prisma: PrismaClient) => {
 
 	input CommandProgramInput {
 		name: String	
+
+		templatePacks: [String]
 	}
 
 	input CommandProgramWhere {
@@ -534,8 +548,10 @@ export default (prisma: PrismaClient) => {
 		id: ID! 
 		name: String
 
+		templatePacks: [CommandHMIDevicePack]
+
 		program: [CommandProgramFlow]
-		interface: CommandProgramHMI
+		interface: [CommandProgramHMI]
 
 		devices(where: CommandProgramDeviceWhere): [CommandProgramDevicePlaceholder]
 		

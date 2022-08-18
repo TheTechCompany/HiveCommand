@@ -37,10 +37,7 @@ const pages = [
             path: '',
             component: <ProgramList/>    
         },
-        {
-            path: ':id/*',
-            component: <EditorPage />
-        }]
+       ]
     },
     {
         icon: <Extension />,

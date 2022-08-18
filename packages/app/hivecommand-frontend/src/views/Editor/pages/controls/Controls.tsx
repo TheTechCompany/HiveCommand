@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { Box, Text, List, Button, Collapsible, TextInput, Select, CheckBox } from 'grommet'
+import { Box, Button, Collapse, IconButton } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { NodeDropdown } from '../../../../components/node-dropdown';
@@ -29,7 +29,8 @@ export const Controls = (props) => {
 
     const { id } = useParams()
 
-    const { sidebarOpen } = useCommandEditor()
+
+    const { sidebarOpen, program: { templatePacks } } = useCommandEditor()
 
     const createProgramHMI = useCreateProgramHMI(id)
 
@@ -96,6 +97,14 @@ export const Controls = (props) => {
                 id
                 name
 
+                templatePacks {
+                    id
+                    name
+                    elements {
+                        id
+                        name
+                    }
+                }
                 interface {
                     id
                     name
@@ -242,11 +251,15 @@ export const Controls = (props) => {
 
     const canvasTemplates = data?.commandInterfaceDevices || [];
 
-    const devices = data?.commandPrograms?.[0]?.devices
-    const flows = data?.commandPrograms?.[0]?.program;
+    // const devices = data?.commandPrograms?.[0]?.devices
+    // const flows = data?.commandPrograms?.[0]?.program;
+    const { program: flows, devices} = data?.commandPrograms?.[0] || {};
+
     let program = data?.commandPrograms?.[0]
 
     let activeProgram = (program?.interface)
+
+    console.log({templatePacks, data, program})
 
 
     const nodeMenu = useMemo(() => NodeMenu.map((x) => {
@@ -374,8 +387,10 @@ export const Controls = (props) => {
                 nodes: nodes
             }}>
             <Box
-                direction="row"
-                flex>
+                sx={{
+                    display: 'flex',
+                    flex: 1,
+                }}>
 
                 <ProgramCanvasModal
                     open={createModalOpen}
@@ -410,14 +425,18 @@ export const Controls = (props) => {
                             id
                         })
                     }}
-                    menu={(<Collapsible
-                        open={Boolean(menuOpen)}
-                        direction="horizontal">
+                    menu={(<Collapse
+                        in={Boolean(menuOpen)}
+                        orientation="horizontal"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}>
                         <HMIDrawer
                             menu={menuOpen}
-                            nodes={nodeMenu}
+                            nodes={templatePacks || []}
                         />
-                    </Collapsible>)}
+                    </Collapse>)}
                     editable={true}
                     nodes={nodes}
                     paths={pathRef.current.paths}
@@ -530,22 +549,36 @@ export const Controls = (props) => {
                     <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
                 </InfiniteCanvas>)}
 
-                <Box background="accent-1" >
-                    <Button
-                        active={menuOpen == 'nodes'}
-                        onClick={() => changeMenu('nodes')}
-                        hoverIndicator
-                        icon={<Nodes  />} />
-                    <Button
-                        active={menuOpen == 'config'}
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    bgcolor: 'secondary.main',
+                    color: 'white'
+                }}>
+                    <div style={{background: menuOpen == 'nodes' ? '#dfdfdfdf' : undefined}}>
+                    <IconButton
+                        sx={{color: 'white'}}
+                        onClick={() => changeMenu('nodes')}>
+                        <Nodes />
+                    </IconButton>
+                    </div>
+                    <div style={{background: menuOpen == 'config' ? '#dfdfdfdf' : undefined}}>
+                    <IconButton
+                        sx={{color: 'white'}}
                         onClick={() => changeMenu('config')}
-                        hoverIndicator
-                        icon={<Settings width="24px" />} />
-                    <Button
-                        active={menuOpen == 'actions'}
+                    >
+                        <Settings style={{fill: 'white'}} width="24px" />
+
+                    </IconButton>
+                    </div>
+                    {/* <div style={{background: menuOpen == 'actions' ? '#dfdfdfdf' : undefined}}>
+                    <IconButton
+                        sx={{color: 'white'}}
                         onClick={() => changeMenu('actions')}
-                        hoverIndicator
-                        icon={<Action />} />
+                    >
+                        <Action />
+                    </IconButton>
+                    </div> */}
                 </Box>
             </Box>
         </HMIContext.Provider>

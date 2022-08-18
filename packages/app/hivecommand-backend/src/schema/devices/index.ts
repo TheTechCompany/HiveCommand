@@ -5,7 +5,25 @@ import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
 import { Channel } from "amqplib";
+import { GraphQLContext } from "../../context";
+import { PubSubChannels, redis } from "../../context/pubsub";
 
+const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => {
+	const asyncReturn = asyncIterator.return;
+  
+	asyncIterator.return = () => {
+		console.log("Async Cancel")
+	  onCancel();
+	  return asyncReturn ? asyncReturn.call(asyncIterator) : Promise.resolve({ value: undefined, done: true });
+	};
+  
+	return asyncIterator;
+};
+
+// //TODO move this out of memory
+// const watching = {
+
+// }
 export default (prisma: PrismaClient, mq: Channel) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
@@ -41,6 +59,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					if(args.where.id) whereArg['id'] = args.where.id;
 					if(args.where.network_name) whereArg['network_name'] = args.where.network_name;
 				}
+
+
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
@@ -250,6 +270,104 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				}) || []
 
 				return devices;
+			}
+		},
+		Subscription: {
+			watchingDevice: {
+				subscribe: async (root: any, args: any, context: GraphQLContext) => {
+					console.log("Subscribe to watchingDevice", {args, pubSub: context.pubSub})
+
+					const redisTag = `watchingDevice:${args.device}`
+
+					const iter = context.pubSub.asyncIterator(`${redisTag}-channel`);
+
+					await context.redis.incr(`${redisTag}:${(context as any)?.jwt?.id}`)
+					// await context.redis.expire(`${rdisTag}:${(context as any)?.jwt?.id}`, 5)
+					
+					await context.redis.expire(`${redisTag}:${(context as any)?.jwt?.id}`, 45);
+
+					let interval: any;
+
+					new Promise(() => {
+						interval = setInterval(async () => {
+							await context.redis.expire(`${redisTag}:${(context as any)?.jwt?.id}`, 45);
+
+							const ttl = await context.redis.ttl(`${redisTag}:${(context as any)?.jwt?.id}`);
+
+							console.log({ttl})
+						}, 30 * 1000)
+					})
+					// await co	ntext.redis.sAdd(redisTag, (context as any)?.jwt?.id)
+
+					let watching : any[] = [];
+
+					for await (const key of context.redis.scanIterator({
+						MATCH: `${redisTag}:*`,
+						COUNT: 0,
+					})){
+						// console.log({key})
+						watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
+					}
+
+			
+					// const items = await context.redis.scan(0, [`${redisTag}:*`]);
+
+					// console.log({items});
+
+					// const watching = await context.redis.sMembers(redisTag)
+					setTimeout(async () => {
+						await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+					}, 100);
+
+					const asyncReturn = iter.return;
+
+					iter.return = async () => {
+						console.log("Cancel");
+
+						clearInterval(interval);
+
+						const redisTag = `watchingDevice:${args.device}`
+
+						const count = await context.redis.decr(`${redisTag}:${(context as any)?.jwt?.id}`)
+						console.log({count})
+						if(count <= 0){
+							await context.redis.del([`${redisTag}:${(context as any)?.jwt?.id}`])
+
+							// await context.redis.sRem(redisTag, (context as any)?.jwt?.id)
+							let watching : any[] = [];
+
+							for await (const key of context.redis.scanIterator({
+								MATCH: `${redisTag}:*`,
+								COUNT: 0,
+							})){
+								// console.log({key})
+								watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
+							}
+		
+							// const watching = await context.redis.sMembers(redisTag)
+							
+							await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+						}
+					  	return asyncReturn ? asyncReturn.call(iter) : Promise.resolve({ value: undefined, done: true });
+					}
+
+					return iter 
+					// withCancel(iter, async () => {
+					// 	console.log("Unsubscribe", {context, args})
+					// 	const redisTag = `watchingDevice:${args.device}`
+	
+					// 	await context.redis.sRem(redisTag, (context as any)?.jwt?.id)
+	
+					// 	const watching = await context.redis.sMembers(redisTag)
+						
+					// 	await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+					
+					// }) //context.pubSub.asyncIterator("watchingDevice");
+				},
+				resolve: (payload: any) => {
+					console.log("Send new info", {payload})
+					return payload.watchers;
+				}
 			}
 		},
 		Mutation: {
@@ -563,6 +681,10 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
 	}
 
+	type Subscription {
+		watchingDevice(device: ID!): [HiveUser]
+	}
+
 	input CommandDeviceInput {
 		name: String
 		network_name: String
@@ -581,9 +703,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		setpoint: CommandDeviceSetpoint
 		value: String
 	}
+
 	type CommandDevice  {
 		id: ID! 
 		name: String
+
+		watching: [HiveUser]
 
 		activeProgram: CommandProgram 
 

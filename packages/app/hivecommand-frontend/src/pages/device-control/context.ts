@@ -10,6 +10,7 @@ export const DeviceControlContext = React.createContext<{
 		variables: any[],
 		devices: CommandProgramDevicePlaceholder[]
 	};
+	watching?: {id: string, name: string}[];
 	hmi?: any;
 	reporting?: any[],
 	hmiNodes?: any[],

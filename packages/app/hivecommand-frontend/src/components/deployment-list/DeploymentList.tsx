@@ -2,7 +2,6 @@ import React from 'react';
 import moment from 'moment';
 import {Add, MoreVert, Search} from '@mui/icons-material'
 import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead, IconButton } from '@mui/material'
-import { BaseStyle } from '@hexhive/styles';
 
 export interface DeploymentListProps {
     onClickRow?: (row: any) => void;
