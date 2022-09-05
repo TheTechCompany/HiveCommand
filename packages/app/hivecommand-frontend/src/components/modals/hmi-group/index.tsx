@@ -158,7 +158,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 							console.log("DELETE")
 						}}
 						editable={true}
-						factories={[new HMINodeFactory(true)]}
+						factories={[HMINodeFactory(true)]}
 						menu={(
 							<HMIGroupMenu 
 								selected={selected}
@@ -202,7 +202,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 									rotation: 0,
 									
 								},
-								type: HMINodeFactory.TAG
+								type: 'hmi-node'
 							};
 							console.log({newElem})
 

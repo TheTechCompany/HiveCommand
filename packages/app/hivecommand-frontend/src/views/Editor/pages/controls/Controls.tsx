@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton } from '@mui/material'
-import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree } from '@hexhive/ui';
+import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
 import { NodeDropdown } from '../../../../components/node-dropdown';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
@@ -392,6 +392,7 @@ export const Controls = (props) => {
                     flex: 1,
                 }}>
 
+                <InfiniteScrubber time={new Date().getTime()} />
                 <ProgramCanvasModal
                     open={createModalOpen}
                     onSubmit={(item) => {
@@ -440,7 +441,7 @@ export const Controls = (props) => {
                     editable={true}
                     nodes={nodes}
                     paths={pathRef.current.paths}
-                    factories={[new HMINodeFactory(true)]}
+                    factories={[HMINodeFactory(true)]}
                     onPathCreate={(path) => {
                         updateRef.current?.addPath(path);
                     }}
@@ -537,7 +538,7 @@ export const Controls = (props) => {
                                 icon: data.extras.icon,
                                 rotation: 0
                             },
-                            type: HMINodeFactory.TAG
+                            type: 'hmi-node'
                         }])
                     }}
 

@@ -109,7 +109,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 					props.onSelect?.({key, id})
 				}}
 				onDelete={props.onDelete}
-                factories={[new IconNodeFactory()]}
+                factories={[IconNodeFactory]}
                 onPathCreate={(path) => {
 					console.log("path create", {path})
                     updateRef.current?.addPath(path);
@@ -152,7 +152,7 @@ export const ProgramCanvas : React.FC<ProgramCanvasProps> = (props) => {
 						extras: {
                             icon: IconMap[node.extras.type]?.icon
                         },
-                        type: IconNodeFactory.TAG
+                        type: 'icon-node' 
 					})
 					setNodes(n)
 					console.log(n)

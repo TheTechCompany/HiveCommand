@@ -233,7 +233,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     editable={false}
                     nodes={nodes}
                     paths={pathRef.current.paths}
-                    factories={[new IconNodeFactory(), new HMINodeFactory()]}
+                    factories={[IconNodeFactory, HMINodeFactory(false)]}
                     onPathCreate={(path) => {
         
                         updateRef.current?.addPath(path);

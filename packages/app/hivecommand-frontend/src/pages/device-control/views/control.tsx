@@ -11,6 +11,7 @@ import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
 import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { isEqual } from 'lodash'
+import { InfiniteScrubber } from '@hexhive/ui';
 const ActionButton = (props) => {
 	return (
 		<Box sx={{ display: 'flex' }}>
@@ -396,11 +397,14 @@ export default () => {
 		})
 	}
 
+	const [ time, setTime ] = useState(new Date().getTime());
+
 	console.log({ hmiNodes, operatingMode, operatingModes })
 
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>
+
 				<HMICanvas
 					id={program.id}
 					program={program}
@@ -442,6 +446,16 @@ export default () => {
 					}}
 				/>
 			</Box>
+
+			<Paper sx={{display: 'flex', flexDirection: 'column', bottom: 6, right: 6, left: 6, position: 'absolute', overflow: 'hidden'}}>
+				<InfiniteScrubber 
+					controls
+					onTimeChange={(time) => {
+						setTime(time)
+					}}
+					time={time} />
+			</Paper>
+
 			<Paper
 				sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', width: '200px', right: 6, top: 6, padding: '6px' }}>
 				<Box sx={{ display: 'flex', justifyContent: 'center' }}>

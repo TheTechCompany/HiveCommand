@@ -8,7 +8,9 @@ export type PubSubChannels = {
     watchingDevice: [ { watcher: {id: string} }]
 };
 
-export const redis = createClient();
+export const redis = createClient({
+    url: process.env.REDIS_URL || "redis://localhost:6379"
+});
 
 export const redisPubSub = new RedisPubSub();
 

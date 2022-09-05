@@ -1,8 +1,6 @@
 import express, { Express } from 'express';
 import {createServer, Server as HttpServer} from 'http';
 import { Server, Socket } from "socket.io";
-import jwt from 'jsonwebtoken'
-import jwt_decode from 'jwt-decode';
 import bodyParser from 'body-parser'
 import routes from './routes';
 import { handleSocket } from './socket-handler';
@@ -10,7 +8,6 @@ import { DiscoveryService } from '@hive-command/opcua-lds'
 import { promises } from 'dns';
 import { log } from './logging'
 import { SyncClient } from './sync-client/SyncClient';
-import os from 'os';
 import { Data } from './data';
 import { PrismaClient, cache } from '@hive-command/data'
 
@@ -36,10 +33,6 @@ export class DiscoveryServer {
     private syncClient: SyncClient;
 
     private dataBroker : Data;
-
-    private requestConsumer? : amqp.Channel
-
-    private connected: any[] = [];
 
     private options: DiscoveryServerOptions;
 
@@ -155,8 +148,6 @@ export class DiscoveryServer {
         channel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
         channel.assertQueue(`COMMAND:MODE`)
         channel.assertQueue(`COMMAND:STATE`)
-
-        this.requestConsumer = channel;
 
         // await this.opcuaServer.start()
         console.log("Listen", this.opcuaDiscovery)

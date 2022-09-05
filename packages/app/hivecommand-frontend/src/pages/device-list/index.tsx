@@ -185,7 +185,9 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                 selected={[selectedDevice?.id]}
                 
                 onCreate={() => openModal(true)}
-
+                onMapRow={(datum) => {
+                    navigate(`/device-map/${datum.id}`)
+                }}
                 onClickRow={({datum}) => {
                     console.log(datum)
                    
