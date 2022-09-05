@@ -18,6 +18,8 @@ model Device {
 
   network_name String @unique
 
+  dataLayout DataLayout[] @relation(name: "hasLayout")
+
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
 
   setpoints DeviceSetpoint[] @relation(name: "hasSetpoints")
@@ -36,6 +38,20 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+model DataLayout {
+  id String @id
+  label String
+  type String
+
+  children DataLayout[] @relation(name: "hasLayoutChild")
+
+  parent DataLayout? @relation(name: "hasLayoutChild", fields: [parentId], references: [id])
+  parentId String?
+
+  device Device @relation(name: "hasLayout", fields: [deviceId], references: [id])
+  deviceId String
 }
 
 model DeviceSetpoint {

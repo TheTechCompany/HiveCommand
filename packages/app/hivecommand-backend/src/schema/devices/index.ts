@@ -64,6 +64,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						dataLayout: {
+							include: {
+								children: true
+							}
+						},
 						setpoints: {
 							include: {
 								setpoint: {
@@ -714,6 +719,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 		network_name: String
 
+		dataLayout: [DataLayout]
+
 		calibrations: [CommandProgramDeviceCalibration] 
 		setpoints: [CommandDeviceSetpointCalibration]
 
@@ -732,6 +739,18 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		reports: [CommandDeviceReport] 
 
 		organisation: HiveOrganisation 
+	}
+
+	type DataLayout {
+		id: ID
+		label: String
+		type: String
+	  
+		children: [DataLayout]
+
+		parent: DataLayout
+	  
+		device: CommandDevice
 	}
 
 	input CommandDeviceSnapshotInput {

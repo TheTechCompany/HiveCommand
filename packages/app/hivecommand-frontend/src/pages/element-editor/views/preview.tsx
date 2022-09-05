@@ -12,7 +12,7 @@ export const PreviewView = () => {
     return (
 
         <InfiniteCanvas 
-        factories={[new HMINodeFactory()]}
+        factories={[HMINodeFactory(false)]}
         nodes={[
             {
                 id: 'editor-node',
