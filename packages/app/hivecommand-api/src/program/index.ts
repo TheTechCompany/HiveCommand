@@ -124,12 +124,14 @@ export const useDeleteProgramFlow = (programId: string) => {
 
 export const useCreateProgramHMI = (programId: string) => {
 
-	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string}) => {
+	const [ mutateFn ] = useMutation((mutation, args: {name: string, parent?: string, remoteHomepage?: boolean, localHomepage?: boolean}) => {
 
 		const item = mutation.createCommandProgramInterface({
 			program: programId,
 			input: {
-				name: args.name
+				name: args.name,
+				localHomepage: args.localHomepage,
+				remoteHomepage: args.remoteHomepage
 			}
 		})
 		// let query = {};
@@ -171,11 +173,47 @@ export const useCreateProgramHMI = (programId: string) => {
 			}
 		}
 	})
-	return async (name: string, parent?: string) => {
+	return async (name: string, localHomepage?: boolean, remoteHomepage?: boolean, parent?: string) => {
 		return await mutateFn({
 			args: {
 				name,
+				remoteHomepage,
+				localHomepage,
 				parent
+			}
+		})
+	}
+}
+
+
+export const useUpdateProgramHMI = (programId: string) => {
+
+	const [ mutateFn ] = useMutation((mutation, args: {id: string, name: string, parent?: string, remoteHomepage?: boolean, localHomepage?: boolean}) => {
+
+		const item = mutation.updateCommandProgramInterface({
+			program: programId,
+			id: args.id,
+			input: {
+				name: args.name,
+				localHomepage: args.localHomepage,
+				remoteHomepage: args.remoteHomepage,
+			}
+		})
+	
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return async (id: string, name: string, localHomepage?: boolean, remoteHomepage?: boolean, parent?: string) => {
+		return await mutateFn({
+			args: {
+				id,
+				name,
+				parent,
+				remoteHomepage,
+				localHomepage
 			}
 		})
 	}

@@ -1,5 +1,5 @@
-import { BaseModal, FormControl } from "@hexhive/ui";
-import { TextInput, CheckBox, Box } from "grommet";
+import { FormControl } from "@hexhive/ui";
+import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 export const ControlGraphModal = (props) => {
@@ -22,41 +22,40 @@ export const ControlGraphModal = (props) => {
     props.onSubmit(graph);
   };
   return (
-    <BaseModal
-      title="Control Graph"
+    <Dialog
+      fullWidth
       open={props.open}
-      onSubmit={onSubmit}
       onClose={props.onClose}
     >
-      <Box gap="small">
-        <FormControl
-          value={graph.deviceID}
-          onChange={(value) => setGraph({ ...graph, deviceID: value })}
-          options={props.devices || []}
-          labelKey="name"
-          placeholder="Select device"
-        />
-        <FormControl
-          value={graph.keyID}
-          onChange={(value) => setGraph({ ...graph, keyID: value })}
-          options={
-            props.devices?.find((item) => item.id == graph.deviceID)?.type
-              .state || []
-          }
-          labelKey="key"
-          placeholder="Select key"
-        />
-        <Box direction="row" justify="end">
-          <CheckBox
-            label="Totalize"
-            reverse
-            checked={graph.totalize}
-            onChange={(e) => {
-              setGraph({ ...graph, totalize: e.target.checked });
-            }}
+      <DialogTitle>Add graph to report</DialogTitle>
+      <DialogContent>
+        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{marginTop: '9px'}} />
+          <FormControl
+            value={graph.deviceID}
+            onChange={(value) => setGraph({ ...graph, deviceID: value })}
+            options={props.devices || []}
+            labelKey="name"
+            placeholder="Select device"
           />
+          <div style={{marginTop: '9px'}} />
+          <FormControl
+            value={graph.keyID}
+            onChange={(value) => setGraph({ ...graph, keyID: value })}
+            options={
+              props.devices?.find((item) => item.id == graph.deviceID)?.type
+                .state || []
+            }
+            labelKey="key"
+            placeholder="Select key"
+          />
+          <FormControlLabel label="Totalise" control={<Checkbox checked={graph.totalize} onChange={(e) => setGraph({...graph, totalize: e.target.checked})} />} />
         </Box>
-      </Box>
-    </BaseModal>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={props.onClose}>Close</Button>
+        <Button variant="contained" onClick={onSubmit}>Save</Button>
+      </DialogActions>
+    </Dialog>
   );
 };

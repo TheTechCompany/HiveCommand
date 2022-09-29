@@ -1,30 +1,29 @@
 {
-  "name": "hivecommand-local-native",
+  "name": "@hive-command/native",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@hexhive/styles": "^1.0.1-alpha.39",
     "@hexhive/ui": "^1.0.1-alpha.39",
+    "@hexhive/utils": "^0.0.6-alpha.13",
+    "@hive-command/command-surface": "^1.0.0",
     "@mui/material": "^5.9.3",
     "@tauri-apps/api": "^1.0.2",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
+    "@types/react": "17.0.2",
+    "@types/react-dom": "17.0.2",
     "grommet": "^2.25.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
     "react-scripts": "5.0.1",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "cross-env BROWSER=none GENERATE_SOURCEMAP=false react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "tauri": "tauri"
   },
@@ -48,6 +47,9 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.0.5",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "react-app-rewired": "^2.2.1",
+    "ts-loader": "^9.4.1",
+    "tsconfig-paths-webpack-plugin": "^4.0.0"
   }
 }

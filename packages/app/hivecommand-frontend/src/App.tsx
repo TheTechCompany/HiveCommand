@@ -6,12 +6,15 @@ import { HexHiveTheme } from "@hexhive/styles";
 import { ApolloClient, ApolloProvider, fallbackHttpConfig, InMemoryCache, selectHttpOptionsAndBody, serializeFetchParameter, split } from "@apollo/client";
 import { AuthProvider } from '@hexhive/auth-ui'
 import { ThemeProvider,Box, createTheme } from '@mui/material'
-import { DeviceControl } from "./pages/device-control";
+import { CommandSurface } from "@hive-command/command-surface";
 import { EditorPage } from "./views/Editor";
 import { HttpLink } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { ApolloLink } from "@apollo/client";
 import { Observable } from "@apollo/client/utilities";
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
 const authServer = process.env.REACT_APP_API
@@ -232,23 +235,25 @@ const theme = createTheme({
 function App(props: any) {
 
   return (
-    <ThemeProvider theme={HexHiveTheme}>
-      <AuthProvider authorizationServer={authServer}>
-       
-          <ApolloProvider client={client}>
-            <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
-            <Box sx={{ height: '100%', color: 'white', flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'primary.dark'}}>
-            <Routes>
-              <Route path={`devices/:id/*`} element={<DeviceControl/>} />
+    <LocalizationProvider 
+        dateAdapter={AdapterMoment}>
+      <ThemeProvider theme={HexHiveTheme}>
+        <AuthProvider authorizationServer={authServer}>
+            <ApolloProvider client={client}>
+              <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
+              <Box sx={{ height: '100%', color: 'white', flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'primary.dark'}}>
+              <Routes>
+                <Route path={`devices/:id/*`} element={<CommandSurface/>} />
 
-              <Route path={`programs/:id/*`} element={<EditorPage />} />
-              <Route path={'*'} element={<Dashboard />} />
-              </Routes>
-              </Box>
-            </Router>
-          </ApolloProvider>
-      </AuthProvider>
-    </ThemeProvider>
+                <Route path={`programs/:id/*`} element={<EditorPage />} />
+                <Route path={'*'} element={<Dashboard />} />
+                </Routes>
+                </Box>
+              </Router>
+            </ApolloProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

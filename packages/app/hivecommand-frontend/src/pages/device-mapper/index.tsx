@@ -12,6 +12,8 @@ export const DeviceMapper = () => {
     const { data } = useQuery(gql`
         query GetDeviceLayout ($id: ID) {
             commandDevices(where: {id: $id}){
+                name
+
                 dataLayout {
                     id
                     label
@@ -31,7 +33,7 @@ export const DeviceMapper = () => {
                     <ChevronLeft fontSize="inherit" sx={{color: 'white'}} />
                 </IconButton>
                 <Typography>
-                    Device : {id}
+                    Device Map : {data?.commandDevices?.[0]?.name}
                 </Typography>
             </Box>
             <Box sx={{flex: 1}}>

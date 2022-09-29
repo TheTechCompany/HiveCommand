@@ -15,7 +15,7 @@ import {Controls} from './pages/controls'
 import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 
-import { useCreateProgramFlow, useCreateProgramHMI } from '@hive-command/api';
+import { useCreateProgramFlow, useCreateProgramHMI, useUpdateProgramFlow, useUpdateProgramHMI } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { Variables } from './pages/variables';
@@ -23,7 +23,8 @@ import { IconButton } from '@mui/material';
 import { TreeMenu } from './components/tree-menu';
 import { EditorMenuDialog } from '../../components/modals/editor-menu';
 
-
+import { Home as HomeIcon  } from '@mui/icons-material'
+// import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
 }
@@ -37,6 +38,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const match = useMatch(`*/:path`)
 
     const [ menuOpen, setMenuOpen ] = useState<any>();
+    const [ editItem, setEditItem ] = useState<any>();
 
     const [ selected, setSelected ] = useState<{
         id: string,
@@ -54,6 +56,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
                 templatePacks {
                     id
+                    url
                     name
                 }
                 
@@ -65,6 +68,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 interface {
                     id
                     name
+                    localHomepage
+                    remoteHomepage
                 }
 
                 program {
@@ -88,22 +93,36 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
 
+    const updateProgramFlow = useUpdateProgramFlow(id)
+    const updateProgramHMI = useUpdateProgramHMI(id)
+
     const handleMenuSubmit = async (type: string, data: any) => {
         let promise : any = null
 
-        switch(type){
-            case 'program':
-                //Add parent opt
-                promise = createProgramFlow(data.name)
-                break;
-            case 'hmi':
-                //Add parent opt
-                promise = createProgramHMI(data.name)
-                break;
-        }
+        if(editItem){
+            switch(type){
+                case 'program':
+                    promise = updateProgramFlow(editItem.id, data.name)
+                    break;
+                case 'hmi':
+                    promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
+            }
+        }else{
+            switch(type){
+                case 'program':
+                    //Add parent opt
+                    promise = createProgramFlow(data.name)
+                    break;
+                case 'hmi':
+                    //Add parent opt
+                    promise = createProgramHMI(data.name, data.localHomepage, data.remoteHomepage)
+                    break;
+            }
 
+        }
         await promise;
         setMenuOpen(null);
+        setEditItem(null);
         refetch()
     }
    
@@ -158,10 +177,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             children: program?.interface?.map((x) => ({
                 id: x.id,
                 name: x.name,
-                children: []
+                children: [],
+                icon: x.localHomepage ? <HomeIcon fontSize="small"/> : x.remoteHomepage ? <HomeIcon fontSize="small" /> : undefined
             })),
             element: <div>HMI</div>,
-            editor: <Controls />
+            editor: <Controls activeProgram={selected?.id} />
         },
         {
             id: 'devices-root',
@@ -205,7 +225,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         }}>
             <EditorMenuDialog 
                 type={menuOpen}
+                selected={editItem}
                 onClose={() => {
+                    setEditItem(undefined);
                     setMenuOpen(undefined)
                 }}
                 onSubmit={(item) => {
@@ -228,6 +250,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     margin: '6px',
                     flex: 1,
                     display: 'flex',
+                    position: 'relative',
                     flexDirection: 'column'
                 }}>
                 <Box
@@ -278,11 +301,35 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
               
                 <Box
-                    sx={{flex: 1, display: 'flex', flexDirection: 'row'}}>
+                    sx={{
+                        flex: 1, 
+                        display: 'flex', 
+                        flexDirection: 'row',
+                        height: 'calc(100% - 36px)'
+                    }}>
                     
                     <Paper sx={{borderRadius: 0, minWidth: '175px'}}>
                       
                         <TreeMenu
+                            onEdit={(nodeId) => {
+                                console.log(nodeId)
+                                let elements = treeMenu.reduce((prev, curr) => {
+                                    return [...prev, ...(curr.children || []).map((x) => ({...x, parent: curr.id}))]
+                                }, [])
+
+                                let element = elements.find((a) => a?.id == nodeId);
+
+                                console.log({element});
+                                let type = element.parent.replace(/-root/, '');
+
+                                switch(type){
+                                    case 'hmi':
+                                        setEditItem(program.interface?.find((a) => a.id == nodeId));
+                                        break;
+                                }
+
+                                setMenuOpen(type)
+                            }}
                             onAdd={(parent) => {
                                 setMenuOpen(parent.replace(/-root/, ''))
                             }}

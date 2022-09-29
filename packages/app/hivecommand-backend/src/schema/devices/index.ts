@@ -64,6 +64,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						maintenanceWindows: true,
 						dataLayout: {
 							include: {
 								children: true
@@ -87,9 +88,13 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						},
 						reports: {
 							include: {
-								dataKey: true,
-								dataDevice: true,
-								device: true,
+								reports: {
+									include: {
+										dataKey: true,
+										dataDevice: true,
+									}
+								},
+								device: true
 							}
 						},
 						// values: {
@@ -123,6 +128,9 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						},
 						activeProgram: {
 							include: {
+								remoteHomepage: true,
+								localHomepage: true,
+								templatePacks: true,
 								program: {
 									include: {
 										children: {
@@ -201,7 +209,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 									include: {
 										nodes: {
 											include: {
-												type: true,
 												devicePlaceholder: {
 													include: {
 														type: {
@@ -229,7 +236,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 												},
 												children: {
 													include: {
-														type: true,
 														devicePlaceholder: {
 															include: {
 																type: {
@@ -376,6 +382,25 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			}
 		},
 		Mutation: {
+			createCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.create({
+					data: {
+						id: nanoid(), 
+						startTime: args.input.startTime, 
+						endTime: args.input.endTime,
+						owner: context?.jwt?.id,
+						device: {
+							connect: {id: args.device}
+						}
+					}
+				});
+			},
+			updateCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.update({where: {id: args.id}, data: {startTime: args.input.startTime, endTime: args.input.endTime}});
+			},
+			deleteCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.delete({where: {id: args.id}});
+			},
 			updateCommandDeviceSetpoint: async (root: any, args: {device: string, setpoint: string, value: string}, context: any) => {
 
 				const result = await prisma.device.update({
@@ -679,6 +704,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
+		createCommandDeviceMaintenanceWindow(device: ID, input: MaintenanceWindowInput!): MaintenanceWindow!
+		updateCommandDeviceMaintenanceWindow(device: ID, id: ID!, input: MaintenanceWindowInput!): MaintenanceWindow!
+		deleteCommandDeviceMaintenanceWindow(device: ID, id: ID!): MaintenanceWindow!
+
+
 		updateCommandDeviceSetpoint(device: ID!, setpoint: ID!, value: String): String
 
 		createCommandDeviceCalibration(device: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
@@ -715,6 +745,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 		watching: [HiveUser]
 
+		maintenanceWindows: [MaintenanceWindow]
+
 		activeProgram: CommandProgram 
 
 		network_name: String
@@ -736,10 +768,28 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		online: Boolean
 		lastSeen: DateTime
 
-		reports: [CommandDeviceReport] 
+		reports: [CommandReportPage] 
 
 		organisation: HiveOrganisation 
 	}
+
+	input MaintenanceWindowInput {
+		startTime: DateTime
+		endTime: DateTime
+	}
+
+	type MaintenanceWindow {
+		id: ID
+
+		startTime: DateTime
+		endTime: DateTime
+
+		owner: String
+
+		device: CommandDevice
+	}
+
+	
 
 	type DataLayout {
 		id: ID

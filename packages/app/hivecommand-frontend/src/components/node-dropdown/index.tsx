@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Divider, Typography } from '@mui/material'
 import React, {useState} from 'react' 
 import { Block, BlockTray } from '@hexhive/ui';
 import styled from 'styled-components'
@@ -17,6 +17,13 @@ export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
             <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
                     
                     <BlockTray 
+                        groupBy="group"
+                        renderHeader={(header) => (
+                            <>
+                                <Typography>{header}</Typography>
+                                <Divider />
+                            </>
+                        )}
                         renderItem={(block) => (
                         <Box   
                             sx={{

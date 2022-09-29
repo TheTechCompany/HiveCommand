@@ -21,14 +21,17 @@ import { ObjectTypeDefinitionNode } from 'graphql';
 import { ProgramCanvasModal } from '../../../../components/modals/program-canvas';
 import { EmptyView } from '../../components/empty-view';
 import { HMIDrawer } from './Drawer';
-import { HMIContext } from './context';
+import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
+import { useRemoteComponents } from '../../../../hooks/remote-components';
+import { size } from 'mathjs';
 
 export const Controls = (props) => {
 
     const { id } = useParams()
 
+    const { getPack } = useRemoteComponents()
 
     const { sidebarOpen, program: { templatePacks } } = useCommandEditor()
 
@@ -100,6 +103,7 @@ export const Controls = (props) => {
                 templatePacks {
                     id
                     name
+                    url
                     elements {
                         id
                         name
@@ -135,17 +139,10 @@ export const Controls = (props) => {
                     nodes {
                         
                         id
-                        type {
-                            name
-                            width
-                            height
-                            ports {
-                                key
-                                x
-                                y
-                                rotation
-                            }
-                        }
+                        type
+
+                        options
+
                         devicePlaceholder {
                             id
                             name
@@ -166,28 +163,24 @@ export const Controls = (props) => {
 
                         showTotalizer
                         rotation
-                        scaleX
-                        scaleY
+                        
+                        width
+                        height
 
                         inputs {
                             id
-                            type {
-                                name
-                            }
+                            type 
                         }
 
                         children {
                             id
-                            type {
-                                name
-                                width
-                                height
-                            }
+                            type 
                             x
                             y
 
-                            scaleX
-                            scaleY
+                            width
+                            height
+                            
                             rotation
 
                             devicePlaceholder {
@@ -237,7 +230,7 @@ export const Controls = (props) => {
         client.refetchQueries({ include: ['Q'] })
     }
 
-    const createHMINode = useCreateHMINode(id)
+    const createHMINode = useCreateHMINode(id, props.activeProgram)
     const updateHMINode = useUpdateHMINode(id)
     const deleteHMINode = useDeleteHMINode(id)
 
@@ -257,9 +250,11 @@ export const Controls = (props) => {
 
     let program = data?.commandPrograms?.[0]
 
-    let activeProgram = (program?.interface)
+    let hmiTemplatePacks = program?.templatePacks || [];
 
-    console.log({templatePacks, data, program})
+    let activeProgram = (program?.interface)?.find((a) => a.id == props.activeProgram)
+
+    // console.log({templatePacks, data, program, activeProgram})
 
 
     const nodeMenu = useMemo(() => NodeMenu.map((x) => {
@@ -280,61 +275,119 @@ export const Controls = (props) => {
         let program = data?.commandPrograms?.[0]
         if (program) {
 
-            let activeProgram = (program.interface)
             let nodes = activeProgram?.nodes?.filter((a) => !a.children || a.children.length == 0) || []
             let groups = activeProgram?.nodes?.filter((a) => a.children && a.children.length > 0) || []
 
-            setNodes(nodes.map((x) => ({
-                id: x.id,
-                x: x.x,
-                y: x.y,
-                width: x.type.width ? `${x.type.width}px` : '50px',
-                height: x.type.height ? `${x.type.height}px` : '50px',
-                //  width: `${x?.type?.width || 50}px`,
-                // height: `${x?.type?.height || 50}px`,
-                extras: {
-                    devicePlaceholder: x.devicePlaceholder,
-                    rotation: x.rotation || 0,
-                    scaleX: x.scaleX != undefined ? x.scaleX : 1,
-                    scaleY: x.scaleY != undefined ? x.scaleY : 1,
-                    showTotalizer: x.showTotalizer || false,
-                    iconString: x.type?.name,
-                    icon: HMIIcons[x.type?.name],
-                    ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
-                },
-                type: 'hmi-node',
+            // console.log({nodes})
+            Promise.all(nodes.map(async (node) => {
 
-            })).concat(groups.map((group) => ({
-                id: group.id,
-                x: group.x || 0,
-                y: group.y || 0,
-                type: 'hmi-node',
-                extras: {
-                    nodes: group.children?.map((x) => ({
-                        id: x.id,
-                        x: x.x,
-                        y: x.y,
-                        z: x.z,
-                        width: x.type.width || 50,
-                        height: x.type.height || 50,
-                        scaleX: x.scaleX || 1,
-                        scaleY: x.scaleY || 1,
-                        rotation: x.rotation || 0,
-                        type: x.type,
-                        devicePlaceholder: x.devicePlaceholder,
-                    })),
-                    ports: group.ports?.map((x) => ({
-                        ...x,
-                        id: x.id,
-                        x: x.x,
-                        y: x.y,
-                        length: x.length || 1,
-                        rotation: x.rotation || 0,
-                    }))
+                const [packId, templateName ] = (node.type || '').split(':')
+                const url = templatePacks.find((a) => a.id == packId)?.url;
+
+                if(url){
+                    let base = url.split('/');
+                    let [url_slug] = base.splice(base.length -1, 1)
+                    base = base.join('/');
+
+                    const pack = await getPack(packId, `${base}/`, url_slug)
+                    return {
+                        ...node,
+                        icon: pack.find((a) => a.name == templateName)?.component
+                    }
                 }
-            }))))
+                
+                return node;
+                // return pack
 
-            console.log({intf: program.interface})
+            })).then((nodes) => {
+                // console.log("ASD", {nodes})
+
+                console.log(nodes.map((x) => x?.icon?.metadata));
+
+                setNodes(nodes.map((x) => {
+                    let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                    let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
+    
+                    console.log({icon: x.icon, metadata: x.icon?.metadata, width, height});
+
+                    return {
+                        id: x.id,
+                        x: x.x,
+                        y: x.y,
+                        width, 
+                        height,
+                        rotation: x.rotation || 0,
+                        options: x.options,
+                        //  width: `${x?.type?.width || 50}px`,
+                        // height: `${x?.type?.height || 50}px`,
+                        extras: {
+                            options: x.icon?.metadata?.options || {},
+                            devicePlaceholder: x.devicePlaceholder,
+                            rotation: x.rotation || 0,
+                            scaleX: x.scaleX != undefined ? x.scaleX : 1,
+                            scaleY: x.scaleY != undefined ? x.scaleY : 1,
+                            showTotalizer: x.showTotalizer || false,
+                            iconString: x.type?.name,
+                            icon: x.icon, //HMIIcons[x.type?.name],
+                            ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
+                        },
+                        type: 'hmi-node',
+        
+                    }
+                }))
+                // setNodes(nodes);
+            })
+            // setNodes(nodes.map((x) => ({
+            //     id: x.id,
+            //     x: x.x,
+            //     y: x.y,
+            //     width: x.type.width ? `${x.type.width}px` : '50px',
+            //     height: x.type.height ? `${x.type.height}px` : '50px',
+            //     //  width: `${x?.type?.width || 50}px`,
+            //     // height: `${x?.type?.height || 50}px`,
+            //     extras: {
+            //         devicePlaceholder: x.devicePlaceholder,
+            //         rotation: x.rotation || 0,
+            //         scaleX: x.scaleX != undefined ? x.scaleX : 1,
+            //         scaleY: x.scaleY != undefined ? x.scaleY : 1,
+            //         showTotalizer: x.showTotalizer || false,
+            //         iconString: x.type?.name,
+            //         icon: HMIIcons[x.type?.name],
+            //         ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
+            //     },
+            //     type: 'hmi-node',
+
+            // })).concat(groups.map((group) => ({
+            //     id: group.id,
+            //     x: group.x || 0,
+            //     y: group.y || 0,
+            //     type: 'hmi-node',
+            //     extras: {
+            //         nodes: group.children?.map((x) => ({
+            //             id: x.id,
+            //             x: x.x,
+            //             y: x.y,
+            //             z: x.z,
+            //             width: x.type.width || 50,
+            //             height: x.type.height || 50,
+            //             scaleX: x.scaleX || 1,
+            //             scaleY: x.scaleY || 1,
+            //             rotation: x.rotation || 0,
+            //             type: x.type,
+            //             devicePlaceholder: x.devicePlaceholder,
+            //         })),
+            //         ports: group.ports?.map((x) => ({
+            //             ...x,
+            //             id: x.id,
+            //             x: x.x,
+            //             y: x.y,
+            //             length: x.length || 1,
+            //             rotation: x.rotation || 0,
+            //         }))
+            //     }
+            // }))))
+
+            // console.log({intf: program.interface})
             setPaths((program.interface)?.edges?.map((x) => {
                 return {
                     id: x.id,
@@ -375,25 +428,72 @@ export const Controls = (props) => {
 
     }
 
+    const updateNode = (id: string, data: ((node: HMINodeData) => HMINodeData)) => {
+
+    
+        setNodes((nodes) => {
+            let n = nodes.slice();
+            let ix = n.map(x => x.id).indexOf(id)
+
+            let nodeData : HMINodeData = {
+                position: {x: n[ix].x, y: n[ix].y},
+                rotation: n[ix].rotation,
+                size: {width: n[ix].width, height: n[ix].height}
+            };
+
+            let newData = {
+                ...nodeData,
+                ...data(nodeData)
+            };
+
+            console.log({newData})
+
+            n[ix] = {
+                ...n[ix],
+                x: newData.position.x,
+                y: newData.position.y,
+                rotation: newData.rotation,
+                width: newData.size.width,
+                height: newData.size.height
+            }
+
+            updateHMINode(id, {
+                x: n[ix].x,
+                y: n[ix].y,
+                rotation: n[ix].rotation,
+                width: n[ix].width,
+                height: n[ix].height
+            })
+
+            return n
+        })
+
+      
+    }
+
     return (
         <HMIContext.Provider
             value={{
                 programId: id,
                 actions: activeProgram?.actions,
                 flows: flows,
+                interfaces: program?.interface || [],
                 refetch,
                 selected,
                 devices,
-                nodes: nodes
+                nodes: nodes,
+
+                updateNode
             }}>
             <Box
                 sx={{
                     display: 'flex',
                     flex: 1,
+                    position: 'relative',
                 }}>
 
                 <InfiniteScrubber time={new Date().getTime()} />
-                <ProgramCanvasModal
+                {/* <ProgramCanvasModal
                     open={createModalOpen}
                     onSubmit={(item) => {
                         let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
@@ -412,13 +512,15 @@ export const Controls = (props) => {
                         type HMI {
                             name: String
                         }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} />
+                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} /> */}
 
                 {(<InfiniteCanvas
+                    finite
                     style={CanvasStyle}
                     snapToGrid={true}
                     grid={{divisions: 20, width: 100, height: 100}}
                     onDelete={watchEditorKeys}
+                    selected={selected ? [selected] : undefined}
                     onSelect={(key, id) => {
                         console.log("Select", key, id)
                         setSelected({
@@ -431,11 +533,12 @@ export const Controls = (props) => {
                         orientation="horizontal"
                         sx={{
                             display: 'flex',
+                            height: '100%',
                             flexDirection: 'column'
                         }}>
                         <HMIDrawer
                             menu={menuOpen}
-                            nodes={templatePacks || []}
+                            nodes={hmiTemplatePacks || []}
                         />
                     </Collapse>)}
                     editable={true}
@@ -446,7 +549,7 @@ export const Controls = (props) => {
                         updateRef.current?.addPath(path);
                     }}
                     onPathUpdate={(path) => {
-                        console.log("CREATE PATH", {path})
+                        // console.log("CREATE PATH", {path})
 
                         if (path.source && path.target && path.targetHandle) {
 
@@ -518,9 +621,10 @@ export const Controls = (props) => {
                 
                     }}
                     onNodeCreate={(position, data) => {
-          
+                        console.log("Node create", {position, data})
+
                         createHMINode(
-                            data.extras?.id,
+                            `${data.extras.pack}:${data.extras?.name}`,
                             position.x,
                             position.y,
                         ).then(() => {
@@ -528,18 +632,18 @@ export const Controls = (props) => {
                         })
 
 
-                        data.extras.icon = HMIIcons[data.extras.icon]
+                        // data.extras.icon = HMIIcons[data.extras.icon]
 
-                        setNodes([...nodes, {
-                            id: nanoid(),
-                            x: position.x,
-                            y: position.y,
-                            extras: {
-                                icon: data.extras.icon,
-                                rotation: 0
-                            },
-                            type: 'hmi-node'
-                        }])
+                        // setNodes([...nodes, {
+                        //     id: nanoid(),
+                        //     x: position.x,
+                        //     y: position.y,
+                        //     extras: {
+                        //         icon: data.extras.icon,
+                        //         rotation: 0
+                        //     },
+                        //     type: 'hmi-node'
+                        // }])
                     }}
 
                     onRightClick={(target, position) => {
