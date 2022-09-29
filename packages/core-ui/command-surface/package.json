@@ -1,0 +1,32 @@
+{
+  "name": "@hive-command/command-surface",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "react-dom": "17.0.2",
+    "react": "17.0.2",
+    "styled-components": "^5.3.6",
+    "@mui/material": "5.6.4",
+    "@mui/icons-material": "^5.10.6",
+    "@types/react": "17.0.2",
+    "@hive-command/api": "^1.4.15-alpha.52"
+  },
+  "devDependencies": {
+    "@hexhive/styles": "^1.0.1-alpha.45",
+    "@hexhive/ui": "^1.0.1-alpha.45",
+    "@hexhive/utils": "^0.0.6-alpha.13",
+    "@types/styled-components": "^5.1.26",
+    "grommet": "^2.26.0",
+    "moment": "^2.29.4",
+    "react-router-dom": "6.2.1",
+    "typescript": "^4.8.4"
+  }
+}

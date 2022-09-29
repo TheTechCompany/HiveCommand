@@ -204,7 +204,7 @@ export const useUpdateHMIGroup = (programId: string) => {
 // 	}
 // };
 
-export const useCreateHMINode = (programId: string) => {
+export const useCreateHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
     (
       mutation,
@@ -217,6 +217,7 @@ export const useCreateHMINode = (programId: string) => {
 
       const item = mutation.createCommandProgramInterfaceNode({
         program: programId,
+        hmi: hmiId,
         input: {
           type: args.type,
           x: args.x,
@@ -283,17 +284,18 @@ export const useUpdateHMINode = (programId: string) => {
         nodeId: string;
         x?: number;
         y?: number;
-        scale?: { x?: number; y?: number };
+        width?: number,
+        height?: number,
+        options?: any;
         rotation?: number;
       }
     ) => {
       let hmiUpdate: any = {};
       if (args.x != undefined) hmiUpdate.x = args.x;
       if (args.y != undefined) hmiUpdate.y = args.y;
-      if (args.scale) {
-        if (args.scale.x != undefined) hmiUpdate.scaleX = args.scale.x;
-        if (args.scale.y != undefined) hmiUpdate.scaleY = args.scale.y;
-      }
+        if (args.width != undefined) hmiUpdate.width = args.width
+        if (args.height != undefined) hmiUpdate.height = args.height;
+      if(args.options) hmiUpdate.options = args.options;
 
       if(args.rotation != undefined) hmiUpdate.rotation = args.rotation;
 
@@ -341,7 +343,9 @@ export const useUpdateHMINode = (programId: string) => {
   return async (node_id: string, update: {
 		x?: number,
 		y?: number,
-		scale?: { x?: number; y?: number };
+    width?: number,
+    height?: number,
+    options?: any;
 		rotation?: number;
 	}) => {
     return await mutateFn({
@@ -349,7 +353,9 @@ export const useUpdateHMINode = (programId: string) => {
         nodeId: node_id,
         x: update.x,
         y: update.y,
-        scale: update.scale,
+        width: update.width,
+        height: update.height,
+        options: update.options,
         rotation: update.rotation,
       },
     });

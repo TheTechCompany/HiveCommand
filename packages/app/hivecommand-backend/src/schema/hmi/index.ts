@@ -21,6 +21,14 @@ export default (prisma: PrismaClient) => {
 	}
 
 	const resolvers = {
+		CommandProgramHMI: {
+			localHomepage: (root: any) => {
+				return root.localHomepage?.length > 0;
+			},
+			remoteHomepage: (root: any) => {
+				return root.remoteHomepage?.length > 0;
+			}
+		},
 		CommandHMIDevicePack: {
 			elements: async (root: any, args: any, context: any) => {
 				console.log({root})
@@ -195,26 +203,57 @@ export default (prisma: PrismaClient) => {
 		},
 		Mutation: {
 			createCommandProgramInterface: async (root: any, args: any, context: any) => {
-				return await prisma.program.update({
-					where: {
-						id: args.program,
-					},
+
+				let id = nanoid();
+
+				let homepageUpdates : any = {};
+				if(args.input.localHomepage){
+					homepageUpdates['localHomepage'] = {connect: {id: id}};
+				}else if(args.input.remoteHomepage){
+					homepageUpdates['remoteHomepage'] = {connect: {id}}
+				}
+
+				const hmi = await prisma.programHMI.create({
 					data: {
-						interface: {
-							create: {
-								id: nanoid(),
-								name: args.input.name
-							}
-						}
+						id,
+						name: args.input.name,
+						programId: args.program
 					}
 				})
+
+				if(Object.keys(homepageUpdates).length > 0){
+					await prisma.program.update({
+						where: {
+							id: args.program,
+						},
+						data: {
+							...homepageUpdates
+							// interface: {
+							// 	create: {
+							// 		id: nanoid(),
+							// 		name: args.input.name
+							// 	}
+							// }
+						}
+					})
+				}
+				return hmi;
 			},
 			updateCommandProgramInterface: async (root: any, args: any, context: any) => {
+
+				let homepageUpdates : any = {};
+				if(args.input.localHomepage){
+					homepageUpdates['localHomepage'] = {connect: {id: args.id}};
+				}else if(args.input.remoteHomepage){
+					homepageUpdates['remoteHomepage'] = {connect: {id: args.id}}
+				}
+
 				return await prisma.program.update({
 					where: {
 						id: args.program
 					},
 					data: {
+						...homepageUpdates,
 						interface: {
 							update: {
 								where: {
@@ -311,15 +350,14 @@ export default (prisma: PrismaClient) => {
 						id: nanoid(),
 						x: args.input.x,
 						y: args.input.y,
+						options: args.input.options,
 						rotation: args.input.rotation || 0,
-						scaleX: args.input.scaleX || 1,
-						scaleY: args.input.scaleY || 1,
+						width: args.input.width || 1,
+						height: args.input.height || 1,
 						z: args.input.z || 1,
 						showTotalizer: args.input.showTotalizer || false,
 						...deviceUpdate,
-						type: {
-							connect: { id: args.input.type }
-						},
+						type: args.input.type,
 						hmi: {
 							connect: { id: args.hmi }
 						}
@@ -338,11 +376,13 @@ export default (prisma: PrismaClient) => {
 				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
 				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
 
-				if (args.input.scaleX != undefined) deviceUpdate['scaleX'] = args.input.scaleX;
-				if (args.input.scaleY != undefined) deviceUpdate['scaleY'] = args.input.scaleY;
+				if (args.input.width != undefined) deviceUpdate['width'] = args.input.width;
+				if (args.input.height != undefined) deviceUpdate['height'] = args.input.height;
 
 				if (args.input.rotation != undefined) deviceUpdate['rotation'] = args.input.rotation;
-				if (args.input.type) deviceUpdate['type'] = { connect: { id: args.input.type } };
+				if (args.input.type) deviceUpdate['type'] = args.input.type //{ connect: { id: args.input.type } };
+
+				if(args.input.options) deviceUpdate['options'] = args.input.options;
 
 				if(args.input.children){
 					const createChildren = args.input.children.filter((a: any) => !a.id).map((x: any) => ({...x, id: nanoid()}))
@@ -362,9 +402,10 @@ export default (prisma: PrismaClient) => {
 									id: child.id,
 									x: child.x,
 									y: child.y,
+									options: child.options,
 									rotation: child.rotation || 0,
-									scaleX: child.scaleX || 1,
-									scaleY: child.scaleY || 1,
+									width: child.width || 1,
+									height: child.height || 1,
 									z: child.z || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
@@ -381,9 +422,10 @@ export default (prisma: PrismaClient) => {
 								data: {
 									x: child.x,
 									y: child.y,
+									options: child.options,
 									rotation: child.rotation || 0,
-									scaleX: child.scaleX || 1,
-									scaleY: child.scaleY || 1,
+									width: child.width || 1,
+									height: child.height || 1,
 									z: child.z || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
@@ -704,11 +746,17 @@ export default (prisma: PrismaClient) => {
 
 	input CommandProgramInterfaceInput {
 		name: String
+
+		localHomepage: Boolean
+		remoteHomepage: Boolean
 	}
 
 	type CommandProgramHMI {
 		id: ID
 		name: String
+
+		localHomepage: Boolean
+		remoteHomepage: Boolean
 
 		actions: [CommandProgramAction] 
 
@@ -738,8 +786,6 @@ export default (prisma: PrismaClient) => {
 		height: Float
 
 		rotation: Float
-		scaleX: Float
-		scaleY: Float
 
 		nodes: [CommandHMINode]
 		ports: [CommandHMIPort]
@@ -771,8 +817,10 @@ export default (prisma: PrismaClient) => {
 		x: Float
 		y: Float
 		rotation: Float
-		scaleX: Float
-		scaleY: Float
+		width: Float
+		height: Float
+
+		options: JSONObject
 
 		z: Int
 
@@ -792,14 +840,16 @@ export default (prisma: PrismaClient) => {
 		y: Float
 
 		rotation: Float
-		scaleX: Float
-		scaleY: Float
+		width: Float
+		height: Float
 
 		z: Int
 
+		options: JSONObject
+
 		showTotalizer : Boolean
 		
-		type: CommandHMIDevice 
+		type: String 
 
 		devicePlaceholder: CommandProgramDevicePlaceholder 
 

@@ -18,6 +18,8 @@ model Device {
 
   network_name String @unique
 
+  maintenanceWindows MaintenanceWindow[] @relation(name: "hasMaintenanceWindow")
+  
   dataLayout DataLayout[] @relation(name: "hasLayout")
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
@@ -31,7 +33,7 @@ model Device {
 
   program String?
 
-  reports DeviceReport[] @relation(name: "hasReports")
+  reports ReportPage[] @relation(name: "hasReportPages")
 
   createdAt DateTime @default(now())
   
@@ -39,6 +41,34 @@ model Device {
 
   organisation String
 }
+
+model MaintenanceWindow {
+  id String @id
+
+  startTime DateTime
+  endTime DateTime
+
+  owner String
+
+  device Device @relation(name: "hasMaintenanceWindow", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+model ReportPage {
+  id String @id
+
+  name String
+
+  reports DeviceReport[] @relation(name: "hasReports")
+
+  createdAt DateTime? @default(now())
+
+  owner String
+
+  device Device @relation(name: "hasReportPages", fields: [deviceId], references: [id])
+  deviceId String
+}
+
 
 model DataLayout {
   id String @id
@@ -182,8 +212,8 @@ model DeviceReport {
   dataKey IOTemplateState @relation(name: "hasDataKey", fields: [dataKeyId], references: [id])
   dataKeyId String
 
-  device Device @relation(name: "hasReports", fields: [deviceId], references: [id])
-  deviceId String
+  page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
+  pageId String
 }
 
 model IOTemplate {
@@ -266,6 +296,11 @@ model Program {
   program ProgramFlow[]
 
   interface ProgramHMI[] @relation(name: "hasInterface")
+
+  localHomepage ProgramHMI? @relation(name: "localHomepage", fields: [localHomepageId], references: [id])
+  localHomepageId String? 
+  remoteHomepage ProgramHMI? @relation(name: "remoteHomepage", fields: [remoteHomepageId], references: [id])
+  remoteHomepageId String?
 
   devices ProgramFlowIO[]
 
@@ -498,6 +533,8 @@ model ProgramHMI {
   program Program @relation(name: "hasInterface", fields: [programId], references: [id])
   programId String
 
+  localHomepage Program[] @relation(name: "localHomepage", map: "localHomepage")
+  remoteHomepage Program[] @relation(name: "remoteHomepage", map: "remoteHomepage")
 }
 
 model ProgramHMIAction {
@@ -567,7 +604,6 @@ model CanvasNodeTemplate {
 
   ports Json?
   
-  usedBy CanvasNode[] @relation(name: "usedBy")
 
   pack CanvasNodeTemplatePack? @relation(name: "inPack", fields: [packId], references: [id])
   packId String?
@@ -580,15 +616,17 @@ model CanvasNode {
   y Float
   
   rotation Float
-	scaleX Float
-	scaleY Float
+
+	width Float?
+	height Float?
 
 	z Int
 
 	showTotalizer Boolean
 
-	type CanvasNodeTemplate @relation(name: "usedBy", fields: [templateId], references: [id], onDelete: Cascade)
-  templateId String
+	type String?
+
+  options Json?
 
 	devicePlaceholder ProgramFlowIO?  @relation(name: "shownOn", fields: [deviceId], references: [id])
   deviceId String?

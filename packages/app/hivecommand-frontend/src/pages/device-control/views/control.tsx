@@ -62,13 +62,18 @@ export default () => {
 	const {
 		changeOperationMode,
 		changeOperationState,
+		historize,
+		functions,
 		program,
 		actions,
-		hmi,
+		hmis,
+		activePage,
+		defaultPage,
 		groups,
 		changeDeviceMode,
 		changeDeviceValue,
 		performAction,
+		templatePacks,
 		controlId,
 		device,
 		refetch
@@ -134,24 +139,25 @@ export default () => {
 
 	}
 
+	const hmi = useMemo(() => {
+		return hmis?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)
+	}, [ hmis, defaultPage, activePage ])
 
-	console.log({ hmi: hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])) })
+	// const hmiNodes = useMemo(() => {
+	// 	return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
 
-	const hmiNodes = useMemo(() => {
-		return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
+	// 		let device = node?.devicePlaceholder?.name;
+	// 		let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
+	// 		let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
 
-			let device = node?.devicePlaceholder?.name;
-			let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
-			let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
-
-			// console.log("CONF", conf)
-			return {
-				...node,
-				values: value,
-				conf
-			}
-		})
-	}, [device, deviceValueData])
+	// 		// console.log("CONF", conf)
+	// 		return {
+	// 			...node,
+	// 			values: value,
+	// 			conf
+	// 		}
+	// 	})
+	// }, [device, deviceValueData])
 
 
 	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase() || '';
@@ -399,7 +405,9 @@ export default () => {
 
 	const [ time, setTime ] = useState(new Date().getTime());
 
-	console.log({ hmiNodes, operatingMode, operatingModes })
+	// console.log({ hmiNodes, operatingMode, operatingModes })
+
+	console.log({hmis, hmi, defaultPage})
 
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
@@ -407,8 +415,12 @@ export default () => {
 
 				<HMICanvas
 					id={program.id}
-					program={program}
-					deviceValues={hmiNodes}
+					nodes={hmi?.nodes || []}
+					templatePacks={templatePacks}
+					paths={hmi?.edges || []}
+					functions={functions}
+					// program={program}
+					// deviceValues={hmiNodes}
 					modes={deviceModes}
 					information={infoTarget != undefined ? (
 						<Bubble
@@ -423,22 +435,22 @@ export default () => {
 					onSelect={(select) => {
 						console.log({ hmi: program.interface });
 						let node = program.interface?.nodes?.find((a) => a.id == select.id)
-						const { x, y, scaleX, scaleY } = node;
+						const { x, y, width, height } = node;
 
-						let width, height;
-						if (node.children && node.children.length > 0) {
-							let widths = node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
-							let xs = node.children?.map((x) => x.x);
-							let heights = node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
-							let ys = node.children?.map((x) => x.y);
+						// let width, height;
+						// if (node.children && node.children.length > 0) {
+						// 	let widths = node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
+						// 	let xs = node.children?.map((x) => x.x);
+						// 	let heights = node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
+						// 	let ys = node.children?.map((x) => x.y);
 
-							width = Math.max(...widths) - Math.min(...xs)
-							height = 25// Math.min(...ys) - Math.max(...heights)
-							console.log({ width, height, widths, heights, children: node.children })
-						} else {
-							width = node.type.width * scaleX;
-							height = 25 //node.type.height * scaleY;
-						}
+						// 	width = Math.max(...widths) - Math.min(...xs)
+						// 	height = 25// Math.min(...ys) - Math.max(...heights)
+						// 	console.log({ width, height, widths, heights, children: node.children })
+						// } else {
+						// 	width = node.type.width * scaleX;
+						// 	height = 25 //node.type.height * scaleY;
+						// }
 
 						setInfoTarget({ x: x + (width), y: y + height })
 						setEditSetpoint(undefined)
@@ -447,14 +459,14 @@ export default () => {
 				/>
 			</Box>
 
-			<Paper sx={{display: 'flex', flexDirection: 'column', bottom: 6, right: 6, left: 6, position: 'absolute', overflow: 'hidden'}}>
+			{historize && <Paper sx={{display: 'flex', flexDirection: 'column', bottom: 6, right: 6, left: 6, position: 'absolute', overflow: 'hidden'}}>
 				<InfiniteScrubber 
 					controls
 					onTimeChange={(time) => {
 						setTime(time)
 					}}
 					time={time} />
-			</Paper>
+			</Paper>}
 
 			<Paper
 				sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', width: '200px', right: 6, top: 6, padding: '6px' }}>

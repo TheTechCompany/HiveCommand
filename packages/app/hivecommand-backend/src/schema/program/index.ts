@@ -86,6 +86,8 @@ export default (prisma: PrismaClient) => {
 					return await prisma.program.findMany({
 						where: {...filter, organisation: context.jwt.organisation
 					}, include: {
+						remoteHomepage: true,
+						localHomepage: true,
 						program: {
 							include: {
 								parent: true,
@@ -99,15 +101,15 @@ export default (prisma: PrismaClient) => {
 						},
 						interface: {
 							include: {
+								localHomepage: true,
+								remoteHomepage: true,
 								nodes: {
 									include: {
-										type: true,
 										devicePlaceholder: true,
 										inputs: true,
 										outputs: true,
 										children: {
 											include: {
-												type: true,
 												devicePlaceholder: true
 											}
 										},
@@ -552,6 +554,9 @@ export default (prisma: PrismaClient) => {
 
 		program: [CommandProgramFlow]
 		interface: [CommandProgramHMI]
+
+		localHomepage: CommandProgramHMI
+		remoteHomepage: CommandProgramHMI
 
 		devices(where: CommandProgramDeviceWhere): [CommandProgramDevicePlaceholder]
 		

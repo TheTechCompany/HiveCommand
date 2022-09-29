@@ -16,6 +16,7 @@ export interface TreeMenuProps {
     items?: {
         id: string, 
         name: string, 
+        icon?: any;
         dontAdd?: boolean, 
         dontEdit?: boolean, 
         children?: any[]
@@ -40,9 +41,9 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
             defaultExpandIcon={<ChevronRight />}
         >
             {props.items?.map((item) => (
-                <CustomTreeItem nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
+                <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
                     {item.children?.map((g) => (
-                        <CustomTreeItem nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
+                        <CustomTreeItem decoration={g.icon} nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
                     ))}
                 </CustomTreeItem>
             ))}   
