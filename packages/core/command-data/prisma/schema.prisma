@@ -554,11 +554,13 @@ model CanvasEdge {
   fromId String
 
   fromHandle String?
+  fromPoint Json?
 
   to CanvasNode @relation(name: "toNode", fields: [toId], references: [id], onDelete: Cascade)
   toId String
 
   toHandle String?
+  toPoint Json?
 
   points Json?
 
@@ -649,8 +651,10 @@ model CanvasNode {
 model CanvasPort {
 		id String @id
 		key String
-		x Float
+		
+    x Float
 		y Float
+
 		length Float
 		rotation Float
 

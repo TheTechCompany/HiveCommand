@@ -16,6 +16,9 @@ export interface IconNodeProps {
     x: number;
     y: number;
 
+    scaleX: number;
+    scaleY: number;
+
     building?: boolean;
     className?: string;
     extras?: {
@@ -198,7 +201,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                 }, 400)
                             }}
                             sx={{ 
-                                pointerEvents: 'all',
+                                // pointerEvents: 'all',
                                 // background: 'red',
                                 flex: 1, 
                                 display: 'flex', 
@@ -211,6 +214,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                           
                             >
                             <div 
+                                onClick={() => console.log("Clicked ports")}
                                  style={{ pointerEvents: props.building ? 'all' : undefined}}>
 
                             {/* {port && (

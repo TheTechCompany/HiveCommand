@@ -3,6 +3,7 @@
   "build": {
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn start",
+    "withGlobalTauri": true,
     "devPath": "http://localhost:3000",
     "distDir": "../build"
   },

@@ -11,7 +11,6 @@ export interface HMIDrawerProps {
 
 export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
 
-    console.log({nodes: props.nodes})
     const renderMenu = () => {
         switch(props.menu){
             case 'actions':

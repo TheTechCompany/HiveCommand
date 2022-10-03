@@ -1,4 +1,4 @@
-import { DateTimePicker } from '@mui/lab'
+import { DateTimePicker } from '@mui/x-date-pickers'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
