@@ -133,7 +133,6 @@ const client = new ApolloClient({
 // console.log((window as any).__TAURI__);
 
 function App() {
-
   // const [ conf, setConf ] = useState<{
   //   ready: boolean;
   // }>({ready: false})
