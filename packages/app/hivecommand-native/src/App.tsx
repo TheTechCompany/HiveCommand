@@ -172,15 +172,15 @@ function App() {
   return (
     <LocalizationProvider 
     dateAdapter={AdapterMoment}>
-    <Router>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={HexHiveTheme}>
-          <Box style={{height: '100vh', width: '100vw', display: 'flex'}}>
-            <CommandSurface />
-          </Box>
-        </ThemeProvider>
-      </ApolloProvider>
-    </Router>
+      <Router>
+        <ApolloProvider client={client}>
+          <ThemeProvider theme={HexHiveTheme}>
+            <Box style={{height: '100vh', width: '100vw', display: 'flex'}}>
+              <CommandSurface />
+            </Box>
+          </ThemeProvider>
+        </ApolloProvider>
+      </Router>
     </LocalizationProvider>
   );
 }
