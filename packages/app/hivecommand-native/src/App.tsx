@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
 import { InfiniteCanvas } from '@hexhive/ui';
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
@@ -7,8 +6,7 @@ import { ThemeProvider, Box } from '@mui/material';
 // import { readTextFile, writeTextFile } from '@tauri-apps/api/fs'
 import { SetupView } from './views/setup';
 import { CommandSurface } from '@hive-command/command-surface';
-import { ApolloClient, ApolloLink, ApolloProvider, fallbackHttpConfig, HttpLink, InMemoryCache, Observable, selectHttpOptionsAndBody, serializeFetchParameter, split } from '@apollo/client';
-import { getMainDefinition } from '@apollo/client/utilities';
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
@@ -16,11 +14,11 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
-const authServer = process.env.REACT_APP_API
-  ? `${process.env.REACT_APP_API}`
-  : "http://localhost:7000";
+// const authServer = process.env.REACT_APP_API
+//   ? `${process.env.REACT_APP_API}`
+//   : "http://localhost:7000";
 
-  const URL = `${process.env.NODE_ENV == 'production'
+  const URL = `${process.env.NODE_ENV === 'production'
     ? `${API_URL || process.env.REACT_APP_API}/graphql`
     : "http://localhost:7000/graphql"}`;
     
@@ -157,17 +155,17 @@ function App() {
     })
   }, []) 
 
-  const renderView = () => {
-    if(!conf.ready){
-      return (
-        <SetupView onConfChange={(conf: any) => setConf(conf)} />
-      )
-    }else{
-        return (
-          <InfiniteCanvas />
-        ) 
-    }
-  }
+  // const renderView = () => {
+  //   if(!conf.ready){
+  //     return (
+  //       <SetupView onConfChange={(conf: any) => setConf(conf)} />
+  //     )
+  //   }else{
+  //       return (
+  //         <InfiniteCanvas />
+  //       ) 
+  //   }
+  // }
 
   return (
     <LocalizationProvider 
