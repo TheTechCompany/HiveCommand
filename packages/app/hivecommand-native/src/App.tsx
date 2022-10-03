@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
@@ -130,10 +129,6 @@ const client = new ApolloClient({
   credentials: "include",
 });
 
-
-const CONF_FILE = 'app.conf.json';
-
-const { readTextFile } = (window as any).__TAURI__.fs;
 
 // console.log((window as any).__TAURI__);
 
