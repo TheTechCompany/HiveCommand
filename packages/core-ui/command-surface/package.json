@@ -11,17 +11,19 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
-    "react-dom": "17.0.2",
-    "react": "17.0.2",
-    "styled-components": "^5.3.6",
-    "@mui/material": "5.6.4",
+    "@apollo/client": "^3.6.9",
+    "@hive-command/api": "^1.4.15-alpha.52",
     "@mui/icons-material": "^5.10.6",
+    "@mui/material": "5.6.4",
+    "@mui/x-date-pickers": "^5.0.3",
     "@types/react": "17.0.2",
-    "@hive-command/api": "^1.4.15-alpha.52"
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "styled-components": "^5.3.6"
   },
   "devDependencies": {
     "@hexhive/styles": "^1.0.1-alpha.45",
-    "@hexhive/ui": "^1.0.1-alpha.45",
+    "@hexhive/ui": "^1.0.1-alpha.47",
     "@hexhive/utils": "^0.0.6-alpha.13",
     "@types/styled-components": "^5.1.26",
     "grommet": "^2.26.0",

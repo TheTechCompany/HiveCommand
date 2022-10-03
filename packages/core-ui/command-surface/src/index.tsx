@@ -603,6 +603,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             <MaintenanceWindow
                 open={maintenanceWindow}
                 onSubmit={(period) => {
+                    if(!period.startTime || !period.endTime) return;
                     createMaintenanceWindow(period.startTime, period.endTime).then(() => {
                         setMaintenanceWindow(false)
                         refetch();

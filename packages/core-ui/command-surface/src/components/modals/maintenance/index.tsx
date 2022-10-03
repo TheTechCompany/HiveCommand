@@ -1,11 +1,11 @@
-import { DateTimePicker } from '@mui/lab'
+import { DateTimePicker } from '@mui/x-date-pickers'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-export const MaintenanceWindow = (props: {open: boolean, onClose: () => void, onSubmit?: (window: {startTime: Date, endTime: Date}) => void}) => {
+export const MaintenanceWindow = (props: {open: boolean, onClose: () => void, onSubmit?: (window: {startTime: Date | null, endTime: Date | null}) => void}) => {
 
-    const [ startTime, setStartTime ] = useState(new Date());
-    const [ endTime, setEndTime ] = useState(new Date());
+    const [ startTime, setStartTime ] = useState<Date | null>(new Date());
+    const [ endTime, setEndTime ] = useState<Date | null>(new Date());
 
     const onSubmit = () => {
         props.onSubmit?.({startTime, endTime})
@@ -26,7 +26,7 @@ export const MaintenanceWindow = (props: {open: boolean, onClose: () => void, on
                 <DateTimePicker 
                     label="Start Time"
                     value={startTime}
-                    onChange={(date: Date) => {
+                    onChange={(date: Date | null) => {
                         setStartTime(date)
                     }}
                     renderInput={(params: any) => (
@@ -38,12 +38,12 @@ export const MaintenanceWindow = (props: {open: boolean, onClose: () => void, on
                             size="small" 
                             {...params} />
                     )} />
-
+    {/* asdf */}
                 <DateTimePicker
                     
                     label="End Time" 
                     value={endTime}
-                    onChange={(date: Date) => {
+                    onChange={(date: Date | null) => {
                         setEndTime(date)
                     }}
                     renderInput={(params: any) => (

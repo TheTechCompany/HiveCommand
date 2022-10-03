@@ -9,43 +9,7 @@ export const useCreateHMIAction = (programId: string) => {
         flow: string[];
       }
     ) => {
-      // const item = mutation.createCommandProgramInterfaceGroup()
-      // const item = mutation.updateCommandPrograms({
-      //   where: { id: programId },
-      //   update: {
-      //     hmi: [
-      //       {
-      //         where: { node: { id: hmiId } },
-      //         update: {
-      //           node: {
-      //             actions: [
-      //               {
-      //                 create: [
-      //                   {
-      //                     node: {
-      //                       name: args.name,
-      //                       flow: {
-      //                         connect: args.flow.map((f) => ({
-      //                           where: { node: { id: f } },
-      //                         })),
-      //                       },
-      //                     },
-      //                   },
-      //                 ],
-      //               },
-      //             ],
-      //           },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // });
-
-      // return {
-      //   item: {
-      //     ...item.commandPrograms?.[0],
-      //   },
-      // };
+      
     }
   );
   return async (name: string, flow: string[]) => {
@@ -92,60 +56,6 @@ export const useUpdateHMIGroup = (programId: string) => {
       }
     })
 
-    // const item = mutation.createCommandProgramInterfaceGroup({
-    //   program: programId,
-    //   node: args.node,
-    //   input: {
-    //     nodes: args.nodes,
-    //     ports: args.ports,
-    //   }
-    // })
-	
-		// const item = mutation.updateCommandPrograms({
-		// 	where: {id: programId},
-		// 	update: {
-		// 		hmi: [{
-		// 			where: {node: {id: hmiId}},
-		// 			update: {
-		// 				node: {
-		// 					groups: [{
-		// 						create: [{
-		// 							node: {
-		// 								ports: {
-		// 									create: args.ports.map((p) => ({
-		// 										node: {
-		// 											...p
-		// 										}
-		// 									}))
-		// 								},
-		// 								nodes: {
-		// 									create: args.nodes.map((node) => ({
-		// 										node: {
-		// 											x: node.x,
-		// 											y: node.y,
-		// 											rotation: node.rotation,
-		// 											scaleX: node.scaleX,
-		// 											scaleY: node.scaleY,
-		// 											showTotalizer: node.showTotalizer,
-		// 											type: {connect: {where: {node: {name: node.type}}}}
-		// 										}
-		// 									}))
-		// 								}
-		// 							}
-		// 						}]
-		// 					}]
-		// 				}
-		// 			}
-		// 		}]
-		// 	}
-		// })
-
-		// return {
-		// 	item: {
-		// 		...item.commandPrograms?.[0]
-		// 	}
-		// }
-
     return {
       item: {
         ...item
@@ -165,44 +75,6 @@ export const useUpdateHMIGroup = (programId: string) => {
 
 };
 
-// export const useUpdateHMIGroup = () => {
-	
-// 	const [ mutateFn ] = useMutation((mutation, args: {
-// 		id: string,
-// 		x: number,
-// 		y: number
-// 	}) => {
-
-//     const item = mutation.updateCommandProgramInterfaceGroup({
-//       id: args.id,
-//       input: {
-//         x: args.x,
-//         y: args.y
-//       }
-//     })
-// 		// const item = mutation.updateCommandHMIGroups({
-// 		// 	where: {id: args.id},
-// 		// 	update: {
-// 		// 		x: args.x,
-// 		// 		y: args.y
-// 		// 	}
-// 		// })
-// 		// return {
-// 		// 	item: {
-// 		// 		...item.commandHmiGroups?.[0]
-// 		// 	}
-// 		// }
-//     return {
-//       item: {
-//         ...item
-//       }
-//     }
-// 	})
-// 	return async (id: string, x: number, y: number) => {
-
-// 		return await mutateFn({args: {id, x, y}})
-// 	}
-// };
 
 export const useCreateHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
@@ -224,40 +96,7 @@ export const useCreateHMINode = (programId: string, hmiId: string) => {
           y: args.y
         }
       })
-      // const item = mutation.updateCommandPrograms({
-      //   where: { id: programId },
-      //   update: {
-      //     hmi: [
-      //       {
-      //         where: { node: { id: hmiId } },
-      //         update: {
-      //           node: {
-      //             nodes: [
-      //               {
-      //                 create: [
-      //                   {
-      //                     node: {
-      //                       type: {
-      //                         connect: { where: { node: { name: args.type } } },
-      //                       },
-      //                       x: args.x,
-      //                       y: args.y,
-      //                     },
-      //                   },
-      //                 ],
-      //               },
-      //             ],
-      //           },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // });
-      // return {
-      //   item: {
-      //     ...item.commandPrograms?.[0],
-      //   },
-      // };
+
       return {
         item: {
           ...item
@@ -304,33 +143,6 @@ export const useUpdateHMINode = (programId: string) => {
         input: hmiUpdate
       })
 
-      // const item = mutation.updateCommandPrograms({
-      //   where: { id: programId },
-      //   update: {
-      //     hmi: [
-      //       {
-      //         where: { node: { id: hmiId } },
-      //         update: {
-      //           node: {
-      //             nodes: [
-      //               {
-      //                 where: { node: { id: args.nodeId } },
-      //                 update: {
-      //                   node: hmiUpdate,
-      //                 },
-      //               },
-      //             ],
-      //           },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // });
-      // return {
-      //   item: {
-      //     ...item.commandPrograms?.[0],
-      //   },
-      // };
 
       return {
         item: {
@@ -364,28 +176,7 @@ export const useUpdateHMINode = (programId: string) => {
 
 export const useDeleteHMIAction = (programId: string) => {
   const [ mutateFn ] = useMutation((mutation, args: {actionId: string}) => {
-    // const item = mutation.updateCommandPrograms({
-    //   where: { id: programId },
-    //   update: {
-    //     hmi: [
-    //       {
-    //         where: { node: { id: hmiId } },
-    //         update: {
-    //           node: {
-    //             actions: [{
-    //               delete: [{where: {node: {id: args.actionId}}}]
-    //             }]
-    //           },
-    //         },
-    //       },
-    //     ],
-    //   },
-    // });
-    // return {
-    //   item: {
-    //     ...item.commandPrograms?.[0],
-    //   },
-    // };
+  
   })
 
   return async (actionId: string) => {
@@ -403,32 +194,7 @@ export const useDeleteHMINode = (programId: string) => {
     ) => {
 
       const item = mutation.deleteCommandProgramInterfaceNode({id: args.nodeId})
-      // const item = mutation.updateCommandPrograms({
-      //   where: { id: programId },
-      //   update: {
-      //     hmi: [
-      //       {
-      //         where: { node: { id: hmiId } },
-      //         update: {
-      //           node: {
-      //             nodes: [
-      //               {
-      //                 delete: [{
-      //                   where: { node: { id: args.nodeId } }
-      //                 }],
-      //               },
-      //             ],
-      //           },
-      //         },
-      //       },
-      //     ],
-      //   },
-      // });
-      // return {
-      //   item: {
-      //     ...item.commandPrograms?.[0],
-      //   },
-      // };
+      
       return {
         item: {
           success: item?.id != null
@@ -508,21 +274,26 @@ export const useUpdateHMIPath = (programId: string) => {
       id?: string;
       source: string;
       sourceHandle: string;
+      sourcePoint: {x: number, y: number},
       target: string;
       targetHandle: string;
+      targetPoint: {x: number, y: number},
       points: { x: number; y: number }[];
     }
   ) => {
+
     const item = mutation.updateCommandProgramInterfaceEdge({
       id: args.id,
       input: {
         from: args.source,
         fromHandle: args.sourceHandle,
+        fromPoint: args.sourcePoint,
         to: args.target,
         toHandle: args.targetHandle,
+        toPoint: args.targetPoint,
         points: args.points,
       }
-    })
+    });
 
     return {
       item: {
@@ -535,8 +306,10 @@ export const useUpdateHMIPath = (programId: string) => {
     node_id: string,
     source: string,
     sourceHandle: string,
+    sourcePoint: {x: number, y: number},
     target: string,
     targetHandle: string,
+    targetPoint: {x: number, y: number},
     points: { x: number; y: number }[]
   ) => {
     return await mutateFn({
@@ -544,34 +317,41 @@ export const useUpdateHMIPath = (programId: string) => {
         id: node_id,
         source,
         sourceHandle,
+        sourcePoint,
         target,
         targetHandle,
+        targetPoint,
         points,
       }
     })
   }
 }
 
-export const useCreateHMIPath = (programId: string) => {
+export const useCreateHMIPath = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
     (
       mutation,
       args: {
         source: string;
         sourceHandle: string;
+        sourcePoint: {x: number, y: number},
         target: string;
         targetHandle: string;
+        targetPoint: {x: number, y: number},
         points: { x: number; y: number }[];
       }
     ) => {
 
       const item = mutation.createCommandProgramInterfaceEdge({
         program: programId,
+        hmi: hmiId,
         input: {
           from: args.source,
           fromHandle: args.sourceHandle,
+          fromPoint: args.sourcePoint,
           to: args.target,
           toHandle: args.targetHandle,
+          toPoint: args.targetPoint,
           points: args.points,
         }
       })
@@ -581,99 +361,26 @@ export const useCreateHMIPath = (programId: string) => {
           ...item
         }
       }
-    //   let paths = [
-    //     !args.id
-    //       ? {
-    //           create: [
-    //             {
-    //               node: {
-    //                 source: {
-    //                   CommandHMIGroup: {
-    //                     connect: { where: { node: { id: args.source } } },
-    //                   },
-    //                   CommandHMINode: {
-    //                     connect: { where: { node: { id: args.source } } },
-    //                   },
-    //                 },
-    //                 target: {
-    //                   CommandHMIGroup: {
-    //                     connect: { where: { node: { id: args.target } } },
-    //                   },
-    //                   CommandHMINode: {
-    //                     connect: { where: { node: { id: args.target } } },
-    //                   },
-    //                 },
-    //                 sourceHandle: args.sourceHandle,
-    //                 targetHandle: args.targetHandle,
-    //                 points: args.points,
-    //               },
-    //             },
-    //           ],
-    //         }
-    //       : {
-    //           where: { node: { id: args.id } },
-    //           update: {
-    //             node: {
-    //               source: {
-    //                 CommandHMIGroup: {
-    //                   connect: { where: { node: { id: args.source } } },
-    //                 },
-    //                 CommandHMINode: {
-    //                   connect: { where: { node: { id: args.source } } },
-    //                 },
-    //               },
-    //               target: {
-    //                 CommandHMIGroup: {
-    //                   connect: { where: { node: { id: args.target } } },
-    //                 },
-    //                 CommandHMINode: {
-    //                   connect: { where: { node: { id: args.target } } },
-    //                 },
-    //               },
-    //               sourceHandle: args.sourceHandle,
-    //               targetHandle: args.targetHandle,
-    //               points: args.points,
-    //             },
-    //           },
-    //         },
-    //   ];
-    //   const item = mutation.updateCommandPrograms({
-    //     where: { id: programId },
-    //     update: {
-    //       hmi: [
-    //         {
-    //           where: { node: { id: hmiId } },
-    //           update: {
-    //             node: {
-		// 			paths: paths
-		// 		}
-    //           },
-    //         },
-    //       ],
-    //     },
-    //   });
-
-	  // return {
-		//   item: {
-		// 	  ...item.commandPrograms?.[0]
-		//   }
-	  // }
     }
   );
 
   return async (
     source: string,
     sourceHandle: string,
+    sourcePoint: {x: number, y: number},
     target: string,
     targetHandle: string,
+    targetPoint: {x: number, y: number},
     points: { x: number; y: number }[]
   ) => {
     return await mutateFn({
       args: {
         source,
         sourceHandle,
+        sourcePoint,
         target,
         targetHandle,
+        targetPoint,
         points,
       },
     });
@@ -694,33 +401,6 @@ export const useAssignHMINode = (programId: string) => {
         ...item
       }
     }
-		// const item = mutation.updateCommandPrograms({
-		// 	where: {id: programId},
-		// 	update: {
-		// 		hmi: [{
-		// 			where: {node: {id: hmiId}},
-		// 			update: {
-		// 				node: {
-		// 					nodes: [{
-		// 						where: {node: {id: args.nodeId}},
-		// 						update: {
-		// 							node: {
-		// 								devicePlaceholder: {
-		// 									connect: {where: {node: {id: args.deviceId}}}
-		// 								}
-		// 							}
-		// 						}
-		// 					}]
-		// 				}
-		// 			}
-		// 		}]
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandPrograms?.[0]
-		// 	}
-		// }
 	})
 
 	return async (

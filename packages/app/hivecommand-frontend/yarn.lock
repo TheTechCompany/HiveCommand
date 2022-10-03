@@ -1399,10 +1399,10 @@
   dependencies:
     "@emotion/styled" "^11.9.3"
 
-"@hexhive/ui@1.0.1-alpha.45":
-  version "1.0.1-alpha.45"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.45.tgz#73b7361a5122ad39b03d21b02a8323ee44472769"
-  integrity sha512-8Av4EZg2jEV56+7x5+mfF1T26D053JVRTox+ZGdpOfuAGnz6Uz4r5dLFFLZhvaGimRuO/syMM4obGNskkZEYbQ==
+"@hexhive/ui@1.0.1-alpha.59":
+  version "1.0.1-alpha.59"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.59.tgz#df2599204af66e6644034e4a6a275c885121fb9d"
+  integrity sha512-tYLt8JbnAnagHjyEaqbcjrfd2eAeo029tXTloN4IVGZwZbWPADRK3hn84gAKjNFsNXk6SAFveP79sF1wl64jKg==
   dependencies:
     "@emotion/react" "^11.9.0"
     "@emotion/styled" "^11.8.1"

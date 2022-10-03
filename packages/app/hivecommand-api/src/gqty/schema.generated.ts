@@ -36,9 +36,11 @@ export interface Scalars {
 export interface ComandProgramInterfaceEdgeInput {
   from?: InputMaybe<Scalars["String"]>;
   fromHandle?: InputMaybe<Scalars["String"]>;
+  fromPoint?: InputMaybe<Scalars["JSON"]>;
   points?: InputMaybe<Array<InputMaybe<PointInput>>>;
   to?: InputMaybe<Scalars["String"]>;
   toHandle?: InputMaybe<Scalars["String"]>;
+  toPoint?: InputMaybe<Scalars["JSON"]>;
 }
 
 export interface ComandProgramInterfaceGroupInput {
@@ -310,9 +312,11 @@ export const generatedSchema = {
   ComandProgramInterfaceEdgeInput: {
     from: { __type: "String" },
     fromHandle: { __type: "String" },
+    fromPoint: { __type: "JSON" },
     points: { __type: "[PointInput]" },
     to: { __type: "String" },
     toHandle: { __type: "String" },
+    toPoint: { __type: "JSON" },
   },
   ComandProgramInterfaceGroupInput: {
     nodes: { __type: "[ComandProgramInterfaceNodeInput]" },
@@ -588,10 +592,12 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     from: { __type: "CommandHMINode" },
     fromHandle: { __type: "String" },
+    fromPoint: { __type: "JSON" },
     id: { __type: "ID!" },
     points: { __type: "[Point]" },
     to: { __type: "CommandHMINode" },
     toHandle: { __type: "String" },
+    toPoint: { __type: "JSON" },
   },
   CommandHMIGroup: {
     __typename: { __type: "String!" },
@@ -1717,10 +1723,12 @@ export interface CommandHMIEdge {
   __typename?: "CommandHMIEdge";
   from?: Maybe<CommandHMINode>;
   fromHandle?: Maybe<ScalarsEnums["String"]>;
+  fromPoint?: Maybe<ScalarsEnums["JSON"]>;
   id: ScalarsEnums["ID"];
   points?: Maybe<Array<Maybe<Point>>>;
   to?: Maybe<CommandHMINode>;
   toHandle?: Maybe<ScalarsEnums["String"]>;
+  toPoint?: Maybe<ScalarsEnums["JSON"]>;
 }
 
 export interface CommandHMIGroup {

@@ -352,8 +352,9 @@ export default (prisma: PrismaClient) => {
 						y: args.input.y,
 						options: args.input.options,
 						rotation: args.input.rotation || 0,
-						width: args.input.width || 1,
-						height: args.input.height || 1,
+						width: args.input.width,
+						height: args.input.height,
+
 						z: args.input.z || 1,
 						showTotalizer: args.input.showTotalizer || false,
 						...deviceUpdate,
@@ -372,7 +373,7 @@ export default (prisma: PrismaClient) => {
 					}
 				}
 				if (args.input.z != undefined) deviceUpdate['z'] = args.input.z;
-				if (args.input.showTotalizer != undefined) deviceUpdate['showTotalizer'] = args.input.showTotalizer;
+				if (args.input.showTotalizer != undefined) deviceUpdate['showTotalizer'] = args.ianput.showTotalizer;
 				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
 				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
 
@@ -404,8 +405,8 @@ export default (prisma: PrismaClient) => {
 									y: child.y,
 									options: child.options,
 									rotation: child.rotation || 0,
-									width: child.width || 1,
-									height: child.height || 1,
+									width: child.width,
+									height: child.height,
 									z: child.z || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
@@ -424,8 +425,8 @@ export default (prisma: PrismaClient) => {
 									y: child.y,
 									options: child.options,
 									rotation: child.rotation || 0,
-									width: child.width || 1,
-									height: child.height || 1,
+									width: child.width,
+									height: child.height,
 									z: child.z || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
@@ -521,9 +522,11 @@ export default (prisma: PrismaClient) => {
 							connect: { id: args.input.from }
 						},
 						fromHandle: args.input.fromHandle,
+						fromPoint: args.input.fromPoint,
 						to: {
 							connect: { id: args.input.to }
 						},
+						toPoint: args.input.toPoint,
 						toHandle: args.input.toHandle,
 						points: args.input.points,
 						hmi: {
@@ -542,10 +545,12 @@ export default (prisma: PrismaClient) => {
 							connect: { id: args.input.from }
 						},
 						fromHandle: args.input.fromHandle,
+						fromPoint: args.input.fromPoint,
 						to: {
 							connect: { id: args.input.to }
 						},
 						toHandle: args.input.toHandle,
+						toPoint: args.input.toPoint,
 						points: args.input.points
 						// hmi: {
 						// 	connect: { programId: args.program }
@@ -865,17 +870,24 @@ export default (prisma: PrismaClient) => {
 	input ComandProgramInterfaceEdgeInput {
 		from: String
 		fromHandle: String
+		fromPoint: JSON
 		to: String
 		toHandle: String
+		toPoint: JSON
 		points: [PointInput]
 	}
+
+
 
 	type CommandHMIEdge {
 		id: ID! 
 		from: CommandHMINode
 		fromHandle: String
+		fromPoint: JSON
 		to: CommandHMINode
+		toPoint: JSON
 		toHandle: String
+
 		points: [Point]
 	}
 

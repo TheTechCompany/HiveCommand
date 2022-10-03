@@ -26,6 +26,7 @@ import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
 import { useRemoteComponents } from '../../../../hooks/remote-components';
 import { size } from 'mathjs';
+import { PipePathFactory } from "@hexhive/ui/dist/components/InfiniteCanvas/components/paths/pipe-path";
 
 export const Controls = (props) => {
 
@@ -56,32 +57,38 @@ export const Controls = (props) => {
     const [menuOpen, openMenu] = useState<string | undefined>(undefined);
 
     const [nodes, setNodes] = useState<InfiniteCanvasNode[]>([])
-    const [paths, _setPaths] = useState<InfiniteCanvasPath[]>([])
+    const [paths, setPaths] = useState<InfiniteCanvasPath[]>([])
 
-    const pathRef = useRef<{ paths: InfiniteCanvasPath[] }>({ paths: [] })
+    // const pathRef = useRef<{ paths: InfiniteCanvasPath[] }>({ paths: [] })
 
-    const setPaths = (paths: InfiniteCanvasPath[]) => {
-        _setPaths(paths)
-        pathRef.current.paths = paths;
-    }
+    // const setPaths = (paths: InfiniteCanvasPath[]) => {
+    //     _setPaths(paths)
+    //     pathRef.current.paths = paths;
+    // }
 
-    const updateRef = useRef<{ addPath?: (path: any) => void, updatePath?: (path: any) => void }>({
-        updatePath: (path) => {
-            let p = pathRef.current.paths.slice()
-            let ix = p.map((x) => x.id).indexOf(path.id)
-            // if(path.sourceHandle && path.targetHandle){
-            //     path.draft = false;
-            // }
-            p[ix] = path;
-            setPaths(p)
-        },
-        addPath: (path) => {
-            let p = pathRef.current.paths.slice()
-            path.draft = true;
-            p.push(path)
-            setPaths(p)
-        }
-    })
+    // const updateRef = useRef<{ addPath?: (path: any) => void, updatePath?: (path: any) => void }>({
+    //     updatePath: (path) => {
+
+    //         console.log("Update path");
+    //         let p = pathRef.current.paths.slice()
+    //         let ix = p.map((x) => x.id).indexOf(path.id)
+    //         // if(path.sourceHandle && path.targetHandle){
+    //         //     path.draft = false;
+    //         // }
+    //         path.type = 'pipe-path';
+    //         p[ix] = path;
+    //         setPaths(p)
+    //     },
+    //     addPath: (path) => {
+
+    //         console.log("Add Path");
+    //         let p = pathRef.current.paths.slice()
+    //         path.type = 'pipe-path';
+    //         path.draft = true;
+    //         p.push(path)
+    //         setPaths(p)
+    //     }
+    // })
 
 
     const client = useApolloClient()
@@ -125,12 +132,14 @@ export const Controls = (props) => {
                         
                         }
                         fromHandle
+                        fromPoint
                         to {
                           
                             id
                         
                         }
                         toHandle
+                        toPoint
                         points {
                             x
                             y
@@ -236,7 +245,7 @@ export const Controls = (props) => {
 
 
     const deleteHMIEdge = useDeleteHMIPath(id)
-    const createHMIEdge = useCreateHMIPath(id)
+    const createHMIEdge = useCreateHMIPath(id, props.activeProgram)
     const updateHMIEdge = useUpdateHMIPath(id)
 
     // const updateHMIGroup = useUpdateHMIGroup()
@@ -305,9 +314,15 @@ export const Controls = (props) => {
                 console.log(nodes.map((x) => x?.icon?.metadata));
 
                 setNodes(nodes.map((x) => {
-                    let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                    let width =  x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
                     let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
-    
+    //x.width ||
+    //x.height || 
+                    let scaleX = x.width / width;
+                    let scaleY = x.height / height;
+
+                    if(x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
+
                     console.log({icon: x.icon, metadata: x.icon?.metadata, width, height});
 
                     return {
@@ -316,6 +331,8 @@ export const Controls = (props) => {
                         y: x.y,
                         width, 
                         height,
+                        scaleX: 1,
+                        scaleY: 1,
                         rotation: x.rotation || 0,
                         options: x.options,
                         //  width: `${x?.type?.width || 50}px`,
@@ -329,7 +346,7 @@ export const Controls = (props) => {
                             showTotalizer: x.showTotalizer || false,
                             iconString: x.type?.name,
                             icon: x.icon, //HMIIcons[x.type?.name],
-                            ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
+                            ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
                         },
                         type: 'hmi-node',
         
@@ -388,13 +405,14 @@ export const Controls = (props) => {
             // }))))
 
             // console.log({intf: program.interface})
-            setPaths((program.interface)?.edges?.map((x) => {
+            setPaths(((activeProgram)?.edges || []).map((x) => {
                 return {
                     id: x.id,
+                    type: 'pipe-path',
                     source: x?.from?.id,
-                    sourceHandle: x.fromHandle,
+                    sourceHandle: x.fromPoint || x.fromHandle,
                     target: x?.to?.id,
-                    targetHandle: x.toHandle,
+                    targetHandle: x.toPoint || x.toHandle,
                     points: x.points
                 }
             }).reduce((prev, curr) => {
@@ -428,6 +446,7 @@ export const Controls = (props) => {
 
     }
 
+
     const updateNode = (id: string, data: ((node: HMINodeData) => HMINodeData)) => {
 
     
@@ -445,8 +464,6 @@ export const Controls = (props) => {
                 ...nodeData,
                 ...data(nodeData)
             };
-
-            console.log({newData})
 
             n[ix] = {
                 ...n[ix],
@@ -471,6 +488,7 @@ export const Controls = (props) => {
       
     }
 
+
     return (
         <HMIContext.Provider
             value={{
@@ -482,7 +500,6 @@ export const Controls = (props) => {
                 selected,
                 devices,
                 nodes: nodes,
-
                 updateNode
             }}>
             <Box
@@ -493,27 +510,7 @@ export const Controls = (props) => {
                 }}>
 
                 <InfiniteScrubber time={new Date().getTime()} />
-                {/* <ProgramCanvasModal
-                    open={createModalOpen}
-                    onSubmit={(item) => {
-                        let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                        createProgramHMI(item.name, parent).then(() => {
-                            refetch()
-                        })
-
-
-                        openCreateModal(false)
-                    }}
-                    onClose={() => {
-                        setSelectedItem(undefined)
-                        openCreateModal(false)
-                    }}
-                    modal={(gql`
-                        type HMI {
-                            name: String
-                        }
-                    `).definitions.find((a) => (a as ObjectTypeDefinitionNode).name.value == "HMI") as ObjectTypeDefinitionNode} /> */}
-
+               
                 {(<InfiniteCanvas
                     finite
                     style={CanvasStyle}
@@ -543,30 +540,49 @@ export const Controls = (props) => {
                     </Collapse>)}
                     editable={true}
                     nodes={nodes}
-                    paths={pathRef.current.paths}
-                    factories={[HMINodeFactory(true)]}
+                    paths={paths}
+                    factories={[HMINodeFactory(true), PipePathFactory]}
                     onPathCreate={(path) => {
-                        updateRef.current?.addPath(path);
+
+                        setPaths((paths) => {
+                            let p = paths.slice();
+                            path.type = 'pipe-path';
+                            path.draft = true;
+                            p.push(path)
+                            return p;
+                        })
+                        // updateRef.current?.addPath(path);
                     }}
                     onPathUpdate={(path) => {
-                        // console.log("CREATE PATH", {path})
+                        console.log("CREATE PATH", {path})
 
                         if (path.source && path.target && path.targetHandle) {
 
                             let p = paths.slice()
                             let ix = p.map((x) => x.id).indexOf(path.id)
-                            if (ix > -1) {
+                            if (ix > -1) { 
                                 (p[ix] as any).draft = false;
                                 setPaths(p)
                             }
+
+                            let sourceHandle = typeof(path.sourceHandle) == 'string' ? path.sourceHandle : undefined;
+                            let targetHandle = typeof(path.targetHandle) == 'string' ? path.targetHandle : undefined;
+                            let sourcePoint = typeof(path.sourceHandle) == 'string' ? undefined : path.sourceHandle;
+                            let targetPoint = typeof(path.targetHandle) == 'string' ? undefined : path.targetHandle;
+
+                            let node = nodes.find((a) => a.id == path.target);
+
+                            if(targetPoint && (node.extras.ports?.length > 0)) return;
 
                                 if (!path.draft) {
                                     updateHMIEdge(
                                         path.id,
                                         path.source,
-                                        path.sourceHandle,
+                                        sourceHandle,
+                                        sourcePoint,
                                         path.target,
-                                        path.targetHandle,
+                                        targetHandle,
+                                        targetPoint,
                                         path.points
                                     ).then(() => {
                                         refetch()
@@ -574,9 +590,11 @@ export const Controls = (props) => {
                                 } else {
                                     createHMIEdge(
                                         path.source,
-                                        path.sourceHandle,
+                                        sourceHandle,
+                                        sourcePoint,
                                         path.target,
-                                        path.targetHandle,
+                                        targetHandle,
+                                        targetPoint,
                                         path.points
                                     ).then(() => {
                                         refetch()
@@ -594,9 +612,18 @@ export const Controls = (props) => {
                                 //     refetch()
                                 // })
 
+                        }else{
+                            console.log({path})
                         }
 
-                        updateRef.current?.updatePath(path)
+                        setPaths((paths) => {
+                            let p = paths.slice();
+                            let ix = p.map((x) => x.id).indexOf(path.id)
+                            path.type = 'pipe-path';
+                            p[ix] = path;
+                            return p;
+                        })
+                        // updateRef.current?.updatePath(path)
                     }}
                     onNodeUpdate={(node) => {
                         let n = nodes.slice()
