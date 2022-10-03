@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { InfiniteCanvas } from '@hexhive/ui';
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
 // import { readTextFile, writeTextFile } from '@tauri-apps/api/fs'
-import { SetupView } from './views/setup';
 import { CommandSurface } from '@hive-command/command-surface';
 import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -141,19 +139,19 @@ const { readTextFile } = (window as any).__TAURI__.fs;
 
 function App() {
 
-  const [ conf, setConf ] = useState<{
-    ready: boolean;
-  }>({ready: false})
+  // const [ conf, setConf ] = useState<{
+  //   ready: boolean;
+  // }>({ready: false})
 
-  useEffect(() => {
-    readTextFile(CONF_FILE).then((confText: any) => {
+  // useEffect(() => {
+  //   readTextFile(CONF_FILE).then((confText: any) => {
 
-      if(confText){
-        setConf(JSON.parse(confText))
-      }
+  //     if(confText){
+  //       setConf(JSON.parse(confText))
+  //     }
 
-    })
-  }, []) 
+  //   })
+  // }, []) 
 
   // const renderView = () => {
   //   if(!conf.ready){
