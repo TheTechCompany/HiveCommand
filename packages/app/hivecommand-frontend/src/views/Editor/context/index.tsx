@@ -5,6 +5,7 @@ export interface ICommandEditorContext {
 	refetch?: () => void;
 	program?: {
 		id?: string;
+		templatePacks?: any[];
 		program?: any[];
 		hmi?: any[]
 	}

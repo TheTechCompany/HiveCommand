@@ -1,13 +1,24 @@
-import { Box, Layer, Text } from 'grommet';
 import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
-import { RetractingPort } from '@hexhive/ui';
+import { Box, Typography as Text } from '@mui/material'
+import { InfiniteCanvasContext, RetractingPort } from '@hexhive/ui';
 import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
 import * as Icons from '../../assets/hmi-elements';
+import { HMIPort } from './HMIPort';
+import { borderRadius } from '@mui/system';
+import { EditorHandles } from './EditorHandles';
+import { HMIContext } from '../../views/Editor/pages/controls/context';
 
 export interface IconNodeProps {
+    id?: string;
+    x: number;
+    y: number;
+
+    scaleX: number;
+    scaleY: number;
+
     building?: boolean;
     className?: string;
     extras?: {
@@ -35,6 +46,7 @@ export interface IconNodeProps {
     },
     width?: any;
     height?: any
+    options?: any;
     onClick?: () => void;
     children?: (element: JSX.Element) => JSX.Element;
 }
@@ -43,7 +55,6 @@ const _Icons: any = Icons;
 
 export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
-    console.log("base", {props});
     
     const { getDeviceConf, getDeviceOptions } = useContext(HMICanvasContext)
 
@@ -73,23 +84,29 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
         setRotation(props?.extras?.rotation)
     }, [props?.extras?.rotation])
 
-    console.log("NODE",{props})
+
     return (
         <Box
-            style={{ position: 'relative', pointerEvents: props.building ? 'none' : undefined }}
-            onClick={props.onClick}
-            width={props.width || '72px'}
-            height={props.height || '72px'}
-            round="small"
+            style={{ 
+                position: 'relative',
+                pointerEvents: props.building ? 'none' : undefined,
+                width: props.width || '72px',
+                height: props.height || '72px',
+                display :'flex',
+                borderRadius: "3px"
+            }}
+            onClick={props.onClick ? props.onClick : undefined}
             className={props.className}>
             {props.children?.(
                 <Icon
+                    editing={props.building}
                     rotation={props.extras.rotation}
                     device={props.extras?.devicePlaceholder}
                     scaleX={props.extras?.scaleX}
                     scaleY={props.extras?.scaleY}
                     conf={conf}
                     options={options}
+                    {...props.options}
                     size="medium" />
             )}
         </Box>
@@ -100,7 +117,13 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 export const UnstyledIconNode = (props: IconNodeProps) => {
     const [actionsOpen, openActions] = useState<boolean>(false);
 
-    console.log({props})
+    const [ hovering, setHovering ] = useState(false);
+
+    const [ port, setPort ] = useState<any>();
+
+
+    const { getRelativeCanvasPos, selected } = useContext(InfiniteCanvasContext)
+
     return (
         <>
             {/* {props.extras?.showTotalizer && (
@@ -112,10 +135,18 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                 Total
             </Box>
         )} */}
+
+            {/* <EditorHandles 
+                id={props.id}
+                x={props.x}
+                y={props.y}
+                active={selected?.map((x) => x.id).indexOf(props.id) > -1}> */}
             <BaseIconNode
+
                 onClick={!props.building && (() => {
-                    console.log("Open")
+                    // console.log("Open")
                     openActions(!actionsOpen)
+                    
                 })}
                 width={props.extras?.label ? '96px' : '55px'}
                 height={props.extras?.label ? '42px' : '55px'}
@@ -123,14 +154,79 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                 {(icon) => (
                     <>
                         <Box
-                            flex
-                            // style={{ pointerEvents: props.building ? 'all' : undefined}}
-                            justify={props.extras?.label ? 'between' : 'center'}
-                            align={props.extras?.label ? 'center' : 'center'}
-                            direction={props.extras?.label ? 'row' : 'column'}>
+                            onMouseLeave={(e) => {
+                                setHovering(false);
+                                setPort(null)
+                            }}
+                            onMouseMove={(evt) => {
+                                if(hovering){
+                                    // console.log("Move", {evt})
 
+                                    const { x, y } = getRelativeCanvasPos({x: evt.clientX, y: evt.clientY})
+                                    setPort({x: x, y: y});
+
+                                }
+                            }}
+                            onMouseOver={(evt) => {
+                                // console.log("Mouse over")
+
+                          
+
+                                // const currentTarget = evt.target;
+                                
+                                setTimeout(() => {
+                                    setHovering(true);
+
+                                    const { x, y } = getRelativeCanvasPos({x: evt.clientX, y: evt.clientY})
+                                    setPort({x: x, y: y});
+
+                                //     const moveListener = (e: any) => {
+                                //         // console.log("Move", {e})
+                                //         setPort({x: e.clientX, y: e.clientY});
+                                //     }
+    
+    
+                                //     const cancelListener = (evt: any) => {
+                                //         evt.currentTarget.removeEventListener('mouseup', cancelListener)
+                                //         evt.currentTarget.removeEventListener('mouseleave', cancelListener)
+                                //         evt.currentTarget.removeEventListener('mousemove', moveListener)
+                                //     }
+    
+                                //     currentTarget.addEventListener('mousemove', moveListener);
+    
+                                //     currentTarget.addEventListener('mouseup', cancelListener)
+                                //     currentTarget.addEventListener('mouseleave', cancelListener)
+    
+                                //     // alert("Over node")
+                                }, 400)
+                            }}
+                            sx={{ 
+                                // pointerEvents: 'all',
+                                // background: 'red',
+                                flex: 1, 
+                                display: 'flex', 
+                                border: selected?.map((x) => x.id).indexOf(props.id) > -1  ?  '1px solid black' : undefined,
+                                justifyContent: props.extras?.label ? 'space-between' : 'center',
+                                alignItems: props.extras?.label ? 'center' : 'center',
+                                flexDirection: props.extras?.label ? 'row' : 'column'
+                            }}
+                            // style={{ pointerEvents: props.building ? 'all' : undefined}}
+                          
+                            >
                             <div 
+                                onClick={() => console.log("Clicked ports")}
                                  style={{ pointerEvents: props.building ? 'all' : undefined}}>
+
+                            {/* {port && (
+                                <div style={{
+                                    width: 5, 
+                                    height: 5, 
+                                    background: 'green', 
+                                    left: port.x - props.x,
+                                    top: port.y - props.y, 
+                                    position: 'absolute'
+                                }} />
+                            )} */}
                             {props.extras.ports && props.extras.ports.map((port) => (
                                 <RetractingPort
                                     id="in"
@@ -148,6 +244,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                 )}
 
             </BaseIconNode>
+            {/* </EditorHandles> */}
             {props.extras?.devicePlaceholder?.name && (
                 <Box
                     style={{
@@ -156,12 +253,13 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                     scaleY(${1 / (props.extras?.scaleY || 1)})
                                 `,
                         textAlign: 'center',
-                        position: 'absolute'
-                    }}
-                    direction="row"
-                    justify="center"
-                    flex>
-                    <Text size="small" color="white">{props.extras?.devicePlaceholder?.name}</Text>
+                        position: 'absolute',
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'center'
+                    }}>
+                    <Text fontSize="small">{props.extras?.devicePlaceholder?.name}</Text>
                 </Box>
             )}
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { ProgramModal } from '../../components/modals/program';
-import { Box } from 'grommet';
 import { NestedList } from '../../components/ui/nested-list';
 import { useNavigate } from 'react-router-dom';
 import { useCreateProgram } from '@hive-command/api';
 import { gql, useQuery, useApolloClient } from '@apollo/client';
 import { useAuth } from '@hexhive/auth-ui';
+import { Box, IconButton, List, ListItem, Paper } from '@mui/material';
+import { Add } from '@mui/icons-material';
 
 export interface ProgramListProps  {
 }
@@ -34,11 +35,11 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
     `)
 
     
-    const programs = data?.commandPrograms; 
+    const programs = data?.commandPrograms || []; 
     
 
     return (
-        <Box flex className="program-list">
+        <Box sx={{flex: 1, display: 'flex'}}>
           <ProgramModal 
             selected={selectedProgram}
             open={modalOpen} 
@@ -65,12 +66,27 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
                 }
 
             }}/>
-
-            <NestedList
+            <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                <Box sx={{bgcolor: 'secondary.main', flexDirection: 'row', display: 'flex', justifyContent: 'flex-end'}}>
+                    <IconButton
+                        sx={{color: 'navigation.main'}}
+                        onClick={() => openModal(true)}>
+                        <Add />
+                    </IconButton>
+                </Box>
+                <List>
+                    {programs?.map((program) => (
+                        <ListItem button onClick={() => navigate(`${program.id}`)}>
+                            {program.name}
+                        </ListItem>
+                    ))}
+                </List>
+            </Paper>
+            {/* <NestedList
                 data={programs}
                 onClick={({item}) => navigate(`${item.id}`)}
                 renderItem={(item) => item.name}
-                onAdd={() => openModal(true)} />
+                onAdd={() => openModal(true)} /> */}
             {/*<PaperList 
                 title="Programs"
                 items={programs}

@@ -54,6 +54,51 @@ export class SyncClient {
 		this.createLogEntry = this.createLogEntry.bind(this);
 	}
 
+
+	async setupConnection(client: Client){
+		const result = await client.browse('/')
+
+
+		const items = await Promise.all((result?.references || []).map(async (ref) => {
+			await client.browse(`/${ref.browseName.namespaceIndex}:${ref.browseName.name}`)
+		}))
+
+		console.log({items})
+	}
+
+	async onClientDiscovered(serverUrl: string){
+		let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
+		
+		if(!networkName) return console.error("Could not find network name for server", serverUrl)
+		const controlDevice = await this.dataBroker.getDeviceByNetID(networkName)
+
+		console.log("Connecting to server", {serverUrl})
+
+		//New server
+		this.clients[serverUrl] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
+
+		this.clients[serverUrl].on('after_reconnection', () => {
+			console.log(`${serverUrl} reconnected`)
+		})
+
+		this.clients[serverUrl].on('reconnection_attempt_has_failed', () => {
+			console.log(`${serverUrl} failed to reconnect`)
+		})
+
+		this.clients[serverUrl].on('close', this.onClientLost.bind(this, serverUrl))
+		this.clients[serverUrl].on('connection_lost', this.onClientLost.bind(this, serverUrl))
+
+		await this.clients[serverUrl].connect(serverUrl)
+
+		await this.setupConnection(this.clients[serverUrl])
+	
+	}
+
+	onClientLost(serverUrl: string){
+		delete this.clients[serverUrl];
+	}
+
+
 	async discover(){
 		const servers = this.discoveryServer.registeredServers
 	
@@ -67,19 +112,12 @@ export class SyncClient {
 				let serverUri = serverUrl;
 
 				if(!this.clients[serverUri] && serverUrl){
-					
-					//Match networkName to device id 
-					let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
-
-					if(!networkName) return console.error("Could not find network name for server", serverUrl)
-					const controlDevice = await this.dataBroker.getDeviceByNetID(networkName)
-
-					console.log("Connecting to server", {serverUrl, serverUri})
-
-					//New server
-					this.clients[serverUri] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
-					await this.clients[serverUri].connect(serverUrl)
 				
+					await this.onClientDiscovered(serverUrl)
+					//Match networkName to device id 
+
+					
+					
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
 
 					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)

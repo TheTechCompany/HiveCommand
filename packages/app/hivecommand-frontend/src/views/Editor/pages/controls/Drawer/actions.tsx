@@ -1,5 +1,5 @@
 import { AssignFlowModal } from "../../../../../components/modals/assign-flow";
-import { Box, Button, List, Text } from "grommet";
+import { Box, Button, List, ListItem, Typography } from "@mui/material";
 import { MoreVert, Add } from '@mui/icons-material';
 import React, { useState } from "react";
 import { useCreateHMIAction, useDeleteHMIAction } from "@hive-command/api";
@@ -18,7 +18,7 @@ export const ActionMenu = () => {
 
     
     return (
-        <Box flex>
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
              <AssignFlowModal   
                 flows={flows}
                 selected={selectedHMIAction}
@@ -43,37 +43,48 @@ export const ActionMenu = () => {
                 }}
                 open={assignModalOpen} />
         <Box 
-            pad="xsmall" 
-            background={"accent-1"} 
-            direction="row" 
-            align='center'
-            justify="between">
-            <Text>Action Palette</Text>
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '3px',
+                bgcolor: 'secondary.main',
+                color: 'white'
+            }}>
+            <Typography>Action Palette</Typography>
             <IconButton 
                 size="small"
+                sx={{
+                    color: 'white'
+                }}
                 onClick={() => openAssignModal(true)}
             >
                 <Add fontSize="inherit" />
             </IconButton>
         </Box>
 
-        <List
-            pad={'none'} 
-            primaryKey={'name'}
-            data={actions || []}>
-            {(datum) => (
-                <Box pad="xsmall" direction='row' justify='between' align='center'>
-                    <Text size="small">{datum?.name}</Text>
-                    <Button                                 
-                        style={{padding: 6, borderRadius: 3}}
-                        hoverIndicator 
+        <List>
+            {(actions || []).map((datum) => (
+                <ListItem 
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}>
+                    <Typography fontSize="small">{datum?.name}</Typography>
+                    <IconButton    
+                        sx={{
+                            color: 'white'
+                        }}                             
                         onClick={() => {
                             openAssignModal(true)
                             setSelectedHMIAction(datum)
                         }}
-                        icon={<MoreVert />} />
-                </Box>
-            )}
+                        >
+                        <MoreVert sx={{color: 'white'}} />
+                    </IconButton>
+                </ListItem>
+            ))}
         </List>
     </Box>
     )

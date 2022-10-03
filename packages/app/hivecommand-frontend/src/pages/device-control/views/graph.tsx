@@ -14,7 +14,7 @@ import { Graph, GraphContainer } from "../../../components/ui/graph";
 import { useApolloClient } from "@apollo/client";
 import { LoadingIndicator } from "../../../components/LoadingIndicator";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
-import { Menu } from "@mui/material";
+import { Menu, Paper } from "@mui/material";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
 
@@ -147,14 +147,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   return (
     <Box
-      pad="xsmall"
-      flex
-      gap="xsmall"
-      background="light-1"
-      elevation="small"
-      round="xsmall"
-      style={{position: 'relative'}}
-
+      style={{position: 'relative', flex: 1, display: 'flex', flexDirection: 'column'}}
     >
       <ControlGraphModal
         open={modalOpen}

@@ -18,6 +18,10 @@ model Device {
 
   network_name String @unique
 
+  maintenanceWindows MaintenanceWindow[] @relation(name: "hasMaintenanceWindow")
+  
+  dataLayout DataLayout[] @relation(name: "hasLayout")
+
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
 
   setpoints DeviceSetpoint[] @relation(name: "hasSetpoints")
@@ -29,13 +33,55 @@ model Device {
 
   program String?
 
-  reports DeviceReport[] @relation(name: "hasReports")
+  reports ReportPage[] @relation(name: "hasReportPages")
 
   createdAt DateTime @default(now())
   
   lastSeen DateTime?
 
   organisation String
+}
+
+model MaintenanceWindow {
+  id String @id
+
+  startTime DateTime
+  endTime DateTime
+
+  owner String
+
+  device Device @relation(name: "hasMaintenanceWindow", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+model ReportPage {
+  id String @id
+
+  name String
+
+  reports DeviceReport[] @relation(name: "hasReports")
+
+  createdAt DateTime? @default(now())
+
+  owner String
+
+  device Device @relation(name: "hasReportPages", fields: [deviceId], references: [id])
+  deviceId String
+}
+
+
+model DataLayout {
+  id String @id
+  label String
+  type String
+
+  children DataLayout[] @relation(name: "hasLayoutChild")
+
+  parent DataLayout? @relation(name: "hasLayoutChild", fields: [parentId], references: [id])
+  parentId String?
+
+  device Device @relation(name: "hasLayout", fields: [deviceId], references: [id])
+  deviceId String
 }
 
 model DeviceSetpoint {
@@ -166,8 +212,8 @@ model DeviceReport {
   dataKey IOTemplateState @relation(name: "hasDataKey", fields: [dataKeyId], references: [id])
   dataKeyId String
 
-  device Device @relation(name: "hasReports", fields: [deviceId], references: [id])
-  deviceId String
+  page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
+  pageId String
 }
 
 model IOTemplate {
@@ -245,10 +291,16 @@ model Program {
 
   name String
 
+  templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
   program ProgramFlow[]
 
-  interface ProgramHMI? @relation(name: "hasInterface")
+  interface ProgramHMI[] @relation(name: "hasInterface")
+
+  localHomepage ProgramHMI? @relation(name: "localHomepage", fields: [localHomepageId], references: [id])
+  localHomepageId String? 
+  remoteHomepage ProgramHMI? @relation(name: "remoteHomepage", fields: [remoteHomepageId], references: [id])
+  remoteHomepageId String?
 
   devices ProgramFlowIO[]
 
@@ -470,6 +522,8 @@ model ProgramAssertion {
 model ProgramHMI {
   id String @id
 
+  name String? 
+
   nodes CanvasNode[] @relation(name: "useNode")
 
   edges CanvasEdge[] @relation(name: "useEdge")
@@ -479,6 +533,8 @@ model ProgramHMI {
   program Program @relation(name: "hasInterface", fields: [programId], references: [id])
   programId String
 
+  localHomepage Program[] @relation(name: "localHomepage", map: "localHomepage")
+  remoteHomepage Program[] @relation(name: "remoteHomepage", map: "remoteHomepage")
 }
 
 model ProgramHMIAction {
@@ -498,16 +554,46 @@ model CanvasEdge {
   fromId String
 
   fromHandle String?
+  fromPoint Json?
 
   to CanvasNode @relation(name: "toNode", fields: [toId], references: [id], onDelete: Cascade)
   toId String
 
   toHandle String?
+  toPoint Json?
 
   points Json?
 
   hmi ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
   hmiId String
+}
+
+model CanvasNodeTemplatePack {
+  id String @id
+
+  name String
+  type String?
+
+  provider String?
+  url String?
+  
+  version String?
+  description String?
+
+  public Boolean?
+
+  icon String?
+
+  elements CanvasNodeTemplate[] @relation(name: "inPack")
+
+  owner String
+
+  registeredBy String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  usedBy Program[] @relation(name: "useTemplatePack")
 }
 
 model CanvasNodeTemplate {
@@ -520,8 +606,9 @@ model CanvasNodeTemplate {
 
   ports Json?
   
-  usedBy CanvasNode[] @relation(name: "usedBy")
 
+  pack CanvasNodeTemplatePack? @relation(name: "inPack", fields: [packId], references: [id])
+  packId String?
 }
 
 model CanvasNode {
@@ -531,15 +618,17 @@ model CanvasNode {
   y Float
   
   rotation Float
-	scaleX Float
-	scaleY Float
+
+	width Float?
+	height Float?
 
 	z Int
 
 	showTotalizer Boolean
 
-	type CanvasNodeTemplate @relation(name: "usedBy", fields: [templateId], references: [id], onDelete: Cascade)
-  templateId String
+	type String?
+
+  options Json?
 
 	devicePlaceholder ProgramFlowIO?  @relation(name: "shownOn", fields: [deviceId], references: [id])
   deviceId String?
@@ -562,8 +651,10 @@ model CanvasNode {
 model CanvasPort {
 		id String @id
 		key String
-		x Float
+		
+    x Float
 		y Float
+
 		length Float
 		rotation Float
 
