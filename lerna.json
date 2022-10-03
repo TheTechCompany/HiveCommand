@@ -1,6 +1,7 @@
 {
   "packages": [
     "packages/core/*",
+    "packages/core-ui/*",
     "packages/communication/*",
     "packages/clients/*",
     "packages/network/*",

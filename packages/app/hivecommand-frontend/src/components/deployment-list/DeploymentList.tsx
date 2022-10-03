@@ -1,99 +1,143 @@
-import React from 'react';
-import { Box, DataTable, Text, Button } from 'grommet';
+import React, { useState } from 'react';
 import moment from 'moment';
-import {MoreVert} from '@mui/icons-material'
-import { Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead } from '@mui/material'
-import { BaseStyle } from '@hexhive/styles';
+import {Add, MoreVert, Search} from '@mui/icons-material'
+import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead, IconButton, Menu, MenuItem } from '@mui/material'
 
 export interface DeploymentListProps {
     onClickRow?: (row: any) => void;
     onEditRow?: (row: any) => void;
 
+    onMapRow?: (row: any) => void;
+
     programs?: any[];
     devices?: any[];
 
     selected?: string[];
+
+    onCreate?: () => void;
 }
 
 
 export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
 
+    const [ editElem, setEditElem ] = useState<any>(null);
+    const [ editAnchor, setEditAnchor ] = useState<any>(null);
+
     const columns = [
         {
-            property: 'selected',
-            render: (datum) => <Checkbox checked={(props.selected || []).indexOf(datum.id) > -1} />,
-            header: <Checkbox />
-        },
-        {
             property: 'name',
+            align: 'left',
             size: 'medium',
-            header: <Text>Name</Text>
+            header: (
+                 <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Typography>Name</Typography>
+                    {/* <IconButton sx={{color: "#fff"}} >
+                        <Search />
+                    </IconButton> */}
+                 </Box>
+            )
         },
         {
             property: 'activeProgram',
-            size: 'small',
+            size: 'medium',
+            align: 'left',
             render: (datum) => datum?.activeProgram?.name,
-            header: <Text>Program</Text>
+            header: <Typography>Program</Typography>
         },
         {
             size: 'small',
             property: 'connected',
-            align: 'center',
-            header: <Text>Connection</Text>,
+            align: 'left',
+            header: <Typography>Connection</Typography>,
             render: (datum) => (
                 <Box 
-                    direction="row"
-                    align="center"
-                    round="small"  >
+                    sx={{flexDirection: 'row', display: 'flex', alignItems: 'center'}} >
                     <Box 
-                        margin={{right: 'small'}}
-                        width="7px" 
-                        height="7px" 
-                        round="small" 
-                        background={datum.online ? 'green' : 'red'} />
+                        sx={{
+                            width: 7,
+                            height: 7,
+                            borderRadius: 7,
+                            marginRight: '6px',
+                            background: datum.online ? 'green' : 'red'
+                        }}/>
                     {datum.online ? 'Online' : 'Offline'}
                 </Box>
             )
         },
         {  
             property: 'lastSeen',
-            align: 'end',
-            size: 'small',
-            header: <Text>Last Seen</Text>,
+            align: 'center',
+            size: 'medium',
+            header: <Typography>Last Seen</Typography>,
             render: (datum) => moment(datum.lastSeen).fromNow()
         },
         {
             property: 'edit',
-            align: 'end',
+            align: 'right',
             size: 'small',
+            header: (
+                <IconButton 
+                    onClick={props.onCreate}
+                    sx={{color: "#fff"}}>
+                    <Add />
+                </IconButton>
+            ),
             render: (datum) => (
-            <Button 
-                plain
-                style={{padding: 6, borderRadius: 3}}
-                onClick={(e) => {   
-                    e.stopPropagation();
-                    props.onEditRow?.(datum)
-                }}
-                hoverIndicator 
-                icon={<MoreVert fontSize='small'/>} />
+                <IconButton
+                    onClick={(e) => {
+                        e.stopPropagation();
+
+                        setEditAnchor(e.target);
+                        setEditElem(datum)
+                        // props.onEditRow?.(datum)
+                    }}
+                    >
+                    <MoreVert />
+                </IconButton> 
             )
-        }   
+        }  
     ]
 
     return (
         <Box 
-            
-            background={'neutral-1'}
-            elevation="small"
-            flex>
+            sx={{flex: 1, display: 'flex'}}>
+
+            <Menu 
+                anchorEl={editAnchor}
+                open={Boolean(editAnchor)} 
+                onClose={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                }}>
+                <MenuItem onClick={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                    props.onEditRow?.(editElem)
+                }}>
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                    props.onMapRow?.(editElem)
+                }}>
+                    Change mapping
+                </MenuItem>
+            </Menu>
             <TableContainer
-                style={{flex: 1, borderRadius: 0, background: BaseStyle.global.colors['neutral-1']}}
+                style={{flex: 1, borderRadius: 0}}
                 component={Paper}>
                 <Table size="medium">
-                    <TableHead style={{background: BaseStyle.global.colors['accent-2']}}>
-                        <TableRow>
-                            {columns.map((column) => (
-                                <TableCell style={{color: 'white', padding: 0}}>{column.header}</TableCell>  
+                    <TableHead>
+                        <TableRow
+                            >
+                            {columns.map((column, ix) => (
+                                <TableCell 
+                                    align={column.align as any} 
+                                    size={'small'} 
+                                    sx={{color: 'white', padding: 0, paddingLeft: ix == 0 ? '12px' : '0px'}}>
+                                        {column.header}
+                                </TableCell>  
                             ))}
                         </TableRow>
                     </TableHead>
@@ -105,8 +149,15 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
                                 hover 
                                 onClick={() => props.onClickRow?.({datum: device})}
                                 key={device.id}>
-                                {columns.map((column) => (
-                                    <TableCell>{column?.render?.(device) || device[column.property]}</TableCell>
+                                {columns.map((column, ix) => (
+                                    <TableCell 
+                                        size={'small'} 
+                                        sx={{ padding: (ix != (columns.length - 1))? '6px' : '0px', paddingLeft: ix == 0 ? '12px' : '0px'}} 
+                                        align={column.align as any}>
+
+                                        {column?.render?.(device) || device[column.property]}
+
+                                    </TableCell>
                                 ))}
                             </TableRow>
                         ))}

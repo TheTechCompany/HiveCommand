@@ -12,7 +12,8 @@ import {
     Variant,
     DataType,
     ClientMonitoredItemGroup,
-    ServerOnNetwork
+    ServerOnNetwork,
+    OPCUAClientBase
 } from 'node-opcua'
 
 import { getNodeId } from '@hive-command/opcua-utils'
@@ -29,7 +30,7 @@ const baseSubscriptionParams : SubscriptionParams = {
     queueSize: 1
 }
 
-export default class Client {
+export default class Client extends OPCUAClientBase{
     private client: OPCUAClient;
     private session?: ClientSession;
 
@@ -40,6 +41,8 @@ export default class Client {
     private subscription?: ClientSubscription;
 
     constructor(discoveryServer?: string){
+        super();
+
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
@@ -51,7 +54,13 @@ export default class Client {
                 maxDelay: 10 * 1000
             }
         })
+
+        // this.client.on('')
     }
+
+    // on(key: string, listener: any){
+    //     return this.client.on(key, listener)
+    // }
 
     async discoverOnNetwork(){
         const servers : ServerOnNetwork[] = await this.client.findServersOnNetwork()

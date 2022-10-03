@@ -17,7 +17,11 @@ module.exports = (webpackConfigEnv, argv) => {
     resolve: {
       plugins: [
         new TsconfigPathsPlugin(),
-      ]
+      ],
+      fallback: {
+        https: false,
+        http: false,
+      }
     },
     module: {
       rules: [

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import { Box, List, Text } from 'grommet'
 import { useQuery, gql } from '@apollo/client';
+import { Box, List, ListItem, Typography } from '@mui/material'
 import { useUpdateDeviceCalibrations  } from '@hive-command/api';
 import { ProgramDeviceModal } from '../../components/modals/program-device';
 import { useParams } from 'react-router-dom';
@@ -112,12 +112,7 @@ export const DeviceDevices : React.FC<any> = (props) => {
 
 
 	return (
-		<Box
-			overflow="hidden"
-			round="xsmall"
-			flex
-			background="neutral-1"
-			>
+		<Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 			<ProgramDeviceModal
 				open={modalOpen}
 				onClose={() => {
@@ -158,9 +153,20 @@ export const DeviceDevices : React.FC<any> = (props) => {
 				configuration={[]}
 				deviceTypes={data?.commandProgramDevices}
 				/>
-			<Box overflow="scroll" flex>
-				<List
-					pad="none" 
+			<Box sx={{flex: 1, display: "flex"}}>
+				<List sx={{flex: 1}}>
+					{(device?.activeProgram?.devices || []).map((item) => (
+						<ListItem button onClick={() => {
+							let calibration = device.calibrations?.filter((a) => a.placeholder?.id == item.id);
+					
+							openModal(true)
+							setSelected({...item, calibrated: calibration})
+						}}>
+							<Typography>{item.name} - {item?.type?.name}</Typography>
+						</ListItem>
+					))}
+				</List>
+					{/* pad="none" 
 					onClickItem={({item}) => {
 						console.log({calibrations: device.calibrations, item})
 						let calibration = device.calibrations?.filter((a) => a.placeholder?.id == item.id);
@@ -172,16 +178,13 @@ export const DeviceDevices : React.FC<any> = (props) => {
 					data={device?.activeProgram?.devices || []} >
 					{(datum) => (
 						<Box
-							align="center"
-							justify="between"
-							pad="xsmall" 
-							direction="row">
+							sx={{alignItems: 'center', justifyContent: 'space-between', padding: '6px', flexDirection: 'row'}}>
 							<Text size="medium">{datum.name}</Text>
 
 							<Text size="small">{datum?.type?.name}</Text>
 						</Box>
 					)}
-				</List>
+				</List> */}
 			</Box>
 		</Box>
 	)

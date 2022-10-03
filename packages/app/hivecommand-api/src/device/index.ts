@@ -497,3 +497,24 @@ export const useUpdateDeviceSetpoint = (deviceId: string) => {
     })
   }
 }
+
+export const useCreateDeviceMaintenanceWindow = (deviceId: string) => {
+  const [ createWindow ] = useMutation((mutation, args: {startTime: Date, endTime: Date}) => {
+    const item = mutation.createCommandDeviceMaintenanceWindow({
+      device: deviceId,
+      input: {
+        startTime: args.startTime.toISOString(),
+        endTime: args.endTime.toISOString()
+      }
+    })
+    return {
+      item: {
+        ...item
+      }
+    }
+  })
+
+  return (startTime: Date, endTime: Date) => {
+    return createWindow({args: {startTime, endTime}})
+  }
+}

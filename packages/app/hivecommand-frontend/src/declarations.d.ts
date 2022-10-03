@@ -1,3 +1,11 @@
+import { PaletteOptions } from '@mui/material'
+
+declare module 'https://jspm.dev/*';
+
+// declare global {
+//   const System : System;
+// }
+
 declare module "*.html" {
   const rawHtmlFile: string;
   export = rawHtmlFile;
@@ -36,4 +44,32 @@ declare module "*.webp" {
 declare module "*.svg" {
   const src: string;
   export default src;
+}
+
+
+declare module '@mui/material/styles' {
+  // interface Theme {
+  //   status: {
+  //     danger: React.CSSProperties['color'];
+  //   };
+  // }
+
+  interface Palette {
+    navigation: Palette['primary'];
+  }
+  interface PaletteOptions {
+    navigation: PaletteOptions['primary'];
+  }
+
+  // interface PaletteColor {
+  //   darker?: string;
+  // }
+  // interface SimplePaletteColorOptions {
+  //   darker?: string;
+  // }
+  // interface ThemeOptions {
+  //   status: {
+  //     danger: React.CSSProperties['color'];
+  //   };
+  // }
 }

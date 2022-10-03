@@ -5,7 +5,7 @@ import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
-import { BaseStyle } from '@hexhive/styles';
+import { HexHiveTheme } from '@hexhive/styles';
 
 export interface TreeMenuProps {
     onNodeSelect?: (nodeId: string) => void;
@@ -13,33 +13,24 @@ export interface TreeMenuProps {
     onAdd?: (nodeId?: string) => void;
     selected?: string;
 
-    items?: {id: string, name: string, children?: any[]}[]
+    items?: {
+        id: string, 
+        name: string, 
+        icon?: any;
+        dontAdd?: boolean, 
+        dontEdit?: boolean, 
+        children?: any[]
+    }[]
 
     label?: string;
 }
 
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
+
+    console.log({items: props.items})
     return (
     <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
-        <Box 
-            style={{
-                background: BaseStyle.global.colors['accent-1'],
-                paddingLeft: '4px',
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-            }}>
-            <Typography
-                    component="div"
-                >
-                    {props.label}
-            </Typography>
-
-            <IconButton size="small" onClick={() => props.onAdd?.()}>
-                <Add fontSize="inherit" />
-            </IconButton>
-        </Box>
+    
         <TreeView
             onNodeSelect={(event, nodeId) => {
                 props.onNodeSelect?.(nodeId);
@@ -50,9 +41,9 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
             defaultExpandIcon={<ChevronRight />}
         >
             {props.items?.map((item) => (
-                <CustomTreeItem nodeId={item.id} label={item.name}>
+                <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
                     {item.children?.map((g) => (
-                        <CustomTreeItem nodeId={g.id} label={g.name} />
+                        <CustomTreeItem decoration={g.icon} nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
                     ))}
                 </CustomTreeItem>
             ))}   

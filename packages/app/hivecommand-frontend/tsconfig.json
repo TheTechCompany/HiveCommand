@@ -4,12 +4,14 @@
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "outDir": "dist/",
+    "typeRoots": ["node_modules/@types"],
     "rootDir": "src/"
   },
   "include": ["src/**/*", "node_modules/@types"],
   "exclude": ["src/**/*.test*"],
   "references": [
     {"path": "../hivecommand-api"},
+    {"path": "../../core-ui/command-surface"},
     {"path": "../../core/command-data-types"}
   ]
 }

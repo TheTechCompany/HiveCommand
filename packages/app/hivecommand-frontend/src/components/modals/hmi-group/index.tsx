@@ -7,6 +7,7 @@ import { BaseModal } from '../base';
 import { HMIGroupMenu } from './Menu';
 import * as HMIIcons from '../../../assets/hmi-elements'
 import { HMIGroupProvider } from './context';
+import { CanvasStyle } from '../../../style';
 
 const PORT_ANCHOR = {x: 300, y: 60}
 
@@ -152,11 +153,12 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 					direction="row"
 					height={{min: '400px'}}>
 					<InfiniteCanvas
+						style={CanvasStyle}
 						onDelete={() => {
 							console.log("DELETE")
 						}}
 						editable={true}
-						factories={[new HMINodeFactory(true)]}
+						factories={[HMINodeFactory(true)]}
 						menu={(
 							<HMIGroupMenu 
 								selected={selected}
@@ -200,7 +202,7 @@ export const HMIGroupModal : React.FC<HMIGroupModalProps> = (props) => {
 									rotation: 0,
 									
 								},
-								type: HMINodeFactory.TAG
+								type: 'hmi-node'
 							};
 							console.log({newElem})
 

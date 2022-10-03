@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 
 import { Route, Routes, matchPath, useNavigate, Outlet } from 'react-router-dom';
-
-import { Box, List, Spinner } from 'grommet';
+import { Spinner } from 'grommet'
+import { Box } from '@mui/material';
 import { Header } from '../../components/ui/header'
-import {Map, Handyman} from '@mui/icons-material';
+import {Map, Handyman, Extension} from '@mui/icons-material';
 import { EditorPage } from '../Editor';
 import { Sidebar } from '@hexhive/ui'
 import { DeviceDevices } from '../../pages/device-devices';
+import { ElementEditor } from '../../pages/element-editor';
+import { ElementList } from '../../pages/element-list';
+import { DeviceMapper } from '../../pages/device-mapper';
 const PluginEditor = React.lazy(() => import('../../pages/plugin-editor').then((r) => ({default: r.PluginEditorPage})))
 const DeviceControl = React.lazy(() => import('../../pages/device-control').then((r) => ({default: r.DeviceControl})))
 
@@ -35,10 +38,23 @@ const pages = [
             path: '',
             component: <ProgramList/>    
         },
-        {
-            path: ':id/*',
-            component: <EditorPage />
-        }]
+       ]
+    },
+    {
+        icon: <Extension />,
+        label: "Elements",
+        path: "elements",
+        component: <Outlet />,
+        children: [
+            {
+                path: '',
+                component: <ElementList />
+            },
+            {
+                path: ':id/*',
+                component: <ElementEditor />
+            }
+        ]
     }
 ]
 
@@ -53,13 +69,12 @@ const Dashboard : React.FC<any> = (props) => {
 
 
     return (
-        <Box flex background="neutral-2" className="dashboard">
+        <Box sx={{flex: 1, display: 'flex', bgcolor: 'primary.dark'}}>
        
             <Box
-                flex
-                direction="row"
-                key={'left'}
-                style={{ display: 'flex', flex: 1 }}>
+                sx={{flex: 1, display: 'flex', flexDirection: 'row'}}
+                
+                key={'left'}>
                 <Sidebar 
                     active={window.location.pathname.replace((process.env.REACT_APP_URL || '/dashboard/command'), '')}
                     onSelect={(item) => {
@@ -69,11 +84,9 @@ const Dashboard : React.FC<any> = (props) => {
                     />
                 
                 <Box
-                    pad='xsmall'
-                    background={'neutral-2'}
-                    flex >
+                    sx={{flex: 1, display: 'flex', padding: '6px'}}>
                     <React.Suspense fallback={(
-                        <Box flex align="center" justify="center">
+                        <Box sx={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                             <Spinner color="gold" size="medium" />
                         </Box>)}>
 
@@ -85,12 +98,11 @@ const Dashboard : React.FC<any> = (props) => {
                                     ))}
                                 </Route>
                             ))}
-                            <Route path={`devices/:id/*`} element={<DeviceControl/>} />
                             {/* <Route path={`/devices/:id/graphs`} component={DeviceControlGraph} />
                             <Route path={`/devices/:id/devices`} component={DeviceDevices} /> */}
                             {/* <Route path={`/devices/:id`} component={DeviceSingle} /> */}
                         
-                        
+                            <Route path={`device-map/:id`} element={<DeviceMapper />} />
                             {/* <Route path={`programs/:id/*`} element={<EditorPage/>} /> */}
                             <Route path={`plugins/:id/editor`} element={<PluginEditor/>} />
                             <Route path={`plugins/:id`} element={<PluginSingle/>} />
