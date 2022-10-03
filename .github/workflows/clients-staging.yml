@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       - master
-    paths: ["packages/app/hivecommand-native", "packages/core-ui/**"]
+    paths: ["packages/app/hivecommand-native/**", "packages/core-ui/**"]
 
 jobs:
   build:
