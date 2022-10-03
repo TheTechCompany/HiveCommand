@@ -1,4 +1,4 @@
-import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api/dist/gqty';
+import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api';
 import React from 'react';
 
 export const DeviceControlContext = React.createContext<{
