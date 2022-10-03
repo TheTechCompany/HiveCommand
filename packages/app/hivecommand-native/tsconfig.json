@@ -26,6 +26,7 @@
     "src"
   ],
   "references": [
-    {"path": "../../core-ui/command-surface"}
+    {"path": "../../core-ui/command-surface"},
+    {"path": "../hivecommand-api"}
   ]
 }
