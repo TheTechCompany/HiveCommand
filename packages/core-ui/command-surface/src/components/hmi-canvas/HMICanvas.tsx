@@ -255,11 +255,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         
                         updateRef.current?.addPath?.(path);
                     }}
-                
-                    >
-        
-                    <ZoomControls anchor={{vertical: 'bottom', horizontal: 'right'}} />
-                </InfiniteCanvas>
+                />
             
             </Box>
         </HMICanvasProvider>
