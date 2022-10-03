@@ -6,10 +6,6 @@ import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
 import * as Icons from '../../assets/hmi-elements';
-import { HMIPort } from './HMIPort';
-import { borderRadius } from '@mui/system';
-import { EditorHandles } from './EditorHandles';
-import { HMIContext } from '../../views/Editor/pages/controls/context';
 
 export interface IconNodeProps {
     id?: string;
