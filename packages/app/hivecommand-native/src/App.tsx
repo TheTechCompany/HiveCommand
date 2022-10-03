@@ -168,7 +168,6 @@ function App() {
         ) 
     }
   }
-  
 
   return (
     <LocalizationProvider 
