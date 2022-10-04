@@ -129,9 +129,6 @@ const client = new ApolloClient({
   credentials: "include",
 });
 
-
-// console.log((window as any).__TAURI__);
-
 function App() {
   // const [ conf, setConf ] = useState<{
   //   ready: boolean;
