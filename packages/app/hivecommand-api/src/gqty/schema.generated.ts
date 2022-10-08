@@ -279,6 +279,11 @@ export interface CommandReportPageInput {
   name?: InputMaybe<Scalars["String"]>;
 }
 
+export interface DeviceScreenInput {
+  developer?: InputMaybe<Scalars["Boolean"]>;
+  name?: InputMaybe<Scalars["String"]>;
+}
+
 export interface MaintenanceWindowInput {
   endTime?: InputMaybe<Scalars["DateTime"]>;
   startTime?: InputMaybe<Scalars["DateTime"]>;
@@ -373,6 +378,7 @@ export const generatedSchema = {
   CommandDevice: {
     __typename: { __type: "String!" },
     activeProgram: { __type: "CommandProgram" },
+    alarms: { __type: "[DeviceAlarm]" },
     calibrations: { __type: "[CommandProgramDeviceCalibration]" },
     dataLayout: { __type: "[DataLayout]" },
     deviceSnapshot: { __type: "[CommandDeviceSnapshot]" },
@@ -493,6 +499,14 @@ export const generatedSchema = {
     width: { __type: "Int" },
     x: { __type: "Int" },
     y: { __type: "Int" },
+  },
+  CommandDeviceScreen: {
+    __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
+    device: { __type: "CommandDevice" },
+    id: { __type: "ID" },
+    name: { __type: "String" },
+    provisionCode: { __type: "String" },
   },
   CommandDeviceSetpoint: {
     __typename: { __type: "String!" },
@@ -1004,6 +1018,17 @@ export const generatedSchema = {
     parent: { __type: "DataLayout" },
     type: { __type: "String" },
   },
+  DeviceAlarm: {
+    __typename: { __type: "String!" },
+    cause: { __type: "String" },
+    createdAt: { __type: "DateTime" },
+    id: { __type: "ID" },
+    message: { __type: "String" },
+  },
+  DeviceScreenInput: {
+    developer: { __type: "Boolean" },
+    name: { __type: "String" },
+  },
   HiveOrganisation: {
     __typename: { __type: "String!" },
     id: { __type: "ID!" },
@@ -1194,6 +1219,10 @@ export const generatedSchema = {
       __type: "CommandReportPage!",
       __args: { device: "ID", input: "CommandReportPageInput!" },
     },
+    createDeviceScreen: {
+      __type: "CommandDeviceScreen",
+      __args: { device: "ID", input: "DeviceScreenInput!" },
+    },
     deleteCommandDevice: {
       __type: "CommandDevice!",
       __args: { where: "CommandDeviceWhere!" },
@@ -1282,6 +1311,10 @@ export const generatedSchema = {
     deleteCommandReportPage: {
       __type: "CommandReportPage!",
       __args: { device: "ID", id: "ID" },
+    },
+    deleteDeviceScreen: {
+      __type: "CommandDeviceScreen",
+      __args: { device: "ID", id: "ID!" },
     },
     performDeviceAction: {
       __type: "Boolean",
@@ -1468,6 +1501,10 @@ export const generatedSchema = {
       __type: "CommandReportPage!",
       __args: { device: "ID", id: "ID", input: "CommandReportPageInput!" },
     },
+    updateDeviceScreen: {
+      __type: "CommandDeviceScreen",
+      __args: { device: "ID", id: "ID!", input: "DeviceScreenInput!" },
+    },
   },
   query: {
     __typename: { __type: "String!" },
@@ -1554,6 +1591,7 @@ export interface CommandDataInterlock {
 export interface CommandDevice {
   __typename?: "CommandDevice";
   activeProgram?: Maybe<CommandProgram>;
+  alarms?: Maybe<Array<Maybe<DeviceAlarm>>>;
   calibrations?: Maybe<Array<Maybe<CommandProgramDeviceCalibration>>>;
   dataLayout?: Maybe<Array<Maybe<DataLayout>>>;
   deviceSnapshot?: Maybe<Array<Maybe<CommandDeviceSnapshot>>>;
@@ -1642,6 +1680,15 @@ export interface CommandDeviceReport {
   width?: Maybe<ScalarsEnums["Int"]>;
   x?: Maybe<ScalarsEnums["Int"]>;
   y?: Maybe<ScalarsEnums["Int"]>;
+}
+
+export interface CommandDeviceScreen {
+  __typename?: "CommandDeviceScreen";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  device?: Maybe<CommandDevice>;
+  id?: Maybe<ScalarsEnums["ID"]>;
+  name?: Maybe<ScalarsEnums["String"]>;
+  provisionCode?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandDeviceSetpoint {
@@ -2068,6 +2115,14 @@ export interface DataLayout {
   type?: Maybe<ScalarsEnums["String"]>;
 }
 
+export interface DeviceAlarm {
+  __typename?: "DeviceAlarm";
+  cause?: Maybe<ScalarsEnums["String"]>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  id?: Maybe<ScalarsEnums["ID"]>;
+  message?: Maybe<ScalarsEnums["String"]>;
+}
+
 export interface HiveOrganisation {
   __typename?: "HiveOrganisation";
   id: ScalarsEnums["ID"];
@@ -2214,6 +2269,10 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     input: CommandReportPageInput;
   }) => CommandReportPage;
+  createDeviceScreen: (args: {
+    device?: Maybe<Scalars["ID"]>;
+    input: DeviceScreenInput;
+  }) => Maybe<CommandDeviceScreen>;
   deleteCommandDevice: (args: { where: CommandDeviceWhere }) => CommandDevice;
   deleteCommandDeviceCalibration: (args: {
     device: Scalars["ID"];
@@ -2314,6 +2373,10 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id?: Maybe<Scalars["ID"]>;
   }) => CommandReportPage;
+  deleteDeviceScreen: (args: {
+    device?: Maybe<Scalars["ID"]>;
+    id: Scalars["ID"];
+  }) => Maybe<CommandDeviceScreen>;
   performDeviceAction: (args?: {
     action?: Maybe<Scalars["String"]>;
     deviceId?: Maybe<Scalars["String"]>;
@@ -2462,6 +2525,11 @@ export interface Mutation {
     id?: Maybe<Scalars["ID"]>;
     input: CommandReportPageInput;
   }) => CommandReportPage;
+  updateDeviceScreen: (args: {
+    device?: Maybe<Scalars["ID"]>;
+    id: Scalars["ID"];
+    input: DeviceScreenInput;
+  }) => Maybe<CommandDeviceScreen>;
 }
 
 export interface Query {
@@ -2523,6 +2591,7 @@ export interface SchemaObjectTypes {
   CommandDevicePlugin: CommandDevicePlugin;
   CommandDevicePluginConfiguration: CommandDevicePluginConfiguration;
   CommandDeviceReport: CommandDeviceReport;
+  CommandDeviceScreen: CommandDeviceScreen;
   CommandDeviceSetpoint: CommandDeviceSetpoint;
   CommandDeviceSetpointCalibration: CommandDeviceSetpointCalibration;
   CommandDeviceSnapshot: CommandDeviceSnapshot;
@@ -2565,6 +2634,7 @@ export interface SchemaObjectTypes {
   CommandProgramVariable: CommandProgramVariable;
   CommandReportPage: CommandReportPage;
   DataLayout: DataLayout;
+  DeviceAlarm: DeviceAlarm;
   HiveOrganisation: HiveOrganisation;
   HiveUser: HiveUser;
   MaintenanceWindow: MaintenanceWindow;
@@ -2585,6 +2655,7 @@ export type SchemaObjectTypesNames =
   | "CommandDevicePlugin"
   | "CommandDevicePluginConfiguration"
   | "CommandDeviceReport"
+  | "CommandDeviceScreen"
   | "CommandDeviceSetpoint"
   | "CommandDeviceSetpointCalibration"
   | "CommandDeviceSnapshot"
@@ -2627,6 +2698,7 @@ export type SchemaObjectTypesNames =
   | "CommandProgramVariable"
   | "CommandReportPage"
   | "DataLayout"
+  | "DeviceAlarm"
   | "HiveOrganisation"
   | "HiveUser"
   | "MaintenanceWindow"

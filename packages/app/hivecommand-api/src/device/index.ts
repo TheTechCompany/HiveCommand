@@ -165,6 +165,23 @@ export const useUpdateDevice = (user: string) => {
   };
 };
 
+
+export const useCreateDeviceScreen = (deviceId: string) => {
+  const [ createScreen ] = useMutation((mutation, args: {name: string}) => {
+    const item = mutation.createDeviceScreen({device: deviceId, input: {name: args.name}})
+    return {
+      item: {
+        ...item
+      }
+    }
+  })
+
+  return (name: string) => {
+    return createScreen({args: {name}})
+  }
+}
+
+
 export const useSetDevicePeripherals = (deviceId: string) => {
   const [ mutateFn ] = useMutation((mutation, args: {
     peripherals: any[]

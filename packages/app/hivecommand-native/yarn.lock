@@ -1402,10 +1402,10 @@
   dependencies:
     "@emotion/styled" "^11.9.3"
 
-"@hexhive/ui@^1.0.1-alpha.39":
-  version "1.0.1-alpha.39"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.39.tgz#f2a6f80518025834ad2d11fa4a1c661688d9799b"
-  integrity sha512-VYH9xw1aV9JJUea9l8XhDL9x0h5qt1zKhjmKVa/rIF8ppgZrcqBjOOw3R408G/XDZfUARwsesmwcb1vyDQjdSA==
+"@hexhive/ui@^1.0.1-alpha.60":
+  version "1.0.1-alpha.60"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.60.tgz#71ee1e3be22d51b15ebb365ae56aeb083d2e3777"
+  integrity sha512-U7QdLTXkeIvbHp4ECi9Y5n9N8ExYXfyNK8b2RWNY5+ED+9fMPZNiz99ijj1CW94CMLriwQBXMOAu6UKVEfU1Sg==
   dependencies:
     "@emotion/react" "^11.9.0"
     "@emotion/styled" "^11.8.1"
@@ -1416,7 +1416,11 @@
     date-fns "^2.28.0"
     history "^5.3.0"
     immutability-helper "^3.1.1"
+    javascript-astar "^0.4.1"
     moment "^2.29.1"
+    ngraph.graph "^20.0.0"
+    ngraph.path "^1.4.0"
+    pathfinding "^0.4.18"
     react-ace "^9.5.0"
     react-beautiful-dnd "^13.1.0"
     react-dnd "^16.0.1"
@@ -2114,10 +2118,10 @@
     "@svgr/plugin-svgo" "^5.5.0"
     loader-utils "^2.0.0"
 
-"@tauri-apps/api@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.0.2.tgz#5228720e35d50fd08df87067dc29e7306c1f7a10"
-  integrity sha512-yuNW0oeJ1/ZA7wNF1KgxhHrSu5viPVzY/UgUczzN5ptLM8dH15Juy5rEGkoHfeXGju90Y/l22hi3BtIrp/za+w==
+"@tauri-apps/api@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@tauri-apps/api/-/api-1.1.0.tgz#2c5756f6aeecd36f7683183eaba021690711bedf"
+  integrity sha512-n13pIqdPd3KtaMmmAcrU7BTfdMtIlGNnfZD0dNX8L4p8dgmuNyikm6JAA+yCpl9gqq6I8x5cV2Y0muqdgD0cWw==
 
 "@tauri-apps/cli-darwin-arm64@1.0.5":
   version "1.0.5"
@@ -5348,6 +5352,11 @@ he@^1.2.0:
   resolved "https://registry.yarnpkg.com/he/-/he-1.2.0.tgz#84ae65fa7eafb165fddb61566ae14baf05664f0f"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
+heap@0.2.5:
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/heap/-/heap-0.2.5.tgz#713b65590ebcc40fcbeeaf55e851694092b39af1"
+  integrity sha512-G7HLD+WKcrOyJP5VQwYZNC3Z6FcQ7YYjEFiFoIj8PfEr73mu421o8B1N5DKUcc8K37EsJ2XXWA8DtrDz/2dReg==
+
 history@^5.2.0, history@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/history/-/history-5.3.0.tgz#1548abaa245ba47992f063a0783db91ef201c73b"
@@ -5861,6 +5870,11 @@ jake@^10.8.5:
     chalk "^4.0.2"
     filelist "^1.0.1"
     minimatch "^3.0.4"
+
+javascript-astar@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/javascript-astar/-/javascript-astar-0.4.1.tgz#e49dd9a1535c9a98675091f7258e69d983811703"
+  integrity sha512-/SlmWkL/Ww0tu737MLvKMe2LC4sr081bL4YOgwgugFbKUjxTuQ6WLzGkibCo4buubWo0yT52bbHZlhwcwAYCzQ==
 
 jest-changed-files@^27.5.1:
   version "27.5.1"
@@ -6816,7 +6830,7 @@ mkdirp@~0.5.1:
   dependencies:
     minimist "^1.2.6"
 
-moment@^2.29.1:
+moment@^2.29.1, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -6863,6 +6877,23 @@ neo-async@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
+
+ngraph.events@^1.2.1:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/ngraph.events/-/ngraph.events-1.2.2.tgz#3ceb92d676a04a4e7ce60a09fa8e17a4f0346d7f"
+  integrity sha512-JsUbEOzANskax+WSYiAPETemLWYXmixuPAlmZmhIbIj6FH/WDgEGCGnRwUQBK0GjOnVm8Ui+e5IJ+5VZ4e32eQ==
+
+ngraph.graph@^20.0.0:
+  version "20.0.1"
+  resolved "https://registry.yarnpkg.com/ngraph.graph/-/ngraph.graph-20.0.1.tgz#579470d1d805583239704dc913e2095540aaf371"
+  integrity sha512-VFsQ+EMkT+7lcJO1QP8Ik3w64WbHJl27Q53EO9hiFU9CRyxJ8HfcXtfWz/U8okuoYKDctbciL6pX3vG5dt1rYA==
+  dependencies:
+    ngraph.events "^1.2.1"
+
+ngraph.path@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ngraph.path/-/ngraph.path-1.4.0.tgz#0b6701b187d92d3e72ba8ecfe094a4154fc69aba"
+  integrity sha512-yJZay4tP0wcjqkkf8zlMQ/T+JOgU+EWfdE4w4TG8OS94B12J/+Z44UOYxVJErE8E6/wFunX1hMZEB1/GHsBYHg==
 
 no-case@^3.0.4:
   version "3.0.4"
@@ -7219,6 +7250,13 @@ path-type@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/path-type/-/path-type-4.0.0.tgz#84ed01c0a7ba380afe09d90a8c180dcd9d03043b"
   integrity sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
+
+pathfinding@^0.4.18:
+  version "0.4.18"
+  resolved "https://registry.yarnpkg.com/pathfinding/-/pathfinding-0.4.18.tgz#a9990f6fa22b7ef196e5651b049165403a045fe8"
+  integrity sha512-R0TGEQ9GRcFCDvAWlJAWC+KGJ9SLbW4c0nuZRcioVlXVTlw+F5RvXQ8SQgSqI9KXWC1ew95vgmIiyaWTlCe9Ag==
+  dependencies:
+    heap "0.2.5"
 
 pdfjs-dist@2.4.456:
   version "2.4.456"

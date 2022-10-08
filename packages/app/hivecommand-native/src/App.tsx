@@ -7,9 +7,14 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import { SetupView } from './views/setup';
+import { useEffect, useState } from 'react';
+// import fs from '@tauri-apps/api/fs';
 
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
+
+const CONF_FILE = 'conf/app.conf.json';
 
 // const authServer = process.env.REACT_APP_API
 //   ? `${process.env.REACT_APP_API}`
@@ -129,32 +134,42 @@ const client = new ApolloClient({
   credentials: "include",
 });
 
+const { readTextFile, writeTextFile, createDir, BaseDirectory } = (window as any).__TAURI__.fs
+
 function App() {
-  // const [ conf, setConf ] = useState<{
-  //   ready: boolean;
-  // }>({ready: false})
+  const [ conf, setConf ] = useState<{
+    ready: boolean;
+  }>({ready: false})
 
-  // useEffect(() => {
-  //   readTextFile(CONF_FILE).then((confText: any) => {
+  useEffect(() => {
+    console.log({BaseDirectory: BaseDirectory.App})
+    createDir('conf', {dir: BaseDirectory.App, recursive: true}).then(() => {
+      writeTextFile({path: CONF_FILE, contents: '{}'}, {dir: BaseDirectory.App}).then(() => {
+        console.log("ASFD")
+  
+        readTextFile(CONF_FILE, {dir: BaseDirectory.App}).then((confText: any) => {
+  
+          if(confText){
+            setConf(JSON.parse(confText))
+          }
+    
+        })
+      })
+    })
+    
+  }, []) 
 
-  //     if(confText){
-  //       setConf(JSON.parse(confText))
-  //     }
-
-  //   })
-  // }, []) 
-
-  // const renderView = () => {
-  //   if(!conf.ready){
-  //     return (
-  //       <SetupView onConfChange={(conf: any) => setConf(conf)} />
-  //     )
-  //   }else{
-  //       return (
-  //         <InfiniteCanvas />
-  //       ) 
-  //   }
-  // }
+  const renderView = () => {
+    if(!conf.ready){
+      return (
+        <SetupView onConfChange={(conf: any) => setConf(conf)} />
+      )
+    }else{
+        return (
+          <CommandSurface />
+        ) 
+    }
+  }
 
   return (
     <LocalizationProvider 
@@ -163,7 +178,7 @@ function App() {
         <ApolloProvider client={client}>
           <ThemeProvider theme={HexHiveTheme}>
             <Box style={{height: '100vh', width: '100vw', display: 'flex'}}>
-              <CommandSurface />
+              {renderView()}
             </Box>
           </ThemeProvider>
         </ApolloProvider>

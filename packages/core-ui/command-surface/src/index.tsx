@@ -23,6 +23,7 @@ import { MenuItemProps } from './components/tree-menu/item';
 
 import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
+import { AlarmList } from './views/alarms';
 
 export interface DeviceControlProps {
 
@@ -90,8 +91,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
     const [anchorEl, setAnchorEl ] = useState<any>();
 
-    console.log({subscriptionData})
-
     // useEffect(() => {
     //     if(subscriptionData?.watchingDevice) alert(`${subscriptionData?.watchingDevice} is watching now too`);
     // }, [subscriptionData])
@@ -134,6 +133,13 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                 name
                 operatingMode
                 operatingState
+
+                alarms {
+                    id
+                    cause
+                    message
+                    createdAt
+                }
 
                 online
                 
@@ -399,6 +405,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
     //Translates id to bus-port value
     const rootDevice = data?.commandDevices?.[0];
 
+    const alarms = rootDevice?.alarms || [];
+    
     const reports = rootDevice?.reports || [];
 
     const peripherals = data?.commandDevices?.[0]?.peripherals || []
@@ -575,6 +583,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         <DeviceControlProvider value={{
             actions,
             historize,
+            alarms,
             // waitingForActions,
             changeOperationMode,
             changeOperationState,
@@ -749,7 +758,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                 <Box
                     sx={{flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row'}}>
                     <Routes>
-                        <Route path={`alarms`} element={<div>Alarms</div>} />
+                        <Route path={`alarms`} element={<AlarmList />} />
                         <Route path={''} element={<React.Fragment>
                                 <Paper sx={{
                                     width: '200px',
