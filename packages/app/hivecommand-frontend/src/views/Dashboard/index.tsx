@@ -11,6 +11,7 @@ import { DeviceDevices } from '../../pages/device-devices';
 import { ElementEditor } from '../../pages/element-editor';
 import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';
+import { DeviceSettings } from '../../pages/device-settings';
 const PluginEditor = React.lazy(() => import('../../pages/plugin-editor').then((r) => ({default: r.PluginEditorPage})))
 const DeviceControl = React.lazy(() => import('../../pages/device-control').then((r) => ({default: r.DeviceControl})))
 
@@ -101,7 +102,7 @@ const Dashboard : React.FC<any> = (props) => {
                             {/* <Route path={`/devices/:id/graphs`} component={DeviceControlGraph} />
                             <Route path={`/devices/:id/devices`} component={DeviceDevices} /> */}
                             {/* <Route path={`/devices/:id`} component={DeviceSingle} /> */}
-                        
+                            <Route path={'devices/:id/settings'} element={<DeviceSettings/>} />
                             <Route path={`device-map/:id`} element={<DeviceMapper />} />
                             {/* <Route path={`programs/:id/*`} element={<EditorPage/>} /> */}
                             <Route path={`plugins/:id/editor`} element={<PluginEditor/>} />

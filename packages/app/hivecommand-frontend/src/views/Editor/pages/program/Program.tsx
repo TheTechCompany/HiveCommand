@@ -649,16 +649,16 @@ export const Program : React.FC<{activeProgram: string}> = (props) => {
 
                     onPathCreate={(path) => {
 
-                        connectProgramNode(
-                            path.source,
-                            path.sourceHandle,
-                            path.target,
-                            path.targetHandle,
-                            path.points,
-                            path.id != 'temp' && path.id
-                        ).then(() => {
-                            refetch()
-                        })
+                        // connectProgramNode(
+                        //     path.source,
+                        //     path.sourceHandle,
+                        //     path.target,
+                        //     path.targetHandle,
+                        //     path.points,
+                        //     path.id != 'temp' && path.id
+                        // ).then(() => {
+                        //     refetch()
+                        // })
                     }}
 
                     nodes={nodes}

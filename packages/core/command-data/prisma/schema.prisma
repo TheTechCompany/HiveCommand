@@ -24,11 +24,14 @@ model Device {
 
   peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
 
+  alarms Alarm[] @relation(name: "hasAlarmed")
+
   setpoints DeviceSetpoint[] @relation(name: "hasSetpoints")
   calibrations DeviceCalibration[] @relation(name: "hasCalibration")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
   
+  screens DeviceScreen[] @relation(name: "hasScreen")
   // values DeviceValue[] @relation(name: "hasSnapshots")
 
   program String?
@@ -40,6 +43,35 @@ model Device {
   lastSeen DateTime?
 
   organisation String
+}
+
+
+model DeviceScreen {
+  id String @id
+  name String
+
+  device Device @relation(name: "hasScreen", fields: [deviceId], references: [id])
+  deviceId String
+
+  createdAt DateTime @default(now())
+
+  provisioned Boolean
+
+  provisionCode String
+}
+
+model Alarm {
+  id String @id
+
+  message String
+  cause String
+
+  seen Boolean
+
+  createdAt DateTime @default(now())
+
+  device Device @relation(name: "hasAlarmed", fields: [deviceId], references: [id])
+  deviceId String
 }
 
 model MaintenanceWindow {

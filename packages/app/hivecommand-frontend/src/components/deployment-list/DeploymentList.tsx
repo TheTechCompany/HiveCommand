@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import {Add, MoreVert, Search} from '@mui/icons-material'
 import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead, IconButton, Menu, MenuItem } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
 export interface DeploymentListProps {
     onClickRow?: (row: any) => void;
@@ -23,6 +24,9 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
     const [ editElem, setEditElem ] = useState<any>(null);
     const [ editAnchor, setEditAnchor ] = useState<any>(null);
 
+    const navigate = useNavigate();
+
+    
     const columns = [
         {
             property: 'name',
@@ -122,6 +126,13 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
                     props.onMapRow?.(editElem)
                 }}>
                     Change mapping
+                </MenuItem>
+                <MenuItem 
+                    onClick={() => {
+                        navigate(`${editElem.id}/settings`)
+                    }}
+                    >
+                    Settings
                 </MenuItem>
             </Menu>
             <TableContainer

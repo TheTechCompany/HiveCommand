@@ -8,6 +8,8 @@ import { Channel } from "amqplib";
 import { GraphQLContext } from "../../context";
 import { PubSubChannels, redis } from "../../context/pubsub";
 
+const Moniker = require('moniker')
+
 const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => {
 	const asyncReturn = asyncIterator.return;
   
@@ -65,6 +67,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
 						maintenanceWindows: true,
+						alarms: true,
+						screens: true,
 						dataLayout: {
 							include: {
 								children: true
@@ -382,6 +386,39 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			}
 		},
 		Mutation: {
+
+			createDeviceScreen: async (root: any, args: any, context: any) => {
+				
+				const device = await prisma.device.findFirst({where: {id: args.device, organisation: context?.jwt?.organisation}});
+				if(!device) return new Error(`No device found in organisation with id ${args.device}`);
+
+				return await prisma.deviceScreen.create({
+					data: {
+						id: nanoid(),
+						name: args.input.name,
+						provisionCode: Moniker.choose(),
+						provisioned: false,
+						device: {
+							connect: {id: device.id}
+						}
+					}
+				});
+			},
+			updateDeviceScreen: async (root: any, args: any, context: any) => {
+
+				const device = await prisma.device.findFirst({where: {id: args.device, organisation: context?.jwt?.organisation}});
+				if(!device) return new Error(`No device found in organisation with id ${args.device}`);
+
+				return await prisma.deviceScreen.update({
+					where: {id: args.id},
+					data: {
+						name: args.input.name,
+					}
+				})
+			},
+			deleteDeviceScreen: async (root: any, args: any, context: any) => {
+				return await prisma.deviceScreen.deleteMany({where: {id: args.id, device: {id: args.device, organisation: context?.jwt?.organisation } }})
+			},
 			createCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
 				return await prisma.maintenanceWindow.create({
 					data: {
@@ -704,6 +741,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
+		createDeviceScreen(device: ID, input: DeviceScreenInput!): CommandDeviceScreen
+		updateDeviceScreen(device: ID, id: ID!, input: DeviceScreenInput!): CommandDeviceScreen
+		deleteDeviceScreen(device: ID, id: ID!): CommandDeviceScreen
+
+
 		createCommandDeviceMaintenanceWindow(device: ID, input: MaintenanceWindowInput!): MaintenanceWindow!
 		updateCommandDeviceMaintenanceWindow(device: ID, id: ID!, input: MaintenanceWindowInput!): MaintenanceWindow!
 		deleteCommandDeviceMaintenanceWindow(device: ID, id: ID!): MaintenanceWindow!
@@ -718,6 +760,23 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 	type Subscription {
 		watchingDevice(device: ID!): [HiveUser]
+	}
+
+	type CommandDeviceScreen {
+		id: ID
+		name: String
+
+		provisionCode: String
+
+		provisioned: Boolean
+		createdAt: DateTime
+
+		device: CommandDevice
+	}
+
+	input DeviceScreenInput {
+		name: String
+		developer: Boolean
 	}
 
 	input CommandDeviceInput {
@@ -743,6 +802,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		id: ID! 
 		name: String
 
+		screens: [CommandDeviceScreen]
+
 		watching: [HiveUser]
 
 		maintenanceWindows: [MaintenanceWindow]
@@ -760,6 +821,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		
 		deviceSnapshot: [CommandDeviceSnapshot]
 
+		alarms: [DeviceAlarm]
+
 		operatingMode: String
 		operatingState: String
 
@@ -771,6 +834,15 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		reports: [CommandReportPage] 
 
 		organisation: HiveOrganisation 
+	}
+
+	type DeviceAlarm {
+		id: ID
+
+		message: String
+		cause: String
+
+		createdAt: DateTime
 	}
 
 	input MaintenanceWindowInput {
