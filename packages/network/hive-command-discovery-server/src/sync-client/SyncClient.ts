@@ -70,6 +70,7 @@ export class SyncClient {
 		let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
 		
 		if(!networkName) return console.error("Could not find network name for server", serverUrl)
+
 		const controlDevice = await this.dataBroker.getDeviceByNetID(networkName)
 
 		console.log("Connecting to server", {serverUrl})
@@ -91,7 +92,8 @@ export class SyncClient {
 		await this.clients[serverUrl].connect(serverUrl)
 
 		await this.setupConnection(this.clients[serverUrl])
-	
+
+		return controlDevice;
 	}
 
 	onClientLost(serverUrl: string){
@@ -113,7 +115,7 @@ export class SyncClient {
 
 				if(!this.clients[serverUri] && serverUrl){
 				
-					await this.onClientDiscovered(serverUrl)
+					const controlDevice = await this.onClientDiscovered(serverUrl)
 					//Match networkName to device id 
 
 					
