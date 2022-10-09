@@ -672,7 +672,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				})
 			},
 			updateCommandDeviceUptime: async (root: any, args: {where: {id: any, network_name: string}, uptime: any}, context: any) => {
-		
 
 				let deviceWhere : any = {};
 				if(args.where.id) deviceWhere.id = args.where.id
