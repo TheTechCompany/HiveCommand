@@ -49,7 +49,7 @@ cache.connect_to(process.env.MONGO_URL || '');
 	const { typeDefs, resolvers } = schema(prisma, mqChannel);
 
 	console.log({typeDefs})
-	console.log("Setting up graph")
+
 
 	const graphServer = new HiveGraph({
 		dev: false,
