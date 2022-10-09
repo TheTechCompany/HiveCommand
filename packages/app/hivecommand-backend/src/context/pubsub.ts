@@ -9,7 +9,7 @@ export type PubSubChannels = {
 };
 
 export const redis = createClient({
-    url: `redis://${process.env.REDIS_URL}` || "redis://localhost:6379"
+    url: process.env.REDIS_URL ? `redis://${process.env.REDIS_URL}` : "redis://localhost:6379"
 });
 
 export const redisPubSub = new RedisPubSub({
