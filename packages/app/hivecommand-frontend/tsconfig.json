@@ -4,6 +4,7 @@
     "jsx": "react-jsx",
     "esModuleInterop": true,
     "outDir": "dist/",
+    "downlevelIteration": true,
     "typeRoots": ["node_modules/@types"],
     "rootDir": "src/"
   },
