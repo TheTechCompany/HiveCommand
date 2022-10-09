@@ -643,10 +643,10 @@
     tslib "~2.4.0"
     value-or-promise "1.0.11"
 
-"@hexhive/graphql-server@1.0.2-beta.57":
-  version "1.0.2-beta.57"
-  resolved "https://registry.yarnpkg.com/@hexhive/graphql-server/-/graphql-server-1.0.2-beta.57.tgz#655adecd41b0de43c660f5842e77e5f4322c54a9"
-  integrity sha512-0iv9Qzx2Rsp3mb3CrWQms+dYLn53IEGAr2aKz+YTGzz3ZHxXhchJ2I7bhGC98iYTHi7GCk1FHnXPbHYYodK3GA==
+"@hexhive/graphql-server@1.0.2-beta.58":
+  version "1.0.2-beta.58"
+  resolved "https://registry.yarnpkg.com/@hexhive/graphql-server/-/graphql-server-1.0.2-beta.58.tgz#11c0fb7fc8f9567e2a7e45cfb52cf9e24d1e24ee"
+  integrity sha512-sx3SqcV3ESFt7Bw4B9vueP1Ek6xsgjIn20MHICrgakPTprFGZFN8LrLmiU1dja2Yso/LoVPnd7FpoMKPG/7f1w==
   dependencies:
     "@graphql-tools/merge" "^8.2.6"
     "@graphql-tools/schema" "^8.3.5"
@@ -656,6 +656,7 @@
     "@neo4j/graphql-ogm" "3.x"
     graphql-helix "^1.12.0"
     graphql-scalars "^1.17.0"
+    graphql-type-json "^0.3.2"
     graphql-upload "^13.0.0"
     jsonwebtoken "^8.5.1"
     jwks-rsa "^2.0.5"
@@ -1843,7 +1844,7 @@ graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   dependencies:
     tslib "^2.1.0"
 
-graphql-type-json@0.3.2:
+graphql-type-json@0.3.2, graphql-type-json@^0.3.2:
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
   integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==

@@ -28,7 +28,7 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@hexhive/graphql-server": "1.0.2-beta.57",
+    "@hexhive/graphql-server": "1.0.2-beta.58",
     "@hive-command/data": "^1.4.15-alpha.60",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
