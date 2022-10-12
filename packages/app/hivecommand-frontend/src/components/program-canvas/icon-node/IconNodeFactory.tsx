@@ -1,32 +1,31 @@
 import React from "react";
-import { AbstractWidgetFactory } from "@hexhive/ui";
+import { AbstractNodeFactory } from "@hexhive/ui";
 import { IconNode } from "./IconNode";
 
-export class IconNodeFactory extends AbstractWidgetFactory {
 
-    public static TAG : string = 'icon-node';
-    constructor(){
-        super('icon-node')
-    }
+export const IconNodeFactory : AbstractNodeFactory = (context) => {
 
-    public generateWidget(event: any): JSX.Element {
-        return (<IconNode  {...event} />)
-    }
-    public parseModel(model: any) {
-        
-        return {
-            ...model,
-            ports: model.ports ? model.ports : [
-                {
-                    name: "in",
-                    type: "base"
-                    
-                },
-                {
-                    name: 'out',
-                    type: 'base'
-                }
-            ]
+    return {
+        type: 'icon-node',
+        renderNode: (event: any) => {
+            return (<IconNode  {...event} />)
+        },
+        parseModel: (model: any)  => {
+            
+            return {
+                ...model,
+                ports: model.ports ? model.ports : [
+                    {
+                        name: "in",
+                        type: "base"
+                        
+                    },
+                    {
+                        name: 'out',
+                        type: 'base'
+                    }
+                ]
+            }
         }
     }
 

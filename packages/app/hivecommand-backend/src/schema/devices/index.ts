@@ -5,7 +5,27 @@ import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
 import { Channel } from "amqplib";
+import { GraphQLContext } from "../../context";
+import { PubSubChannels, redis } from "../../context/pubsub";
 
+const Moniker = require('moniker')
+
+const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => {
+	const asyncReturn = asyncIterator.return;
+  
+	asyncIterator.return = () => {
+		console.log("Async Cancel")
+	  onCancel();
+	  return asyncReturn ? asyncReturn.call(asyncIterator) : Promise.resolve({ value: undefined, done: true });
+	};
+  
+	return asyncIterator;
+};
+
+// //TODO move this out of memory
+// const watching = {
+
+// }
 export default (prisma: PrismaClient, mq: Channel) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
@@ -41,9 +61,19 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					if(args.where.id) whereArg['id'] = args.where.id;
 					if(args.where.network_name) whereArg['network_name'] = args.where.network_name;
 				}
+
+
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
+						maintenanceWindows: true,
+						alarms: true,
+						screens: true,
+						dataLayout: {
+							include: {
+								children: true
+							}
+						},
 						setpoints: {
 							include: {
 								setpoint: {
@@ -62,9 +92,13 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						},
 						reports: {
 							include: {
-								dataKey: true,
-								dataDevice: true,
-								device: true,
+								reports: {
+									include: {
+										dataKey: true,
+										dataDevice: true,
+									}
+								},
+								device: true
 							}
 						},
 						// values: {
@@ -98,6 +132,9 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						},
 						activeProgram: {
 							include: {
+								remoteHomepage: true,
+								localHomepage: true,
+								templatePacks: true,
 								program: {
 									include: {
 										children: {
@@ -176,7 +213,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 									include: {
 										nodes: {
 											include: {
-												type: true,
 												devicePlaceholder: {
 													include: {
 														type: {
@@ -204,7 +240,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 												},
 												children: {
 													include: {
-														type: true,
 														devicePlaceholder: {
 															include: {
 																type: {
@@ -252,7 +287,157 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				return devices;
 			}
 		},
+		Subscription: {
+			watchingDevice: {
+				subscribe: async (root: any, args: any, context: GraphQLContext) => {
+					console.log("Subscribe to watchingDevice", {args, pubSub: context.pubSub})
+
+					const redisTag = `watchingDevice:${args.device}`
+
+					const iter = context.pubSub.asyncIterator(`${redisTag}-channel`);
+
+					await context.redis.incr(`${redisTag}:${(context as any)?.jwt?.id}`)
+					// await context.redis.expire(`${rdisTag}:${(context as any)?.jwt?.id}`, 5)
+					
+					await context.redis.expire(`${redisTag}:${(context as any)?.jwt?.id}`, 45);
+
+					let interval: any;
+
+					new Promise(() => {
+						interval = setInterval(async () => {
+							await context.redis.expire(`${redisTag}:${(context as any)?.jwt?.id}`, 45);
+
+							const ttl = await context.redis.ttl(`${redisTag}:${(context as any)?.jwt?.id}`);
+
+							console.log({ttl})
+						}, 30 * 1000)
+					})
+					// await co	ntext.redis.sAdd(redisTag, (context as any)?.jwt?.id)
+
+					let watching : any[] = [];
+
+					for await (const key of context.redis.scanIterator({
+						MATCH: `${redisTag}:*`,
+						COUNT: 0,
+					})){
+						// console.log({key})
+						watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
+					}
+
+			
+					// const items = await context.redis.scan(0, [`${redisTag}:*`]);
+
+					// console.log({items});
+
+					// const watching = await context.redis.sMembers(redisTag)
+					setTimeout(async () => {
+						await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+					}, 100);
+
+					const asyncReturn = iter.return;
+
+					iter.return = async () => {
+						console.log("Cancel");
+
+						clearInterval(interval);
+
+						const redisTag = `watchingDevice:${args.device}`
+
+						const count = await context.redis.decr(`${redisTag}:${(context as any)?.jwt?.id}`)
+						console.log({count})
+						if(count <= 0){
+							await context.redis.del([`${redisTag}:${(context as any)?.jwt?.id}`])
+
+							// await context.redis.sRem(redisTag, (context as any)?.jwt?.id)
+							let watching : any[] = [];
+
+							for await (const key of context.redis.scanIterator({
+								MATCH: `${redisTag}:*`,
+								COUNT: 0,
+							})){
+								// console.log({key})
+								watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
+							}
+		
+							// const watching = await context.redis.sMembers(redisTag)
+							
+							await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+						}
+					  	return asyncReturn ? asyncReturn.call(iter) : Promise.resolve({ value: undefined, done: true });
+					}
+
+					return iter 
+					// withCancel(iter, async () => {
+					// 	console.log("Unsubscribe", {context, args})
+					// 	const redisTag = `watchingDevice:${args.device}`
+	
+					// 	await context.redis.sRem(redisTag, (context as any)?.jwt?.id)
+	
+					// 	const watching = await context.redis.sMembers(redisTag)
+						
+					// 	await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
+					
+					// }) //context.pubSub.asyncIterator("watchingDevice");
+				},
+				resolve: (payload: any) => {
+					console.log("Send new info", {payload})
+					return payload.watchers;
+				}
+			}
+		},
 		Mutation: {
+
+			createDeviceScreen: async (root: any, args: any, context: any) => {
+				
+				const device = await prisma.device.findFirst({where: {id: args.device, organisation: context?.jwt?.organisation}});
+				if(!device) return new Error(`No device found in organisation with id ${args.device}`);
+
+				return await prisma.deviceScreen.create({
+					data: {
+						id: nanoid(),
+						name: args.input.name,
+						provisionCode: Moniker.choose(),
+						provisioned: false,
+						device: {
+							connect: {id: device.id}
+						}
+					}
+				});
+			},
+			updateDeviceScreen: async (root: any, args: any, context: any) => {
+
+				const device = await prisma.device.findFirst({where: {id: args.device, organisation: context?.jwt?.organisation}});
+				if(!device) return new Error(`No device found in organisation with id ${args.device}`);
+
+				return await prisma.deviceScreen.update({
+					where: {id: args.id},
+					data: {
+						name: args.input.name,
+					}
+				})
+			},
+			deleteDeviceScreen: async (root: any, args: any, context: any) => {
+				return await prisma.deviceScreen.deleteMany({where: {id: args.id, device: {id: args.device, organisation: context?.jwt?.organisation } }})
+			},
+			createCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.create({
+					data: {
+						id: nanoid(), 
+						startTime: args.input.startTime, 
+						endTime: args.input.endTime,
+						owner: context?.jwt?.id,
+						device: {
+							connect: {id: args.device}
+						}
+					}
+				});
+			},
+			updateCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.update({where: {id: args.id}, data: {startTime: args.input.startTime, endTime: args.input.endTime}});
+			},
+			deleteCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
+				return await prisma.maintenanceWindow.delete({where: {id: args.id}});
+			},
 			updateCommandDeviceSetpoint: async (root: any, args: {device: string, setpoint: string, value: string}, context: any) => {
 
 				const result = await prisma.device.update({
@@ -487,7 +672,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				})
 			},
 			updateCommandDeviceUptime: async (root: any, args: {where: {id: any, network_name: string}, uptime: any}, context: any) => {
-		
 
 				let deviceWhere : any = {};
 				if(args.where.id) deviceWhere.id = args.where.id
@@ -556,11 +740,42 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
+		createDeviceScreen(device: ID, input: DeviceScreenInput!): CommandDeviceScreen
+		updateDeviceScreen(device: ID, id: ID!, input: DeviceScreenInput!): CommandDeviceScreen
+		deleteDeviceScreen(device: ID, id: ID!): CommandDeviceScreen
+
+
+		createCommandDeviceMaintenanceWindow(device: ID, input: MaintenanceWindowInput!): MaintenanceWindow!
+		updateCommandDeviceMaintenanceWindow(device: ID, id: ID!, input: MaintenanceWindowInput!): MaintenanceWindow!
+		deleteCommandDeviceMaintenanceWindow(device: ID, id: ID!): MaintenanceWindow!
+
+
 		updateCommandDeviceSetpoint(device: ID!, setpoint: ID!, value: String): String
 
 		createCommandDeviceCalibration(device: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
 		updateCommandDeviceCalibration(device: ID!, id: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
 		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
+	}
+
+	type Subscription {
+		watchingDevice(device: ID!): [HiveUser]
+	}
+
+	type CommandDeviceScreen {
+		id: ID
+		name: String
+
+		provisionCode: String
+
+		provisioned: Boolean
+		createdAt: DateTime
+
+		device: CommandDevice
+	}
+
+	input DeviceScreenInput {
+		name: String
+		developer: Boolean
 	}
 
 	input CommandDeviceInput {
@@ -581,13 +796,22 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		setpoint: CommandDeviceSetpoint
 		value: String
 	}
+
 	type CommandDevice  {
 		id: ID! 
 		name: String
 
+		screens: [CommandDeviceScreen]
+
+		watching: [HiveUser]
+
+		maintenanceWindows: [MaintenanceWindow]
+
 		activeProgram: CommandProgram 
 
 		network_name: String
+
+		dataLayout: [DataLayout]
 
 		calibrations: [CommandProgramDeviceCalibration] 
 		setpoints: [CommandDeviceSetpointCalibration]
@@ -595,6 +819,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		peripherals: [CommandDevicePeripheral] 
 		
 		deviceSnapshot: [CommandDeviceSnapshot]
+
+		alarms: [DeviceAlarm]
 
 		operatingMode: String
 		operatingState: String
@@ -604,9 +830,48 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		online: Boolean
 		lastSeen: DateTime
 
-		reports: [CommandDeviceReport] 
+		reports: [CommandReportPage] 
 
 		organisation: HiveOrganisation 
+	}
+
+	type DeviceAlarm {
+		id: ID
+
+		message: String
+		cause: String
+
+		createdAt: DateTime
+	}
+
+	input MaintenanceWindowInput {
+		startTime: DateTime
+		endTime: DateTime
+	}
+
+	type MaintenanceWindow {
+		id: ID
+
+		startTime: DateTime
+		endTime: DateTime
+
+		owner: String
+
+		device: CommandDevice
+	}
+
+	
+
+	type DataLayout {
+		id: ID
+		label: String
+		type: String
+	  
+		children: [DataLayout]
+
+		parent: DataLayout
+	  
+		device: CommandDevice
 	}
 
 	input CommandDeviceSnapshotInput {

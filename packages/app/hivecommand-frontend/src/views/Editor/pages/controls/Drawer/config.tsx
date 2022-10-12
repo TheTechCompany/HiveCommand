@@ -1,10 +1,12 @@
 import { BumpInput } from "@hexhive/ui";
 import { HMIGroupModal } from "../../../../../components/modals/hmi-group";
-import { Box, Text, Button, Select, CheckBox } from "grommet";
-import { TableView as Aggregate, RotateLeft, RotateRight, Remove as Subtract, Add } from '@mui/icons-material';
-import React, { useState } from "react";
+import { Autocomplete, Box, Checkbox, FormControlLabel, InputAdornment, TextField, Typography } from "@mui/material";
+import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add } from '@mui/icons-material';
+import React, { useContext, useEffect, useState } from "react";
 import { useAssignHMINode, useUpdateHMIGroup, useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
+import { FunctionArgumentsModal } from "../../../../../components/modals/function-arguments";
+// import { HMICanvasContext } from "../context";
 
 export interface ConfigMenuProps {
     nodes?: any[]
@@ -12,10 +14,28 @@ export interface ConfigMenuProps {
 
 export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
+    const functions = [
+        {
+            id: 'change-view',
+            label: "Change View",
+            args: [
+                {
+                    key: 'view',
+                    type: 'View'
+                }
+            ]
+        }
+    ]
+
+    const [ functionArgs, setFunctionArgs ] = useState<any>(null);
+    const [ functionOpt, setFunctionOpt ] = useState<any>()
+
     const [ aggregate, setAggregate ] = useState<any>()
     const [ modalOpen, openModal ] = useState<boolean>(false);
 
-    const { programId, refetch, selected, nodes, devices } = useHMIContext();
+    // const { interfaces } = useContext(HMICanvasContext)
+
+    const { programId, interfaces, refetch, selected, nodes, devices } = useHMIContext();
 
     const updateHMIGroup = useUpdateHMIGroup(programId)
     const assignHMINode = useAssignHMINode(programId)
@@ -23,21 +43,137 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     const item = nodes?.find((a) => a.id == selected.id);
 
-    console.log({selected})
+    const options = item?.extras?.options || {};
+
+    const [ state, setState ] = useState<any>([])
+
+    useEffect(() => {
+        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
+
+        setState(newState)
+    }, [selected, options])
+
+    const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
+
+    const updateState = (key: string, value: any) => {
+        setState((state) => {
+            let ix = state.map((x) => x.key).indexOf(key)
+            state[ix].value = value;
+            return state;
+        })
+
+        if(updateBouncer){
+            clearTimeout(updateBouncer)
+            setUpdateBouncer(null)
+        }
+        setUpdateBouncer(
+            setTimeout(() => {
+                updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+                    refetch?.()
+                })
+            }, 500)
+        )
+
+    }
+    console.log({state})
+
+    const renderConfigInput = ({type, value, label}: {type: 'Function' | 'String' | 'Number' | 'Boolean', value: any, label: string}) => {
+        switch(type){
+            case 'Boolean':
+                return (
+                    <FormControlLabel 
+                        label={label} 
+                        control={<Checkbox value={value} onChange={(evt) => {
+                            updateState(label, evt.target.checked)
+                        }} />} />
+                )
+            case 'Function':
+                return (
+                    <Autocomplete 
+                        disablePortal
+                        options={functions}
+                        value={functions?.find((a) => a.id == value?.fn) || {label: ""}}
+                        
+                        onChange={(event, newValue) => {
+                            console.log({newValue})
+                            if(!newValue){
+                                updateState(label, null)
+                            }else{
+                                setFunctionArgs(newValue);
+                                setFunctionOpt(label)
+                            }
+                        }}
+                        getOptionLabel={(option) => typeof(option) == "string" ? option : option.label}
+                        // isOptionEqualToValue={(option, value) => option.id == value.id}
+                        renderInput={(params) => 
+                            <TextField 
+                                {...params} 
+                                label={label}
+                                />
+                        }
+                        // value={value || ''}
+                        // onChange={(e) => {
+                        //     updateState(label, e.target.value)
+                        // }}
+                        size="small" 
+                        // label={label} />
+                        />
+                );
+            case 'String':
+                return (
+                    <TextField 
+                        value={value || ''}
+                        onChange={(e) => {
+                            updateState(label, e.target.value)
+                        }}
+                        size="small" 
+                        label={label} />
+                );
+            case 'Number':
+                return (
+                    <TextField 
+                        value={value || ''}
+                        type="number"
+                        onChange={(e) => {
+                            updateState(label, e.target.value)
+                        }}
+                        size="small" 
+                        label={label} />
+                );
+            default:
+                return (<span>{type} not found in renderConfigInput</span>)
+        }
+    }
 
     return (
 
         <Box
-            pad="xsmall"
-            gap="xsmall"
-            focusIndicator={false}>
+            >
+
+            <FunctionArgumentsModal
+                interfaces={interfaces}
+                function={functionArgs}
+                open={Boolean(functionArgs)}
+                onSubmit={(args) => {
+
+                    updateState(functionOpt, {fn: functionArgs.id, args})
+
+                    setFunctionArgs(null)
+                    setFunctionOpt(null)
+                }}
+                onClose={() => {
+                    setFunctionArgs(null)
+                    setFunctionOpt(null)
+                }} />
 
             <HMIGroupModal
                 devices={devices}
                 base={aggregate}
                 open={modalOpen}
                 onSubmit={(item) => {
+                    
                     console.log("HMI GROUP", {item})
+
                     updateHMIGroup(
                         selected.id,
                         item.nodes.map((x) => ({
@@ -67,9 +203,28 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 onClose={() => openModal(false)}
                 nodeMenu={props.nodes} />
 
-            <Box justify="between" align="center" direction="row">
-                <Text>Config</Text>
-                <Button
+
+            <Box sx={{
+                paddingLeft: '3px',
+                paddingRight: '3px'
+            }}>
+                {Object.keys(options).map((optionKey) => {
+
+                    const type = options[optionKey];
+                    const value = state?.find((a) => a.key == optionKey)?.value;
+                    const label = optionKey
+
+                    return (<Box sx={{marginTop: '6px'}}>
+                        {renderConfigInput({type, value, label})}
+                    </Box>)
+
+                })}
+            </Box>
+
+            
+            <Box sx={{display :'flex'}}>
+                <Typography>Config</Typography>
+                {/* <Button
                     onClick={() => {
                         openModal(true)
                         setAggregate(item)
@@ -77,9 +232,9 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     plain
                     hoverIndicator
                     style={{ padding: 6, borderRadius: 3 }}
-                    icon={<Aggregate />} />
+                    icon={<Aggregate />} /> */}
             </Box>
-            <Select
+            {/* <Select
                 valueKey={{ reduce: true, key: "id" }}
                 labelKey="name"
                 value={item?.extras?.devicePlaceholder?.id}
@@ -89,9 +244,9 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     })
                 }}
                 options={devices.filter((a) => a.type?.name.replace(/ /, '').indexOf(item?.extras?.iconString) > -1)}
-                placeholder="Device" />
+                placeholder="Device" /> */}
 
-            <Box justify="end" direction="row">
+            {/* <Box>
                 <CheckBox
                     checked={item?.extras?.showTotalizer}
                     onChange={(e) => {
@@ -106,7 +261,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     }}
                     reverse
                     label="Show Totalizer" />
-            </Box>
+            </Box> */}
             <BumpInput
                 placeholder="Rotation"
                 type="number"
@@ -137,7 +292,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 }}
             />
 
-            <BumpInput
+            {/* <BumpInput
                 placeholder="Scale X"
                 type="number"
                 leftIcon={<Subtract fontSize="small"   />}
@@ -149,6 +304,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     updateHMINode(
                         selected.id,
                         {
+                            width: 
                             scale: {
                                 x: parseFloat(item?.extras?.scaleX || 0) - 1
                             }
@@ -209,11 +365,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                         refetch()
                     })
 
-                }} />
-
-            <Box>
-
-            </Box>
+                }} /> */}
         </Box>
 
     )

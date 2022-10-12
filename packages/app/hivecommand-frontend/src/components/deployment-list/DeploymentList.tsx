@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import {Add, MoreVert, Search} from '@mui/icons-material'
-import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead, IconButton } from '@mui/material'
-import { BaseStyle } from '@hexhive/styles';
+import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, TableCell, TableRow, Paper, TableHead, IconButton, Menu, MenuItem } from '@mui/material'
+import { useNavigate } from 'react-router-dom';
 
 export interface DeploymentListProps {
     onClickRow?: (row: any) => void;
     onEditRow?: (row: any) => void;
+
+    onMapRow?: (row: any) => void;
 
     programs?: any[];
     devices?: any[];
@@ -19,6 +21,12 @@ export interface DeploymentListProps {
 
 export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
 
+    const [ editElem, setEditElem ] = useState<any>(null);
+    const [ editAnchor, setEditAnchor ] = useState<any>(null);
+
+    const navigate = useNavigate();
+
+    
     const columns = [
         {
             property: 'name',
@@ -82,7 +90,10 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
                 <IconButton
                     onClick={(e) => {
                         e.stopPropagation();
-                        props.onEditRow?.(datum)
+
+                        setEditAnchor(e.target);
+                        setEditElem(datum)
+                        // props.onEditRow?.(datum)
                     }}
                     >
                     <MoreVert />
@@ -94,6 +105,36 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
     return (
         <Box 
             sx={{flex: 1, display: 'flex'}}>
+
+            <Menu 
+                anchorEl={editAnchor}
+                open={Boolean(editAnchor)} 
+                onClose={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                }}>
+                <MenuItem onClick={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                    props.onEditRow?.(editElem)
+                }}>
+                    Edit
+                </MenuItem>
+                <MenuItem onClick={() => {
+                    setEditElem(null);
+                    setEditAnchor(null)
+                    props.onMapRow?.(editElem)
+                }}>
+                    Change mapping
+                </MenuItem>
+                <MenuItem 
+                    onClick={() => {
+                        navigate(`${editElem.id}/settings`)
+                    }}
+                    >
+                    Settings
+                </MenuItem>
+            </Menu>
             <TableContainer
                 style={{flex: 1, borderRadius: 0}}
                 component={Paper}>

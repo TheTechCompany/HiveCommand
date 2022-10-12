@@ -3,8 +3,6 @@ import { Box, Text, Button, List } from 'grommet';
 import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
 // import { StackItemModal } from '../../modals/stacks/item'
 import useResizeAware from 'react-resize-aware'
-import { size } from 'lodash';
-import { TreeView } from '@hexhive/ui';
 
 import { NavigateNext as Next, KeyboardArrowDown as Down, Folder, Add, Article as Document } from '@mui/icons-material'
 

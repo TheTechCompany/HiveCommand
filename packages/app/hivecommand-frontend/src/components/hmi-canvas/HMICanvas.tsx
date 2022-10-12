@@ -6,6 +6,8 @@ import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../assets/hmi-elements'
 import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
+import { registerNodes } from './utils';
+import { useRemoteComponents } from '../../hooks/remote-components';
 
 export interface HMICanvasProps {
 	id: string;
@@ -28,7 +30,12 @@ export interface HMICanvasProps {
         }, 
         values: any
     }[];
-    program?: any;
+    // program?: any;
+    functions?: {id: string, fn: any}[];
+    nodes?: any[];
+    paths?: any[];
+
+    templatePacks?: any;
 	
 	onConnect?: (path: {
 		source: string,
@@ -48,8 +55,8 @@ export interface HMICanvasProps {
 
 export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     
-    const [ zoom, setZoom ] = useState(120);
-    const [ offset, setOffset ] = useState({x: 250, y: 150})
+    const [ zoom, setZoom ] = useState(100);
+    const [ offset, setOffset ] = useState({x: 0, y: 0})
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
     const selectedRef = useRef<{selected?: {key?: "node" | "path", id?: string}}>({})
@@ -60,8 +67,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
     const [ menuOpen, openMenu ] = useState<string | undefined>(undefined);
 
-    const [ nodes, setNodes ] = useState<InfiniteCanvasNode[]>([])
-    const [ paths, _setPaths ] = useState<InfiniteCanvasPath[]>([])
+    const [ nodes, setNodes ] = useState<any[]>([])
+    const [ paths, _setPaths ] = useState<any[]>([])
     
     const pathRef = useRef<{paths: InfiniteCanvasPath[]}>({paths: []})
 
@@ -91,77 +98,87 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         client.refetchQueries({include: ['Q']})
     }
 
+    const { getPack } = useRemoteComponents()
+
     
     useEffect(() => {
-        let program = props.program
-        if(program){
-            let hmi = program.interface //TODO change to a default flag on the HMI
+        if(props.nodes){
 
-            const nodes = hmi?.nodes?.filter((a) => !a.children || a.children.length == 0);
-            const groups = hmi?.nodes?.filter((a) => a.children && a.children.length > 0);
+            
+            // let hmi = program.interface //TODO change to a default flag on the HMI
+            console.log("Register nodes", {nodes: props.nodes})
+            registerNodes(props.nodes, props.templatePacks, getPack, props.functions).then((nodes) => {
+                console.log("Registered nodes", {nodes})
+                setNodes(nodes);
+            })
 
-            setNodes(nodes?.map((x) => {
+            // const nodes = props?.nodes?.filter((a) => !a.children || a.children.length == 0);
+            // const groups = props?.nodes?.filter((a) => a.children && a.children.length > 0);
 
-                return {
-                    id: x.id,
-                    x: x.x,
-                    y: x.y,
-                    width: `${x?.type?.width || 50}px`,
-                    height: `${x?.type?.height || 50}px`,
-                    extras: {
+            // setNodes(nodes?.map((x) => {
+
+            //     return {
+            //         id: x.id,
+            //         x: x.x,
+            //         y: x.y,
+            //         width: `${x?.type?.width || 50}px`,
+            //         height: `${x?.type?.height || 50}px`,
+            //         extras: {
                       
-                        // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
-                        // configuration: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.conf.reduce((prev,curr) => ({...prev, [curr.conf.key]: curr.value}), {}),
-                        ports: (x?.type?.ports || []).map((x) => ({...x, id: x.key})),
-                        rotation: x?.rotation || 0,
-                        scaleX: x?.scaleX || 1,
-                        scaleY: x?.scaleY || 1,
-                        // color: x.type == 'BallValve' || x.type == "DiaphragmValve" ? (props.deviceValues.find((a) => a.devicePlaceholder.name == x.devicePlaceholder.name)?.values == "false" ? '0deg' : '60deg') : '0deg',
-                        devicePlaceholder: x.devicePlaceholder,
-                        iconString: x?.type?.name,
-                        icon: HMIIcons[x?.type?.name],
-                    },
-                    type: 'hmi-node',
-                }
+            //             // options: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.values,
+            //             // configuration: props.deviceValues.find((a) => a?.devicePlaceholder?.name == x?.devicePlaceholder?.name)?.conf.reduce((prev,curr) => ({...prev, [curr.conf.key]: curr.value}), {}),
+            //             ports: (x?.type?.ports || []).map((x) => ({...x, id: x.key})),
+            //             rotation: x?.rotation || 0,
+            //             scaleX: x?.scaleX || 1,
+            //             scaleY: x?.scaleY || 1,
+            //             // color: x.type == 'BallValve' || x.type == "DiaphragmValve" ? (props.deviceValues.find((a) => a.devicePlaceholder.name == x.devicePlaceholder.name)?.values == "false" ? '0deg' : '60deg') : '0deg',
+            //             devicePlaceholder: x.devicePlaceholder,
+            //             iconString: x?.type?.name,
+            //             icon: HMIIcons[x?.type?.name],
+            //         },
+            //         type: 'hmi-node',
+            //     }
                 
-            }).concat((groups || []).map((group) => {
+            // }))
+            
+            // .concat((groups || []).map((group) => {
 
-                let widths =  group.children?.map((x) => x.x + (x.type?.width || 50));
-                let heights =  group.children?.map((x) => x.y + (x.type?.height || 50));
-                let width = Math.max(...widths) - Math.min(...widths)
-                let height = Math.max(...heights) - Math.min(...heights)
+            //     let widths =  group.children?.map((x) => x.x + (x.type?.width || 50));
+            //     let heights =  group.children?.map((x) => x.y + (x.type?.height || 50));
+            //     let width = Math.max(...widths) - Math.min(...widths)
+            //     let height = Math.max(...heights) - Math.min(...heights)
 
-                return {
-                    id: group.id,
-                    x: group.x || 0,
-                    y: group.y || 0,
-                    width: `${width}px`,
-                    height: `${height}px`,
-                    type: 'hmi-node',
-                    extras: {
-                        nodes: group.children?.map((x) => ({
-                            id: x.id,
-                            x: x.x,
-                            y: x.y,
-                            z: x.z,
-                            devicePlaceholder: x.devicePlaceholder,
-                            scaleX: x.scaleX || 1,
-                            scaleY: x.scaleY || 1,
-                            rotation: x.rotation || 0,
-                            type: x.type
-                        })),
-                        ports: group.ports?.map((x) => ({
-                            id: x.id,
-                            x: x.x,
-                            y: x.y,
-                            length: x.length || 1,
-                            rotation: x.rotation || 0,
-                        }))
-                    }
-                }   
-            })))
+            //     return {
+            //         id: group.id,
+            //         x: group.x || 0,
+            //         y: group.y || 0,
+            //         width: `${width}px`,
+            //         height: `${height}px`,
+            //         type: 'hmi-node',
+            //         extras: {
+            //             nodes: group.children?.map((x) => ({
+            //                 id: x.id,
+            //                 x: x.x,
+            //                 y: x.y,
+            //                 z: x.z,
+            //                 devicePlaceholder: x.devicePlaceholder,
+            //                 scaleX: x.scaleX || 1,
+            //                 scaleY: x.scaleY || 1,
+            //                 rotation: x.rotation || 0,
+            //                 type: x.type
+            //             })),
+            //             ports: group.ports?.map((x) => ({
+            //                 id: x.id,
+            //                 x: x.x,
+            //                 y: x.y,
+            //                 length: x.length || 1,
+            //                 rotation: x.rotation || 0,
+            //             }))
+            //         }
+            //     }   
+            // })))
 
-            setPaths(hmi?.edges?.map((x) => {
+            setPaths(props.paths?.map((x) => {
                 return {
                     id: x.id,
                     source: x?.from?.id,
@@ -171,9 +188,9 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     points: x.points
                 }
 
-            }))
+            }));
         }
-    }, [props.program, props.deviceValues])
+    }, [props.nodes, props.paths, props.templatePacks, props.deviceValues])
 
     useEffect(() => {
         window.addEventListener('keydown', watchEditorKeys)
@@ -213,6 +230,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 direction="row"
                 flex>
                 <InfiniteCanvas
+                    finite
                     style={CanvasStyle}
                     zoom={zoom}
                     offset={offset}
@@ -233,7 +251,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     editable={false}
                     nodes={nodes}
                     paths={pathRef.current.paths}
-                    factories={[new IconNodeFactory(), new HMINodeFactory()]}
+                    factories={[IconNodeFactory, HMINodeFactory(false)]}
                     onPathCreate={(path) => {
         
                         updateRef.current?.addPath(path);

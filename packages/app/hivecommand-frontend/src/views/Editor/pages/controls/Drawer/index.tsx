@@ -1,4 +1,4 @@
-import { Box } from "grommet";
+import { Box } from "@mui/material";
 import React from "react";
 import { ActionMenu } from "./actions";
 import { ConfigMenu } from "./config";
@@ -10,6 +10,7 @@ export interface HMIDrawerProps {
 }
 
 export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
+
     const renderMenu = () => {
         switch(props.menu){
             case 'actions':
@@ -31,12 +32,15 @@ export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
     
     return (
         <Box
-            overflow="scroll"
+            sx={{
+                overflow: 'auto',
+                height: '100%',
+                width: '175px'
+            }}
             onClick={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
-            }}
-            width="small">
+            }}>
             {renderMenu()}
         </Box>
     )

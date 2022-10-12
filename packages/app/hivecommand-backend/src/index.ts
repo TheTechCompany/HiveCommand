@@ -11,9 +11,10 @@ import schema from './schema'
 import { Pool, types } from 'pg';
 
 import { cache, PrismaClient } from "@hive-command/data";
+import { contextFactory } from './context';
+import { redis } from './context/pubsub'
 
 types.setTypeParser(1114, (value) => {
-	// console.log({value})
 	return new Date(`${value}+0000`)
 });
 
@@ -22,6 +23,8 @@ const prisma = new PrismaClient();
 cache.connect_to(process.env.MONGO_URL || '');
 
 (async () => {
+
+	await redis.connect()
 
 
 	const mq = await amqp.connect(
@@ -45,7 +48,7 @@ cache.connect_to(process.env.MONGO_URL || '');
 	const { typeDefs, resolvers } = schema(prisma, mqChannel);
 
 	console.log({typeDefs})
-	console.log("Setting up graph")
+
 
 	const graphServer = new HiveGraph({
 		dev: false,
@@ -53,7 +56,8 @@ cache.connect_to(process.env.MONGO_URL || '');
 		schema: {
 			typeDefs: typeDefs,
 			resolvers: resolvers,
-		}
+		},
+		contextFactory: contextFactory
 	})
 
 	console.log("Graph server setup")

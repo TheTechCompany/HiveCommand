@@ -10,7 +10,16 @@ export const DeviceControlContext = React.createContext<{
 		variables: any[],
 		devices: CommandProgramDevicePlaceholder[]
 	};
-	hmi?: any;
+	watching?: {id: string, name: string}[];
+	hmis?: any;
+	functions?: any[];
+
+	historize?: boolean;
+	
+	defaultPage?: string;
+	activePage?: string;
+	templatePacks?: any[];
+
 	reporting?: any[],
 	hmiNodes?: any[],
 	groups?: any,

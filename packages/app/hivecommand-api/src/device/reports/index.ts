@@ -1,4 +1,26 @@
-import { useMutation } from '../../gqty'
+import { mutate, useMutation } from '../../gqty'
+
+
+export const useCreateReportPage = (deviceId: string) => {
+
+	const [ addReportPage ] = useMutation((mutation, args: {name: string}) => {
+		const item = mutation.createCommandReportPage({
+			device: deviceId,
+			input: {
+				name: args.name
+			}
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return (name: string) => {
+		return addReportPage({args: {name}})
+	}
+}
+
 
 export const useAddDeviceChart = (deviceId: string) => {
 	const [ addGraph ] = useMutation((mutation, args: {

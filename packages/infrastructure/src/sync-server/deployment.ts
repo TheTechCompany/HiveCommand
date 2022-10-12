@@ -38,9 +38,9 @@ export const Deployment = (provider: Provider, appName: string, dbUrl: Output<an
             template: {
                 metadata: { labels: appLabels },
                 spec: {
-                    nodeSelector: {
-                        'eks.amazonaws.com/nodegroup': 'managed-nodes'
-                    },
+                    // nodeSelector: {
+                    //     'eks.amazonaws.com/nodegroup': 'managed-nodes'
+                    // },
                    containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
