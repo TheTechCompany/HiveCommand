@@ -145,10 +145,16 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
             updateDevice(device.id, device.name, device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((updated) => {
                 console.log("Update result", updated)
                 refetch()
+                
+                setEditDevice(null)
+                openModal(false)
             })
         }else{
             createDevice(device.name || '', device.network_name || nanoid().substring(0, 8), device.activeProgram?.id).then((new_device) => {
                 refetch()
+
+                setEditDevice(null)
+                openModal(false)
                 // if(new_device.item){
                 //     let d: any[] = devices.slice()
                 //     d.push(new_device.item)
@@ -185,7 +191,9 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                 selected={[selectedDevice?.id]}
                 
                 onCreate={() => openModal(true)}
-
+                onMapRow={(datum) => {
+                    navigate(`/device-map/${datum.id}`)
+                }}
                 onClickRow={({datum}) => {
                     console.log(datum)
                    

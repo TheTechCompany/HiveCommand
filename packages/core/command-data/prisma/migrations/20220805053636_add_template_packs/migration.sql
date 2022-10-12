@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "CanvasNodeTemplatePack" ALTER COLUMN "type" DROP NOT NULL,
+ALTER COLUMN "version" DROP NOT NULL,
+ALTER COLUMN "description" DROP NOT NULL,
+ALTER COLUMN "icon" DROP NOT NULL;

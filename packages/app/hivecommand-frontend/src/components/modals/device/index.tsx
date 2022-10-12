@@ -81,8 +81,11 @@ export const DeviceModal : React.FC<DeviceModalProps> = (props) => {
                <FormControl size="small">
                    <InputLabel>Program</InputLabel>
                     <Select
-                        value={device.activeProgram?.id}
-                        onChange={(event, value) => setDevice({...device, activeProgram: value})}
+                        value={device.activeProgram?.id || ''}
+                        onChange={(event) => {
+                            console.log({newValue:event.target.value, programs:  props.programs})
+                            setDevice({...device, activeProgram: {id: event.target.value} })
+                        }}
                         label="Program"
                         >
                         {(props.programs || []).map((program) => (

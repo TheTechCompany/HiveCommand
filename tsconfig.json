@@ -2,14 +2,25 @@
 	"compilerOptions": {
 	  "baseUrl": "./packages",
 	  "paths": {
+		"@mui/styled-engine": ["../node_modules/@mui/styled-engine"],
+		"@mui/material": ["../node_modules/@mui/material"],
+		"@mui/x-date-pickers": ["../node_modules/@mui/x-date-pickers"],
+		"@emotion/react": ["../node_modules/@emotion/react"],
+		"@emotion/styled": ["../node_modules/@emotion/styled"],
+		"styled-components": ["../node_modules/styled-components"],
 		"@apollo/client": ["../node_modules/@apollo/client"],
 		"graphql": ["../node_modules/graphql"],
 		"react": ["../node_modules/react"],
 		"react-dom": ["../node_modules/react-dom"],
+		"react-router-dom": ["../node_modules/react-router-dom"],
 		"@types/react-dom": ["../node_modules/@types/react-dom"],
 		"@types/react": ["../node_modules/@types/react"],
 		"node-opcua": ["../node_modules/node-opcua"],
+
+		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
+
+		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 
 		"@hive-command/data": ["./core/command-data/src"],
 		/* Runtime */

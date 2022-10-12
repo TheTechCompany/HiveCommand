@@ -1,5 +1,11 @@
 import { PaletteOptions } from '@mui/material'
 
+declare module 'https://jspm.dev/*';
+
+// declare global {
+//   const System : System;
+// }
+
 declare module "*.html" {
   const rawHtmlFile: string;
   export = rawHtmlFile;

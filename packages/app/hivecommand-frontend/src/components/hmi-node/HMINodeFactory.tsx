@@ -1,38 +1,55 @@
 import React from "react";
-import { AbstractWidgetFactory } from "@hexhive/ui";
+import { AbstractNodeFactory, InfiniteCanvasNode } from "@hexhive/ui";
 import { HMINode } from "./HMINode";
 import { HMIGroup } from "./HMIGroup";
+import { EditorHandles } from "./EditorHandles";
 
-export class HMINodeFactory extends AbstractWidgetFactory {
+export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (building: boolean = false) => (context) => {
 
-    public static TAG : string = 'hmi-node';
-
-    private building = false;
-
-    constructor(building?: boolean){
-        super('hmi-node')
-        this.building = building;
-    }
-
-    public generateWidget(event: any): JSX.Element {
-        return event.extras.nodes ? <HMIGroup {...event} /> : (<HMINode  {...event} />)
-    }
-    public parseModel(model: any) {
-        return {
-            ...model,
-            building: this.building,
-            ports: model.ports ? model.ports : [
-                {
-                    name: "in",
-                    type: "base"
-                    
-                },
-                {
-                    name: 'out',
-                    type: 'base'
-                }
-            ]
+    return {
+        type: 'hmi-node',
+        renderNodeContainer: (node: any, children: any) => {
+            return building ? (
+                <EditorHandles 
+                    active={node.isSelected} 
+                    rotation={node.rotation}
+                    scaleX={node.scaleX}
+                    scaleY={node.scaleY}
+                    x={node.x} 
+                    y={node.y} 
+                    id={node.id}>
+                    {children}
+                </EditorHandles>
+            ) : (
+            <div 
+            data-nodeid={node.id}    
+            style={{
+                position: 'absolute', 
+                top: node.y, 
+                left: node.x, 
+                transform: `rotate(${node.rotation}deg) scaleX(${node.scaleX}) scaleY(${node.scaleY})`
+            }}>{children}</div>)
+        },
+        renderNode: (event: any) => {
+            // console.log(event)
+            return event.extras.nodes ? <HMIGroup {...event} building={building} /> : (<HMINode  {...event} building={building} />)
+        },
+        parseModel: (model: any) => {
+            return {
+                ...model,
+                building: building,
+                ports: model.ports ? model.ports : [
+                    {
+                        name: "in",
+                        type: "base"
+                        
+                    },
+                    {
+                        name: 'out',
+                        type: 'base'
+                    }
+                ]
+            }
         }
     }
-
 }

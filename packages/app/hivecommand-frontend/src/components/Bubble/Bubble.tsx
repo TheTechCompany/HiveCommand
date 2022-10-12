@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box } from '@mui/material';
 import styled from 'styled-components'
-import { BaseStyle } from '@hexhive/styles';
+import { HexHiveTheme } from '@hexhive/styles';
 import useResizeAware from 'react-resize-aware'
 
 export interface BubbleProps {
@@ -43,7 +43,7 @@ export const Bubble = styled(UnstyledBubble)`
 		width: 0;
 		height: 0;
 		border-top: 6px solid transparent;
-		border-right: 12px solid ${BaseStyle.global.colors['neutral-1']};
+		border-right: 12px solid ${HexHiveTheme.palette.secondary.light};
 		border-bottom: 6px solid transparent;
 	}
 `

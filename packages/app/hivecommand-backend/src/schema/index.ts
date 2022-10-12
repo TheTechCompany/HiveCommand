@@ -11,6 +11,7 @@ import { Pool } from 'pg';
 
 export default (prisma: PrismaClient, channel: Channel) => {
 
+	
 	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, channel);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)

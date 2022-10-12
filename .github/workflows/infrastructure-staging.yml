@@ -298,6 +298,9 @@ jobs:
           echo "NAMESPACE=db-prod" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/master' }}
         
+      - run: pulumi stack -s ultraviolet/base-infrastructure/prod output k3sconfig > ~/.kube/config
+        working-directory: ./packages/infrastructure
+        id: kube_config
 
       - run: echo "::set-output name=postgres::$(pulumi stack -s ${{env.DB_NAME}} output timeseries_name)" 
         working-directory: ./packages/infrastructure
@@ -318,7 +321,7 @@ jobs:
         with:
           version: "v1.23.5"
 
-      - run: aws eks update-kubeconfig --name hexhive-cluster-eksCluster-506b63f
+      # - run: aws eks update-kubeconfig --name hexhive-cluster-eksCluster-506b63f
    
       - run: kubectl -n ${{ env.NAMESPACE }} port-forward service/${{ steps.postgres_url.outputs.postgres }} 5432:5432 &
       

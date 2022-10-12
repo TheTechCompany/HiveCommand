@@ -27,11 +27,12 @@ const main = (async () => {
 
     const vpcId = stackRef.getOutput('vpcId');
 
-    const kubeconfig = stackRef.getOutput('kubeconfig');
+    const kubeconfig = stackRef.getOutput('k3sconfig');
 
-    const rootServer = gatewayRef.getOutput('gatewayUrl');
+    const rootServer = gatewayRef.getOutput('internalGatewayUrl');
 
     const rabbitURL = dbRef.getOutput('rabbitURL');
+    const redisUrl = dbRef.getOutput('redisUrl');
     
     const dbUrl = dbRef.getOutput('timescale_url');
     const mongoUrl = dbRef.getOutput('mongo_url');
@@ -49,7 +50,7 @@ const main = (async () => {
     
     const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl));
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl));
     const service = await Service(provider)
 
     return {

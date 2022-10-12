@@ -165,6 +165,23 @@ export const useUpdateDevice = (user: string) => {
   };
 };
 
+
+export const useCreateDeviceScreen = (deviceId: string) => {
+  const [ createScreen ] = useMutation((mutation, args: {name: string}) => {
+    const item = mutation.createDeviceScreen({device: deviceId, input: {name: args.name}})
+    return {
+      item: {
+        ...item
+      }
+    }
+  })
+
+  return (name: string) => {
+    return createScreen({args: {name}})
+  }
+}
+
+
 export const useSetDevicePeripherals = (deviceId: string) => {
   const [ mutateFn ] = useMutation((mutation, args: {
     peripherals: any[]
@@ -495,5 +512,26 @@ export const useUpdateDeviceSetpoint = (deviceId: string) => {
         value
       }
     })
+  }
+}
+
+export const useCreateDeviceMaintenanceWindow = (deviceId: string) => {
+  const [ createWindow ] = useMutation((mutation, args: {startTime: Date, endTime: Date}) => {
+    const item = mutation.createCommandDeviceMaintenanceWindow({
+      device: deviceId,
+      input: {
+        startTime: args.startTime.toISOString(),
+        endTime: args.endTime.toISOString()
+      }
+    })
+    return {
+      item: {
+        ...item
+      }
+    }
+  })
+
+  return (startTime: Date, endTime: Date) => {
+    return createWindow({args: {startTime, endTime}})
   }
 }

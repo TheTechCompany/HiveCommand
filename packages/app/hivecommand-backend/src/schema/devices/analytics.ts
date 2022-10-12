@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 
 export default (prisma: PrismaClient) => {
 
+	
     const typeDefs = `
 	    type Query {
 			commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
@@ -15,10 +16,29 @@ export default (prisma: PrismaClient) => {
 		}
 
 		type Mutation {
-			createCommandDeviceReport(input: CommandDeviceReportInput): CommandDeviceReport
-			updateCommandDeviceReportGrid(device: ID, grid: [CommandDeviceReportInput]): [CommandDeviceReport]
-			updateCommandDeviceReport(id: ID, input: CommandDeviceReportInput): CommandDeviceReport
-			deleteCommandDeviceReport(id: ID): CommandDeviceReport
+			createCommandDeviceReport(page: ID, input: CommandDeviceReportInput): CommandDeviceReport
+			updateCommandDeviceReportGrid(device: ID, page: ID, grid: [CommandDeviceReportInput]): [CommandDeviceReport]
+			updateCommandDeviceReport(page: ID, id: ID, input: CommandDeviceReportInput): CommandDeviceReport
+			deleteCommandDeviceReport(page: ID, id: ID): CommandDeviceReport
+
+			createCommandReportPage(device: ID, input: CommandReportPageInput!): CommandReportPage!
+			updateCommandReportPage(device: ID, id: ID, input: CommandReportPageInput!): CommandReportPage!
+			deleteCommandReportPage(device: ID, id: ID): CommandReportPage!
+		}
+
+		input CommandReportPageInput {
+			name: String
+		}
+	
+		type CommandReportPage {
+			id: ID
+	
+			name: String
+			reports: [CommandDeviceReport]
+	
+			createdAt: DateTime
+			
+			device: CommandDevice
 		}
 
 		input CommandDeviceReportInput {
@@ -248,6 +268,67 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
+			createCommandReportPage: async (root: any, args: any, context: any) => {
+				const id = nanoid();
+
+				const device = await prisma.device.update({
+					where: {id: args.device},
+					data: {
+						reports: {
+							create: [{
+								id: id,
+								name: args.input.name,
+								// reports: [],
+								createdAt: new Date(),
+								owner: context?.jwt?.id
+							}]
+						}
+					},
+					include: {
+						reports: true
+					}
+				})
+
+				return device.reports.find((a) => a.id == id)
+			},
+			updateCommandReportPage: async (root: any, args: any, context: any) => {
+
+				const device = await prisma.device.update({
+					where: {
+						id: args.device
+					},
+					data: {
+						reports: {
+							update: {
+								where: {id: args.id},
+								data: {
+									name: args.input.name,
+									reports: args.input.reports
+								}
+							}
+						}
+					},
+					include: {
+						reports: true
+					}
+				})
+
+				return device.reports?.find((a) => a.id == args.id);
+			},
+			deleteCommandReportPage: async (root: any, args: any, context: any) => {
+				return await prisma.device.update({
+					where: {
+						id: args.device
+					},
+					data: {
+						reports: {
+							delete: {
+								id: args.id
+							}
+						}
+					}
+				})
+			},
 			createCommandDeviceReport: async (root: any, args: any) => {
 				return await prisma.deviceReport.create({
 					data: {
@@ -266,8 +347,8 @@ export default (prisma: PrismaClient) => {
 						dataKey: {
 							connect: {id: args.input.dataKey}
 						},
-						device: {
-							connect: {id: args.input.device}
+						page: {
+							connect: {id: args.page}
 						}
 					}
 				})

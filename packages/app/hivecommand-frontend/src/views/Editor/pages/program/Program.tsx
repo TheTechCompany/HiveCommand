@@ -43,21 +43,21 @@ const reducer = (state, action) => {
     }
 }
 
-export const Program = (props) => {
+export const Program : React.FC<{activeProgram: string}> = (props) => {
 
-    const { id } = useParams()
 
     const { sidebarOpen, refetch: refetchProgram } = useCommandEditor()
 
     const [ selectedItem, setSelectedItem ] = useState<{id?: string} | undefined>(undefined)
     const [ parentItem, setParentItem ] = useState<{id?: string} | undefined>(undefined)
     
-    const [ activeProgram, setActiveProgram ] = useState<string>(undefined)
+    // const [ activeProgram, setActiveProgram ] = useState<string>(undefined)
 
+    const { activeProgram } = props;
 
-    const createProgramFlow = useCreateProgramFlow(id)
-    const updateProgramFlow = useUpdateProgramFlow(id);
-    const deleteProgramFlow = useDeleteProgramFlow(id);
+    const createProgramFlow = useCreateProgramFlow(activeProgram)
+    const updateProgramFlow = useUpdateProgramFlow(activeProgram);
+    const deleteProgramFlow = useDeleteProgramFlow(activeProgram);
 
     const [state, dispatch] = useEditor(reducer, {
         nodes: [],
@@ -301,7 +301,7 @@ export const Program = (props) => {
     }
 `, {
         variables: {
-            id: id,
+            id: activeProgram,
         }
     })
 
@@ -313,11 +313,11 @@ export const Program = (props) => {
 
     const program = data?.commandPrograms?.[0];
 
-    const createProgramNode = useCreateProgramNode(id, activeProgram, flow?.parent?.id)
-    const updateProgramNode = useUpdateProgramNode(id, activeProgram, flow?.parent?.id)
-    const deleteProgramNodes = useDeleteProgramNodes(id, activeProgram, flow?.parent?.id)
-    const connectProgramNode = useConnectProgramNode(id, activeProgram, flow?.parent?.id)
-    const disconnectProgramNode = useDisconnectProgramNode(id, activeProgram, flow?.parent?.id)
+    const createProgramNode = useCreateProgramNode(activeProgram, activeProgram, flow?.parent?.id)
+    const updateProgramNode = useUpdateProgramNode(activeProgram, activeProgram, flow?.parent?.id)
+    const deleteProgramNodes = useDeleteProgramNodes(activeProgram, activeProgram, flow?.parent?.id)
+    const connectProgramNode = useConnectProgramNode(activeProgram, activeProgram, flow?.parent?.id)
+    const disconnectProgramNode = useDisconnectProgramNode(activeProgram, activeProgram, flow?.parent?.id)
 
     useEffect(() => {
         if (flow && activeProgram) {
@@ -555,7 +555,7 @@ export const Program = (props) => {
     }
 
 
-    const devices = data?.commandPrograms?.[0].devices || []
+    const devices = data?.commandPrograms?.[0]?.devices || []
     const variables = data?.commandPrograms?.[0]?.variables || [];
 
 
@@ -584,166 +584,7 @@ export const Program = (props) => {
                 selected: selected.key == 'node' ? nodes.find((a) => a.id == selected.id) : paths.find((a) => a.id == selected.id)
             }}
         >
-            <Box flex direction='row'>
-                <Collapsible    
-                    direction="horizontal"
-                    open={sidebarOpen}>
-                    <Box 
-                        elevation='small'
-                        flex
-                        width="small">
-                        {/* <Box 
-                            pad="xsmall"
-                            border={{side: 'bottom', size: 'small'}}
-                            direction="row" 
-                            align="center" 
-                            justify="between">
-                            <Text size="small">{view}</Text>
-                            <Button
-                                onClick={() => {
-                                    if(view == "Program"){
-                                        addProgram().then(() => {
-                                            refetch()
-                                        })
-                                    }else{
-                                        addHMI().then(() => {
-                                            refetch()
-                                        })
-                                    }
-                                 
-                                }}
-                                hoverIndicator
-                                plain
-                                style={{padding: 6, borderRadius: 3}}
-                                icon={<Add size="small" />} />
-                        </Box> */}
-
-                <ProgramFlowModal 
-                    open={modalOpen}
-                    selected={selectedItem}
-                    onDelete={() => {
-                        deleteProgramFlow(selectedItem.id).then(() => {
-                            refetchProgram()
-                            openModal(false)
-                            setSelectedItem({})
-                            setParentItem(undefined)
-                        })
-                    }}
-                    onClose={() => {
-                        setSelectedItem({})
-                        setParentItem(undefined)
-
-                        openModal(false)
-                    }}
-                    onSubmit={(item) => {
-                        let parent = parentItem?.id !== 'root' ? parentItem?.id : undefined;
-
-                        if(item.id){
-                            updateProgramFlow(item.id, item.name, parent).then(() => {
-                                refetchProgram()
-                                openModal(false)
-                                setParentItem(undefined)
-                                setSelectedItem({})
-                            })
-                        }else{
-                            createProgramFlow(item.name, parent).then(() => {
-                                refetchProgram()
-                                openModal(false)
-                                setParentItem(undefined)
-
-                                setSelectedItem({})
-                                
-                            })
-                        }
-                    }}
-                    />
-                {/* <ProgramCanvasModal
-                    open={modalOpen}
-                    onSubmit={(item) => {
-                        let parent = selectedItem.id !== 'root' ? selectedItem.id : undefined;
-                        createProgramFlow(item.name, parent).then(() => {
-                            refetchProgram()
-                            openModal(false)
-                            
-                        })
-                    }}
-                    onClose={() => {
-                        setSelectedItem(undefined)
-                        openModal(false)
-                    }}
-                    
-                    /> */}
-                        <TreeMenu
-                            label='Flows'
-                            onAdd={(nodeId) => {
-                                let item = tree.reduce((prev, curr) => [...prev, curr, ...curr.children], [])
-                                setParentItem(item.find((a) => a.id == nodeId))
-                                openModal(true)
-                            }}
-                            onEdit={(nodeId) => {
-                                let item = tree.reduce((prev, curr) => [...prev, curr, ...curr.children], [])
-                                setSelectedItem(item.find((a) => a.id == nodeId));
-                                openModal(true);
-                                
-                            }}
-                            onNodeSelect={(nodeId) => {
-                                setActiveProgram(nodeId)
-                            }}
-                            selected={activeProgram}
-                            items={tree}
-                            />
-                        {/* <TreeView
-                            onNodeSelect={(event, nodeId) => {
-                                setActiveProgram(nodeId)
-                            }}
-                            selected={activeProgram}
-                            sx={{flex: 1, userSelect: 'none', maxWidth: `100%`}}
-                            defaultCollapseIcon={<ExpandMore />}
-                            defaultExpandIcon={<ChevronRight />}
-                            >
-                            {tree.map((item) => (
-                                <TreeItem
-                                    ContentProps={{style: {width: 'unset'}}}
-                                    ContentComponent={Box}
-                                    nodeId={item.id}
-                                    label={item.name}
-                                    >
-                                    {item.children.map((row) => (
-                                        <TreeItem
-                                            ContentProps={{style: {width: 'unset'}}}
-                                            nodeId={row.id} 
-                                            label={row.name} />
-                                    ))}
-                                </TreeItem>
-                            ))}
-                        </TreeView> */}
-                        {/* <HyperTree 
-                            id="editor-menu"
-                            onCreate={(node) => {
-                                console.log("CREATE", node)
-                                setSelectedItem(node.data)
-                                openModal(true)
-                            }}
-                            onSelect={(node) => {
-                                if(node.data.id !== 'root'){
-                                    setActiveProgram(node.data.id)
-                                }
-                            }}
-                            data={[{
-                                id: 'root',
-                                name: `Program`,
-                                children: tree || []
-                            }]} /> */}
-                        {/* <List 
-                            onClickItem={({item}) => {
-                                console.log(item)
-                                setActiveProgram(item.id)
-                            }}
-                            primaryKey="name"
-                            data={view == "Program" ? program.program : program.hmi} /> */}
-                    </Box>
-                </Collapsible>
-                
+            <Box flex direction='row'>         
                 {activeProgram != undefined ? (
                 <ProgramCanvas
                     onDelete={watchEditorKeys}
@@ -768,7 +609,7 @@ export const Program = (props) => {
                         },
                         {
                             key: 'settings',
-                            icon: <Settings width="24px" />,
+                            icon: <Settings style={{fill:"white"}} width="24px" />,
                             panel: (
                                 <ProgramDrawer />
                             )
@@ -808,16 +649,16 @@ export const Program = (props) => {
 
                     onPathCreate={(path) => {
 
-                        connectProgramNode(
-                            path.source,
-                            path.sourceHandle,
-                            path.target,
-                            path.targetHandle,
-                            path.points,
-                            path.id != 'temp' && path.id
-                        ).then(() => {
-                            refetch()
-                        })
+                        // connectProgramNode(
+                        //     path.source,
+                        //     path.sourceHandle,
+                        //     path.target,
+                        //     path.targetHandle,
+                        //     path.points,
+                        //     path.id != 'temp' && path.id
+                        // ).then(() => {
+                        //     refetch()
+                        // })
                     }}
 
                     nodes={nodes}
