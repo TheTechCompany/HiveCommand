@@ -75,6 +75,7 @@ export class SyncClient {
 
 		console.log("Connecting to server", {serverUrl})
 
+
 		//New server
 		this.clients[serverUrl] = new Client(`opc.tcp://discovery.hexhive.io:4840`)
 
@@ -85,6 +86,7 @@ export class SyncClient {
 		this.clients[serverUrl].on('reconnection_attempt_has_failed', () => {
 			console.log(`${serverUrl} failed to reconnect`)
 		})
+		
 
 		this.clients[serverUrl].on('close', this.onClientLost.bind(this, serverUrl))
 		this.clients[serverUrl].on('connection_lost', this.onClientLost.bind(this, serverUrl))

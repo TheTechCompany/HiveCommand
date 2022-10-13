@@ -2,6 +2,7 @@
 	"compilerOptions": {
 	  "baseUrl": "./packages",
 	  "paths": {
+		"@hive-command/local-sidecar": ["./core/command-local-sidecar"],
 		"@mui/styled-engine": ["../node_modules/@mui/styled-engine"],
 		"@mui/material": ["../node_modules/@mui/material"],
 		"@mui/x-date-pickers": ["../node_modules/@mui/x-date-pickers"],
@@ -44,6 +45,7 @@
 		/* OPCUA Libraries */
 		"@hive-command/opcua-lds": ["./network/opcua-lds/src"],
 		"@hive-command/opcua-server": ["./communication/opc-server/src"],
+		"@hive-command/opcua-client": ["./communication/opc-client/src"],
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
 		
 		/* IO-Link Libraries */

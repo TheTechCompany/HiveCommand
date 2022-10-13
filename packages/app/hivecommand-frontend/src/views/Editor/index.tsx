@@ -4,7 +4,6 @@ import { Box, Paper, Typography } from '@mui/material';
 import { Spinner } from 'grommet'
 import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
-import { IconNodeFactory, InfiniteCanvas, InfiniteCanvasNode, InfiniteCanvasPath, HyperTree } from '@hexhive/ui'
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { Home } from './pages/home'
 import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
@@ -50,6 +49,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     const { data } = useQuery(gql`
         query EditorCommandProgram ($id: ID){
+
+            commandProgramDevices { 
+                id
+                name
+                tagPrefix
+            }
+
             commandPrograms(where: {id: $id}){
                 id
                 name
@@ -62,7 +68,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 
                 devices {
                     id
-                    name
+                    tag
                 }
 
                 interface {
@@ -89,6 +95,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             id: id
         }
     })
+
+
+    const deviceTypes = data?.commandProgramDevices || [];
+
+    console.log({deviceTypes})
 
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
@@ -221,6 +232,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     return (
         <CommandEditorProvider value={{
             program,
+            deviceTypes,
             refetch: refetch
         }}>
             <EditorMenuDialog 
