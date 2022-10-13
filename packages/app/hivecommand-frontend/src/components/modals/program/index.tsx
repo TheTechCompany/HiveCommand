@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
-import { TextInput } from 'grommet';
-import { BaseModal } from '../base';
-import { Dialog } from '@mui/material';
+import { Button, Dialog } from '@mui/material';
 import { DialogTitle } from '@mui/material';
+import { DialogContent } from '@mui/material';
+import { TextField } from '@mui/material';
+import { DialogActions } from '@mui/material';
 
 export interface ProgramModalProps {
   open: boolean;
@@ -42,11 +43,19 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
   return (
     <Dialog 
         open={props.open}
-        onClose={onClose}
-        onSubmit={onSubmit}
-        title="Edit Program">
+        onClose={onClose}>
           <DialogTitle>{program.id ? "Edit" : "Create"} Program</DialogTitle>
-          <TextInput placeholder="Program name" value={program.name} onChange={(e) => setProgram({...program, name: e.target.value}) } />
+          <DialogContent>
+            <TextField 
+              placeholder="Program name" 
+              value={program.name} 
+              onChange={(e) => setProgram({...program, name: e.target.value}) } />
+
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={onSubmit} variant="contained" color="primary">{program.id ? "Save": "Create"}</Button>
+          </DialogActions>
      </Dialog>
   );
 }
