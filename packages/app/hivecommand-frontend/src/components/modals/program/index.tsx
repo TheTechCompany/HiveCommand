@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Dialog } from '@mui/material';
+import { Box, Button, Dialog } from '@mui/material';
 import { DialogTitle } from '@mui/material';
 import { DialogContent } from '@mui/material';
 import { TextField } from '@mui/material';
@@ -47,12 +47,14 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
         onClose={onClose}>
           <DialogTitle>{program.id ? "Edit" : "Create"} Program</DialogTitle>
           <DialogContent>
-            <TextField 
-              fullWidth
-              label="Program name" 
-              value={program.name} 
-              onChange={(e) => setProgram({...program, name: e.target.value}) } />
-
+            <Box sx={{padding: '6px'}}>
+              <TextField 
+                fullWidth
+                size="small"
+                label="Program name" 
+                value={program.name} 
+                onChange={(e) => setProgram({...program, name: e.target.value}) } />
+            </Box>
           </DialogContent>
           <DialogActions>
             <Button onClick={onClose}>Cancel</Button>
