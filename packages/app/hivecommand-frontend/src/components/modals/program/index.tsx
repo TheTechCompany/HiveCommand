@@ -1,7 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { TextInput } from 'grommet';
 import { BaseModal } from '../base';
+import { Dialog } from '@mui/material';
+import { DialogTitle } from '@mui/material';
 
 export interface ProgramModalProps {
   open: boolean;
@@ -11,7 +13,12 @@ export interface ProgramModalProps {
 }
 
 export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
-  const [ name, setName ] = React.useState<string>('');
+
+  const [ program, setProgram ] = useState<{id?: string, name: string}>({name: ''})
+
+  // const [ name, setName ] = React.useState<string>('');
+
+  // useEff
   const onClose = () => {
     if(props.onClose){
       props.onClose();
@@ -21,24 +28,25 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
   const onSubmit = () => {
     if(props.onSubmit){
       props.onSubmit({
-        name: name
+        ...program
       })
     }
   }
 
   useEffect(() => {
     if(props.selected){
-      setName(props.selected.name)
+      setProgram({...props.selected})
     }
   }, [props.selected])
 
   return (
-    <BaseModal 
+    <Dialog 
         open={props.open}
         onClose={onClose}
         onSubmit={onSubmit}
         title="Edit Program">
-          <TextInput placeholder="Program name" value={name} onChange={(e) => setName(e.target.value)} />
-     </BaseModal>
+          <DialogTitle>{program.id ? "Edit" : "Create"} Program</DialogTitle>
+          <TextInput placeholder="Program name" value={program.name} onChange={(e) => setProgram({...program, name: e.target.value}) } />
+     </Dialog>
   );
 }
