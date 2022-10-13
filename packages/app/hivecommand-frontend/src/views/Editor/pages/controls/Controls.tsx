@@ -2,24 +2,13 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
 import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
-import { NodeDropdown } from '../../../../components/node-dropdown';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
 import { GridView as Nodes, Construction as Action } from '@mui/icons-material'
 import Settings from './Settings'
-import { nanoid } from 'nanoid';
-import { pick } from 'lodash';
-import { throttle } from 'lodash';
-import { HMIGroupModal } from '../../../../components/modals/hmi-group';
-import { debounce } from 'lodash';
-import { AssignFlowModal } from '../../../../components/modals/assign-flow';
 import { useParams } from 'react-router-dom';
 import { useAssignHMINode, useCreateHMIAction, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
-import { cleanTree } from '../../utils';
-import { ObjectTypeDefinitionNode } from 'graphql';
-import { ProgramCanvasModal } from '../../../../components/modals/program-canvas';
-import { EmptyView } from '../../components/empty-view';
 import { HMIDrawer } from './Drawer';
 import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';

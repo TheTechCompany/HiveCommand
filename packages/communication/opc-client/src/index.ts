@@ -15,7 +15,6 @@ import {
     ServerOnNetwork,
     OPCUAClientBase
 } from 'node-opcua'
-
 import { getNodeId } from '@hive-command/opcua-utils'
 
 export interface SubscriptionParams {
@@ -30,7 +29,7 @@ const baseSubscriptionParams : SubscriptionParams = {
     queueSize: 1
 }
 
-export default class Client extends OPCUAClientBase{
+export default class Client {
     private client: OPCUAClient;
     private session?: ClientSession;
 
@@ -41,7 +40,7 @@ export default class Client extends OPCUAClientBase{
     private subscription?: ClientSubscription;
 
     constructor(discoveryServer?: string){
-        super();
+        // super();
 
         this.client = OPCUAClient.create({
             endpointMustExist: false,
@@ -62,6 +61,10 @@ export default class Client extends OPCUAClientBase{
     //     return this.client.on(key, listener)
     // }
 
+    on(event: any, eventHandler: any){
+        return this.client.on(event, eventHandler)
+    }
+    
     async discoverOnNetwork(){
         const servers : ServerOnNetwork[] = await this.client.findServersOnNetwork()
         return servers;

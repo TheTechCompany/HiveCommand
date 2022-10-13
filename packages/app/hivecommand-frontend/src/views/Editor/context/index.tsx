@@ -3,6 +3,11 @@ import React from "react";
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
 	refetch?: () => void;
+	deviceTypes?: {
+		id: string;
+		tagPrefix?: string;
+		name: string;
+	}[];
 	program?: {
 		id?: string;
 		templatePacks?: any[];
