@@ -15,7 +15,6 @@ import {
     ServerOnNetwork,
     OPCUAClientBase
 } from 'node-opcua'
-
 import { getNodeId } from '@hive-command/opcua-utils'
 
 export interface SubscriptionParams {
@@ -62,6 +61,10 @@ export default class Client {
     //     return this.client.on(key, listener)
     // }
 
+    on(event: any, eventHandler: any){
+        return this.client.on(event, eventHandler)
+    }
+    
     async discoverOnNetwork(){
         const servers : ServerOnNetwork[] = await this.client.findServersOnNetwork()
         return servers;
