@@ -42,12 +42,14 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
 
   return (
     <Dialog 
+      fullWidth
         open={props.open}
         onClose={onClose}>
           <DialogTitle>{program.id ? "Edit" : "Create"} Program</DialogTitle>
           <DialogContent>
             <TextField 
-              placeholder="Program name" 
+              fullWidth
+              label="Program name" 
               value={program.name} 
               onChange={(e) => setProgram({...program, name: e.target.value}) } />
 
