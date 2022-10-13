@@ -30,7 +30,7 @@ const baseSubscriptionParams : SubscriptionParams = {
     queueSize: 1
 }
 
-export default class Client extends OPCUAClientBase{
+export default class Client {
     private client: OPCUAClient;
     private session?: ClientSession;
 
@@ -41,7 +41,7 @@ export default class Client extends OPCUAClientBase{
     private subscription?: ClientSubscription;
 
     constructor(discoveryServer?: string){
-        super();
+        // super();
 
         this.client = OPCUAClient.create({
             endpointMustExist: false,

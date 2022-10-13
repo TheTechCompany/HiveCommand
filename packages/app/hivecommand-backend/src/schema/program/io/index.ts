@@ -33,13 +33,13 @@ export default (prisma: PrismaClient) => {
         }
     
         input CommandProgramDeviceInput {
-            name: String
+            tag: String
             template: String
         }
 
         type CommandProgramDevicePlaceholder {
             id: ID! 
-            name: String
+            tag: String
 
             type: CommandProgramDevice 
 
@@ -153,6 +153,8 @@ export default (prisma: PrismaClient) => {
             name: String
             type: String
 
+            tagPrefix: String
+
             usedIn: [CommandProgramDevicePlaceholder]
 
             config: [CommandProgramDeviceConfiguration]
@@ -198,6 +200,7 @@ export default (prisma: PrismaClient) => {
         type CommandProgramDevicePlugin {
             id: ID! 
             name: String
+        
             compatibility: [CommandProgramDevicePluginCompatibility] 
             config: [CommandProgramDevicePluginConfiguration] 
             tick: String
@@ -281,7 +284,7 @@ export default (prisma: PrismaClient) => {
                 return await prisma.programFlowIO.create({
                     data: {
                         id: nanoid(),
-                        name: args.input.name,
+                        tag: args.input.tag,
                         type: {
                             connect: {id: args.input.template}
                         },
@@ -297,7 +300,7 @@ export default (prisma: PrismaClient) => {
                         id: args.id
                     },
                     data: {
-                        name: args.input.name,
+                        tag: args.input.tag,
                         type: {
                             connect: {id: args.input.template}
                         }
