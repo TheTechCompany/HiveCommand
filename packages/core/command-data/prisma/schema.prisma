@@ -248,11 +248,15 @@ model DeviceReport {
   pageId String
 }
 
+
+//TODO allow IOTemplate to be added by user/org
 model IOTemplate {
   id String @id
   name String
 
   type String
+
+  tagPrefix String?
 
   state IOTemplateState[] @relation(name: "hasState")
   actions IOTemplateAction[] @relation(name: "hasAction")
@@ -386,7 +390,7 @@ model ProgramVariable {
 model ProgramFlowIO {
   id String @id
 
-  name String
+  tag String?
 
   type IOTemplate? @relation(name: "useTemplate", fields: [templateId], references: [id], onUpdate: Cascade)
   templateId String?

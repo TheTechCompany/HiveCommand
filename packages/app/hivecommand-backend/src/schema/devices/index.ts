@@ -480,7 +480,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 				let stateUpdate = {
 					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
-					deviceName: setpoint?.setpoint.device?.name,
+					deviceName: setpoint?.setpoint.device?.tag,
 					deviceSetpoint:  setpoint?.setpoint.name,
 					value: args.value,
 					authorizedBy: context.jwt?.name
