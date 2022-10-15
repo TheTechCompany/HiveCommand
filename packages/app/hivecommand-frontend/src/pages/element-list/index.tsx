@@ -1,17 +1,20 @@
 import { Box, Paper, IconButton, Typography, List, ListItem, TextField } from "@mui/material";
-import { Add } from '@mui/icons-material'
+import { Add, MoreVert } from '@mui/icons-material'
 import React, { useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { ElementPackModal } from "../../components/modals/element-pack";
 import { useMutation } from "@apollo/client";
 import { useApolloClient } from "@apollo/client";
+import { ListItemSecondaryAction } from "@mui/material";
 
 export const ElementList = (props) => {
 
     const navigate = useNavigate();
 
     const [ modalOpen, openModal ] = useState(false);
+
+    const [ selected, setSelected ] = useState<any>(null);
     
     const client = useApolloClient()
     
@@ -25,6 +28,9 @@ export const ElementList = (props) => {
             installed:commandInterfaceDevicePacks(registered: true){
                 id
                 name
+
+                provider
+                url
             }
 
             registryList:commandInterfaceDevicePacks{
@@ -56,6 +62,7 @@ export const ElementList = (props) => {
         <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <ElementPackModal
                 open={modalOpen}
+                selected={selected}
                 onClose={() => {
                     openModal(false)
                 }}
@@ -73,6 +80,7 @@ export const ElementList = (props) => {
                         }
                     }).then(() => {
                         openModal(false)
+                        setSelected(null)
                         refetch()
                     })
                 }}
@@ -114,6 +122,14 @@ export const ElementList = (props) => {
                     {elements.map((elem) => (
                         <ListItem button onClick={() => navigate(elem.id)}>
                             {elem.name}
+                            <ListItemSecondaryAction>
+                                <IconButton onClick={() => {
+                                    openModal(true);
+                                    setSelected(elem)
+                                }}>
+                                    <MoreVert />
+                                </IconButton>
+                            </ListItemSecondaryAction>
                         </ListItem>
                     ))}
                 </List>)}
@@ -127,7 +143,6 @@ export const ElementList = (props) => {
                             {registryList.map((pack) => (
                                 <ListItem button sx={{display: 'flex', padding: '6px'}}>
                                     <Typography>{pack.name}</Typography>
-
                                 </ListItem>
                             ))}
                         </List>

@@ -143,7 +143,8 @@ export const Controls = (props) => {
 
                         devicePlaceholder {
                             id
-                            name
+                            
+                            tag
 
                             setpoints {
                                 id
@@ -183,7 +184,7 @@ export const Controls = (props) => {
 
                             devicePlaceholder {
                                 id
-                                name
+                                tag
                             }
                         }
 
@@ -210,7 +211,7 @@ export const Controls = (props) => {
 
                 devices {
                     id
-                    name
+                    tag
                     type {
                         id
                         name
