@@ -120,7 +120,7 @@ export default () => {
 
 
 		let v = values.filter((a) => a?.placeholder == name);
-		let state = program?.devices?.find((a) => a.name == name)?.type?.state;
+		let state = program?.devices?.find((a) => a.tag == name)?.type?.state;
 
 
 		return v.reduce((prev, curr) => {
