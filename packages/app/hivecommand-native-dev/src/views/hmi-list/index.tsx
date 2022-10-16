@@ -33,7 +33,7 @@ export const HMIList = () => {
             <CRUDHMIModal 
                 selected={selected}
                 open={modalOpen}
-                onSubmit={({name, file}) => {
+                onSubmit={({name, file}: any) => {
                     createHMI?.(name, {filePath: file});
                     openModal(false);
                     setSelected(null)
