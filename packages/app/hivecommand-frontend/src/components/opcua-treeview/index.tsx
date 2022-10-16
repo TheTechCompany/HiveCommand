@@ -1,9 +1,11 @@
-import { ChevronRight, ExpandMore } from "@mui/icons-material";
+import { ChevronRight, ExpandMore, Explore } from "@mui/icons-material";
 import { TreeItem, TreeItemContentProps, TreeView, useTreeItem } from "@mui/lab";
 import { Box, TextField, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import { render } from "react-dom";
 import clsx from 'clsx';
+import { TreeMapProvider, useTreeMap, useTreeMapNode } from "./context";
+import { IconButton } from "@mui/material";
 
 export interface OPCUATreeItem {
     id: string;
@@ -13,6 +15,7 @@ export interface OPCUATreeItem {
 
 export interface OPCUATreeViewProps {
     items: OPCUATreeItem[]
+    onMap?: (item: any) => void;
 }
 
 const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
@@ -26,6 +29,7 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
         displayIcon,
       } = props;
 
+
       const {
         disabled,
         expanded,
@@ -34,8 +38,12 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
         handleExpansion,
         handleSelection,
         preventSelection,
-      } = useTreeItem(nodeId);
+      }  = useTreeItem(nodeId); //= useTreeItem(nodeId);
       
+      const { editable, value } = useTreeMapNode(nodeId);
+
+      const { onMap } = useTreeMap()
+
       const icon = iconProp || expansionIcon || displayIcon;
 
       const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -53,6 +61,8 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
       ) => {
         handleSelection(event);
       };
+
+    // console.log({props})
     
     return (
         <div 
@@ -69,8 +79,16 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
                     {icon}
                 </div>
             <Box sx={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                <Typography>{label}</Typography>
-                <TextField size="small" />
+                <Typography sx={{padding: editable ? '6px' : undefined}}>{label}</Typography>
+
+               {editable ? (
+                <Box sx={{display: 'flex', alignItems: 'center', marginRight: '6px'}}>
+                    <TextField value={value} size="small" />
+                    <IconButton onClick={() => onMap(nodeId)} size="small">
+                        <Explore fontSize="inherit" />
+                    </IconButton>
+                </Box>
+               ) : null} 
             </Box>
         </div>
     )
@@ -79,20 +97,26 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
 export const OPCUATreeView : React.FC<OPCUATreeViewProps> = (props) => {
 
     const renderItems = (items: OPCUATreeItem[]) => {
-        return items.map((item) => (
+        return items.map((item: any) => {
+            // item.editable = item.children?.length > 0
+            return (
             <TreeItem ContentComponent={OPCUATreeItem} nodeId={item.id} label={item.label}>
                 {renderItems(item.children || [])}
             </TreeItem>
-        ))
+            )
+        })
     }
 
 
     return (
-        <TreeView
-            defaultCollapseIcon={<ExpandMore />}
-            defaultExpandIcon={<ChevronRight />}
-            >
-            {renderItems(props.items)}
-        </TreeView>
+        <TreeMapProvider value={{items: props.items, onMap: props.onMap}}>
+            <TreeView
+                // onSelect={(evt)}
+                defaultCollapseIcon={<ExpandMore />}
+                defaultExpandIcon={<ChevronRight />}
+                >
+                {renderItems(props.items)}
+            </TreeView>
+        </TreeMapProvider>
     )
 }

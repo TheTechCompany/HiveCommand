@@ -56,9 +56,9 @@ export const useRemoteComponents = () => {
                 const data = await Loader(base_url, `${url}?now=${Date.now()}`)
                 setPacks({
                     ...packs,
-                    [id]: Object.keys(data).map((x) => ({name: x, component: data[x]}))
+                    [id]: Object.keys(data).map((x) => ({name: x, component: data[x], metadata: data[x].metadata}))
                 })
-                return Object.keys(data).map((x) => ({name: x, component: data[x]}))
+                return Object.keys(data).map((x) => ({name: x, component: data[x], metadata: data[x].metadata}))
             }catch(e){
                 console.log({e, base_url, url})
             }

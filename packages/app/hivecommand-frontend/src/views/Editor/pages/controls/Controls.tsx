@@ -215,6 +215,9 @@ export const Controls = (props) => {
                     type {
                         id
                         name
+                        type
+                        tagPrefix
+
                     }
                 }
             }
@@ -289,9 +292,13 @@ export const Controls = (props) => {
                     base = base.join('/');
 
                     const pack = await getPack(packId, `${base}/`, url_slug)
+
+                    const item = pack.find((a) => a.name == templateName);
+
                     return {
                         ...node,
-                        icon: pack.find((a) => a.name == templateName)?.component
+                        metadata: item?.metadata,
+                        icon: item?.component
                     }
                 }
                 
@@ -334,7 +341,7 @@ export const Controls = (props) => {
                             scaleX: x.scaleX != undefined ? x.scaleX : 1,
                             scaleY: x.scaleY != undefined ? x.scaleY : 1,
                             showTotalizer: x.showTotalizer || false,
-                            iconString: x.type?.name,
+                            metadata: x.metadata,
                             icon: x.icon, //HMIIcons[x.type?.name],
                             ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
                         },

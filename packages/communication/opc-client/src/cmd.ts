@@ -23,8 +23,8 @@ program.version(pkg.version)
         const result = await client.browse(path)
 
         // const path_id = await client.getPathID(path)
-        console.log(result?.references?.map((x) => x.typeDefinition.toJSON()))
-        console.log(result?.references?.map((x) => x.browseName.toString()))
+        console.log(result?.map((x) => x.typeDefinition.toJSON()))
+        console.log(result?.map((x) => x.browseName.toString()))
 
                 await client.disconnect();
 

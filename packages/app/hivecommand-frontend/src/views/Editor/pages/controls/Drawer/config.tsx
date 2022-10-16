@@ -1,11 +1,14 @@
 import { BumpInput } from "@hexhive/ui";
 import { HMIGroupModal } from "../../../../../components/modals/hmi-group";
-import { Autocomplete, Box, Checkbox, FormControlLabel, InputAdornment, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Checkbox, FormControlLabel, InputAdornment, Select, TextField, Typography } from "@mui/material";
 import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add } from '@mui/icons-material';
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useAssignHMINode, useUpdateHMIGroup, useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
 import { FunctionArgumentsModal } from "../../../../../components/modals/function-arguments";
+import { MenuItem } from "@mui/material";
+import { FormControl } from "@mui/material";
+import { InputLabel } from "@mui/material";
 // import { HMICanvasContext } from "../context";
 
 export interface ConfigMenuProps {
@@ -42,6 +45,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
     const updateHMINode = useUpdateHMINode(programId)
 
     const item = nodes?.find((a) => a.id == selected.id);
+
+    console.log({item})
 
     const options = item?.extras?.options || {};
 
@@ -145,6 +150,20 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
         }
     }
 
+    const assignableDevices = useMemo(() => {
+
+        let devs = devices;
+
+        if(item?.extras?.metadata?.type){
+            devs = devs.filter((a) => a.type?.type == item?.extras?.metadata?.type);
+        }
+
+        return devs;
+        // devices?.filter((a) => a.type?.type?.indexOf(item?.extras?.metadata) > -1)
+    }, [devices, item])
+
+    // console.log({devices})
+
     return (
 
         <Box
@@ -234,17 +253,26 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     style={{ padding: 6, borderRadius: 3 }}
                     icon={<Aggregate />} /> */}
             </Box>
-            {/* <Select
-                valueKey={{ reduce: true, key: "id" }}
-                labelKey="name"
-                value={item?.extras?.devicePlaceholder?.id}
-                onChange={({ value }) => {
-                    assignHMINode(selected.id, value).then(() => {
-                        refetch()
-                    })
-                }}
-                options={devices.filter((a) => a.type?.name.replace(/ /, '').indexOf(item?.extras?.iconString) > -1)}
-                placeholder="Device" /> */}
+            <FormControl sx={{marginTop: '6px', marginBottom: '6px'}} fullWidth size="small">
+                <InputLabel>Device</InputLabel>
+                <Select
+                    label="Device"
+                    // valueKey={{ reduce: true, key: "id" }}
+                    // labelKey="name"
+                    value={item?.extras?.devicePlaceholder?.id}
+                    onChange={(evt) => {
+                        assignHMINode(selected.id, evt.target.value).then(() => {
+                            refetch()
+                        })
+                    }}
+                    // options={devices.filter((a) => a.type?.name.replace(/ /, '').indexOf(item?.extras?.iconString) > -1)}
+                    placeholder="Device">
+                    {assignableDevices?.map((device) => (
+                        <MenuItem value={device.id}>{device.type?.tagPrefix}{device.tag}</MenuItem>
+                    ))}    
+                </Select>
+            </FormControl>
+           
 
             {/* <Box>
                 <CheckBox
