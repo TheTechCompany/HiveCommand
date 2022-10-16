@@ -6,7 +6,6 @@
   "bin": "dist/index.js",
   "scripts": {
     "build": "tsc -b && yarn package",
-    "postinstall": "pkg package.json --output dist/sidecar",
     "package": "pkg package.json --output dist/sidecar"
   },
   "devDependencies": {
