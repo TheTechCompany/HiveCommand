@@ -13,7 +13,6 @@ import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';
 import { DeviceSettings } from '../../pages/device-settings';
 const PluginEditor = React.lazy(() => import('../../pages/plugin-editor').then((r) => ({default: r.PluginEditorPage})))
-const DeviceControl = React.lazy(() => import('../../pages/device-control').then((r) => ({default: r.DeviceControl})))
 
 const Devices = React.lazy(() => import('../../pages/device-list').then((r) => ({ default: r.Devices })))
 
