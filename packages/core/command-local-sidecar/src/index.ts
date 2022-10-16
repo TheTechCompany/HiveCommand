@@ -62,9 +62,6 @@ class DevSidecar {
             // this.sessions[endpointUrl] = await this.clients[endpointUrl].createSession();
             
             const results = await this.browse(this.clients[endpointUrl], "/Objects", true);
-            // const browseResult = await this.sessions[endpointUrl]?.browse("RootFolder");
-
-         
 
             return results;
         }catch(e: any){
