@@ -44,6 +44,7 @@ export class CommandIdentity {
 
 		this.network = os.networkInterfaces()
 	
+		
 		this.uptime = os.uptime()
 
 		this.httpInstance = axios.create({
