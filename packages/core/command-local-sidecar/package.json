@@ -2,6 +2,7 @@
   "name": "@hive-command/local-sidecar",
   "version": "1.0.0",
   "main": "index.js",
+  "private": true,
   "license": "MIT",
   "bin": "dist/index.js",
   "scripts": {
