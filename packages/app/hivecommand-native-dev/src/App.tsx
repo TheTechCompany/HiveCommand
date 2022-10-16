@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { Box, Divider, IconButton, ListItem, Paper, Typography } from '@mui/material'
 import { Menu } from '@mui/icons-material'
-import { invoke } from "@tauri-apps/api/tauri";
 import "./App.css";
-import { AppBar } from "@mui/material";
-import { Toolbar } from "@mui/material";
 import { Drawer } from "@mui/material";
 import { List } from "@mui/material";
 import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import { OPCUAList } from "./views/opcua-list";
 import { HMIList } from "./views/hmi-list";
 import { DevProvider } from "./context";
-import { getSettingsBlob, updateSettingsKey } from "./utils";
+import { getSettingsBlob } from "./utils";
 import { HMIView } from "./views/hmi-view";
 import { OPCUAView } from "./views/opcua-view";
 import {nanoid} from 'nanoid'
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 import { Command } from '@tauri-apps/api/shell';
 
