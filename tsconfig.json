@@ -23,6 +23,8 @@
 
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 
+		"@hive-command/iot-server": ["./communication/iot-server/src"],
+
 		"@hive-command/data": ["./core/command-data/src"],
 		/* Runtime */
 		"@hive-command/data-types": ["./core/command-data-types/src"],

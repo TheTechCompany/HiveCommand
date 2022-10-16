@@ -75,6 +75,7 @@
     {"path": "../../core/command-data"},
     {"path": "../../core/command-data-types"},
     {"path": "../opc-lds"},
-    {"path": "../../communication/opc-client"}
+    {"path": "../../communication/opc-client"},
+    {"path": "../../communication/iot-server"}
   ]
 }
