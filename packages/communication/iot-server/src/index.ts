@@ -73,7 +73,10 @@ export class IOTServer {
 
         //Rectify context
         this.router.post('/context', async (req, res) => {
-            const { tree } = req.body;
+            const { tree, token } = req.body;
+
+            const { sub } = jwt.verify(token, 'SECRET');
+
             const typedTree : IOTTree[] = tree;
 
             // const {dataLayout: currentTree} = await this.client.device.findFirst({
@@ -115,7 +118,7 @@ export class IOTServer {
             console.log({newSet})
             await this.client.device.update({
                 where: {
-                    id: "iftwUBXW0FBNpKvlc_Z8S"
+                    id: sub?.toString()
                 },
                 data: {
                     dataLayout: newSet

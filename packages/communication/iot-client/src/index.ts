@@ -57,7 +57,7 @@ export class IOTClient {
 
         const { token } = handshakeResult.data
 
-        const contextResult = await axios.post(`${this.iotServer}/context`, {tree: results})
+        const contextResult = await axios.post(`${this.iotServer}/context`, {tree: results, token})
 
         console.log("Context sent")
         //Tunnel connection to IOT server for OPC-Client -> Local server
