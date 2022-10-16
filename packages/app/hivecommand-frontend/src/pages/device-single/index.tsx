@@ -8,7 +8,7 @@ import { BusMap } from '../../components/bus-map/BusMap';
 import { DeviceBusModal } from '../../components/modals/device-bus/DeviceBusModal';
 import { DeviceBusConnectionModal } from '../../components/modals/device-bus-connections';
 import { DeviceControlContext } from '../device-control/context';
-import { useMapPort, useSetDevicePeripherals } from '@hive-command/api';
+import { useMapPort } from '@hive-command/api';
 import { IconButton, Box } from '@mui/material';
 import { Add } from '@mui/icons-material';
 export interface DeviceSingleProps {
@@ -144,7 +144,6 @@ mappedDevicesConnection {
                         }
                     }
     */
-    const setDevicePeripherals = useSetDevicePeripherals(controlId)
     const mapPort = useMapPort(controlId)
 
     const refetch = () => {
@@ -195,7 +194,6 @@ mappedDevicesConnection {
             <DeviceBusModal
                 open={busOpen}
                 onSubmit={(bus) => {
-                    setDevicePeripherals([...(device.peripherals || []), bus])
                 }}
                 onClose={() => {
                     openBus(false)

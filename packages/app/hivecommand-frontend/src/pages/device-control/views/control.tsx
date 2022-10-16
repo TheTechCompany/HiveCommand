@@ -118,7 +118,7 @@ export default () => {
 
 
 		let v = values.filter((a) => a?.placeholder == name);
-		let state = program?.devices?.find((a) => a.name == name).type?.state;
+		let state = program?.devices?.find((a) => a.tag == name).type?.state;
 
 
 		return v.reduce((prev, curr) => {
@@ -373,9 +373,9 @@ export default () => {
 
 
 	const deviceModes = program?.devices?.map((a) => {
-		let vals = values.filter((b) => b?.placeholder == a.name);
+		let vals = values.filter((b) => b?.placeholder == a.tag);
 		// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-		return { name: a.name, mode: vals.find((a) => a.key == 'mode')?.value };
+		return { name: a.tag, mode: vals.find((a) => a.key == 'mode')?.value };
 	}) || [];
 
 
