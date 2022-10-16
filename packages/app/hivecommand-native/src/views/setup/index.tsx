@@ -87,7 +87,7 @@ export const SetupView = (props: any) => {
                     {renderView()}
                 </Box>
                 <Box sx={{ padding: '3px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                    {activeIndex != 0 ? (<Button
+                    {activeIndex !== 0 ? (<Button
                         onClick={goPrevious}
                         >Previous</Button>) : <Box />}
                     <Button 
