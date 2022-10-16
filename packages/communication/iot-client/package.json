@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/iot-client",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.61",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
@@ -22,7 +22,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/opcua-client": "^1.4.15-alpha.9",
+    "@hive-command/opcua-client": "^1.4.15-alpha.61",
     "axios": "^1.1.3",
     "node-opcua": "^2.81.0",
     "yargs": "^17.6.0"
