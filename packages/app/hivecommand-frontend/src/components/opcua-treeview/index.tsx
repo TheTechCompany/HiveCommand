@@ -62,7 +62,6 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
         handleSelection(event);
       };
 
-    // console.log({props})
     
     return (
         <div 
