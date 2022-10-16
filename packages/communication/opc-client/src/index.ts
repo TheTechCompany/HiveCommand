@@ -13,7 +13,8 @@ import {
     DataType,
     ClientMonitoredItemGroup,
     ServerOnNetwork,
-    OPCUAClientBase
+    OPCUAClientBase,
+    ReferenceDescription
 } from 'node-opcua'
 import { getNodeId } from '@hive-command/opcua-utils'
 
@@ -242,7 +243,51 @@ export default class Client {
     async browse(path: string){
         let path_id = await this.getPathID(path);
         if(path_id){
-            return await this.session?.browse(path_id)
+            const results = await this.session?.browse(path_id)
+            return results?.references || [];
         }
+        return null;
+    }
+
+    async scan(startPath: string, recursive?: boolean, blacklist?: string[]){
+        let results : ReferenceDescription[] = await this.browse(startPath) || [];
+
+        // let outputResults = [];
+        
+        if(recursive){
+            let newResults : any[] = [];
+            for(const result of results){
+
+                let extension = `${startPath}/${result.browseName.namespaceIndex}:${result.browseName.name}`
+
+                if((blacklist || []).map((x) => x.indexOf(extension) > -1).indexOf(true) < 0){
+                    console.log({extension})
+
+                    const type = await this.session?.read({
+                        nodeId: result.nodeId,
+                        attributeId: AttributeIds.DataType
+                    })
+
+                    const children = await this.scan(extension, recursive)
+
+                    
+                    newResults.push({
+                        path: extension,
+                        label: result.browseName.name,
+                        type: DataType[type?.value?.value?.value],
+                        // ...result, 
+                        children: children.length > 0 ? children : undefined
+                    })
+                }
+
+            }
+            results = newResults;
+            return results;
+        }
+
+        return results.map((x) => ({
+            path: `${startPath}/${x.browseName.namespaceIndex}:${x.browseName.name}`,
+            type: x.typeDefinition,
+        }));
     }
 }

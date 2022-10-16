@@ -18,11 +18,14 @@ model Device {
 
   network_name String @unique
 
+  provisionCode String? @unique
+  provisioned Boolean?
+
   maintenanceWindows MaintenanceWindow[] @relation(name: "hasMaintenanceWindow")
   
-  dataLayout DataLayout[] @relation(name: "hasLayout")
+  dataLayout Json?
 
-  peripherals DevicePeripheral[] @relation(name: "hasPeripherals")
+  deviceMapping DeviceMapping[] @relation(name: "hasDeviceMapping")
 
   alarms Alarm[] @relation(name: "hasAlarmed")
 
@@ -45,6 +48,19 @@ model Device {
   organisation String
 }
 
+model DeviceMapping {
+  id String @id
+  path String
+
+  device ProgramFlowIO @relation(name: "mapsDevice", references: [id], fields: [deviceId])
+  deviceId String
+
+  deviceState IOTemplateState @relation(name: "mapsDeviceState", references: [id], fields: [deviceStateId])
+  deviceStateId String
+
+  owner Device @relation(name: "hasDeviceMapping", fields: [ownerId], references: [id])
+  ownerId String
+}
 
 model DeviceScreen {
   id String @id
@@ -101,21 +117,6 @@ model ReportPage {
   deviceId String
 }
 
-
-model DataLayout {
-  id String @id
-  label String
-  type String
-
-  children DataLayout[] @relation(name: "hasLayoutChild")
-
-  parent DataLayout? @relation(name: "hasLayoutChild", fields: [parentId], references: [id])
-  parentId String?
-
-  device Device @relation(name: "hasLayout", fields: [deviceId], references: [id])
-  deviceId String
-}
-
 model DeviceSetpoint {
   id String @id
 
@@ -161,70 +162,6 @@ model DeviceValue {
   @@unique([id, lastUpdated, deviceId, placeholder, key])
 }
 
-model DevicePeripheral {
-  id String @id
-  name String
-  type String
-
-  ports Int
-
-  connectedDevices PeripheralProduct[] @relation(name: "hasPeripheralProducts")
-
-  mappedDevices PeripheralMap[] @relation(name: "hasPeripheralMaps")
-
-  device Device @relation(name: "hasPeripherals", fields: [deviceId], references: [id])
-  deviceId String
-
-}
-
-model PeripheralProduct {
-	id String @id
-	deviceId String
-	vendorId String
-	name String
-
-  port String
-
-	connections PeripheralProductDatapoint[] @relation(name: "hasDatapoints")
-
-	peripheral DevicePeripheral @relation(name: "hasPeripheralProducts", fields: [peripheralId], references: [id])
-  peripheralId String
-
-}
-
-	model PeripheralProductDatapoint {
-    id String @id
-		direction String
-		key String
-		type String
-
-		product PeripheralProduct @relation(name: "hasDatapoints", fields: [productId], references: [id])
-    productId String
-
-    usedInMap PeripheralMap[] @relation(name: "mapsDatapoint")
-
-    @@unique([key, productId])
-	}
-
-	model PeripheralMap {
-		id String @id 
-
-		key PeripheralProductDatapoint @relation(name: "mapsDatapoint", fields: [keyId], references: [id])
-    keyId String
-
-		device ProgramFlowIO @relation(name: "mapsFlowIO", fields: [deviceId], references: [id])
-    deviceId String
-
-		value IOTemplateState @relation(name: "mapsTo", fields: [valueId], references: [id])
-    valueId String
-
-    port String
-
-    peripheral DevicePeripheral @relation(name: "hasPeripheralMaps", fields: [peripheralId], references: [id])
-    peripheralId String
-
-    @@unique([peripheralId, port, keyId])
-	}
 
 model DeviceReport {
   id String @id
@@ -315,8 +252,9 @@ model IOTemplateState {
 
   reportedBy DeviceReport[] @relation(name: "hasDataKey")
 
-  mappedBy PeripheralMap[] @relation(name: "mapsTo")
   calibratedBy DeviceCalibration[] @relation(name: "calibratesState")
+
+  mappedBy DeviceMapping[] @relation(name: "mapsDeviceState")
 
   device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
@@ -413,7 +351,7 @@ model ProgramFlowIO {
 
   reportedBy DeviceReport[] @relation(name: "hasDataDevice")
 
-  mappedBy PeripheralMap[] @relation(name: "mapsFlowIO")
+  mappedBy DeviceMapping[] @relation(name: "mapsDevice")
 
   program Program @relation(fields: [programId], references: [id])
   programId String

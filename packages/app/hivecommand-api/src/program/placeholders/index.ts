@@ -11,7 +11,7 @@ export const useCreateProgramPlaceholder = (programId: string) => {
 		const item = mutation.createCommandProgramDevice({
 			program: programId,
 			input: {
-				name: args.name,
+				tag: args.name,
 				template: args.type
 			}
 			// where: {id: programId},
@@ -62,7 +62,7 @@ export const useUpdateProgramPlaceholder = (programId: string) => {
 			program: programId,
 			id: args.deviceId,
 			input: {
-				name: args.name,
+				tag: args.name,
 				template: args.type
 			}
 			// where: {id: programId},

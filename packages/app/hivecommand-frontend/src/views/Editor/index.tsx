@@ -14,7 +14,7 @@ import {Controls} from './pages/controls'
 import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 
-import { useCreateProgramFlow, useCreateProgramHMI, useUpdateProgramFlow, useUpdateProgramHMI } from '@hive-command/api';
+import { useCreateProgramFlow, useCreateProgramHMI, useCreateProgramPlaceholder, useUpdateProgramFlow, useUpdateProgramHMI, useUpdateProgramPlaceholder } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { Variables } from './pages/variables';
@@ -69,6 +69,10 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 devices {
                     id
                     tag
+
+                    type {
+                        tagPrefix
+                    }
                 }
 
                 interface {
@@ -103,9 +107,12 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
+    const createProgramPlaceholder = useCreateProgramPlaceholder(id);
 
     const updateProgramFlow = useUpdateProgramFlow(id)
     const updateProgramHMI = useUpdateProgramHMI(id)
+    const updateProgramPlaceholder = useUpdateProgramPlaceholder(id);
+    
 
     const handleMenuSubmit = async (type: string, data: any) => {
         let promise : any = null
@@ -117,6 +124,10 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     break;
                 case 'hmi':
                     promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
+                    break;
+                case 'devices':
+                    promise = updateProgramPlaceholder(editItem.id, data.tag, data.type);
+                    break;
             }
         }else{
             switch(type){
@@ -127,6 +138,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 case 'hmi':
                     //Add parent opt
                     promise = createProgramHMI(data.name, data.localHomepage, data.remoteHomepage)
+                    break;
+                case 'devices':
+                    promise = createProgramPlaceholder(data.tag, data.type)
                     break;
             }
 
@@ -199,7 +213,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             name: 'Devices',
             children: program?.devices?.map((x) => ({
                 id: x.id,
-                name: x.name
+                name: `${x.type?.tagPrefix || ''}${x.tag}`
             })),
             element: <Devices />
         },

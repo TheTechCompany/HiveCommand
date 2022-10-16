@@ -69,11 +69,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						maintenanceWindows: true,
 						alarms: true,
 						screens: true,
-						dataLayout: {
-							include: {
-								children: true
-							}
-						},
 						setpoints: {
 							include: {
 								setpoint: {
@@ -105,29 +100,10 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						// 	where: {lastUpdated: {gt: new Date()}},
 						// 	orderBy: {lastUpdated: 'desc'},
 						// },
-						peripherals: {
+						deviceMapping: {
 							include: {
-								connectedDevices: {
-									include: {
-										connections: true 
-									}
-								},
-								mappedDevices: {
-									include: {
-										device: {
-											include: {
-												type: {
-													include: {
-														actions: true,
-														state: true
-													}
-												}
-											}
-										},
-										key: true,
-										value: true
-									}
-								}
+								device: true,
+								deviceState: true
 							}
 						},
 						activeProgram: {
@@ -497,6 +473,8 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					data: {
 						id: nanoid(),
 						name: args.input.name,
+						provisioned: false,
+						provisionCode: Moniker.choose(),
 						network_name: args.input.network_name,
 						activeProgram: {
 							connect: {id: args.input.program}
@@ -519,121 +497,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				if(args.where.id) deviceWhere.id = args.where.id
 				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
 
-				const peripheral = await prisma.devicePeripheral.findFirst({where: {id: args.input.peripherals?.[0]?.id}});
-
-				console.log({peripheral})
-
-				if(args.input.peripherals){
-					peripheralUpdate['peripherals'] = {
-						upsert: args.input.peripherals.map((peripheral) => {
-							let id = peripheral.id || nanoid()
-							
-							let upsertPeripheral : any = {};
-							
-							if(peripheral.name) upsertPeripheral.name = peripheral.name;
-							if(peripheral.type) upsertPeripheral.type = peripheral.type;
-							if(peripheral.ports) upsertPeripheral.ports = peripheral.ports;
-
-							console.log("Upsert", id, {mapped: peripheral.mappedDevices})
-
-						
-							return {
-								where: {
-									id
-								},
-								update: {
-									...upsertPeripheral,
-									mappedDevices: {
-										upsert: peripheral.mappedDevices?.map((map: any) => {
-											return {
-												where: {
-													peripheralId_port_keyId: {
-														peripheralId: id,
-														port: map.port,
-														keyId: map.key
-													}
-												},
-												update: {
-													valueId: map.value,
-													deviceId: map.device,
-													port: map.port,
-													keyId: map.key
-												},
-												create: {
-													id: nanoid(),
-													valueId: map.value,
-													deviceId: map.device,
-													port: map.port,
-													keyId: map.key
-												}
-											}
-										})
-									},
-									connectedDevices: {
-										upsert: peripheral.connectedDevices?.map((dev: any) => {
-											let product_id = `${id}-${dev.id || nanoid()}`;
-											return {
-												where: {
-													id: product_id
-												},
-												update: {
-													port: dev.port,
-													name: dev.name || '',
-													connections: {
-														upsert: dev.connections.map((connection: any) => ({
-															where: {
-																key_productId: {
-																	key: connection.key,
-																	productId: product_id
-																}
-															},
-															update: {
-																direction: connection.direction,
-																key: connection.key,
-																type: connection.type
-															},
-															create: {
-																id: nanoid(),
-																key: connection.key,
-																type: connection.type,
-																direction: connection.direction
-															}
-														}))
-													}
-												},
-												create: {
-													id: product_id,
-													name: dev.name || '',
-													vendorId: dev.vendorId,
-													deviceId: dev.deviceId,
-													port: dev.port,
-													connections: {
-														createMany: {
-															data: dev.connections.map((connection: any) => ({
-																id: nanoid(),
-																key: connection.key,
-																// productId: connection.productId,
-																type: connection.type,
-																direction: connection.direction
-															}))
-														}
-													}
-												}
-											}
-										})
-									}
-								},
-								create: {
-									id,
-									name: peripheral.name || '',
-									type: peripheral.type  || '',
-									ports: peripheral.ports || 0,
-								}
-							}
-						})
-					}	
-				}
-
+				
 				if(args.input.deviceSnapshot && args.where.network_name) {
 					deviceUpdate['deviceSnapshot'] = {
 						upsert: args.input.deviceSnapshot.map((snapshot) => ({
@@ -714,6 +578,60 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			},
 			deleteCommandDeviceCalibration: async (root: any, args: any, context: any) => {
 				return await prisma.deviceCalibration.delete({where: {id: args.id}})
+			},
+			connectCommandDeviceData: async (root: any, args: any, context: any) => {
+				return await prisma.device.update({
+					where: {
+						id: args.where.id,
+					},
+					data: {
+						deviceMapping: {
+							create: [{
+								id: nanoid(),
+								path: args.input.path,
+								deviceState: {
+									connect: {id: args.input.deviceState}
+								},
+								device: {
+									connect: {id: args.input.device}
+								}
+							}]
+						}
+					}
+				})
+			},
+			updateCommandDeviceData: async (root: any, args: any, context: any) => {
+				return await prisma.device.update({
+					where: {
+						id: args.where.id
+					},
+					data: {
+						deviceMapping: {
+							update: {
+								where: {
+									id: args.input.id
+								},
+								data: {
+									path: args.input.path
+								}
+							}
+						}
+					}
+				})
+			},
+			disconnectCommandDeviceData: async (root: any, args: any, context: any) => {
+				return await prisma.device.update({
+					where: {
+						id: args.where.id
+					},
+					data: {
+						deviceMapping: {
+							delete: [{
+									id: args.input.id
+							}]
+						}
+					}
+				})
 			}
 
 		}
@@ -740,6 +658,10 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
+		connectCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
+		updateCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
+		disconnectCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
+
 		createDeviceScreen(device: ID, input: DeviceScreenInput!): CommandDeviceScreen
 		updateDeviceScreen(device: ID, id: ID!, input: DeviceScreenInput!): CommandDeviceScreen
 		deleteDeviceScreen(device: ID, id: ID!): CommandDeviceScreen
@@ -756,6 +678,14 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceCalibration(device: ID!, id: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
 		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
 	}
+
+	input ConnectDevicesInput {
+		id: ID
+		device: ID
+		deviceState: ID
+		path: String
+	}
+
 
 	type Subscription {
 		watchingDevice(device: ID!): [HiveUser]
@@ -782,7 +712,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		name: String
 		network_name: String
 		program: String
-		peripherals: [CommandDevicePeripheralInput]
 		deviceSnapshot: [CommandDeviceSnapshotInput]
 	}
 
@@ -801,6 +730,9 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		id: ID! 
 		name: String
 
+		provisioned: Boolean
+		provisionCode: String
+
 		screens: [CommandDeviceScreen]
 
 		watching: [HiveUser]
@@ -811,12 +743,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 		network_name: String
 
-		dataLayout: [DataLayout]
+		dataLayout: JSON
+
+		deviceMapping: [CommandDeviceMapping]
 
 		calibrations: [CommandProgramDeviceCalibration] 
 		setpoints: [CommandDeviceSetpointCalibration]
-
-		peripherals: [CommandDevicePeripheral] 
 		
 		deviceSnapshot: [CommandDeviceSnapshot]
 
@@ -833,6 +765,16 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		reports: [CommandReportPage] 
 
 		organisation: HiveOrganisation 
+	}
+
+	type CommandDeviceMapping {
+		id: ID
+
+		path: String
+
+		deviceState: CommandProgramDeviceState 
+
+		device: CommandProgramDevicePlaceholder
 	}
 
 	type DeviceAlarm {
@@ -862,18 +804,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 	
 
-	type DataLayout {
-		id: ID
-		label: String
-		type: String
-	  
-		children: [DataLayout]
-
-		parent: DataLayout
-	  
-		device: CommandDevice
-	}
-
 	input CommandDeviceSnapshotInput {
 		key: String
 		value: String
@@ -886,47 +816,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		placeholder: String
 	}
 
-	input CommandDevicePeripheralInput {
-		id: String
-		name: String
-		type: String
 
-		ports: Int
-		
-		mappedDevices: [PeripheralMapInput]
-		connectedDevices: [CommandPeripheralProductInput]
-	}
-
-	input CommandPeripheralProductInput {
-		id: String
-		deviceId: String
-		vendorId: String
-		name: String
-
-		port: String
-		connections: [CommandPeripheralDatapointInput]
-	}
-
-	input CommandPeripheralDatapointInput {
-		id: String
-		direction: String
-		key: String
-		type: String
-	}
-
-
-	type CommandDevicePeripheral {
-		id: ID! 
-		name: String
-		type: String
-		
-		ports: Int
-
-		connectedDevices: [CommandDevicePeripheralProduct] 
-		mappedDevices: [CommandDevicePeripheralMap] 
-
-		device: CommandDevice 
-	}
 
 	input CommandProgramDeviceCalibrationInput {
 		placeholder: String
@@ -944,47 +834,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 		min: String
 		max: String
-	}
-
-	type CommandDevicePeripheralProduct {
-		id:ID 
-		deviceId: String
-		vendorId: String
-		name: String
-
-		port: String
-
-		peripheral: CommandDevicePeripheral 
-
-		connections: [CommandPeripheralProductDatapoint]
-	}
-
-	type CommandPeripheralProductDatapoint {
-		id: ID
-		direction: String
-		key: String
-		type: String
-
-		product: CommandDevicePeripheralProduct
-	}
-
-	input PeripheralMapInput {
-		port: String
-		key: String
-		device: String
-		value: String
-	}
-
-	type CommandDevicePeripheralMap {
-		id: ID! 
-		port: String
-		key: CommandPeripheralProductDatapoint 
-		device: CommandProgramDevicePlaceholder
-		value: CommandProgramDeviceState
-	}
-
-	interface CommandDevicePeripheralPort {
-		port: String
 	}
 
 	`]);

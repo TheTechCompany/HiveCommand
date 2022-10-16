@@ -23,7 +23,7 @@ class DevSidecar {
 
         let results : any[] = [];
         console.log("references of RootFolder :");
-        for(const reference of browseResult?.references || []) {
+        for(const reference of browseResult || []) {
 
             const name = reference.browseName.toString();
 

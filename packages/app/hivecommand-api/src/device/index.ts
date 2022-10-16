@@ -182,33 +182,6 @@ export const useCreateDeviceScreen = (deviceId: string) => {
 }
 
 
-export const useSetDevicePeripherals = (deviceId: string) => {
-  const [ mutateFn ] = useMutation((mutation, args: {
-    peripherals: any[]
-  }) => {
-    const item = mutation.updateCommandDevice({
-      where: {id: deviceId}, 
-      input: {
-        peripherals: args.peripherals
-      }
-    })
-
-    return {
-      item: {
-        ...item,
-      }
-    }
-  })
-
-  return (peripherals: any[]) => {
-    return mutateFn({
-      args: {
-        peripherals
-      }
-    })
-  }
-}
-
 /*
 	Map a program device to the actualized device bus
 
@@ -223,27 +196,35 @@ export const useMapPort = (deviceId: string) => {
     (
       mutation,
       args: {
-        peripheralId: string;
-        port: string;
-        connections: { id?: string, key: string; device: string; value: string }[];
+        deviceId: string,
+        deviceState: string,
+        path: string,
       }
     ) => {
 
     
-      const item = mutation.updateCommandDevice({
-        where: {id: deviceId}, 
+      const item = mutation.connectCommandDeviceData({
+        where: {id: deviceId},
         input: {
-          peripherals: [
-            {
-              id: args.peripheralId,
-              mappedDevices: args.connections.map((connection) => ({
-                ...connection,
-                port: args.port
-              }))
-            }
-          ] 
+          path: args.path,
+          device: args.deviceId,
+          deviceState: args.deviceState
         }
       })
+      // const item = mutation.updateCommandDevice({
+      //   where: {id: deviceId}, 
+      //   input: {
+      //     peripherals: [
+      //       {
+      //         id: args.peripheralId,
+      //         mappedDevices: args.connections.map((connection) => ({
+      //           ...connection,
+      //           port: args.port
+      //         }))
+      //       }
+      //     ] 
+      //   }
+      // })
     //   let deviceMapping: any[] = [
     //     {
     //       create: args.connections
@@ -408,47 +389,16 @@ export const useMapPort = (deviceId: string) => {
   });
 
   return async (
-    peripheralId: string,
-    port: string,
-    connections: { id?: string, key: string; device: string; value: string }[]
+    deviceId: string,
+    deviceState: string,
+    path: string
   ) => {
-
-      //   let deviceMapping: any[] = [
-      //   {
-      //     create: connections
-      //       .filter((a) => !a.id)
-      //       .map((map) => {
-      //         let keyConnect = map.key
-      //           ? {
-      //               key: {
-      //                 connect: {
-      //                   where: {
-      //                     node: {
-      //                       key: map.key,
-      //                       product: {
-      //                         peripheral: { id: peripheralId },
-      //                         peripheralConnection: {
-      //                           edge: { port: port },
-      //                         },
-      //                       },
-      //                     },
-      //                   },
-      //                 },
-      //               },
-      //             }
-      //           : {};
-      //           return keyConnect
-      //       })
-      //   }
-      // ]
-
-      // console.log({deviceMapping})
 
 	  return await mutateFn({
       args: {
-        peripheralId,
-        port,
-        connections
+        deviceId: deviceId,
+        deviceState: deviceState,
+        path: path
       }
 	  })
   };

@@ -77,19 +77,7 @@ export interface CommandDeviceInput {
   deviceSnapshot?: InputMaybe<Array<InputMaybe<CommandDeviceSnapshotInput>>>;
   name?: InputMaybe<Scalars["String"]>;
   network_name?: InputMaybe<Scalars["String"]>;
-  peripherals?: InputMaybe<Array<InputMaybe<CommandDevicePeripheralInput>>>;
   program?: InputMaybe<Scalars["String"]>;
-}
-
-export interface CommandDevicePeripheralInput {
-  connectedDevices?: InputMaybe<
-    Array<InputMaybe<CommandPeripheralProductInput>>
-  >;
-  id?: InputMaybe<Scalars["String"]>;
-  mappedDevices?: InputMaybe<Array<InputMaybe<PeripheralMapInput>>>;
-  name?: InputMaybe<Scalars["String"]>;
-  ports?: InputMaybe<Scalars["Int"]>;
-  type?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandDevicePluginConfigurationInput {
@@ -159,22 +147,6 @@ export interface CommandHMIPortInput {
   y?: InputMaybe<Scalars["Float"]>;
 }
 
-export interface CommandPeripheralDatapointInput {
-  direction?: InputMaybe<Scalars["String"]>;
-  id?: InputMaybe<Scalars["String"]>;
-  key?: InputMaybe<Scalars["String"]>;
-  type?: InputMaybe<Scalars["String"]>;
-}
-
-export interface CommandPeripheralProductInput {
-  connections?: InputMaybe<Array<InputMaybe<CommandPeripheralDatapointInput>>>;
-  deviceId?: InputMaybe<Scalars["String"]>;
-  id?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  port?: InputMaybe<Scalars["String"]>;
-  vendorId?: InputMaybe<Scalars["String"]>;
-}
-
 export interface CommandProgramDataDeviceInterlockInput {
   assertion?: InputMaybe<CommandAssertionInput>;
   comparator?: InputMaybe<Scalars["String"]>;
@@ -191,7 +163,7 @@ export interface CommandProgramDeviceCalibrationInput {
 }
 
 export interface CommandProgramDeviceInput {
-  name?: InputMaybe<Scalars["String"]>;
+  tag?: InputMaybe<Scalars["String"]>;
   template?: InputMaybe<Scalars["String"]>;
 }
 
@@ -279,6 +251,13 @@ export interface CommandReportPageInput {
   name?: InputMaybe<Scalars["String"]>;
 }
 
+export interface ConnectDevicesInput {
+  device?: InputMaybe<Scalars["ID"]>;
+  deviceState?: InputMaybe<Scalars["ID"]>;
+  id?: InputMaybe<Scalars["ID"]>;
+  path?: InputMaybe<Scalars["String"]>;
+}
+
 export interface DeviceScreenInput {
   developer?: InputMaybe<Scalars["Boolean"]>;
   name?: InputMaybe<Scalars["String"]>;
@@ -287,13 +266,6 @@ export interface DeviceScreenInput {
 export interface MaintenanceWindowInput {
   endTime?: InputMaybe<Scalars["DateTime"]>;
   startTime?: InputMaybe<Scalars["DateTime"]>;
-}
-
-export interface PeripheralMapInput {
-  device?: InputMaybe<Scalars["String"]>;
-  key?: InputMaybe<Scalars["String"]>;
-  port?: InputMaybe<Scalars["String"]>;
-  value?: InputMaybe<Scalars["String"]>;
 }
 
 export interface PointInput {
@@ -380,7 +352,8 @@ export const generatedSchema = {
     activeProgram: { __type: "CommandProgram" },
     alarms: { __type: "[DeviceAlarm]" },
     calibrations: { __type: "[CommandProgramDeviceCalibration]" },
-    dataLayout: { __type: "[DataLayout]" },
+    dataLayout: { __type: "JSON" },
+    deviceMapping: { __type: "[CommandDeviceMapping]" },
     deviceSnapshot: { __type: "[CommandDeviceSnapshot]" },
     id: { __type: "ID!" },
     lastSeen: { __type: "DateTime" },
@@ -391,8 +364,10 @@ export const generatedSchema = {
     operatingMode: { __type: "String" },
     operatingState: { __type: "String" },
     organisation: { __type: "HiveOrganisation" },
-    peripherals: { __type: "[CommandDevicePeripheral]" },
+    provisionCode: { __type: "String" },
+    provisioned: { __type: "Boolean" },
     reports: { __type: "[CommandReportPage]" },
+    screens: { __type: "[CommandDeviceScreen]" },
     setpoints: { __type: "[CommandDeviceSetpointCalibration]" },
     waitingForActions: { __type: "[CommandProgramAction]" },
     watching: { __type: "[HiveUser]" },
@@ -401,48 +376,14 @@ export const generatedSchema = {
     deviceSnapshot: { __type: "[CommandDeviceSnapshotInput]" },
     name: { __type: "String" },
     network_name: { __type: "String" },
-    peripherals: { __type: "[CommandDevicePeripheralInput]" },
     program: { __type: "String" },
   },
-  CommandDevicePeripheral: {
-    __typename: { __type: "String!" },
-    connectedDevices: { __type: "[CommandDevicePeripheralProduct]" },
-    device: { __type: "CommandDevice" },
-    id: { __type: "ID!" },
-    mappedDevices: { __type: "[CommandDevicePeripheralMap]" },
-    name: { __type: "String" },
-    ports: { __type: "Int" },
-    type: { __type: "String" },
-  },
-  CommandDevicePeripheralInput: {
-    connectedDevices: { __type: "[CommandPeripheralProductInput]" },
-    id: { __type: "String" },
-    mappedDevices: { __type: "[PeripheralMapInput]" },
-    name: { __type: "String" },
-    ports: { __type: "Int" },
-    type: { __type: "String" },
-  },
-  CommandDevicePeripheralMap: {
+  CommandDeviceMapping: {
     __typename: { __type: "String!" },
     device: { __type: "CommandProgramDevicePlaceholder" },
-    id: { __type: "ID!" },
-    key: { __type: "CommandPeripheralProductDatapoint" },
-    port: { __type: "String" },
-    value: { __type: "CommandProgramDeviceState" },
-  },
-  CommandDevicePeripheralPort: {
-    __typename: { __type: "String!" },
-    port: { __type: "String" },
-  },
-  CommandDevicePeripheralProduct: {
-    __typename: { __type: "String!" },
-    connections: { __type: "[CommandPeripheralProductDatapoint]" },
-    deviceId: { __type: "String" },
+    deviceState: { __type: "CommandProgramDeviceState" },
     id: { __type: "ID" },
-    name: { __type: "String" },
-    peripheral: { __type: "CommandDevicePeripheral" },
-    port: { __type: "String" },
-    vendorId: { __type: "String" },
+    path: { __type: "String" },
   },
   CommandDevicePlugin: {
     __typename: { __type: "String!" },
@@ -507,6 +448,7 @@ export const generatedSchema = {
     id: { __type: "ID" },
     name: { __type: "String" },
     provisionCode: { __type: "String" },
+    provisioned: { __type: "Boolean" },
   },
   CommandDeviceSetpoint: {
     __typename: { __type: "String!" },
@@ -698,28 +640,6 @@ export const generatedSchema = {
     key: { __type: "String" },
     value: { __type: "String" },
   },
-  CommandPeripheralDatapointInput: {
-    direction: { __type: "String" },
-    id: { __type: "String" },
-    key: { __type: "String" },
-    type: { __type: "String" },
-  },
-  CommandPeripheralProductDatapoint: {
-    __typename: { __type: "String!" },
-    direction: { __type: "String" },
-    id: { __type: "ID" },
-    key: { __type: "String" },
-    product: { __type: "CommandDevicePeripheralProduct" },
-    type: { __type: "String" },
-  },
-  CommandPeripheralProductInput: {
-    connections: { __type: "[CommandPeripheralDatapointInput]" },
-    deviceId: { __type: "String" },
-    id: { __type: "String" },
-    name: { __type: "String" },
-    port: { __type: "String" },
-    vendorId: { __type: "String" },
-  },
   CommandProgram: {
     __typename: { __type: "String!" },
     alarms: { __type: "[CommandProgramAlarm]" },
@@ -765,6 +685,7 @@ export const generatedSchema = {
     id: { __type: "ID!" },
     name: { __type: "String" },
     state: { __type: "[CommandProgramDeviceState]" },
+    tagPrefix: { __type: "String" },
     type: { __type: "String" },
     usedIn: { __type: "[CommandProgramDevicePlaceholder]" },
   },
@@ -797,7 +718,7 @@ export const generatedSchema = {
     type: { __type: "String" },
   },
   CommandProgramDeviceInput: {
-    name: { __type: "String" },
+    tag: { __type: "String" },
     template: { __type: "String" },
   },
   CommandProgramDeviceInterlockInput: {
@@ -812,11 +733,11 @@ export const generatedSchema = {
     dataInterlocks: { __type: "[CommandDataInterlock]" },
     id: { __type: "ID!" },
     interlocks: { __type: "[CommandInterlock]" },
-    name: { __type: "String" },
     plugins: { __type: "[CommandDevicePlugin]" },
     program: { __type: "CommandProgram" },
     requiresMutex: { __type: "Boolean" },
     setpoints: { __type: "[CommandDeviceSetpoint]" },
+    tag: { __type: "String" },
     type: { __type: "CommandProgramDevice" },
     units: { __type: "[CommandProgramDeviceUnit]" },
   },
@@ -1009,14 +930,11 @@ export const generatedSchema = {
     reports: { __type: "[CommandDeviceReport]" },
   },
   CommandReportPageInput: { name: { __type: "String" } },
-  DataLayout: {
-    __typename: { __type: "String!" },
-    children: { __type: "[DataLayout]" },
-    device: { __type: "CommandDevice" },
+  ConnectDevicesInput: {
+    device: { __type: "ID" },
+    deviceState: { __type: "ID" },
     id: { __type: "ID" },
-    label: { __type: "String" },
-    parent: { __type: "DataLayout" },
-    type: { __type: "String" },
+    path: { __type: "String" },
   },
   DeviceAlarm: {
     __typename: { __type: "String!" },
@@ -1046,12 +964,6 @@ export const generatedSchema = {
     endTime: { __type: "DateTime" },
     startTime: { __type: "DateTime" },
   },
-  PeripheralMapInput: {
-    device: { __type: "String" },
-    key: { __type: "String" },
-    port: { __type: "String" },
-    value: { __type: "String" },
-  },
   Point: {
     __typename: { __type: "String!" },
     x: { __type: "Float" },
@@ -1080,6 +992,10 @@ export const generatedSchema = {
     changeState: {
       __type: "Boolean",
       __args: { deviceId: "String", state: "String" },
+    },
+    connectCommandDeviceData: {
+      __type: "CommandDeviceMapping",
+      __args: { input: "ConnectDevicesInput!", where: "CommandDeviceWhere!" },
     },
     createCommandDevice: {
       __type: "CommandDevice!",
@@ -1316,6 +1232,10 @@ export const generatedSchema = {
       __type: "CommandDeviceScreen",
       __args: { device: "ID", id: "ID!" },
     },
+    disconnectCommandDeviceData: {
+      __type: "CommandDeviceMapping",
+      __args: { input: "ConnectDevicesInput!", where: "CommandDeviceWhere!" },
+    },
     performDeviceAction: {
       __type: "Boolean",
       __args: { action: "String", deviceId: "String", deviceName: "String" },
@@ -1335,6 +1255,10 @@ export const generatedSchema = {
         id: "ID!",
         input: "CommandProgramDeviceCalibrationInput",
       },
+    },
+    updateCommandDeviceData: {
+      __type: "CommandDeviceMapping",
+      __args: { input: "ConnectDevicesInput!", where: "CommandDeviceWhere!" },
     },
     updateCommandDeviceMaintenanceWindow: {
       __type: "MaintenanceWindow!",
@@ -1593,7 +1517,8 @@ export interface CommandDevice {
   activeProgram?: Maybe<CommandProgram>;
   alarms?: Maybe<Array<Maybe<DeviceAlarm>>>;
   calibrations?: Maybe<Array<Maybe<CommandProgramDeviceCalibration>>>;
-  dataLayout?: Maybe<Array<Maybe<DataLayout>>>;
+  dataLayout?: Maybe<ScalarsEnums["JSON"]>;
+  deviceMapping?: Maybe<Array<Maybe<CommandDeviceMapping>>>;
   deviceSnapshot?: Maybe<Array<Maybe<CommandDeviceSnapshot>>>;
   id: ScalarsEnums["ID"];
   lastSeen?: Maybe<ScalarsEnums["DateTime"]>;
@@ -1604,47 +1529,21 @@ export interface CommandDevice {
   operatingMode?: Maybe<ScalarsEnums["String"]>;
   operatingState?: Maybe<ScalarsEnums["String"]>;
   organisation?: Maybe<HiveOrganisation>;
-  peripherals?: Maybe<Array<Maybe<CommandDevicePeripheral>>>;
+  provisionCode?: Maybe<ScalarsEnums["String"]>;
+  provisioned?: Maybe<ScalarsEnums["Boolean"]>;
   reports?: Maybe<Array<Maybe<CommandReportPage>>>;
+  screens?: Maybe<Array<Maybe<CommandDeviceScreen>>>;
   setpoints?: Maybe<Array<Maybe<CommandDeviceSetpointCalibration>>>;
   waitingForActions?: Maybe<Array<Maybe<CommandProgramAction>>>;
   watching?: Maybe<Array<Maybe<HiveUser>>>;
 }
 
-export interface CommandDevicePeripheral {
-  __typename?: "CommandDevicePeripheral";
-  connectedDevices?: Maybe<Array<Maybe<CommandDevicePeripheralProduct>>>;
-  device?: Maybe<CommandDevice>;
-  id: ScalarsEnums["ID"];
-  mappedDevices?: Maybe<Array<Maybe<CommandDevicePeripheralMap>>>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  ports?: Maybe<ScalarsEnums["Int"]>;
-  type?: Maybe<ScalarsEnums["String"]>;
-}
-
-export interface CommandDevicePeripheralMap {
-  __typename?: "CommandDevicePeripheralMap";
+export interface CommandDeviceMapping {
+  __typename?: "CommandDeviceMapping";
   device?: Maybe<CommandProgramDevicePlaceholder>;
-  id: ScalarsEnums["ID"];
-  key?: Maybe<CommandPeripheralProductDatapoint>;
-  port?: Maybe<ScalarsEnums["String"]>;
-  value?: Maybe<CommandProgramDeviceState>;
-}
-
-export interface CommandDevicePeripheralPort {
-  __typename?: "CommandDevicePeripheralPort";
-  port?: Maybe<ScalarsEnums["String"]>;
-}
-
-export interface CommandDevicePeripheralProduct {
-  __typename?: "CommandDevicePeripheralProduct";
-  connections?: Maybe<Array<Maybe<CommandPeripheralProductDatapoint>>>;
-  deviceId?: Maybe<ScalarsEnums["String"]>;
+  deviceState?: Maybe<CommandProgramDeviceState>;
   id?: Maybe<ScalarsEnums["ID"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  peripheral?: Maybe<CommandDevicePeripheral>;
-  port?: Maybe<ScalarsEnums["String"]>;
-  vendorId?: Maybe<ScalarsEnums["String"]>;
+  path?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandDevicePlugin {
@@ -1689,6 +1588,7 @@ export interface CommandDeviceScreen {
   id?: Maybe<ScalarsEnums["ID"]>;
   name?: Maybe<ScalarsEnums["String"]>;
   provisionCode?: Maybe<ScalarsEnums["String"]>;
+  provisioned?: Maybe<ScalarsEnums["Boolean"]>;
 }
 
 export interface CommandDeviceSetpoint {
@@ -1863,15 +1763,6 @@ export interface CommandKeyValue {
   value?: Maybe<ScalarsEnums["String"]>;
 }
 
-export interface CommandPeripheralProductDatapoint {
-  __typename?: "CommandPeripheralProductDatapoint";
-  direction?: Maybe<ScalarsEnums["String"]>;
-  id?: Maybe<ScalarsEnums["ID"]>;
-  key?: Maybe<ScalarsEnums["String"]>;
-  product?: Maybe<CommandDevicePeripheralProduct>;
-  type?: Maybe<ScalarsEnums["String"]>;
-}
-
 export interface CommandProgram {
   __typename?: "CommandProgram";
   alarms?: Maybe<Array<Maybe<CommandProgramAlarm>>>;
@@ -1912,6 +1803,7 @@ export interface CommandProgramDevice {
   id: ScalarsEnums["ID"];
   name?: Maybe<ScalarsEnums["String"]>;
   state?: Maybe<Array<Maybe<CommandProgramDeviceState>>>;
+  tagPrefix?: Maybe<ScalarsEnums["String"]>;
   type?: Maybe<ScalarsEnums["String"]>;
   usedIn?: Maybe<Array<Maybe<CommandProgramDevicePlaceholder>>>;
 }
@@ -1946,11 +1838,11 @@ export interface CommandProgramDevicePlaceholder {
   dataInterlocks?: Maybe<Array<Maybe<CommandDataInterlock>>>;
   id: ScalarsEnums["ID"];
   interlocks?: Maybe<Array<Maybe<CommandInterlock>>>;
-  name?: Maybe<ScalarsEnums["String"]>;
   plugins?: Maybe<Array<Maybe<CommandDevicePlugin>>>;
   program?: Maybe<CommandProgram>;
   requiresMutex?: Maybe<ScalarsEnums["Boolean"]>;
   setpoints?: Maybe<Array<Maybe<CommandDeviceSetpoint>>>;
+  tag?: Maybe<ScalarsEnums["String"]>;
   type?: Maybe<CommandProgramDevice>;
   units?: Maybe<Array<Maybe<CommandProgramDeviceUnit>>>;
 }
@@ -2105,16 +1997,6 @@ export interface CommandReportPage {
   reports?: Maybe<Array<Maybe<CommandDeviceReport>>>;
 }
 
-export interface DataLayout {
-  __typename?: "DataLayout";
-  children?: Maybe<Array<Maybe<DataLayout>>>;
-  device?: Maybe<CommandDevice>;
-  id?: Maybe<ScalarsEnums["ID"]>;
-  label?: Maybe<ScalarsEnums["String"]>;
-  parent?: Maybe<DataLayout>;
-  type?: Maybe<ScalarsEnums["String"]>;
-}
-
 export interface DeviceAlarm {
   __typename?: "DeviceAlarm";
   cause?: Maybe<ScalarsEnums["String"]>;
@@ -2169,6 +2051,10 @@ export interface Mutation {
     deviceId?: Maybe<Scalars["String"]>;
     state?: Maybe<Scalars["String"]>;
   }) => Maybe<ScalarsEnums["Boolean"]>;
+  connectCommandDeviceData: (args: {
+    input: ConnectDevicesInput;
+    where: CommandDeviceWhere;
+  }) => Maybe<CommandDeviceMapping>;
   createCommandDevice: (args: { input: CommandDeviceInput }) => CommandDevice;
   createCommandDeviceCalibration: (args: {
     device: Scalars["ID"];
@@ -2377,6 +2263,10 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
   }) => Maybe<CommandDeviceScreen>;
+  disconnectCommandDeviceData: (args: {
+    input: ConnectDevicesInput;
+    where: CommandDeviceWhere;
+  }) => Maybe<CommandDeviceMapping>;
   performDeviceAction: (args?: {
     action?: Maybe<Scalars["String"]>;
     deviceId?: Maybe<Scalars["String"]>;
@@ -2395,6 +2285,10 @@ export interface Mutation {
     id: Scalars["ID"];
     input?: Maybe<CommandProgramDeviceCalibrationInput>;
   }) => Maybe<CommandProgramDeviceCalibration>;
+  updateCommandDeviceData: (args: {
+    input: ConnectDevicesInput;
+    where: CommandDeviceWhere;
+  }) => Maybe<CommandDeviceMapping>;
   updateCommandDeviceMaintenanceWindow: (args: {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
@@ -2584,10 +2478,7 @@ export interface SchemaObjectTypes {
   CommandAssertion: CommandAssertion;
   CommandDataInterlock: CommandDataInterlock;
   CommandDevice: CommandDevice;
-  CommandDevicePeripheral: CommandDevicePeripheral;
-  CommandDevicePeripheralMap: CommandDevicePeripheralMap;
-  CommandDevicePeripheralPort: CommandDevicePeripheralPort;
-  CommandDevicePeripheralProduct: CommandDevicePeripheralProduct;
+  CommandDeviceMapping: CommandDeviceMapping;
   CommandDevicePlugin: CommandDevicePlugin;
   CommandDevicePluginConfiguration: CommandDevicePluginConfiguration;
   CommandDeviceReport: CommandDeviceReport;
@@ -2609,7 +2500,6 @@ export interface SchemaObjectTypes {
   CommandInterlock: CommandInterlock;
   CommandInterlockState: CommandInterlockState;
   CommandKeyValue: CommandKeyValue;
-  CommandPeripheralProductDatapoint: CommandPeripheralProductDatapoint;
   CommandProgram: CommandProgram;
   CommandProgramAction: CommandProgramAction;
   CommandProgramAlarm: CommandProgramAlarm;
@@ -2633,7 +2523,6 @@ export interface SchemaObjectTypes {
   CommandProgramNodeTimer: CommandProgramNodeTimer;
   CommandProgramVariable: CommandProgramVariable;
   CommandReportPage: CommandReportPage;
-  DataLayout: DataLayout;
   DeviceAlarm: DeviceAlarm;
   HiveOrganisation: HiveOrganisation;
   HiveUser: HiveUser;
@@ -2648,10 +2537,7 @@ export type SchemaObjectTypesNames =
   | "CommandAssertion"
   | "CommandDataInterlock"
   | "CommandDevice"
-  | "CommandDevicePeripheral"
-  | "CommandDevicePeripheralMap"
-  | "CommandDevicePeripheralPort"
-  | "CommandDevicePeripheralProduct"
+  | "CommandDeviceMapping"
   | "CommandDevicePlugin"
   | "CommandDevicePluginConfiguration"
   | "CommandDeviceReport"
@@ -2673,7 +2559,6 @@ export type SchemaObjectTypesNames =
   | "CommandInterlock"
   | "CommandInterlockState"
   | "CommandKeyValue"
-  | "CommandPeripheralProductDatapoint"
   | "CommandProgram"
   | "CommandProgramAction"
   | "CommandProgramAlarm"
@@ -2697,7 +2582,6 @@ export type SchemaObjectTypesNames =
   | "CommandProgramNodeTimer"
   | "CommandProgramVariable"
   | "CommandReportPage"
-  | "DataLayout"
   | "DeviceAlarm"
   | "HiveOrganisation"
   | "HiveUser"

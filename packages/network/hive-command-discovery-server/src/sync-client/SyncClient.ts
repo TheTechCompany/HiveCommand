@@ -59,7 +59,7 @@ export class SyncClient {
 		const result = await client.browse('/')
 
 
-		const items = await Promise.all((result?.references || []).map(async (ref) => {
+		const items = await Promise.all((result || []).map(async (ref) => {
 			await client.browse(`/${ref.browseName.namespaceIndex}:${ref.browseName.name}`)
 		}))
 
@@ -128,8 +128,8 @@ export class SyncClient {
 			
 					
 					let items = [];
-					for(var i = 0; i < (devices?.references || []).length; i++){
-						let ref = devices?.references?.[i];
+					for(var i = 0; i < (devices || []).length; i++){
+						let ref = devices?.[i];
 
 						let path = `/Objects/1:Devices/${ref?.browseName.namespaceIndex}:${ref?.browseName.name}`
 						const result = await this.clients[serverUri].browse(path)
@@ -137,7 +137,7 @@ export class SyncClient {
 	
 						let item = {
 							name: ref?.browseName.name?.toString(),
-							items: result?.references?.map((x) => x.browseName.name?.toString())
+							items: result?.map((x) => x.browseName.name?.toString())
 						}
 						items.push(item);
 					}
@@ -165,7 +165,7 @@ export class SyncClient {
 							}) ) || [])
 						}, [])
 
-						let action_datapoints = (actions?.references || []).map((ref) => ({
+						let action_datapoints = (actions || []).map((ref) => ({
 							path: `/Objects/1:Plant/1:Actions/${ref.browseName.namespaceIndex}:${ref.browseName.name}/1:running`,
 							tag: `PlantActions-${ref.browseName.name}`
 						}))

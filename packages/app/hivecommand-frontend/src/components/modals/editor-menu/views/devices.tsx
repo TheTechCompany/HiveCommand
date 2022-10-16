@@ -23,9 +23,9 @@ export const DeviceView = () => {
     return (
         <Box sx={{flex: 1}}>
             <TextField 
-                value={item?.name || ''}
+                value={item?.tag || ''}
                 onChange={(e) => {
-                    setItem({...item, name: e.target.value})
+                    setItem({...item, tag: e.target.value})
                 }}
                 InputProps={{
                     startAdornment: <InputAdornment position="start">{deviceType?.tagPrefix}</InputAdornment>

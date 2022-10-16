@@ -78,6 +78,12 @@ export const DeviceSettings = () => {
                         </ListItem>
                 ))}
             </List>
+{/* 
+            <Divider />
+            <Box sx={{padding: '6px'}}>
+                <Typography>OPCUA Mapping</Typography>
+            </Box>
+            <Divider /> */}
         </Paper>
     )
 }
