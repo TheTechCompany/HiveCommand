@@ -218,7 +218,6 @@ export class Controller {
 
 	async start(
 		credentials: {
-			hostname: string,
 			discoveryServer: string
 		}, 
 		struct: {
@@ -237,10 +236,6 @@ export class Controller {
 		}
 		await this.network.stop()
 		await this.healthCheck.disconnect()
-	}
-
-	becomeSelf(self: any){
-		this.network.becomeSelf(self)
 	}
 
 

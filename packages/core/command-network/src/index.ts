@@ -63,7 +63,6 @@ export class CommandNetwork {
 
 	private httpInstance : AxiosInstance;
 
-	private identity? : string;
 	private valueBank : ValueBankInterface = {}
 
 	private options : CommandNetworkOptions;
@@ -81,13 +80,6 @@ export class CommandNetwork {
 	}
 
 	
-
-	becomeSelf(self: {error?: any, identity?: any}){
-		if(!self.error){
-			console.log("become self")
-			this.identity = self.identity.named;
-		}
-	}
 
 	getDataType = (type: string) => {
 		switch(type){
@@ -291,7 +283,6 @@ export class CommandNetwork {
 	*/
 	async start(
 		credentials: {
-			hostname: string,
 			discoveryServer?: string
 		}, 
 		struct: {
@@ -307,7 +298,7 @@ export class CommandNetwork {
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
-            hostname: credentials.hostname,
+            // hostname: credentials.hostname,
 			discoveryServer: credentials.discoveryServer,
 			controller: this.options.controller || {},
 		})

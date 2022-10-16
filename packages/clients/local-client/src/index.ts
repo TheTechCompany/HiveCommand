@@ -13,6 +13,7 @@ import { Machine } from './machine'
 import path from 'path/posix';
 
 import { AlarmEngine } from './alarm-engine'
+import { readFileSync } from 'fs'
 
 const pkg = require('../package.json')
 
@@ -26,6 +27,8 @@ export interface CommandEnvironment {
 export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
+
+	purposeFile?: string;
 
 	// commandCenter? : string //Web server to connect to
 	discoveryServer?: string
@@ -180,24 +183,27 @@ export class CommandClient {
 		// this.logs.log(`Found environment ${JSON.stringify(this.environment)}`)
 
 		//Find self identity
-		const self = await this.identity.whoami()
-		console.log("Identity", {self})
+		// const self = await this.identity.whoami()
+		// console.log("Identity", {self})
 
-		if(!self.identity?.named) throw new Error("No self found, check credentials");
+		// if(!self.identity?.named) throw new Error("No self found, check credentials");
 
 		console.log("Sending context");
-		await this.identity.provideContext(this.environment, this.identity.identity)
+		// await this.identity.provideContext(this.environment, this.identity.identity)
 
 		// this.logs.log(`Found self ${JSON.stringify(self)}`)
 
-		const credentials = await this.controller.becomeSelf(self)
-		console.log({credentials})
+		// const credentials = await this.controller.becomeSelf(self)
+		// console.log({credentials})
 
 		// this.logs.log(`Found credentials ${JSON.stringify(credentials)}`)
 
 		//Get our command payload
 
-		const commandPayload = await this.identity.getPurpose()
+		if(!this.options.purposeFile) throw new Error('No purpose file given');
+
+		const payload = readFileSync(this.options.purposeFile, 'utf8')
+		const commandPayload = JSON.parse(payload) //await this.identity.getPurpose()
 
 		console.log("Purpose", JSON.stringify({commandPayload}))
 		if(commandPayload.payload){
@@ -209,7 +215,6 @@ export class CommandClient {
 				// console.log({setpoints, variables})
 
 				await this.controller.start({
-					hostname: self.identity.named, 
 					discoveryServer: `opc.tcp://${this.options.discoveryServer}:4840` || 'http://localhost:8080',
 				}, {
 					layout: layout || [], 

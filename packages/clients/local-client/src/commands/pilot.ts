@@ -13,7 +13,7 @@ type Options = {
 	discoveryServer?: string;
 	ignorePlugins?: string;
 	pluginDir: string;
-	jesus: boolean | undefined;
+	purposeFile?: string;
   };
   
   export const command: string = 'pilot';
@@ -29,13 +29,14 @@ type Options = {
 		discoveryServer: {type: 'string', description: 'OPCUA Server to connect to', default: 'opc.tcp://discovery.hexhive.io:4840'},
 		// commandCenter: {type: 'string', description: 'Websocket having endpoint for healthchecks and program info', default: 'http://discovery.hexhive.io:8080'},
 		// healthCenter: {type: 'string', description: '', default: ''},
+		purposeFile: {type: 'string', description: 'Purpose file'},
 		ignorePlugins: {type: 'string'},
 		pluginDir: {type: 'string', default: '/tmp/plugins'},
 		networkInterface: {type: 'string', description: 'network interface to scan for IO-Link masters on', default: 'eth0'},
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { commander, pluginDir, logLevel, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
+	const { commander, pluginDir, purposeFile, logLevel, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
 
 	// console.info(`Starting HiveCommand Pilot v${pkg.version}`);
 	
@@ -49,6 +50,7 @@ type Options = {
 		logLevel: logLevel ? (log.levels as any)[logLevel.toUpperCase()] : log.levels.INFO,
 		// commandCenter,
 		// healthCenter: healthCenter,
+		purposeFile,
 		healthCheck: {
 			number: process.env.HEALTH_CHECK_NUMBER || '',
 			message: process.env.HEALTH_CHECK_MESSAGE || '',
