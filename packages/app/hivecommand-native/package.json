@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/native",
-  "version": "0.1.0",
+  "version": "1.4.15-alpha.61",
   "private": true,
   "dependencies": {
     "@apollo/client": "3.4.13",
@@ -8,8 +8,8 @@
     "@hexhive/styles": "^1.0.1-alpha.39",
     "@hexhive/ui": "^1.0.1-alpha.60",
     "@hexhive/utils": "^0.0.6-alpha.13",
-    "@hive-command/api": "^1.4.15-alpha.52",
-    "@hive-command/command-surface": "^1.0.0",
+    "@hive-command/api": "^1.4.15-alpha.61",
+    "@hive-command/command-surface": "^1.4.15-alpha.61",
     "@mui/material": "^5.9.3",
     "@mui/x-date-pickers": "^5.0.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
