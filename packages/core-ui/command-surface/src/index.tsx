@@ -142,21 +142,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                 }
 
                 online
-                
-
-                calibrations {
-                    placeholder {
-                        id
-                        name
-                    }
-
-                    stateItem {
-                        key
-                    }
-
-                    min
-                    max
-                }
+            
 
           
                 reports {
@@ -164,14 +150,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                     name
                 }
 
-                peripherals {
-                    id
-                    name
-                    type
-
-                    
-                }
-               
+       
                 activeProgram {
                     id
                     name
@@ -227,7 +206,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 rotation
                                 devicePlaceholder {
                                     id
-                                    name
+                                    tag
                                     units {
                                         inputUnit
                                         displayUnit
@@ -275,7 +254,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
                                 devicePlaceholder {
                                     id
-                                    name
+                                    tag
                                     units {
                                         inputUnit
                                         displayUnit
@@ -333,7 +312,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
                     devices {
                         id
-                        name
+                        tag
                         units {
                             inputUnit
                             displayUnit
@@ -519,7 +498,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             case 'analytics':
                 return (<DeviceControlGraph />)
             case 'controls':
-                // return (<Control />)
+                return (<Control />)
         }
     }
 
