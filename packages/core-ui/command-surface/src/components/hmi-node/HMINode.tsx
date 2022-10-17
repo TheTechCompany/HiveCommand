@@ -25,6 +25,10 @@ export interface IconNodeProps {
 
         devicePlaceholder?: {
             tag?: string;
+
+            type: {
+                tagPrefix?: string;
+            }
         }
 
         configuration?: any;
@@ -52,12 +56,15 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
     let options: any = {};
     let conf: any = {};
-    if (getDeviceOptions) {
-        options = getDeviceOptions(props.extras?.devicePlaceholder?.tag || '');
+
+    const tag = `${props.extras?.devicePlaceholder?.tag}`
+    if (getDeviceOptions && tag) {
+        options = getDeviceOptions(tag);
     }
-    if (getDeviceConf) {
-        conf = getDeviceConf(props.extras?.devicePlaceholder?.tag || '');
+    if (getDeviceConf && tag) {
+        conf = getDeviceConf(tag);
     }
+
     // const options = getDeviceOptions(props.extras?.devicePlaceholder?.name)
 
     // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)

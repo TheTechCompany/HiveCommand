@@ -116,8 +116,37 @@ export default () => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage)
 	}, [ hmis, defaultPage, activePage ])
 
+	// const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
+	// 	//Find map between P&ID tag and bus-port
+
+	// 	if (!name) return;
+
+
+	// 	let v = values?.filter((a) => a?.placeholder == name);
+	// 	let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
+
+    //     console.log({name, values, v, state, program: program?.devices})
+
+	// 	return v?.reduce((prev, curr) => {
+	// 		let unit = units?.find((a) => a.key == curr.key);
+	// 		let stateItem = state?.find((a: any) => a.key == curr.key);
+	// 		let value = curr.value;
+
+	// 		if (!stateItem) return prev;
+
+	// 		if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
+	// 			value = parseFloat(value).toFixed(2)
+	// 		}
+	// 		return {
+	// 			...prev,
+	// 			[curr.key]: value
+	// 		}
+	// 	}, {})
+
+	// }
+
 	// const hmiNodes = useMemo(() => {
-	// 	return hmi.concat(groups.map((x) => x.children).reduce((prev, curr) => prev.concat(curr), [])).filter((a) => a?.devicePlaceholder?.name).map((node) => {
+	// 	return hmi?.nodes?.map((node) => {
 
 	// 		let device = node?.devicePlaceholder?.name;
 	// 		let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
@@ -198,7 +227,7 @@ export default () => {
 					paths={hmi?.edges || []}
 					functions={functions}
 					// program={program}
-					// deviceValues={hmiNodes}
+					deviceValues={values}
 					modes={[]}
 					information={infoTarget != undefined ? (
 						<Bubble
