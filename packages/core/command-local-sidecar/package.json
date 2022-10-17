@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-sidecar",
-  "version": "1.4.15-alpha.64",
+  "version": "1.4.15-alpha.65",
   "main": "index.js",
   "private": true,
   "license": "MIT",
@@ -15,7 +15,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/opcua-client": "^1.4.15-alpha.64",
+    "@hive-command/opcua-client": "^1.4.15-alpha.65",
     "express": "^4.18.2",
     "node-opcua": "^2.81.0"
   }
