@@ -13,15 +13,15 @@ export const handleHeartbeat = async (dataManager: PrismaClient, socket: Socket,
     // const device = await Device.findById(id)
 
     try{
-        await dataManager.device.update({
-            where: {
-                network_name: id,
-            },
-            data: {
-                online: true,
-                lastSeen: new Date()
-            }
-        })
+        // await dataManager.device.update({
+        //     where: {
+        //         network_name: id,
+        //     },
+        //     data: {
+        //         online: true,
+        //         lastSeen: new Date()
+        //     }
+        // })
     }catch(e){
         console.log(e)
     }   
