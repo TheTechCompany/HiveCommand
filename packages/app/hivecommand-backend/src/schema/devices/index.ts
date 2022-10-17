@@ -100,6 +100,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						// 	where: {lastUpdated: {gt: new Date()}},
 						// 	orderBy: {lastUpdated: 'desc'},
 						// },
+						
 						deviceMapping: {
 							include: {
 								device: {
