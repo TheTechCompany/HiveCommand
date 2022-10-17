@@ -55,16 +55,16 @@ export class SyncClient {
 	}
 
 
-	async setupConnection(client: Client){
-		const result = await client.browse('/')
+	// async setupConnection(client: Client){
+	// 	const result = await client.browse('/')
 
 
-		const items = await Promise.all((result || []).map(async (ref) => {
-			await client.browse(`/${ref.browseName.namespaceIndex}:${ref.browseName.name}`)
-		}))
+	// 	const items = await Promise.all((result || []).map(async (ref) => {
+	// 		await client.browse(`/${ref.browseName.namespaceIndex}:${ref.browseName.name}`)
+	// 	}))
 
-		console.log({items})
-	}
+	// 	console.log({items})
+	// }
 
 	async onClientDiscovered(serverUrl: string){
 		let networkName = serverUrl.match(/opc.tcp:\/\/(.+?):/)?.[1]
@@ -103,7 +103,7 @@ export class SyncClient {
 
 		await this.clients[serverUrl].connect(serverUrl)
 
-		await this.setupConnection(this.clients[serverUrl])
+		// await this.setupConnection(this.clients[serverUrl])
 
 		return controlDevice;
 	}
@@ -143,7 +143,7 @@ export class SyncClient {
 					
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
 
-					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
+					// const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
 			
 					
 					// let items = [];
@@ -197,7 +197,9 @@ export class SyncClient {
 						// 	tag: `PlantActions-${ref.browseName.name}`
 						// }))
 
-						datapoints = [...datapoints]
+						datapoints = [...datapoints, ...plant_datapoints]
+
+						console.log("Datapoints", {datapoints})
 
 						// console.log("Subscribing to", datapoints.map((x) => x.tag))
 	
