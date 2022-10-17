@@ -45,6 +45,8 @@ export class Data {
 					id
 
 					deviceMapping {
+						path
+						
 						device {
 							id
 							tag
