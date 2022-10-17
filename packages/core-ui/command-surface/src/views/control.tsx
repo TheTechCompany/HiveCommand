@@ -107,7 +107,7 @@ export default () => {
 	}
 
 
-	const values: { placeholder: string, key: string, value: string }[] = [{placeholder: 'BLO701', key: 'on', value: 'true'}] // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
+	const values: { placeholder: string, key: string, value: string }[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 
 	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
