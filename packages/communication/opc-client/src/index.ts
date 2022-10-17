@@ -171,9 +171,14 @@ export default class Client {
             relativePath: makeRelativePath(path)
         })
 
-        const browseTranslation = await this.session?.translateBrowsePath(browsePath)
-        if(browseTranslation?.targets){
-            return browseTranslation?.targets[0].targetId.toString()
+        try{
+            const browseTranslation = await this.session?.translateBrowsePath(browsePath)
+        
+            if(browseTranslation?.targets){
+                return browseTranslation?.targets[0].targetId.toString()
+            }
+        }catch(e){
+            console.log("Error getting path for ", path)
         }
     }
 
