@@ -19,16 +19,20 @@ export interface HMICanvasProps {
         mode: string
     }[]
     deviceValues?: {
-        conf: {
-            device: {id: string},
-            conf: {key: string}, 
-            value: any
-        }[], 
-        devicePlaceholder: {
-            id: string, 
-            name: string
-        }, 
-        values: any
+        placeholder: string;
+        key: string;
+        value: any;
+
+        // conf: {
+        //     device: {id: string},
+        //     conf: {key: string}, 
+        //     value: any
+        // }[], 
+        // devicePlaceholder: {
+        //     id: string, 
+        //     name: string
+        // }, 
+        // values: any
     }[];
     // program?: any;
     functions?: {id: string, fn: any}[];
