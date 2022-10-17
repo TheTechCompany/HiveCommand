@@ -10,8 +10,8 @@ import { useRequestFlow, useUpdateDeviceSetpoint } from '@hive-command/api';
 import { gql, useQuery } from '@apollo/client';
 import { useApolloClient } from '@apollo/client';
 import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
-import { isEqual } from 'lodash'
 import { InfiniteScrubber } from '@hexhive/ui';
+import { ActionMenu } from '../components/action-menu';
 
 
 const ActionButton = (props: any) => {
@@ -56,10 +56,6 @@ export default () => {
 	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number }>();
 	const [selected, setSelected] = useState<{ key?: string, id?: string }>()
 
-	const [workingState, setWorkingState] = useState<any>({})
-
-	const [editSetpoint, setEditSetpoint] = useState();
-	const [setpointWorkstate, setSetpointWorkstate] = useState({});
 
 	const {
 		changeOperationMode,
@@ -73,12 +69,10 @@ export default () => {
 		defaultPage,
 		groups,
 		changeDeviceMode,
-		changeDeviceValue,
 		performAction,
 		templatePacks,
 		controlId = '',
 		device,
-		refetch
 	} = useContext(DeviceControlContext)
 
 
@@ -108,38 +102,16 @@ export default () => {
 		}
 	})
 
+	const refetch = () => {
+		client.refetchQueries({include: ['DeviceValues']})
+	}
+
 
 	const values: { placeholder: string, key: string, value: string }[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 
 	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
-	const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
-		//Find map between P&ID tag and bus-port
-
-		if (!name) return;
-
-
-		let v = values.filter((a) => a?.placeholder == name);
-		let state = program?.devices?.find((a) => a.tag == name)?.type?.state;
-
-
-		return v.reduce((prev, curr) => {
-			let unit = units?.find((a) => a.key == curr.key);
-			let stateItem = state?.find((a: any) => a.key == curr.key);
-			let value = curr.value;
-
-			if (!stateItem) return prev;
-
-			if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
-				value = parseFloat(value).toFixed(2)
-			}
-			return {
-				...prev,
-				[curr.key]: value
-			}
-		}, {})
-
-	}
+	
 
 	const hmi = useMemo(() => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage)
@@ -196,202 +168,8 @@ export default () => {
 	// alert(operatingMode)
 
 
-	// const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
-	// 	let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
 
-	// 	if (state.writable && operatingMode == "manual") {
-	// 		return (
-	// 			<TextField
-	// 				style={{ padding: "none" }}
-	// 				type="number"
-	// 				size="small"
-	// 				placeholder={state.key}
-	// 				onChange={(e) => {
-	// 					setWorkingState({
-	// 						...workingState,
-	// 						[deviceName]: {
-	// 							...workingState[deviceName],
-	// 							[state.key]: parseFloat(e.target.value)
-	// 						}
-	// 					})
-	// 				}}
-	// 				value={workingState?.[deviceName]?.[state.key] ?? parseFloat(value)} />
-	// 		)
-	// 	} else {
-	// 		return <Typography>{value}</Typography>
-	// 	}
-	// }
-
-
-	// const renderActions = () => {
-	// 	let node = hmi.concat(groups).find((a) => a.id == selected?.id)
-
-	// 	if (!node) return;
-
-	// 	let devices = getDevicesForNode(node)
-
-	// 	if (editSetpoint) {
-	// 		const device = devices.find((a) => a.name == editSetpoint)
-
-	// 		return (
-	// 			<Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-	// 				<Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row' }}>
-	// 					<IconButton
-	// 						onClick={() => setEditSetpoint(undefined)}
-	// 						size="small">
-	// 						<ChevronLeft fontSize='inherit' />
-	// 					</IconButton>
-
-	// 					<Typography >{editSetpoint} Setpoints</Typography>
-
-	// 				</Box>
-	// 				<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column', padding: '3px' }}>
-	// 					{device.setpoints?.map((setpoint) => (
-
-	// 						<TextField
-	// 							fullWidth
-	// 							InputProps={{
-	// 								endAdornment: setpoint.type == "ratio" && <InputAdornment position="end">%</InputAdornment>
-	// 							}}
-	// 							size='small'
-	// 							label={setpoint.name}
-	// 							type="number"
-	// 							onChange={(e) => {
-	// 								setSetpointWorkstate({
-	// 									...setpointWorkstate,
-	// 									[setpoint.id]: {
-	// 										...setpointWorkstate?.[setpoint?.id],
-	// 										value: e.target.value
-	// 									}
-	// 								})
-	// 							}}
-	// 							value={setpointWorkstate?.[setpoint.id]?.value} />
-
-	// 					))}
-	// 				</Box>
-	// 				<Box sx={{ flexDirection: 'row', display: 'flex' }}>
-	// 					<Button
-	// 						fullWidth
-	// 						disabled={isEqual(setpointWorkstate, device?.setpoints?.reduce((prev, curr) => ({
-	// 							...prev,
-	// 							[curr.id]: {
-	// 								...curr
-	// 							}
-	// 						}), {}))}
-	// 						onClick={() => {
-	// 							setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
-	// 								...prev,
-	// 								[curr.id]: {
-	// 									...curr
-	// 								}
-	// 							}), {}))
-	// 						}}>Reset</Button>
-	// 					<Button
-	// 						fullWidth
-	// 						onClick={() => {
-	// 							for (var k in setpointWorkstate) {
-	// 								updateSetpoint(k, setpointWorkstate[k].value).then(() => {
-	// 									refetch();
-	// 								})
-	// 							}
-	// 							// updateSetpoint()
-	// 						}}>Save</Button>
-	// 				</Box>
-	// 			</Box>
-	// 		)
-	// 	} else {
-
-	// 		return devices.map((device) => {
-	// 			let deviceInfo = device?.type || {};
-	// 			let deviceName = device?.name || '';
-
-	// 			console.log({ deviceInfo })
-	// 			let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
-
-	// 			return (
-	// 				<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-	// 					{/* <Box
-	// 					sx={{display: 'flex'}}
-	// 					> */}
-
-	// 					<Box sx={{ padding: '3px', display: 'flex', alignItems: 'center', justifyContent: device.setpoints?.length > 0 ? "space-between" : "flex-start", flexDirection: 'row' }}>
-	// 						<Typography>{device?.name}</Typography>
-
-	// 						{device.setpoints?.length > 0 && operatingMode != "auto" && <IconButton
-	// 							onClick={() => {
-	// 								setEditSetpoint(device?.name)
-	// 								setSetpointWorkstate(device?.setpoints?.reduce((prev, curr) => ({
-	// 									...prev,
-	// 									[curr.id]: {
-	// 										...curr
-	// 									}
-	// 								}), {}))
-	// 							}}
-	// 							size="small">
-	// 							<SettingsEthernet fontSize='inherit' />
-	// 						</IconButton>}
-
-	// 					</Box>
-
-	// 					<Divider />
-	// 					{/* <Typography >{deviceInfo?.name}</Typography> */}
-	// 					{/* </Box> */}
-	// 					<Box sx={{ flex: 1, padding: '3px', display: 'flex', justifyContent: 'center', flexDirection: 'column' }} >
-	// 						{deviceInfo?.state?.map((state: any) => (
-	// 							<Box sx={{ flexDirection: "row", display: 'flex', alignItems: "center" }}>
-	// 								<Box sx={{ flex: 1 }}><Typography >{state.key}</Typography></Box>
-	// 								<Box sx={{ flex: 1 }}>{renderActionValue(deviceName, deviceInfo, deviceMode || '', state)}</Box>
-	// 								{workingState?.[deviceName]?.[state.key] != undefined ? (
-	// 									<IconButton
-
-	// 										onClick={() => {
-	// 											sendChanges(deviceName, state.key, workingState?.[deviceName]?.[state.key])
-	// 										}}>
-	// 										<Checkmark />
-	// 									</IconButton>) : ''}
-	// 							</Box>
-	// 						))}
-	// 					</Box>
-
-	// 					<Box sx={{ display: 'flex', flexDirection: 'row' }}>
-	// 						{operatingMode == 'manual' && deviceInfo?.actions?.map((action) => (
-	// 							<Button
-	// 								fullWidth
-	// 								onClick={() => {
-	// 									performAction(
-	// 										deviceName,
-	// 										action.key
-	// 									)
-	// 								}}>{action.key}</Button>
-	// 						))}
-	// 					</Box>
-
-	// 				</Box>
-	// 			)
-	// 		})
-	// 	}
-
-	// }
-
-
-	// const deviceModes = program?.devices?.map((a) => {
-	// 	let vals = values.filter((b) => b?.placeholder == a.name);
-	// 	// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-	// 	return { name: a.name, mode: vals.find((a) => a.key == 'mode')?.value };
-	// }) || [];
-
-
-	// const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-	// 	changeDeviceValue(
-	// 		deviceName,
-	// 		stateKey,
-	// 		`${stateValue}`
-	// 	).then(() => {
-	// 		let ws = Object.assign({}, workingState);
-	// 		delete ws[stateKey]
-	// 		setWorkingState(ws)
-	// 	})
-	// }
+	
 
 	// useEffect(() => {
 	// 	setWorkingState({})
@@ -426,17 +204,20 @@ export default () => {
 					information={infoTarget != undefined ? (
 						<Bubble
 							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
-							{/* {renderActions()} */}
+							<ActionMenu selected={selected} refetch={refetch} values={values} />
 						</Bubble>
 					) : null}
 					onBackdropClick={() => {
-						setSelected(undefined)
+						console.log("Backdrop click");
+
+						// setSelected(undefined)
 						setInfoTarget(undefined)
 					}}
 					onSelect={(select) => {
-						console.log({ hmi: program?.interface });
-						let node = program?.interface?.nodes?.find((a: any) => a.id == select.id)
-						// const { x, y, width, height } = node || {x: 0, y: 0, width: 0, height: 0};
+						let node = hmi?.nodes?.find((a: any) => a.id == select.id)
+						const { x, y, width, height } = node || {x: 0, y: 0, width: 0, height: 0};
+
+						console.log({ hmi: hmi, node });
 
 						// // let width, height;
 						// // if (node.children && node.children.length > 0) {
@@ -453,7 +234,7 @@ export default () => {
 						// // 	height = 25 //node.type.height * scaleY;
 						// // }
 
-						// setInfoTarget({ x: x + (width), y: y + height })
+						setInfoTarget({ x: (x || 0) + (width||0), y: (y||0) + (height||0) })
 						// setEditSetpoint(undefined)
 						// setSelected(select)
 					}}

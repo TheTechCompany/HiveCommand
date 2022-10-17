@@ -127,7 +127,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
     }
 
     const { data } = useQuery(gql`
-            query Q ($id: ID){
+            query BaseDeviceInfo ($id: ID){
      
             commandDevices(where: {id: $id}){
                 name
@@ -183,10 +183,12 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 id
                             }
                             fromHandle
+                            fromPoint
                             to {
                                id
                             }
                             toHandle
+                            toPoint
                             points {
                                 x
                                 y
@@ -203,6 +205,13 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 
                                 x
                                 y
+                                
+                                width
+                                height
+
+                                scaleX
+                                scaleY
+
                                 rotation
                                 devicePlaceholder {
                                     id
@@ -220,6 +229,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                         actions {
                                             key
                                         }
+
+                                        tagPrefix
     
                                         state {
                                             type
@@ -268,7 +279,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                         actions {
                                             key
                                         }
-    
+                                        tagPrefix
                                         state {
                                             units
                                             inputUnits
@@ -405,7 +416,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             return {
                 ...node,
                 devicePlaceholder: {
-
+                    ...node?.devicePlaceholder,
+                    tag: node?.devicePlaceholder?.tag ? `${node?.devicePlaceholder?.type?.tagPrefix || ''}${node?.devicePlaceholder?.tag}` : ''
                 }
             }
         })
@@ -422,7 +434,9 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
     // console.log({defaultPage})
 
-    const hmi = activeProgram?.interface?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
+    console.log({activeProgram, activePage})
+
+    const hmi = activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
         const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
             let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a: any) => a.setpoint?.id == setpoint.id);
 
@@ -432,6 +446,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             };
         });
 
+        console.log({devicePlaceholder: node})
+
         return {
             ...node,
             devicePlaceholder: {
@@ -440,6 +456,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             }
         }
     }) || [];
+
+    console.log({hmi})
     
     const groups = activeProgram?.interface?.nodes?.filter((a: any) => a.children && a.children.length > 0)?.map((node: any) => {
         const children = node.children?.map((children: any) => {
