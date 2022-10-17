@@ -36,9 +36,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			CommandDevice: {
 				deviceSnapshot: async (root: any, args: any, context: any) => {
 
+					// console.log(await cache.DeviceValue.find())
 					const result = await cache.DeviceValue.find({
 						deviceId: root.id
-					})
+					});
+
 					return result;
 
 					// return await prisma.$queryRaw`
@@ -100,7 +102,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						// 	where: {lastUpdated: {gt: new Date()}},
 						// 	orderBy: {lastUpdated: 'desc'},
 						// },
-						
+
 						deviceMapping: {
 							include: {
 								device: {

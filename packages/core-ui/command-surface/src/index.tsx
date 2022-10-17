@@ -333,6 +333,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                             }
                         }
                         type {
+                            tagPrefix
+                            
                             state {
                                 id
                                 inputUnits
