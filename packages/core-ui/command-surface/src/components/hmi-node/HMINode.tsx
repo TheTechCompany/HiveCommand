@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
 import { Box, Typography as Text } from '@mui/material'
-import { InfiniteCanvasContext, RetractingPort } from '@hexhive/ui';
+import { InfiniteCanvasContext, PortWidget, RetractingPort } from '@hexhive/ui';
 import { getSVGStyle } from '../../hooks/svg';
 import { HMIGroup } from './HMIGroup';
 import { HMICanvasContext } from '../hmi-canvas/HMICanvasContext';
@@ -24,7 +24,7 @@ export interface IconNodeProps {
         iconString?: string;
 
         devicePlaceholder?: {
-            name?: string;
+            tag?: string;
         }
 
         configuration?: any;
@@ -53,10 +53,10 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     let options: any = {};
     let conf: any = {};
     if (getDeviceOptions) {
-        options = getDeviceOptions(props.extras?.devicePlaceholder?.name || '');
+        options = getDeviceOptions(props.extras?.devicePlaceholder?.tag || '');
     }
     if (getDeviceConf) {
-        conf = getDeviceConf(props.extras?.devicePlaceholder?.name || '');
+        conf = getDeviceConf(props.extras?.devicePlaceholder?.tag || '');
     }
     // const options = getDeviceOptions(props.extras?.devicePlaceholder?.name)
 
@@ -64,6 +64,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
 
     const Icon = getSVGStyle(props.extras?.icon && (props.extras?.icon) ? props.extras?.icon : null, (props) => ({
+        pointerEvents: 'none',
         stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open?.trim() == 'true' || options?.on?.trim() == 'true' || parseFloat(options?.speed) > 0) ? 'green' : 'gray'
     }))
 
@@ -80,7 +81,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
         <Box
             style={{ 
                 position: 'relative',
-                pointerEvents: props.building ? 'none' : undefined,
+                pointerEvents: 'none', // props.building ? 'none' : undefined,
                 width: props.width || '72px',
                 height: props.height || '72px',
                 display :'flex',
@@ -106,14 +107,13 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
 
 export const UnstyledIconNode = (props: IconNodeProps) => {
-    const [actionsOpen, openActions] = useState<boolean>(false);
 
     const [ hovering, setHovering ] = useState(false);
 
     const [ port, setPort ] = useState<any>();
 
-
-    const { getRelativeCanvasPos = (opts: {x?: number, y?: number}) => ({x: 0, y: 0}), selected } = useContext(InfiniteCanvasContext)
+// console.log({props})
+    const { getRelativeCanvasPos = (opts: {x?: number, y?: number}) => ({x: 0, y: 0}), selected, selectNode } = useContext(InfiniteCanvasContext)
 
     return (
         <>
@@ -134,17 +134,17 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                 active={selected?.map((x) => x.id).indexOf(props.id) > -1}> */}
             <BaseIconNode
 
-                onClick={!props.building ? (() => {
-                    // console.log("Open")
-                    openActions(!actionsOpen)
-                    
-                }) : () => {}}
+               
                 width={props.extras?.label ? '96px' : '55px'}
                 height={props.extras?.label ? '42px' : '55px'}
                 {...props}>
                 {(icon) => (
                     <>
                         <Box
+                            onClick={(evt) => {
+                                evt.stopPropagation()
+                                selectNode?.(props.id || '')
+                            }}
                             onMouseLeave={(e) => {
                                 setHovering(false);
                                 setPort(null)
@@ -194,9 +194,10 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             sx={{ 
                                 pointerEvents: 'all',
                                 // background: 'red',
+                                cursor: 'pointer',
                                 flex: 1, 
                                 display: 'flex', 
-                                border: (selected || []).map((x) => x.id)?.indexOf(props.id) > -1  ?  '1px solid black' : undefined,
+                                border: props.building ? ( (selected || []).map((x) => x.id)?.indexOf(props.id) > -1  ?  '1px solid black' : undefined ): undefined,
                                 justifyContent: props.extras?.label ? 'space-between' : 'center',
                                 alignItems: props.extras?.label ? 'center' : 'center',
                                 flexDirection: props.extras?.label ? 'row' : 'column'
@@ -217,13 +218,16 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                     position: 'absolute'
                                 }} />
                             )} */}
+                            
                             {props.extras?.ports && props.extras?.ports.map((port) => (
-                                <RetractingPort
-                                    id="in"
-                                    {...port}
-                                    scaleX={props.extras?.scaleX}
-                                    scaleY={props.extras?.scaleY}
-                                    direction="center" />
+                                
+                                    <RetractingPort
+                                        id="in"
+                                        {...port}
+                                        hidden={!props.building}
+                                        scaleX={props.extras?.scaleX}
+                                        scaleY={props.extras?.scaleY}
+                                        direction="center" />
                             ))}
                             </div>
 
@@ -235,7 +239,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
 
             </BaseIconNode>
             {/* </EditorHandles> */}
-            {props.extras?.devicePlaceholder?.name && (
+            {props.extras?.devicePlaceholder?.tag && (
                 <Box
                     style={{
                         transform: `
@@ -249,7 +253,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                         flexDirection: 'row',
                         justifyContent: 'center'
                     }}>
-                    <Text fontSize="small">{props.extras?.devicePlaceholder?.name}</Text>
+                    <Text fontSize="small">{props.extras?.devicePlaceholder?.tag}</Text>
                 </Box>
             )}
 

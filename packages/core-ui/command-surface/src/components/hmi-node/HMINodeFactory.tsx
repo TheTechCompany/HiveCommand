@@ -8,7 +8,8 @@ export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (buil
 
     return {
         type: 'hmi-node',
-        renderNodeContainer: (node: InfiniteCanvasNode, children: any) => {
+        renderNodeContainer: (node: any, children: any) => {
+            console.log("Container", {node, building})
             return building ? (
                 <EditorHandles 
                     active={node.isSelected || false} 
@@ -18,7 +19,14 @@ export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (buil
                     id={node.id}>
                     {children}
                 </EditorHandles>
-            ) : (<div style={{position: 'absolute', top: node.y, left: node.x, transform: `rotate(${(node as any).rotation}deg)`}}>{children}</div>)
+            ) : (<div style={{
+                position: 'absolute', 
+                pointerEvents: 'none',
+                top: node.y, 
+                left: node.x, 
+                transform: `rotate(${node.rotation || 0}deg) scaleX(${node.scaleX || 1}) scaleY(${node.scaleY || 1})`,
+                // transform: `rotate(${(node as any).rotation}deg)`
+            }}>{children}</div>)
         },
         renderNode: (event: any) => {
             // console.log(event)

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "CanvasNode" ADD COLUMN     "scaleX" DOUBLE PRECISION,
+ADD COLUMN     "scaleY" DOUBLE PRECISION;

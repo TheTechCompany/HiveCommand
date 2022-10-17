@@ -2,11 +2,14 @@ import { useRemoteComponents } from "../../hooks/remote-components";
 
 export interface HMICanvasNode {
     id: string;
+    width?: number;
+    height?: number;
+    scaleX?: number;
+    scaleY?: number;
+    devicePlaceholder?: any;
     x: number;
     y: number;
     options: any;
-    scaleX: number;
-    scaleY: number;
     rotation: number;
     type: string;
     icon: any;
@@ -16,6 +19,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
 
     //Fetch node component packs
 
+    // console.log("Registering", {nodes})
 
     const nodesParsed = await Promise.all(nodes.map(async (node) => {
 
@@ -41,8 +45,8 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
     }))
 
     return nodesParsed.map((x) => {
-        let width = x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
-        let height = x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
+        let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+        let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
 
         let opts = Object.keys(x.options || {}).map((key) => {
@@ -56,6 +60,8 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             id: x.id,
             x: x.x,
             y: x.y,
+            scaleX: x.scaleX || 1,
+            scaleY: x.scaleY || 1,
             width,
             height,
 
@@ -64,11 +70,12 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             // height: `${x?.type?.height || 50}px`,
             extras: {
                 options: x.icon?.metadata?.options || {},
-                // devicePlaceholder: x.devicePlaceholder,
+                devicePlaceholder: x.devicePlaceholder,
                 rotation: x.rotation || 0,
                 scaleX: x.scaleX != undefined ? x.scaleX : 1,
                 scaleY: x.scaleY != undefined ? x.scaleY : 1,
                 // showTotalizer: x.showTotalizer || false,
+                ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || [],
                 // iconString: x.type?.name,
                 icon: x.icon, //HMIIcons[x.type?.name],
                 // ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []

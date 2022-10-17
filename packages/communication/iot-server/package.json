@@ -1,8 +1,11 @@
 {
   "name": "@hive-command/iot-server",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.62",
   "description": "",
   "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/"
   ],
@@ -21,7 +24,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.60",
+    "@hive-command/data": "^1.4.15-alpha.62",
     "@types/uuid": "^8.3.4",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1",
