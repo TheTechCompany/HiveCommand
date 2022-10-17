@@ -76,7 +76,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 
 				if(action && device){
 					let actionRequest = {
-						address: `opc.tcp://${device?.network_name}.hexhive.io:8440`,
+						address: `opc.tcp://${device?.network_name}:8440`,
 						deviceId: args.deviceId,
 						deviceName: args.deviceName,
 						action: action.key,
@@ -102,7 +102,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				if(!device) return new Error("No device found")
 
 				let actionRequest = {
-					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
+					address: `opc.tcp://${device.network_name}:8440`,
 					deviceId: args.deviceId,
 					mode: args.mode,
 					authorizedBy: context.jwt?.name
@@ -168,7 +168,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				// })
 
 				let actionRequest = {
-					address: `opc.tcp://${device.network_name}.hexhive.io:8440`,
+					address: `opc.tcp://${device.network_name}:8440`,
 					deviceId: args.deviceId,
 					state: args.state,
 					authorizedBy: context.jwt?.name
@@ -226,7 +226,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				if(!device) return new Error("No device found")
 
 				let stateChange = {
-					address: `opc.tcp://${device?.network_name}.hexhive.io:8440`,
+					address: `opc.tcp://${device?.network_name}:8440`,
 					busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`,
 					value: args.value
 				}
