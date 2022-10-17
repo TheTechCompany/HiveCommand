@@ -60,6 +60,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             id: x.id,
             x: x.x,
             y: x.y,
+            rotation: x.rotation || 0,
             scaleX: x.scaleX || 1,
             scaleY: x.scaleY || 1,
             width,

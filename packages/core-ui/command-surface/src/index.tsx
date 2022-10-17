@@ -215,7 +215,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 rotation
                                 devicePlaceholder {
                                     id
-                                    tag
+                                    tag 
                                     units {
                                         inputUnit
                                         displayUnit
