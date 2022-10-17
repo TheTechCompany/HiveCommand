@@ -88,8 +88,18 @@ export class SyncClient {
 		})
 		
 
-		this.clients[serverUrl].on('close', this.onClientLost.bind(this, serverUrl))
-		this.clients[serverUrl].on('connection_lost', this.onClientLost.bind(this, serverUrl))
+		this.clients[serverUrl].on('close', this.onClientLost.bind(this, controlDevice, serverUrl))
+		this.clients[serverUrl].on('connection_lost', this.onClientLost.bind(this, controlDevice, serverUrl))
+
+		await this.prisma.device.update({
+            where: {
+                id: controlDevice.id,
+            },
+            data: {
+                online: true,
+                lastSeen: new Date()
+            }
+        })
 
 		await this.clients[serverUrl].connect(serverUrl)
 
@@ -98,7 +108,17 @@ export class SyncClient {
 		return controlDevice;
 	}
 
-	onClientLost(serverUrl: string){
+	async onClientLost(controlDevice: {id: string}, serverUrl: string){
+		await this.prisma.device.update({
+            where: {
+                id: controlDevice.id
+            },
+            data: {
+                online: false,
+                lastSeen: new Date()
+            }
+        })
+
 		delete this.clients[serverUrl];
 	}
 
@@ -119,7 +139,6 @@ export class SyncClient {
 				
 					const controlDevice = await this.onClientDiscovered(serverUrl)
 					//Match networkName to device id 
-
 					
 					
 					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
