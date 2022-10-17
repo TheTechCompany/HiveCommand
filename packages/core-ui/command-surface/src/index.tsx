@@ -206,6 +206,8 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 x
                                 y
                                 
+                                zIndex
+                                
                                 width
                                 height
 
@@ -334,7 +336,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                         }
                         type {
                             tagPrefix
-                            
+
                             state {
                                 id
                                 inputUnits
