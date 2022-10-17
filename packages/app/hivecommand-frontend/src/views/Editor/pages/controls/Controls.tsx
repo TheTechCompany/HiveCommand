@@ -338,6 +338,7 @@ export const Controls = (props) => {
                         scaleY: x.scaleY != undefined ? x.scaleY : 1,
                         rotation: x.rotation || 0,
                         options: x.options,
+                        
                         //  width: `${x?.type?.width || 50}px`,
                         // height: `${x?.type?.height || 50}px`,
                         extras: {
