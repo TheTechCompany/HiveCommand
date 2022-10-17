@@ -41,8 +41,9 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
 
 		let v = values?.filter((a) => a?.placeholder == name);
-		let state = program?.devices?.find((a) => a.tag == name)?.type?.state;
+		let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
 
+        console.log({name, values, v, state, program: program?.devices})
 
 		return v?.reduce((prev, curr) => {
 			let unit = units?.find((a) => a.key == curr.key);
@@ -75,7 +76,10 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	}
 
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
-		let value = getDeviceValue(deviceName, deviceInfo.state)?.[state.key];
+		let deviceValueBlob = getDeviceValue(deviceName, deviceInfo.state)
+        let value = deviceValueBlob?.[state.key];
+
+        console.log({deviceValueBlob, value});
 
 		if (state.writable && operatingMode == "manual") {
 			return (
