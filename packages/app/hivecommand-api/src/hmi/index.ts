@@ -123,6 +123,7 @@ export const useUpdateHMINode = (programId: string) => {
         nodeId: string;
         x?: number;
         y?: number;
+        zIndex?: number;
         scaleX?: number;
         scaleY?: number;
         width?: number,
@@ -136,8 +137,11 @@ export const useUpdateHMINode = (programId: string) => {
       if (args.y != undefined) hmiUpdate.y = args.y;
       if (args.scaleX != undefined) hmiUpdate.scaleX = args.scaleX;
       if (args.scaleY != undefined) hmiUpdate.scaleY = args.scaleY;
-        if (args.width != undefined) hmiUpdate.width = args.width
-        if (args.height != undefined) hmiUpdate.height = args.height;
+      if (args.width != undefined) hmiUpdate.width = args.width
+      if (args.height != undefined) hmiUpdate.height = args.height;
+      
+      if (args.zIndex != undefined) hmiUpdate.zIndex = args.zIndex;
+
       if(args.options) hmiUpdate.options = args.options;
 
       if(args.rotation != undefined) hmiUpdate.rotation = args.rotation;
@@ -159,6 +163,7 @@ export const useUpdateHMINode = (programId: string) => {
   return async (node_id: string, update: {
 		x?: number,
 		y?: number,
+    zIndex?: number,
     scaleX?: number,
     scaleY?: number,
     width?: number,
@@ -171,6 +176,7 @@ export const useUpdateHMINode = (programId: string) => {
         nodeId: node_id,
         x: update.x,
         y: update.y,
+        zIndex: update.zIndex,
         scaleX: update.scaleX,
         scaleY: update.scaleY,
         width: update.width,
