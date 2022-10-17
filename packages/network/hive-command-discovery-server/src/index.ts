@@ -127,16 +127,7 @@ export class DiscoveryServer {
         
         const networkName = (socket as any)?.networkName;
 
-        await this.prisma.device.update({
-            where: {
-                network_name: networkName
-            },
-            data: {
-                online: false,
-                lastSeen: new Date()
-            }
-        })
-       
+     
         socket.removeAllListeners();
     }
 
