@@ -7,6 +7,7 @@ import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
 import { useRemoteComponents } from '../../hooks/remote-components';
+import { PipePathFactory } from "@hexhive/ui/dist/components/InfiniteCanvas/components/paths/pipe-path";
 
 export interface HMICanvasProps {
 	id: string;
@@ -180,10 +181,11 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             setPaths((props.paths || []).map((x) => {
                 return {
                     id: x.id,
+                    type: 'pipe-path',
                     source: x?.from?.id,
-                    sourceHandle: x.fromHandle,
+                    sourceHandle: x.fromPoint || x.fromHandle,
                     target: x?.to?.id,
-                    targetHandle: x.toHandle,
+                    targetHandle: x.toPoint || x.toHandle,
                     points: x.points
                 }
 
@@ -233,13 +235,14 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     style={CanvasStyle}
                     zoom={zoom}
                     offset={offset}
+                    selected={[selected] as any}
                     onViewportChanged={({zoom, offset}) => {
                         setZoom(zoom)
                         setOffset(offset)
                     }}
                     onBackdropClick={props.onBackdropClick}
                     onSelect={(key, id) => {
-
+                        console.log("SELECT", {key, id})
                         props.onSelect?.({key, id})
                         setSelected({
                             key,
@@ -249,8 +252,8 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     information={props.information}
                     editable={false}
                     nodes={nodes}
-                    paths={pathRef.current.paths}
-                    factories={[IconNodeFactory, HMINodeFactory(false)]}
+                    paths={paths}
+                    factories={[IconNodeFactory, HMINodeFactory(false), PipePathFactory ]}
                     onPathCreate={(path) => {
         
                         updateRef.current?.addPath?.(path);

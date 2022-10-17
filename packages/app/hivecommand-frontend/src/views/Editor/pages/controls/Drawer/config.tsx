@@ -290,6 +290,56 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     reverse
                     label="Show Totalizer" />
             </Box> */}
+            <TextField 
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="Width" 
+                value={item.width} 
+                onChange={(e) => {
+                    updateHMINode(selected.id, { width: parseInt(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number"  />
+            <TextField 
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="Height" 
+                value={item.height} 
+                onChange={(e) => {
+                    updateHMINode(selected.id, { height: parseInt(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number" />
+
+            <TextField 
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="Scale X" 
+                value={item.extras.scaleX} 
+                onChange={(e) => {
+                    updateHMINode(selected.id, { scaleX: parseFloat(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number" />
+
+            <TextField 
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="Scale Y" 
+                value={item.extras.scaleY} 
+                onChange={(e) => {
+                    updateHMINode(selected.id, { scaleY: parseFloat(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number" />
             <BumpInput
                 placeholder="Rotation"
                 type="number"
