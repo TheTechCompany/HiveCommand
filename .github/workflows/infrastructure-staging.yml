@@ -3,7 +3,7 @@ name: HiveCommand Staging Infrastructure
 on:
   push:
     branches:
-      - staging
+      # - staging
       - master
     paths: ["packages/app/**", "packages/network/**", "packages/infrastructure/**"]
 

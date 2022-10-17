@@ -283,6 +283,7 @@ export class CommandNetwork {
 	*/
 	async start(
 		credentials: {
+			hostname: string;
 			discoveryServer?: string
 		}, 
 		struct: {
@@ -298,7 +299,7 @@ export class CommandNetwork {
 
 		this.opc = new OPCUAServer({
 			productName: "CommandPilot",
-            // hostname: credentials.hostname,
+            hostname: credentials.hostname,
 			discoveryServer: credentials.discoveryServer,
 			controller: this.options.controller || {},
 		})
