@@ -373,20 +373,25 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
     }
 
     const onTreeSelect = (nodeId: string) => {
-        console.log({nodeId});
 
         switch(nodeId){
             case 'analytics-root':
                 break;
             case 'controls-root':
+                // console.log("Controls ", nodeId)
+                // setActivePage(nodeId)
+
                 break;
             default:
                 let nodes = drawerMenu.reduce((prev, curr) => [...prev, ...(curr.children || []).map((x) => ({...x, parent: curr.id}))], [] as any[])
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node.parent.replace(/-root/g, '');
 
-                console.log({nodes, node, page})
                 setView(page);
+                
+                if(page == 'controls'){
+                    setActivePage(nodeId)
+                }
                 break;
         }
     }
@@ -434,8 +439,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
     // console.log({defaultPage})
 
-    console.log({activeProgram, activePage})
-
     const hmi = activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
         const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
             let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a: any) => a.setpoint?.id == setpoint.id);
@@ -446,7 +449,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             };
         });
 
-        console.log({devicePlaceholder: node})
 
         return {
             ...node,
@@ -457,7 +459,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         }
     }) || [];
 
-    console.log({hmi})
     
     const groups = activeProgram?.interface?.nodes?.filter((a: any) => a.children && a.children.length > 0)?.map((node: any) => {
         const children = node.children?.map((children: any) => {

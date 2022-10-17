@@ -112,7 +112,6 @@ export default () => {
 	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
 	
-
 	const hmi = useMemo(() => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage)
 	}, [ hmis, defaultPage, activePage ])

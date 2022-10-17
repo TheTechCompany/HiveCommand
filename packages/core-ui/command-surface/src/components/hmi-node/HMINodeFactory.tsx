@@ -9,7 +9,7 @@ export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (buil
     return {
         type: 'hmi-node',
         renderNodeContainer: (node: any, children: any) => {
-            console.log("Container", {node, building})
+
             return building ? (
                 <EditorHandles 
                     active={node.isSelected || false} 
