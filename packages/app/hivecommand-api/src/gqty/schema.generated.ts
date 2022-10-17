@@ -65,7 +65,7 @@ export interface ComandProgramInterfaceNodeInput {
   width?: InputMaybe<Scalars["Float"]>;
   x?: InputMaybe<Scalars["Float"]>;
   y?: InputMaybe<Scalars["Float"]>;
-  z?: InputMaybe<Scalars["Int"]>;
+  zIndex?: InputMaybe<Scalars["Float"]>;
 }
 
 export interface CommandAssertionInput {
@@ -318,7 +318,7 @@ export const generatedSchema = {
     width: { __type: "Float" },
     x: { __type: "Float" },
     y: { __type: "Float" },
-    z: { __type: "Int" },
+    zIndex: { __type: "Float" },
   },
   CommandActionItem: {
     __typename: { __type: "String!" },
@@ -591,7 +591,7 @@ export const generatedSchema = {
     width: { __type: "Float" },
     x: { __type: "Float" },
     y: { __type: "Float" },
-    z: { __type: "Int" },
+    zIndex: { __type: "Float" },
   },
   CommandHMINodeFlow: {
     __typename: { __type: "String!" },
@@ -1717,7 +1717,7 @@ export interface CommandHMINode {
   width?: Maybe<ScalarsEnums["Float"]>;
   x?: Maybe<ScalarsEnums["Float"]>;
   y?: Maybe<ScalarsEnums["Float"]>;
-  z?: Maybe<ScalarsEnums["Int"]>;
+  zIndex?: Maybe<ScalarsEnums["Float"]>;
 }
 
 export interface CommandHMINodeFlow {

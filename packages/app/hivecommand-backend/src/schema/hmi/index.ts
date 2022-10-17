@@ -355,7 +355,7 @@ export default (prisma: PrismaClient) => {
 						width: args.input.width,
 						height: args.input.height,
 
-						z: args.input.z || 1,
+						zIndex: args.input.zIndex || 1,
 						showTotalizer: args.input.showTotalizer || false,
 						...deviceUpdate,
 						type: args.input.type,
@@ -372,10 +372,12 @@ export default (prisma: PrismaClient) => {
 						connect: { id: args.input.devicePlaceholder }
 					}
 				}
-				if (args.input.z != undefined) deviceUpdate['z'] = args.input.z;
+
 				if (args.input.showTotalizer != undefined) deviceUpdate['showTotalizer'] = args.ianput.showTotalizer;
 				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
 				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
+
+				if(args.input.zIndex != undefined) deviceUpdate['zIndex'] = args.input.zIndex;
 
 				if (args.input.scaleX != undefined) deviceUpdate['scaleX'] = args.input.scaleX;
 				if (args.input.scaleY != undefined) deviceUpdate['scaleY'] = args.input.scaleY;
@@ -410,7 +412,7 @@ export default (prisma: PrismaClient) => {
 									rotation: child.rotation || 0,
 									width: child.width,
 									height: child.height,
-									z: child.z || 1,
+									zIndex: child.zIndex || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
 									deviceId: child.devicePlaceholder,
@@ -430,7 +432,7 @@ export default (prisma: PrismaClient) => {
 									rotation: child.rotation || 0,
 									width: child.width,
 									height: child.height,
-									z: child.z || 1,
+									zIndex: child.zIndex || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
 									deviceId: child.devicePlaceholder,
@@ -450,7 +452,6 @@ export default (prisma: PrismaClient) => {
 						}
 					}
 
-					console.log({update: JSON.stringify(update), create: JSON.stringify(create)})
 					deviceUpdate['children'] = {
 						...create,
 						...update,
@@ -833,7 +834,7 @@ export default (prisma: PrismaClient) => {
 
 		options: JSONObject
 
-		z: Int
+		zIndex: Float
 
 		showTotalizer : Boolean
 		
@@ -850,6 +851,8 @@ export default (prisma: PrismaClient) => {
 		x: Float
 		y: Float
 
+		zIndex: Float
+
 		rotation: Float
 
 		scaleX: Float
@@ -857,8 +860,6 @@ export default (prisma: PrismaClient) => {
 
 		width: Float
 		height: Float
-
-		z: Int
 
 		options: JSONObject
 
