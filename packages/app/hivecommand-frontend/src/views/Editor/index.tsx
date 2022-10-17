@@ -78,8 +78,22 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 interface {
                     id
                     name
+
                     localHomepage
                     remoteHomepage
+
+                    nodes {
+                        id
+                        type
+
+                        devicePlaceholder {
+                            tag
+
+                            type {
+                                tagPrefix
+                            }
+                        }
+                    }
                 }
 
                 program {
@@ -202,8 +216,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             children: program?.interface?.map((x) => ({
                 id: x.id,
                 name: x.name,
-                children: [],
-                icon: x.localHomepage ? <HomeIcon fontSize="small"/> : x.remoteHomepage ? <HomeIcon fontSize="small" /> : undefined
+                icon: x.localHomepage ? <HomeIcon fontSize="small"/> : x.remoteHomepage ? <HomeIcon fontSize="small" /> : undefined,
+                children: x.nodes?.map((node) => ({
+                    id: node.id,
+                    name: node.type.split(':')[1] //`${node.devicePlaceholder?.type?.tagPrefix || ''}${node.devicePlaceholder?.tag}`
+                })),
             })),
             element: <div>HMI</div>,
             editor: <Controls activeProgram={selected?.id} />

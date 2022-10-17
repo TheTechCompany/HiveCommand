@@ -599,7 +599,7 @@ model CanvasNode {
 	width Float?
 	height Float?
 
-	z Int
+	zIndex Float @default(1)
 
 	showTotalizer Boolean
 
