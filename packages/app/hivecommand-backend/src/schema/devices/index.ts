@@ -102,7 +102,11 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						// },
 						deviceMapping: {
 							include: {
-								device: true,
+								device: {
+									include: {
+										type: true
+									}
+								},
 								deviceState: true
 							}
 						},
