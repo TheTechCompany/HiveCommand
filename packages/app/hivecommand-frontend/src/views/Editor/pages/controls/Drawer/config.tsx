@@ -340,6 +340,19 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     })
                 }}
                 type="number" />
+
+            <TextField
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                type="number"
+                size="small"
+                label="Z Index"
+                value={item.extras?.zIndex}
+                onChange={(e) => {
+                    updateHMINode(selected.id, { zIndex: parseFloat(e.target.value)}).then(() => {
+                        refetch()
+                    })
+                }} />
             <BumpInput
                 placeholder="Rotation"
                 type="number"

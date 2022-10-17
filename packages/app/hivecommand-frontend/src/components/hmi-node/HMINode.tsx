@@ -12,6 +12,8 @@ export interface IconNodeProps {
     x: number;
     y: number;
 
+    zIndex: number;
+    
     scaleX: number;
     scaleY: number;
 
@@ -84,6 +86,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     return (
         <Box
             style={{ 
+                zIndex: props.zIndex,
                 position: 'relative',
                 pointerEvents: props.building ? 'none' : undefined,
                 width: props.width || '72px',

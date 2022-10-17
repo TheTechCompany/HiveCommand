@@ -7,25 +7,35 @@ import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
 import { HexHiveTheme } from '@hexhive/styles';
 
+export interface TreeMenuItem {
+    id: string;
+    name: string;
+    icon?: any;
+    dontAdd?: boolean;
+    dontEdit?: boolean;
+    children?: TreeMenuItem[];
+}
+
 export interface TreeMenuProps {
     onNodeSelect?: (nodeId: string) => void;
     onEdit?: (nodeId: string) => void;
     onAdd?: (nodeId?: string) => void;
     selected?: string;
 
-    items?: {
-        id: string, 
-        name: string, 
-        icon?: any;
-        dontAdd?: boolean, 
-        dontEdit?: boolean, 
-        children?: any[]
-    }[]
+    items?: TreeMenuItem[]
 
     label?: string;
 }
 
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
+
+    const renderItems = (items: any[]) => {
+        return items.map((item) => (
+            <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
+                {renderItems(item.children ||[])}
+            </CustomTreeItem>
+        ))
+    }
 
     return (
     <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
@@ -39,13 +49,14 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
             defaultCollapseIcon={<ExpandMore />}
             defaultExpandIcon={<ChevronRight />}
         >
-            {props.items?.map((item) => (
+            {renderItems(props.items || [])}
+            {/* {props.items?.map((item) => (
                 <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
                     {item.children?.map((g) => (
                         <CustomTreeItem decoration={g.icon} nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
                     ))}
                 </CustomTreeItem>
-            ))}   
+            ))}    */}
         </TreeView>
     </TreeViewProvider>
     )
