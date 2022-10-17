@@ -56,7 +56,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 						activeProgram: {
 							include: {
 								devices: {
-									where: {tag: args.deviceName},
+									// where: {tag: args.deviceName},
 									include: {
 										type: {
 											include: {
@@ -70,7 +70,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 					}
 				})
 
-				const actions = device?.activeProgram?.devices?.find((a) => a.tag == args.deviceName)?.type?.actions
+				const actions = device?.activeProgram?.devices?.find((a) => `${a.type?.tagPrefix || ''}${a.tag}` == args.deviceName)?.type?.actions
 
 				let action = actions?.find((a: any) => a.key == args.action)
 
