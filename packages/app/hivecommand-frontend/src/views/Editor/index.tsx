@@ -239,7 +239,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         let root = treeMenu.find((a) => a.id == selected?.parent);
         let page = root?.children?.find((a) => a.id == selected?.id);
 
-        console.log({root, page, selected})
         return root?.editor
     }
 
