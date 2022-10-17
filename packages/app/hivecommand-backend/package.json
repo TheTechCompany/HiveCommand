@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/backend",
-  "version": "1.4.15-alpha.63",
+  "version": "1.4.15-alpha.64",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@hexhive/graphql-server": "1.0.2-beta.58",
-    "@hive-command/data": "^1.4.15-alpha.63",
+    "@hive-command/data": "^1.4.15-alpha.64",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
     "axios": "^0.27.2",
