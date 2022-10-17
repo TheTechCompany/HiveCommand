@@ -28,6 +28,8 @@ export interface CommandClientOptions {
 	networkInterface?: string;
 	storagePath?: string
 
+	hostname: string;
+
 	purposeFile?: string;
 
 	// commandCenter? : string //Web server to connect to
@@ -215,6 +217,7 @@ export class CommandClient {
 				// console.log({setpoints, variables})
 
 				await this.controller.start({
+					hostname: this.options.hostname,
 					discoveryServer: `opc.tcp://${this.options.discoveryServer}:4840` || 'http://localhost:8080',
 				}, {
 					layout: layout || [], 

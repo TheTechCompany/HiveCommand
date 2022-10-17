@@ -8,6 +8,7 @@ type Options = {
 	logLevel?: string;
 	storagePath: string | undefined;
 	privateKey?: string;
+	hostname?: string;
 	networkInterface: string | undefined;
 	healthCenter: string | undefined,
 	discoveryServer?: string;
@@ -26,6 +27,7 @@ type Options = {
 		privateKey: {type: 'string'},
 		commander: { type: 'string' },
 		storagePath: {type: 'string'},
+		hostname: {type: 'string'},
 		discoveryServer: {type: 'string', description: 'OPCUA Server to connect to', default: 'opc.tcp://discovery.hexhive.io:4840'},
 		// commandCenter: {type: 'string', description: 'Websocket having endpoint for healthchecks and program info', default: 'http://discovery.hexhive.io:8080'},
 		// healthCenter: {type: 'string', description: '', default: ''},
@@ -36,7 +38,7 @@ type Options = {
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { commander, pluginDir, purposeFile, logLevel, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
+	const { commander, hostname, pluginDir, purposeFile, logLevel, ignorePlugins, discoveryServer, healthCenter, privateKey, commandCenter, storagePath, networkInterface } = argv;
 
 	// console.info(`Starting HiveCommand Pilot v${pkg.version}`);
 	
@@ -47,6 +49,7 @@ type Options = {
  
 	const hostCommander = new CommandClient({
 		storagePath,
+		hostname: hostname || '',
 		logLevel: logLevel ? (log.levels as any)[logLevel.toUpperCase()] : log.levels.INFO,
 		// commandCenter,
 		// healthCenter: healthCenter,

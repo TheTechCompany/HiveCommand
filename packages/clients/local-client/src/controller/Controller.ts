@@ -218,6 +218,7 @@ export class Controller {
 
 	async start(
 		credentials: {
+			hostname: string;
 			discoveryServer: string
 		}, 
 		struct: {
