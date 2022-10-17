@@ -591,6 +591,9 @@ model CanvasNode {
   x Float
   y Float
   
+  scaleX Float?
+  scaleY Float?
+
   rotation Float
 
 	width Float?

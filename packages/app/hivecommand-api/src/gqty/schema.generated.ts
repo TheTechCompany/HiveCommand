@@ -58,6 +58,8 @@ export interface ComandProgramInterfaceNodeInput {
   options?: InputMaybe<Scalars["JSONObject"]>;
   ports?: InputMaybe<Array<InputMaybe<CommandHMIPortInput>>>;
   rotation?: InputMaybe<Scalars["Float"]>;
+  scaleX?: InputMaybe<Scalars["Float"]>;
+  scaleY?: InputMaybe<Scalars["Float"]>;
   showTotalizer?: InputMaybe<Scalars["Boolean"]>;
   type?: InputMaybe<Scalars["String"]>;
   width?: InputMaybe<Scalars["Float"]>;
@@ -309,6 +311,8 @@ export const generatedSchema = {
     options: { __type: "JSONObject" },
     ports: { __type: "[CommandHMIPortInput]" },
     rotation: { __type: "Float" },
+    scaleX: { __type: "Float" },
+    scaleY: { __type: "Float" },
     showTotalizer: { __type: "Boolean" },
     type: { __type: "String" },
     width: { __type: "Float" },
@@ -580,6 +584,8 @@ export const generatedSchema = {
     outputs: { __type: "[CommandHMINode]" },
     ports: { __type: "[CommandHMIPort]" },
     rotation: { __type: "Float" },
+    scaleX: { __type: "Float" },
+    scaleY: { __type: "Float" },
     showTotalizer: { __type: "Boolean" },
     type: { __type: "String" },
     width: { __type: "Float" },
@@ -1704,6 +1710,8 @@ export interface CommandHMINode {
   outputs?: Maybe<Array<Maybe<CommandHMINode>>>;
   ports?: Maybe<Array<Maybe<CommandHMIPort>>>;
   rotation?: Maybe<ScalarsEnums["Float"]>;
+  scaleX?: Maybe<ScalarsEnums["Float"]>;
+  scaleY?: Maybe<ScalarsEnums["Float"]>;
   showTotalizer?: Maybe<ScalarsEnums["Boolean"]>;
   type?: Maybe<ScalarsEnums["String"]>;
   width?: Maybe<ScalarsEnums["Float"]>;

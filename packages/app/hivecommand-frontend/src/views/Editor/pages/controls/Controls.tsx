@@ -160,6 +160,9 @@ export const Controls = (props) => {
                         x
                         y
 
+                        scaleX
+                        scaleY
+
                         showTotalizer
                         rotation
                         
@@ -328,8 +331,8 @@ export const Controls = (props) => {
                         y: x.y,
                         width, 
                         height,
-                        scaleX: 1,
-                        scaleY: 1,
+                        scaleX: x.scaleX != undefined ? x.scaleX : 1,
+                        scaleY: x.scaleY != undefined ? x.scaleY : 1,
                         rotation: x.rotation || 0,
                         options: x.options,
                         //  width: `${x?.type?.width || 50}px`,

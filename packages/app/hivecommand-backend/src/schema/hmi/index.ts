@@ -377,6 +377,9 @@ export default (prisma: PrismaClient) => {
 				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
 				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
 
+				if (args.input.scaleX != undefined) deviceUpdate['scaleX'] = args.input.scaleX;
+				if (args.input.scaleY != undefined) deviceUpdate['scaleY'] = args.input.scaleY;
+
 				if (args.input.width != undefined) deviceUpdate['width'] = args.input.width;
 				if (args.input.height != undefined) deviceUpdate['height'] = args.input.height;
 
@@ -825,6 +828,9 @@ export default (prisma: PrismaClient) => {
 		width: Float
 		height: Float
 
+		scaleX: Float
+		scaleY: Float
+
 		options: JSONObject
 
 		z: Int
@@ -845,6 +851,10 @@ export default (prisma: PrismaClient) => {
 		y: Float
 
 		rotation: Float
+
+		scaleX: Float
+		scaleY: Float
+
 		width: Float
 		height: Float
 
