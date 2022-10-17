@@ -67,7 +67,7 @@ export class SyncClient {
 	}
 
 	async onClientDiscovered(serverUrl: string){
-		let networkName = serverUrl.match(/opc.tcp:\/\/(.+?).hexhive.io/)?.[1]
+		let networkName = serverUrl.match(/opc.tcp:\/\/(.+?):/)?.[1]
 		
 		if(!networkName) return console.error("Could not find network name for server", serverUrl)
 
