@@ -181,7 +181,7 @@ export class SyncClient {
 					let datapoints = (controlDevice.deviceMapping || []).map((mapItem: any) => {
 							return {
 								path: mapItem.path,
-								tag: `${mapItem.device?.type?.tagPrefix || ''}${mapItem.device?.tag}`
+								tag: `${mapItem.device?.type?.tagPrefix || ''}${mapItem.device?.tag}-${mapItem?.deviceState?.key}`
 							}
 					}) //[];
 	
