@@ -27,7 +27,6 @@ export interface TreeMenuProps {
 
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
 
-    console.log({items: props.items})
     return (
     <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
     
