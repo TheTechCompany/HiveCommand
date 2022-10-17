@@ -6,7 +6,6 @@ import { nanoid } from "nanoid";
 
 export default (prisma: PrismaClient) => {
 
-	
     const typeDefs = `
 	    type Query {
 			commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
