@@ -36,12 +36,28 @@ export class Data {
 	}
 
 
+	// async getDevice
 	async getDeviceByNetID(deviceId: string) {
 
 		const devices = await this.requestGraphQL(gql`
 			query GetDevice($networkName: String) {
 				commandDevices(where: {network_name: $networkName}) {
 					id
+
+					deviceMapping {
+						device {
+							id
+							tag
+
+							type {
+								tagPrefix
+							}
+						}
+
+						deviceState {
+							key
+						}
+					}
 				}
 			}
 		`, {

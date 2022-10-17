@@ -127,20 +127,20 @@ export class SyncClient {
 					const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
 			
 					
-					let items = [];
-					for(var i = 0; i < (devices || []).length; i++){
-						let ref = devices?.[i];
+					// let items = [];
+					// for(var i = 0; i < (devices || []).length; i++){
+					// 	let ref = devices?.[i];
 
-						let path = `/Objects/1:Devices/${ref?.browseName.namespaceIndex}:${ref?.browseName.name}`
-						const result = await this.clients[serverUri].browse(path)
+					// 	let path = `/Objects/1:Devices/${ref?.browseName.namespaceIndex}:${ref?.browseName.name}`
+					// 	const result = await this.clients[serverUri].browse(path)
 						
 	
-						let item = {
-							name: ref?.browseName.name?.toString(),
-							items: result?.map((x) => x.browseName.name?.toString())
-						}
-						items.push(item);
-					}
+					// 	let item = {
+					// 		name: ref?.browseName.name?.toString(),
+					// 		items: result?.map((x) => x.browseName.name?.toString())
+					// 	}
+					// 	items.push(item);
+					// }
 			
 
 						let plant_datapoints = [
@@ -157,20 +157,28 @@ export class SyncClient {
 								tag: "Plant-Running"
 							}
 						]
+					
+					//Get datapoints and mapping from DB
+					let datapoints = (controlDevice.deviceMapping || []).map((mapItem: any) => {
+							return {
+								path: mapItem.path,
+								tag: `${mapItem.device?.type?.tagPrefix || ''}${mapItem.device?.tag}`
+							}
+					}) //[];
 	
-						let datapoints = items?.reduce<{path: string, tag: string}[]>((prev, curr) => {
-							return prev.concat(curr?.items?.filter((a) => a !== "Product" && a !== "Serial").map((item) => ({
-								path: `/Objects/1:Devices/1:${curr.name}/1:${item}`,
-								tag: `${curr.name}-${item}`
-							}) ) || [])
-						}, [])
+						// let datapoints = items?.reduce<{path: string, tag: string}[]>((prev, curr) => {
+						// 	return prev.concat(curr?.items?.filter((a) => a !== "Product" && a !== "Serial").map((item) => ({
+						// 		path: `/Objects/1:Devices/1:${curr.name}/1:${item}`,
+						// 		tag: `${curr.name}-${item}`
+						// 	}) ) || [])
+						// }, [])
 
-						let action_datapoints = (actions || []).map((ref) => ({
-							path: `/Objects/1:Plant/1:Actions/${ref.browseName.namespaceIndex}:${ref.browseName.name}/1:running`,
-							tag: `PlantActions-${ref.browseName.name}`
-						}))
+						// let action_datapoints = (actions || []).map((ref) => ({
+						// 	path: `/Objects/1:Plant/1:Actions/${ref.browseName.namespaceIndex}:${ref.browseName.name}/1:running`,
+						// 	tag: `PlantActions-${ref.browseName.name}`
+						// }))
 
-						datapoints = [...datapoints, ...action_datapoints, ...plant_datapoints]
+						datapoints = [...datapoints]
 
 						// console.log("Subscribing to", datapoints.map((x) => x.tag))
 	
