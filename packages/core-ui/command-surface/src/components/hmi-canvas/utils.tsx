@@ -4,6 +4,8 @@ export interface HMICanvasNode {
     id: string;
     width?: number;
     height?: number;
+    zIndex?: number;
+    
     scaleX?: number;
     scaleY?: number;
     devicePlaceholder?: any;
@@ -60,6 +62,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             id: x.id,
             x: x.x,
             y: x.y,
+            zIndex: x.zIndex || 1,
             rotation: x.rotation || 0,
             scaleX: x.scaleX || 1,
             scaleY: x.scaleY || 1,
@@ -73,6 +76,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
                 options: x.icon?.metadata?.options || {},
                 devicePlaceholder: x.devicePlaceholder,
                 rotation: x.rotation || 0,
+                zIndex: x.zIndex || 1,
                 scaleX: x.scaleX != undefined ? x.scaleX : 1,
                 scaleY: x.scaleY != undefined ? x.scaleY : 1,
                 // showTotalizer: x.showTotalizer || false,
