@@ -3,7 +3,7 @@ import { Box, Button, Collapsible, List, Text } from 'grommet';
 import { useConnectProgramNode, useCreateProgramFlow, useCreateProgramNode, useDeleteProgramFlow, useDeleteProgramNodes, useDisconnectProgramNode, useUpdateProgramFlow, useUpdateProgramNode } from '@hive-command/api';
 
 import { IconNodeFactory, InfiniteCanvasNode, InfiniteCanvas, ZoomControls, InfiniteCanvasPath, HyperTree } from '@hexhive/ui';
-import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
+import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { nanoid } from 'nanoid';
 import { NodeDropdown } from '../../../../components/node-dropdown';
 import { SubdirectoryArrowRight as Connect, GridView as Action, PlayArrow as Trigger, PowerSettingsNew as PowerShutdown, Add, Timer } from '@mui/icons-material';

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
-import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
+import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
 import { GridView as Nodes, Construction as Action } from '@mui/icons-material'
@@ -338,7 +338,7 @@ export const Controls = (props) => {
                         scaleY: x.scaleY != undefined ? x.scaleY : 1,
                         rotation: x.rotation || 0,
                         options: x.options,
-                        
+
                         //  width: `${x?.type?.width || 50}px`,
                         // height: `${x?.type?.height || 50}px`,
                         extras: {

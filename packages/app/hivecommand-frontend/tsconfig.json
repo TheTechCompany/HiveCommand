@@ -11,6 +11,7 @@
   "include": ["src/**/*", "node_modules/@types"],
   "exclude": ["src/**/*.test*"],
   "references": [
+    {"path": "../../core-ui/canvas-nodes"},
     {"path": "../hivecommand-api"},
     {"path": "../../core-ui/command-surface"},
     {"path": "../../core/command-data-types"}
