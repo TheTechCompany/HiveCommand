@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Box, Text, List, Button, Collapsible, TextInput, Select } from 'grommet'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
-import { HMINodeFactory } from '../hmi-node/HMINodeFactory';
+import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../assets/hmi-elements'
 import { HMICanvasProvider } from './HMICanvasContext';
