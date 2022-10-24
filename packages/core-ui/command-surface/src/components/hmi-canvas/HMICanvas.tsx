@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Box, Text, List, Button, Collapsible, TextInput, Select } from 'grommet'
+import { Box } from '@mui/material'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
-import { HMINodeFactory } from '../hmi-node/HMINodeFactory';
+import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
@@ -231,9 +231,11 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             value={{
                 values: props.deviceValues
             }}>
-            <Box 
-                direction="row"
-                flex>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flex: 1
+                }}>
                 <InfiniteCanvas
                     finite
                     style={CanvasStyle}
