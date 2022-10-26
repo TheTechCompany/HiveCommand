@@ -345,7 +345,10 @@ export const Controls = (props) => {
                         // height: `${x?.type?.height || 50}px`,
                         extras: {
                             options: x.icon?.metadata?.options || {},
-                            devicePlaceholder: x.devicePlaceholder,
+                            devicePlaceholder: {
+                                ...x.devicePlaceholder,
+                                tag: x?.devicePlaceholder?.tag ? `${x?.devicePlaceholder?.type?.tagPrefix || ''}${x?.devicePlaceholder?.tag}` : ''
+                            },
                             rotation: x.rotation || 0,
                             zIndex: x.zIndex != undefined ? x.zIndex : 1,
                             scaleX: x.scaleX != undefined ? x.scaleX : 1,

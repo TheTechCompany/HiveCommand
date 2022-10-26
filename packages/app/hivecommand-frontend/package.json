@@ -58,7 +58,7 @@
     "@emotion/styled": "^11.8.1",
     "@hexhive/auth-ui": "0.0.6-alpha.10",
     "@hexhive/styles": "1.0.1-alpha.39",
-    "@hexhive/ui": "1.0.1-alpha.75",
+    "@hexhive/ui": "1.0.1-alpha.76",
     "@hive-command/api": "^1.4.15-alpha.65",
     "@hive-command/canvas-nodes": "^1.0.0",
     "@hive-command/command-surface": "^1.4.15-alpha.64",
