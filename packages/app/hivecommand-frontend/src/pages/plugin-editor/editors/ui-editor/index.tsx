@@ -76,14 +76,6 @@ export const UIEditor : React.FC<UIEditorProps> = (props) => {
     }, [props.plugin])
 
 const tabs = [
-    // {
-    //     label: "IO-Spec",
-    //     pane: (
-    //         // <IOSpecEditor 
-    //         //     plugin={_plugin}/>
-    //     )
-    // },
-
     {
         label: "Component",
         pane: (
