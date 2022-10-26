@@ -43,8 +43,6 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 		let v = values?.filter((a) => a?.placeholder == name);
 		let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
 
-        console.log({name, values, v, state, program: program?.devices})
-
 		return v?.reduce((prev, curr) => {
 			let unit = units?.find((a) => a.key == curr.key);
 			let stateItem = state?.find((a: any) => a.key == curr.key);
@@ -79,8 +77,6 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 		let deviceValueBlob = getDeviceValue(deviceName, deviceInfo.state)
         let value = deviceValueBlob?.[state.key];
 
-        console.log({deviceValueBlob, value});
-
 		if (state.writable && operatingMode == "manual") {
 			return (
 				<TextField
@@ -108,12 +104,9 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	const renderActions = () => {
 		let node = hmi?.nodes?.find((a) => (selected || []).map((x) => x.id).indexOf(a.id) > -1)
 
-        console.log({node, selected: selected, hmi})
 		if (!node) return null;
 
 		let devices = getDevicesForNode(node)
-
-        console.log({devices})
 
 		if (editSetpoint) {
 			const device = devices.find((a) => a.tag == editSetpoint)
@@ -190,7 +183,6 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 				let deviceInfo = device?.type || {};
 				let deviceName = device?.tag || '';
 
-				console.log({ deviceInfo })
 				let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
 
 				return (

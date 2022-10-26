@@ -3,8 +3,6 @@ import { Box, List, Button, Tabs, Tab } from 'grommet';
 import componentTemplate from '../../templates/code/component'
 import ioTemplate from '../../templates/code/io-bus';
 import _ from 'lodash';
-import { HMICanvas } from '../../../../components/hmi-canvas';
-import { HMINode } from '../../../../components/hmi-node';
 import { useDropzone } from 'react-dropzone'
 import { Code } from '@mui/icons-material';
 import svgr from '@svgr/core'

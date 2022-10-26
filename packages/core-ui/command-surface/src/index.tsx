@@ -1,10 +1,8 @@
 import { AvatarList, IconNodeFactory } from '@hexhive/ui';
 import { InfiniteCanvas } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
-// import { HMINodeFactory } from '../../components/hmi-node/HMINodeFactory';
 import { useQuery, gql, useApolloClient } from '@apollo/client';
 import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
-// import program from 'shared/hexhive-types/src/models/program';
 
 import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering } from '@mui/icons-material';
 import Toolbar from './toolbar';
@@ -24,6 +22,7 @@ import { MenuItemProps } from './components/tree-menu/item';
 import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
+import { HomeView } from './views/home';
 
 export interface DeviceControlProps {
 
@@ -51,7 +50,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         {
             id: 'change-view',
             fn: (args: {view: string}) => {
-                console.log("CLICK ", {args})
                 setActivePage(args.view);
             }
         }
@@ -207,7 +205,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 y
                                 
                                 zIndex
-                                
+
                                 width
                                 height
 
@@ -517,7 +515,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
     const renderActiveView = () => {
         switch(activeView){
             case 'home':
-                return (<div>Home</div>)
+                return (<HomeView />)
             case 'analytics':
                 return (<DeviceControlGraph />)
             case 'controls':

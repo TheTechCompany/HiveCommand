@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
-import { HMINodeFactory } from '../../../../components/hmi-node/HMINodeFactory';
+import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
 import { GridView as Nodes, Construction as Action } from '@mui/icons-material'
@@ -145,6 +145,10 @@ export const Controls = (props) => {
                             id
                             
                             tag
+
+                            type {
+                                tagPrefix
+                            }
 
                             setpoints {
                                 id
@@ -313,7 +317,6 @@ export const Controls = (props) => {
             })).then((nodes) => {
                 // console.log("ASD", {nodes})
 
-                console.log(nodes.map((x) => x?.icon?.metadata));
 
                 setNodes(nodes.map((x) => {
                     let width =  x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
@@ -325,7 +328,6 @@ export const Controls = (props) => {
 
                     if(x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
 
-                    console.log({icon: x.icon, metadata: x.icon?.metadata, width, height});
 
                     return {
                         id: x.id,
@@ -338,7 +340,7 @@ export const Controls = (props) => {
                         scaleY: x.scaleY != undefined ? x.scaleY : 1,
                         rotation: x.rotation || 0,
                         options: x.options,
-                        
+
                         //  width: `${x?.type?.width || 50}px`,
                         // height: `${x?.type?.height || 50}px`,
                         extras: {
@@ -524,13 +526,12 @@ export const Controls = (props) => {
                     onDelete={watchEditorKeys}
                     selected={selected ? [selected] : undefined}
                     onSelect={(key, id) => {
-                        console.log("Select", key, id)
                         setSelected({
                             key,
                             id
                         })
                     }}
-                    menu={(<Collapse
+                    menu={ (<Collapse
                         in={Boolean(menuOpen)}
                         orientation="horizontal"
                         sx={{
@@ -559,7 +560,6 @@ export const Controls = (props) => {
                         // updateRef.current?.addPath(path);
                     }}
                     onPathUpdate={(path) => {
-                        console.log("CREATE PATH", {path})
 
                         if (path.source && path.target && path.targetHandle) {
 
@@ -653,7 +653,6 @@ export const Controls = (props) => {
                 
                     }}
                     onNodeCreate={(position, data) => {
-                        console.log("Node create", {position, data})
 
                         createHMINode(
                             `${data.extras.pack}:${data.extras?.name}`,
