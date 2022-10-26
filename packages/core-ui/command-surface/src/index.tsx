@@ -50,7 +50,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         {
             id: 'change-view',
             fn: (args: {view: string}) => {
-                console.log("CLICK ", {args})
                 setActivePage(args.view);
             }
         }

@@ -34,7 +34,6 @@ const reducer = (state, action) => {
     switch (action.type) {
         case 'ADD_NODE':
             let newNode = action.data;
-            console.log("ADD")
 
             return { ...state, nodes: [...state.nodes, newNode] }
             break;

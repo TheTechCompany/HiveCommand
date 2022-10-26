@@ -248,7 +248,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     }}
                     onBackdropClick={props.onBackdropClick}
                     onSelect={(key, id) => {
-                        console.log("SELECT", {key, id})
+
                         props.onSelect?.({key, id})
                         setSelected({
                             key,

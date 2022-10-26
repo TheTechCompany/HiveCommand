@@ -236,7 +236,6 @@ export default () => {
 						</Bubble>
 					) : null}
 					onBackdropClick={() => {
-						console.log("Backdrop click");
 
 						// setSelected(undefined)
 						setInfoTarget(undefined)
@@ -245,7 +244,6 @@ export default () => {
 						let node = hmi?.nodes?.find((a: any) => a.id == select.id)
 						const { x, y, width, height } = node || {x: 0, y: 0, width: 0, height: 0};
 
-						console.log({ hmi: hmi, node });
 
 						// // let width, height;
 						// // if (node.children && node.children.length > 0) {
