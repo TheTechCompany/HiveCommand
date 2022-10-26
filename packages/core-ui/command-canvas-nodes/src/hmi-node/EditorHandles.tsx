@@ -5,7 +5,7 @@ import { ChangeCircle } from '@mui/icons-material';
 
 // import { HMIContext } from '../../views/Editor/pages/controls/context';
 
-export const EditorHandles : React.FC<{id: string, active: boolean, rotation: number, x: number, y: number, children?: any}> = (props) => {
+export const EditorHandles : React.FC<{id: string, extraProps: any, active: boolean, scaleX: number, scaleY: number, rotation: number, x: number, y: number, children?: any}> = (props) => {
 
     const { getRelativeCanvasPos = (opts: {x?: number, y?: number}) => ({x: 0, y: 0}) } = useContext(InfiniteCanvasContext)
     // const { updateNode } = useContext(HMIContext)
@@ -42,54 +42,17 @@ export const EditorHandles : React.FC<{id: string, active: boolean, rotation: nu
 
     return (
         <Box 
-            ref={containerRef}
-            onClick={() => {
-                selectNode?.(props.id);
-            }}
-            onPointerDown={(evt) => {
-
-                let { x: startX, y: startY } = getRelativeCanvasPos?.({x: evt.clientX, y: evt.clientY});
-
-                const host = evt.currentTarget;
-
-                host.setPointerCapture(evt.pointerId);
-
-                const mouseMove = (evt: any) => {
-
-                    const { x, y } = getRelativeCanvasPos?.({x: evt.clientX, y: evt.clientY})
-
-                    let deltaX = x - startX;
-                    let deltaY = y - startY;
-
-                    // updateNode(props.id, (data) => ({position: {x: data.position.x + deltaX, y: data.position.y + deltaY}}))
-
-                    startX = x
-                    startY = y;
-                }
-
-                const mouseUp = (evt: any) => {
-
-                    host.releasePointerCapture(evt.pointerId);
-
-                    host.removeEventListener('mousemove', mouseMove)
-                    host.removeEventListener('mouseup', mouseUp)
-                }
-
-                host.addEventListener('mousemove', mouseMove)
-                host.addEventListener('mouseup', mouseUp)
-
-            }}
-            sx={{
-                position: 'absolute',
-                top: props.y, 
-                left: props.x,
-                transform: `rotate(${props.rotation || 0}deg)`,
-                cursor: 'pointer',
-                pointerEvents: 'all'
-            }}>
-            <Box sx={{position: 'relative'}}>
+            {...props.extraProps}
+            // onClick={() => {
+            //     selectNode?.(props.id);
+            // }}
+          >
+            <Box 
+                ref={containerRef}
+                sx={{position: 'relative'}}>
                 <div 
                     onPointerDown={(e) => {
+                        console.log("Pointer down - editor")
                         e.stopPropagation();
 
                         const host = e.currentTarget;

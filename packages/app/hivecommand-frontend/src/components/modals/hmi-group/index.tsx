@@ -2,7 +2,7 @@ import { InfiniteCanvas, RetractingPort } from '@hexhive/ui';
 import { Box, Button } from 'grommet';
 import { nanoid } from 'nanoid';
 import React, {useState, useEffect} from 'react';
-import { HMINodeFactory } from '../../hmi-node';
+import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { BaseModal } from '../base';
 import { HMIGroupMenu } from './Menu';
 import * as HMIIcons from '../../../assets/hmi-elements'

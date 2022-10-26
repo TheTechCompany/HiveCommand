@@ -889,7 +889,6 @@ export const useCreatePlaceholderPlugin = (programId: string, deviceId: string) 
 				}
 			}
 
-			console.log({args})
 			let ruleUpdate = {};
 
 			if(args.rules){

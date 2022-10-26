@@ -1,36 +1,32 @@
 import React from "react";
 import { AbstractNodeFactory, InfiniteCanvasNode } from "@hexhive/ui";
 import { HMINode } from "./HMINode";
-import { HMIGroup } from "./HMIGroup";
 import { EditorHandles } from "./EditorHandles";
 
 export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (building: boolean = false) => (context) => {
 
     return {
         type: 'hmi-node',
-        renderNodeContainer: (node: any, children: any) => {
+        renderNodeContainer: (node: any, props: any, children: any) => {
 
             return building ? (
                 <EditorHandles 
+                    extraProps={props}
                     active={node.isSelected || false} 
                     rotation={(node as any).rotation}
                     x={node.x} 
                     y={node.y} 
+                    scaleX={node.scaleX}
+                    scaleY={node.scaleY}
                     id={node.id}>
                     {children}
                 </EditorHandles>
-            ) : (<div style={{
-                position: 'absolute', 
-                pointerEvents: 'none',
-                top: node.y, 
-                left: node.x, 
-                transform: `rotate(${node.rotation || 0}deg) scaleX(${node.scaleX || 1}) scaleY(${node.scaleY || 1})`,
-                // transform: `rotate(${(node as any).rotation}deg)`
-            }}>{children}</div>)
+            ) : (<div 
+                    {...props}>{children}</div>)
         },
         renderNode: (event: any) => {
             // console.log(event)
-            return event.extras.nodes ? <HMIGroup {...event} building={building} /> : (<HMINode  {...event} building={building} />)
+            return (<HMINode  {...event} building={building} />)
         },
         parseModel: (model: any) => {
             return {

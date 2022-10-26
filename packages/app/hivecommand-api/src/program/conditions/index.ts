@@ -44,7 +44,6 @@ export const useCreatePathCondition = (programId: string, flowId: string, parent
 
 export const useUpdatePathCondition = (programId: string, flowId: string, parent?: string) => {
 
-	console.log({programId}, {flowId})
 	const [ mutateFn ] = useMutation((mutation, args: {
 		sourceNode: string,
 		id: string,
@@ -72,7 +71,6 @@ export const useUpdatePathCondition = (programId: string, flowId: string, parent
 		// let newIds = args.conditions.filter((a) => !a.id).map((x) => nanoid()) || []
 		// let totalIds = args.conditions.filter((a) => a.id).map((x) => x.id || '').concat(newIds);
 
-		// console.log({totalIds})
 		
 		// let where = parent ? {id: flowId, parent: {id: parent, programs: {id: programId}}} : {id: flowId, programs: {id: programId}}
 

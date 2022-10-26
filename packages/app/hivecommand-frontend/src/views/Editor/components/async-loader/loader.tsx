@@ -3,7 +3,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export const Loader = async (base_url: string, start: string) => {
     let url = base_url + start;
 
-    console.log("Load ", {url})
 
     let baseRequirements = {
         react: require('react'),
@@ -61,7 +60,6 @@ export const useRemote = (base_url: string, url : string) => {
 
     useEffect(() => {
         Loader(base_url, `${url}?now=${Date.now()}`).then((data) => {
-            console.log({data});
 
             setComponentList(Object.keys(data));
 

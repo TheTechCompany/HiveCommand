@@ -3,7 +3,7 @@ import { InfiniteCanvas } from "@hexhive/ui";
 import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material";
 import React, { useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { HMINodeFactory } from "../../components/hmi-node";
+import { HMINodeFactory } from "@hive-command/canvas-nodes";
 
 import { useEffect } from "react";
 import { Save, Add } from "@mui/icons-material";

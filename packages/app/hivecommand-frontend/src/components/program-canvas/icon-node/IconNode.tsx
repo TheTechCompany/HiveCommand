@@ -72,24 +72,4 @@ export const IconNode = styled(UnstyledIconNode)`
         height: 12px;
         width: 12px;
     }
-
-    .port-base:first-child{
-        top: -6px;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: center;
-        margin: 0 auto;
-        position: absolute;
-    }
-
-    .port-base:last-child{
-        bottom: -6px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        position: absolute;
-    }
 `
