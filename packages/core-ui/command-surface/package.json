@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@hexhive/styles": "^1.0.1-alpha.45",
-    "@hexhive/ui": "^1.0.1-alpha.69",
+    "@hexhive/ui": "^1.0.1-alpha.75",
     "@hexhive/utils": "^0.0.6-alpha.13",
     "@hive-command/api": "^1.4.15-alpha.65",
     "@types/styled-components": "^5.1.26",

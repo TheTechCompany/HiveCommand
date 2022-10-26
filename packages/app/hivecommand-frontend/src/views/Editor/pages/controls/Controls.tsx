@@ -15,7 +15,7 @@ import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
 import { useRemoteComponents } from '../../../../hooks/remote-components';
 import { size } from 'mathjs';
-import { PipePathFactory } from "@hexhive/ui/dist/components/InfiniteCanvas/components/paths/pipe-path";
+import { PipePathFactory } from "@hexhive/ui";
 
 export const Controls = (props) => {
 
@@ -561,6 +561,8 @@ export const Controls = (props) => {
                     }}
                     onPathUpdate={(path) => {
 
+                        console.log("Path Update", {path})
+
                         if (path.source && path.target && path.targetHandle) {
 
                             let p = paths.slice()
@@ -577,7 +579,7 @@ export const Controls = (props) => {
 
                             let node = nodes.find((a) => a.id == path.target);
 
-                            if(targetPoint && (node.extras.ports?.length > 0)) return;
+                            if(targetPoint && (node?.extras?.ports?.length > 0)) return;
 
                                 if (!path.draft) {
                                     updateHMIEdge(
@@ -621,13 +623,15 @@ export const Controls = (props) => {
                             console.log({path})
                         }
 
-                        setPaths((paths) => {
-                            let p = paths.slice();
-                            let ix = p.map((x) => x.id).indexOf(path.id)
-                            path.type = 'pipe-path';
-                            p[ix] = path;
-                            return p;
-                        })
+                        // setPaths((paths) => {
+                        //     let p = paths.slice();
+                        //     let ix = p.map((x) => x.id).indexOf(path.id)
+                        //     path.type = 'pipe-path';
+                        //     p[ix] = path;
+                        //     return p;
+                        // })
+
+
                         // updateRef.current?.updatePath(path)
                     }}
                     onNodeUpdate={(node) => {
@@ -635,6 +639,8 @@ export const Controls = (props) => {
                         let ix = n.map((x) => x.id).indexOf(node.id)
                         n[ix] = node;
                         setNodes(n)
+
+                        console.log({node});
 
                         setSelected({
                             key: 'node',
@@ -645,7 +651,10 @@ export const Controls = (props) => {
                                 node.id,
                                 {
                                     x: node.x,
-                                    y: node.y
+                                    y: node.y,
+                                    width: node.width,
+                                    height: node.height,
+                                    rotation: node.rotation
                                 }
                             ).then(() => {
                                 refetch()
