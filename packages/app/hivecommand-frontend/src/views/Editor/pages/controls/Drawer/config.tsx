@@ -9,6 +9,7 @@ import { FunctionArgumentsModal } from "../../../../../components/modals/functio
 import { MenuItem } from "@mui/material";
 import { FormControl } from "@mui/material";
 import { InputLabel } from "@mui/material";
+import { FormGroup } from "@mui/material";
 // import { HMICanvasContext } from "../context";
 
 export interface ConfigMenuProps {
@@ -46,8 +47,6 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     const item = nodes?.find((a) => a.id == selected.id);
 
-    console.log({item})
-
     const options = item?.extras?.options || {};
 
     const [ state, setState ] = useState<any>([])
@@ -80,17 +79,23 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
         )
 
     }
-    console.log({state})
 
-    const renderConfigInput = ({type, value, label}: {type: 'Function' | 'String' | 'Number' | 'Boolean', value: any, label: string}) => {
+    const [ templateValue, setTemplateValue ] = useState('');
+
+    const renderConfigInput = ({type, value, label}: {type: 'Template' | 'Function' | 'String' | 'Number' | 'Boolean', value: any, label: string}) => {
         switch(type){
             case 'Boolean':
                 return (
-                    <FormControlLabel 
-                        label={label} 
-                        control={<Checkbox value={value} onChange={(evt) => {
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <input 
+                        checked={Boolean(value)}
+                        type="checkbox" 
+                        onChange={(evt) => {
                             updateState(label, evt.target.checked)
-                        }} />} />
+                        }} />
+
+                        <Typography>{label}</Typography>
+                    </Box>
                 )
             case 'Function':
                 return (
@@ -100,7 +105,6 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                         value={functions?.find((a) => a.id == value?.fn) || {label: ""}}
                         
                         onChange={(event, newValue) => {
-                            console.log({newValue})
                             if(!newValue){
                                 updateState(label, null)
                             }else{
@@ -144,6 +148,34 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                         }}
                         size="small" 
                         label={label} />
+                );
+            case 'Template':
+                return (
+
+                    // <Autocomplete
+                    //     size="small"
+                    //     multiple={true}
+                    //     options={[{label: 'BLO701.on'}, {label: 'FIT101.flow'}]}
+                    //     inputValue={templateValue}
+                    //     onInputChange={(event, value, reason) => {
+                    //         if ( event && event.type === 'blur' ) {
+                    //             console.log("BLur", value)
+                    //               setTemplateValue('');
+                    //         } else if ( reason !== 'reset' ) {
+                    //             console.log("Non blur", value)
+                    //           setTemplateValue(value);
+                    //         }
+                    //     }}
+                    //     getOptionLabel={(option) => typeof(option) == 'string' ? option : option.label }
+                    //     renderInput={(params) => (
+                            <TextField 
+                                label={label}
+                                value={value}
+                                size="small"
+                                onChange={(e) => {
+                                    updateState(label, e.target.value)
+                                }} />
+                        // )} />
                 );
             default:
                 return (<span>{type} not found in renderConfigInput</span>)
@@ -191,7 +223,6 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 open={modalOpen}
                 onSubmit={(item) => {
                     
-                    console.log("HMI GROUP", {item})
 
                     updateHMIGroup(
                         selected.id,
@@ -227,19 +258,20 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 paddingLeft: '3px',
                 paddingRight: '3px'
             }}>
-                {Object.keys(options).map((optionKey) => {
+                <FormGroup>
+                    {Object.keys(options).map((optionKey) => {
 
-                    const type = options[optionKey];
-                    const value = state?.find((a) => a.key == optionKey)?.value;
-                    const label = optionKey
+                        const type = options[optionKey];
+                        const value = state?.find((a) => a.key == optionKey)?.value;
+                        const label = optionKey
 
-                    return (<Box sx={{marginTop: '6px'}}>
-                        {renderConfigInput({type, value, label})}
-                    </Box>)
+                        return (<Box sx={{marginTop: '6px'}}>
+                            {renderConfigInput({type, value, label})}
+                        </Box>)
 
-                })}
+                    })}
+                </FormGroup>
             </Box>
-
             
             <Box sx={{display :'flex'}}>
                 <Typography>Config</Typography>
@@ -295,7 +327,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Width" 
-                value={item.width} 
+                value={item?.width} 
                 onChange={(e) => {
                     updateHMINode(selected.id, { width: parseInt(e.target.value) }).then(() => {
                         refetch()
@@ -307,7 +339,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Height" 
-                value={item.height} 
+                value={item?.height} 
                 onChange={(e) => {
                     updateHMINode(selected.id, { height: parseInt(e.target.value) }).then(() => {
                         refetch()
@@ -320,7 +352,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Scale X" 
-                value={item.extras.scaleX} 
+                value={item?.extras?.scaleX} 
                 onChange={(e) => {
                     updateHMINode(selected.id, { scaleX: parseFloat(e.target.value) }).then(() => {
                         refetch()
@@ -333,7 +365,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Scale Y" 
-                value={item.extras.scaleY} 
+                value={item?.extras?.scaleY} 
                 onChange={(e) => {
                     updateHMINode(selected.id, { scaleY: parseFloat(e.target.value) }).then(() => {
                         refetch()
@@ -347,7 +379,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 type="number"
                 size="small"
                 label="Z Index"
-                value={item.extras?.zIndex}
+                value={item?.extras?.zIndex}
                 onChange={(e) => {
                     updateHMINode(selected.id, { zIndex: parseFloat(e.target.value)}).then(() => {
                         refetch()

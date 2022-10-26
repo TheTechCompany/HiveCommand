@@ -65,7 +65,6 @@ export const HMICanvasProvider = (props: {children: any, value: {values?: {place
 				// 	}
 				// }
 
-				console.log({values, vals, deviceValues, device})
 				// 	let mods = deviceValues.devicePlaceholder?.type.state.find((a) => a.key == k).modifiers || []
 				// 	console.log(mods)
 				// 	if(mods.length > 0){

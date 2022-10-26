@@ -146,6 +146,10 @@ export const Controls = (props) => {
                             
                             tag
 
+                            type {
+                                tagPrefix
+                            }
+
                             setpoints {
                                 id
                                 name
@@ -313,7 +317,6 @@ export const Controls = (props) => {
             })).then((nodes) => {
                 // console.log("ASD", {nodes})
 
-                console.log(nodes.map((x) => x?.icon?.metadata));
 
                 setNodes(nodes.map((x) => {
                     let width =  x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
@@ -325,7 +328,6 @@ export const Controls = (props) => {
 
                     if(x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
 
-                    console.log({icon: x.icon, metadata: x.icon?.metadata, width, height});
 
                     return {
                         id: x.id,
@@ -524,13 +526,12 @@ export const Controls = (props) => {
                     onDelete={watchEditorKeys}
                     selected={selected ? [selected] : undefined}
                     onSelect={(key, id) => {
-                        console.log("Select", key, id)
                         setSelected({
                             key,
                             id
                         })
                     }}
-                    menu={(<Collapse
+                    menu={ (<Collapse
                         in={Boolean(menuOpen)}
                         orientation="horizontal"
                         sx={{
@@ -559,7 +560,6 @@ export const Controls = (props) => {
                         // updateRef.current?.addPath(path);
                     }}
                     onPathUpdate={(path) => {
-                        console.log("CREATE PATH", {path})
 
                         if (path.source && path.target && path.targetHandle) {
 
@@ -653,7 +653,6 @@ export const Controls = (props) => {
                 
                     }}
                     onNodeCreate={(position, data) => {
-                        console.log("Node create", {position, data})
 
                         createHMINode(
                             `${data.extras.pack}:${data.extras?.name}`,

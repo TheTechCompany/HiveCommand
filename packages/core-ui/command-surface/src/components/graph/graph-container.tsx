@@ -26,7 +26,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  console.log({props})
+
   return (
     <Paper
       elevation={1}

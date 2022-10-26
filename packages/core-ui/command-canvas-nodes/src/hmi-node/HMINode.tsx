@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
 import { Box, Typography as Text } from '@mui/material'
-import { InfiniteCanvasContext, PortWidget, RetractingPort } from '@hexhive/ui';
+import { InfiniteCanvasContext, PortWidget } from '@hexhive/ui';
 
 export interface IconNodeProps {
     id?: string;
@@ -119,7 +119,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
     const [ port, setPort ] = useState<any>();
 
 // console.log({props})
-    const { getRelativeCanvasPos = (opts: {x?: number, y?: number}) => ({x: 0, y: 0}), selected, selectNode } = useContext(InfiniteCanvasContext)
+    const { selected, selectNode } = useContext(InfiniteCanvasContext)
 
     return (
         <>
@@ -155,48 +155,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                 setHovering(false);
                                 setPort(null)
                             }}
-                            onMouseMove={(evt) => {
-                                if(hovering){
-                                    // console.log("Move", {evt})
-
-                                    const { x, y } = getRelativeCanvasPos?.({x: evt.clientX, y: evt.clientY})
-                                    setPort({x: x, y: y});
-
-                                }
-                            }}
-                            onMouseOver={(evt) => {
-                                // console.log("Mouse over")
-
                           
-
-                                // const currentTarget = evt.target;
-                                
-                                setTimeout(() => {
-                                    setHovering(true);
-
-                                    const { x, y } = getRelativeCanvasPos?.({x: evt.clientX, y: evt.clientY})
-                                    setPort({x: x, y: y});
-
-                                //     const moveListener = (e: any) => {
-                                //         // console.log("Move", {e})
-                                //         setPort({x: e.clientX, y: e.clientY});
-                                //     }
-    
-    
-                                //     const cancelListener = (evt: any) => {
-                                //         evt.currentTarget.removeEventListener('mouseup', cancelListener)
-                                //         evt.currentTarget.removeEventListener('mouseleave', cancelListener)
-                                //         evt.currentTarget.removeEventListener('mousemove', moveListener)
-                                //     }
-    
-                                //     currentTarget.addEventListener('mousemove', moveListener);
-    
-                                //     currentTarget.addEventListener('mouseup', cancelListener)
-                                //     currentTarget.addEventListener('mouseleave', cancelListener)
-    
-                                //     // alert("Over node")
-                                }, 400)
-                            }}
                             sx={{ 
                                 pointerEvents: 'all',
                                 // background: 'red',
@@ -226,14 +185,15 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             )} */}
                             
                             {props.extras?.ports && props.extras?.ports.map((port) => (
-                                
-                                    <RetractingPort
+                                <Box sx={{visibility: props.building ? undefined : 'hidden', position: 'absolute', width: '12px', height: '12px', left: port.x, top: port.y}}>
+                                    <PortWidget
                                         id="in"
                                         {...port}
                                         hidden={!props.building}
                                         scaleX={props.extras?.scaleX}
                                         scaleY={props.extras?.scaleY}
                                         direction="center" />
+                                </Box>
                             ))}
                             </div>
 
@@ -275,23 +235,4 @@ export const HMINode = styled(UnstyledIconNode)`
         width: 12px;
     }
 
-    .port-base:first-child{
-        top: -6px;
-        left: 0;
-        right: 0;
-        display: flex;
-        justify-content: center;
-        margin: 0 auto;
-        position: absolute;
-    }
-
-    .port-base:last-child{
-        bottom: -6px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        position: absolute;
-    }
 `

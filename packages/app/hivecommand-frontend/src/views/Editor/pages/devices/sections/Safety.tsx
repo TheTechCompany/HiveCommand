@@ -94,7 +94,6 @@ export const SafetySection = (props) => {
                     })
                 }}
                 onSubmit={(lock) => {
-                    console.log(lock)
                     if (lock.id) {
                         updatePlaceholderInterlock(
                             lock.id,
