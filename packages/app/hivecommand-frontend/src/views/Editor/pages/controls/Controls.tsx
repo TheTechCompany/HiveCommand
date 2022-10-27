@@ -626,13 +626,13 @@ export const Controls = (props) => {
                             console.log({path})
                         }
 
-                        // setPaths((paths) => {
-                        //     let p = paths.slice();
-                        //     let ix = p.map((x) => x.id).indexOf(path.id)
-                        //     path.type = 'pipe-path';
-                        //     p[ix] = path;
-                        //     return p;
-                        // })
+                        setPaths((paths) => {
+                            let p = paths.slice();
+                            let ix = p.map((x) => x.id).indexOf(path.id)
+                            path.type = 'pipe-path';
+                            p[ix] = path;
+                            return p;
+                        })
 
 
                         // updateRef.current?.updatePath(path)
