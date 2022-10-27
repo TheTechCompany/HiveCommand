@@ -157,7 +157,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             }}
                           
                             sx={{ 
-                                pointerEvents: 'all',
+                                // pointerEvents: 'all',
                                 // background: 'red',
                                 cursor: 'pointer',
                                 flex: 1, 

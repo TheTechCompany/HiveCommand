@@ -72,7 +72,7 @@ export const EditorHandles : React.FC<EditorHandleProps> = (props) => {
           >
             <Box 
                 ref={containerRef}
-                sx={{position: 'relative'}}>
+                sx={{position: 'relative', pointerEvents: 'none'}}>
                 <div 
                     onPointerDown={(e) => {
                         console.log("Pointer down - editor")
@@ -264,7 +264,10 @@ export const EditorHandles : React.FC<EditorHandleProps> = (props) => {
 
                         </div>
                 ))}
-                {props.children}
+                <div    
+                    style={{pointerEvents: 'none'}}>
+                    {props.children}
+                </div>
             </Box>
         </Box>
     )
