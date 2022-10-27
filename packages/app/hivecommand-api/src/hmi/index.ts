@@ -296,16 +296,21 @@ export const useUpdateHMIPath = (programId: string) => {
     }
   ) => {
 
+    let points = args.points.map((x) => ({x: x.x, y: x.y}));
+
+    let tgtPoint = args.targetPoint ? {x: args.targetPoint.x, y: args.targetPoint.y} : undefined;
+    let srcPoint = args.sourcePoint ? {x: args.sourcePoint.x, y: args.sourcePoint.y} : undefined;
+
     const item = mutation.updateCommandProgramInterfaceEdge({
       id: args.id,
       input: {
         from: args.source,
         fromHandle: args.sourceHandle,
-        fromPoint: args.sourcePoint,
+        fromPoint: srcPoint,
         to: args.target,
         toHandle: args.targetHandle,
-        toPoint: args.targetPoint,
-        points: args.points,
+        toPoint: tgtPoint,
+        points: points,
       }
     });
 
