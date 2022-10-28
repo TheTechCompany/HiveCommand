@@ -13,12 +13,16 @@ export interface OPCUATreeItem {
     children?: OPCUATreeItem[]
 }
 
-export interface OPCUATreeViewProps {
-    items: OPCUATreeItem[]
-    onMap?: (item: any) => void;
+export interface OPCUATreeItemProps extends TreeItemContentProps {
+    parentId?: string;
 }
 
-const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
+export interface OPCUATreeViewProps {
+    items: OPCUATreeItem[]
+    onMap?: (item: any, parentId?: string) => void;
+}
+
+const OPCUATreeItem = forwardRef((props: OPCUATreeItemProps, ref) => {
     const {
         classes,
         className,
@@ -40,7 +44,7 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
         preventSelection,
       }  = useTreeItem(nodeId); //= useTreeItem(nodeId);
       
-      const { editable, value } = useTreeMapNode(nodeId);
+      const { editable, value } = useTreeMapNode(nodeId, props.parentId);
 
       const { onMap } = useTreeMap()
 
@@ -83,7 +87,7 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
                {editable ? (
                 <Box sx={{display: 'flex', alignItems: 'center', marginRight: '6px'}}>
                     <TextField value={value} size="small" />
-                    <IconButton onClick={() => onMap(nodeId)} size="small">
+                    <IconButton onClick={() => onMap(nodeId, props.parentId)} size="small">
                         <Explore fontSize="inherit" />
                     </IconButton>
                 </Box>
@@ -95,12 +99,12 @@ const OPCUATreeItem = forwardRef((props: TreeItemContentProps, ref) => {
 
 export const OPCUATreeView : React.FC<OPCUATreeViewProps> = (props) => {
 
-    const renderItems = (items: OPCUATreeItem[]) => {
+    const renderItems = (items: OPCUATreeItem[], parentId?: string) => {
         return items.map((item: any) => {
             // item.editable = item.children?.length > 0
             return (
-            <TreeItem ContentComponent={OPCUATreeItem} nodeId={item.id} label={item.label}>
-                {renderItems(item.children || [])}
+            <TreeItem ContentComponent={OPCUATreeItem} ContentProps={{parentId} as any} nodeId={item.id} label={item.label}>
+                {renderItems(item.children || [], item.id)}
             </TreeItem>
             )
         })
