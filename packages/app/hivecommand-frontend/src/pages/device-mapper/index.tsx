@@ -81,7 +81,7 @@ export const DeviceMapper = () => {
                 selected={selectedElement}
                 dataLayout={dataLayout}
                 onSubmit={(nodeId) => {
-                    console.log({nodeId});
+                    console.log("Create connection", {selectedElement, nodeId});
                     connectDevice(selectedElement.parent.id, selectedElement.id, nodeId).then(() => {
                         setSelectedElement(null)
                     })
@@ -99,11 +99,17 @@ export const DeviceMapper = () => {
             </Box>
             <Box sx={{flex: 1}}>
                 <OPCUATreeView 
-                    onMap={(item) => {
+                    onMap={(item, parentId) => {
                         console.log({item, devices});
                         let stateItems = devices.reduce((prev, curr) => [...prev, ...curr.type?.state?.map((x) => ({id: x.id, label: x.key, parent: {id: curr.id, label: `${curr?.type?.tagPrefix || ''}${curr?.tag}`}}))], [])
                         console.log({stateItems})
-                        setSelectedElement(stateItems.find((a) => a.id == item))
+                        setSelectedElement(stateItems.find((a) => {
+                            if(parentId){
+                                return a.id == item && a.parent.id == parentId;
+                            }else{
+                                return a.id == item
+                            }
+                        }))
                     }}
                     items={
                         devices.map((device) => ({
