@@ -46,7 +46,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                         ],
                         readinessProbe: {
                             httpGet: {
-                                path: '/graphql',
+                                path: '/',
                                 port: 'http'
                             }
                         },

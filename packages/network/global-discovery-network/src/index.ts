@@ -10,6 +10,9 @@ app.use(bodyParser.json());
 
 const prisma = new PrismaClient();
 
+app.get('/', async (req, res) => {
+    res.send({success: true})
+})
 
 //Auth against a short-code in the system
 app.post('/authorize', async (req, res) => {
