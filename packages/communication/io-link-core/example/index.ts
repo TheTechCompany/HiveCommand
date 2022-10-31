@@ -2,7 +2,7 @@ import { discoverDevices, discoverMasters, IOMaster } from "../src";
 
 (async () => {
 
-	const master = new IOMaster('192.168.100.12')
+	const master = new IOMaster('192.168.88.250')
 
 	master.on('init', async () => {
 		const port = await master.getPortInfo(2)
