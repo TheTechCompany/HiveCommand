@@ -1,5 +1,5 @@
 import { Box, TextField } from '@mui/material';
-import React, { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { SetupContext } from '../context';
 
 export const ProvisionCodeStage = () => {
