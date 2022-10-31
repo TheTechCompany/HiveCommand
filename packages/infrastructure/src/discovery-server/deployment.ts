@@ -50,6 +50,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                                 port: 'http'
                             }
                         },
+                        
                         // livenessProbe: {
                         //     httpGet: {
                         //         path: '/graphql',
