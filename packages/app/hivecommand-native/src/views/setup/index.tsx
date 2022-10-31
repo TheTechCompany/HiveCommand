@@ -3,6 +3,7 @@ import { writeTextFile } from "@tauri-apps/api/fs";
 import React, { useState } from "react";
 import { SetupProvider } from "./context";
 import { DiscoveryServerStage, OPCUAServerStage, ProvisionCodeStage } from "./stages";
+import axios from 'axios';
 
 export const SetupView = (props: any) => {
 
@@ -21,6 +22,15 @@ export const SetupView = (props: any) => {
             onNext: async (state: any, setState: any) => {
                 if(!state.provisionResult){
                     //Test provisionCode against discovery server
+
+                    const res = await axios.post(`${state.discoveryServer}/authorize`, {
+                        shortCode: state.provisionCode
+                    })
+                    if(res?.data?.token){
+                        console.log({token: res.data.token})
+                    }else{
+                        console.log({res})
+                    }
                 }
             }
         },
