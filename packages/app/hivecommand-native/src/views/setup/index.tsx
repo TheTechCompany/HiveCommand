@@ -17,7 +17,12 @@ export const SetupView = (props: any) => {
             label: "Discovery server"
         },
         {
-            label: "Provision code"
+            label: "Provision code",
+            onNext: async (state: any, setState: any) => {
+                if(!state.provisionResult){
+                    //Test provisionCode against discovery server
+                }
+            }
         },
         {
             label: "OPCUA Server"

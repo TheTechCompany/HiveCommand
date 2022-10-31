@@ -63,6 +63,10 @@ export class IOMaster extends EventEmitter {
         return this.ports;
     }
 
+    async getPortInfo(port: number): Promise<any> {
+        return await this.portClient?.getPortSetting(port)
+    }
+
     async readPort(port: number){
         const portData = await this.portClient?.getPortData(port)
         return portData?.data
