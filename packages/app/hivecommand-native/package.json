@@ -74,7 +74,7 @@
   },
   "scripts": {
     "start": "cross-env BROWSER=none GENERATE_SOURCEMAP=false node ./scripts/start",
-    "build": "node ./scripts/build",
+    "build": "node --max_old_space_size=8192 ./scripts/build",
     "test": "node ./scripts/test",
     "tauri": "tauri"
   },
