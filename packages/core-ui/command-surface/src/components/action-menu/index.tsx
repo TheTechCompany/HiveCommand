@@ -39,6 +39,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
 		if (!name) return;
 
+		console.log("DeviceValue getter", {name, values})
 
 		let v = values?.filter((a) => a?.placeholder == name);
 		let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
