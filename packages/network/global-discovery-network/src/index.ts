@@ -1,10 +1,13 @@
 import express from 'express'
 import bodyParser from 'body-parser';
 import jwt from 'jsonwebtoken';
+import cors from 'cors';
 
 import { PrismaClient } from '@hive-command/data';
 
 const app = express();
+
+app.use(cors());
 
 app.use(bodyParser.json());
 

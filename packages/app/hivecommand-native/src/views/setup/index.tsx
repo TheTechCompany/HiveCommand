@@ -8,7 +8,7 @@ import axios from 'axios';
 export const SetupView = (props: any) => {
 
     const [ state, setState ] = useState<any>({
-        discoveryServer: 'discovery.hexhive.io'
+        discoveryServer: 'https://discovery.hexhive.io'
     });
 
     const [ activeIndex, setActiveIndex ] = useState(0);
@@ -55,9 +55,12 @@ export const SetupView = (props: any) => {
         }
     }
 
-    const goNext = () => {
+    const goNext = async () => {
         if(activeIndex < steps.length -1){
-            setActiveIndex((index) => index + 1)
+            const res = await steps[activeIndex].onNext?.(state, setState)
+            if(res || !steps[activeIndex].onNext){
+                setActiveIndex((index) => index + 1)
+            }
         }else{
             finish()
         }
