@@ -422,6 +422,9 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         let nodes = iface?.nodes?.map((node: any) => {
             return {
                 ...node,
+                extras: {
+                    options: {a: 1}
+                },
                 devicePlaceholder: {
                     ...node?.devicePlaceholder,
                     tag: node?.devicePlaceholder?.tag ? `${node?.devicePlaceholder?.type?.tagPrefix || ''}${node?.devicePlaceholder?.tag}` : ''

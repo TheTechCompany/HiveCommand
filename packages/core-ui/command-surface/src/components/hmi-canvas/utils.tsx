@@ -51,6 +51,8 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
         let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
 
+        console.log("Options", {opts: x.options})
+
         let opts = Object.keys(x.options || {}).map((key) => {
             if(x.options[key]?.fn){
                 return {key, value: functions?.find((a) => a.id == x.options[key]?.fn)?.fn?.bind(this, x.options[key]?.args)}

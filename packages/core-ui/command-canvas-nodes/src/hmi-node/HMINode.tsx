@@ -12,6 +12,7 @@ export interface IconNodeProps {
     className?: string;
     extras?: {
         options?: any;
+        dataValue?: any;
 
         label?: string;
         color?: string;
@@ -51,7 +52,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     
     // const { getDeviceConf, getDeviceOptions } = useContext(HMICanvasContext)
 
-    let options: any = {};
+    // let options: any = props.extras?.options || {};
     let conf: any = {};
 
     const tag = `${props.extras?.devicePlaceholder?.tag}`
@@ -103,7 +104,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
                     scaleX={props.extras?.scaleX}
                     scaleY={props.extras?.scaleY}
                     conf={conf}
-                    options={options}
+                    options={props.extras?.dataValue}
                     {...props.options}
                     size="medium" />
             )}
@@ -118,7 +119,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
 
     const [ port, setPort ] = useState<any>();
 
-// console.log({props})
+console.log({props})
     const { selected, selectNode } = useContext(InfiniteCanvasContext)
 
     return (

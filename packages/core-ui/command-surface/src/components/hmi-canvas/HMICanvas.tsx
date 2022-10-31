@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box } from '@mui/material'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
@@ -104,7 +104,30 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
     const { getPack } = useRemoteComponents()
 
+    // const getDeviceOptions = useCon
     
+    const dataNodes = useMemo(() => {
+        console.log({nodes, deviceValues: props.deviceValues})
+        return nodes.map((node) => {
+            
+
+            let values = (props.deviceValues || []).filter((a) => a.placeholder == node.extras?.devicePlaceholder?.tag).reduce((prev, curr) => ({
+                ...prev,
+                [curr.key]: curr.value
+            }), {})
+
+            return {
+                ...node,
+                extras: {
+                    ...node.extras,
+                    dataValue: values
+                }
+            }
+        });
+    }, [nodes, props.deviceValues]);
+
+    console.log({dataNodes})
+
     useEffect(() => {
         if(props.nodes){
 
@@ -257,7 +280,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     }} 
                     information={props.information}
                     editable={false}
-                    nodes={nodes}
+                    nodes={dataNodes}
                     paths={paths}
                     factories={[IconNodeFactory, HMINodeFactory(false), PipePathFactory ]}
                     onPathCreate={(path) => {
