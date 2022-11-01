@@ -242,6 +242,7 @@ jobs:
       RABBIT_URL: ${{ secrets.RABBIT_URL }}
       TIMESERIES_HOST: ${{ secrets.TIMESERIES_HOST }}
       TIMESERIES_PASSWORD: ${{ secrets.TIMESERIES_PASSWORD }}
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
     steps:
       - name: checkout
         uses: actions/checkout@v2
