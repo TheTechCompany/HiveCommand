@@ -13,6 +13,7 @@ export const SetupView = (props: any) => {
 
     const [ activeIndex, setActiveIndex ] = useState(0);
 
+    
     const steps = [
         {
             label: "Discovery server"
