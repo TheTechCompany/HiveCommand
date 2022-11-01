@@ -4,3 +4,4 @@ config:
   hivecommand-app:suffix: staging 
 
   hivecommand-app:sync-host: discovery.hexhive.io
+  hivecommand-app:discoveryUrl: discovery.hexhive.io
