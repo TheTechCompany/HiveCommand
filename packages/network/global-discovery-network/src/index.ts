@@ -28,7 +28,7 @@ app.post('/authorize', async (req, res) => {
             provisionCode: shortCode
         }
     })
-    
+
 
     if(!screen) return res.send({error: "No screen found with that shortCode"});
 
