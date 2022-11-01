@@ -7,13 +7,15 @@ export const Service = (provider: Provider, namespace: k8s.core.v1.Namespace, ap
 
     const sslCert = new aws.acm.Certificate(`${discoveryUrl}-ssl-certif`, {
         domainName: discoveryUrl,
-        subjectAlternativeNames: [discoveryUrl],
+        // subjectAlternativeNames: [discoveryUrl],
         validationMethod: "DNS"
-    })
+    }, {
+        deleteBeforeReplace: false
+    });
 
     let certValidations = sslCert.domainValidationOptions.apply((domains) => {
         return domains.map((domain) => {
-            return new aws.route53.Record(`${discoveryUrl}-certValidation-${domain.domainName}`, {
+            return new aws.route53.Record(`${domain.domainName}-certValidation-${domain.domainName}`, {
                 name: domain.resourceRecordName,
                 zoneId: zoneId,
                 type: domain.resourceRecordType,
