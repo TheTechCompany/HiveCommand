@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { writeTextFile } from "@tauri-apps/api/fs";
-import React, { useState } from "react";
+import { useState } from "react";
 import { SetupProvider } from "./context";
-import { DiscoveryServerStage, OPCUAServerStage, ProvisionCodeStage } from "./stages";
-import axios from 'axios';
+import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage, ProvisionCodeStage } from "./stages";
+// import axios from 'axios';
 
 export const SetupView = (props: any) => {
 
@@ -13,7 +13,7 @@ export const SetupView = (props: any) => {
 
     const [ activeIndex, setActiveIndex ] = useState(0);
 
-    
+
     const steps = [
         {
             label: "Discovery server"
@@ -24,16 +24,28 @@ export const SetupView = (props: any) => {
                 if(!state.provisionResult){
                     //Test provisionCode against discovery server
 
-                    const res = await axios.post(`${state.discoveryServer}/authorize`, {
-                        shortCode: state.provisionCode
-                    })
-                    if(res?.data?.token){
-                        console.log({token: res.data.token})
-                    }else{
-                        console.log({res})
-                    }
+                    // const res = await axios.post(`${state.discoveryServer}/authorize`, {
+                    //     shortCode: state.provisionCode
+                    // });
+
+                    // if(res?.data?.token){
+                    //     setState({
+                    //         ...state,
+                    //         provisionResult: res.data.token
+                    //     })
+                    //     console.log({token: res.data.token})
+
+                    //     return true;
+                    // }else{
+                    //     console.log({res})
+                    // }
+                }else{
+                    return true;
                 }
             }
+        },
+        {
+            label: "Downloading assets"
         },
         {
             label: "OPCUA Server"
@@ -78,6 +90,10 @@ export const SetupView = (props: any) => {
                     <ProvisionCodeStage />
                 )
             case 2:
+                return (
+                    <LayoutDownload />
+                )
+            case 3:
                 return (
                     <OPCUAServerStage />
                 )

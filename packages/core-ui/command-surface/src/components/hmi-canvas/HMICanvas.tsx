@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box } from '@mui/material'
-import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
+import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui/dist/components/InfiniteCanvas/InfiniteCanvas';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';

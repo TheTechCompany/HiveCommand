@@ -1,5 +1,4 @@
-import { AvatarList, IconNodeFactory } from '@hexhive/ui';
-import { InfiniteCanvas } from '@hexhive/ui';
+import { AvatarList } from '@hexhive/ui/dist/components/AvatarList';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery, gql, useApolloClient } from '@apollo/client';
 import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
@@ -7,7 +6,6 @@ import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } fr
 import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
-import Controls from './views/control'
 import { DeviceControlGraph } from './views/graph'
 
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, useCreateDeviceMaintenanceWindow, useCreateReportPage, usePerformDeviceAction } from '@hive-command/api';
@@ -17,18 +15,14 @@ import { useSubscription } from '@apollo/client';
 import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
 import { MaintenanceWindow } from './components/modals/maintenance';
-import { MenuItemProps } from './components/tree-menu/item';
 
 import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
 
-export interface DeviceControlProps {
 
-}
-
-export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
+export const CommandSurface: React.FC<any> = (props) => {
 
     const client = useApolloClient();
 

@@ -1,10 +1,9 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
-import { DateSelector, GridLayoutItem, LineGraph } from "@hexhive/ui";
 import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../components/modals/device-control-graph";
-import { useAddDeviceChart, useUpdateDeviceChart, useRemoveDeviceChart, useUpdateDeviceChartGrid } from '@hive-command/api'
+// import { useAddDeviceChart, useUpdateDeviceChart, useRemoveDeviceChart, useUpdateDeviceChartGrid } from '@hive-command/api'
 import { GraphGrid } from '@hexhive/ui'
 // import { Graph, GraphContainer } from "../../../components/ui/graph";
 
@@ -36,7 +35,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   const [deviceList, setDeviceList] = useState([]);
 
-  const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
+  // const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
 
   const client = useApolloClient()
 
@@ -101,10 +100,10 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     }
   })
 
-	const addChart = useAddDeviceChart(controlId)
-	const updateChart = useUpdateDeviceChart(controlId)
-	const updateChartGrid = useUpdateDeviceChartGrid(controlId)
-	const removeChart = useRemoveDeviceChart(controlId);
+	const addChart : any= () => {}; //useAddDeviceChart(controlId)
+	const updateChart : any=() => {}; //useUpdateDeviceChart(controlId)
+	const updateChartGrid: any =() => {}; // useUpdateDeviceChartGrid(controlId)
+	const removeChart: any = () => {}; //useRemoveDeviceChart(controlId);
 
 
   const refetchValues = () => {
