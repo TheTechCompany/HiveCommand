@@ -1,5 +1,5 @@
 import { Box, InputAdornment, TextField } from '@mui/material'
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import { SetupContext } from '../context';
 
 export const OPCUAServerStage = () => {

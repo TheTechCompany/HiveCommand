@@ -1,4 +1,4 @@
-import { FormControl } from "@hexhive/ui";
+import { FormControl } from "@hexhive/ui"
 import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions } from "@mui/material";
 import React, { useEffect, useState } from "react";
 

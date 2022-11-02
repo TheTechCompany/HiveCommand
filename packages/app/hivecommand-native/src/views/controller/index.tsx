@@ -1,8 +1,9 @@
-import { CommandSurface } from '@hive-command/command-surface';
-import React from 'react';
+// import { CommandSurface } from '@hive-command/command-surface';
 
 export const Controller = () => {
     return (
-        <CommandSurface />
+        <div>
+        {/* // <CommandSurface /> */}
+        </div>
     )
 }

@@ -7,14 +7,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
 import { useEffect, useState } from 'react';
+import { DataProvider } from './data';
+
+import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs'
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
 const CONF_FILE = 'conf/app.conf.json';
-
-
-
-const { readTextFile, writeTextFile, createDir, BaseDirectory } = (window as any).__TAURI__.fs
 
 function App() {
   const [ conf, setConf ] = useState<{
@@ -46,7 +45,9 @@ function App() {
       )
     }else{
         return (
-          <CommandSurface />
+          <Box>
+            <CommandSurface />
+          </Box>
         ) 
     }
   }
@@ -54,13 +55,15 @@ function App() {
   return (
     <LocalizationProvider 
     dateAdapter={AdapterMoment}>
-      <Router>
-          <ThemeProvider theme={HexHiveTheme}>
-            <Box style={{height: '100vh', width: '100vw', display: 'flex'}}>
-              {renderView()}
-            </Box>
-          </ThemeProvider>
-      </Router>
+      <DataProvider>
+        <Router>
+            <ThemeProvider theme={HexHiveTheme}>
+              <Box style={{height: '100vh', width: '100vw', display: 'flex'}}>
+                {renderView()}
+              </Box>
+            </ThemeProvider>
+        </Router>
+      </DataProvider>
     </LocalizationProvider>
   );
 }

@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
 import { Box, Typography as Text } from '@mui/material'
-import { InfiniteCanvasContext, PortWidget } from '@hexhive/ui';
-
+import { PortWidget } from '@hexhive/ui/dist/components/InfiniteCanvas/InfiniteCanvas';
+import { InfiniteCanvasContext } from '@hexhive/ui/dist/components/InfiniteCanvas/context/context'
 export interface IconNodeProps {
     id?: string;
     x: number;

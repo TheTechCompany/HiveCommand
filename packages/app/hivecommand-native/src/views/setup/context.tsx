@@ -1,6 +1,6 @@
-import React from 'react'
+import { createContext } from "react";
 
-export const SetupContext = React.createContext<{
+export const SetupContext = createContext<{
     state?: any;
     setState?: any;
 }>({
