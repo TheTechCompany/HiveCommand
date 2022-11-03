@@ -5,6 +5,7 @@ export const SetupContext = React.createContext<{
     setState?: any;
 }>({
 
+    
 });
 
 export const SetupProvider = SetupContext.Provider;
