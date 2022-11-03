@@ -28,7 +28,7 @@
         "icons/128x128.png",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "io.hexhive.command",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
