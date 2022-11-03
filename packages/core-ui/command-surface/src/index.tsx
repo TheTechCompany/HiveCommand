@@ -1,8 +1,11 @@
-import { AvatarList } from '@hexhive/ui/dist/components/AvatarList';
+import { AvatarList } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
-import { useQuery, gql, useApolloClient } from '@apollo/client';
-import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+// import { useQuery, gql, useApolloClient } from '@apollo/client';
 
+// import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+
+import { LocalizationProvider } from '@mui/x-date-pickers' 
 import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
@@ -11,8 +14,8 @@ import { DeviceControlGraph } from './views/graph'
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, useCreateDeviceMaintenanceWindow, useCreateReportPage, usePerformDeviceAction } from '@hive-command/api';
 
 import { Paper, Box, Button, Typography, IconButton, Popover, Divider, List, ListItem } from '@mui/material';
-import { useSubscription } from '@apollo/client';
-import { stringToColor } from '@hexhive/utils';
+// import { useSubscription } from '@apollo/client';
+// import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
 import { MaintenanceWindow } from './components/modals/maintenance';
 
@@ -24,11 +27,12 @@ import { HomeView } from './views/home';
 
 export const CommandSurface: React.FC<any> = (props) => {
 
-    const client = useApolloClient();
+    // const client = useApolloClient();
 
-    const { id = ''} = useParams()
+    // const { id = ''} = useParams()
+    const id = '';
 
-    const navigate = useNavigate()
+    // const navigate = useNavigate()
 
     const [ activePage, setActivePage ] = useState<any>(null)
 
@@ -62,24 +66,24 @@ export const CommandSurface: React.FC<any> = (props) => {
     ]
 
     const view = toolbar_menu.find((a) => {
-        return matchPath(window.location.pathname, `${a.id}`) != null;
+        // return matchPath(window.location.pathname, `${a.id}`) != null;
     })
 
-    const {data: subscriptionData} = useSubscription(gql`
-        subscription($id: ID!) {
-            watchingDevice(device: $id) {
-                id
-                name
-            }
-        }
-    `, {
-        variables: {
-            id
-        },
-        onSubscriptionData: (data) => {
-            console.log("Received data", {data})
-        }
-    })
+    // const {data: subscriptionData} = useSubscription(gql`
+    //     subscription($id: ID!) {
+    //         watchingDevice(device: $id) {
+    //             id
+    //             name
+    //         }
+    //     }
+    // `, {
+    //     variables: {
+    //         id
+    //     },
+    //     onSubscriptionData: (data) => {
+    //         console.log("Received data", {data})
+    //     }
+    // })
 
     const [anchorEl, setAnchorEl ] = useState<any>();
 
@@ -87,267 +91,270 @@ export const CommandSurface: React.FC<any> = (props) => {
     //     if(subscriptionData?.watchingDevice) alert(`${subscriptionData?.watchingDevice} is watching now too`);
     // }, [subscriptionData])
 
-   const { data: deviceInfo } = useQuery(gql`
-        query DeviceInfo($id: ID) {
-            commandDevices(where: {id: $id}){
-                setpoints {
-                    id
-                    setpoint {
-                        id
-                        name
-                        key {
-                            id
-                            key
-                        }
-                        device {
-                            id
-                            name
-                        }
-                    }
-                    value
-                }
-            }
-        }
-    `, {
-       variables: {
-           id
-       }
-    })
+    const deviceInfo: any = {};
 
-    const refetch = () => {
-        client.refetchQueries({include: ['DeviceInfo']})
-    }
+    const subscriptionData : any = {};
+//    const { data: deviceInfo } = useQuery(gql`
+//         query DeviceInfo($id: ID) {
+//             commandDevices(where: {id: $id}){
+//                 setpoints {
+//                     id
+//                     setpoint {
+//                         id
+//                         name
+//                         key {
+//                             id
+//                             key
+//                         }
+//                         device {
+//                             id
+//                             name
+//                         }
+//                     }
+//                     value
+//                 }
+//             }
+//         }
+//     `, {
+//        variables: {
+//            id
+//        }
+//     })
 
-    const { data } = useQuery(gql`
-            query BaseDeviceInfo ($id: ID){
+    // const refetch = () => {
+    //     client.refetchQueries({include: ['DeviceInfo']})
+    // }
+
+    // const { data } = useQuery(gql`
+    //         query BaseDeviceInfo ($id: ID){
      
-            commandDevices(where: {id: $id}){
-                name
-                operatingMode
-                operatingState
+    //         commandDevices(where: {id: $id}){
+    //             name
+    //             operatingMode
+    //             operatingState
 
-                alarms {
-                    id
-                    cause
-                    message
-                    createdAt
-                }
+    //             alarms {
+    //                 id
+    //                 cause
+    //                 message
+    //                 createdAt
+    //             }
 
-                online
+    //             online
             
 
           
-                reports {
-                    id
-                    name
-                }
+    //             reports {
+    //                 id
+    //                 name
+    //             }
 
        
-                activeProgram {
-                    id
-                    name
+    //             activeProgram {
+    //                 id
+    //                 name
 
-                    templatePacks {
-                        id
-                        url
-                        name
-                    }
+    //                 templatePacks {
+    //                     id
+    //                     url
+    //                     name
+    //                 }
                     
-                    remoteHomepage {
-                        id
-                    }
+    //                 remoteHomepage {
+    //                     id
+    //                 }
 
-                    interface{
-                        id
-                        name
+    //                 interface{
+    //                     id
+    //                     name
 
-                        actions {
-                            id
-                            name
-                            flow {
-                                id
-                                name
-                            }
-                        }
+    //                     actions {
+    //                         id
+    //                         name
+    //                         flow {
+    //                             id
+    //                             name
+    //                         }
+    //                     }
 
-                        edges {
-                            from {
-                                id
-                            }
-                            fromHandle
-                            fromPoint
-                            to {
-                               id
-                            }
-                            toHandle
-                            toPoint
-                            points {
-                                x
-                                y
-                            }
+    //                     edges {
+    //                         from {
+    //                             id
+    //                         }
+    //                         fromHandle
+    //                         fromPoint
+    //                         to {
+    //                            id
+    //                         }
+    //                         toHandle
+    //                         toPoint
+    //                         points {
+    //                             x
+    //                             y
+    //                         }
 
-                        }
+    //                     }
                         
-                        nodes{
+    //                     nodes{
        
-                                id
-                                type
+    //                             id
+    //                             type
 
-                                options
+    //                             options
                                 
-                                x
-                                y
+    //                             x
+    //                             y
                                 
-                                zIndex
+    //                             zIndex
 
-                                width
-                                height
+    //                             width
+    //                             height
 
-                                scaleX
-                                scaleY
+    //                             scaleX
+    //                             scaleY
 
-                                rotation
-                                devicePlaceholder {
-                                    id
-                                    tag 
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
+    //                             rotation
+    //                             devicePlaceholder {
+    //                                 id
+    //                                 tag 
+    //                                 units {
+    //                                     inputUnit
+    //                                     displayUnit
+    //                                     state {
+    //                                         id
+    //                                         key
+    //                                     }
+    //                                 }
 
-                                    type {
-                                        actions {
-                                            key
-                                        }
+    //                                 type {
+    //                                     actions {
+    //                                         key
+    //                                     }
 
-                                        tagPrefix
+    //                                     tagPrefix
     
-                                        state {
-                                            type
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
+    //                                     state {
+    //                                         type
+    //                                         units
+    //                                         inputUnits
+    //                                         key
+    //                                         writable
+    //                                     }
+    //                                 }
 
 
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
+    //                                 setpoints {
+    //                                     id
+    //                                     name
+    //                                     key {
+    //                                         id
+    //                                         key
+    //                                     }
+    //                                     value
+    //                                     type
+    //                                 }
     
-                                }
+    //                             }
                             
-                            children {
-                                id
-                                type 
+    //                         children {
+    //                             id
+    //                             type 
 
-                                rotation
-                                x
-                                y
+    //                             rotation
+    //                             x
+    //                             y
 
-                                devicePlaceholder {
-                                    id
-                                    tag
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
+    //                             devicePlaceholder {
+    //                                 id
+    //                                 tag
+    //                                 units {
+    //                                     inputUnit
+    //                                     displayUnit
+    //                                     state {
+    //                                         id
+    //                                         key
+    //                                     }
+    //                                 }
 
-                                    type {
-                                        actions {
-                                            key
-                                        }
-                                        tagPrefix
-                                        state {
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
+    //                                 type {
+    //                                     actions {
+    //                                         key
+    //                                     }
+    //                                     tagPrefix
+    //                                     state {
+    //                                         units
+    //                                         inputUnits
+    //                                         key
+    //                                         writable
+    //                                     }
+    //                                 }
 
 
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
+    //                                 setpoints {
+    //                                     id
+    //                                     name
+    //                                     key {
+    //                                         id
+    //                                         key
+    //                                     }
+    //                                     value
+    //                                     type
+    //                                 }
     
-                                }
-                            }
+    //                             }
+    //                         }
 
-                            ports {
-                                id
-                                x
-                                y
-                                length
-                                rotation
-                            }
+    //                         ports {
+    //                             id
+    //                             x
+    //                             y
+    //                             length
+    //                             rotation
+    //                         }
                             
-                        }
+    //                     }
                             
-                    }
+    //                 }
 
-                    variables {
-                        id
-                        name
-                        type
-                    }
+    //                 variables {
+    //                     id
+    //                     name
+    //                     type
+    //                 }
 
-                    devices {
-                        id
-                        tag
-                        units {
-                            inputUnit
-                            displayUnit
-                            state {
-                                id
-                                key
-                            }
-                        }
-                        type {
-                            tagPrefix
+    //                 devices {
+    //                     id
+    //                     tag
+    //                     units {
+    //                         inputUnit
+    //                         displayUnit
+    //                         state {
+    //                             id
+    //                             key
+    //                         }
+    //                     }
+    //                     type {
+    //                         tagPrefix
 
-                            state {
-                                id
-                                inputUnits
-                                units
-                                key
-                                type
-                                id
-                            }
-                        }
-                    }
-                }
+    //                         state {
+    //                             id
+    //                             inputUnits
+    //                             units
+    //                             key
+    //                             type
+    //                             id
+    //                         }
+    //                     }
+    //                 }
+    //             }
 
-            }
-        }
-    `, {
-        variables: {
-            id: id,
-        }
-    })
+    //         }
+    //     }
+    // `, {
+    //     variables: {
+    //         id: id,
+    //     }
+    // })
 
     const changeMode = useChangeMode(id)
     const changeState = useChangeState(id)
@@ -394,15 +401,15 @@ export const CommandSurface: React.FC<any> = (props) => {
 
 
     //Translates id to bus-port value
-    const rootDevice = data?.commandDevices?.[0];
+    const rootDevice = {} //data?.commandDevices?.[0];
 
-    const alarms = rootDevice?.alarms || [];
+    const alarms = [] //rootDevice?.alarms || [];
     
-    const reports = rootDevice?.reports || [];
+    const reports = [] //rootDevice?.reports || [];
 
-    const peripherals = data?.commandDevices?.[0]?.peripherals || []
+    const peripherals = []// data?.commandDevices?.[0]?.peripherals || []
 
-    const activeProgram = data?.commandDevices?.[0]?.activeProgram || {};
+    const activeProgram : any = {} //data?.commandDevices?.[0]?.activeProgram || {};
 
     const defaultPage = activeProgram?.remoteHomepage?.id;
 
@@ -558,32 +565,35 @@ export const CommandSurface: React.FC<any> = (props) => {
     // }
    
 
-        const refresh = () => {
-            return client.refetchQueries({ include: ['Q'] })
-        }
+        // const refresh = () => {
+        //     return client.refetchQueries({ include: ['Q'] })
+        // }
 
-    const changeOperationMode = (mode: string) => {
-        changeMode(mode).then(() => {
-            refresh()
-        })
-    }
+    // const changeOperationMode = (mode: string) => {
+    //     changeMode(mode).then(() => {
+    //         refresh()
+    //     })
+    // }
 
-    const changeOperationState = (state: "on" | "off" | "standby") => {
-        changeState(state).then(() => {
-            refresh()
-        })
-    }
+    // const changeOperationState = (state: "on" | "off" | "standby") => {
+    //     changeState(state).then(() => {
+    //         refresh()
+    //     })
+    // }
 
     // console.log({values, state: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")})
 
     return (
+        <LocalizationProvider dateAdapter={AdapterMoment}>
         <DeviceControlProvider value={{
             actions,
             historize,
             alarms,
             // waitingForActions,
-            changeOperationMode,
-            changeOperationState,
+            
+            // changeOperationMode,
+            // changeOperationState,
+
             // operatingMode: rootDevice?.operatingMode,
             // operatingState: rootDevice?.operatingState,
             // operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
@@ -603,8 +613,8 @@ export const CommandSurface: React.FC<any> = (props) => {
             changeDeviceMode,
             changeDeviceValue,
             performAction: performDeviceAction,
-            refresh,
-            refetch
+            // refresh,
+            // refetch
         }}>
             <MaintenanceWindow
                 open={maintenanceWindow}
@@ -612,7 +622,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                     if(!period.startTime || !period.endTime) return;
                     createMaintenanceWindow(period.startTime, period.endTime).then(() => {
                         setMaintenanceWindow(false)
-                        refetch();
+                        // refetch();
                     })
                 }}
                 onClose={() => {
@@ -622,11 +632,11 @@ export const CommandSurface: React.FC<any> = (props) => {
                 onSubmit={(page) => {
                     createReportPage(page.name).then(() => {
                         setEditReportPage(null);
-                        refetch();
+                        // refetch();
                     })
                 }}
                 onClose={() => setEditReportPage(null)}
-                open={editReportPage} />
+                open={Boolean(editReportPage)} />
             <Paper
                 sx={{flex: 1, margin: '6px', display: 'flex', flexDirection: 'column'}}>
                 <Paper
@@ -643,7 +653,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <IconButton
                             size="small"
-                            onClick={() => navigate("/devices")}
+                            // onClick={() => navigate("/devices")}
                             sx={{color: 'navigation.main'}}>
                             <KeyboardArrowLeft
                                 fontSize="inherit"
@@ -677,9 +687,9 @@ export const CommandSurface: React.FC<any> = (props) => {
                                     borderRadius: 7,
                                     marginRight: '8px',
                                     marginLeft: '8px',
-                                    background: rootDevice?.online ? '#42e239' : '#db001b'
+                                    // background: rootDevice?.online ? '#42e239' : '#db001b'
                                 }} />
-                            <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography>
+                            {/* <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography> */}
                     </Box>
                        
                     <Toolbar
@@ -694,9 +704,9 @@ export const CommandSurface: React.FC<any> = (props) => {
                                     break;
                                 case 'alarms':
                                     if( window.location.href.indexOf('alarms') > -1){
-                                        navigate('.')
+                                        // navigate('.')
                                     }else{
-                                        navigate('alarms');
+                                        // navigate('alarms');
                                     }
 
                                     break;
@@ -716,7 +726,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                             <AvatarList
                                 users={subscriptionData?.watchingDevice?.map((x: any) => ({
                                     ...x,
-                                    color: stringToColor(x.name)
+                                    // color: stringToColor(x.name)
                                 })) || []} />
                          
                             <Popover
@@ -754,7 +764,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                 
                 <Box
                     sx={{flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row'}}>
-                    <Routes>
+                    {/* <Routes>
                         <Route path={`alarms`} element={<AlarmList />} />
                         <Route path={''} element={<React.Fragment>
                                 <Paper sx={{
@@ -774,10 +784,11 @@ export const CommandSurface: React.FC<any> = (props) => {
                             </React.Fragment>}>
                            
                         </Route>
-                    </Routes>
+                    </Routes> */}
                 </Box>
 
             </Paper>
         </DeviceControlProvider>
+        </LocalizationProvider>
     )
 }

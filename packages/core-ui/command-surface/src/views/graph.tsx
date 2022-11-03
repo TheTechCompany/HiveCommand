@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
 import { Box, Button, Text } from "grommet";
-import { useQuery, gql } from "@apollo/client";
+// import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../components/modals/device-control-graph";
 // import { useAddDeviceChart, useUpdateDeviceChart, useRemoveDeviceChart, useUpdateDeviceChartGrid } from '@hive-command/api'
@@ -10,7 +10,7 @@ import { GraphGrid } from '@hexhive/ui'
 // import { GraphGridLayout } from "app/hivecommand-frontend/src/components/ui/graph-grid-layout";
 import moment from "moment";
 import { Graph, GraphContainer } from "../components/graph";
-import { useApolloClient } from "@apollo/client";
+// import { useApolloClient } from "@apollo/client";
 import { LoadingIndicator } from "../components/LoadingIndicator";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
 import { Menu, Paper } from "@mui/material";
@@ -37,68 +37,68 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 
   // const [deviceLayout, setDeviceLayout] = useState<GridLayoutItem[]>([]);
 
-  const client = useApolloClient()
+  // const client = useApolloClient()
 
-  const { data } = useQuery(gql`
-    query ReportData($id: ID) {
+  // const { data } = useQuery(gql`
+  //   query ReportData($id: ID) {
 
-      commandDevices(where: {id: $id}){
+  //     commandDevices(where: {id: $id}){
 
-        reports {
-          id
-          x
-          y
-          width
-          height
+  //       reports {
+  //         id
+  //         x
+  //         y
+  //         width
+  //         height
 
-          total
+  //         total
 
-          device {
-              id
-              name
-          }
-          dataDevice {
-              id
-              name
-          }
-          dataKey {
-              id
-              key
-          }
+  //         device {
+  //             id
+  //             name
+  //         }
+  //         dataDevice {
+  //             id
+  //             name
+  //         }
+  //         dataKey {
+  //             id
+  //             key
+  //         }
 
       
-        }
-      }
-    }
-  `, {
-    variables: {
-      id: controlId,
-      startDate: startOfWeek.toISOString()
-    }
-  })
+  //       }
+  //     }
+  //   }
+  // `, {
+  //   variables: {
+  //     id: controlId,
+  //     startDate: startOfWeek.toISOString()
+  //   }
+  // })
  
-  const { data: reportData, loading } = useQuery(gql`
-    query ReportDataValue($id: ID, $startDate: DateTime){
-      commandDevices(where: {id: $id}){
+  // const { data: reportData, loading } = useQuery(gql`
+  //   query ReportDataValue($id: ID, $startDate: DateTime){
+  //     commandDevices(where: {id: $id}){
         
-        reports {
-          id
-          totalValue(startDate: $startDate) {
-            total
-          }
-          values (startDate: $startDate){
-            timestamp
-            value
-          }
-        }
-      }
-    }
-  `, {
-    variables: {
-      id: controlId,
-      startDate: startOfWeek.toISOString()
-    }
-  })
+  //       reports {
+  //         id
+  //         totalValue(startDate: $startDate) {
+  //           total
+  //         }
+  //         values (startDate: $startDate){
+  //           timestamp
+  //           value
+  //         }
+  //       }
+  //     }
+  //   }
+  // `, {
+  //   variables: {
+  //     id: controlId,
+  //     startDate: startOfWeek.toISOString()
+  //   }
+  // })
 
 	const addChart : any= () => {}; //useAddDeviceChart(controlId)
 	const updateChart : any=() => {}; //useUpdateDeviceChart(controlId)
@@ -106,40 +106,42 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
 	const removeChart: any = () => {}; //useRemoveDeviceChart(controlId);
 
 
-  const refetchValues = () => {
-    client.refetchQueries({include: ['ReportDataValue']})
-  }
-  const refetchStructure = () => {
-    client.refetchQueries({include: ["ReportData"]})
-  }
+  // const refetchValues = () => {
+  //   client.refetchQueries({include: ['ReportDataValue']})
+  // }
+  // const refetchStructure = () => {
+  //   client.refetchQueries({include: ["ReportData"]})
+  // }
 
 
-  useEffect(() => {
-      const timer = setInterval(() => {
-        refetchValues()
-      }, 5 * 1000)
+  // useEffect(() => {
+  //     const timer = setInterval(() => {
+  //       refetchValues()
+  //     }, 5 * 1000)
 
-      return () => {
-          clearInterval(timer)
-      }
-  }, [])
+  //     return () => {
+  //         clearInterval(timer)
+  //     }
+  // }, [])
 
-  const values = (data?.commandDevices?.[0]?.reports || []).map((report: any) => {
+  const values = []
+  
+  // (data?.commandDevices?.[0]?.reports || []).map((report: any) => {
 
-    let reportValue = reportData?.commandDevices?.[0]?.reports?.find((a: {id: string}) => a.id == report.id);
+  //   let reportValue = reportData?.commandDevices?.[0]?.reports?.find((a: {id: string}) => a.id == report.id);
 
-    return {
-      ...report,
-      w: report.width,
-      h: report.height,
-      label: `${report.dataDevice?.name} - ${report.dataKey?.key}`,
-      values: reportValue?.values?.map((value: any) => ({
-        ...value,
-        timestamp: moment(value.timestamp).format("DD/MM hh:mma")
-      })),
-      total: reportValue?.totalValue?.total
-    }
-  })
+  //   return {
+  //     ...report,
+  //     w: report.width,
+  //     h: report.height,
+  //     label: `${report.dataDevice?.name} - ${report.dataKey?.key}`,
+  //     values: reportValue?.values?.map((value: any) => ({
+  //       ...value,
+  //       timestamp: moment(value.timestamp).format("DD/MM hh:mma")
+  //     })),
+  //     total: reportValue?.totalValue?.total
+  //   }
+  // })
 
 
   const [modalOpen, openModal] = useState(false);
@@ -160,15 +162,15 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
           if(!graph.id){
             addChart('line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
               openModal(false);
-              refetchStructure?.()
-              refetchValues?.()
+              // refetchStructure?.()
+              // refetchValues?.()
               setSelected(undefined)
             })
           }else{
             updateChart(graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
               openModal(false);
-              refetchStructure?.()
-              refetchValues?.()
+              // refetchStructure?.()
+              // refetchValues?.()
               setSelected(undefined)
             })
           }
@@ -203,7 +205,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
     <Box 
       flex 
       overflow='auto'>
-      {loading && <LoadingIndicator />}
+      {/* {loading && <LoadingIndicator />} */}
       <GraphGrid 
        
         onLayoutChange={(layout: any) => {
@@ -211,7 +213,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
             ...x,
             id: x.i
           }))).then(() => {
-            refetchStructure?.()
+            // refetchStructure?.()
           });
 
         // console.log(layout)
@@ -223,7 +225,7 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
        <GraphContainer
           onDelete={() => {
             removeChart(item.id).then(() => {
-              refetchStructure?.()
+              // refetchStructure?.()
             })
           }}
           onEdit={() => {

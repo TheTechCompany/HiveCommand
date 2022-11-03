@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box } from '@mui/material'
-import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui/dist/components/InfiniteCanvas/InfiniteCanvas';
+import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
-import { gql, useApolloClient, useQuery } from '@apollo/client';
+// import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
 import { useRemoteComponents } from '../../hooks/remote-components';
-import { PipePathFactory } from "@hexhive/ui/dist/components/InfiniteCanvas/components/paths/pipe-path";
+import { PipePathFactory } from "@hexhive/ui";
 
 export interface HMICanvasProps {
 	id: string;
@@ -95,12 +95,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         }
     })
 
-    const client = useApolloClient()
+    // const client = useApolloClient()
 
    
-    const refetch = () => {
-        client.refetchQueries({include: ['Q']})
-    }
+    // const refetch = () => {
+    //     client.refetchQueries({include: ['Q']})
+    // }
 
     const { getPack } = useRemoteComponents()
 

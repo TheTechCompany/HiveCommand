@@ -1,7 +1,7 @@
 import { Box, Typography, CircularProgress } from '@mui/material';
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { SetupContext } from '../context';
-// import axios from 'axios';
+import axios from 'axios';
 
 export const LayoutDownload = () => {
 
@@ -10,22 +10,22 @@ export const LayoutDownload = () => {
 
     useEffect(() => {
 
-        // axios.get(`${state.discoveryServer}/control-layout?token=${state.provisionResult}`).then((res) => {
-        //     console.log("controlLayout", {res})
+        axios.get(`${state.discoveryServer}/control-layout?token=${state.provisionResult}`).then((res) => {
+            console.log("controlLayout", {res})
 
-        //     setState((state: any) => ({
-        //         ...state,
-        //         controlLayout: res.data.results
-        //     }))
-        // })
+            setState((state: any) => ({
+                ...state,
+                controlLayout: res.data.results
+            }))
+        })
 
-        // axios.get(`${state.discoveryServer}/network-layout?token=${state.provisionResult}`).then((res) => {
-        //     console.log("networkLayout", {res})
-        //     setState((state: any) => ({
-        //         ...state,
-        //         networkLayout: res.data.results
-        //     }))
-        // })
+        axios.get(`${state.discoveryServer}/network-layout?token=${state.provisionResult}`).then((res) => {
+            console.log("networkLayout", {res})
+            setState((state: any) => ({
+                ...state,
+                networkLayout: res.data.results
+            }))
+        })
 
         console.log({state, nl: (state.networkLayout == undefined || state.networklayout == null)})
 

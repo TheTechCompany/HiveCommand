@@ -1,3 +1,4 @@
+import React from 'react'
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
