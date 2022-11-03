@@ -37,6 +37,7 @@ export const LayoutDownload = () => {
                     {(state.controlLayout == undefined || state.controlLayout == null) ? <CircularProgress sx={{marginRight: '6px'}} size={18} /> : "Done"}
 
                     <Typography>HMI Layout</Typography>
+                    
                 </Box>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                     {(state.networkLayout == undefined || state.networklayout == null) ? <CircularProgress sx={{marginRight: '6px'}} size={18} /> : "Done"}
