@@ -11,8 +11,6 @@ import { useEffect, useState } from 'react';
 import { DataProvider } from './data';
 import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs';
 
-const API_URL = localStorage.getItem('HEXHIVE_API');
-
 const CONF_FILE = 'conf/app.conf.json';
 
 

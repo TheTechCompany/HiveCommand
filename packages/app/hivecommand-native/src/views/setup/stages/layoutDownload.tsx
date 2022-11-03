@@ -27,8 +27,6 @@ export const LayoutDownload = () => {
             }))
         })
 
-        console.log({state, nl: (state.networkLayout == undefined || state.networklayout == null)})
-
     }, [])
     
     return (
