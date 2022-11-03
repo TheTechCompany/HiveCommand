@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path')
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 // const rewireTypescript = require('./rewire-ts');
@@ -21,11 +22,17 @@ module.exports = function override(config, env) {
         new TsconfigPathsPlugin()
     )
 
+    // config.plugins.push(new BundleAnalyzerPlugin());
+
     config.resolve.alias = {
         ...config.resolve.alias,
         'react': path.resolve(__dirname, 'node_modules/react'),
         // "react/jsx-runtime.js": "react/jsx-runtime",
         // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
+        '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
+        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+        '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+        '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
         'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
         '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
         '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),

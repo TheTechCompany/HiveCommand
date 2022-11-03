@@ -46,13 +46,14 @@
 		]
 	},
 	"devDependencies": {
-		"tsconfig-paths-webpack-plugin": "^4.0.0",
 		"@tauri-apps/cli": "^1.1.1",
-		"cross-env": "^7.0.3",
-		"react-app-rewired": "^2.2.1",
 		"@types/jest": "^27.5.2",
 		"@types/node": "^16.18.3",
 		"@types/react": "17.0.39",
-		"@types/react-dom": "17.0.17"
+		"@types/react-dom": "17.0.17",
+		"cross-env": "^7.0.3",
+		"react-app-rewired": "^2.2.1",
+		"tsconfig-paths-webpack-plugin": "^4.0.0",
+		"webpack-bundle-analyzer": "^4.7.0"
 	}
 }
