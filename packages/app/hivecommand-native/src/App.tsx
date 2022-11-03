@@ -1,3 +1,4 @@
+import React from 'react'
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
@@ -8,12 +9,12 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
 import { useEffect, useState } from 'react';
 import { DataProvider } from './data';
-
-import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs'
+import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs';
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
 const CONF_FILE = 'conf/app.conf.json';
+
 
 function App() {
   const [ conf, setConf ] = useState<{
@@ -39,15 +40,13 @@ function App() {
   }, []) 
 
   const renderView = () => {
-    if(!conf.ready){
+    if(conf.ready){
       return (
         <SetupView onConfChange={(conf: any) => setConf(conf)} />
       )
     }else{
         return (
-          <Box>
-            <CommandSurface />
-          </Box>
+          <CommandSurface />
         ) 
     }
   }

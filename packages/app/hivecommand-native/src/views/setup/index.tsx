@@ -1,9 +1,9 @@
 import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/material";
 import { writeTextFile } from "@tauri-apps/api/fs";
-import { useState } from "react";
+import React, { useState } from "react";
 import { SetupProvider } from "./context";
 import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage, ProvisionCodeStage } from "./stages";
-// import axios from 'axios';
+import axios from 'axios';
 
 export const SetupView = (props: any) => {
 
@@ -24,21 +24,21 @@ export const SetupView = (props: any) => {
                 if(!state.provisionResult){
                     //Test provisionCode against discovery server
 
-                    // const res = await axios.post(`${state.discoveryServer}/authorize`, {
-                    //     shortCode: state.provisionCode
-                    // });
+                    const res = await axios.post(`${state.discoveryServer}/authorize`, {
+                        shortCode: state.provisionCode
+                    });
 
-                    // if(res?.data?.token){
-                    //     setState({
-                    //         ...state,
-                    //         provisionResult: res.data.token
-                    //     })
-                    //     console.log({token: res.data.token})
+                    if(res?.data?.token){
+                        setState({
+                            ...state,
+                            provisionResult: res.data.token
+                        })
+                        console.log({token: res.data.token})
 
-                    //     return true;
-                    // }else{
-                    //     console.log({res})
-                    // }
+                        return true;
+                    }else{
+                        console.log({res})
+                    }
                 }else{
                     return true;
                 }

@@ -1,26 +1,31 @@
 {
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "target": "ESNext",
-    "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "allowJs": false,
+    "baseUrl": ".",
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "module": "ESNext",
-    "moduleResolution": "Node",
+    "noFallthroughCasesInSwitch": true,
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "paths": {
-      "@hive-command/command-surface": ["../../core-ui/command-surface/src"],
-      "@hive-command/api": ["../hivecommand-api/src"]
-    }
+    "jsx": "react"
   },
-  "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }, {"path": "../../core-ui/command-surface"}, {"path": "../hivecommand-api"}]
+  "include": [
+    "src"
+  ],
+  "references": [
+    {"path": "../../core-ui/command-surface"}
+  ]
 }
