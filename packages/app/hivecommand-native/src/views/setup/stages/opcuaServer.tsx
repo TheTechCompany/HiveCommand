@@ -9,7 +9,6 @@ export const OPCUAServerStage = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', alignItems: 'center', paddingLeft: '6px', paddingRight: '6px'}}>
             <TextField 
-
                 value={state.opcuaServer}
                 onChange={(e) => setState({...state, opcuaServer: e.target.value})}
                 InputProps={{
@@ -18,7 +17,7 @@ export const OPCUAServerStage = () => {
                 label="OPCUA Server Endpoint"  
                 fullWidth 
                 size="small"/>
-                
+
         </Box>
     )
 }
