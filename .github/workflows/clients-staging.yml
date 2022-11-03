@@ -40,11 +40,11 @@ jobs:
       - name: Bootstrap
         run: npx lerna bootstrap --scope @hive-command/native --include-dependencies
 
-      - name: Build
-        env:
-          CI: false
-          NODE_OPTIONS: "--max-old-space-size=8192"
-        run: npx lerna run build --scope @hive-command/native --include-dependencies
+      # - name: Build
+      #   env:
+      #     CI: false
+      #     NODE_OPTIONS: "--max-old-space-size=8192"
+      #   run: npx lerna run build --scope @hive-command/native --include-dependencies
         
       - name: Build the app
         uses: tauri-apps/tauri-action@v0
@@ -52,7 +52,7 @@ jobs:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_PRIVATE_KEY: ${{secrets.TAURI_PRIVATE_KEY}}
-          NODE_OPTIONS: "--max-old-space-size=8192"
+          NODE_OPTIONS: "--max-old-space-size=4096"
         with:
           projectPath: ./packages/app/hivecommand-native
           tagName: v__VERSION__ # tauri-action replaces \_\_VERSION\_\_ with the app version
