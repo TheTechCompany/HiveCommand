@@ -5,8 +5,8 @@ export const DataContext = React.createContext({});
 
 export const DataProvider = (props: any) => {
 
-    const layoutSchema = [];
-    const dataSchema = [];
+    // const layoutSchema = [];
+    // const dataSchema = [];
 
     const [ globalState, setGlobalState ] = useState<any>({});
 
@@ -27,7 +27,7 @@ export const DataProvider = (props: any) => {
             setGlobalState(data)
         });
 
-    }, [])
+    }, [readBlob])
 
     const updateGlobalState = async (key: string, updateFn: any) => {
         await setGlobalState(async (data: any) => {
