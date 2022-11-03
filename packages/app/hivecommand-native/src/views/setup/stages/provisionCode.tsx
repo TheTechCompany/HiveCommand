@@ -8,13 +8,14 @@ export const ProvisionCodeStage = () => {
 
     return (
         <Box sx={{flex: 1, display: 'flex', alignItems: 'center', paddingLeft: '6px', paddingRight: '6px'}}>
+           
             <TextField 
                 value={state.provisionCode}
                 onChange={(e) => setState({...state, provisionCode: e.target.value})}
                 label="Provisioning code" 
                 fullWidth 
                 size="small" />
-                
+
         </Box>
     )
 }
