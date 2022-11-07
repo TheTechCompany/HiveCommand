@@ -350,7 +350,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                         height: 'calc(100% - 36px)'
                     }}>
                     
-                    <Paper sx={{borderRadius: 0, minWidth: '175px'}}>
+                    <Paper sx={{borderRadius: 0, display: 'flex', minWidth: '175px'}}>
                       
                         <TreeMenu
                             onEdit={(nodeId) => {

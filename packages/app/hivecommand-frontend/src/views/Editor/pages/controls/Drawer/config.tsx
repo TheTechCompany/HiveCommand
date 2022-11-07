@@ -321,7 +321,31 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     }}
                     reverse
                     label="Show Totalizer" />
-            </Box> */}
+            </Box> */} 
+            <TextField
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="X"
+                value={item.x}
+                onChange={(e) => {
+                    updateHMINode(selected.id, { x: parseFloat(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number" />
+            <TextField
+                sx={{marginBottom: '6px', marginTop: '6px'}}
+                fullWidth
+                size="small"
+                label="Y"
+                value={item.y}
+                onChange={(e) => {
+                    updateHMINode(selected.id, { y: parseFloat(e.target.value) }).then(() => {
+                        refetch()
+                    })
+                }}
+                type="number" />
             <TextField 
                 sx={{marginBottom: '6px', marginTop: '6px'}}
                 fullWidth

@@ -1,38 +1,74 @@
-import { AvatarList, IconNodeFactory } from '@hexhive/ui';
-import { InfiniteCanvas } from '@hexhive/ui';
+import { AvatarList } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
-import { useQuery, gql, useApolloClient } from '@apollo/client';
-import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+// import { useQuery, gql, useApolloClient } from '@apollo/client';
 
+import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
+// import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+
+import { LocalizationProvider } from '@mui/x-date-pickers' 
 import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
-import Controls from './views/control'
 import { DeviceControlGraph } from './views/graph'
 
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, useCreateDeviceMaintenanceWindow, useCreateReportPage, usePerformDeviceAction } from '@hive-command/api';
 
 import { Paper, Box, Button, Typography, IconButton, Popover, Divider, List, ListItem } from '@mui/material';
-import { useSubscription } from '@apollo/client';
-import { stringToColor } from '@hexhive/utils';
+// import { useSubscription } from '@apollo/client';
+// import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
 import { MaintenanceWindow } from './components/modals/maintenance';
-import { MenuItemProps } from './components/tree-menu/item';
 
 import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
+import { RemoteComponentCache } from './hooks/remote-components';
 
-export interface DeviceControlProps {
+export * from './hooks/remote-components'
 
-}
 
-export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
+export interface CommandSurfaceProps {
+    program: {interface: {nodes: any[], edges: any[]}} & any;
+    onCommand?: (type: string, parameters: any) => void;
 
-    const client = useApolloClient();
+    values: {id: string, key: string, value: any}[] | {[key: string]: {[key: string]: any}}
 
-    const { id = ''} = useParams()
+    watching?: {id: string, name: string, color: string}[];
+
+    cache?: RemoteComponentCache
+}   
+
+export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
+
+    const { program: activeProgram, onCommand, watching } = props;
+
+
+    /*
+        Parse the values blob internally and represent it as a clean tag system
+        {
+            [TAG]: {
+                [STATE]: VALUE
+            }
+        }
+    */
+
+    const deviceValues : {[key: string]: {[key: string]: any}} = useMemo(() => {
+        if(Array.isArray(props.values)){
+            return props.values.reduce((prev, curr) => ({
+                ...prev,
+                [curr.id]: {
+                    ...prev[curr.id],
+                    [curr.key]: curr.value
+                }
+            }), {})
+        }else{
+            return props.values;
+        }
+    }, [props.values])
+    
+    const id = '';
 
     const navigate = useNavigate()
 
@@ -71,296 +107,48 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         return matchPath(window.location.pathname, `${a.id}`) != null;
     })
 
-    const {data: subscriptionData} = useSubscription(gql`
-        subscription($id: ID!) {
-            watchingDevice(device: $id) {
-                id
-                name
-            }
-        }
-    `, {
-        variables: {
-            id
-        },
-        onSubscriptionData: (data) => {
-            console.log("Received data", {data})
-        }
-    })
 
     const [anchorEl, setAnchorEl ] = useState<any>();
 
-    // useEffect(() => {
-    //     if(subscriptionData?.watchingDevice) alert(`${subscriptionData?.watchingDevice} is watching now too`);
-    // }, [subscriptionData])
 
-   const { data: deviceInfo } = useQuery(gql`
-        query DeviceInfo($id: ID) {
-            commandDevices(where: {id: $id}){
-                setpoints {
-                    id
-                    setpoint {
-                        id
-                        name
-                        key {
-                            id
-                            key
-                        }
-                        device {
-                            id
-                            name
-                        }
-                    }
-                    value
-                }
-            }
-        }
-    `, {
-       variables: {
-           id
-       }
-    })
+    const deviceInfo: any = {};
 
-    const refetch = () => {
-        client.refetchQueries({include: ['DeviceInfo']})
-    }
+//    const { data: deviceInfo } = useQuery(gql`
+//         query DeviceInfo($id: ID) {
+//             commandDevices(where: {id: $id}){
+//                 setpoints {
+//                     id
+//                     setpoint {
+//                         id
+//                         name
+//                         key {
+//                             id
+//                             key
+//                         }
+//                         device {
+//                             id
+//                             name
+//                         }
+//                     }
+//                     value
+//                 }
+//             }
+//         }
+//     `, {
+//        variables: {
+//            id
+//        }
+//     })
 
-    const { data } = useQuery(gql`
-            query BaseDeviceInfo ($id: ID){
-     
-            commandDevices(where: {id: $id}){
-                name
-                operatingMode
-                operatingState
+    // const refetch = () => {
+    //     client.refetchQueries({include: ['DeviceInfo']})
+    // }
 
-                alarms {
-                    id
-                    cause
-                    message
-                    createdAt
-                }
-
-                online
-            
-
-          
-                reports {
-                    id
-                    name
-                }
-
-       
-                activeProgram {
-                    id
-                    name
-
-                    templatePacks {
-                        id
-                        url
-                        name
-                    }
-                    
-                    remoteHomepage {
-                        id
-                    }
-
-                    interface{
-                        id
-                        name
-
-                        actions {
-                            id
-                            name
-                            flow {
-                                id
-                                name
-                            }
-                        }
-
-                        edges {
-                            from {
-                                id
-                            }
-                            fromHandle
-                            fromPoint
-                            to {
-                               id
-                            }
-                            toHandle
-                            toPoint
-                            points {
-                                x
-                                y
-                            }
-
-                        }
-                        
-                        nodes{
-       
-                                id
-                                type
-
-                                options
-                                
-                                x
-                                y
-                                
-                                zIndex
-
-                                width
-                                height
-
-                                scaleX
-                                scaleY
-
-                                rotation
-                                devicePlaceholder {
-                                    id
-                                    tag 
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
-
-                                    type {
-                                        actions {
-                                            key
-                                        }
-
-                                        tagPrefix
-    
-                                        state {
-                                            type
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
-
-
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
-    
-                                }
-                            
-                            children {
-                                id
-                                type 
-
-                                rotation
-                                x
-                                y
-
-                                devicePlaceholder {
-                                    id
-                                    tag
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
-
-                                    type {
-                                        actions {
-                                            key
-                                        }
-                                        tagPrefix
-                                        state {
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
-
-
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
-    
-                                }
-                            }
-
-                            ports {
-                                id
-                                x
-                                y
-                                length
-                                rotation
-                            }
-                            
-                        }
-                            
-                    }
-
-                    variables {
-                        id
-                        name
-                        type
-                    }
-
-                    devices {
-                        id
-                        tag
-                        units {
-                            inputUnit
-                            displayUnit
-                            state {
-                                id
-                                key
-                            }
-                        }
-                        type {
-                            tagPrefix
-
-                            state {
-                                id
-                                inputUnits
-                                units
-                                key
-                                type
-                                id
-                            }
-                        }
-                    }
-                }
-
-            }
-        }
-    `, {
-        variables: {
-            id: id,
-        }
-    })
 
     const changeMode = useChangeMode(id)
     const changeState = useChangeState(id)
 
     const changeDeviceMode = useChangeDeviceMode(id)
-    const changeDeviceValue = useChangeDeviceValue(id)
-    const performDeviceAction = usePerformDeviceAction(id)
 
     const createMaintenanceWindow = useCreateDeviceMaintenanceWindow(id);
 
@@ -400,15 +188,11 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
 
     //Translates id to bus-port value
-    const rootDevice = data?.commandDevices?.[0];
+    const rootDevice = {} //data?.commandDevices?.[0];
 
-    const alarms = rootDevice?.alarms || [];
+    const alarms = activeProgram?.alarms || [];
     
-    const reports = rootDevice?.reports || [];
-
-    const peripherals = data?.commandDevices?.[0]?.peripherals || []
-
-    const activeProgram = data?.commandDevices?.[0]?.activeProgram || {};
+    const reports = activeProgram?.reports || [];
 
     const defaultPage = activeProgram?.remoteHomepage?.id;
 
@@ -416,6 +200,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
     const templatePacks = activeProgram?.templatePacks || [];
 
+    console.log({activeProgram, templatePacks})
     // const defaultPage = activeProgram?.interface?.find((a) => a.id == remoteHomepage);
 
     const mapHMI = (iface: any ) => {
@@ -442,7 +227,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
         return activeProgram?.interface?.map(mapHMI);
     }, [activeProgram?.interface]) 
 
-    // console.log({defaultPage})
+    console.log({memoisedHmi})
 
     const hmi = activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
         const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
@@ -564,41 +349,45 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
     // }
    
 
-        const refresh = () => {
-            return client.refetchQueries({ include: ['Q'] })
-        }
+        // const refresh = () => {
+        //     return client.refetchQueries({ include: ['Q'] })
+        // }
 
-    const changeOperationMode = (mode: string) => {
-        changeMode(mode).then(() => {
-            refresh()
-        })
-    }
+    // const changeOperationMode = (mode: string) => {
+    //     changeMode(mode).then(() => {
+    //         refresh()
+    //     })
+    // }
 
-    const changeOperationState = (state: "on" | "off" | "standby") => {
-        changeState(state).then(() => {
-            refresh()
-        })
-    }
+    // const changeOperationState = (state: "on" | "off" | "standby") => {
+    //     changeState(state).then(() => {
+    //         refresh()
+    //     })
+    // }
 
     // console.log({values, state: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")})
 
     return (
+        <LocalizationProvider dateAdapter={AdapterMoment}>
         <DeviceControlProvider value={{
             actions,
             historize,
             alarms,
+            sendAction: props.onCommand,
             // waitingForActions,
-            changeOperationMode,
-            changeOperationState,
+            
+            // changeOperationMode,
+            // changeOperationState,
+
             // operatingMode: rootDevice?.operatingMode,
             // operatingState: rootDevice?.operatingState,
             // operatingMode: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Mode")?.value.toLowerCase(),
             // operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
-            controlId: id,
+            // controlId: id,
+            values: deviceValues,
             program,
-            watching: subscriptionData?.watchingDevice || [],
+            watching: watching || [],
             // values,
-            device: rootDevice,
             reporting: reports,
             hmis: memoisedHmi,
             defaultPage,
@@ -607,10 +396,10 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
             templatePacks,
             groups,
             changeDeviceMode,
-            changeDeviceValue,
-            performAction: performDeviceAction,
-            refresh,
-            refetch
+            // changeDeviceValue,
+            // performAction: performDeviceAction,
+            // refresh,
+            // refetch
         }}>
             <MaintenanceWindow
                 open={maintenanceWindow}
@@ -618,7 +407,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                     if(!period.startTime || !period.endTime) return;
                     createMaintenanceWindow(period.startTime, period.endTime).then(() => {
                         setMaintenanceWindow(false)
-                        refetch();
+                        // refetch();
                     })
                 }}
                 onClose={() => {
@@ -628,11 +417,11 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                 onSubmit={(page) => {
                     createReportPage(page.name).then(() => {
                         setEditReportPage(null);
-                        refetch();
+                        // refetch();
                     })
                 }}
                 onClose={() => setEditReportPage(null)}
-                open={editReportPage} />
+                open={Boolean(editReportPage)} />
             <Paper
                 sx={{flex: 1, margin: '6px', display: 'flex', flexDirection: 'column'}}>
                 <Paper
@@ -683,9 +472,9 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                     borderRadius: 7,
                                     marginRight: '8px',
                                     marginLeft: '8px',
-                                    background: rootDevice?.online ? '#42e239' : '#db001b'
+                                    // background: rootDevice?.online ? '#42e239' : '#db001b'
                                 }} />
-                            <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography>
+                            {/* <Typography color="#fff">{rootDevice?.name} - {program?.name}</Typography> */}
                     </Box>
                        
                     <Toolbar
@@ -707,7 +496,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
                                     break;
                             }
-                            // navigate(`${item}`)
+                            navigate(`${item}`)
                         }}
                         items={toolbar_menu} />
 
@@ -720,9 +509,9 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                 setAnchorEl(null)
                             }}>
                             <AvatarList
-                                users={subscriptionData?.watchingDevice?.map((x: any) => ({
+                                users={(watching || []).map((x: any) => ({
                                     ...x,
-                                    color: stringToColor(x.name)
+                                    // color: stringToColor(x.name)
                                 })) || []} />
                          
                             <Popover
@@ -745,7 +534,7 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
                                         <Typography>Observing</Typography>
                                         <Divider />
                                         <List disablePadding>
-                                            {subscriptionData?.watchingDevice?.map((x: any) => (
+                                            {watching?.map((x: any) => (
                                                 <ListItem sx={{marginBottom: '3px'}} dense>{x.name}</ListItem>
                                             ))}
                                         </List>
@@ -785,5 +574,6 @@ export const CommandSurface: React.FC<DeviceControlProps> = (props) => {
 
             </Paper>
         </DeviceControlProvider>
+        </LocalizationProvider>
     )
 }

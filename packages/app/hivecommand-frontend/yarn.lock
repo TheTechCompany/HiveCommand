@@ -1241,10 +1241,10 @@
     react "^17.0.2"
     styled-components "^5.3.0"
 
-"@hexhive/styles@1.0.1-alpha.39":
-  version "1.0.1-alpha.39"
-  resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-1.0.1-alpha.39.tgz#da3c9d1296b737c042d5dfcb451dd1ca076a10e5"
-  integrity sha512-AV+8eMc/0j87ixtOGTYcT5jmT1Z+Zau3Yw40h5uqOqj7m1blFy6poYar0efo8i9+eY+a9NB9+OFVrAHkK6NLLQ==
+"@hexhive/styles@1.0.1-alpha.84":
+  version "1.0.1-alpha.84"
+  resolved "https://registry.yarnpkg.com/@hexhive/styles/-/styles-1.0.1-alpha.84.tgz#fb8fdba12337613273f93b9fae8d2bdbb956fa15"
+  integrity sha512-7UBFFKDhdzynmaWE/3r3Oww9DjvVlLzJ1J7NTa/1tG+rpwswZC9EePWjzXifGbcjvhGUc0uaeFNPK7XIHM1mOQ==
   dependencies:
     "@emotion/styled" "^11.9.3"
 

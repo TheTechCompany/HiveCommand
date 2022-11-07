@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AbstractNodeFactory, InfiniteCanvasNode, InfiniteCanvasContext } from "@hexhive/ui";
+import { AbstractNodeFactory } from "@hexhive/ui";
 import { HMINode } from "./HMINode";
 import { EditorHandles } from "./EditorHandles";
 

@@ -1,58 +1,43 @@
-const webpack = require("webpack");
+const fs = require('fs');
+const path = require('path')
 
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
-const path = require("path");
+// const rewireTypescript = require('./rewire-ts');
 
 module.exports = function override(config, env) {
-  config.resolve.fallback = {
-//     url: require.resolve("url"),
-//     assert: require.resolve("assert"),
-//     crypto: require.resolve("crypto-browserify"),
-//     http: require.resolve("stream-http"),
-//     https: require.resolve("https-browserify"),
-//     os: require.resolve("os-browserify/browser"),
-    buffer: false // require.resolve("buffer"),
-//     stream: require.resolve("stream-browserify"),
-//     process: require.resolve("process"),
-  };
+    //do stuff with the webpack config...
 
-  config.plugins.push(
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-      Buffer: ["buffer", "Buffer"],
-    })
-  );
+    config.module.rules.push({
+        test: /\.m?js/,
+        resolve: {
+            fullySpecified: false,
+        },
+    });
 
-  config.resolve.plugins = config.resolve.plugins.filter(plugin => !(plugin instanceof ModuleScopePlugin));
+    config.resolve.plugins = config.resolve.plugins.filter(plugin => !(plugin instanceof ModuleScopePlugin));
 
-  config.resolve.plugins.push(
-    new TsconfigPathsPlugin({extensions: ['.ts', '.tsx']})
-  )
+    config.resolve.plugins.push(
+        new TsconfigPathsPlugin()
+    )
 
+    // config.plugins.push(new BundleAnalyzerPlugin());
 
-  config.resolve.extensions.push('.tsx')
-//   config.stats = { ...config.stats, children: true };
+    config.resolve.alias = {
+        ...config.resolve.alias,
+        'react': path.resolve(__dirname, 'node_modules/react'),
+        // "react/jsx-runtime.js": "react/jsx-runtime",
+        // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
+        '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
+        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+        '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+        '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+        'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+        'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
+        '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
+        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+    }
 
-  // react-dnd
-  config.module.rules.push({
-    test: /\.m?js$/,
-    resolve: {
-      fullySpecified: false, // disable the behaviour
-    },
-  });
-
-//   config.module.rules.push({test: /\.tsx?$/, use: [{loader: 'ts-loader', options: {transpileOnly: true}}]})
-
-  // react-dnd
-  config.resolve.alias = {
-    ...config.resolve.alias,
-    'react': path.resolve(__dirname, 'node_modules/react'),
-    "react/jsx-runtime.js": "react/jsx-runtime",
-    "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
-  };
-
-//   console.log({resolve: config.resolve})
-
-  return config;
-};
+    return config;
+}

@@ -294,10 +294,10 @@
   dependencies:
     "@emotion/styled" "^11.9.3"
 
-"@hexhive/ui@^1.0.1-alpha.77":
-  version "1.0.1-alpha.77"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.77.tgz#26fc632f16fd6ec6e873b3d7a506fa1981d630f4"
-  integrity sha512-NY/lgyLYCOgIXNY6uM9tmb0O/gxF8OzTlWaTJggM9cW0m+NvIOt1tmoC0PmlUFtRsRhag1oV2oRSKF3iZgfhRw==
+"@hexhive/ui@^1.0.1-alpha.85":
+  version "1.0.1-alpha.85"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.85.tgz#9f08cbcd935f45bcd18f632563152b0c35ba661f"
+  integrity sha512-ptPqKdeLLFP16//9LPcRT29qW/A3ENMiNj+YGpqQUkHv+AHoGCMnVYhHT+GNUhFFPzJ13qe1GLQLGa/5geLZTg==
   dependencies:
     "@emotion/react" "^11.9.0"
     "@emotion/styled" "^11.8.1"
@@ -1598,7 +1598,7 @@ source-map@^0.5.7:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==
 
-styled-components@^5.1.1, styled-components@^5.3.3:
+styled-components@^5.1.1, styled-components@^5.3.3, styled-components@^5.3.6:
   version "5.3.6"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.3.6.tgz#27753c8c27c650bee9358e343fc927966bfd00d1"
   integrity sha512-hGTZquGAaTqhGWldX7hhfzjnIYBZ0IXQXkCYdvF1Sq3DsUaLx6+NTHC5Jj1ooM2F68sBiVz3lvhfwQs/S3l6qg==

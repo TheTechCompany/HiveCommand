@@ -7,8 +7,8 @@ import { getDevicesForNode } from '../utils';
 import { Bubble } from '../components/Bubble/Bubble';
 import { useRequestFlow, useUpdateDeviceSetpoint } from '@hive-command/api';
 // import { FormControl } from '@hexhive/ui';
-import { gql, useQuery } from '@apollo/client';
-import { useApolloClient } from '@apollo/client';
+// import { gql, useQuery } from '@apollo/client';
+// import { useApolloClient } from '@apollo/client';
 import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { InfiniteScrubber } from '@hexhive/ui';
 import { ActionMenu } from '../components/action-menu';
@@ -69,47 +69,49 @@ export default () => {
 		defaultPage,
 		groups,
 		changeDeviceMode,
-		performAction,
+		// performAction,
 		templatePacks,
-		controlId = '',
-		device,
+
+		values,
+		// controlId = '',
+		// device,
 	} = useContext(DeviceControlContext)
 
 
-	const requestFlow = useRequestFlow(controlId)
-	const updateSetpoint = useUpdateDeviceSetpoint(controlId);
+	// const requestFlow = useRequestFlow(controlId)
+	// const updateSetpoint = useUpdateDeviceSetpoint(controlId);
 
-	const client = useApolloClient()
+// ?	const client = useApolloClient()
 
-	const { data: deviceValueData } = useQuery(gql`
-		query DeviceValues($id: ID) {
+	// const { data: deviceValueData } = useQuery(gql`
+	// 	query DeviceValues($id: ID) {
 		
-			commandDevices (where: {id: $id}){
-				deviceSnapshot {
-					placeholder
-					key
-					value
-				}
-				waitingForActions {
-					id
-				}
-			}
-		}
-    `, {
-		variables: {
-			id: controlId,
-			idStr: controlId
-		}
-	})
+	// 		commandDevices (where: {id: $id}){
+	// 			deviceSnapshot {
+	// 				placeholder
+	// 				key
+	// 				value
+	// 			}
+	// 			waitingForActions {
+	// 				id
+	// 			}
+	// 		}
+	// 	}
+    // `, {
+	// 	variables: {
+	// 		id: controlId,
+	// 		idStr: controlId
+	// 	}
+	// })
 
-	const refetch = () => {
-		client.refetchQueries({include: ['DeviceValues']})
-	}
+	// const refetch = () => {
+	// 	client.refetchQueries({include: ['DeviceValues']})
+	// }
 
 
-	const values: { placeholder: string, key: string, value: string }[] = deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
+	// const values: { placeholder: string, key: string, value: string }[] =  [] //deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 
-	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
+	// const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
 	
 	const hmi = useMemo(() => {
@@ -162,19 +164,19 @@ export default () => {
 	// }, [device, deviceValueData])
 
 
-	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase() || '';
-	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
-	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
+	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
+	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
+	const operatingStatus = values?.["Plant"]?.["Status"];
 
 
 	useEffect(() => {
-		const timer = setInterval(() => {
-			client.refetchQueries({ include: ['DeviceValues'] })
-		}, 2 * 1000)
+		// const timer = setInterval(() => {
+		// 	client.refetchQueries({ include: ['DeviceValues'] })
+		// }, 2 * 1000)
 
-		return () => {
-			clearInterval(timer)
-		}
+		// return () => {
+		// 	clearInterval(timer)
+		// }
 	}, [])
 
 	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
@@ -232,7 +234,7 @@ export default () => {
 					information={infoTarget != undefined ? (
 						<Bubble
 							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
-							<ActionMenu selected={selected} refetch={refetch} values={values} />
+							<ActionMenu selected={selected} values={values} />
 						</Bubble>
 					) : null}
 					onBackdropClick={() => {
@@ -322,12 +324,12 @@ export default () => {
 					{operatingMode == "manual" && <Box border={{ side: 'bottom', size: 'small' }}>
 						<Typography>Commands</Typography>
 						<Box gap="xsmall">
-							{actions?.map((action) => (
+							{/* {actions?.map((action) => (
 								<ActionButton
 									waiting={waitingForActions[action.id]}
 									// onClick={() => controlAction(action)}
 									label={action.name} />
-							))}
+							))} */}
 						</Box>
 					</Box>}
 				</Box>

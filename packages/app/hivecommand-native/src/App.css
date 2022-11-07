@@ -2,6 +2,11 @@
   text-align: center;
 }
 
+:not(svg), :not(svg) > svg, :not(foreignObject) > svg {
+  transform-origin: initial;
+  transform-box: fill-box !important;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

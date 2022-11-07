@@ -108,8 +108,11 @@ app.get('/control-layout', verifyAccess, async (req, res) => {
                         include:{
                             nodes: {
                                 include:{
-                                    devicePlaceholder: true,
-                                    
+                                    devicePlaceholder: {
+                                        include: {
+                                            type: true
+                                        }
+                                    }
                                 }
                             },
                             edges: {

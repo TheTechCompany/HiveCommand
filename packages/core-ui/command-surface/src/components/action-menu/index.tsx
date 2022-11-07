@@ -9,7 +9,11 @@ import { isEqual } from 'lodash'
 import { InfiniteCanvasContext } from '@hexhive/ui';
 
 export interface ActionMenuProps {
-    values?: any[]
+    values?: {
+		[key: string]: {
+			[key: string]: any;
+		}
+	}
     refetch?: () => void;
     selected?: any;
 }
@@ -20,62 +24,67 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
     const { values } = props;
 
-    const { program, controlId, changeDeviceValue, defaultPage, activePage, hmis, performAction } = useContext(DeviceControlContext);
+    const { program, sendAction, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
 
     const { selected } = useContext(InfiniteCanvasContext)
 	const [editSetpoint, setEditSetpoint] = useState<string>();
 	const [setpointWorkstate, setSetpointWorkstate] = useState({});
 
-	const updateSetpoint = useUpdateDeviceSetpoint(controlId || '');
+	//TODO
+	// const updateSetpoint = useUpdateDeviceSetpoint(controlId || '');
 
-	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase() || '';
+	const operatingMode = values?.["Plant"]?.["Mode"]?.value.toLowerCase() || '';
 
     const hmi = useMemo(() => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage) || {}
 	}, [ hmis, defaultPage, activePage ])
 
-    const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
-		//Find map between P&ID tag and bus-port
+    // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
+	// 	//Find map between P&ID tag and bus-port
 
-		if (!name) return;
+	// 	if (!name) return;
 
-		console.log("DeviceValue getter", {name, values})
+	// 	console.log("DeviceValue getter", {name, values})
 
-		let v = values?.filter((a) => a?.placeholder == name);
-		let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
+	// 	let v = values?.filter((a) => a?.placeholder == name);
+	// 	let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
 
-		return v?.reduce((prev, curr) => {
-			let unit = units?.find((a) => a.key == curr.key);
-			let stateItem = state?.find((a: any) => a.key == curr.key);
-			let value = curr.value;
+	// 	return v?.reduce((prev, curr) => {
+	// 		let unit = units?.find((a) => a.key == curr.key);
+	// 		let stateItem = state?.find((a: any) => a.key == curr.key);
+	// 		let value = curr.value;
 
-			if (!stateItem) return prev;
+	// 		if (!stateItem) return prev;
 
-			if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
-				value = parseFloat(value).toFixed(2)
-			}
-			return {
-				...prev,
-				[curr.key]: value
-			}
-		}, {})
+	// 		if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
+	// 			value = parseFloat(value).toFixed(2)
+	// 		}
+	// 		return {
+	// 			...prev,
+	// 			[curr.key]: value
+	// 		}
+	// 	}, {})
 
-	}
+	// }
 
     const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-		changeDeviceValue(
-			deviceName,
-			stateKey,
-			`${stateValue}`
-		).then(() => {
-			let ws = Object.assign({}, workingState);
-			delete ws[stateKey]
-			setWorkingState(ws)
-		})
+		sendAction?.('UPDATE-DEVICE-STATE', { deviceName, stateKey: stateKey, value: stateValue})
+		
+		let ws = Object.assign({}, workingState);
+		delete ws[stateKey]
+		setWorkingState(ws)
+
+		// changeDeviceValue(
+		// 	deviceName,
+		// 	stateKey,
+		// 	`${stateValue}`
+		// ).then(() => {
+			
+		// })
 	}
 
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
-		let deviceValueBlob = getDeviceValue(deviceName, deviceInfo.state)
+		let deviceValueBlob = values?.[deviceName] //getDeviceValue(deviceName, deviceInfo.state)
         let value = deviceValueBlob?.[state.key];
 
 		if (state.writable && operatingMode == "manual") {
@@ -169,9 +178,9 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 							fullWidth
 							onClick={() => {
 								for (var k in setpointWorkstate) {
-									updateSetpoint(k, setpointWorkstate[k].value).then(() => {
-										props.refetch?.();
-									})
+									// updateSetpoint(k, setpointWorkstate[k].value).then(() => {
+									// 	props.refetch?.();
+									// })
 								}
 								// updateSetpoint()
 							}}>Save</Button>
@@ -236,10 +245,13 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 								<Button
 									fullWidth
 									onClick={() => {
-										performAction(
-											deviceName,
-											action.key
-										)
+
+										sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});
+
+										// performAction(
+										// 	deviceName,
+										// 	action.key
+										// )
 									}}>{action.key}</Button>
 							))}
 						</Box>
@@ -252,10 +264,13 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	}
 
 
-	const deviceModes = program?.devices?.map((a) => {
-		let vals = values?.filter((b) => b?.placeholder == a.tag) || [];
+	const deviceModes = program?.devices?.filter((a) => a.tag).map((a) => {
+		if(!a.tag) return {name: a.tag, mode: "manual"}
+		let mode = values?.[a.tag]?.["mode"];
+
+		// values?.filter((b) => b?.placeholder == a.tag) || [];
 		// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-		return { name: a.tag, mode: vals.find((a) => a.key == 'mode')?.value };
+		return { name: a.tag, mode };
 	}) || [];
 
     
