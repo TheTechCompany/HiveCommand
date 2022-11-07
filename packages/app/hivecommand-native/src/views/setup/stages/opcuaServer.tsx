@@ -9,15 +9,15 @@ export const OPCUAServerStage = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', alignItems: 'center', paddingLeft: '6px', paddingRight: '6px'}}>
             <TextField 
-
-                value={state.opcuaServer}
-                onChange={(e) => setState({...state, opcuaServer: e.target.value})}
+                value={state.opcuaServer || ''}
+                onChange={(e) => setState('opcuaServer', e.target.value)}
                 InputProps={{
                     startAdornment: <InputAdornment position="start">opc.tcp://</InputAdornment>
                 }}
                 label="OPCUA Server Endpoint"  
                 fullWidth 
                 size="small"/>
+
         </Box>
     )
 }

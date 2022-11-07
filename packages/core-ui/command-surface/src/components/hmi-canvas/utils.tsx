@@ -1,4 +1,6 @@
+import React from 'react';
 import { useRemoteComponents } from "../../hooks/remote-components";
+import {compile, templateSettings, template} from 'dot'
 
 export interface HMICanvasNode {
     id: string;
@@ -17,17 +19,19 @@ export interface HMICanvasNode {
     icon: any;
 }
 
-export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[], getPack?: any, functions?: any[]) => {
+export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[], values?: any, getPack?: any, functions?: any[]) => {
 
     //Fetch node component packs
 
     // console.log("Registering", {nodes})
+    console.log({templatePacks, nodes});
 
     const nodesParsed = await Promise.all(nodes.map(async (node) => {
 
         const [packId, templateName] = (node.type || '').split(':')
         const url = templatePacks?.find((a) => a.id == packId)?.url;
 
+        
         if (url) {
             let base = url.split('/');
             let [url_slug] = base.splice(base.length - 1, 1)
@@ -41,7 +45,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             }
         }
 
-        return { ...node, icon: undefined };
+        return { ...node, icon: <div>no icon found</div> };
         // return pack
 
     }))
@@ -50,14 +54,23 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
         let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
         let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
-
-        console.log("Options", {opts: x.options})
-
         let opts = Object.keys(x.options || {}).map((key) => {
             if(x.options[key]?.fn){
                 return {key, value: functions?.find((a) => a.id == x.options[key]?.fn)?.fn?.bind(this, x.options[key]?.args)}
             }
-            return {key, value: x.options[key]}
+
+
+            // console.log(template('{{=it.stuff}}', {varname: 'stuff',})({stuff: 'abc'}))
+            const varname = Object.keys(values).join(', ');
+            let value;
+            try{
+            // console.log({varname, tmpl: x.options[key], values})
+                value = template(x.options[key] || '')(values)
+            }catch(e){
+                value = x.options[key];
+            };
+//x.options[key] /
+            return {key, value: value}
         }).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
 
         return {

@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { Box } from '@mui/material'
-import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath } from '@hexhive/ui';
+import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
-import { gql, useApolloClient, useQuery } from '@apollo/client';
+// import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
 import { useRemoteComponents } from '../../hooks/remote-components';
-import { PipePathFactory } from "@hexhive/ui/dist/components/InfiniteCanvas/components/paths/pipe-path";
+import { PipePathFactory } from "@hexhive/ui";
+import { DeviceControlContext } from '../../context';
 
 export interface HMICanvasProps {
 	id: string;
@@ -18,22 +19,7 @@ export interface HMICanvasProps {
         name: string,
         mode: string
     }[]
-    deviceValues?: {
-        placeholder: string;
-        key: string;
-        value: any;
-
-        // conf: {
-        //     device: {id: string},
-        //     conf: {key: string}, 
-        //     value: any
-        // }[], 
-        // devicePlaceholder: {
-        //     id: string, 
-        //     name: string
-        // }, 
-        // values: any
-    }[];
+    deviceValues?: {[key: string]: {[key: string]: any}};
     // program?: any;
     functions?: {id: string, fn: any}[];
     nodes?: any[];
@@ -95,14 +81,16 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         }
     })
 
-    const client = useApolloClient()
+    // const client = useApolloClient()
 
    
-    const refetch = () => {
-        client.refetchQueries({include: ['Q']})
-    }
+    // const refetch = () => {
+    //     client.refetchQueries({include: ['Q']})
+    // }
 
-    const { getPack } = useRemoteComponents()
+    const { cache, values } = useContext(DeviceControlContext)
+
+    const { getPack } = useRemoteComponents(cache)
 
     // const getDeviceOptions = useCon
     
@@ -111,10 +99,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         return nodes.map((node) => {
             
 
-            let values = (props.deviceValues || []).filter((a) => a.placeholder == node.extras?.devicePlaceholder?.tag).reduce((prev, curr) => ({
-                ...prev,
-                [curr.key]: curr.value
-            }), {})
+            // let values = (props.deviceValues || []).filter((a) => a.placeholder == node.extras?.devicePlaceholder?.tag).reduce((prev, curr) => ({
+            //     ...prev,
+            //     [curr.key]: curr.value
+            // }), {})
+
+            let values = props.deviceValues?.[node?.extras?.devicePlaceholder?.tag];
 
             return {
                 ...node,
@@ -134,7 +124,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             
             // let hmi = program.interface //TODO change to a default flag on the HMI
             console.log("Register nodes", {nodes: props.nodes})
-            registerNodes(props.nodes, props.templatePacks, getPack, props.functions).then((nodes) => {
+            registerNodes(props.nodes, props.templatePacks, values, getPack, props.functions).then((nodes) => {
                 console.log("Registered nodes", {nodes})
                 setNodes(nodes);
             })

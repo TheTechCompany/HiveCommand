@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect, useContext, useRef } from 'react';
 import styled from 'styled-components'
 import { Box, Typography as Text } from '@mui/material'
-import { InfiniteCanvasContext, PortWidget } from '@hexhive/ui';
-
+import { PortWidget } from '@hexhive/ui';
+import { InfiniteCanvasContext } from '@hexhive/ui'
 export interface IconNodeProps {
     id?: string;
     x: number;
@@ -55,7 +55,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     // let options: any = props.extras?.options || {};
     let conf: any = {};
 
-    const tag = `${props.extras?.devicePlaceholder?.tag}`
+    // const tag = `${props?.extras?.devicePlaceholder?.tag}`
     // if (getDeviceOptions && tag) {
     //     options = getDeviceOptions(tag);
     // }
@@ -68,21 +68,15 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
     // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)
 
 
-    const Icon = props.extras?.icon
-    
-    // getSVGStyle(props.extras?.icon && (props.extras?.icon) ? props.extras?.icon : null, (props) => ({
-    //     pointerEvents: 'none',
-    //     stroke: (options?.opening == 'true' || options?.starting == 'true') ? 'yellow' : (options?.open?.trim() == 'true' || options?.on?.trim() == 'true' || parseFloat(options?.speed) > 0) ? 'green' : 'gray'
-    // }))
+    const Icon = props?.extras?.icon || (() => <div>no component found</div>)
 
-    //Array.isArray(props.extras.icon) ?
-    //: () => <HMIGroup icons={props.extras.icon} />
+    console.log({Icon, extras: props.extras})
+    
     const [rotation, setRotation] = useState<number>(0);
 
     useEffect(() => {
         setRotation(props?.extras?.rotation || 0)
     }, [props?.extras?.rotation])
-
 
     return (
         <Box

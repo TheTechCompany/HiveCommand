@@ -1,15 +1,15 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
+    "withGlobalTauri": true,
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn start",
-    "withGlobalTauri": true,
     "devPath": "http://localhost:3000",
     "distDir": "../build"
   },
   "package": {
     "productName": "HiveCommand",
-    "version": "0.1.0"
+    "version": "0.1.1"
   },
   "tauri": {
     "allowlist": {
@@ -66,7 +66,7 @@
     },
     "windows": [
       {
-        "fullscreen": false,
+        "fullscreen": true,
         "height": 600,
         "resizable": true,
         "title": "HiveCommand",
