@@ -14,6 +14,7 @@ import { ApolloLink } from "@apollo/client";
 import { Observable } from "@apollo/client/utilities";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
+import { DeviceControlView } from "./pages/device-control";
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
@@ -90,10 +91,10 @@ const authServer = process.env.REACT_APP_API
             ({done, value} = await reader.read());
 
             let strValue = new TextDecoder().decode(value)
-            console.log({strValue})
+            // console.log({strValue})
             let parsed = strValue.toString()?.match(/data: (.+)/)?.[1];
 
-            console.log({parsed})
+            // console.log({parsed})
             observer.next(JSON.parse(parsed));
           }
         })
@@ -149,7 +150,7 @@ function App(props: any) {
 
                 <Route path={`programs/:id/*`} element={<EditorPage />} />
                 <Route path={'*'} element={<Dashboard />} />
-                <Route path={`devices/:id/controls`} element={<CommandSurface/>} />
+                <Route path={`devices/:id/controls`} element={<DeviceControlView/>} />
 
                 </Routes>
                 </Box>
