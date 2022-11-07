@@ -3,27 +3,9 @@ import React from 'react';
 
 export const HMICanvasContext = React.createContext<{
 	values?: {
-		placeholder: string;
-		key: string;
-		value: any;
-		// conf: {
-        //     device: {id: string},
-        //     deviceKey: {key: string}, 
-        //     min: any,
-		// 	max: any
-        // }[], 
-		// devicePlaceholder?: {
-		// 	name: string
-		// 	type?: {
-		// 		state?: {
-		// 			key: string,
-		// 			units?: string;
-		// 			inputUnits?: string;
-		// 			modifiers: string[]
-		// 		}[]
-		// 	}
-		// }
-		// values: any
+		[key: string]: {
+			[key: string]: any
+		}
 	}[],
 	getDeviceOptions?: (device: string) => any
 	getDeviceConf?: (device: string) => any;
@@ -32,7 +14,7 @@ export const HMICanvasContext = React.createContext<{
 })
 
 
-export const HMICanvasProvider = (props: {children: any, value: {values?: {placeholder: string, key: string, value: any}[]}}) => {
+export const HMICanvasProvider = (props: {children: any, value: {values?: any}}) => {
 	
 	const values = props.value?.values || [];
 
@@ -40,38 +22,8 @@ export const HMICanvasProvider = (props: {children: any, value: {values?: {place
 		<HMICanvasContext.Provider value={{
 			...props.value,
 			getDeviceOptions: (device) => {				
-				// `${a.devicePlaceholder?.type?.tagPrefix || ''}${a.devicePlaceholder?.tag}` 
-				let deviceValues = values.filter((a) => a.placeholder == device);
-				// return deviceValues?.values;
-				let vals = deviceValues.reduce((prev, curr) => ({
-					...prev,
-					[curr.key]: curr.value
-				}), {}) 
-				//Object.assign({}, deviceValues || {});
 				
-				// for(var k in vals){
-				// 	let state = deviceValues.devicePlaceholder?.type?.state?.find((a: any) => a.key == k);
-
-				// 	let units = deviceValues.devicePlaceholder?.units?.find((a: any) => a.state?.key == k)
-				// 	// if(state.inputUnits == "Pa") vals[k] = 65;
-				// 	// if(state.inputUnits && state.units && state.inputUnits != state.units){
-					
-				// 	// 	let newUnit = unit(vals[k], state.inputUnits).to(state.units);
-				// 	// 	console.log({state}, vals[k], newUnit)
-
-				// 	// 	vals[k] =  `${newUnit.toNumber().toFixed(2)} ${newUnit.formatUnits()}`//`${vals[k]} ${state.inputUnits} to ${state.units}`)
-				// 	if(units?.inputUnit || units?.displayUnit || state.units){
-				// 		vals[k] = `${vals[k]} ${units?.displayUnit || units?.inputUnit || state.units}`
-				// 	}
-				// }
-
-				// 	let mods = deviceValues.devicePlaceholder?.type.state.find((a) => a.key == k).modifiers || []
-				// 	console.log(mods)
-				// 	if(mods.length > 0){
-				// 		vals[k] = modify(vals[k], mods)
-				// 	}
-				// }
-				return vals;
+				return values?.[device];
 			},
 			getDeviceConf: (device) => {
 

@@ -12,11 +12,13 @@ export const Controller = () => {
 
     const [packs, setPacks] = useRemoteCache('remote-components.json');
 
+    // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     console.log({controlLayout})
     return (
         <Box sx={{flex: 1, display: 'flex'}}>
 
             <CommandSurface 
+                values={{}}
                 cache={[packs, setPacks] as any}
                 program={controlLayout} />
 

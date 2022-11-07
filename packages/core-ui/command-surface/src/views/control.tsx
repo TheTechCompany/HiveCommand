@@ -71,13 +71,15 @@ export default () => {
 		changeDeviceMode,
 		performAction,
 		templatePacks,
-		controlId = '',
-		device,
+
+		values,
+		// controlId = '',
+		// device,
 	} = useContext(DeviceControlContext)
 
 
-	const requestFlow = useRequestFlow(controlId)
-	const updateSetpoint = useUpdateDeviceSetpoint(controlId);
+	// const requestFlow = useRequestFlow(controlId)
+	// const updateSetpoint = useUpdateDeviceSetpoint(controlId);
 
 // ?	const client = useApolloClient()
 
@@ -107,9 +109,9 @@ export default () => {
 	// }
 
 
-	const values: { placeholder: string, key: string, value: string }[] =  [] //deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
+	// const values: { placeholder: string, key: string, value: string }[] =  [] //deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
 
-	const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
+	// const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
 	
 	const hmi = useMemo(() => {
@@ -162,9 +164,9 @@ export default () => {
 	// }, [device, deviceValueData])
 
 
-	const operatingMode = values?.find((a) => a.placeholder == "Plant" && a.key == "Mode")?.value.toLowerCase() || '';
-	const operatingState = values?.find((a) => a.placeholder == "Plant" && a.key == "Running")?.value == 'true' ? "on" : "off";
-	const operatingStatus = values?.find((a) => a.placeholder == "Plant" && a.key == "Status")?.value
+	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
+	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
+	const operatingStatus = values?.["Plant"]?.["Status"];
 
 
 	useEffect(() => {
@@ -232,7 +234,7 @@ export default () => {
 					information={infoTarget != undefined ? (
 						<Bubble
 							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
-							{/* <ActionMenu selected={selected} refetch={refetch} values={values} /> */}
+							<ActionMenu selected={selected} values={values} />
 						</Bubble>
 					) : null}
 					onBackdropClick={() => {
@@ -322,12 +324,12 @@ export default () => {
 					{operatingMode == "manual" && <Box border={{ side: 'bottom', size: 'small' }}>
 						<Typography>Commands</Typography>
 						<Box gap="xsmall">
-							{actions?.map((action) => (
+							{/* {actions?.map((action) => (
 								<ActionButton
 									waiting={waitingForActions[action.id]}
 									// onClick={() => controlAction(action)}
 									label={action.name} />
-							))}
+							))} */}
 						</Box>
 					</Box>}
 				</Box>

@@ -3,11 +3,15 @@ import React from 'react';
 import { RemoteComponentCache } from './hooks/remote-components';
 
 export const DeviceControlContext = React.createContext<{
-	controlId?: string;
-	device?: any;
+	// controlId?: string;
+	// device?: any;
+
+	values?: {[key: string]: {[key: string]: any}}
+
+	sendAction?: (type: string, action: any) => void;
 
 	cache?: RemoteComponentCache;
-	
+
 	program?: {
 		id: string;
 		interface: CommandProgramHMI,

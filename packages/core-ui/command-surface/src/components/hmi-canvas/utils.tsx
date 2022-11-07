@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRemoteComponents } from "../../hooks/remote-components";
+import {compile, templateSettings, template} from 'dot'
 
 export interface HMICanvasNode {
     id: string;
@@ -18,7 +19,7 @@ export interface HMICanvasNode {
     icon: any;
 }
 
-export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[], getPack?: any, functions?: any[]) => {
+export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[], values?: any, getPack?: any, functions?: any[]) => {
 
     //Fetch node component packs
 
@@ -57,7 +58,15 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             if(x.options[key]?.fn){
                 return {key, value: functions?.find((a) => a.id == x.options[key]?.fn)?.fn?.bind(this, x.options[key]?.args)}
             }
-            return {key, value: x.options[key]}
+
+
+            // console.log(template('{{=it.stuff}}', {varname: 'stuff',})({stuff: 'abc'}))
+            const varname = Object.keys(values).join(', ');
+
+            // console.log({varname, tmpl: x.options[key], values})
+            let value = template(x.options[key] || '')(values)
+//x.options[key] /
+            return {key, value: value}
         }).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
 
         return {
