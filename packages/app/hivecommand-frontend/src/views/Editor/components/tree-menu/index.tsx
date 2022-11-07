@@ -38,26 +38,28 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
     }
 
     return (
-    <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
-    
-        <TreeView
-            onNodeSelect={(event, nodeId) => {
-                props.onNodeSelect?.(nodeId);
-            }}
-            selected={props.selected}
-            sx={{ flex: 1, userSelect: 'none', maxWidth: `100%` }}
-            defaultCollapseIcon={<ExpandMore />}
-            defaultExpandIcon={<ChevronRight />}
-        >
-            {renderItems(props.items || [])}
-            {/* {props.items?.map((item) => (
-                <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
-                    {item.children?.map((g) => (
-                        <CustomTreeItem decoration={g.icon} nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
-                    ))}
-                </CustomTreeItem>
-            ))}    */}
-        </TreeView>
-    </TreeViewProvider>
+    <Box sx={{display: 'flex', overflowY: 'auto'}}>
+        <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
+        
+            <TreeView
+                onNodeSelect={(event, nodeId) => {
+                    props.onNodeSelect?.(nodeId);
+                }}
+                selected={props.selected}
+                sx={{ flex: 1, userSelect: 'none', maxWidth: `100%` }}
+                defaultCollapseIcon={<ExpandMore />}
+                defaultExpandIcon={<ChevronRight />}
+            >
+                {renderItems(props.items || [])}
+                {/* {props.items?.map((item) => (
+                    <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
+                        {item.children?.map((g) => (
+                            <CustomTreeItem decoration={g.icon} nodeId={g.id} dontAdd={g.dontAdd} dontEdit={g.dontEdit}  label={g.name} />
+                        ))}
+                    </CustomTreeItem>
+                ))}    */}
+            </TreeView>
+        </TreeViewProvider>
+    </Box>
     )
 }
