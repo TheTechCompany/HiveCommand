@@ -1,6 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-export const Loader = async (base_url: string, start: string) => {
+export interface RemoteComponent {
+    name: string;
+    component: JSX.Element;
+}
+
+export type RemoteComponentCache = [ packs: {[key: string]: RemoteComponent[]},  setPacks: (packs: {[key: string]: RemoteComponent[]}) => void ]
+
+const Loader = async (base_url: string, start: string) => {
     let url = base_url + start;
 
     let baseRequirements : any = {
@@ -37,16 +44,20 @@ export const Loader = async (base_url: string, start: string) => {
     const func = new Function("require", "module", "exports", stringFunc);
     func(_initialRequire, module, exports);
 
-    await Promise.all(requirementFetch)
+    await Promise.all(requirementFetch);
 
     func(_requires, module, exports);
 
     return module.exports;
 }
 
-export const useRemoteComponents = () => {
+export { 
+    Loader
+}
 
-    const [ packs, setPacks ] = useState<{[key: string]: any}>({});
+export const useRemoteComponents = (cache?: RemoteComponentCache) => {
+
+    const [ packs, setPacks ] = cache ? cache : useState<{[key: string]: RemoteComponent[]}>({});
 
     const getPack = async (id: string, base_url: string, url: string) => {
         if(packs[id]){

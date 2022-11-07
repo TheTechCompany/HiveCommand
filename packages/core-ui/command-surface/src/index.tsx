@@ -2,6 +2,7 @@ import { AvatarList } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
+import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
 // import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
@@ -23,16 +24,29 @@ import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
+import { RemoteComponentCache } from './hooks/remote-components';
 
+export * from './hooks/remote-components'
 
-export const CommandSurface: React.FC<any> = (props) => {
+export interface CommandSurfaceProps {
+    program: {interface: {nodes: any[], edges: any[]}} & any;
+    onCommand?: (type: string, parameters: any) => void;
+
+    watching?: {id: string, name: string, color: string}[];
+
+    cache?: RemoteComponentCache
+}   
+
+export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
+
+    const { program: activeProgram, onCommand, watching } = props;
 
     // const client = useApolloClient();
 
     // const { id = ''} = useParams()
     const id = '';
 
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
 
     const [ activePage, setActivePage ] = useState<any>(null)
 
@@ -66,7 +80,7 @@ export const CommandSurface: React.FC<any> = (props) => {
     ]
 
     const view = toolbar_menu.find((a) => {
-        // return matchPath(window.location.pathname, `${a.id}`) != null;
+        return matchPath(window.location.pathname, `${a.id}`) != null;
     })
 
     // const {data: subscriptionData} = useSubscription(gql`
@@ -409,14 +423,13 @@ export const CommandSurface: React.FC<any> = (props) => {
 
     const peripherals = []// data?.commandDevices?.[0]?.peripherals || []
 
-    const activeProgram : any = {} //data?.commandDevices?.[0]?.activeProgram || {};
-
     const defaultPage = activeProgram?.remoteHomepage?.id;
 
     const actions = activeProgram?.interface?.actions || [];
 
     const templatePacks = activeProgram?.templatePacks || [];
 
+    console.log({activeProgram, templatePacks})
     // const defaultPage = activeProgram?.interface?.find((a) => a.id == remoteHomepage);
 
     const mapHMI = (iface: any ) => {
@@ -443,7 +456,7 @@ export const CommandSurface: React.FC<any> = (props) => {
         return activeProgram?.interface?.map(mapHMI);
     }, [activeProgram?.interface]) 
 
-    // console.log({defaultPage})
+    console.log({memoisedHmi})
 
     const hmi = activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
         const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
@@ -600,7 +613,7 @@ export const CommandSurface: React.FC<any> = (props) => {
             // operatingState: values?.find((a) => a.deviceId == "Plant" && a.valueKey == "Running")?.value == 'true' ? "on" : "off",
             controlId: id,
             program,
-            watching: subscriptionData?.watchingDevice || [],
+            watching: watching || [],
             // values,
             device: rootDevice,
             reporting: reports,
@@ -653,7 +666,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <IconButton
                             size="small"
-                            // onClick={() => navigate("/devices")}
+                            onClick={() => navigate("/devices")}
                             sx={{color: 'navigation.main'}}>
                             <KeyboardArrowLeft
                                 fontSize="inherit"
@@ -704,14 +717,14 @@ export const CommandSurface: React.FC<any> = (props) => {
                                     break;
                                 case 'alarms':
                                     if( window.location.href.indexOf('alarms') > -1){
-                                        // navigate('.')
+                                        navigate('.')
                                     }else{
-                                        // navigate('alarms');
+                                        navigate('alarms');
                                     }
 
                                     break;
                             }
-                            // navigate(`${item}`)
+                            navigate(`${item}`)
                         }}
                         items={toolbar_menu} />
 
@@ -724,7 +737,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                                 setAnchorEl(null)
                             }}>
                             <AvatarList
-                                users={subscriptionData?.watchingDevice?.map((x: any) => ({
+                                users={(watching || []).map((x: any) => ({
                                     ...x,
                                     // color: stringToColor(x.name)
                                 })) || []} />
@@ -764,7 +777,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                 
                 <Box
                     sx={{flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row'}}>
-                    {/* <Routes>
+                    <Routes>
                         <Route path={`alarms`} element={<AlarmList />} />
                         <Route path={''} element={<React.Fragment>
                                 <Paper sx={{
@@ -784,7 +797,7 @@ export const CommandSurface: React.FC<any> = (props) => {
                             </React.Fragment>}>
                            
                         </Route>
-                    </Routes> */}
+                    </Routes>
                 </Box>
 
             </Paper>

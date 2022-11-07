@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRemoteComponents } from "../../hooks/remote-components";
 
 export interface HMICanvasNode {
@@ -22,12 +23,14 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
     //Fetch node component packs
 
     // console.log("Registering", {nodes})
+    console.log({templatePacks, nodes});
 
     const nodesParsed = await Promise.all(nodes.map(async (node) => {
 
         const [packId, templateName] = (node.type || '').split(':')
         const url = templatePacks?.find((a) => a.id == packId)?.url;
 
+        
         if (url) {
             let base = url.split('/');
             let [url_slug] = base.splice(base.length - 1, 1)
@@ -41,7 +44,7 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
             }
         }
 
-        return { ...node, icon: undefined };
+        return { ...node, icon: <div>no icon found</div> };
         // return pack
 
     }))
@@ -49,9 +52,6 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
     return nodesParsed.map((x) => {
         let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
         let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
-
-
-        console.log("Options", {opts: x.options})
 
         let opts = Object.keys(x.options || {}).map((key) => {
             if(x.options[key]?.fn){
