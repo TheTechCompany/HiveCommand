@@ -69,7 +69,7 @@ export default () => {
 		defaultPage,
 		groups,
 		changeDeviceMode,
-		performAction,
+		// performAction,
 		templatePacks,
 
 		values,

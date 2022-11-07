@@ -17,7 +17,7 @@ import { Menu, Paper } from "@mui/material";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
 
-  const { reporting, controlId = '', refresh, program } = useContext(DeviceControlContext);
+  const { reporting, refresh, program } = useContext(DeviceControlContext);
 
   const [ selected, setSelected ] = useState();
 

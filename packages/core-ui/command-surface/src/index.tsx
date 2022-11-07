@@ -149,8 +149,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const changeState = useChangeState(id)
 
     const changeDeviceMode = useChangeDeviceMode(id)
-    const changeDeviceValue = useChangeDeviceValue(id)
-    const performDeviceAction = usePerformDeviceAction(id)
 
     const createMaintenanceWindow = useCreateDeviceMaintenanceWindow(id);
 
@@ -375,9 +373,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             actions,
             historize,
             alarms,
-            sendAction: (type, action) => {
-                console.log("ACTION", {type, action})
-            },
+            sendAction: props.onCommand,
             // waitingForActions,
             
             // changeOperationMode,
@@ -400,8 +396,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             templatePacks,
             groups,
             changeDeviceMode,
-            changeDeviceValue,
-            performAction: performDeviceAction,
+            // changeDeviceValue,
+            // performAction: performDeviceAction,
             // refresh,
             // refetch
         }}>
