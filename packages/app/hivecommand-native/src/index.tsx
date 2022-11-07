@@ -3,9 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { DataProvider } from './data';
+
+const CONF_FILE = 'app.conf.json';
 
 ReactDOM.render(
-      <App />,
+  <Router>
+    <DataProvider storagePath={CONF_FILE}>
+      <App />
+    </DataProvider>
+  </Router>,
   document.getElementById('root') as HTMLElement
 );
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { Box } from '@mui/material'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
@@ -8,6 +8,7 @@ import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
 import { useRemoteComponents } from '../../hooks/remote-components';
 import { PipePathFactory } from "@hexhive/ui";
+import { DeviceControlContext } from '../../context';
 
 export interface HMICanvasProps {
 	id: string;
@@ -102,7 +103,9 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     //     client.refetchQueries({include: ['Q']})
     // }
 
-    const { getPack } = useRemoteComponents()
+    const { cache } = useContext(DeviceControlContext)
+
+    const { getPack } = useRemoteComponents(cache)
 
     // const getDeviceOptions = useCon
     

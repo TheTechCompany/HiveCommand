@@ -38,7 +38,6 @@ export const MaintenanceWindow = (props: {open: boolean, onClose: () => void, on
                             size="small" 
                             {...params} />
                     )} />
-    {/* asdf */}
                 <DateTimePicker
                     
                     label="End Time" 
