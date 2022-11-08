@@ -22,11 +22,14 @@ export const DeviceControlView = () => {
     const performDeviceAction = usePerformDeviceAction(id)
     const changeDeviceValue = useChangeDeviceValue(id)
 
+    const defaultPage = program?.remoteHomepage?.id;
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
                 values={values}
                 program={program}
+                defaultPage={defaultPage}
                 onCommand={(type, params) => {
                     // console.log({type, params});
 

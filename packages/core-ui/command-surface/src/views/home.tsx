@@ -1,7 +1,11 @@
 import { Box, Button, Paper, Typography } from '@mui/material'
-import React from 'react'
+import React, { useContext } from 'react'
 import { ArrowForward } from '@mui/icons-material'
+import { DeviceControlContext } from '../context'
 export const HomeView = () => {
+
+    const { setView } = useContext(DeviceControlContext);
+
     return (
         <Box sx={{flex: 1, padding: '6px'}}>
             <Typography>Home</Typography>
@@ -17,7 +21,11 @@ export const HomeView = () => {
                 </Box>
                 <Paper sx={{bgcolor: 'secondary.light', margin: '6px',padding: '12px'}}>
                     <Typography>Control</Typography>
-                    <Button variant="contained" endIcon={<ArrowForward />}>Go to Controls</Button>
+                    <Button 
+                        onClick={() => {
+                            setView?.('controls')
+                        }}
+                        variant="contained" endIcon={<ArrowForward />}>Go to Controls</Button>
                 </Paper>
                 
             </Box>

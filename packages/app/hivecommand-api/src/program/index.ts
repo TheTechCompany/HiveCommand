@@ -134,39 +134,7 @@ export const useCreateProgramHMI = (programId: string) => {
 				remoteHomepage: args.remoteHomepage
 			}
 		})
-		// let query = {};
-		// // if(args.parent){
-		// // 	query = {
-		// // 		where: {node: {id: args.parent}},
-		// // 		update: {
-		// // 			node: {
-		// // 				children: [{
-		// // 					create: [{
-		// // 						node: {
-		// // 							name: args.name
-		// // 						}
-		// // 					}]
-		// // 				}]
-		// // 			}
-		// // 		}
-		// // 	}
-		// // }else{
-		// 	query = {
-		// 		create: [{node: {name: args.name}}]
-		// 	}
-		// // }
-
-		// const item = mutation.createCommandProgramHMI({
-		// 	where: {id: programId},
-		// 	update: {
-		// 		hmi: [query]
-		// 	}
-		// })
-		// return {
-		// 	item: {
-		// 		...item.commandPrograms?.[0]
-		// 	}
-		// }
+		
 		return {
 			item: {
 				...item
@@ -180,6 +148,30 @@ export const useCreateProgramHMI = (programId: string) => {
 				remoteHomepage,
 				localHomepage,
 				parent
+			}
+		})
+	}
+}
+
+export const useDeleteProgramHMI = (programId: string) => {
+	const [ mutateFn ] = useMutation((mutation, args: {id: string}) => {
+
+		const item = mutation.deleteCommandProgramInterface({
+			program: programId,
+			id: args.id
+		})
+
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+
+	return (id: string) => {
+		return mutateFn({
+			args: {
+				id
 			}
 		})
 	}

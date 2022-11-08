@@ -209,7 +209,9 @@ export default (prisma: PrismaClient) => {
 				let homepageUpdates : any = {};
 				if(args.input.localHomepage){
 					homepageUpdates['localHomepage'] = {connect: {id: id}};
-				}else if(args.input.remoteHomepage){
+				}
+				
+				if(args.input.remoteHomepage){
 					homepageUpdates['remoteHomepage'] = {connect: {id}}
 				}
 
@@ -241,12 +243,27 @@ export default (prisma: PrismaClient) => {
 			},
 			updateCommandProgramInterface: async (root: any, args: any, context: any) => {
 
+				const hmi = await prisma.program.findFirst({where: {id: args.program}})
+
 				let homepageUpdates : any = {};
+
 				if(args.input.localHomepage){
 					homepageUpdates['localHomepage'] = {connect: {id: args.id}};
-				}else if(args.input.remoteHomepage){
-					homepageUpdates['remoteHomepage'] = {connect: {id: args.id}}
+				}else{
+					if(hmi?.localHomepageId == args.id){
+						homepageUpdates['localHomepage'] = {disconnect: true}
+					}
 				}
+				
+				if(args.input.remoteHomepage){
+					homepageUpdates['remoteHomepage'] = {connect: {id: args.id}}
+				}else{
+					if(hmi?.remoteHomepageId == args.id){
+						homepageUpdates['remoteHomepage'] = {disconnect: true}
+					}
+				}
+
+				console.log({input: args, homepageUpdates})
 
 				return await prisma.program.update({
 					where: {
@@ -254,6 +271,7 @@ export default (prisma: PrismaClient) => {
 					},
 					data: {
 						...homepageUpdates,
+						
 						interface: {
 							update: {
 								where: {
