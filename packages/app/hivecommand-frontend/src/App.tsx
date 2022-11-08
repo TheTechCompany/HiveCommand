@@ -150,7 +150,7 @@ function App(props: any) {
 
                 <Route path={`programs/:id/*`} element={<EditorPage />} />
                 <Route path={'*'} element={<Dashboard />} />
-                <Route path={`devices/:id/controls`} element={<DeviceControlView/>} />
+                <Route path={`:id/controls`} element={<DeviceControlView/>} />
 
                 </Routes>
                 </Box>
