@@ -30,7 +30,9 @@ export * from './hooks/remote-components'
 
 
 export interface CommandSurfaceProps {
-    program: {interface: {nodes: any[], edges: any[]}} & any;
+    defaultPage?: string;
+
+    program: {interface: {id: string, nodes: any[], edges: any[]}} & any;
     onCommand?: (type: string, parameters: any) => void;
 
     values: {id: string, key: string, value: any}[] | {[key: string]: {[key: string]: any}}
@@ -42,7 +44,7 @@ export interface CommandSurfaceProps {
 
 export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
-    const { program: activeProgram, onCommand, watching } = props;
+    const { program: activeProgram, defaultPage, onCommand, watching } = props;
 
 
     /*
@@ -194,7 +196,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     
     const reports = activeProgram?.reports || [];
 
-    const defaultPage = activeProgram?.remoteHomepage?.id;
 
     const actions = activeProgram?.interface?.actions || [];
 
@@ -374,6 +375,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             historize,
             alarms,
             sendAction: props.onCommand,
+            setView,
             // waitingForActions,
             
             // changeOperationMode,
