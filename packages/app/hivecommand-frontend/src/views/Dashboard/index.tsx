@@ -25,7 +25,7 @@ const pages = [
     {
         icon: <Map />,
         label: "Deployments",
-        path: 'devices',
+        path: '',
         component: <Devices/>
     },
     {

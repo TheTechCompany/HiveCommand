@@ -38,7 +38,7 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
     }
 
     return (
-    <Box sx={{display: 'flex', overflowY: 'auto'}}>
+    <Box sx={{display: 'flex', overflowY: 'auto', flex: 1}}>
         <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
         
             <TreeView

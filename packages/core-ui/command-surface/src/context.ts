@@ -9,6 +9,7 @@ export const DeviceControlContext = React.createContext<{
 	values?: {[key: string]: {[key: string]: any}}
 
 	sendAction?: (type: string, action: any) => void;
+	setView?: (view: string) => void;
 
 	cache?: RemoteComponentCache;
 
@@ -37,6 +38,7 @@ export const DeviceControlContext = React.createContext<{
 	changeDeviceMode?:any
 	changeDeviceValue?:any
 	actions?: any[],
+	
 	changeOperationState?: (state: "on" | "off" | "standby") => void;
 	changeOperationMode?: (mode: string) => void,
 	refresh?: () => void;
