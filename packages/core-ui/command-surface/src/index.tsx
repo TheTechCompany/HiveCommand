@@ -440,7 +440,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                         <IconButton
                             size="small"
-                            onClick={() => navigate("/devices")}
+                            onClick={() => navigate("../../")}
                             sx={{color: 'navigation.main'}}>
                             <KeyboardArrowLeft
                                 fontSize="inherit"
