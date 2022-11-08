@@ -7,6 +7,7 @@ export interface EditorMenuDialogProps {
     open: boolean;
     type: string;
     selected?: any;
+    onDelete?: () => void;
     onClose?: () => void;
     onSubmit?: (item: any) => void;
 }
@@ -49,12 +50,19 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
         }
     }
 
+    console.log({props})
     const getActions = () => {
         switch(type){
             case 'program':
             case 'hmi':
             case 'devices':
-                return <Box>
+                return <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: ( Boolean(props.selected?.id) ? 'space-between' : 'flex-end') }}>
+                    {props.selected?.id ? (
+                        <Button variant="contained" color="error" onClick={props.onDelete}>
+                            Delete
+                        </Button>
+                    ) : null}
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Button onClick={props.onClose}>
                         Cancel
                     </Button>
@@ -62,6 +70,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
                         Save
                     </Button>
                     </Box>
+                </Box>
         }
     }
 
@@ -82,7 +91,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
                         {getContent()}
                     </Box>
                 </DialogContent>
-                <DialogActions>
+                <DialogActions sx={{display: 'flex', flex: 1, justifyContent: 'unset'}}>
                     {getActions()}
                 </DialogActions>
             </EditorMenuProvider>

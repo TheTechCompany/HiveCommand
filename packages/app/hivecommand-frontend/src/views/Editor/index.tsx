@@ -14,7 +14,7 @@ import {Controls} from './pages/controls'
 import { Alarms } from './pages/alarms';
 import { Devices, DeviceSingle } from './pages/devices';
 
-import { useCreateProgramFlow, useCreateProgramHMI, useCreateProgramPlaceholder, useUpdateProgramFlow, useUpdateProgramHMI, useUpdateProgramPlaceholder } from '@hive-command/api';
+import { useCreateProgramFlow, useCreateProgramHMI, useCreateProgramPlaceholder, useDeleteProgramHMI, useUpdateProgramFlow, useUpdateProgramHMI, useUpdateProgramPlaceholder } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { Variables } from './pages/variables';
@@ -127,6 +127,27 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const updateProgramHMI = useUpdateProgramHMI(id)
     const updateProgramPlaceholder = useUpdateProgramPlaceholder(id);
     
+    const deleteProgramHMI = useDeleteProgramHMI(id);
+
+    const handleMenuDelete = async (type: string, data: any) => {
+        let promise : any = null;
+
+        console.log({type});
+
+        switch(type){
+            case 'hmi':
+                promise = deleteProgramHMI(data.id)
+                break;
+            default: 
+                promise = Promise.resolve(true)
+                break;
+        }
+        await promise;
+
+        setMenuOpen(null);
+        setEditItem(null);
+        refetch()
+    }
 
     const handleMenuSubmit = async (type: string, data: any) => {
         let promise : any = null
@@ -268,6 +289,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             <EditorMenuDialog 
                 type={menuOpen}
                 selected={editItem}
+                onDelete={() => {
+                    handleMenuDelete(menuOpen, editItem)
+                }}
                 onClose={() => {
                     setEditItem(undefined);
                     setMenuOpen(undefined)
