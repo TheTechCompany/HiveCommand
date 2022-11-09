@@ -5,7 +5,7 @@ import { useWatchers } from './utils/watchers';
 import { useParams } from 'react-router-dom';
 import { useDevice } from './utils/program';
 import { useDeviceHistory, useDeviceValues } from './utils/value';
-import { useChangeDeviceValue, usePerformDeviceAction } from '@hive-command/api';
+import { useChangeDeviceValue, useChangeMode, usePerformDeviceAction } from '@hive-command/api';
 import moment from 'moment';
 
 export const DeviceControlView = () => {
@@ -24,6 +24,8 @@ export const DeviceControlView = () => {
 
     const performDeviceAction = usePerformDeviceAction(id)
     const changeDeviceValue = useChangeDeviceValue(id)
+
+    const changeMode = useChangeMode(id)
 
     const defaultPage = program?.remoteHomepage?.id;
 
@@ -78,6 +80,10 @@ export const DeviceControlView = () => {
                             performDeviceAction(params.deviceName, params.actionKey).then(() => {
 
                             });
+                        case 'CHANGE-MODE':
+                            changeMode(params.mode).then(() => {
+                                
+                            })
                     }
                 }}
                 watching={watchers}
