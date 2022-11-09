@@ -1,4 +1,4 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { gql, useApolloClient, useQuery, useLazyQuery } from "@apollo/client";
 
 export const useDeviceValues = (id: string) => {
 
@@ -27,4 +27,28 @@ export const useDeviceValues = (id: string) => {
         },
         results: deviceValueData?.commandDevices?.[0]?.deviceSnapshot?.map((x) => ({id: x.placeholder, key: x.key, value: x.value})) || []
     }
+}
+
+
+export const useDeviceHistory = (id: string) => {
+
+	const HISTORIC_DATA_QUERY = gql`
+		query HistoricDeviceValues($id: ID, $startDate: DateTime, $endDate: DateTime){
+
+			commandDevices(where: {id: $id}){
+				deviceSnapshot(where: {startDate: $startDate, endDate: $endDate}){
+					placeholder
+					key
+					value
+					lastUpdated
+				}
+			}
+		}
+	`
+	const [getHistoricValues, {data}] = useLazyQuery(HISTORIC_DATA_QUERY)
+
+	return {
+		getHistoricValues,
+		data: data?.commandDevices?.[0]?.deviceSnapshot?.map((x) => ({id: x.placeholder, lastUpdated: x.lastUpdated, key: x.key, value: x.value})) || []
+	}
 }
