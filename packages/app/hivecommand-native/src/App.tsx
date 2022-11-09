@@ -29,6 +29,7 @@ function App() {
   
   useEffect(() => {
     console.log({ BaseDirectory: BaseDirectory.App })
+    
     // createDir('conf', {dir: BaseDirectory.App, recursive: true}).then(() => {
     //   writeTextFile({path: CONF_FILE, contents: '{}'}, {dir: BaseDirectory.App}).then(() => {
     //     console.log("ASFD")
