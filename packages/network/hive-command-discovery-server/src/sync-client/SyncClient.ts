@@ -127,7 +127,7 @@ export class SyncClient {
 		const servers = this.discoveryServer.registeredServers
 	
 		await Promise.all((servers || []).map(async (server) => {
-			if(server.productUri?.toString() == "NodeOPCUA-Server"){
+			if(server.productUri?.toString() == "NodeOPCUA-Server" || server.productUri?.toString() == "HiveCommand OPCUA"){
 				// console.log("Server", JSON.stringify(server))
 
 				
