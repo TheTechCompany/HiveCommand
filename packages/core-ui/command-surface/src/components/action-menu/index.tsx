@@ -33,7 +33,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	//TODO
 	// const updateSetpoint = useUpdateDeviceSetpoint(controlId || '');
 
-	const operatingMode = values?.["Plant"]?.["Mode"]?.value.toLowerCase() || '';
+	const operatingMode = values?.["Plant"]?.["Mode"]?.value?.toLowerCase() || '';
 
     const hmi = useMemo(() => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage) || {}
