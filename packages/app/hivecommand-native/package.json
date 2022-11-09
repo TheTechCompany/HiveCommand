@@ -26,7 +26,7 @@
 	"scripts": {
 		"start": "yarn package && react-app-rewired start",
 		"build": "yarn package && react-app-rewired build",
-	    "package": "node ./scripts/move-binary.js",
+	    "package": "node ./move-binary.js",
 		"tauri": "tauri"
 	},
 	"eslintConfig": {
