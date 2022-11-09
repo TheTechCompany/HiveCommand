@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { CommandSurface } from '@hive-command/command-surface';
 import { useWatchers } from './utils/watchers';
@@ -32,6 +32,16 @@ export const DeviceControlView = () => {
     const daysHorizon = 14;
     const [ lastDate, setLastDate ] = useState(null)
     
+    useEffect(() => {
+        const interval = setInterval(() => {
+            refetchValues();
+        }, 2000)
+        
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
@@ -82,7 +92,7 @@ export const DeviceControlView = () => {
                             });
                         case 'CHANGE-MODE':
                             changeMode(params.mode).then(() => {
-                                
+
                             })
                     }
                 }}
