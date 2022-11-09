@@ -41,6 +41,12 @@ jobs:
         run: npx lerna bootstrap --scope @hive-command/native --include-dependencies
 
       - name: Build
+          env:
+            CI: false
+            NODE_OPTIONS: "--max-old-space-size=8192"
+          run: npx lerna run build --scope @hive-command/local-sidecar --include-dependencies
+
+      - name: Build
         env:
           CI: false
           NODE_OPTIONS: "--max-old-space-size=8192"
