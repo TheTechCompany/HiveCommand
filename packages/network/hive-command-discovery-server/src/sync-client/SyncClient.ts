@@ -132,6 +132,9 @@ export class SyncClient {
 
 				
 				let serverUrl = (server.discoveryUrls || []).length > 0 ? server.discoveryUrls?.[0]?.toString() : undefined
+
+				console.log({serverUrl});
+
 				if(!serverUrl) return;
 				let serverUri = serverUrl;
 
@@ -228,6 +231,8 @@ export class SyncClient {
 
 				this.servers[serverUri] = server;
 
+			}else{
+				console.log({productUri: server.productUri?.toString()})
 			}
 		}))
 

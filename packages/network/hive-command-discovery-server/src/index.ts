@@ -38,14 +38,14 @@ export class DiscoveryServer {
 
     private options: DiscoveryServerOptions;
 
-    private iotServer: IOTServer;
+    // private iotServer: IOTServer;
 
     constructor(opts: DiscoveryServerOptions){
         this.options = opts;
 
         this.prisma = new PrismaClient()
 
-        this.iotServer = new IOTServer();
+        // this.iotServer = new IOTServer();
 
         cache.connect_to(process.env.MONGO_URL || '');
 
@@ -77,7 +77,7 @@ export class DiscoveryServer {
         this.app.use(bodyParser.json())
         this.app.use(routes(this.dataBroker))
 
-        this.app.use('/iot', this.iotServer.router);
+        // this.app.use('/iot', this.iotServer.router);
         
         this.io.use(async (socket, next) => {
 
