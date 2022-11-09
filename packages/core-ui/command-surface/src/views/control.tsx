@@ -12,6 +12,7 @@ import { useRequestFlow, useUpdateDeviceSetpoint } from '@hive-command/api';
 import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { InfiniteScrubber } from '@hexhive/ui';
 import { ActionMenu } from '../components/action-menu';
+import moment from 'moment';
 
 
 const ActionButton = (props: any) => {
@@ -71,6 +72,7 @@ export default () => {
 		changeDeviceMode,
 		// performAction,
 		templatePacks,
+		seekValue,
 
 		values,
 		// controlId = '',
@@ -274,6 +276,13 @@ export default () => {
 					controls
 					onTimeChange={(time) => {
 						setTime(time)
+
+						console.log({time});
+						
+						//TODO make onHorizonCHange
+						const startDate = moment(time).toDate();
+						const endDate = moment(startDate).add(1, 'week').toDate()
+						seekValue?.(startDate, endDate)
 					}}
 					time={time} />
 			</Paper>}

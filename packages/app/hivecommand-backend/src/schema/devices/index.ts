@@ -36,10 +36,32 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			CommandDevice: {
 				deviceSnapshot: async (root: any, args: any, context: any) => {
 
+					let result;
+					const { where } = args;
+
+					if(where){
+						//Query timeseries
+						result = await prisma.deviceValue.findMany({
+							where: {
+								deviceId: root.id,
+								lastUpdated: {
+									gte: where.startDate,
+									lte: where.endDate
+								}
+							},
+							orderBy: {
+								lastUpdated: 'desc'
+							}
+							
+						})
+					}else{
+						//Get data from mongocache
+						result = await cache.DeviceValue.find({
+							deviceId: root.id
+						});
+					}
 					// console.log(await cache.DeviceValue.find())
-					const result = await cache.DeviceValue.find({
-						deviceId: root.id
-					});
+					
 
 					return result;
 
@@ -733,6 +755,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		value: String
 	}
 
+	input CommandDeviceSnapshotWhere {
+		startDate: DateTime
+		endDate: DateTime
+		blocks: Float
+	}
+
 	type CommandDevice  {
 		id: ID! 
 		name: String
@@ -757,7 +785,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		calibrations: [CommandProgramDeviceCalibration] 
 		setpoints: [CommandDeviceSetpointCalibration]
 		
-		deviceSnapshot: [CommandDeviceSnapshot]
+		deviceSnapshot(where: CommandDeviceSnapshotWhere): [CommandDeviceSnapshot]
 
 		alarms: [DeviceAlarm]
 
@@ -821,6 +849,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		key: String
 		value: String
 		placeholder: String
+		lastUpdated: DateTime
 	}
 
 

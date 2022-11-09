@@ -11,6 +11,8 @@ export const DeviceControlContext = React.createContext<{
 	sendAction?: (type: string, action: any) => void;
 	setView?: (view: string) => void;
 
+	seekValue?: (startDate: Date, endDate: Date) => any[];
+
 	cache?: RemoteComponentCache;
 
 	program?: {

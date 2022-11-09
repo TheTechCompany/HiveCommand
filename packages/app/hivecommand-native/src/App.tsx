@@ -12,6 +12,10 @@ import { DataContext, DataProvider } from './data';
 import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs';
 import { Controller } from './views/controller';
 
+import { Command } from '@tauri-apps/api/shell';
+
+const cmd = Command.sidecar('binaries/sidecar')
+
 const CONF_FILE = 'conf/app.conf.json';
 
 
@@ -20,7 +24,12 @@ function App() {
   const { authState } = useContext(DataContext)
 
   useEffect(() => {
+    cmd.execute();
+  }, [])
+  
+  useEffect(() => {
     console.log({ BaseDirectory: BaseDirectory.App })
+    
     // createDir('conf', {dir: BaseDirectory.App, recursive: true}).then(() => {
     //   writeTextFile({path: CONF_FILE, contents: '{}'}, {dir: BaseDirectory.App}).then(() => {
     //     console.log("ASFD")
