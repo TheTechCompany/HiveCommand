@@ -35,6 +35,8 @@ export interface CommandSurfaceProps {
     program: {interface: {id: string, nodes: any[], edges: any[]}} & any;
     onCommand?: (type: string, parameters: any) => void;
 
+    mode?: string;
+
     seekValue?: (startDate: Date, endDate: Date) => any[];
     values: {id: string, key: string, value: any}[] | {[key: string]: {[key: string]: any}}
 
@@ -381,7 +383,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             seekValue: props.seekValue,
             // waitingForActions,
             
-            // changeOperationMode,
+            changeOperationMode: (mode) => {
+                props.onCommand?.('CHANGE-MODE', {mode})
+            },
             // changeOperationState,
 
             // operatingMode: rootDevice?.operatingMode,
