@@ -327,7 +327,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="X"
-                value={item.x}
+                value={item?.x}
                 onChange={(e) => {
                     updateHMINode(selected.id, { x: parseFloat(e.target.value) }).then(() => {
                         refetch()
@@ -339,7 +339,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Y"
-                value={item.y}
+                value={item?.y}
                 onChange={(e) => {
                     updateHMINode(selected.id, { y: parseFloat(e.target.value) }).then(() => {
                         refetch()

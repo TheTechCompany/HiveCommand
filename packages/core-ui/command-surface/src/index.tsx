@@ -35,6 +35,7 @@ export interface CommandSurfaceProps {
     program: {interface: {id: string, nodes: any[], edges: any[]}} & any;
     onCommand?: (type: string, parameters: any) => void;
 
+    seekValue?: (startDate: Date, endDate: Date) => any[];
     values: {id: string, key: string, value: any}[] | {[key: string]: {[key: string]: any}}
 
     watching?: {id: string, name: string, color: string}[];
@@ -376,6 +377,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             alarms,
             sendAction: props.onCommand,
             setView,
+
+            seekValue: props.seekValue,
             // waitingForActions,
             
             // changeOperationMode,
@@ -498,7 +501,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                                     break;
                             }
-                            navigate(`${item}`)
+                            // navigate(`${item}`)
                         }}
                         items={toolbar_menu} />
 

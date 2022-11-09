@@ -70,8 +70,6 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
     const Icon = props?.extras?.icon || (() => <div>no component found</div>)
 
-    console.log({Icon, extras: props.extras})
-    
     const [rotation, setRotation] = useState<number>(0);
 
     useEffect(() => {
@@ -113,7 +111,6 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
 
     const [ port, setPort ] = useState<any>();
 
-console.log({props})
     const { selected, selectNode } = useContext(InfiniteCanvasContext)
 
     return (
