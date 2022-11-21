@@ -107,7 +107,7 @@ model ReportPage {
 
   name String
 
-  reports DeviceReport[] @relation(name: "hasReports")
+  charts DeviceReport[] @relation(name: "hasReports")
 
   createdAt DateTime? @default(now())
 

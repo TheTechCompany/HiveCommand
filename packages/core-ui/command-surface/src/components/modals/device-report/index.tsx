@@ -12,7 +12,10 @@ export const DeviceReportModal = (props: {open: boolean, onClose: () => void, on
     }
 
     return (
-        <Dialog open={props.open} onClose={props.onClose}>
+        <Dialog 
+            fullWidth
+            open={props.open} 
+            onClose={props.onClose}>
             <DialogTitle>Create Report</DialogTitle>
             <DialogContent>
                 <TextField 
@@ -20,6 +23,7 @@ export const DeviceReportModal = (props: {open: boolean, onClose: () => void, on
                     onChange={(e) => setName(e.target.value)}
                     sx={{marginTop: "9px"}} 
                     size="small" 
+                    fullWidth
                     label="Report Name" />
             </DialogContent>
             <DialogActions>

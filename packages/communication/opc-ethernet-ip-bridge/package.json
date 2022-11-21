@@ -1,0 +1,22 @@
+{
+  "name": "@hive-command/opcua-enip-bridge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "bin": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b && yarn package",
+    "package": "pkg package.json --output dist/enip-bridge",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "pkg": "^5.8.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "@hive-command/opcua-server": "^1.4.15-alpha.50",
+    "st-ethernet-ip": "^2.5.0"
+  }
+}

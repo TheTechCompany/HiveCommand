@@ -24,7 +24,7 @@
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
-		"start": "yarn package && react-app-rewired start",
+		"start": "react-app-rewired start",
 		"build": "yarn package && react-app-rewired build",
 	    "package": "node ./move-binary.js",
 		"tauri": "tauri"

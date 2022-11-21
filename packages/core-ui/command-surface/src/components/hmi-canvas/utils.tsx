@@ -61,7 +61,6 @@ export const registerNodes = async (nodes: HMICanvasNode[], templatePacks?: any[
 
 
             // console.log(template('{{=it.stuff}}', {varname: 'stuff',})({stuff: 'abc'}))
-            const varname = Object.keys(values).join(', ');
             let value;
             try{
             // console.log({varname, tmpl: x.options[key], values})

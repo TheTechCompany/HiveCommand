@@ -147,7 +147,7 @@ export default class Server {
         return this.objectTypes;    
     }
 
-    async addVariable(name: string, type: string, getter: () => any, setter: (value: any) => void){
+    async addVariable(name: string, type: 'String' | 'Number' | 'Boolean', getter: () => any, setter: (value: any) => void){
         console.log(`Add variable ${name} ${type}`)
 
         let dataType : DataType;

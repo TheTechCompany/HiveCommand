@@ -64,15 +64,11 @@ export default () => {
 		historize,
 		functions,
 		program,
-		actions,
 		hmis,
 		activePage,
 		defaultPage,
-		groups,
-		changeDeviceMode,
-		// performAction,
 		templatePacks,
-		seekValue,
+		// seekValue,
 
 		values,
 		// controlId = '',
@@ -274,6 +270,7 @@ export default () => {
 			{historize && <Paper sx={{display: 'flex', flexDirection: 'column', bottom: 6, right: 6, left: 6, position: 'absolute', overflow: 'hidden'}}>
 				<InfiniteScrubber 
 					controls
+					scale={'quarter-hour'}
 					onTimeChange={(time) => {
 						setTime(time)
 
@@ -282,7 +279,7 @@ export default () => {
 						//TODO make onHorizonCHange
 						const startDate = moment(time).toDate();
 						const endDate = moment(startDate).add(1, 'week').toDate()
-						seekValue?.(startDate, endDate)
+						// seekValue?.(startDate, endDate)
 					}}
 					time={time} />
 			</Paper>}

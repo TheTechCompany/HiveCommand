@@ -1,5 +1,6 @@
 import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api';
 import React from 'react';
+import { CommandSurfaceClient } from '.';
 import { RemoteComponentCache } from './hooks/remote-components';
 
 export const DeviceControlContext = React.createContext<{
@@ -8,10 +9,12 @@ export const DeviceControlContext = React.createContext<{
 
 	values?: {[key: string]: {[key: string]: any}}
 
-	sendAction?: (type: string, action: any) => void;
+	// sendAction?: (type: string, action: any) => void;
 	setView?: (view: string) => void;
 
-	seekValue?: (startDate: Date, endDate: Date) => any[];
+	// seekValue?: (startDate: Date, endDate: Date) => any[];
+
+	client?: CommandSurfaceClient;
 
 	cache?: RemoteComponentCache;
 
@@ -19,7 +22,14 @@ export const DeviceControlContext = React.createContext<{
 		id: string;
 		interface: CommandProgramHMI,
 		variables: any[],
-		devices: CommandProgramDevicePlaceholder[]
+		devices: {
+			id: string;
+			tag: string;
+			type: {
+				tagPrefix: string;
+				state: any[]
+			}
+		}[]
 	};
 	
 	alarms?: any[];
@@ -34,9 +44,10 @@ export const DeviceControlContext = React.createContext<{
 	activePage?: string;
 	templatePacks?: any[];
 
-	reporting?: any[],
-	hmiNodes?: any[],
-	groups?: any,
+	reports?: {
+		id: string;
+		charts: {x: number, y: number, w: number, h: number, label: string, values: {timestamp: Date, value: any}[] }[]
+	}[];
 	changeDeviceMode?:any
 	changeDeviceValue?:any
 	actions?: any[],

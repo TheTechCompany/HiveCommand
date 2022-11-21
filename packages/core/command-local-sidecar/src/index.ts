@@ -1,5 +1,15 @@
-import express from 'express';
+/*
+    Command Client - Native Sidecar
 
+    - maintains opc connections
+    - provides access for native frontend
+    - registers subscriptions
+*/  
+import EventEmitter from 'events'
+import express from 'express';
+import bodyParser from 'body-parser'
+import cors from 'cors';
+import {Server} from 'socket.io'
 import OPCUAClient from '@hive-command/opcua-client';
 
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
@@ -16,8 +26,27 @@ class DevSidecar {
 
     }
 
-    async browse(client: OPCUAClient, browsePath: string, recursive?: boolean){
+    async subscribe(host: string, paths: {tag: string, path: string}[]){
+        const client = await this.connect(host);
+
+        const { monitors, unwrap } = await client.subscribeMulti(paths)
+
+        const emitter = new EventEmitter()
+
+        monitors?.on('changed', async (item, value, index) => {
+            const key = unwrap(index)
+
+            console.log(key, value.value)
+
+            emitter.emit('data-changed', {key, value: value.value})
+        })
+        
+        return emitter;
+    }
+
+    async browse(host: string, browsePath: string, recursive?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
+        const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
 
@@ -25,11 +54,11 @@ class DevSidecar {
         console.log("references of RootFolder :");
         for(const reference of browseResult || []) {
 
-            const name = reference.browseName.toString();
+            const name = reference?.browseName?.toString();
 
             if(recursive){
                 try{
-                    const innerResults = await this.browse(client, `${browsePath}/${name}`, recursive);
+                    const innerResults = await this.browse(host, `${browsePath}/${name}`, recursive);
                     results.push({name: name, children: innerResults})
                 }catch(e){
                     console.log({e, name})
@@ -44,29 +73,17 @@ class DevSidecar {
         return results;
     }
 
-    async connect(host: string, port: number){
-        const endpointUrl = `opc.tcp://${host}:${port}`;
+    async connect(host: string, port?: number){
+        const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
-        try{
-    
+        if(this.clients[endpointUrl]) return this.clients[endpointUrl];
 
-            this.clients[endpointUrl] = new OPCUAClient();
+        this.clients[endpointUrl] = new OPCUAClient();
 
-            await this.clients[endpointUrl].connect(endpointUrl)
 
+        await this.clients[endpointUrl].connect(endpointUrl)
       
-            // await this.clients[endpointUrl].connect(endpointUrl);
-
-            // this.clients[endpointUrl].browse('RootFolder')
-
-            // this.sessions[endpointUrl] = await this.clients[endpointUrl].createSession();
-            
-            const results = await this.browse(this.clients[endpointUrl], "/Objects", true);
-
-            return results;
-        }catch(e: any){
-            return [e.message]
-        }
+        return this.clients[endpointUrl];
 
     }
 
@@ -77,28 +94,60 @@ const sidecar = new DevSidecar();
 
 const app = express();
 
-app.get('/:host/test', (req, res) => {
+const http = require('http');
+const server = http.createServer(app);
+const io = new Server(server);
+
+let subscriptions : {[key: string]: EventEmitter}= {};
+
+const dataChanged = (data: any) => {
+    io.emit('data-changed', data)
+}
+
+app.use(bodyParser.json());
+app.use(cors());
+
+app.post('/:host/subscribe', async (req, res) => {
+    if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
+
+    try{
+        const events = await sidecar.subscribe(req.params.host, req.body.paths)
+
+        events.on('data-changed', dataChanged)
+
+        subscriptions[req.params.host] = events;
+    }catch(e){
+        return res.send({error: e})
+    }
+
     res.send({success: true})
 })
 
+app.post('/:host/unsubscribe', async (req, res) => {
+    if(!subscriptions[req.params.host]) return res.send({error: "No subscription found"});
 
-app.get('/:host/:port/tree', async (req, res) => {
-
-    // res.send("Tree called");
-
-    let port : number;
     try{
-        port = parseInt(req.params.port)
-    }catch(e){
-        return res.send({error: "Port not a valid integer"});
-    }
+        const eventEmitter = subscriptions[req.params.host];
 
-    const tree = await sidecar.connect(req.params.host, port);
-    res.send({results: tree})
+        eventEmitter.removeListener('data-changed', dataChanged);
+    }catch(e){
+        return res.send({error: e})
+    }
+    res.send({success: true})
+})
+
+app.get('/:host/tree', async (req, res) => {
+    try{
+        const tree = await sidecar.browse(req.params.host, '/1:Objects', true);
+        res.send({results: tree})
+
+    }catch(e){
+        return res.send({error: e})
+    }
 });
 
 
-const server = app.listen(OPC_PROXY_PORT, () => {
+server.listen(OPC_PROXY_PORT, () => {
     console.debug(`Listening on ${OPC_PROXY_PORT}`)
 })
 
