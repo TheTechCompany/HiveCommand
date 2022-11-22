@@ -1,8 +1,9 @@
 const { Controller } = require('st-ethernet-ip');
+import EventEmitter from 'events'
 
 import OPCUAServer from '@hive-command/opcua-server'
 
-export interface PLCTag {
+export interface PLCTag extends EventEmitter {
     id: number,
     name: string,
     type: {
@@ -23,7 +24,13 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
     const PLC = new Controller();
 
+    let valueStore : any = {};
+
+
     PLC.connect(host, slot || 0).then(async () => {
+
+        PLC.scan_rate = 500;
+        PLC.scan();
 
         const tagList : PLCTag[] = PLC.tagList;
 
@@ -35,15 +42,29 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         tagList.forEach((tag) => {
 
+            tag.on('Changed', (newTag, oldValue) => {
+                valueStore[tag.name] = newTag.value;
+            })
+
+            const getter = () => {
+                return valueStore[tag.name];
+            }
+
             switch(tag.type.typeName){
                 case 'STRING':
-                    server.addVariable(tag.name, 'String', () => {}, () => {})
+                    server.addVariable(tag.name, 'String', getter, () => {
+
+                    })
                     break;
                 case 'DINT':
-                    server.addVariable(tag.name, 'Number', () => {}, () => {});
+                    server.addVariable(tag.name, 'Number', getter, () => {
+
+                    });
                     break;
                 case 'BOOL':
-                    server.addVariable(tag.name, 'Boolean', () => {}, () => {});
+                    server.addVariable(tag.name, 'Boolean', getter, () => {
+
+                    });
                     break;
             }
             // server.addVariable(tag.name, )
@@ -51,5 +72,6 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         server.start();
 
+        console.log("OPCUA Server started");
     })
 }

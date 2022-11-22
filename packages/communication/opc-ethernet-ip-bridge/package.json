@@ -1,11 +1,11 @@
 {
-  "name": "@hive-command/opcua-enip-bridge",
+  "name": "@hive-command/enip-bridge",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "bin": "dist/index.js",
+  "bin": "dist/cli.js",
   "scripts": {
-    "build": "tsc -b && yarn package",
+    "build": "tsc -b",
     "package": "pkg package.json --output dist/enip-bridge",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
