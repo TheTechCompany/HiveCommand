@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/canvas-nodes",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.66",
   "main": "dist/index.js",
   "files": [
     "dist/"
@@ -15,8 +15,8 @@
     "@types/react": "17.0.39",
     "@types/styled-components": "^5.1.26",
     "react": "17.0.2",
-    "typescript": "^4.8.4",
-    "styled-components": "^5.3.6"
+    "styled-components": "^5.3.6",
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "@hexhive/styles": "^1.0.1-alpha.65",
