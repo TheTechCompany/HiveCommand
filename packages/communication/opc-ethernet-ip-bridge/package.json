@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "bin": "dist/cli.js",
+  "bin": {
+    "enip-bridge": "dist/cli.js"
+  },
   "scripts": {
     "build": "tsc -b",
     "package": "pkg package.json --output dist/enip-bridge",
