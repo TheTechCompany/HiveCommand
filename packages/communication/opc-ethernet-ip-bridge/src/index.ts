@@ -40,11 +40,13 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         console.log(`Found ${tagList.length} tags`);
 
+        console.log(JSON.stringify({tagList}));
+        
         tagList.forEach((tag) => {
 
-            tag.on('Changed', (newTag, oldValue) => {
-                valueStore[tag.name] = newTag.value;
-            })
+            // tag.on('Changed', (newTag, oldValue) => {
+            //     valueStore[tag.name] = newTag.value;
+            // })
 
             const getter = () => {
                 return valueStore[tag.name];
