@@ -21,7 +21,7 @@
     "url": "git+https://github.com/TheTechCompany/sudbuster.git"
   },
   "scripts": {
-    "build": "tsc -b . ",
+    "build": "tsc -b",
     "test": "jest",
     "example": "ts-node example/index.ts"
   },

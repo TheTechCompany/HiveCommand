@@ -24,7 +24,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
     const { values } = props;
 
-    const { program, sendAction, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
+    const { program, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
 
     const { selected } = useContext(InfiniteCanvasContext)
 	const [editSetpoint, setEditSetpoint] = useState<string>();
@@ -68,19 +68,13 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	// }
 
     const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-		sendAction?.('UPDATE-DEVICE-STATE', { deviceName, stateKey: stateKey, value: stateValue})
+		// sendAction?.('UPDATE-DEVICE-STATE', { deviceName, stateKey: stateKey, value: stateValue})
 		
-		let ws = Object.assign({}, workingState);
-		delete ws[stateKey]
-		setWorkingState(ws)
+		// let ws = Object.assign({}, workingState);
+		// delete ws[stateKey]
+		// setWorkingState(ws)
 
-		// changeDeviceValue(
-		// 	deviceName,
-		// 	stateKey,
-		// 	`${stateValue}`
-		// ).then(() => {
-			
-		// })
+		
 	}
 
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
@@ -246,7 +240,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 									fullWidth
 									onClick={() => {
 
-										sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});
+										// sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});
 
 										// performAction(
 										// 	deviceName,
