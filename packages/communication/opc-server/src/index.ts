@@ -47,7 +47,6 @@ export default class Server {
         [key: string]: UAObjectType
     } = {};
 
-    private objectFolder?: UAObject;
 
     private commandEndpoint?: (value: Variant) => void;
 
@@ -73,10 +72,10 @@ export default class Server {
             ...discovery,
         })
 
-        const addressSpace = this.server.engine.addressSpace;
-        if(addressSpace)
-            this.objectFolder = addressSpace.rootFolder.objects;
+    }
 
+    get objectFolder(){
+        return this.server?.engine?.addressSpace?.rootFolder?.objects;
     }
 
     get endpoint(){
