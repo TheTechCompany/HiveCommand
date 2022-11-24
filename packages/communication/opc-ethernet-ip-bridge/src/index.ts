@@ -29,6 +29,8 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
     PLC.connect(host, slot || 0).then(async () => {
 
+        server.start();
+
         PLC.scan_rate = 500;
         PLC.scan();
 
@@ -41,7 +43,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
         console.log(`Found ${tagList.length} tags`);
 
         console.log(JSON.stringify({tagList}));
-        
+
         tagList.forEach((tag) => {
 
             // tag.on('Changed', (newTag, oldValue) => {
@@ -72,7 +74,6 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             // server.addVariable(tag.name, )
         })
 
-        server.start();
 
         console.log("OPCUA Server started");
     })
