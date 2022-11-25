@@ -41,7 +41,6 @@ export interface ServerOpts {
 export default class Server {
     private server: OPCUAServer;
 
-    public namespace?: Namespace;
 
     private objectTypes: {
         [key: string]: UAObjectType
@@ -72,6 +71,10 @@ export default class Server {
             ...discovery,
         })
 
+    }
+
+    get namespace(){
+        return this.server?.engine?.addressSpace?.getOwnNamespace()
     }
 
     get objectFolder(){
@@ -146,7 +149,6 @@ export default class Server {
 
     async addVariable(name: string, type: 'String' | 'Number' | 'Boolean', getter: () => any, setter: (value: any) => void){
         console.log(`Add variable ${name} ${type}`)
-        console.log(`Object folder ${this.objectFolder}`)
 
         let dataType : DataType;
         switch(type){
