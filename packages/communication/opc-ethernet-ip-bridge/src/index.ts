@@ -57,17 +57,17 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             switch(tag.type.typeName){
                 case 'STRING':
                     await server.addVariable(tag.name, 'String', getter, () => {
-
+                        return "Test"
                     })
                     break;
                 case 'DINT':
                     await server.addVariable(tag.name, 'Number', getter, () => {
-
+                        return 0;
                     });
                     break;
                 case 'BOOL':
                     await server.addVariable(tag.name, 'Boolean', getter, () => {
-
+                        return false;
                     });
                     break;
             }
