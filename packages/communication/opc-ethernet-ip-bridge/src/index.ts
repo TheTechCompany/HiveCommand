@@ -51,23 +51,36 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             // })
 
             const getter = () => {
+                let value = valueStore[tag.name];
+
+                switch(tag.type.typeName){
+                    case 'STRING':
+                        return 'Test';
+                    case 'DINT':
+                        return 0;
+                    case 'BOOL':
+                        return false;
+                }
                 return valueStore[tag.name];
             }
 
             switch(tag.type.typeName){
                 case 'STRING':
-                    await server.addVariable(tag.name, 'String', getter, () => {
-                        return "Test"
+                    await server.addVariable(tag.name, 'String', getter, (value) => {
+                        // return "Test"
+                        console.log({value})
                     })
                     break;
                 case 'DINT':
-                    await server.addVariable(tag.name, 'Number', getter, () => {
-                        return 0;
+                    await server.addVariable(tag.name, 'Number', getter, (value) => {
+                        // return 0;
+                        console.log({value})
                     });
                     break;
                 case 'BOOL':
-                    await server.addVariable(tag.name, 'Boolean', getter, () => {
-                        return false;
+                    await server.addVariable(tag.name, 'Boolean', getter, (value) => {
+                        // return false;
+                        console.log({value})
                     });
                     break;
             }
