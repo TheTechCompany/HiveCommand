@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.70](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.69...v1.4.15-alpha.70) (2022-11-25)
+
+**Note:** Version bump only for package @hive-command/network
+
+
+
+
+
 ## [1.4.15-alpha.69](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.68...v1.4.15-alpha.69) (2022-11-25)
 
 **Note:** Version bump only for package @hive-command/network
