@@ -6,14 +6,18 @@ import {
     makeEUInformation,
     makeRelativePath,
     Namespace,
-    OPCUAServer, RegisterServerMethod, StatusCode, UAMethod, UAObject, UAObjectType, UAVariable, Variant
+    StatusCodes,
+    OPCUAServer,
+    RegisterServerMethod, 
+    StatusCode, 
+    UAMethod, 
+    UAObject,
+    UAObjectType, 
+    UAVariable, 
+    Variant
 } from 'node-opcua'
-import { networkInterfaces } from 'os';
 
 import { getNodeId } from '@hive-command/opcua-utils'
-import { StatusCodes } from 'node-opcua';
-import { EUInformation } from 'node-opcua-types';
-import { DeviceManager } from './device-manager';
 
 export interface ServerOpts {
     productName: string;
@@ -183,7 +187,10 @@ export default class Server {
 
 
         (variable?.getComponentByName(`value`) as UAVariable)?.bindVariable({
-            get: () => new Variant({dataType: dataType, value: getter()}),
+            get: () => {
+                const value = getter();
+                return new Variant({dataType: dataType, value})
+            },
             set: (value: Variant) => {
                 if(!setter) return StatusCodes.BadNotWritable;
                             
