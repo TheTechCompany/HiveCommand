@@ -146,6 +146,7 @@ export default class Server {
 
     async addVariable(name: string, type: 'String' | 'Number' | 'Boolean', getter: () => any, setter: (value: any) => void){
         console.log(`Add variable ${name} ${type}`)
+        console.log(`Object folder ${this.objectFolder}`)
 
         let dataType : DataType;
         switch(type){

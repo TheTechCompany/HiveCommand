@@ -29,7 +29,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
     PLC.connect(host, slot || 0).then(async () => {
 
-        server.start();
+        await server.start();
 
         PLC.scan_rate = 500;
         PLC.scan();
@@ -44,7 +44,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         console.log(JSON.stringify({tagList}));
 
-        tagList.forEach((tag) => {
+        await Promise.all(tagList.map(async (tag) => {
 
             // tag.on('Changed', (newTag, oldValue) => {
             //     valueStore[tag.name] = newTag.value;
@@ -56,23 +56,23 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
             switch(tag.type.typeName){
                 case 'STRING':
-                    server.addVariable(tag.name, 'String', getter, () => {
+                    await server.addVariable(tag.name, 'String', getter, () => {
 
                     })
                     break;
                 case 'DINT':
-                    server.addVariable(tag.name, 'Number', getter, () => {
+                    await server.addVariable(tag.name, 'Number', getter, () => {
 
                     });
                     break;
                 case 'BOOL':
-                    server.addVariable(tag.name, 'Boolean', getter, () => {
+                    await server.addVariable(tag.name, 'Boolean', getter, () => {
 
                     });
                     break;
             }
             // server.addVariable(tag.name, )
-        })
+        }))
 
 
         console.log("OPCUA Server started");
