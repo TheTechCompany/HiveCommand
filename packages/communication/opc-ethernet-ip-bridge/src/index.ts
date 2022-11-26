@@ -47,17 +47,24 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         // plc.newTag()
 
-        tagList?.map(async (tag) => {
-            plc.subscribe(tag);
+        // tagList?.map(async (tag) => {
+        //     plc.subscribe(tag);
 
-            await plc.readTag(tag)
-        });
+        //     await plc.readTag(tag)
+        // });
 
         // PLC.forEach()
 
         await Promise.all((tagList || []).map(async (tag) => {
 
-            tag.on('Changed', (newTag, oldValue) => {
+            const realTag = plc.newTag(tag.name, null, true);
+
+            // realTag.subs
+            await plc.readTag(realTag)
+
+            valueStore[tag.name] = realTag.value;
+
+            realTag.on('Changed', (newTag, oldValue) => {
                 valueStore[tag.name] = newTag.value;
             });
             // tag.
@@ -68,7 +75,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             const getter = () => {
                 let value = valueStore[tag.name];
 
-                switch(tag.typeName){
+                switch(tag.type.typeName){
                     case 'STRING':
                         return 'Test';
                     case 'DINT':
@@ -79,7 +86,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
                 return valueStore[tag.name];
             }
 
-            switch(tag.typeName){
+            switch(tag.type.typeName){
                 case 'STRING':
                     await server.addVariable(tag.name, 'String', getter, (value) => {
                         // return "Test"
