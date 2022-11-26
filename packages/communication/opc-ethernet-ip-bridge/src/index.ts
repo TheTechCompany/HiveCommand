@@ -1,4 +1,5 @@
-const { Controller } = require('st-ethernet-ip');
+import { Controller } from '@hive-command/ethernet-ip';
+
 import EventEmitter from 'events'
 
 import OPCUAServer from '@hive-command/opcua-server'
@@ -27,25 +28,35 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
     let valueStore : any = {};
 
 
-    PLC.connect(host, slot || 0).then(async () => {
+    PLC.connect(host, slot || 0).then(async (plc) => {
 
         await server.start();
 
         PLC.scan_rate = 500;
         PLC.scan();
 
-        const tagList : PLCTag[] = PLC.tagList;
+        const tagList = PLC.tagList;
 
         const { properties } = PLC;
 
         console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
 
-        console.log(`Found ${tagList.length} tags`);
+        console.log(`Found ${tagList?.length} tags`);
 
         console.log(JSON.stringify({tagList}));
 
-        await Promise.all(tagList.map(async (tag) => {
+        tagList?.map((tag) => {
+            plc.subscribe(tag);
+        });
 
+        // PLC.forEach()
+
+        await Promise.all((tagList || []).map(async (tag) => {
+
+            tag.on('Changed', (newTag, oldValue) => {
+                valueStore[tag.name] = newTag.value;
+            });
+            // tag.
             // tag.on('Changed', (newTag, oldValue) => {
             //     valueStore[tag.name] = newTag.value;
             // })
@@ -53,7 +64,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             const getter = () => {
                 let value = valueStore[tag.name];
 
-                switch(tag.type.typeName){
+                switch(tag.typeName){
                     case 'STRING':
                         return 'Test';
                     case 'DINT':
@@ -64,7 +75,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
                 return valueStore[tag.name];
             }
 
-            switch(tag.type.typeName){
+            switch(tag.typeName){
                 case 'STRING':
                     await server.addVariable(tag.name, 'String', getter, (value) => {
                         // return "Test"

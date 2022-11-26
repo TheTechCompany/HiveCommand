@@ -21,7 +21,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@hive-command/opcua-server": "^1.4.15-alpha.71",
-    "st-ethernet-ip": "^2.5.0"
+    "@hive-command/ethernet-ip": "^2.5.4-alpha.1",
+    "@hive-command/opcua-server": "^1.4.15-alpha.71"
   }
 }
