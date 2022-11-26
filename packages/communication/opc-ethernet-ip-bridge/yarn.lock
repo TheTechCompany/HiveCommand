@@ -43,15 +43,15 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@hive-command/ethernet-ip@^2.5.5-alpha.7":
-  version "2.5.5-alpha.7"
-  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.5-alpha.7.tgz#13dfc8afedfb726c3143fee38f3baa0f261ddcac"
-  integrity sha512-w3zvBNP0xa/vE5GwSnzAGw4dhHKhJLrKIw7W9MXySgT9QiUY+IlP7BSgwLal8w+3sRdMw/5FJw1JvZm2uW3aDg==
+"@hive-command/ethernet-ip@^2.5.5-alpha.8":
+  version "2.5.5-alpha.8"
+  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.5-alpha.8.tgz#9c3a72db9dc67f56d2a9afe27e591dbd3ec01695"
+  integrity sha512-MTXOOkn0sXJ+BdvrN2Gebwf1ZFnDREChgI2jZ9CBPWn2gvoaQVQWHqf53UVMamqUiccNXWeBNLZLpUPGXRjVXg==
   dependencies:
     dateformat "^3.0.3"
     deep-equal "^1.1.1"
     int64-buffer "^0.99.1007"
-    task-easy "^0.2.0"
+    task-easy "^1.0.1"
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.2"
@@ -1011,10 +1011,10 @@ tar-stream@^2.1.4:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-task-easy@^0.2.0:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/task-easy/-/task-easy-0.2.1.tgz#9c71f6f2221f04525dd29f698db6239d10b869a0"
-  integrity sha512-VMYezcVhfyaTkc3cWf4sSQG6YgYBdiNCAg4iXuUWRGB7tp7A/rZA9Nter0ZIG5chSoidLS0VWf87koFD9XHwDg==
+task-easy@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/task-easy/-/task-easy-1.0.1.tgz#edfb7ccc3a3dfe4731ed909a4a756c9a4962bb4b"
+  integrity sha512-3WIgb6s9fR1zGgdxOnfLwT3bARk5HlKQDAAtow8igg+r08oa6EIZM+Ovof8ZNjkK/E6T5kA3rDcqApz9DdSJDQ==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"
