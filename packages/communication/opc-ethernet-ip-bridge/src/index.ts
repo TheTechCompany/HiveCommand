@@ -45,8 +45,12 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         console.log(JSON.stringify({tagList}));
 
-        tagList?.map((tag) => {
+        // plc.newTag()
+
+        tagList?.map(async (tag) => {
             plc.subscribe(tag);
+
+            await plc.readTag(tag)
         });
 
         // PLC.forEach()
