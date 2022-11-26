@@ -74,14 +74,22 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             //     valueStore[tag.name] = newTag.value;
             // })
 
+            if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL'){
+                console.log("Can't find " + tag.name + " " + tag.type.typeName)
+            }
+
             const getter = () => {
                 let value = valueStore[tag.name];
 
                 console.log({value});
 
-                plc.readTag(realTag).then(() => {
-                    valueStore[tag.name] = realTag.value;
-                })
+                if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL'){
+                    console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
+                }else{
+                    plc.readTag(realTag).then(() => {
+                        valueStore[tag.name] = realTag.value;
+                    })
+                }
 
                 if(!value){
                     switch(tag.type.typeName){
