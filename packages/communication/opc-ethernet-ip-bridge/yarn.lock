@@ -43,10 +43,10 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@hive-command/ethernet-ip@^2.5.5-alpha.4":
-  version "2.5.5-alpha.4"
-  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.5-alpha.4.tgz#fdcc97b92b2cc2f0cd0961a2424adb645e7489e1"
-  integrity sha512-8fmiQ9J5yDvx3F5vEDAGuUZ3rHjlFJubCDZja24FHRAnFAnjv+VX6pzqJvcwfmj4ik/WyHr2UNvhI9ffJgBTPg==
+"@hive-command/ethernet-ip@^2.5.5-alpah.5":
+  version "2.5.5-alpah.5"
+  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.5-alpah.5.tgz#975adfb28a27ba6cb5e45a5095b43fb5e11ffd89"
+  integrity sha512-KspkM++RkgboEfzlbRgXiWMbFg89Wl6J8AvFmhUjvHtSXymZGK1zk+4WG8pNK16p1MF7H6HS8wsbFMwr4f3aAw==
   dependencies:
     dateformat "^3.0.3"
     deep-equal "^1.1.1"
