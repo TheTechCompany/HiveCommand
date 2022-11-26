@@ -57,7 +57,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         await Promise.all((tagList || []).map(async (tag) => {
 
-            const realTag = plc.newTag(tag.name, null, true);
+            const realTag = plc.newTag(tag.name);
 
             // realTag.subs
             // await plc.readTag(realTag)
