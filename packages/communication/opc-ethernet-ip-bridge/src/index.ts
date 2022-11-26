@@ -32,8 +32,8 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         await server.start();
 
-        PLC.scan_rate = 500;
-        PLC.scan();
+        // PLC.scan_rate = 500;
+        // PLC.scan();
 
         const tagList = PLC.tagList;
 
@@ -60,13 +60,15 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             const realTag = plc.newTag(tag.name, null, true);
 
             // realTag.subs
-            await plc.readTag(realTag)
+            // await plc.readTag(realTag)
 
-            valueStore[tag.name] = realTag.value;
+            // valueStore[tag.name] = realTag.value;
 
-            realTag.on('Changed', (newTag, oldValue) => {
-                valueStore[tag.name] = newTag.value;
-            });
+            // realTag.on('Changed', (newTag, oldValue) => {
+            //     valueStore[tag.name] = newTag.value;
+            // });
+
+
             // tag.
             // tag.on('Changed', (newTag, oldValue) => {
             //     valueStore[tag.name] = newTag.value;
@@ -75,15 +77,24 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             const getter = () => {
                 let value = valueStore[tag.name];
 
-                switch(tag.type.typeName){
-                    case 'STRING':
-                        return 'Test';
-                    case 'DINT':
-                        return 0;
-                    case 'BOOL':
-                        return false;
+                console.log({value});
+
+                plc.readTag(realTag).then(() => {
+                    valueStore[tag.name] = realTag.value;
+                })
+
+                if(!value){
+                    switch(tag.type.typeName){
+                        case 'STRING':
+                            return 'Test';
+                        case 'DINT':
+                            return 0;
+                        case 'BOOL':
+                            return false;
+                    }
+                }else{
+                    return value;
                 }
-                return valueStore[tag.name];
             }
 
             switch(tag.type.typeName){
