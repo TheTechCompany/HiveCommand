@@ -55,7 +55,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         // PLC.forEach()
 
-        await Promise.all((tagList || []).map(async (tag) => {
+        await Promise.all((tagList || []).filter((a) => a.name.indexOf('__') !== 0).map(async (tag) => {
 
             const realTag = plc.newTag(tag.name);
 
