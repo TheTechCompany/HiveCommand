@@ -39,14 +39,13 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
         PLC.scan_rate = 500;
         // PLC.scan();
 
-        await PLC.getControllerTagList(tagList);
-
         const { properties } = PLC;
 
         console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
 
         console.log(`Found ${PLC.tagList?.length} tags`);
       
+        await PLC.getControllerTagList(tagList);
 
         let tags : {tag: Tag, type: any, name: string}[] = [];
 
@@ -65,6 +64,8 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             tag.tag.on('Changed', (newTag) => {
                 valueStore[tag.name] = newTag.value;
             })
+            
+            console.log("READ TAG", tag.name)
             
             await new Promise((resolve) => setTimeout(() => resolve(true), READ_BUFFER_TIME))
         }
