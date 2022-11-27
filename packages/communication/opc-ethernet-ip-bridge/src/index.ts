@@ -32,7 +32,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         await server.start();
 
-        // PLC.scan_rate = 500;
+        PLC.scan_rate = 500;
         // PLC.scan();
 
         const tagList = PLC.tagList;
@@ -59,14 +59,15 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
             const realTag = plc.newTag(tag.name);
 
+            plc.subscribe(realTag)
             // realTag.subs
             // await plc.readTag(realTag)
 
             // valueStore[tag.name] = realTag.value;
 
-            // realTag.on('Changed', (newTag, oldValue) => {
-            //     valueStore[tag.name] = newTag.value;
-            // });
+            realTag.on('Changed', (newTag, oldValue) => {
+                valueStore[tag.name] = newTag.value;
+            });
 
 
             // tag.
@@ -74,7 +75,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             //     valueStore[tag.name] = newTag.value;
             // })
 
-            if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL'){
+            if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
                 console.log("Can't find " + tag.name + " " + tag.type.typeName)
             }
 
@@ -83,13 +84,13 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
                 console.log({value});
 
-                if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL'){
-                    console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
-                }else{
-                    plc.readTag(realTag).then(() => {
-                        valueStore[tag.name] = realTag.value;
-                    })
-                }
+                // if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
+                //     console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
+                // }else{
+                //     // plc.readTag(realTag).then(() => {
+                //     //     valueStore[tag.name] = realTag.value;
+                //     // })
+                // }
 
                 if(!value){
                     switch(tag.type.typeName){
@@ -129,6 +130,8 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
             }
             // server.addVariable(tag.name, )
         }))
+
+        await PLC.scan();
 
 
         console.log("OPCUA Server started");
