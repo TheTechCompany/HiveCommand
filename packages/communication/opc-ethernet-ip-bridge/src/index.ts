@@ -1,8 +1,9 @@
-import { Controller } from '@hive-command/ethernet-ip';
+import { Controller, Tag, TagList } from '@hive-command/ethernet-ip';
 
 import EventEmitter from 'events'
 
 import OPCUAServer from '@hive-command/opcua-server'
+
 
 export interface PLCTag extends EventEmitter {
     id: number,
@@ -17,6 +18,8 @@ export interface PLCTag extends EventEmitter {
     }
 }
 
+const READ_BUFFER_TIME = 200;
+
 export const EthernetIPBridge = (host: string, slot?: number) => {
 
     const server = new OPCUAServer({
@@ -27,6 +30,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
     let valueStore : any = {};
 
+    const tagList = new TagList()
 
     PLC.connect(host, slot || 0).then(async (plc) => {
 
@@ -35,101 +39,115 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
         PLC.scan_rate = 500;
         // PLC.scan();
 
-        const tagList = PLC.tagList;
+        await PLC.getControllerTagList(tagList);
 
         const { properties } = PLC;
 
         console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
 
-        console.log(`Found ${tagList?.length} tags`);
+        console.log(`Found ${PLC.tagList?.length} tags`);
+      
 
-        console.log(JSON.stringify({tagList}));
+        let tags : {tag: Tag, type: any, name: string}[] = [];
 
-        // plc.newTag()
+        PLC.tagList?.forEach((tag) => {
+            tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
+        })
 
-        // tagList?.map(async (tag) => {
-        //     plc.subscribe(tag);
+        for(const tag of tags){
 
-        //     await plc.readTag(tag)
-        // });
+            await PLC.readTag(tag.tag);
 
-        // PLC.forEach()
+            // PLC.subscribe(tag.tag)
 
-        await Promise.all((tagList || []).filter((a) => a.name.indexOf('__') !== 0).map(async (tag) => {
+            valueStore[tag.name] = tag.tag.value
 
-            const realTag = plc.newTag(tag.name);
-
-            plc.subscribe(realTag)
-            // realTag.subs
-            // await plc.readTag(realTag)
-
-            // valueStore[tag.name] = realTag.value;
-
-            realTag.on('Changed', (newTag, oldValue) => {
+            tag.tag.on('Changed', (newTag) => {
                 valueStore[tag.name] = newTag.value;
-            });
+            })
+            
+            await new Promise((resolve) => setTimeout(() => resolve(true), READ_BUFFER_TIME))
+        }
 
+        Object.keys(valueStore).map((key) => {
+            let tag = tags.find((a) => a.name == key);
+            let value = valueStore[key];
 
-            // tag.
-            // tag.on('Changed', (newTag, oldValue) => {
-            //     valueStore[tag.name] = newTag.value;
-            // })
-
-            if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
-                console.log("Can't find " + tag.name + " " + tag.type.typeName)
+            if(tag?.type.structure){
+                console.log("Struct type", tag.type)
+                console.log("Struct value", value)
+            }else{
+                console.log({tag, value});
             }
+        })
 
-            const getter = () => {
-                let value = valueStore[tag.name];
+        console.log({valueStore})
 
-                console.log({value});
+        // await Promise.all((tagList || []).filter((a) => a.name.indexOf('__') !== 0).map(async (tag) => {
 
-                // if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
-                //     console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
-                // }else{
-                //     // plc.readTag(realTag).then(() => {
-                //     //     valueStore[tag.name] = realTag.value;
-                //     // })
-                // }
+        //     const realTag = plc.newTag(tag.name);
 
-                if(!value){
-                    switch(tag.type.typeName){
-                        case 'STRING':
-                            return 'Test';
-                        case 'REAL':
-                        case 'DINT':
-                            return 0;
-                        case 'BOOL':
-                            return false;
-                    }
-                }else{
-                    return value;
-                }
-            }
+        //     plc.subscribe(realTag)
+  
+        //     realTag.on('Changed', (newTag, oldValue) => {
+        //         valueStore[tag.name] = newTag.value;
+        //     });
 
-            switch(tag.type.typeName){
-                case 'STRING':
-                    await server.addVariable(tag.name, 'String', getter, (value) => {
-                        // return "Test"
-                        console.log({value})
-                    })
-                    break;
-                case 'REAL':
-                case 'DINT':
-                    await server.addVariable(tag.name, 'Number', getter, (value) => {
-                        // return 0;
-                        console.log({value})
-                    });
-                    break;
-                case 'BOOL':
-                    await server.addVariable(tag.name, 'Boolean', getter, (value) => {
-                        // return false;
-                        console.log({value})
-                    });
-                    break;
-            }
-            // server.addVariable(tag.name, )
-        }))
+        //     if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
+        //         console.log("Can't find " + tag.name + " " + tag.type.typeName)
+        //     }
+
+        //     const getter = () => {
+        //         let value = valueStore[tag.name];
+
+        //         console.log({value});
+
+        //         // if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
+        //         //     console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
+        //         // }else{
+        //         //     // plc.readTag(realTag).then(() => {
+        //         //     //     valueStore[tag.name] = realTag.value;
+        //         //     // })
+        //         // }
+
+        //         if(!value){
+        //             switch(tag.type.typeName){
+        //                 case 'STRING':
+        //                     return 'Test';
+        //                 case 'REAL':
+        //                 case 'DINT':
+        //                     return 0;
+        //                 case 'BOOL':
+        //                     return false;
+        //             }
+        //         }else{
+        //             return value;
+        //         }
+        //     }
+
+        //     switch(tag.type.typeName){
+        //         case 'STRING':
+        //             await server.addVariable(tag.name, 'String', getter, (value) => {
+        //                 // return "Test"
+        //                 console.log({value})
+        //             })
+        //             break;
+        //         case 'REAL':
+        //         case 'DINT':
+        //             await server.addVariable(tag.name, 'Number', getter, (value) => {
+        //                 // return 0;
+        //                 console.log({value})
+        //             });
+        //             break;
+        //         case 'BOOL':
+        //             await server.addVariable(tag.name, 'Boolean', getter, (value) => {
+        //                 // return false;
+        //                 console.log({value})
+        //             });
+        //             break;
+        //     }
+        //     // server.addVariable(tag.name, )
+        // }))
 
         await PLC.scan();
 
