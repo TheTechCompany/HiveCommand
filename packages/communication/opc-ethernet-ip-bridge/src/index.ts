@@ -95,6 +95,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
                     switch(tag.type.typeName){
                         case 'STRING':
                             return 'Test';
+                        case 'REAL':
                         case 'DINT':
                             return 0;
                         case 'BOOL':
@@ -112,6 +113,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
                         console.log({value})
                     })
                     break;
+                case 'REAL':
                 case 'DINT':
                     await server.addVariable(tag.name, 'Number', getter, (value) => {
                         // return 0;
