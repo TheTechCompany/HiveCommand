@@ -19,9 +19,22 @@ export interface PLCTag extends EventEmitter {
     }
 }
 
+export interface ListenTag {
+    name: string,
+    children?: ListenTag[]
+}
+
 const READ_BUFFER_TIME = 200;
 
-export const EthernetIPBridge = (host: string, slot?: number) => {
+export interface BridgeOptions {
+    host: string,
+    slot?: number,
+    listenTags?: ListenTag[]
+}
+
+export const EthernetIPBridge = (options: BridgeOptions) => {
+
+    const { host, slot, listenTags } = options;
 
     const server = new OPCUAServer({
         productName: 'Ethernet IP - OPCUA Bridge'
@@ -50,12 +63,33 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         let tags : {tag: Tag, type: any, name: string}[] = [];
 
-        PLC.tagList?.forEach((tag) => {
-            addTag(server, tag.name, tag.type.typeName || '', tag.type.structureObj);
+        if(listenTags){
 
-            // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
-        })
+            listenTags.forEach((tag) => {
 
+                let fromTagList = PLC.tagList?.find((a) => a.name == tag.name);
+                let fromTagListChildren = (tag.children || []).length > 0 ? 
+                    tag.children?.map((x) => ({
+                        type: (fromTagList?.type.structureObj as any)[x.name], 
+                        name: x.name 
+                    })).filter((a) => a.type).reduce((prev, curr) => ({
+                            ...prev,
+                            [curr.name]: curr.type
+                    }), {}) :
+                    undefined;
+
+                addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', fromTagListChildren)
+
+            })
+
+        }else{
+
+            PLC.tagList?.forEach((tag) => {
+                addTag(server, tag.name, tag.type.typeName || '', tag.type.structureObj);
+
+                // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
+            })
+        }
         // for(const tag of tags){
 
         //     await PLC.readTag(tag.tag);

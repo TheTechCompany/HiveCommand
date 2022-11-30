@@ -1,11 +1,12 @@
 import { Arguments, CommandBuilder, string } from 'yargs';
 import crypto from 'crypto';
-import { existsSync, writeFileSync } from 'fs';
-import { EthernetIPBridge } from '..';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { EthernetIPBridge, ListenTag } from '..';
 
 type Options = {
 	host: string;
     slot?: number;
+	tags?: string;
 };
   
   export const command: string = 'start';
@@ -15,13 +16,17 @@ type Options = {
 	yargs
 	  .options({
         host: {type: 'string', description: 'Ethernet/IP Host', required: true},
-        slot: {type: 'number', description: 'Slot number', default: 0}
+        slot: {type: 'number', description: 'Slot number', default: 0},
+		tags: {type: 'string', description: 'Tag whitelist json file'}
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { host, slot } = argv;
+	const { host, slot, tags } = argv;
 
-    const bridge = EthernetIPBridge(host, slot)
+	let tagList : ListenTag[] | undefined = undefined;
+	if(tags) tagList = JSON.parse(readFileSync(tags, 'utf8'));
+
+    const bridge = EthernetIPBridge({host, slot, listenTags: tagList})
 
 	// if(!existsSync(path)){
 	// 	console.error("Specified key folder does not exist")
