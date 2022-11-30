@@ -151,7 +151,23 @@ export default class Server {
         return this.objectTypes;    
     }
 
-    async addVariable(name: string, type: 'String' | 'Number' | 'Boolean', getter: () => any, setter: (value: any) => void){
+    async addObject(
+        name: string,
+        organizedBy?: UAObject
+    ) {
+        return this.namespace?.addObject({
+            browseName: name,
+            organizedBy: organizedBy || this.objectFolder
+        })
+    }
+    
+    async addVariable(
+        name: string, 
+        type: 'String' | 'Number' | 'Boolean', 
+        getter: () => any, 
+        setter: (value: any) => void,
+        parent?: UAObject
+    ){
         console.log(`Add variable ${name} ${type}`)
 
         let dataType : DataType;
@@ -172,7 +188,7 @@ export default class Server {
 
         const variable = this.namespace?.addObject({
             browseName: name, //`${type}-Variable`,
-            organizedBy: this.objectFolder
+            organizedBy: parent || this.objectFolder
         })
 
         const variableValue = this.namespace?.addAnalogDataItem({
@@ -203,6 +219,8 @@ export default class Server {
                 return StatusCodes.Good;
             }
         })
+
+        return variable;
     }
 
     async addDevice(

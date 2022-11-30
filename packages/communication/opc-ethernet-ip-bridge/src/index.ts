@@ -3,6 +3,7 @@ import { Controller, Tag, TagList } from '@hive-command/ethernet-ip';
 import EventEmitter from 'events'
 
 import OPCUAServer from '@hive-command/opcua-server'
+import { addTag } from './opc-server';
 
 
 export interface PLCTag extends EventEmitter {
@@ -45,44 +46,46 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
 
         console.log(`Found ${PLC.tagList?.length} tags`);
       
-        await PLC.getControllerTagList(tagList);
+        // await PLC.getControllerTagList(tagList);
 
         let tags : {tag: Tag, type: any, name: string}[] = [];
 
         PLC.tagList?.forEach((tag) => {
-            tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
+            addTag(server, tag.name, tag.type.typeName || '', tag.type.structureObj);
+
+            // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
         })
 
-        for(const tag of tags){
+        // for(const tag of tags){
 
-            await PLC.readTag(tag.tag);
+        //     await PLC.readTag(tag.tag);
 
-            // PLC.subscribe(tag.tag)
+        //     // PLC.subscribe(tag.tag)
 
-            valueStore[tag.name] = tag.tag.value
+        //     valueStore[tag.name] = tag.tag.value
 
-            tag.tag.on('Changed', (newTag) => {
-                valueStore[tag.name] = newTag.value;
-            })
+        //     tag.tag.on('Changed', (newTag) => {
+        //         valueStore[tag.name] = newTag.value;
+        //     })
             
-            console.log("READ TAG", tag.name)
-            
-            await new Promise((resolve) => setTimeout(() => resolve(true), READ_BUFFER_TIME))
-        }
+        //     console.log("READ TAG", tag.name)
 
-        Object.keys(valueStore).map((key) => {
-            let tag = tags.find((a) => a.name == key);
-            let value = valueStore[key];
+        //     await new Promise((resolve) => setTimeout(() => resolve(true), READ_BUFFER_TIME))
+        // }
 
-            if(tag?.type.structure){
-                console.log("Struct type", tag.type)
-                console.log("Struct value", value)
-            }else{
-                console.log({tag, value});
-            }
-        })
+        // Object.keys(valueStore).map((key) => {
+        //     let tag = tags.find((a) => a.name == key);
+        //     let value = valueStore[key];
 
-        console.log({valueStore})
+        //     if(tag?.type.structure){
+        //         console.log("Struct type", tag.type)
+        //         console.log("Struct value", value)
+        //     }else{
+        //         console.log({tag, value});
+        //     }
+        // })
+
+        // console.log({valueStore})
 
         // await Promise.all((tagList || []).filter((a) => a.name.indexOf('__') !== 0).map(async (tag) => {
 
@@ -150,7 +153,7 @@ export const EthernetIPBridge = (host: string, slot?: number) => {
         //     // server.addVariable(tag.name, )
         // }))
 
-        await PLC.scan();
+        // await PLC.scan();
 
 
         console.log("OPCUA Server started");
