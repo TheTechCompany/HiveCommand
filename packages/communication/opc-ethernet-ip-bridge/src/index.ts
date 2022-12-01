@@ -146,7 +146,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         tags = JSON.parse(readFileSync(listenTags, 'utf-8'));
 
 
-    controller.connect();
+    await controller.connect();
     
     const tagList = controller.PLC?.tagList || []
 
@@ -169,7 +169,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 let fromTagList = tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
                     tag.children?.map((x) => ({
-                        type: (fromTagList?.type.structureObj as any)[x.name], 
+                        type: (fromTagList?.type.structureObj as any)?.[x.name], 
                         name: x.name 
                     })).filter((a) => a.type).reduce((prev, curr) => ({
                             ...prev,
