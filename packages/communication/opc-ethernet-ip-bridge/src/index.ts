@@ -186,7 +186,8 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                 }, () => {
                     console.log("Set it")
                 }, fromTagListChildren)
-
+                
+                await new Promise((resolve) => setTimeout(() => resolve(true), 200))
             }
 
         }else{
@@ -204,6 +205,8 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                 }, () => {
                     console.log("Set it")
                 }, tag.type.structureObj);
+
+                await new Promise((resolve) => setTimeout(() => resolve(true), 200))
 
                 // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
             }
