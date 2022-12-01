@@ -25,10 +25,8 @@ type Options = {
   export const handler =  (argv: Arguments<Options>) => {
 	const { host, slot, tags, configure } = argv;
 
-	let tagList : ListenTag[] | undefined = undefined;
-	if(tags) tagList = JSON.parse(readFileSync(tags, 'utf8'));
-
-    const bridge = EthernetIPBridge({host, slot, listenTags: tagList, configure})
+	
+    const bridge = EthernetIPBridge({host, slot, listenTags: tags, configure})
 
 	// if(!existsSync(path)){
 	// 	console.error("Specified key folder does not exist")
