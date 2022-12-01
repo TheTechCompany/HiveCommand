@@ -1,4 +1,4 @@
-import { Controller, Tag, TagList } from '@hive-command/ethernet-ip';
+import { ControllerManager, ManagedController, Tag, TagList } from '@hive-command/ethernet-ip';
 
 import EventEmitter from 'events'
 
@@ -46,11 +46,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         productName: 'Ethernet IP - OPCUA Bridge'
     });
 
-    const PLC = new Controller();
+    const manager = new ControllerManager();
 
-    let valueStore : any = {};
-
-    const tagList = new TagList()
+    const controller : ManagedController = manager.addController(host, slot)
 
     await server.start();
 
@@ -63,7 +61,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
         app.get('/api/tags', (req, res) => {
 
-            const tags = PLC.tagList?.map((tag) => ({
+            const tags = controller.PLC?.tagList?.map((tag) => ({
                 name: tag.name,
                 children: Object.keys(tag.type.structureObj || {}).map((x) => ({name: x, type: (tag.type.structureObj as any)?.[x]}))
             }))
@@ -148,17 +146,18 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         tags = JSON.parse(readFileSync(listenTags, 'utf-8'));
 
 
-    const controller = await PLC.connect(host, slot || 0);
-
+    controller.connect();
+    
+    const tagList = controller.PLC?.tagList || []
 
         // PLC.scan_rate = 500;
         // PLC.scan();
 
-        const { properties } = PLC;
+        const { properties } = controller.PLC || {};
 
-        console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
+        console.log(`Connected to ${properties?.name} @ ${host}:${slot || 0}`);
 
-        console.log(`Found ${PLC.tagList?.length} tags`);
+        console.log(`Found ${tagList?.length} tags`);
       
 
         if(listenTags){
@@ -167,7 +166,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 let tag = tags[i];
 
-                let fromTagList = PLC.tagList?.find((a) => a.name == tag.name);
+                let fromTagList = tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
                     tag.children?.map((x) => ({
                         type: (fromTagList?.type.structureObj as any)[x.name], 
@@ -178,18 +177,18 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     }), {}) :
                     undefined;
 
-                const enipTag = PLC.newTag(tag.name)
+                const enipTag = controller.addTag(tag.name)
 
-                try{
-                    await PLC.readTag(enipTag);
-                }catch(e){
-                    console.error({msg: (e as any).message})
-                }
+                // try{
+                //     await PLC.readTag(enipTag);
+                // }catch(e){
+                //     console.error({msg: (e as any).message})
+                // }
 
-                PLC.subscribe(enipTag);
+                // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
-                    return enipTag.value
+                    return enipTag?.value
                 }, () => {
                     console.log("Set it")
                 }, fromTagListChildren)
@@ -199,20 +198,20 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
         }else{
 
-            for(var i = 0; i < (PLC.tagList || []).length; i++){
-                let tag = (PLC.tagList || [])[i];
-                let enipTag = PLC.newTag(tag.name);
+            for(var i = 0; i < (tagList || []).length; i++){
+                let tag = (tagList || [])[i];
+                let enipTag = controller.addTag(tag.name);
                
-                try{
-                    await PLC.readTag(enipTag);
-                }catch(e){
-                    console.error({msg: (e as any).message})
-                }
+                // try{
+                //     await PLC.readTag(enipTag);
+                // }catch(e){
+                //     console.error({msg: (e as any).message})
+                // }
 
-                PLC.subscribe(enipTag);
+                // PLC.subscribe(enipTag);
 
                 addTag(server, tag.name, tag.type.typeName || '', () => {
-                    return enipTag.value
+                    return enipTag?.value
                 }, () => {
                     console.log("Set it")
                 }, tag.type.structureObj);
@@ -223,8 +222,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             }
         }
        
-        PLC.scan_rate = 500;
-        await PLC.scan();
+        // PLC.scan_rate = 500;
+        // await PLC.scan();
 
 
 
