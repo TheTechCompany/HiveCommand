@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { Box, Button, Checkbox } from '@mui/material'
+import { Box, Checkbox } from '@mui/material'
 import { TreeView, TreeItem } from '@mui/lab';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'
 import './App.css'

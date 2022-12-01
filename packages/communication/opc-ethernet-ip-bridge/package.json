@@ -10,7 +10,7 @@
     "enip-bridge": "dist/cli.js"
   },
   "scripts": {
-    "build:configurator": "cd src/configurator; yarn build",
+    "build:configurator": "cd src/configurator; yarn; yarn build",
     "move:configurator": "rm -rf dist/configurator; mv src/configurator/dist/ dist/configurator/",
     "build": "tsc -b && yarn build:configurator && yarn move:configurator",
     "package": "pkg package.json --output dist/enip-bridge",
