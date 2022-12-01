@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { Box, Checkbox } from '@mui/material'
-import { TreeView, TreeItem } from '@mui/lab';
+import { TreeView, TreeItem, TreeItemContentProps } from '@mui/lab';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'
 import './App.css'
 
@@ -21,7 +21,7 @@ function App() {
   ]);
 
   const getTags = () => {
-    return fetch('/api/tags').then((r) => r.json())
+    return fetch('http://localhost:8020/api/tags').then((r) => r.json())
   }
 
   const updateTags = (add: boolean, path: string | undefined, name: string) => {
@@ -48,13 +48,14 @@ function App() {
     return tags.map((tag) => {
       
       return (<TreeItem   
-        ContentComponent={() => (
-        <div>
+        key={parent ? `${parent}.${tag.name}` : tag.name}
+        ContentComponent={forwardRef<unknown, any>((props, ref) => (
+        <div ref={ref as any}>
           <Checkbox onChange={(e) => {
             updateTags(e.target.checked, parent, tag.name)
           }} />{tag.name}
         </div>
-        )}
+        ))}
         nodeId={parent ? `${parent}.${tag.name}` : tag.name} label={tag.name}>
           {tag.children ? renderTree(tag.children, parent ? `${parent}.${tag.name}` : tag.name) : null}
       </TreeItem>)
@@ -64,11 +65,10 @@ function App() {
   return (
     <Box>
       <TreeView
-        onNodeSelect={(e: any, node: any) => console.log({node})}
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
         >
-          {renderTree(tags)}
+          {renderTree(tags || [])}
       </TreeView>
     </Box>
   )
