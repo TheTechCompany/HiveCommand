@@ -77,7 +77,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
             res.send(whitelist)
 
         })
-        
+
         app.post('/api/whitelist', (req, res) => {
 
             if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
@@ -160,7 +160,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         if(listenTags){
             const tags : ListenTag[] = JSON.parse(readFileSync(listenTags, 'utf-8'));
 
-            tags.forEach((tag) => {
+            await Promise.all(tags.map(async (tag) => {
 
                 let fromTagList = PLC.tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
@@ -173,17 +173,37 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     }), {}) :
                     undefined;
 
-                addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', fromTagListChildren)
+                let enipTag = PLC.newTag(tag.name)
 
-            })
+                await PLC.readTag(enipTag);
+
+                PLC.subscribe(enipTag);
+
+                addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
+                    return enipTag.value
+                }, () => {
+                    console.log("Set it")
+                }, fromTagListChildren)
+
+            }))
 
         }else{
 
-            PLC.tagList?.forEach((tag) => {
-                addTag(server, tag.name, tag.type.typeName || '', tag.type.structureObj);
+            await Promise.all((PLC.tagList || []).map(async (tag) => {
+                let enipTag = PLC.newTag(tag.name);
+
+                await PLC.readTag(enipTag);
+
+                PLC.subscribe(enipTag);
+
+                addTag(server, tag.name, tag.type.typeName || '', () => {
+                    return enipTag.value
+                }, () => {
+                    console.log("Set it")
+                }, tag.type.structureObj);
 
                 // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
-            })
+            }))
         }
         // for(const tag of tags){
 
@@ -282,7 +302,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         //     // server.addVariable(tag.name, )
         // }))
 
-        // await PLC.scan();
+        await PLC.scan();
 
 
         console.log("OPCUA Server started");

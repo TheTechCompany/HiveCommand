@@ -17,7 +17,14 @@ export const getOPCType = (type: string) => {
     }
 }
 
-export const addTag = async (server: OPCServer, tagname: string, type: string, structure?: {[key: string]: string}, parent?: UAObject) => {
+export const addTag = async (
+    server: OPCServer, 
+    tagname: string, 
+    type: string, 
+    getter: (() => any | undefined),
+    setter: () => void,
+    structure?: {[key: string]: string}, parent?: UAObject
+) => {
 
     let dataType : 'Boolean'  | 'Structure' | 'String' | 'Number' = 'String';
 
@@ -29,7 +36,9 @@ export const addTag = async (server: OPCServer, tagname: string, type: string, s
 
             await Promise.all(Object.keys(structure || {}).map(async (key) => {
 
-                await addTag(server, key, structure?.[key] || '', undefined, rootObject);
+                await addTag(server, key, structure?.[key] || '', () => {
+                    return getter()?.[key]
+                }, setter, undefined, rootObject);
 
                 // await server.addVariable(key, getOPCType(structure?.[key] || ''), )
             }));
@@ -45,7 +54,7 @@ export const addTag = async (server: OPCServer, tagname: string, type: string, s
             break;
     }
 
-    const getter = () => {
+    const _getter = () => {
         switch(dataType){
             case 'Boolean':
                 return false;
@@ -56,11 +65,11 @@ export const addTag = async (server: OPCServer, tagname: string, type: string, s
         }    
     }
 
-    const setter = () => {
+    // const setter = () => {
 
-    }
+    // }
 
     if(dataType != 'Structure'){
-        await server.addVariable(tagname, dataType, getter, setter, parent)
+        await server.addVariable(tagname, dataType, getter || _getter, setter, parent)
     }
 }

@@ -1,5 +1,5 @@
 import { forwardRef, useEffect, useState } from 'react'
-import { Box, Checkbox } from '@mui/material'
+import { Box, Checkbox, TextField } from '@mui/material'
 import { TreeView, TreeItem, TreeItemContentProps, useTreeItem } from '@mui/lab';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'
 import clsx from 'clsx';
@@ -11,6 +11,8 @@ export interface Tag {
 }
 
 function App() {
+
+  const [search, setSearch ] = useState('');
 
   const [tags, setTags] = useState<Tag[]>([
     {
@@ -179,6 +181,11 @@ function App() {
 
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+      <TextField 
+        size="small"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        label="Search..." />
       <TreeView
         onNodeSelect={(e: any, node: any) => {
           console.log({node})
@@ -186,7 +193,10 @@ function App() {
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
         >
-          {renderTree(tags || [])}
+          {renderTree((tags || []).filter((a) => {
+            if(search && search.length > -1)return a.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+            return true;
+          }))}
       </TreeView>
     </Box>
   )
