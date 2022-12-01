@@ -7,6 +7,7 @@ type Options = {
 	host: string;
     slot?: number;
 	tags?: string;
+	configure?: boolean
 };
   
   export const command: string = 'start';
@@ -17,16 +18,17 @@ type Options = {
 	  .options({
         host: {type: 'string', description: 'Ethernet/IP Host', required: true},
         slot: {type: 'number', description: 'Slot number', default: 0},
-		tags: {type: 'string', description: 'Tag whitelist json file'}
+		tags: {type: 'string', description: 'Tag whitelist json file'},
+		configure: {type: 'boolean', description: 'Configure tag whitelist', default: false}
 	  })
 
   export const handler =  (argv: Arguments<Options>) => {
-	const { host, slot, tags } = argv;
+	const { host, slot, tags, configure } = argv;
 
 	let tagList : ListenTag[] | undefined = undefined;
 	if(tags) tagList = JSON.parse(readFileSync(tags, 'utf8'));
 
-    const bridge = EthernetIPBridge({host, slot, listenTags: tagList})
+    const bridge = EthernetIPBridge({host, slot, listenTags: tagList, configure})
 
 	// if(!existsSync(path)){
 	// 	console.error("Specified key folder does not exist")

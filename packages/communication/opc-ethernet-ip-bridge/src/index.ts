@@ -2,9 +2,13 @@ import { Controller, Tag, TagList } from '@hive-command/ethernet-ip';
 
 import EventEmitter from 'events'
 
+import express from 'express'
+import bodyParser from 'body-parser'
+
 import OPCUAServer from '@hive-command/opcua-server'
 import { addTag } from './opc-server';
-
+import path from 'path';
+import { readFileSync, writeFileSync } from 'fs';
 
 export interface PLCTag extends EventEmitter {
     id: number,
@@ -25,16 +29,18 @@ export interface ListenTag {
 }
 
 const READ_BUFFER_TIME = 200;
+const CONFIGURE_PORT = 80200;
 
 export interface BridgeOptions {
     host: string,
     slot?: number,
-    listenTags?: ListenTag[]
+    listenTags?: string,
+    configure?: boolean
 }
 
 export const EthernetIPBridge = (options: BridgeOptions) => {
 
-    const { host, slot, listenTags } = options;
+    const { host, slot, listenTags, configure } = options;
 
     const server = new OPCUAServer({
         productName: 'Ethernet IP - OPCUA Bridge'
@@ -45,6 +51,79 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
     let valueStore : any = {};
 
     const tagList = new TagList()
+
+    if(configure){
+        const app = express();
+
+        app.use(bodyParser.json())
+
+        app.use(express.static(path.join(__dirname, './configurator')))
+
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, './configurator/index.html'));
+        })
+
+        app.get('/api/tags', (req, res) => {
+            res.send(PLC.tagList)
+        });
+
+        app.post('/api/whitelist', (req, res) => {
+
+            if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
+
+            let whitelist = JSON.parse(readFileSync(listenTags, 'utf8')) || [];
+
+            let change = {
+                add: req.body.add, //add or remove from whitelist
+                path: req.body.path, //name.child.child
+                name: req.body.name
+            }
+
+            
+            const deleteNode = (node: any, path: string | undefined, name: string, currentPath?: string) => {
+                let path_parts = ([undefined] as any).concat( path ? path.split('.') : [] );
+                let curr_path_parts = (currentPath?.split('.') || []).length;
+
+                if(currentPath == path){
+                    node.children = node.children.filter((a: any) => a.name != name)
+                }else if(node.name == path_parts[curr_path_parts] && node.children.length > 0){
+                    for(let i = 0; i < node.children.length; i++){
+                        if(node.children[i].name == path_parts[curr_path_parts + 1]){
+                            deleteNode(node.children[i], path, name, currentPath ? `${currentPath}.${node.children[i].name}` : node.children[i].name);
+                        }
+                    }
+                }
+            }
+          
+            const insertNode = (node: any, path: string | undefined, name: string, currentPath?: string) => {
+
+                let path_parts = ([undefined] as any).concat(path ? path.split('.') : []);
+                let curr_path_parts = (currentPath?.split('.') || []).length;
+
+                if(currentPath == path){
+                    node.children.push({name, children: []});
+                }else if(node.name == path_parts[curr_path_parts] && node.children.length > 0) {
+                    for(let i = 0; i < node.children.length; i++){
+                        if(node.children[i].name == path_parts[curr_path_parts + 1]){
+                            insertNode(node.children[i], path, name, currentPath ? `${currentPath}.${node.children[i].name}` : node.children[i].name)
+                        }
+                    }
+                }
+            }
+
+            if(change.add){
+                insertNode({children: whitelist}, change.path, change.name)
+            }else{
+                deleteNode({children: whitelist}, change.path, change.name)
+            }
+
+            writeFileSync(listenTags, JSON.stringify(whitelist), 'utf8')
+        })
+
+        app.listen(CONFIGURE_PORT, () => {
+            console.log(`Configure live on ${CONFIGURE_PORT}`)
+        });
+    }
 
     PLC.connect(host, slot || 0).then(async (plc) => {
 
@@ -64,8 +143,9 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         let tags : {tag: Tag, type: any, name: string}[] = [];
 
         if(listenTags){
+            const tags : ListenTag[] = JSON.parse(readFileSync(listenTags, 'utf-8'));
 
-            listenTags.forEach((tag) => {
+            tags.forEach((tag) => {
 
                 let fromTagList = PLC.tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
