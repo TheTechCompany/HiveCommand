@@ -52,6 +52,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     const tagList = new TagList()
 
+    await server.start();
+
     if(configure){
         const app = express();
 
@@ -224,7 +226,6 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         PLC.scan_rate = 500;
         await PLC.scan();
 
-        await server.start();
 
 
         console.log("OPCUA Server started");
