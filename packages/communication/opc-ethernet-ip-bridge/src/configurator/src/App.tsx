@@ -21,6 +21,57 @@ function App() {
     }
   ]);
 
+  const [ whitelist, setWhitelist ] = useState<Tag[]>([
+    {
+      name: 'tag1',
+      children: [
+        {name: 'value'}
+      ]
+    }
+  ])
+
+  const insertNode = (node: any, path: string | undefined, name: string, currentPath?: string) => {
+
+    let path_parts = ([undefined] as any).concat(path ? path.split('.') : []);
+    let curr_path_parts = (currentPath?.split('.') || []).length;
+
+    if(currentPath == path){
+        node.children.push({name, children: []});
+    }else if(node.name == path_parts[curr_path_parts] && node.children.length > 0) {
+        for(let i = 0; i < node.children.length; i++){
+            if(node.children[i].name == path_parts[curr_path_parts + 1]){
+                insertNode(node.children[i], path, name, currentPath ? `${currentPath}.${node.children[i].name}` : node.children[i].name)
+            }
+        }
+    }
+}
+
+  const tagExists = (path: string, whitelist: Tag[], cwd?: string) => {
+    let parts = path.split('.');
+    let curr_idx = (cwd?.split('.') || []).length;
+
+    let curr_part = parts[curr_idx];
+
+    let exists = false;
+
+    if(cwd == path){
+      exists = true;
+      return true;
+    }else if(whitelist.length > 0){
+      for(var i = 0; i < whitelist.length; i++){
+        let ret = tagExists(path, whitelist[i].children || [], cwd ? `${cwd}.${whitelist[i].name}` : whitelist[i].name)
+        if(ret)
+          exists = true;
+      }
+    }
+    return exists;
+  
+  }
+
+  const getWhitelist = () => {
+    return fetch('http://localhost:8020/api/whitelist').then((r) => r.json())
+  }
+
   const getTags = () => {
     return fetch('http://localhost:8020/api/tags').then((r) => r.json())
   }
@@ -36,12 +87,19 @@ function App() {
         path,
         name
       })
-    }).then((r) => r.json());
+    }).then((r) => r.json()).then(() => {
+      getWhitelist().then((whitelist) => {
+        setWhitelist(whitelist)
+      })
+    });
   }
 
   useEffect(() => {
     getTags().then((tags) => {
       setTags(tags)
+    })
+    getWhitelist().then((whitelist) => {
+      setWhitelist(whitelist)
     })
   }, [])
 
@@ -105,7 +163,9 @@ function App() {
               <div onClick={handleExpansionClick} className={classes.iconContainer}>
                 {icon}
               </div>
-              <Checkbox onChange={(e) => {
+              <Checkbox 
+                checked={tagExists(nodeId, whitelist)}
+                onChange={(e) => {
                 updateTags(e.target.checked, parent, tag.name)
               }} />
               {tag.name}
@@ -120,6 +180,9 @@ function App() {
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <TreeView
+        onNodeSelect={(e: any, node: any) => {
+          console.log({node})
+        }}
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
         >

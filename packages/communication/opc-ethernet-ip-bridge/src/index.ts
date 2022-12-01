@@ -65,10 +65,19 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                 name: tag.name,
                 children: Object.keys(tag.type.structureObj || {}).map((x) => ({name: x, type: (tag.type.structureObj as any)?.[x]}))
             }))
-            
+
             res.send(tags)
         });
 
+        app.get('/api/whitelist', (req, res) => {
+            if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
+
+            let whitelist = JSON.parse(readFileSync(listenTags, 'utf-8')) || [];
+            
+            res.send(whitelist)
+
+        })
+        
         app.post('/api/whitelist', (req, res) => {
 
             if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
