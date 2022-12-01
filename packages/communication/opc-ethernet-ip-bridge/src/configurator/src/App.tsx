@@ -1,7 +1,8 @@
 import { forwardRef, useEffect, useState } from 'react'
 import { Box, Checkbox } from '@mui/material'
-import { TreeView, TreeItem, TreeItemContentProps } from '@mui/lab';
+import { TreeView, TreeItem, TreeItemContentProps, useTreeItem } from '@mui/lab';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'
+import clsx from 'clsx';
 import './App.css'
 
 export interface Tag {
@@ -46,24 +47,78 @@ function App() {
 
   const renderTree = (tags: any[], parent?: string) => {
     return tags.map((tag) => {
-      
+   
+      const nodeId = parent ? `${parent}.${tag.name}` : tag.name;
+
       return (<TreeItem   
         key={parent ? `${parent}.${tag.name}` : tag.name}
-        ContentComponent={forwardRef<unknown, any>((props, ref) => (
-        <div ref={ref as any}>
-          <Checkbox onChange={(e) => {
-            updateTags(e.target.checked, parent, tag.name)
-          }} />{tag.name}
-        </div>
-        ))}
-        nodeId={parent ? `${parent}.${tag.name}` : tag.name} label={tag.name}>
+        ContentComponent={forwardRef<unknown, any>((props, ref) => {
+             
+          const {
+            classes,
+            className,
+            label,
+            nodeId,
+            icon: iconProp,
+            expansionIcon,
+            displayIcon,
+          } = props;
+
+          const {
+            disabled,
+            expanded,
+            selected,
+            focused,
+            handleExpansion,
+            handleSelection,
+            preventSelection,
+          } = useTreeItem(nodeId);
+          
+          const icon = iconProp || expansionIcon || displayIcon;
+
+          const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+            preventSelection(event);
+          };
+        
+          const handleExpansionClick = (
+            event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+          ) => {
+            handleExpansion(event);
+          };
+        
+          const handleSelectionClick = (
+            event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+          ) => {
+            handleSelection(event);
+          };
+
+          return (<div
+            className={clsx(className, classes.root, {
+              [classes.expanded]: expanded,
+              [classes.selected]: selected,
+              [classes.focused]: focused,
+              [classes.disabled]: disabled,
+            })}
+            style={{display: 'flex', alignItems: 'center'}}
+            onMouseDown={handleMouseDown}
+            ref={ref as any}>
+              <div onClick={handleExpansionClick} className={classes.iconContainer}>
+                {icon}
+              </div>
+              <Checkbox onChange={(e) => {
+                updateTags(e.target.checked, parent, tag.name)
+              }} />
+              {tag.name}
+            </div>)
+        })}
+        nodeId={nodeId} label={tag.name}>
           {tag.children ? renderTree(tag.children, parent ? `${parent}.${tag.name}` : tag.name) : null}
       </TreeItem>)
     })
   }
 
   return (
-    <Box>
+    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <TreeView
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
