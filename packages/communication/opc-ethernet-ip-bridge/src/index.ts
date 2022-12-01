@@ -144,17 +144,17 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
 
         await server.start();
 
-        PLC.scan_rate = 500;
+        // PLC.scan_rate = 500;
         // PLC.scan();
 
         const { properties } = PLC;
 
         console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
 
+        await PLC.getControllerTagList(tagList);
+
         console.log(`Found ${PLC.tagList?.length} tags`);
       
-        // await PLC.getControllerTagList(tagList);
-
         let tags : {tag: Tag, type: any, name: string}[] = [];
 
         if(listenTags){
@@ -177,13 +177,19 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
 
                 console.log("ADD ENIP ", tag.name);
 
-                let enipTag = PLC.newTag(tag.name)
+                const enipTag = PLC.newTag(tag.name)
 
-                try{
-                    await PLC.readTag(enipTag);
-                }catch(e){
+                PLC.readTag(enipTag).then(() => {
+                    console.log("READ ENIP ", tag.name, enipTag.value)
+                }).catch((e) => {
                     console.error({msg: (e as any).message})
-                }
+                })
+
+                // try{
+                //     await PLC.readTag(enipTag);
+                // }catch(e){
+                //     console.error({msg: (e as any).message})
+                // }
                 // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
