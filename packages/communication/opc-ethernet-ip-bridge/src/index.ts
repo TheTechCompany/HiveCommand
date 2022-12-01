@@ -160,7 +160,9 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         if(listenTags){
             const tags : ListenTag[] = JSON.parse(readFileSync(listenTags, 'utf-8'));
 
-            await Promise.all(tags.map(async (tag) => {
+            for(var i = 0; i < tags.length; i++){
+
+                let tag = tags[i];
 
                 let fromTagList = PLC.tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
@@ -185,11 +187,12 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     console.log("Set it")
                 }, fromTagListChildren)
 
-            }))
+            }
 
         }else{
 
-            await Promise.all((PLC.tagList || []).map(async (tag) => {
+            for(var i = 0; i < (PLC.tagList || []).length; i++){
+                let tag = (PLC.tagList || [])[i];
                 let enipTag = PLC.newTag(tag.name);
 
                 await PLC.readTag(enipTag);
@@ -203,7 +206,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                 }, tag.type.structureObj);
 
                 // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
-            }))
+            }
         }
         // for(const tag of tags){
 
