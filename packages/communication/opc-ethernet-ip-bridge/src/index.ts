@@ -60,7 +60,13 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         app.use(express.static(path.join(__dirname, './configurator')))
 
         app.get('/api/tags', (req, res) => {
-            res.send(PLC.tagList)
+
+            const tags = PLC.tagList?.map((tag) => ({
+                name: tag.name,
+                children: Object.keys(tag.type.structureObj || {}).map((x) => ({name: x, type: (tag.type.structureObj as any)?.[x]}))
+            }))
+            
+            res.send(tags)
         });
 
         app.post('/api/whitelist', (req, res) => {
