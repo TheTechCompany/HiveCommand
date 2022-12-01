@@ -59,10 +59,6 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
 
         app.use(express.static(path.join(__dirname, './configurator')))
 
-        app.get('*', (req, res) => {
-            res.sendFile(path.join(__dirname, './configurator/index.html'));
-        })
-
         app.get('/api/tags', (req, res) => {
             res.send(PLC.tagList)
         });
@@ -118,6 +114,10 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
             }
 
             writeFileSync(listenTags, JSON.stringify(whitelist), 'utf8')
+        })
+
+        app.get('*', (req, res) => {
+            res.sendFile(path.join(__dirname, './configurator/index.html'));
         })
 
         app.listen(CONFIGURE_PORT, () => {
