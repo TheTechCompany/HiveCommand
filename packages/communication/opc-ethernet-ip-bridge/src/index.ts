@@ -29,7 +29,7 @@ export interface ListenTag {
 }
 
 const READ_BUFFER_TIME = 200;
-const CONFIGURE_PORT = 80200;
+const CONFIGURE_PORT = 8020;
 
 export interface BridgeOptions {
     host: string,
