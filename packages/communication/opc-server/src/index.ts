@@ -186,23 +186,24 @@ export default class Server {
                 break;
         }
 
-        const variable = this.namespace?.addObject({
-            browseName: name, //`${type}-Variable`,
-            organizedBy: parent || this.objectFolder
-        })
+        // const variable = this.namespace?.addObject({
+        //     browseName: name, //`${type}-Variable`,
+        //     organizedBy: parent || this.objectFolder
+        // })
 
         const variableValue = this.namespace?.addAnalogDataItem({
-            browseName: `value`,
+            browseName: name || `value`,
             modellingRule: "Mandatory",
             dataType,
             minimumSamplingInterval: 500,
             engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
             engineeringUnitsRange: {low: -100, high: 100},
-            componentOf: variable
+            organizedBy: parent || this.objectFolder
+            // componentOf: variable
         });
 
 
-        (variable?.getComponentByName(`value`) as UAVariable)?.bindVariable({
+        (variableValue)?.bindVariable({
             get: () => {
                 const value = getter();
                 return new Variant({dataType: dataType, value})
@@ -220,7 +221,7 @@ export default class Server {
             }
         })
 
-        return variable;
+        return variableValue;
     }
 
     async addDevice(

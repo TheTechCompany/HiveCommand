@@ -1,5 +1,5 @@
 import OPCServer from '@hive-command/opcua-server'
-import { UAObject } from 'node-opcua';
+import { browseAll, UAObject } from 'node-opcua';
 
 export type TAG_TYPE = 'DINT' | 'INT' | 'REAL';
 
@@ -36,9 +36,25 @@ export const addTag = async (
 
             await Promise.all(Object.keys(structure || {}).map(async (key) => {
 
-                await addTag(server, key, structure?.[key] || '', () => {
-                    return getter()?.[key]
-                }, setter, undefined, rootObject);
+                let defaultValue: any;
+
+                if(structure?.[key]){
+                    switch(getOPCType(structure?.[key])){
+                        case 'Boolean':
+                            defaultValue = false;
+                            break;
+                        case 'Number':
+                            defaultValue = 0;
+                            break;
+                        case 'String':
+                            defaultValue = '';
+                            break;
+                    }
+
+                    await addTag(server, key, structure?.[key] || '', () => {
+                        return getter()?.[key] || defaultValue
+                    }, setter, undefined, rootObject);
+                }
 
                 // await server.addVariable(key, getOPCType(structure?.[key] || ''), )
             }));
@@ -54,22 +70,28 @@ export const addTag = async (
             break;
     }
 
-    const _getter = () => {
-        switch(dataType){
-            case 'Boolean':
-                return false;
-            case 'Number':
-                return 0;
-            case 'String':
-                return "Test"
-        }    
+    let defaultValue: any;
+
+    switch(dataType){
+        case 'Boolean':
+            defaultValue = false;
+            break;
+        case 'Number':
+            defaultValue = 0;
+            break;
+        case 'String':
+            defaultValue = '';
+            break;
     }
 
+    const _getter = () => {
+        return getter() || defaultValue
+    }
     // const setter = () => {
 
     // }
 
     if(dataType != 'Structure'){
-        await server.addVariable(tagname, dataType, getter || _getter, setter, parent)
+        await server.addVariable(tagname, dataType, _getter, setter, parent)
     }
 }
