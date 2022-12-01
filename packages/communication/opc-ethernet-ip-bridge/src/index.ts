@@ -38,7 +38,7 @@ export interface BridgeOptions {
     configure?: boolean
 }
 
-export const EthernetIPBridge = (options: BridgeOptions) => {
+export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     const { host, slot, listenTags, configure } = options;
 
@@ -140,9 +140,14 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         });
     }
 
-    PLC.connect(host, slot || 0).then(async (plc) => {
+    let tags : ListenTag[] = [];
 
-        await server.start();
+    if(listenTags)
+        tags = JSON.parse(readFileSync(listenTags, 'utf-8'));
+
+
+    const controller = await PLC.connect(host, slot || 0);
+
 
         // PLC.scan_rate = 500;
         // PLC.scan();
@@ -151,15 +156,11 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
 
         console.log(`Connected to ${properties.name} @ ${host}:${slot || 0}`);
 
-        await PLC.getControllerTagList(tagList);
-
         console.log(`Found ${PLC.tagList?.length} tags`);
       
-        let tags : {tag: Tag, type: any, name: string}[] = [];
 
         if(listenTags){
-            const tags : ListenTag[] = JSON.parse(readFileSync(listenTags, 'utf-8'));
-
+            
             for(var i = 0; i < tags.length; i++){
 
                 let tag = tags[i];
@@ -175,22 +176,15 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     }), {}) :
                     undefined;
 
-                console.log("ADD ENIP ", tag.name);
-
                 const enipTag = PLC.newTag(tag.name)
 
-                PLC.readTag(enipTag).then(() => {
-                    console.log("READ ENIP ", tag.name, enipTag.value)
-                }).catch((e) => {
+                try{
+                    await PLC.readTag(enipTag);
+                }catch(e){
                     console.error({msg: (e as any).message})
-                })
+                }
 
-                // try{
-                //     await PLC.readTag(enipTag);
-                // }catch(e){
-                //     console.error({msg: (e as any).message})
-                // }
-                // PLC.subscribe(enipTag);
+                PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
                     return enipTag.value
@@ -198,7 +192,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     console.log("Set it")
                 }, fromTagListChildren)
                 
-                await new Promise((resolve) => setTimeout(() => resolve(true), 200))
+                // await new Promise((resolve) => setTimeout(() => resolve(true), 200))
             }
 
         }else{
@@ -206,8 +200,12 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
             for(var i = 0; i < (PLC.tagList || []).length; i++){
                 let tag = (PLC.tagList || [])[i];
                 let enipTag = PLC.newTag(tag.name);
-
-                await PLC.readTag(enipTag);
+               
+                try{
+                    await PLC.readTag(enipTag);
+                }catch(e){
+                    console.error({msg: (e as any).message})
+                }
 
                 PLC.subscribe(enipTag);
 
@@ -217,111 +215,17 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     console.log("Set it")
                 }, tag.type.structureObj);
 
-                await new Promise((resolve) => setTimeout(() => resolve(true), 200))
+                // await new Promise((resolve) => setTimeout(() => resolve(true), 200))
 
                 // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
             }
         }
-        // for(const tag of tags){
+       
+        PLC.scan_rate = 500;
+        await PLC.scan();
 
-        //     await PLC.readTag(tag.tag);
-
-        //     // PLC.subscribe(tag.tag)
-
-        //     valueStore[tag.name] = tag.tag.value
-
-        //     tag.tag.on('Changed', (newTag) => {
-        //         valueStore[tag.name] = newTag.value;
-        //     })
-            
-        //     console.log("READ TAG", tag.name)
-
-        //     await new Promise((resolve) => setTimeout(() => resolve(true), READ_BUFFER_TIME))
-        // }
-
-        // Object.keys(valueStore).map((key) => {
-        //     let tag = tags.find((a) => a.name == key);
-        //     let value = valueStore[key];
-
-        //     if(tag?.type.structure){
-        //         console.log("Struct type", tag.type)
-        //         console.log("Struct value", value)
-        //     }else{
-        //         console.log({tag, value});
-        //     }
-        // })
-
-        // console.log({valueStore})
-
-        // await Promise.all((tagList || []).filter((a) => a.name.indexOf('__') !== 0).map(async (tag) => {
-
-        //     const realTag = plc.newTag(tag.name);
-
-        //     plc.subscribe(realTag)
-  
-        //     realTag.on('Changed', (newTag, oldValue) => {
-        //         valueStore[tag.name] = newTag.value;
-        //     });
-
-        //     if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
-        //         console.log("Can't find " + tag.name + " " + tag.type.typeName)
-        //     }
-
-        //     const getter = () => {
-        //         let value = valueStore[tag.name];
-
-        //         console.log({value});
-
-        //         // if(tag.type.typeName !== 'STRING' && tag.type.typeName !== 'DINT' && tag.type.typeName !== 'BOOL' && tag.type.typeName !== 'REAL'){
-        //         //     console.log("Can't find way to get value for " + tag.name + " " + tag.type.typeName)
-        //         // }else{
-        //         //     // plc.readTag(realTag).then(() => {
-        //         //     //     valueStore[tag.name] = realTag.value;
-        //         //     // })
-        //         // }
-
-        //         if(!value){
-        //             switch(tag.type.typeName){
-        //                 case 'STRING':
-        //                     return 'Test';
-        //                 case 'REAL':
-        //                 case 'DINT':
-        //                     return 0;
-        //                 case 'BOOL':
-        //                     return false;
-        //             }
-        //         }else{
-        //             return value;
-        //         }
-        //     }
-
-        //     switch(tag.type.typeName){
-        //         case 'STRING':
-        //             await server.addVariable(tag.name, 'String', getter, (value) => {
-        //                 // return "Test"
-        //                 console.log({value})
-        //             })
-        //             break;
-        //         case 'REAL':
-        //         case 'DINT':
-        //             await server.addVariable(tag.name, 'Number', getter, (value) => {
-        //                 // return 0;
-        //                 console.log({value})
-        //             });
-        //             break;
-        //         case 'BOOL':
-        //             await server.addVariable(tag.name, 'Boolean', getter, (value) => {
-        //                 // return false;
-        //                 console.log({value})
-        //             });
-        //             break;
-        //     }
-        //     // server.addVariable(tag.name, )
-        // }))
-
-        // await PLC.scan();
+        await server.start();
 
 
         console.log("OPCUA Server started");
-    })
 }
