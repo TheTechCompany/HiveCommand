@@ -175,11 +175,16 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
                     }), {}) :
                     undefined;
 
+                console.log("ADD ENIP ", tag.name);
+
                 let enipTag = PLC.newTag(tag.name)
 
-                await PLC.readTag(enipTag);
-
-                PLC.subscribe(enipTag);
+                try{
+                    await PLC.readTag(enipTag);
+                }catch(e){
+                    console.error({msg: (e as any).message})
+                }
+                // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
                     return enipTag.value
@@ -308,7 +313,7 @@ export const EthernetIPBridge = (options: BridgeOptions) => {
         //     // server.addVariable(tag.name, )
         // }))
 
-        await PLC.scan();
+        // await PLC.scan();
 
 
         console.log("OPCUA Server started");
