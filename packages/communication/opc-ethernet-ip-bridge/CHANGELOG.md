@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.115](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.114...v1.4.15-alpha.115) (2022-12-02)
+
+**Note:** Version bump only for package @hive-command/enip-bridge
+
+
+
+
+
 ## [1.4.15-alpha.114](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.113...v1.4.15-alpha.114) (2022-12-02)
 
 **Note:** Version bump only for package @hive-command/enip-bridge
