@@ -64,7 +64,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             const tags = controller.PLC?.tagList?.map((tag) => ({
                 name: tag.name,
                 children: (tag.type.structureObj && tag.type.typeName !== "STRING") ? Object.keys(tag.type.structureObj || {}).map((x) => ({name: x, type: (tag.type.structureObj as any)?.[x]})) : []
-            }))
+            }));
 
             res.send(tags)
         });
@@ -173,7 +173,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     tag.children?.map((x) => ({
                         type: (fromTagList?.type.structureObj as any)?.[x.name], 
                         name: x.name 
-                    })).filter((a) => a.type).reduce((prev, curr) => ({
+                    })).reduce((prev, curr) => ({
                             ...prev,
                             [curr.name]: curr.type
                     }), {}) :
