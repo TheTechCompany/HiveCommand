@@ -171,7 +171,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 let fromTagList = tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ? 
                     tag.children?.map((x) => ({
-                        type: (fromTagList?.type.structureObj as any)?.[x.name], 
+                        type: (fromTagList?.type.structureObj as any)?.[x.name] || "STRING", 
                         name: x.name 
                     })).reduce((prev, curr) => ({
                             ...prev,
