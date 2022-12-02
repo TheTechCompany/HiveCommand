@@ -28,7 +28,7 @@ export const addTag = async (
 
     let dataType : 'Boolean'  | 'Structure' | 'String' | 'Number' = 'String';
 
-    switch(structure ? 'STRUCT' : type){
+    switch((structure && type !== 'STRING') ? 'STRUCT' : type){
         case 'STRUCT':
             dataType = 'Structure';
 
