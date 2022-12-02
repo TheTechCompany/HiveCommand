@@ -28,6 +28,11 @@ export const addTag = async (
 
     let dataType : 'Boolean'  | 'Structure' | 'String' | 'Number' = 'String';
 
+    console.log(`Add tag ${tagname}:${type} struct:${structure && type !== 'STRING'}`);
+
+    if(structure){
+        console.log(`Tag structure`, JSON.stringify(structure, null, 2));
+    }
     switch((structure && type !== 'STRING') ? 'STRUCT' : type){
         case 'STRUCT':
             dataType = 'Structure';
@@ -68,6 +73,7 @@ export const addTag = async (
         case 'REAL':
             dataType = "Number"
             break;
+        default:
         case 'STRING':
             dataType = "String";
             break;
