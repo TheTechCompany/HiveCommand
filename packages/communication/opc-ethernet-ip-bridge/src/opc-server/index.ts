@@ -68,6 +68,9 @@ export const addTag = async (
         case 'REAL':
             dataType = "Number"
             break;
+        case 'STRING':
+            dataType = "String";
+            break;
     }
 
     let defaultValue: any;
