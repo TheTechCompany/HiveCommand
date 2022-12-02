@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from 'react'
+import { forwardRef, useEffect, useMemo, useState } from 'react'
 import { Box, Checkbox, TextField } from '@mui/material'
 import { TreeView, TreeItem, TreeItemContentProps, useTreeItem } from '@mui/lab';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'
@@ -179,6 +179,13 @@ function App() {
     })
   }
 
+  const treeItems = useMemo(() => {
+    return renderTree((tags || []).filter((a) => {
+      if(search && search.length > -1)return a.name.toLowerCase().indexOf(search.toLowerCase()) > -1
+      return true;
+    }));
+  }, [tags, search, whitelist])
+
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
       <TextField 
@@ -187,16 +194,10 @@ function App() {
         onChange={(e) => setSearch(e.target.value)}
         label="Search..." />
       <TreeView
-        onNodeSelect={(e: any, node: any) => {
-          console.log({node})
-        }}
         defaultCollapseIcon={<ExpandMore />}
         defaultExpandIcon={<ChevronRight />}
         >
-          {renderTree((tags || []).filter((a) => {
-            if(search && search.length > -1)return a.name.toLowerCase().indexOf(search.toLowerCase()) > -1
-            return true;
-          }))}
+          {treeItems}
       </TreeView>
     </Box>
   )

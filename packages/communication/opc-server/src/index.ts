@@ -205,8 +205,11 @@ export default class Server {
 
         (variableValue)?.bindVariable({
             get: () => {
+                
+                let defaultValue = dataType == DataType.Boolean ? false : dataType == DataType.String ? '' : dataType == DataType.Float ? 0 : undefined;
+
                 const value = getter();
-                return new Variant({dataType: dataType, value})
+                return new Variant({dataType: dataType, value: value || defaultValue})
             },
             set: (value: Variant) => {
                 if(!setter) return StatusCodes.BadNotWritable;
