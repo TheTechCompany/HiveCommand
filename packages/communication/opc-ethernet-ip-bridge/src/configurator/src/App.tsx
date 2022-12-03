@@ -1,18 +1,44 @@
-import { forwardRef, useEffect, useMemo, useState } from 'react'
-import { Box, Checkbox, TextField } from '@mui/material'
-import { TreeView, TreeItem, TreeItemContentProps, useTreeItem } from '@mui/lab';
-import { ExpandMore, ChevronRight } from '@mui/icons-material'
-import clsx from 'clsx';
+import { useEffect, useMemo, useState } from 'react'
+import { Box, Paper, Tabs, Tab, Typography } from '@mui/material'
+
 import './App.css'
+import { ConfiguratorProvider } from './context';
+import { TagView } from './views/tags';
+import { TemplateView } from './views/templates';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
 export interface Tag {
   name: string,
+  type?: string,
   children?: Tag[]
+}
+
+export interface Template {
+  name: string,
+  children?: Template[]
+}
+
+export interface NestedTree {
+  [key: string]: string | NestedTree
 }
 
 function App() {
 
-  const [search, setSearch ] = useState('');
+  const navigate = useNavigate();
+
+  const [ templates, setTemplates ] = useState<Template[]>([
+    {
+      name: 'Valve',
+      children: [
+        {
+          name: 'IOFault',
+        },
+        {
+          name: 'Eng',
+        }
+      ]
+    }
+  ]);
 
   const [tags, setTags] = useState<Tag[]>([
     {
@@ -20,14 +46,31 @@ function App() {
       children: [
         {name: 'value'}
       ]
+    },
+    {
+      name: 'AV101',
+      type: 'Valve',
+      children: [
+        {name: 'Eng'},
+        {name: 'IOFault'}
+      ]
     }
   ]);
 
-  const [ whitelist, setWhitelist ] = useState<Tag[]>([
+  const [ whitelistTags, setWhitelist ] = useState<Tag[]>([
     {
       name: 'tag1',
       children: [
         {name: 'value'}
+      ]
+    }
+  ])
+
+  const [ whitelistTemplates, setWhitelistTemplates ] = useState<Template[]>([
+    {
+      name: 'Valve',
+      children: [
+        {name: 'IOFault'}
       ]
     }
   ])
@@ -48,7 +91,7 @@ function App() {
     }
 }
 
-  const tagExists = (path: string, whitelist: Tag[], cwd?: string) => {
+  const tagExists = (path: string, whitelist: (Tag | Template)[], cwd?: string) => {
     let parts = path.split('.');
     let curr_idx = (cwd?.split('.') || []).length;
 
@@ -56,17 +99,92 @@ function App() {
 
     let exists = false;
 
+    console.log(path, cwd)
+
     if(cwd == path){
       exists = true;
       return true;
     }else if(whitelist.length > 0){
       for(var i = 0; i < whitelist.length; i++){
-        let ret = tagExists(path, whitelist[i].children || [], cwd ? `${cwd}.${whitelist[i].name}` : whitelist[i].name)
+        console.log({whitelist: whitelist[i]})
+        let children = 'children' in whitelist[i] ? (whitelist[i] as any).children  : Object.keys((whitelist[i]as any).structure || {}).map((a) => ({name: a}))
+        let ret = tagExists(path, children || [], cwd ? `${cwd}.${whitelist[i].name}` : whitelist[i].name)
         if(ret)
           exists = true;
       }
     }
     return exists;
+  
+  }
+
+  let reduceFunc = (original: any, next: Tag) : any => {
+    return {
+      ...original,
+      [next.name]: (next.children || []).length > 0 ? next.children?.reduce(reduceFunc, {}) : next.type
+    }
+  }
+
+  const tagMap = useMemo(() => {
+    // let whitelistFilter =
+    let tagsMapping = tags.reduce(reduceFunc, {});
+
+    return tagsMapping
+  }, [whitelistTags, tags ])
+
+  const _whitelistTemplates = useMemo(() => {
+    return templates.filter((a) =>  whitelistTemplates.map((x) => x.name).indexOf(a.name) > -1 ).map((template) => {
+      let whitelist = whitelistTemplates.find((a) => a.name == template.name);
+
+      let whitelistKeys = whitelist?.children?.map((x) => x.name)
+
+      return {
+        ...template,
+        children: template.children?.filter((a) => (whitelistKeys || []).indexOf(a.name) > -1)
+      }
+    })
+  }, [whitelistTemplates, templates])
+
+  const templateExists = (path: string, whitelist: Template[], cwd?: string) => {
+    let parts = path.split('.');
+    let curr_idx = (cwd?.split('.') || []).length;
+
+    let curr_part = parts[curr_idx];
+
+    let exists = false;
+
+    console.log(path);
+
+    const root = parts[0];
+
+    let rootNode = tags.find((a) => a.name === root);
+    let template = _whitelistTemplates.find((a) => rootNode?.type == a.name);
+
+
+    parts.splice(0, 1)
+
+    let struct = template?.children?.reduce((prev, curr) => ({...prev, [curr.name]: ''}), {})
+
+    return template != undefined && (parts.length == 0 || parts.reduce((o, i) => o[i], struct as any) != null )
+    
+
+
+    console.log({rootNode, template})
+    // if(cwd == path){
+    //   exists = true;
+    //   return true;
+    // }else if(whitelist.length > 0){
+    //   for(var i = 0; i < whitelist.length; i++){
+
+    //     let pwd = cwd ? `${cwd}.${whitelist[i]}`
+
+    //     let struct = Object.key
+    //     let ret = tagExists(path, whitelist[i].children || [], cwd ? `${cwd}.${whitelist[i].name}` : whitelist[i].name)
+    //     if(ret)
+    //       exists = true;
+    //   }
+    // }
+    // return exists;
+    return false;
   
   }
 
@@ -78,13 +196,18 @@ function App() {
     return fetch('http://localhost:8020/api/tags').then((r) => r.json())
   }
 
-  const updateTags = (add: boolean, path: string | undefined, name: string) => {
+  const getTemplates = () => {
+    return fetch('http://localhost:8020/api/templates').then((r) => r.json());
+  }
+
+  const updateTags = (type: string, add: boolean, path: string | undefined, name: string) => {
     return fetch('/api/whitelist', {
       method: "POST",
       headers: {
         'Content-Type': "application/json"
       },
       body: JSON.stringify({
+        type,
         add: add,
         path,
         name
@@ -93,10 +216,16 @@ function App() {
       getWhitelist().then((whitelist) => {
         setWhitelist(whitelist)
       })
+      getTemplates().then((templates) => {
+        setTemplates(templates)
+      })
     });
   }
 
   useEffect(() => {
+    getTemplates().then((templates) => {
+      setTemplates(templates)
+    })
     getTags().then((tags) => {
       setTags(tags)
     })
@@ -105,100 +234,33 @@ function App() {
     })
   }, [])
 
-  const renderTree = (tags: any[], parent?: string) => {
-    return tags.map((tag) => {
-   
-      const nodeId = parent ? `${parent}.${tag.name}` : tag.name;
-
-      return (<TreeItem   
-        key={parent ? `${parent}.${tag.name}` : tag.name}
-        ContentComponent={forwardRef<unknown, any>((props, ref) => {
-             
-          const {
-            classes,
-            className,
-            label,
-            nodeId,
-            icon: iconProp,
-            expansionIcon,
-            displayIcon,
-          } = props;
-
-          const {
-            disabled,
-            expanded,
-            selected,
-            focused,
-            handleExpansion,
-            handleSelection,
-            preventSelection,
-          } = useTreeItem(nodeId);
-          
-          const icon = iconProp || expansionIcon || displayIcon;
-
-          const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-            preventSelection(event);
-          };
-        
-          const handleExpansionClick = (
-            event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-          ) => {
-            handleExpansion(event);
-          };
-        
-          const handleSelectionClick = (
-            event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-          ) => {
-            handleSelection(event);
-          };
-
-          return (<div
-            className={clsx(className, classes.root, {
-              [classes.expanded]: expanded,
-              [classes.selected]: selected,
-              [classes.focused]: focused,
-              [classes.disabled]: disabled,
-            })}
-            style={{display: 'flex', alignItems: 'center'}}
-            onMouseDown={handleMouseDown}
-            ref={ref as any}>
-              <div onClick={handleExpansionClick} className={classes.iconContainer}>
-                {icon}
-              </div>
-              <Checkbox 
-                checked={tagExists(nodeId, whitelist)}
-                onChange={(e) => {
-                updateTags(e.target.checked, parent, tag.name)
-              }} />
-              {tag.name}
-            </div>)
-        })}
-        nodeId={nodeId} label={tag.name}>
-          {tag.children ? renderTree(tag.children, parent ? `${parent}.${tag.name}` : tag.name) : null}
-      </TreeItem>)
-    })
-  }
-
-  const treeItems = useMemo(() => {
-    return renderTree((tags || []).filter((a) => {
-      if(search && search.length > -1)return a.name.toLowerCase().indexOf(search.toLowerCase()) > -1
-      return true;
-    }));
-  }, [tags, search, whitelist])
-
   return (
     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-      <TextField 
-        size="small"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        label="Search..." />
-      <TreeView
-        defaultCollapseIcon={<ExpandMore />}
-        defaultExpandIcon={<ChevronRight />}
-        >
-          {treeItems}
-      </TreeView>
+      <ConfiguratorProvider value={{
+        whitelist: {
+          tags: whitelistTags,
+          templates: whitelistTemplates 
+        },
+        tags,
+        templates,
+        tagExists,
+        templateExists,
+        updateTags
+      }}>
+      <Paper sx={{display: 'flex', marginBottom: '12px', background: 'gray', alignItems: 'center', justifyContent: 'space-between', paddingLeft: '6px'}}>
+        <Typography>ENIP Configurator</Typography>
+        <Tabs onChange={(evt, value) => navigate(value)}>
+          <Tab value={""} label="Tags"></Tab>
+          <Tab value={"templates"} label="Templates"></Tab>
+        </Tabs>
+      </Paper>
+      <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Routes>
+          <Route path="" element={<TagView />} />
+          <Route path="templates" element={<TemplateView />} />
+        </Routes>
+      </Box>
+      </ConfiguratorProvider>
     </Box>
   )
 }

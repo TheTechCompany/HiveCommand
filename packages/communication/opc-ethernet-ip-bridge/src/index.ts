@@ -28,6 +28,11 @@ export interface ListenTag {
     children?: ListenTag[]
 }
 
+export interface ListenTemplate {
+    name: string,
+    children?: ListenTemplate[]
+}
+
 const READ_BUFFER_TIME = 200;
 const CONFIGURE_PORT = 8020;
 
@@ -61,20 +66,37 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
         app.get('/api/tags', (req, res) => {
 
+            //Check if tag already covered by template rule ?
+
             const tags = controller.PLC?.tagList?.map((tag) => ({
                 name: tag.name,
+                type: tag.type.typeName,
                 children: (tag.type.structureObj && tag.type.typeName !== "STRING") ? Object.keys(tag.type.structureObj || {}).map((x) => ({name: x, type: (tag.type.structureObj as any)?.[x]})) : []
             }));
 
             res.send(tags)
         });
 
+        app.get('/api/templates', (req, res) => {
+            Object.keys(controller.PLC?.templateList || {}).map((templateKey) => {
+                let template = controller.PLC?.templateList?.[templateKey];
+                
+                return {
+                    name: template?._name,
+                    children: template?._members
+                }
+            })
+        })
+
         app.get('/api/whitelist', (req, res) => {
+
+            //Parse whitelist into tags by including templates
+
             if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
 
-            let whitelist = JSON.parse(readFileSync(listenTags, 'utf-8')) || [];
+            let {tags, templates} = JSON.parse(readFileSync(listenTags, 'utf-8')) || {tags: [], templates: []};
             
-            res.send(whitelist)
+            res.send({tags, templates})
 
         })
 
@@ -82,9 +104,10 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
             if(!listenTags) return res.send({error: "Please specify --tags in bridge startup"});
 
-            let whitelist = JSON.parse(readFileSync(listenTags, 'utf8')) || [];
+            let {tags, templates} = JSON.parse(readFileSync(listenTags, 'utf8')) || {tags: [], templates: []};
 
             let change = {
+                type: req.body.type, //tag | template
                 add: req.body.add, //add or remove from whitelist
                 path: req.body.path, //name.child.child
                 name: req.body.name
@@ -124,13 +147,14 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 }
             }
 
+            
             if(change.add){
-                insertNode({children: whitelist}, change.path, change.name)
+                insertNode({children: change.type == 'tag' ? tags : templates}, change.path, change.name)
             }else{
-                deleteNode({children: whitelist}, change.path, change.name)
+                deleteNode({children: change.type == 'tag' ? tags : templates}, change.path, change.name)
             }
 
-            writeFileSync(listenTags, JSON.stringify(whitelist), 'utf8')
+            writeFileSync(listenTags, JSON.stringify({tags, templates}), 'utf8')
 
             res.send({success: true})
         })
@@ -145,9 +169,13 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
     }
 
     let tags : ListenTag[] = [];
+    let templates : ListenTemplate[] = [];
 
-    if(listenTags)
-        tags = JSON.parse(readFileSync(listenTags, 'utf-8'));
+    if(listenTags){
+        let tagBundle = JSON.parse(readFileSync(listenTags, 'utf-8')) || {};
+        tags = tagBundle?.tags;
+        templates = tagBundle?.templates;
+    }
 
 
     await controller.connect();
@@ -165,6 +193,23 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
       
 
         if(listenTags){
+
+            for(var i = 0; i < templates.length; i++){
+                let template = templates[i];
+
+                let templateKeys = template.children?.map((x) => x.name);
+
+                console.log(`Adding ${controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
+
+                tags = tags.concat( (controller.PLC?.tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
+                    return {
+                        ...tag,
+                        children: template.children?.filter((a) => (templateKeys || []).indexOf(a.name) > -1)
+                    }
+                }) );
+
+
+            }
             
             for(var i = 0; i < tags.length; i++){
 
