@@ -78,7 +78,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         });
 
         app.get('/api/templates', (req, res) => {
-            Object.keys(controller.PLC?.templateList || {}).map((templateKey) => {
+            const templates = Object.keys(controller.PLC?.templateList || {}).map((templateKey) => {
                 let template = controller.PLC?.templateList?.[templateKey];
                 
                 return {
@@ -86,6 +86,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     children: template?._members
                 }
             })
+            res.send(templates)
         })
 
         app.get('/api/whitelist', (req, res) => {
