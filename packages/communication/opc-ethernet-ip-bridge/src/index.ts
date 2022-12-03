@@ -133,14 +133,14 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             const insertNode = (node: any, path: string | undefined, name: string, currentPath?: string) => {
 
                 let path_parts = ([undefined] as any).concat(path ? path.split('.') : []);
-                let curr_path_parts = (currentPath?.split('.') || []).length;
+                let curr_path_parts = (currentPath?.split('.') || [])?.length;
 
                 if(currentPath == path){
-                    if(node.children.map((x: any) => x.name).indexOf(name) < 0){
-                        node.children.push({name, children: []});
+                    if(node.children?.map((x: any) => x.name).indexOf(name) < 0){
+                        node.children?.push({name, children: []});
                     }
                 }else if(node.name == path_parts[curr_path_parts] && node.children.length > 0) {
-                    for(let i = 0; i < node.children.length; i++){
+                    for(let i = 0; i < node?.children?.length; i++){
                         if(node.children[i].name == path_parts[curr_path_parts + 1]){
                             insertNode(node.children[i], path, name, currentPath ? `${currentPath}.${node.children[i].name}` : node.children[i].name)
                         }
