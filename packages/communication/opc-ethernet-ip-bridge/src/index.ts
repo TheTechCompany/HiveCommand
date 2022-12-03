@@ -244,13 +244,13 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){
-                        if(!enipTag?.value) enipTag.value = {};
-                        (enipTag.value as any)[key] = value.value;
+                        // if(!enipTag?.value) enipTag.value = {};
+                        (enipTag.value as any)[key] = value;
                     }else if(enipTag){
-                        enipTag.value = value.value;
+                        enipTag.value = value;
                     }
 
-                    controller.PLC?.writeTag(enipTag);
+                    controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
 
                     console.log("Set it")
                 }, fromTagListChildren)

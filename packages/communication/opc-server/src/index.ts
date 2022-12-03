@@ -215,9 +215,9 @@ export default class Server {
                 if(!setter) return StatusCodes.BadNotWritable;
                             
                 try{
-                    setter?.(value)
+                    setter?.(value.value)
                 }catch(e){
-                    console.error("Error writing port value", value)
+                    console.error("Error writing port value", e)
                 }
 
                 return StatusCodes.Good;
