@@ -131,6 +131,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             }
 
             writeFileSync(listenTags, JSON.stringify(whitelist), 'utf8')
+
+            res.send({success: true})
         })
 
         app.get('*', (req, res) => {
