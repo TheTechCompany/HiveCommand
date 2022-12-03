@@ -107,6 +107,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
             let {tags, templates} = JSON.parse(readFileSync(listenTags, 'utf8')) || {tags: [], templates: []};
 
+            if(!tags) tags = [];
+            if(!templates) templates = [];
+
             let change = {
                 type: req.body.type, //tag | template
                 add: req.body.add, //add or remove from whitelist

@@ -57,7 +57,7 @@ function App() {
     }
   ]);
 
-  const [ whitelistTags, setWhitelist ] = useState<Tag[]>([
+  const [ whitelistTags, setWhitelistTags ] = useState<Tag[]>([
     {
       name: 'tag1',
       children: [
@@ -214,7 +214,8 @@ function App() {
       })
     }).then((r) => r.json()).then(() => {
       getWhitelist().then((whitelist) => {
-        setWhitelist(whitelist)
+        setWhitelistTags(whitelist.tags)
+        setWhitelistTemplates(whitelist.templates)
       })
       getTemplates().then((templates) => {
         setTemplates(templates)
@@ -230,7 +231,9 @@ function App() {
       setTags(tags)
     })
     getWhitelist().then((whitelist) => {
-      setWhitelist(whitelist)
+      setWhitelistTags(whitelist.tags)
+      setWhitelistTemplates(whitelist.templates)
+
     })
   }, [])
 
