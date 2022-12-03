@@ -242,7 +242,16 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
                     return enipTag?.value
-                }, () => {
+                }, (value, key) => {
+                    if(enipTag && key){
+                        if(!enipTag?.value) enipTag.value = {};
+                        (enipTag.value as any)[key] = value;
+                    }else if(enipTag){
+                        enipTag.value = value;
+                    }
+
+                    controller.PLC?.writeTag(enipTag);
+                    
                     console.log("Set it")
                 }, fromTagListChildren)
                 
@@ -265,8 +274,18 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 addTag(server, tag.name, tag.type.typeName || '', () => {
                     return enipTag?.value
-                }, () => {
+                }, (value, key) => {
+                    if(enipTag && key){
+                        if(!enipTag?.value) enipTag.value = {};
+                        (enipTag.value as any)[key] = value;
+                    }else if(enipTag){
+                        enipTag.value = value;
+                    }
+
+                    controller.PLC?.writeTag(enipTag);
+
                     console.log("Set it")
+                    
                 }, tag.type.structureObj);
 
                 // await new Promise((resolve) => setTimeout(() => resolve(true), 200))

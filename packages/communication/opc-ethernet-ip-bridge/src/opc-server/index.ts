@@ -22,7 +22,7 @@ export const addTag = async (
     tagname: string, 
     type: string, 
     getter: (() => any | undefined),
-    setter: () => void,
+    setter: (value: any, key?: string) => void,
     structure?: {[key: string]: string}, parent?: UAObject
 ) => {
 
@@ -58,7 +58,7 @@ export const addTag = async (
 
                     await addTag(server, key, structure?.[key] || '', () => {
                         return getter()?.[key] || defaultValue
-                    }, setter, undefined, rootObject);
+                    }, (value) => setter(value, key), undefined, rootObject);
                 }
 
                 // await server.addVariable(key, getOPCType(structure?.[key] || ''), )
