@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/enip-bridge",
-  "version": "1.4.15-alpha.116",
+  "version": "1.4.15-alpha.117",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
