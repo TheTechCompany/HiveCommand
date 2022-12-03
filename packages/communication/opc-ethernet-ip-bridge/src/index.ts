@@ -174,8 +174,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     if(listenTags){
         let tagBundle = JSON.parse(readFileSync(listenTags, 'utf-8')) || {};
-        tags = tagBundle?.tags;
-        templates = tagBundle?.templates;
+        tags = tagBundle?.tags || [];
+        templates = tagBundle?.templates || [];
     }
 
 
