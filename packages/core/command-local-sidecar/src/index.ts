@@ -59,7 +59,7 @@ class DevSidecar {
             if(recursive){
                 try{
                     const innerResults = await this.browse(host, `${browsePath}/${name}`, recursive);
-                    results.push({name: name, children: innerResults})
+                    results.push({id: reference?.nodeId, name: name, children: innerResults})
                 }catch(e){
                     console.log({e, name})
                 }
