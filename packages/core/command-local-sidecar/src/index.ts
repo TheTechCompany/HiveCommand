@@ -145,7 +145,6 @@ app.get('/:host/tree', async (req, res) => {
     }
 });
 
-
 server.listen(OPC_PROXY_PORT, () => {
     console.debug(`Listening on ${OPC_PROXY_PORT}`)
 })
