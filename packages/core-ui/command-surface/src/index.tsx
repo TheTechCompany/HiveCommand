@@ -78,6 +78,7 @@ export interface CommandSurfaceProps {
         charts: ReportChart[];
     }[]
 
+
     mode?: string;
 
     menu?: {

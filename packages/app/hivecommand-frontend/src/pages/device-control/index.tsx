@@ -48,8 +48,7 @@ export const DeviceControlView = () => {
         }
     }, [])
 
-    console.log({reports});
-    
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
