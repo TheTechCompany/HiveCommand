@@ -19,17 +19,17 @@ export const OPCUAServerStage = () => {
     const [ opcua, setOPCUA ] = useState<OPCUAServerItem[]>([]);
 
     const scanOPCUA = () => {
-        return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data)
-    }
-
-    useEffect(() => {
-        scanOPCUA().then((data) => {
+        return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data).then((data) => {
             if(data.results){
                 setOPCUA(data.results || [])
             }else{
                 console.log({data})
             }
         })
+    }
+
+    useEffect(() => {
+        scanOPCUA()
     }, [])
 
     const renderTree = (items: OPCUAServerItem[]) => {
@@ -40,11 +40,13 @@ export const OPCUAServerStage = () => {
         ))
     }
 
+    console.log({controlLayout})
+
 
     const devices = (controlLayout.devices || []).map((x: any) => ({
         id: x.id,
-        name: x.tag,
-        children: (x.state || []).map((y: any) => ({
+        name: `${x.type?.tagPrefix ? x.type?.tagPrefix : ''}${x.tag}`,
+        children: (x.type?.state || []).map((y: any) => ({
             id: `${x.id}.${y.key}`,
             name: y.key
         }))
@@ -64,29 +66,34 @@ export const OPCUAServerStage = () => {
                     fullWidth 
                     size="small"/>
                 </Box>
-                <Button variant='contained'>Scan Server</Button>
+                <Button 
+                    onClick={scanOPCUA}
+                    variant='contained'>Scan Server</Button>
             </Box>
             
             <Divider />
-            <Box sx={{flex: 1, display: 'flex'}}>
-                <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                    <TreeView
-                        sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
-                        defaultCollapseIcon={<ExpandMore />}
-                        defaultExpandIcon={<ChevronRight />}>
-                        
-                        {renderTree(opcua)}
+            <Box sx={{flex: 1, position: 'relative'}}>
+                <Box sx={{flex: 1, display: 'flex', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
+                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
+                        <TreeView
+                            sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
+                            defaultCollapseIcon={<ExpandMore />}
+                            defaultExpandIcon={<ChevronRight />}>
+                            
+                            {renderTree(opcua)}
 
-                    </TreeView>
-                </Box>
-                <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                    <TreeView
-                        sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
-                        defaultCollapseIcon={<ExpandMore />}
-                        defaultExpandIcon={<ChevronRight />}
-                        >
-                        {renderTree(devices)}
-                    </TreeView>
+                        </TreeView>
+                    </Box>
+                    <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
+                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
+                        <TreeView
+                            sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
+                            defaultCollapseIcon={<ExpandMore />}
+                            defaultExpandIcon={<ChevronRight />}
+                            >
+                            {renderTree(devices)}
+                        </TreeView>
+                    </Box>
                 </Box>
             </Box>
 
