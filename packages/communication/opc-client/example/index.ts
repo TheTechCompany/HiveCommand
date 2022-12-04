@@ -18,7 +18,7 @@ const client = new OPCClient();
     
     // console.log(path_id)
 
-    const resp = await client.setDetails('/Objects/1:BTP_MAIN/1:OperOn', DataType.Boolean, true)
+    const resp = await client.setDetails('/Objects/1:BTP_MAIN/1:OperOff', DataType.Boolean, true)
     console.log("Written...", resp?.value)
     // let result = await client.setDetails('/Objects/1:Devices/1:AV101/1:Inputs', 0.767)
     // console.log(path_id, result)

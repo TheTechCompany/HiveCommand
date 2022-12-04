@@ -184,7 +184,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     await controller.connect();
     
-    const tagList = controller.PLC?.tagList || []
+    const tagList = controller.PLC?.tagList?.filter((a) => a.name.indexOf('__') !== 0) || []
 
         // PLC.scan_rate = 500;
         // PLC.scan();
@@ -205,7 +205,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 console.log(`Adding ${controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
 
-                tags = tags.concat( (controller.PLC?.tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
+                tags = tags.concat( (tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
                     return {
                         ...tag,
                         children: template.children?.filter((a) => (templateKeys || []).indexOf(a.name) > -1)
@@ -232,11 +232,12 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 const enipTag = controller.addTag(tag.name)
 
-                // try{
-                //     await PLC.readTag(enipTag);
-                // }catch(e){
-                //     console.error({msg: (e as any).message})
-                // }
+                try{
+                    if(!enipTag) continue;
+                    await controller.PLC?.readTag(enipTag);
+                }catch(e){
+                    console.error({msg: (e as any).message})
+                }
 
                 // PLC.subscribe(enipTag);
 

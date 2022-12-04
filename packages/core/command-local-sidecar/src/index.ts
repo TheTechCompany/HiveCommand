@@ -138,9 +138,8 @@ app.post('/:host/unsubscribe', async (req, res) => {
 
 app.get('/:host/tree', async (req, res) => {
     try{
-        const tree = await sidecar.browse(req.params.host, '/1:Objects', true);
+        const tree = await sidecar.browse(req.params.host, '/Objects', true);
         res.send({results: tree})
-
     }catch(e){
         return res.send({error: e})
     }

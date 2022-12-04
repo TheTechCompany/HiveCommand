@@ -166,9 +166,6 @@ function App() {
 
     return template != undefined && (parts.length == 0 || parts.reduce((o, i) => o[i], struct as any) != null )
     
-
-
-    console.log({rootNode, template})
     // if(cwd == path){
     //   exists = true;
     //   return true;
