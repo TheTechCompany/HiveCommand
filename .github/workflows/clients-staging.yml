@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       - master
-    paths: ["packages/app/hivecommand-native/**", "packages/core-ui/**"]
+    paths: ["packages/app/hivecommand-native/**", "packages/core/command-local-sidecar/**", "packages/core-ui/**"]
 
 jobs:
   build:
@@ -13,6 +13,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [windows-latest, macos-latest, ubuntu-latest]
+
     runs-on: ${{ matrix.platform }}
     steps:
       - name: Checkout 

@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.66",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.65",
+    "@hive-command/data": "^1.4.15-alpha.66",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^8.5.1"

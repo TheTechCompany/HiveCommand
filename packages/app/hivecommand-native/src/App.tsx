@@ -24,7 +24,12 @@ function App() {
   const { authState } = useContext(DataContext)
 
   useEffect(() => {
-    cmd.execute();
+    cmd.execute().then((proc) => {
+      console.log("Sidecar running");
+
+      // console.log(proc.stdout)
+
+    });
   }, [])
   
   useEffect(() => {

@@ -111,7 +111,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						},
 						reports: {
 							include: {
-								reports: {
+								charts: {
 									include: {
 										dataKey: true,
 										dataDevice: true,

@@ -2,7 +2,7 @@ import { FormControl } from "@hexhive/ui"
 import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-export const ControlGraphModal = (props: {devices: any[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
+export const ControlGraphModal = (props: {devices: {id: string, tag: string, type: {state: any[]}}[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
   const [graph, setGraph] = useState<{
     deviceID?: string;
     keyID?: string;
@@ -35,7 +35,7 @@ export const ControlGraphModal = (props: {devices: any[], selected?: any, open: 
             value={graph.deviceID}
             onChange={(value) => setGraph({ ...graph, deviceID: value })}
             options={props.devices || []}
-            labelKey="name"
+            labelKey="tag"
             placeholder="Select device"
           />
           <div style={{marginTop: '9px'}} />

@@ -1,12 +1,16 @@
 'use strict';
 import OPCServer from '../src';
-
+import OPCClient from '@hive-command/opcua-client'
 const server = new OPCServer({productName: 'Sudbuster'});
+const client = new OPCClient();
 
 beforeAll(async () => {
     await server.start()
 
     await server.addDevice({name: "BLO701", type: 'blower'})
+
+    // console.log(server.endpoint)
+    // await client.connect(server.endpoint)
 })
 
 afterAll(async () => {
@@ -24,6 +28,13 @@ describe('opc-server', () => {
         let blower = await server.getDevice("BLO701")
         expect(blower?.type).toBe("1:blower")
         expect(av101?.type).toBe('1:valve')
+    })
+
+    test('Add variable', async () => {
+        await server.addVariable('Test', 'String', () => "Test", () => {});
+
+        // const results = await client.browse('/1:Objects')
+        // console.log({results})
     })
 
     // test('Get Types', async () => {

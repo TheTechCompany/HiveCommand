@@ -123,6 +123,15 @@ app.get('/control-layout', verifyAccess, async (req, res) => {
                             },
                             
                         }
+                    },
+                    devices: {
+                        include: {
+                            type: {
+                                include: {
+                                    state: true
+                                }
+                            }
+                        }
                     }
                 }
             }

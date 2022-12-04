@@ -22,8 +22,51 @@ export const useCreateReportPage = (deviceId: string) => {
 }
 
 
+export const useUpdateReportPage = (deviceId: string) => {
+
+	const [ updateReportPage ] = useMutation((mutation, args: {id: string, name: string}) => {
+		const item = mutation.updateCommandReportPage({
+			device: deviceId,
+			id: args.id,
+			input: {
+				name: args.name
+			}
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return (id: string, name: string) => {
+		return updateReportPage({args: {id: id, name}})
+	}
+}
+
+
+export const useRemoveReportPage = (deviceId: string) => {
+
+	const [ removeReportPage ] = useMutation((mutation, args: {id: string}) => {
+		const item = mutation.deleteCommandReportPage({
+			device: deviceId,
+			id: args.id
+		})
+		return {
+			item: {
+				...item
+			}
+		}
+	})
+	return (id: string) => {
+		return removeReportPage({args: {id}})
+	}
+}
+
+
 export const useAddDeviceChart = (deviceId: string) => {
 	const [ addGraph ] = useMutation((mutation, args: {
+		page: string,
+
 		type: string,
 		templateId: string,
 		keyId: string,
@@ -34,6 +77,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 		total?: boolean
 	}) => {
 		const item = mutation.createCommandDeviceReport({
+			page: args.page,
 			input: {
 				type: args.type,
 				x: args.x,
@@ -55,9 +99,10 @@ export const useAddDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
 			args: {
+				page: page,
 				type,
 				templateId,
 				keyId,
@@ -73,6 +118,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 
 export const useUpdateDeviceChart = (deviceId: string) => {
 	const [ addGraph ] = useMutation((mutation, args: {
+		page: string,
 		id: string,
 		type: string,
 		templateId: string,
@@ -85,6 +131,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 	}) => {
 		const item = mutation.updateCommandDeviceReport({
 			id: args.id,
+			page: args.page,
 			input: {
 				type: args.type,
 				total: args.total,
@@ -103,9 +150,10 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (id: string, type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, id: string, type: string, templateId: string, keyId: string, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
 			args: {
+				page,
 				id,
 				type,
 				templateId,
@@ -121,16 +169,20 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 
 
 export const useUpdateDeviceChartGrid = (deviceId: string) => {
-	const [ addGraph ] = useMutation((mutation, args: {items: {
-		id: string,
-		x: number,
-		y: number,
-		w: number,
-		h: number,
-	}[]}) => {
+	const [ addGraph ] = useMutation((mutation, args: {
+		page: string,
+		items: {
+			id: string,
+			x: number,
+			y: number,
+			w: number,
+			h: number,
+		}[]
+	}) => {
 
 		const item = mutation.updateCommandDeviceReportGrid({
 			device: deviceId,
+			page: args.page,
 			grid: args.items.map((item) => ({
 				id: item.id,
 				x: item.x,
@@ -147,9 +199,10 @@ export const useUpdateDeviceChartGrid = (deviceId: string) => {
 			]
 		}
 	})
-	return (items: {id: string,  x: number, y: number, w: number, h: number}[]) => {
+	return (page: string, items: {id: string,  x: number, y: number, w: number, h: number}[]) => {
 		return addGraph({
 			args: {
+				page,
 				items
 			}
 		})
@@ -159,9 +212,15 @@ export const useUpdateDeviceChartGrid = (deviceId: string) => {
 
 export const useRemoveDeviceChart = (deviceId: string) => {
 
-	const [ removeGraph ] = useMutation((mutation, args: {id: string}) => {
+	const [ removeGraph ] = useMutation((mutation, args: {
+		id: string,
+		page: string
+	}) => {
 
-		const item = mutation.deleteCommandDeviceReport({id: args.id})
+		const item = mutation.deleteCommandDeviceReport({
+			page: args.page,
+			id: args.id
+		})
 		
 		return {
 			item: {
@@ -169,9 +228,10 @@ export const useRemoveDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (id: string) => {
+	return (page: string, id: string) => {
 		return removeGraph({
 			args: {
+				page,
 				id: id
 			}
 		})

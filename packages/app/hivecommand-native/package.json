@@ -1,15 +1,15 @@
 {
 	"name": "@hive-command/native",
-	"version": "0.1.0",
+	"version": "1.4.15-alpha.126",
 	"private": true,
 	"dependencies": {
 		"@emotion/react": "11.10.4",
 		"@hexhive/styles": "^1.0.1-alpha.77",
 		"@hexhive/ui": "^1.0.1-alpha.85",
 		"@hexhive/utils": "^0.0.6-alpha.13",
-		"@hive-command/api": "^1.4.15-alpha.65",
-		"@hive-command/command-surface": "^1.4.15-alpha.65",
-		"@hive-command/local-sidecar": "^1.4.15-alpha.65",
+		"@hive-command/api": "^1.4.15-alpha.66",
+		"@hive-command/command-surface": "^1.4.15-alpha.66",
+		"@hive-command/local-sidecar": "^1.4.15-alpha.126",
 		"@mui/lab": "5.0.0-alpha.102",
 		"@mui/material": "5.10.11",
 		"@mui/x-date-pickers": "^5.0.6",
@@ -24,9 +24,9 @@
 		"web-vitals": "^2.1.4"
 	},
 	"scripts": {
-		"start": "yarn package && react-app-rewired start",
+		"start": "react-app-rewired start",
 		"build": "yarn package && react-app-rewired build",
-	    "package": "node ./move-binary.js",
+		"package": "node ./move-binary.js",
 		"tauri": "tauri"
 	},
 	"eslintConfig": {

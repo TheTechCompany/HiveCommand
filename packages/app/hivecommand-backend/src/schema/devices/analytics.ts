@@ -11,7 +11,6 @@ export default (prisma: PrismaClient) => {
 			commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
 			commandDeviceTimeseries(deviceId: String, device: String, valueKey: String, startDate: String): [CommandDeviceTimeseriesData]
 			commandDeviceTimeseriesTotal(deviceId: String, device: String, valueKey: String, startDate: String, endDate: String): CommandDeviceTimeseriesTotal
-		
 		}
 
 		type Mutation {
@@ -33,7 +32,7 @@ export default (prisma: PrismaClient) => {
 			id: ID
 	
 			name: String
-			reports: [CommandDeviceReport]
+			charts: [CommandDeviceReport]
 	
 			createdAt: DateTime
 			
@@ -302,7 +301,6 @@ export default (prisma: PrismaClient) => {
 								where: {id: args.id},
 								data: {
 									name: args.input.name,
-									reports: args.input.reports
 								}
 							}
 						}

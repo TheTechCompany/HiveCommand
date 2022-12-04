@@ -50,7 +50,11 @@ export const SetupView = (props: any) => {
         {
             label: "OPCUA Server",
             onNext: async (state: any, setState: any) => {
-                setState('opcuaProvisioned', true)
+
+                axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((data) => {
+
+                })
+                // setState('opcuaProvisioned', true)
             }
         }
     ]

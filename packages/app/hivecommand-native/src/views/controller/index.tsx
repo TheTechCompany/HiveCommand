@@ -18,7 +18,6 @@ export const Controller = () => {
         <Box sx={{flex: 1, display: 'flex'}}>
 
             <CommandSurface 
-                values={{}}
                 cache={[packs, setPacks] as any}
                 program={controlLayout} />
 

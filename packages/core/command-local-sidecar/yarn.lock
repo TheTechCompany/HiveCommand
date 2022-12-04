@@ -35,9 +35,9 @@
     to-fast-properties "^2.0.0"
 
 "@babel/types@^7.18.2":
-  version "7.19.4"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.19.4.tgz#0dd5c91c573a202d600490a35b33246fed8a41c7"
-  integrity sha512-M5LK7nAeS6+9j7hAq+b3fQs+pNfUtTGq+yFFfHnauFA8zQtLRfmuipmsKDKKLuyG+wC8ABW43A153YNawNTEtw==
+  version "7.20.2"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.20.2.tgz#67ac09266606190f496322dbaff360fdaa5e7842"
+  integrity sha512-FnnvsNWgZCr232sqtXggapvlkk/tuwR/qhGzcmxI0GXLCjmPYQPzio2FbdlWuY6y1sHFfQKk+rRbUZ9VStQMog==
   dependencies:
     "@babel/helper-string-parser" "^7.19.4"
     "@babel/helper-validator-identifier" "^7.19.1"
@@ -68,9 +68,9 @@
   integrity sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==
 
 "@jridgewell/trace-mapping@^0.3.9":
-  version "0.3.16"
-  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.16.tgz#a7982f16c18cae02be36274365433e5b49d7b23f"
-  integrity sha512-LCQ+NeThyJ4k1W2d+vIKdxuSt9R3pQSZ4P92m7EakaYuXcVWbHuT5bjNcqLd4Rdgi6xYWYDvBJZJLZSLanjDcA==
+  version "0.3.17"
+  resolved "https://registry.yarnpkg.com/@jridgewell/trace-mapping/-/trace-mapping-0.3.17.tgz#793041277af9073b0951a7fe0f0d8c4c98c36985"
+  integrity sha512-MCNzAp77qzKca9+W/+I0+sEpaUnZoeasnghNeVc41VZCEKaCH73Vq3BZZ/SzWIgrqE4H4ceI+p+b6C0mHf9T4g==
   dependencies:
     "@jridgewell/resolve-uri" "3.1.0"
     "@jridgewell/sourcemap-codec" "1.4.14"
@@ -101,6 +101,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@socket.io/component-emitter@~3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.0.tgz#96116f2a912e0c02817345b3c10751069920d553"
+  integrity sha512-+9jVqKhRSpsc591z5vX+X5Yyw+he/HCB4iQ/RYxw35CEPaY1gnsNE43nf9n9AaYjAQrTiI/mOwKUKdUs9vf7Xg==
+
 "@ster5/global-mutex@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@ster5/global-mutex/-/global-mutex-1.2.0.tgz#fd3ff4e8ceb21f6c1a4d86d536e294157d7e8093"
@@ -125,6 +130,16 @@
   integrity sha512-cdeYyv4KWoEgpBISTxWvqYsVy444DOqehiF3fM3ne10AmJ62RSyNkUnxMJXHQWRQQX2eR94m5y1IZyDwBjV9FQ==
   dependencies:
     "@types/node" "*"
+
+"@types/cookie@^0.4.1":
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/@types/cookie/-/cookie-0.4.1.tgz#bfd02c1f2224567676c1545199f87c3a861d878d"
+  integrity sha512-XW/Aa8APYr6jSVVA1y/DEIZX0/GMKLEVekNG727R8cs56ahETkRAy/3DR7+fJyh7oUgGwNQaRfXCun0+KbWY7Q==
+
+"@types/cors@^2.8.12":
+  version "2.8.12"
+  resolved "https://registry.yarnpkg.com/@types/cors/-/cors-2.8.12.tgz#6b2c510a7ad7039e98e7b8d3d6598f4359e5c080"
+  integrity sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==
 
 "@types/dns-packet@*":
   version "5.2.4"
@@ -152,10 +167,10 @@
     "@types/qs" "*"
     "@types/serve-static" "*"
 
-"@types/lodash@4.14.185":
-  version "4.14.185"
-  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.185.tgz#c9843f5a40703a8f5edfd53358a58ae729816908"
-  integrity sha512-evMDG1bC4rgQg4ku9tKpuMh5iBNEwNa3tf9zRHdP1qlv+1WUg44xat4IxCE14gIpZRGUUWAx2VhItCZc25NfMA==
+"@types/lodash@4.14.190":
+  version "4.14.190"
+  resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.190.tgz#d8e99647af141c63902d0ca53cf2b34d2df33545"
+  integrity sha512-5iJ3FBJBvQHQ8sFhEhJfjUP+G+LalhavTkYyrAYqz5MEJG+erSv0k9KJLb6q7++17Lafk1scaTIFXcMJlwK8Mw==
 
 "@types/mime@*":
   version "3.0.1"
@@ -177,10 +192,10 @@
     "@types/dns-packet" "*"
     "@types/node" "*"
 
-"@types/node@*":
-  version "18.8.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.8.4.tgz#54be907698f40de8a45770b48486aa3cbd3adff7"
-  integrity sha512-WdlVphvfR/GJCLEMbNA8lJ0lhFNBj4SW3O+O5/cEGw9oYrv0al9zTwuQsq+myDUXgNx2jgBynoVgZ2MMJ6pbow==
+"@types/node@*", "@types/node@>=10.0.0":
+  version "18.11.9"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.9.tgz#02d013de7058cea16d36168ef2fc653464cfbad4"
+  integrity sha512-CRpX21/kGdzjOpFsZSkcrXMGIBWMGNIHXXBVFSH+ggkftxg+XYP20TESbh+zFvFj3EQOl5byk0HTRn1IL6hbqg==
 
 "@types/once@^1.4.0":
   version "1.4.0"
@@ -197,10 +212,10 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
-"@types/semver@^7.3.12":
-  version "7.3.12"
-  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.12.tgz#920447fdd78d76b19de0438b7f60df3c4a80bf1c"
-  integrity sha512-WwA1MW0++RfXmCr12xeYOOC5baSC9mSb0ZqCquFzKhcoF4TvHu5MKOuXsncgZcpVFhB1pXd5hZmM0ryAoCp12A==
+"@types/semver@^7.3.13":
+  version "7.3.13"
+  resolved "https://registry.yarnpkg.com/@types/semver/-/semver-7.3.13.tgz#da4bfd73f49bd541d28920ab0e2bf0ee80f71c91"
+  integrity sha512-21cFJr9z3g5dW8B0CVI9g2O9beqaThGQ6ZFBqHfwhzLDKUxaqTIy3vnfah/UPkfOiF2pLq+tGz+W8RyCskuslw==
 
 "@types/serve-static@*":
   version "1.15.0"
@@ -210,12 +225,7 @@
     "@types/mime" "*"
     "@types/node" "*"
 
-"@types/underscore@^1.11.4":
-  version "1.11.4"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.11.4.tgz#62e393f8bc4bd8a06154d110c7d042a93751def3"
-  integrity sha512-uO4CD2ELOjw8tasUrAhvnn2W4A0ZECOvMjCivJr4gA9pGgjv+qxKWY9GLTMVEK8ej85BxQOocUyE7hImmSQYcg==
-
-accepts@~1.3.8:
+accepts@~1.3.4, accepts@~1.3.8:
   version "1.3.8"
   resolved "https://registry.yarnpkg.com/accepts/-/accepts-1.3.8.tgz#0bf0be125b67014adcb0b0921e62db7bffe16b2e"
   integrity sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==
@@ -253,9 +263,9 @@ any-promise@^1.0.0:
   integrity sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==
 
 anymatch@~3.1.2:
-  version "3.1.2"
-  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.2.tgz#c0557c096af32f106198f4f4e2a383537e378716"
-  integrity sha512-P43ePfOAIupkguHUycrc4qJ9kz8ZiuOUijaETwX7THt0Y/GNK7v0aa8rY816xWjZ7rJdA5XdMcpVFTKMq+RvWg==
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-3.1.3.tgz#790c58b19ba1720a84205b57c618d5ad8524973e"
+  integrity sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==
   dependencies:
     normalize-path "^3.0.0"
     picomatch "^2.0.4"
@@ -317,10 +327,20 @@ backoff@^2.5.0:
   dependencies:
     precond "0.2"
 
+balanced-match@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
+  integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
 base64-js@^1.3.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
+base64id@2.0.0, base64id@~2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/base64id/-/base64id-2.0.0.tgz#2770ac6bc47d312af97a8bf9a634342e0cd25cb6"
+  integrity sha512-lGe34o6EHj9y3Kts9R4ZYs/Gr+6N7MCaMlIFA3F1R2O5/m7K06AxfSeO5530PEERE6/WyEg3lsuyw4GHlPZHog==
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -350,7 +370,7 @@ bl@^4.0.3:
     inherits "^2.0.4"
     readable-stream "^3.4.0"
 
-body-parser@1.20.1:
+body-parser@1.20.1, body-parser@^1.20.1:
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.1.tgz#b1812a8912c195cd371a3ee5e66faa2338a5c668"
   integrity sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==
@@ -367,6 +387,14 @@ body-parser@1.20.1:
     raw-body "2.5.1"
     type-is "~1.6.18"
     unpipe "1.0.0"
+
+brace-expansion@^1.1.7:
+  version "1.1.11"
+  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-1.1.11.tgz#3c7fcbf529d87226f3d2f52b966ff5271eb441dd"
+  integrity sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==
+  dependencies:
+    balanced-match "^1.0.0"
+    concat-map "0.0.1"
 
 braces@^3.0.2, braces@~3.0.2:
   version "3.0.2"
@@ -482,6 +510,11 @@ colors@1.0.3:
   resolved "https://registry.yarnpkg.com/colors/-/colors-1.0.3.tgz#0433f44d809680fdeb60ed260f1b0c262e82a40b"
   integrity sha512-pFGrxThWcWQ2MsAz6RtgeWe4NK2kUE1WfsrvvlctdII745EW9I0yflqhe7++M5LEc7bV2c/9/5zc8sFcpL0Drw==
 
+concat-map@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
+  integrity sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==
+
 console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
@@ -509,10 +542,23 @@ cookie@0.5.0:
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.5.0.tgz#d1f5d71adec6558c58f389987c366aa47e994f8b"
   integrity sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==
 
+cookie@~0.4.1:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.4.2.tgz#0e41f24de5ecf317947c82fc789e06a884824432"
+  integrity sha512-aSWTXFzaKWkvHO1Ny/s+ePFpvKsPnjc551iI41v3ny/ow6tBG5Vd+FuqGNhh1LxOmVzOlGUriIlOaokOvhaStA==
+
 core-util-is@~1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.3.tgz#a6042d3634c2b27e9328f837b965fac83808db85"
   integrity sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==
+
+cors@~2.8.5:
+  version "2.8.5"
+  resolved "https://registry.yarnpkg.com/cors/-/cors-2.8.5.tgz#eac11da51592dd86b9f06f6e7ac293b3df875d29"
+  integrity sha512-KIHbLJqu73RGr/hnbrO9uBeixNGuvSQjul/jdFvS/KFSIH1hWVd1ng7zOHx+YrEfInLG7q4n6GHQ9cDtxv/P6g==
+  dependencies:
+    object-assign "^4"
+    vary "^1"
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -528,7 +574,7 @@ debug@2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@4:
+debug@4, debug@~4.3.1, debug@~4.3.2:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
@@ -620,6 +666,27 @@ end-of-stream@^1.1.0, end-of-stream@^1.4.1:
   integrity sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==
   dependencies:
     once "^1.4.0"
+
+engine.io-parser@~5.0.3:
+  version "5.0.4"
+  resolved "https://registry.yarnpkg.com/engine.io-parser/-/engine.io-parser-5.0.4.tgz#0b13f704fa9271b3ec4f33112410d8f3f41d0fc0"
+  integrity sha512-+nVFp+5z1E3HcToEnO7ZIj3g+3k9389DvWtvJZz0T6/eOCPIyyxehFcedoYrZQrp0LgQbD9pPXhpMBKMd5QURg==
+
+engine.io@~6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/engine.io/-/engine.io-6.2.1.tgz#e3f7826ebc4140db9bbaa9021ad6b1efb175878f"
+  integrity sha512-ECceEFcAaNRybd3lsGQKas3ZlMVjN3cyWwMP25D2i0zWfyiytVbTpRPa34qrr+FHddtpBVOmq4H/DCv1O0lZRA==
+  dependencies:
+    "@types/cookie" "^0.4.1"
+    "@types/cors" "^2.8.12"
+    "@types/node" ">=10.0.0"
+    accepts "~1.3.4"
+    base64id "2.0.0"
+    cookie "~0.4.1"
+    cors "~2.8.5"
+    debug "~4.3.1"
+    engine.io-parser "~5.0.3"
+    ws "~8.2.3"
 
 env-paths@2.2.1:
   version "2.2.1"
@@ -766,6 +833,11 @@ fs-extra@^9.1.0:
     jsonfile "^6.0.1"
     universalify "^2.0.0"
 
+fs.realpath@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
+  integrity sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==
+
 fsevents@~2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.2.tgz#8a526f78b8fdf4623b709e0b975c52c24c02fd1a"
@@ -822,6 +894,18 @@ glob-parent@^5.1.2, glob-parent@~5.1.2:
   integrity sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==
   dependencies:
     is-glob "^4.0.1"
+
+glob@^7.1.3:
+  version "7.2.3"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.2.3.tgz#b8df0fb802bbfa8e89bd1d938b4e16578ed44f2b"
+  integrity sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.1.1"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
 
 globby@^11.1.0:
   version "11.1.0"
@@ -908,7 +992,15 @@ ignore@^5.2.0:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.0.tgz#6d3bac8fa7fe0d45d9f9be7bac2fc279577e345a"
   integrity sha512-CmxgYGiEPCLhfLnpPp1MoRmifwEIOgjcHXxOBjv7mY96c+eWScsOP9c112ZyLdWHi0FxHjI+4uVhKYp/gcdRmQ==
 
-inherits@2.0.4, inherits@^2.0.1, inherits@^2.0.3, inherits@^2.0.4, inherits@~2.0.3:
+inflight@^1.0.4:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
+  integrity sha512-k92I/b08q4wvFscXCLvqfsHCrjrF7yiXsQuIVvVE7N82W3+aqpzuUdBbfhWcy/FZR3/4IgflMgKLOsvPDrGCJA==
+  dependencies:
+    once "^1.3.0"
+    wrappy "1"
+
+inherits@2, inherits@2.0.4, inherits@^2.0.1, inherits@^2.0.3, inherits@^2.0.4, inherits@~2.0.3:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/inherits/-/inherits-2.0.4.tgz#0fa2c64f932917c3433a0ded55363aae37416b7c"
   integrity sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
@@ -946,9 +1038,9 @@ is-core-module@2.9.0:
     has "^1.0.3"
 
 is-core-module@^2.9.0:
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.10.0.tgz#9012ede0a91c69587e647514e1d5277019e728ed"
-  integrity sha512-Erxj2n/LDAZ7H8WNJXd9tw38GYM3dv8rk8Zcs+jJuxYTW7sozH+SS8NtrSjVL1/vpLvWi1hxy96IzjJ3EHTJJg==
+  version "2.11.0"
+  resolved "https://registry.yarnpkg.com/is-core-module/-/is-core-module-2.11.0.tgz#ad4cb3e3863e814523c96f3f58d26cc570ff0144"
+  integrity sha512-RRjxlvLDkD1YJwDbroBHMb+cukurkDWNyHx7D3oNB5x9rb5ogcksMC5wHCadcXoo67gVr/+3GFySh3134zi6rw==
   dependencies:
     has "^1.0.3"
 
@@ -1005,10 +1097,10 @@ jsonfile@^6.0.1:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-jsrsasign@^10.5.25:
-  version "10.5.27"
-  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-10.5.27.tgz#481defb1206aa48cd740c3fce8ff546efb5bb45e"
-  integrity sha512-1F4LmDeJZHYwoVvB44jEo2uZL3XuwYNzXCDOu53Ui6vqofGQ/gCYDmaxfVZtN0TGd92UKXr/BONcfrPonUIcQQ==
+jsrsasign@^10.5.27:
+  version "10.6.1"
+  resolved "https://registry.yarnpkg.com/jsrsasign/-/jsrsasign-10.6.1.tgz#dcdfa890241f4cb72e717116f95b5ba9315bfda0"
+  integrity sha512-emiQ05haY9CRj1Ho/LiuCqr/+8RgJuWdiHYNglIg2Qjfz0n+pnUq9I2QHplXuOMO2EnAW1oCGC1++aU5VoWSlw==
 
 lodash@4.17.21:
   version "4.17.21"
@@ -1082,12 +1174,19 @@ mimic-response@^2.0.0:
   resolved "https://registry.yarnpkg.com/mimic-response/-/mimic-response-2.1.0.tgz#d13763d35f613d09ec37ebb30bac0469c0ee8f43"
   integrity sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==
 
+minimatch@^3.1.1:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.1.2.tgz#19cd194bfd3e428f049a70817c038d89ab4be35b"
+  integrity sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==
+  dependencies:
+    brace-expansion "^1.1.7"
+
 minimist@1.2.6:
   version "1.2.6"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
   integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
-minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.6:
+minimist@^1.2.0, minimist@^1.2.3, minimist@^1.2.6, minimist@^1.2.7:
   version "1.2.7"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
   integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
@@ -1157,106 +1256,105 @@ node-fetch@^2.6.6:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-opcua-address-space-base@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-address-space-base/-/node-opcua-address-space-base-2.81.0.tgz#c4ea1f3b538ff4070969704f187381cf6ac050d5"
-  integrity sha512-oFv5q+EYOhVraoxp8QAjfkFQQrBp1Tf/lDkm3G00qgWrXxgMmfigjjs6fb6s3uBEPdflP5YJBIB/3kseB/5CGg==
+node-opcua-address-space-base@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-address-space-base/-/node-opcua-address-space-base-2.85.0.tgz#cae0413ae331f08870597d76589109a04f0d5124"
+  integrity sha512-RWwR7uLP8yRfLpcWLy9FT1r0Ghq3ZqyAG3eDWIX+FqquVX9bqsGAI6osw2+278kb8TKlMjn35X2+nhcaB0+RAA==
   dependencies:
-    "@types/lodash" "4.14.185"
-    node-opcua-basic-types "2.81.0"
+    node-opcua-basic-types "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-date-time "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-schemas "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-date-time "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-schemas "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-address-space-for-conformance-testing@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-address-space-for-conformance-testing/-/node-opcua-address-space-for-conformance-testing-2.81.0.tgz#8214244b8bdb1845bcde0b9d7c2de4807e93dacb"
-  integrity sha512-YR+IfE+CSiSbO7uBpwZXR4Jt9d07zd5JqNU96lrICxtdEDLpXw63+ga2t7yiW8RTaQRk6ciXY3161PfbnJKJdQ==
+node-opcua-address-space-for-conformance-testing@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-address-space-for-conformance-testing/-/node-opcua-address-space-for-conformance-testing-2.85.0.tgz#b3d63d9b019921989bf27cf6143e37fe7282f3fa"
+  integrity sha512-NFx2Dzc8H8ZFB9adJ+d6A9QPv6BQkzUqA0b31fWADtg9IDxMy5MqD+R15dljtmnfb12i+nbCGraZ1/xnVxrhTg==
   dependencies:
-    node-opcua-address-space "2.81.0"
+    node-opcua-address-space "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-data-access "2.81.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-data-access "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-address-space@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-address-space/-/node-opcua-address-space-2.81.0.tgz#b1e340e7462b25854ba9ca658bb97b9e31a7b4da"
-  integrity sha512-GMmUlPR0HC+4qeha9U8IMiQX1286HyGfnhQhTaHQLbCbndfJOcWpqMc+AWBOJL39v80nxppx1W3HTd9UvNQk9Q==
+node-opcua-address-space@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-address-space/-/node-opcua-address-space-2.85.0.tgz#683db1b7f66407cc384ca63d76a288dff22a9e16"
+  integrity sha512-IMmLRRUaoRDe/9RwxBbM89w85/bosTIz+yHMkzmiF8X+ZRxcE9Sky7uV6oPL22C0dpzpuXl3ktwru5WHvsKfBQ==
   dependencies:
-    "@types/lodash" "4.14.185"
-    "@types/semver" "^7.3.12"
+    "@types/lodash" "4.14.190"
+    "@types/semver" "^7.3.13"
     async "^3.2.4"
     chalk "4.1.2"
     dequeue "^1.0.5"
     lodash "4.17.21"
-    node-opcua-address-space-base "2.81.0"
+    node-opcua-address-space-base "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-client-dynamic-extension-object "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-client-dynamic-extension-object "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-data-access "2.81.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-date-time "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-nodeset-ua "2.81.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-pseudo-session "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-history "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
-    node-opcua-xml2json "2.77.0"
-    semver "^7.3.7"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-data-access "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-date-time "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-nodeset-ua "2.85.0"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-pseudo-session "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-history "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
+    node-opcua-xml2json "2.85.0"
+    semver "^7.3.8"
     set-prototype-of "^1.0.0"
     thenify "^3.3.1"
     xml-writer "^1.7.0"
 
-node-opcua-aggregates@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-aggregates/-/node-opcua-aggregates-2.81.0.tgz#1f6d6610a01061bda2c5207d1e748364ad099525"
-  integrity sha512-3fteTmjMbTzXWKi1nBMTMamb2tJOm63cuy2WCahCxILeyM7YNrBPSvA6kGJwffcYmZvJ/Lp+/GrRqVN8UoNR1Q==
+node-opcua-aggregates@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-aggregates/-/node-opcua-aggregates-2.85.0.tgz#49b7d2eb44978b63fda9c6617427ab52091a3bef"
+  integrity sha512-E1ykUQ4lW20e+SmkDXFdmPk95ndv+suaX42n8ZluP12w1ofVv6CVcE0CthYWYs+57OHEgJ9CKJkjjLISGdv5Dg==
   dependencies:
-    node-opcua-address-space "2.81.0"
+    node-opcua-address-space "2.85.0"
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-server "2.81.0"
-    node-opcua-service-history "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-server "2.85.0"
+    node-opcua-service-history "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
 
 node-opcua-assert@2.77.0:
   version "2.77.0"
@@ -1265,133 +1363,132 @@ node-opcua-assert@2.77.0:
   dependencies:
     chalk "4.1.2"
 
-node-opcua-basic-types@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-basic-types/-/node-opcua-basic-types-2.81.0.tgz#29c0f25060db06b5b3430c01a38b358e5fadc808"
-  integrity sha512-t9YcNU42UIqEMjd25ptKYD+k6K1mXwG979BVGxd7mHTtqK13GnMjmEz4e01F4MyRvi60JXzPbeDDVzo4e7JyNg==
+node-opcua-basic-types@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-basic-types/-/node-opcua-basic-types-2.85.0.tgz#766005c29094bdc92bdfeed630e983f15fb8af39"
+  integrity sha512-BnvzMXfiSBKQFR9hnqz6G+lWOImZeEM6hOAjVB8mNY7Km12KlTbYvSLp2r9m2Y+gcMGy9zsTC1zk6PHULBEdgw==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-buffer-utils "2.77.0"
-    node-opcua-date-time "2.77.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-buffer-utils "2.85.0"
+    node-opcua-date-time "2.85.0"
     node-opcua-guid "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-status-code "2.77.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-status-code "2.85.0"
 
-node-opcua-binary-stream@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-binary-stream/-/node-opcua-binary-stream-2.77.0.tgz#baabb71d1f0b863a75b8ed1fc78c0884b10d86d5"
-  integrity sha512-6OgEiMUZ29MIPBP+NHxWaZPzyHQVHW+IN1lG1hf3rjKls9Lvj4M+W0CS4aFzXH/yB6JyqCwpLFIe9ese+b4WUg==
+node-opcua-binary-stream@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-binary-stream/-/node-opcua-binary-stream-2.85.0.tgz#199b5616b99792af75e7cf13f3aa57f5680a6dbf"
+  integrity sha512-9TppC7igu+NmtFH319yGgOdvcKeBflOCmYnQZVdUp+bW2jN5OKkFrAWvigdxPl5SzzK5H5IqwfNorhpbgkWbOQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-buffer-utils "2.77.0"
+    node-opcua-buffer-utils "2.85.0"
 
-node-opcua-buffer-utils@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-buffer-utils/-/node-opcua-buffer-utils-2.77.0.tgz#f3340d2903b6fa1922da31975e04987d54c7319e"
-  integrity sha512-CAAVvwaQtOhJhlcgcQRuuj28GEk9lb2uRrm5RwEu1+KsMogo4FcY+r8N2S7TVyXmbyAi/KtLyQjhqTyYI1uomA==
+node-opcua-buffer-utils@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-buffer-utils/-/node-opcua-buffer-utils-2.85.0.tgz#a32ea3201cfecebee18371484756ac440e616666"
+  integrity sha512-2tP1igjvJh4OgmpVgrXp+3lZevL0mOEa49tZqo47nvr0oZNVvPGMGXHeMomsZy8XVGy6psH0hMpurQJ7fEUa/g==
 
-node-opcua-certificate-manager@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-certificate-manager/-/node-opcua-certificate-manager-2.77.0.tgz#ad1b8f94315d3a32de90242e8d01678efb8e6daf"
-  integrity sha512-v47Loimcua7EdCGYlpiPeUtPmSqJanQzBDEKI1MLugZjaf+T4V4oLxDBddrep8/t1F6R0Q17VRm/otPIKnBgsQ==
+node-opcua-certificate-manager@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-certificate-manager/-/node-opcua-certificate-manager-2.85.0.tgz#414445fe880068f75e3c001edf0143f09cade499"
+  integrity sha512-Hxk0bBC8/GNY+g5XwxKkUz+l++symuH460gwkiMRjKKtcMIMZv4CgU+IwudV2lVWxBTupVRdrDDFdAIXKDLzaQ==
   dependencies:
     "@types/mkdirp" "1.0.2"
     env-paths "2.2.1"
     mkdirp "1.0.4"
     node-opcua-assert "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-pki "^2.17.0"
-    node-opcua-status-code "2.77.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-pki "^2.18.4"
+    node-opcua-status-code "2.85.0"
     thenify "^3.3.1"
 
-node-opcua-chunkmanager@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-chunkmanager/-/node-opcua-chunkmanager-2.81.0.tgz#b1653c50cba66e4d70352924c97212d4970ab3b6"
-  integrity sha512-yGzdDanT6dIQ2wDxwZQ/3ESTmMHJ5FnhWImZRXjtrDR2+yCW8/i7sXIa/nmuOD4HkNDUd/UCxX5i+vpjjqfIPQ==
+node-opcua-chunkmanager@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-chunkmanager/-/node-opcua-chunkmanager-2.85.0.tgz#913e9ce499e04fe0b192911e8ab16014e068af6f"
+  integrity sha512-6NXVMTlwLyv8ivUEnSTdGyE4Q5WmwVtyg4caS9AaaTn5qhKboMinIzsGEJE2LsQU99znvtN14BfZuTFmm0VAsQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-buffer-utils "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-packet-assembler "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-buffer-utils "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-packet-assembler "2.85.0"
 
-node-opcua-client-crawler@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-client-crawler/-/node-opcua-client-crawler-2.81.0.tgz#b75def10bb31c29bdc5aa925d3f17df37bac93ba"
-  integrity sha512-0ODrIH9sp94qBgUxv9n18sRzTwIAypr1RqMsQ2JjGHnzPJxAoF5cgz0vWDBgHyErQjcN5FC80Ct5tOC20pXUhQ==
+node-opcua-client-crawler@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-client-crawler/-/node-opcua-client-crawler-2.85.0.tgz#0a8fb9420f843191cc4cbc652aa8576eb04b0b15"
+  integrity sha512-88Gkm4J+3kqAFM9Smz1/DEuWLIDtgu8lb4je8z4qhH+fIQ3VcJI4swhtUkuItD+Oii+gtWk/WbseYpelpPpMng==
   dependencies:
-    "@types/underscore" "^1.11.4"
     async "^3.2.4"
     chalk "4.1.2"
-    node-opcua-address-space "2.81.0"
+    node-opcua-address-space "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-client "2.81.0"
+    node-opcua-client "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-pki "^2.17.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-pki "^2.18.4"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
     thenify "^3.3.1"
-    underscore "^1.13.6"
 
-node-opcua-client-dynamic-extension-object@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-client-dynamic-extension-object/-/node-opcua-client-dynamic-extension-object-2.81.0.tgz#09da506759e947d0bd532b82207a9ffaba17dc06"
-  integrity sha512-PiIhy9CydLkX4CWQKH4/W4bd0EojQC37IagpTLG1J/A9+FWHd8Q0s4u7b+641+en7eKY2tsSt/IvVb1AYWtTLA==
+node-opcua-client-dynamic-extension-object@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-client-dynamic-extension-object/-/node-opcua-client-dynamic-extension-object-2.85.0.tgz#3d344132361a98fa47199bb17d1c0238f4faa9a3"
+  integrity sha512-P4+eJzFycO7hxNiroNfh6YyFse+ftDZ+qbJefPEmg5jaPq9e3XxherIi3mThoE5vqLAwdg+OovAeXQP2VThRFA==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-pseudo-session "2.81.0"
-    node-opcua-schemas "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-constants "2.77.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-pseudo-session "2.85.0"
+    node-opcua-schemas "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-client-proxy@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-client-proxy/-/node-opcua-client-proxy-2.81.0.tgz#13c61d1400c3f82c8c958343739565d8e199eae8"
-  integrity sha512-IzrWNU2jozAxGljWuFi6fqvrVUj13WuRDFfYSjckZt0eqx9+Y9f197GB1b1VgkIxOTcXqhObyHf5RC65TO6zkw==
+node-opcua-client-proxy@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-client-proxy/-/node-opcua-client-proxy-2.85.0.tgz#218a43838aeb1220a535694ac45e2319d5d61cce"
+  integrity sha512-TMsmrem4vpyGj6T8mpHTZS3ioiw9b1513ugbvIv1b2xQSTC97bWBsA9BCfxOrswVVqv0wl8k5lFT8gsuCudj/g==
   dependencies:
     async "^3.2.4"
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-pseudo-session "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-read "2.81.0"
-    node-opcua-service-subscription "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-pseudo-session "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-read "2.85.0"
+    node-opcua-service-subscription "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
     thenify "^3.3.1"
 
-node-opcua-client@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-client/-/node-opcua-client-2.81.0.tgz#6bfb633e2719e44a35246f43f2df3bd5f89c302a"
-  integrity sha512-sza3oa71uROOQYJMWOW46b2uTWeMiCActJz2B1pZ3BFMcGvb2I1FM+NGsYW54F/GiHhi2Dv8R9MDC8MtY+1ABw==
+node-opcua-client@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-client/-/node-opcua-client-2.85.0.tgz#99529e4ccc3b6ca38226e917c2d0e7a3654134e7"
+  integrity sha512-4eyASna7RJVCp203P/mE4DPol7WEg6ejb5kbpgaSjngopv6aww5ItLVKMI1e7Gz3XmkuLEDHios4rTS9sZqSvg==
   dependencies:
     "@ster5/global-mutex" "^1.2.0"
     "@types/async" "^3.2.15"
@@ -1400,174 +1497,174 @@ node-opcua-client@2.81.0:
     callbackify "^1.1.0"
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-buffer-utils "2.77.0"
-    node-opcua-certificate-manager "2.77.0"
-    node-opcua-client-dynamic-extension-object "2.81.0"
-    node-opcua-common "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-buffer-utils "2.85.0"
+    node-opcua-certificate-manager "2.85.0"
+    node-opcua-client-dynamic-extension-object "2.85.0"
+    node-opcua-common "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-date-time "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-extension-object "2.81.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-date-time "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-extension-object "2.85.0"
     node-opcua-hostname "2.77.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-pki "^2.17.0"
-    node-opcua-pseudo-session "2.81.0"
-    node-opcua-schemas "2.81.0"
-    node-opcua-secure-channel "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-discovery "2.81.0"
-    node-opcua-service-endpoints "2.81.0"
-    node-opcua-service-filter "2.81.0"
-    node-opcua-service-history "2.81.0"
-    node-opcua-service-query "2.81.0"
-    node-opcua-service-read "2.81.0"
-    node-opcua-service-register-node "2.81.0"
-    node-opcua-service-secure-channel "2.81.0"
-    node-opcua-service-session "2.81.0"
-    node-opcua-service-subscription "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-pki "^2.18.4"
+    node-opcua-pseudo-session "2.85.0"
+    node-opcua-schemas "2.85.0"
+    node-opcua-secure-channel "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-discovery "2.85.0"
+    node-opcua-service-endpoints "2.85.0"
+    node-opcua-service-filter "2.85.0"
+    node-opcua-service-history "2.85.0"
+    node-opcua-service-query "2.85.0"
+    node-opcua-service-read "2.85.0"
+    node-opcua-service-register-node "2.85.0"
+    node-opcua-service-secure-channel "2.85.0"
+    node-opcua-service-session "2.85.0"
+    node-opcua-service-subscription "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
     once "^1.4.0"
     thenify "^3.3.1"
 
-node-opcua-common@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-common/-/node-opcua-common-2.81.0.tgz#55ca86a6f536a57d04955ad3262e534c8d6b496e"
-  integrity sha512-6ZWU8hk8yRtQc83MjGUSMnyM2FB8GtSHQg9JB8+rZhWYH6sv+FY96L2vJA570AZNddxbyuw3rbvX8hBS3akmOQ==
+node-opcua-common@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-common/-/node-opcua-common-2.85.0.tgz#73309bf2f0bb45509c52ced8f54ba8e5ef9bfa59"
+  integrity sha512-ydIXFV9gqoF8v8OuTUYz7aFRp9V7FS3gP3RbFD5GHp8PjXgOQ8pZApKWyeLPMD4BjxjaTHrGAAe5FUQNjqtlwA==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-types "2.81.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-types "2.85.0"
 
 node-opcua-constants@2.77.0:
   version "2.77.0"
   resolved "https://registry.yarnpkg.com/node-opcua-constants/-/node-opcua-constants-2.77.0.tgz#3336446d010ecef8ba48198d9bef54cdb935fab1"
   integrity sha512-DZWytWhYi8xqst9y/o7pc+Ba8wvc0gTk9AjZg0fmCe9ANkWZGmRCHjLvw95mE4tk9IY/61k08hj2Pq3X1Ljhcg==
 
-node-opcua-crypto@^1.11.0:
-  version "1.11.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-crypto/-/node-opcua-crypto-1.11.0.tgz#cdcd390b467b1bc1b8eab4996bcc4e180c3702cf"
-  integrity sha512-vaJGnNeOVZvpvpdDN5qrtY4AMKcYcfrhWVzOEKqzJixTVa+Gly9MPBaLq4+Rr4xArz5pel769pp8RKiufW81Hw==
+node-opcua-crypto@^1.12.0:
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-crypto/-/node-opcua-crypto-1.12.0.tgz#d54094e1d718eecf318e0e3032c3609d25e9ce54"
+  integrity sha512-BHip6BRijNmkRhHV2MS/8FGv4+pHmCXuJI0wMaY8Kxau+rX0VuSXAns3nfVyBxvEghTHzuALIbRDrdhrB+1qlg==
   dependencies:
     better-assert "^1.0.2"
     chalk "^4.1.2"
     hexy "0.3.4"
-    jsrsasign "^10.5.25"
+    jsrsasign "^10.5.27"
     sshpk "^1.17.0"
 
-node-opcua-data-access@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-data-access/-/node-opcua-data-access-2.81.0.tgz#0aac0e933812e2675a56adcd97b815a8619fe398"
-  integrity sha512-TBS0p3Q8/yXMmLBt3R//Mj7fk5rzL16W7xDDK5aU0dkdVx4k0vBCLynLrqyZ3yhFL+RRV5d5KqB0V9t0+3h87w==
+node-opcua-data-access@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-data-access/-/node-opcua-data-access-2.85.0.tgz#4a483b91177c82480fdc9821b5e359b3e0c1e4a6"
+  integrity sha512-3Xg87PR0+OGuyrVegKrW5x/XqWM2MOeRop69ySdllG16WO/qfiYjeXBRr96w1kc0l1cLRi71aXPEpIu9WB3Wrg==
   dependencies:
-    node-opcua-data-model "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-data-model@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-data-model/-/node-opcua-data-model-2.81.0.tgz#f3247adadf0b6fac63a020db230783963e539807"
-  integrity sha512-dgtKl3Qd12AiZBVyDNpkZsEChknimKBG7er0cG5Kf5jPT+nMMwIe9Ik9mvAOhMUFclC6A+Oe6mrbsEMXY8Qf0w==
-  dependencies:
-    node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-status-code "2.77.0"
-
-node-opcua-data-value@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-data-value/-/node-opcua-data-value-2.81.0.tgz#867ace4b037cdde3750e5c105a5eb13023d54199"
-  integrity sha512-4B/YWfrU3i8CFcU8r/RtvjIqmv42PrjhnV9Hk2K7SvnY/zi+U6LbCIhwDd0RwO1UPdNtHF7xKk1q/ezQJ9ddBA==
+node-opcua-data-model@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-data-model/-/node-opcua-data-model-2.85.0.tgz#6e546cec08b26188c2c4d44d2389d589edc92b5b"
+  integrity sha512-SBxswQvuhHg7AenRBr0inH6JIG/tpMD2V4r9GEHcanxi/zQNNODJ1HSTtPqpHDanMgjlTnGVc6Cusi9JWLZvTw==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-date-time "2.77.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-status-code "2.85.0"
 
-node-opcua-date-time@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-date-time/-/node-opcua-date-time-2.77.0.tgz#aa5ac3398f31c25f34f682b8fdda9494132064e9"
-  integrity sha512-SXUeHARgMV6Tvny2JQt6riF/VGDxnJHE3z0HdpXCykZnlsfMy+78fc6PrvWOzmRUjFtGH91UYZS/X9kQR7DKQg==
+node-opcua-data-value@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-data-value/-/node-opcua-data-value-2.85.0.tgz#57fa1fe7c37a76bf9cb0b25b49482bcd455b7121"
+  integrity sha512-VXUSSWG+4+YLJbncNwhpDF2cjwgP0DVkianDyQvl/iaom6Bb2ExOHRZ07R5tbcLO1u+tJQz7xPCjIA9AkN9Q1g==
+  dependencies:
+    node-opcua-assert "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-date-time "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-variant "2.85.0"
+
+node-opcua-date-time@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-date-time/-/node-opcua-date-time-2.85.0.tgz#4d4dc2fecbb7620553977b6a83e9e9c7819e30de"
+  integrity sha512-VtIMXRrcaKWYOe1so2zuoMiFWX+8cfUoVuKEETPUOhDM+9JJtp959wXVZ7rPpMT8EpOy3EXPD2EyEfY9wbmKdA==
   dependencies:
     long "^4.0.0"
     node-opcua-assert "2.77.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-debug@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-debug/-/node-opcua-debug-2.77.0.tgz#0709a3d8ae3507bfe834d5e0f2ddb2f3b782ad24"
-  integrity sha512-ufExS03IkJMHgZ3ACqn+oh/YV2srS0cHFYnP3f3F0RgXOG+zP/h88eAXFEpBngbqhEkg6HxqcKCa9zgIy8TZRg==
+node-opcua-debug@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-debug/-/node-opcua-debug-2.85.0.tgz#41e574ad03dc17712d80e9fa35052d528b227d45"
+  integrity sha512-JoLejEoZlC7uhXfWmb5VPa+JiIaLB0ET7I+mzYGH6inpaJsrkmOyMtsfCqLDXvSytWfJLBDZ8tFVvO3rpZYxQg==
   dependencies:
     chalk "4.1.2"
     hexy "0.3.4"
     node-opcua-assert "2.77.0"
-    node-opcua-buffer-utils "2.77.0"
+    node-opcua-buffer-utils "2.85.0"
 
-node-opcua-enum@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-enum/-/node-opcua-enum-2.77.0.tgz#3b25f871361f5224d71142d9490061793d7f8ad4"
-  integrity sha512-AOt4d8WvuYwNl3K/fwXOXKllITEIVI2UjYq91z7sGHHBbyIIR74fOhC1qC8WROY0l1h0pYPlwbDzETngsI9Kug==
+node-opcua-enum@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-enum/-/node-opcua-enum-2.85.0.tgz#105d6ae48f059efa60caefcdfc3537a38eab5d8f"
+  integrity sha512-EBif/cX/S49SdoRGMZ3/kuijZ+7h0bnyqixkgMRpKxTM5LH4E5coysSzHIEI90k7lijEjiB1JtrOr0hfGYU3ZA==
 
-node-opcua-extension-object@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-extension-object/-/node-opcua-extension-object-2.81.0.tgz#df4ac2ecd8713732604a8bff7ae3e9e2d87490c4"
-  integrity sha512-S04nBHrQC7HzOYThCj6ie86zIFssVQtZuXw3NPNXTQO/RHuYW7zicBvaBR9xLJPwJvuQgWAa/89PzSfwX4FS2Q==
+node-opcua-extension-object@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-extension-object/-/node-opcua-extension-object-2.85.0.tgz#038e8549ce4e9a71c97112f1c7f12fe98b3cb319"
+  integrity sha512-3eSg/eLc9RmZdepA/ft+EtCGU0fetFMWIjPx7TbhTi2gElaxkDd/XHLknDSlYOEmUBMKcXkxT3+5mkxTw3CSrg==
   dependencies:
     chalk "4.1.2"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
 
-node-opcua-factory@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-factory/-/node-opcua-factory-2.81.0.tgz#97af10bc37b372a3c659ee5e7faf41782b24b014"
-  integrity sha512-hrRcecUe2Ita8xV8VQZHhLDHIJPJmMlDgAROo6PUf941vBC8vRiP/W+W7dMX6Jxv+yAKGCzQM8AhZQcqII303g==
+node-opcua-factory@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-factory/-/node-opcua-factory-2.85.0.tgz#ab3e50bb9786115d5bcedf3c742b4e87ae00ba0c"
+  integrity sha512-BnR4lepavtfOtE50jMjc21LyHDpD7/r/eW7Cjsi7KYd5KReJ6SlaZcCgGmKxWzs1xBBChHXP5cjSIm4ZPQY+Rw==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-enum "2.77.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-enum "2.85.0"
     node-opcua-guid "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-generator@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-generator/-/node-opcua-generator-2.81.0.tgz#3daae1c5388aff274f859405c0e5ab4552894fea"
-  integrity sha512-0QJQbOkKia0/s/FQIfm3Mhrz7EPreYINcBwiGGzvbSA0PWCKmhZg8cicfFi3UeCL4S9P6rj2Y8JZt7bjfpg2Vw==
+node-opcua-generator@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-generator/-/node-opcua-generator-2.85.0.tgz#e395b2d1f76f2b11b2c84a81b85e23d1e318ea32"
+  integrity sha512-ONaVgRVVggQ+4aUHwSK4/wfU85GPSG+ZJnWr3aRpW5BvjFOlVVK5XRvxxwrUWeXfen2vy63lbE1E9MgANU9yQg==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-schemas "2.81.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-schemas "2.85.0"
+    node-opcua-utils "2.85.0"
 
 node-opcua-guid@2.81.0:
   version "2.81.0"
@@ -1579,82 +1676,79 @@ node-opcua-hostname@2.77.0:
   resolved "https://registry.yarnpkg.com/node-opcua-hostname/-/node-opcua-hostname-2.77.0.tgz#82d5463fbb0dff40714c021f76a124dfb770361e"
   integrity sha512-cZwoJcfchI7cJy6aF4mazrQfASJIbPtGPpyahUrI4hD07oIrI4SnmF9m3Wyy2c9BUz7uOjpkaTDY6qC19c3vlA==
 
-node-opcua-nodeid@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-nodeid/-/node-opcua-nodeid-2.81.0.tgz#57b963553be7e8d4c149041092d26ab3539c02c0"
-  integrity sha512-zYdIWRzbMmKJC7afWuq/93f9rfXJCUPxrIi2oYC7lJ7zqyUvsLp0QRMgccW+mOiYgHaPg2aNHWKxGb6CR4VH/Q==
+node-opcua-nodeid@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-nodeid/-/node-opcua-nodeid-2.85.0.tgz#38ab4837c3bdfc64d63f24bbd49bdbabd4057799"
+  integrity sha512-a5Wb/z3YQv2bbliJ4p0YslQtdF08M+ZGudGexOmSLLLBEKmtNdQifRG5wWUExW0BxJf/+zR94AJNy24TS34vXA==
   dependencies:
-    "@types/lodash" "4.14.185"
-    chalk "4.1.2"
-    lodash "4.17.21"
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
     node-opcua-guid "2.81.0"
 
-node-opcua-nodeset-ua@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-nodeset-ua/-/node-opcua-nodeset-ua-2.81.0.tgz#ec32094fe7c39fe1ee95517f396e29d5dcdaad34"
-  integrity sha512-QOPyNfUZZfHYNZo9/3xRgnb3rblMlhR4mXxIqERtkHL4lBX05MSNkuIkSRBY9JhDiRYbrHrahWL2V3XRgxUQ9Q==
+node-opcua-nodeset-ua@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-nodeset-ua/-/node-opcua-nodeset-ua-2.85.0.tgz#85a1a163bed808d85c43420e1e4608d9e81ac9c2"
+  integrity sha512-hvoZprD2HrN6BGA+RV0BMM/oDQB0TuKmeRK4890DKgipU671vr4khanjs3OGHe94firn4fj8/ifkbso3KZGAlg==
   dependencies:
-    node-opcua-address-space-base "2.81.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-data-access "2.81.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-address-space-base "2.85.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-data-access "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-variant "2.85.0"
 
 node-opcua-nodesets@2.77.0:
   version "2.77.0"
   resolved "https://registry.yarnpkg.com/node-opcua-nodesets/-/node-opcua-nodesets-2.77.0.tgz#337af65f42a1a4f485f6689d791f74f4d4809150"
   integrity sha512-c/dZmU49VcjeD4n7Rjvbtc6G+zmwNNlQxYK7oEIlz37Awppj18bg8wb4HV/sdrJxIlSz5rBYabI3Y3owKD/BDw==
 
-node-opcua-numeric-range@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-numeric-range/-/node-opcua-numeric-range-2.81.0.tgz#a4e310108fe0806c81c6de8b356f5a296183dd08"
-  integrity sha512-oE7grDmC5FMNz/CeWl1Z5xpYWItYAW4XL6Hk7Ku7d5I+g9NDjCBfvnVb6Az1YT5YEMAT/hj5IoztZZ/JLK4X5g==
+node-opcua-numeric-range@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-numeric-range/-/node-opcua-numeric-range-2.85.0.tgz#301dcf769977c76395e8a0abad97b42e6a6457be"
+  integrity sha512-8qfR+m6gSpEUXtwMED8U8P/r18Ed3+UNE10+tnjOl6/XK/zLv/OR2iPU5yXmSsy7LD9Ko0rAyvF7VH8WfuETNw==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-status-code "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-status-code "2.85.0"
 
-node-opcua-object-registry@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-object-registry/-/node-opcua-object-registry-2.77.0.tgz#08a2ec6a07419094e15b45d691592ff52bc89a37"
-  integrity sha512-cNCOijWWKleEyMBL9SfARraeitK6kf4l0JRLcC2aaGtZHNJDVs7l5TR0OGkO6pfRi2P1ercs+6CT+iaubBUnqw==
+node-opcua-object-registry@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-object-registry/-/node-opcua-object-registry-2.85.0.tgz#3a058fe52d94cb8df4177722c01e3425aa26bba7"
+  integrity sha512-d5z1Cr688D4vCQsLmvI6bqDvcnHBuE++sCCY0LXl5gP3tTIDbC6/UNlX337eG8OxJsnMgEevZNgwBGCC9Cw4iw==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-debug "2.77.0"
+    node-opcua-debug "2.85.0"
 
-node-opcua-packet-analyzer@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-packet-analyzer/-/node-opcua-packet-analyzer-2.81.0.tgz#f3ed69535dfce296fe8e8d0d7e4ce6e812c0bb66"
-  integrity sha512-AMhGDkfSr5XzZOp1gDp9hz0Fv7B4Mck8cGqJTuf2Ay6TzsnPElSauQpNp4za4rt7fZ8JSNI3ucfHgZUXiExEIw==
+node-opcua-packet-analyzer@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-packet-analyzer/-/node-opcua-packet-analyzer-2.85.0.tgz#c490f422dbf9c5a014d2c01d112e69b7b883168b"
+  integrity sha512-t9Pp+oiruryZmfE4sHiGgi7oAjGrGmZqyMWmPeodQBojjc8AG9I5hR2Fp1tfCxlsxAp7OD0WYWAnspDfUReEfg==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-packet-assembler@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-packet-assembler/-/node-opcua-packet-assembler-2.77.0.tgz#07b6b956af27b350425fd2fe7ecee16316f7432a"
-  integrity sha512-SFflyoiIVwZz30xT+z2Buz1km5lcZpx0Hlu/ZmYs2W/usVav2VPDYsAbvfCTkl40BjPYiVI+zTma+W0ixoeE+g==
+node-opcua-packet-assembler@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-packet-assembler/-/node-opcua-packet-assembler-2.85.0.tgz#f0a3b15303da6e581dc435cb944e2b2f35e86f6e"
+  integrity sha512-Yd6QxItWuXwlbEKIDOYpJJh62fic4SNoF5/clsDPxWudV6KCmXSHCcVFmyaLK+9BjRYLFFklndMkCKMUfusMvQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-debug "2.77.0"
+    node-opcua-debug "2.85.0"
 
-node-opcua-pki@^2.17.0:
-  version "2.17.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-pki/-/node-opcua-pki-2.17.0.tgz#10b72ee1c368b3beac09871fd3c1b9f71c968525"
-  integrity sha512-CXyy2CuIV7L8VGZ+LL6HeQ/jOph/AjJ/h6/qBvs3Wsowt5Ay7VN1stO0/SDjJX/o7LysIpLuXaxrs97g+Fq/ew==
+node-opcua-pki@^2.18.4:
+  version "2.18.4"
+  resolved "https://registry.yarnpkg.com/node-opcua-pki/-/node-opcua-pki-2.18.4.tgz#91c282965af67ab4dd49b6093e430e8ccb114f81"
+  integrity sha512-sPjZshG1JYBcr5/v7Ajt3qdqywJH8MqFcRgz44Cwy4zS7mnJstKK07T75WETRXp95fbq3iw2hohjDkukikmNbg==
   dependencies:
     "@ster5/global-mutex" "^1.2.0"
     async "^3.2.4"
@@ -1662,444 +1756,446 @@ node-opcua-pki@^2.17.0:
     chalk "4.1.2"
     chokidar "^3.5.3"
     cli-table "^0.3.11"
-    minimist "^1.2.6"
-    node-opcua-crypto "^1.11.0"
+    minimist "^1.2.7"
+    node-opcua-crypto "^1.12.0"
     progress "^2.0.3"
+    rimraf "^3.0.2"
     thenify "^3.3.1"
     wget-improved-2 "^3.3.0"
     yargs "17.5.1"
     yauzl "^2.10.0"
 
-node-opcua-pseudo-session@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-pseudo-session/-/node-opcua-pseudo-session-2.81.0.tgz#5dbb38b654a3f8fd6506cef985f3463ab28a9890"
-  integrity sha512-p5Ql0VUR7VN/EnEICJG0J5OJUov+PSXT1ufYXDiZGfoIAusrMKhWLXzCQvk7U/XWEgObQsTUfwwfLgGxyoFtoA==
+node-opcua-pseudo-session@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-pseudo-session/-/node-opcua-pseudo-session-2.85.0.tgz#8d10e27daf1c46197772798323df864d262888ab"
+  integrity sha512-eRr+473CMmFEvy+njPoBaO7lxiEj7byAotMColXYZghYcEi7DxqNWx0T7NSFZoUBiRJaVnjW3jm9erFEFpfWhA==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
+    node-opcua-basic-types "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-read "2.81.0"
-    node-opcua-service-subscription "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-read "2.85.0"
+    node-opcua-service-subscription "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
     thenify "^3.3.1"
 
-node-opcua-schemas@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-schemas/-/node-opcua-schemas-2.81.0.tgz#d10eea443481337f32c514921d02264e16ef322d"
-  integrity sha512-QXNJ4KUHl4oV5TyNDTO/Gz7gBfKd5fcsCbwb+Na9SlQQuN60HMF7jSttQDbLcxa31jRLX6TWK3OwxQP2gZ6d+A==
+node-opcua-schemas@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-schemas/-/node-opcua-schemas-2.85.0.tgz#c7d0f9cef4734e21d5b54806c5a1596a46ea5708"
+  integrity sha512-GVSVvzOQyzeLRXZb1PwcAxEkGtVDTTKs8AX8dINfB2V+3Qs4ZeJJSylaDGDtS5x1t73VHWn7pA9Xm7IGjv4w9w==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-variant "2.81.0"
-    node-opcua-xml2json "2.77.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-variant "2.85.0"
+    node-opcua-xml2json "2.85.0"
 
-node-opcua-secure-channel@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-secure-channel/-/node-opcua-secure-channel-2.81.0.tgz#5d842cd0a9b2f615b1ffb04854edddb8d0cb0da1"
-  integrity sha512-divsfIhurCpaPEeCo7VZM7acj7ECk+nkgPjTReG0ILYyZucJ9MaY4s8eTpVp8AEyrVoXZsBkH1pgn078SMJl9g==
+node-opcua-secure-channel@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-secure-channel/-/node-opcua-secure-channel-2.85.0.tgz#bdcc108d3907bb8b9e59a69846a0a6d896a9ed06"
+  integrity sha512-jeB2LuVnNGD2cxlc9EAvv+M4EU3dMxo6L13xh0WUtoFBeVMPmPNaCtHMbvSLVSwcS+yvHqLxmzHTKz9wSgYLng==
   dependencies:
     async "^3.2.4"
     backoff "^2.5.0"
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-certificate-manager "2.77.0"
-    node-opcua-chunkmanager "2.81.0"
-    node-opcua-common "2.81.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-packet-analyzer "2.81.0"
-    node-opcua-service-endpoints "2.81.0"
-    node-opcua-service-secure-channel "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-transport "2.81.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-certificate-manager "2.85.0"
+    node-opcua-chunkmanager "2.85.0"
+    node-opcua-common "2.85.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-packet-analyzer "2.85.0"
+    node-opcua-service-endpoints "2.85.0"
+    node-opcua-service-secure-channel "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-transport "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-server-discovery@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-server-discovery/-/node-opcua-server-discovery-2.81.0.tgz#e43241a6e131977c8f45d6094fa0e598cd79a105"
-  integrity sha512-Bjmjk7z6QA/+lAKqWyKg36YtY/IeqV9TGDtMYdpF9k1JPtNEn8aOgKf/p9KTnLmRSP72Z7aNwYaUV/Oao9apYQ==
+node-opcua-server-discovery@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-server-discovery/-/node-opcua-server-discovery-2.85.0.tgz#20df48edf601b1ef51e05ada5f9dd819fbaea8b0"
+  integrity sha512-BDLIksuPsH8y37mC7mXtEY9x0j0Z2n878QQ3rZ9nx6/uPhz/TbEKYP69YMNA983bsGcuM6JQLIxqgaq2jSO8fw==
   dependencies:
     chalk "4.1.2"
     env-paths "2.2.1"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-certificate-manager "2.77.0"
-    node-opcua-common "2.81.0"
-    node-opcua-debug "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-certificate-manager "2.85.0"
+    node-opcua-common "2.85.0"
+    node-opcua-debug "2.85.0"
     node-opcua-hostname "2.77.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-secure-channel "2.81.0"
-    node-opcua-server "2.81.0"
-    node-opcua-service-discovery "2.81.0"
-    node-opcua-service-endpoints "2.81.0"
-    node-opcua-status-code "2.77.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-secure-channel "2.85.0"
+    node-opcua-server "2.85.0"
+    node-opcua-service-discovery "2.85.0"
+    node-opcua-service-endpoints "2.85.0"
+    node-opcua-status-code "2.85.0"
     sterfive-bonjour-service "1.1.4"
     thenify "^3.3.1"
 
-node-opcua-server@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-server/-/node-opcua-server-2.81.0.tgz#0d4d2c93a765acc425c99573fd000b4618da3323"
-  integrity sha512-s0zdFtu6s0DVXHfMsoqbGcgqg4qbPVuQ73jxd3rUg2+IF6ll08PDZ7i0IpLQNjHU9DLZqP4x1GQxg4TZy3T8GQ==
+node-opcua-server@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-server/-/node-opcua-server-2.85.0.tgz#649ba50ed5c7051f60eebb0d05c54fd4ae9521e4"
+  integrity sha512-UqrvHgC9ZAdKxadWZZ5l4yx0TI+y7S5r20O4KjP0RzhtitMF/A5ll+U9w3MkOkHLSn3o9VDRj0F02LRzi+KO/g==
   dependencies:
     "@ster5/global-mutex" "^1.2.0"
     async "^3.2.4"
     chalk "4.1.2"
     dequeue "^1.0.5"
     lodash "4.17.21"
-    node-opcua-address-space "2.81.0"
-    node-opcua-address-space-base "2.81.0"
+    node-opcua-address-space "2.85.0"
+    node-opcua-address-space-base "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-certificate-manager "2.77.0"
-    node-opcua-client "2.81.0"
-    node-opcua-client-dynamic-extension-object "2.81.0"
-    node-opcua-common "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-certificate-manager "2.85.0"
+    node-opcua-client "2.85.0"
+    node-opcua-client-dynamic-extension-object "2.85.0"
+    node-opcua-common "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-date-time "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-factory "2.81.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-date-time "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-factory "2.85.0"
     node-opcua-hostname "2.77.0"
-    node-opcua-nodeid "2.81.0"
+    node-opcua-nodeid "2.85.0"
     node-opcua-nodesets "2.77.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-secure-channel "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-discovery "2.81.0"
-    node-opcua-service-endpoints "2.81.0"
-    node-opcua-service-filter "2.81.0"
-    node-opcua-service-history "2.81.0"
-    node-opcua-service-node-management "2.81.0"
-    node-opcua-service-query "2.81.0"
-    node-opcua-service-read "2.81.0"
-    node-opcua-service-register-node "2.81.0"
-    node-opcua-service-secure-channel "2.81.0"
-    node-opcua-service-session "2.81.0"
-    node-opcua-service-subscription "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-secure-channel "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-discovery "2.85.0"
+    node-opcua-service-endpoints "2.85.0"
+    node-opcua-service-filter "2.85.0"
+    node-opcua-service-history "2.85.0"
+    node-opcua-service-node-management "2.85.0"
+    node-opcua-service-query "2.85.0"
+    node-opcua-service-read "2.85.0"
+    node-opcua-service-register-node "2.85.0"
+    node-opcua-service-secure-channel "2.85.0"
+    node-opcua-service-session "2.85.0"
+    node-opcua-service-subscription "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
     thenify "^3.3.1"
 
-node-opcua-service-browse@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-browse/-/node-opcua-service-browse-2.81.0.tgz#e9a30605f9d2ecbe5a5eec0dc4d8cccd150f13da"
-  integrity sha512-2wGj40HbDOgV183aYX5I/JhM5BNG77xd/+TOg7CM1pPE4IVkojD/Y3KgMAhaaBuEbWN0UdKsXj2nOR7Dqj9GCQ==
+node-opcua-service-browse@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-browse/-/node-opcua-service-browse-2.85.0.tgz#26ea6e8b4e997a71120a9581725720600da58d38"
+  integrity sha512-r3LuyaXshte4AR184VI91QP2ijWgDsbYkHT5o4f/zZBj6hArxIbS0b6hlQhKccoqbjZKMDBtUzg4dcgopOxDJA==
   dependencies:
-    node-opcua-data-model "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-call@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-call/-/node-opcua-service-call-2.81.0.tgz#a88cb6219c10dce5672ff21503515b1d130d0c0c"
-  integrity sha512-4wkv2ZWCgDF0KPGWqyqPPkdc183KRn36TKXBDsXRtkgjocCpr1FaPaULx8Mrf1EOAQGOovyH/ygBmtlyYSoc9w==
+node-opcua-service-call@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-call/-/node-opcua-service-call-2.85.0.tgz#1681e89194d47dba6b4bac5d182e8c7f1748fef3"
+  integrity sha512-xeBdqMoUYafsmm5gWxa7oKOt9UzoQkaCNtAyyXDnowcDYVzNF8u8LT8yC0xUzdHQKFzjlTPEz8ngpdoh+WmUxQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-service-discovery@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-discovery/-/node-opcua-service-discovery-2.81.0.tgz#1db78391852ea4d096178335b800ab23ab0e1334"
-  integrity sha512-gb1qqztdWVxjrmsk0TkLmP3WbBxeOUck6y+kW3SCrQTzY5b84w/G+einknSwJsJBFvXEYn5XO/sVliZilij4bg==
+node-opcua-service-discovery@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-discovery/-/node-opcua-service-discovery-2.85.0.tgz#fa9b9c133a20e0d12889cd0986f3f77c645279c4"
+  integrity sha512-qmfVyXkrfADRdB1BBz+n0LFL1nYwZrP3iCPTGgmIluDX2uAZFEZSr4lF/DAFyKhLqesGwMHq6+akSABmqOmYeQ==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-types "2.81.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-types "2.85.0"
     sterfive-bonjour-service "1.1.4"
 
-node-opcua-service-endpoints@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-endpoints/-/node-opcua-service-endpoints-2.81.0.tgz#4a7a8e8badbf3f23d638a2e42afc537dc34b4933"
-  integrity sha512-x7Kst5TqYC4ovWnPIE3Ly5g6uY3LswGa1R5KdkY/feeDWOsqpIqdWu+pkfliPXljAnMxv/QZ1sfQCrIvdE9qrg==
+node-opcua-service-endpoints@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-endpoints/-/node-opcua-service-endpoints-2.85.0.tgz#b706fd1eae68b97166b432825e9e6985e529f97e"
+  integrity sha512-OnBANeE/cRIMno4AhlwRn4dfU44Bh96ks6Ar67AdSLNFejRLBl2x+ao3dNs+ivxyRxiaq4o7OrtS5jwvBv9F/A==
   dependencies:
-    node-opcua-types "2.81.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-filter@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-filter/-/node-opcua-service-filter-2.81.0.tgz#d1cd4e7bde237b1f6a028d3c589d8b00139d3d54"
-  integrity sha512-D1w1xvQ9FxhXd6s/2VY/euZsiQ5FO0D+cVqo4Wh4CvRcePUkOz4TbBa+i1RCcuj7E2/c67mty6OTgUOd/NGWMA==
+node-opcua-service-filter@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-filter/-/node-opcua-service-filter-2.85.0.tgz#f96243bba747d9d36976f95921df149a681b0951"
+  integrity sha512-WGUm83JwWPefN963XOxU8S4B5+1fIV2ZN9KU7JStULg17wz3uFvdP0nuFq1BpeLqti6kbH3fD+CA9uUeUI/BVw==
   dependencies:
-    node-opcua-address-space-base "2.81.0"
+    node-opcua-address-space-base "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
+    node-opcua-basic-types "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-service-history@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-history/-/node-opcua-service-history-2.81.0.tgz#c837b7394fd7d43b80c78a0a0590c38834a3d13c"
-  integrity sha512-mddcqojh/d6tACK85IvIE12ElyI0xZ2zY9L2iZ5h6haJ6j73mqVgFzT3OZEb3A6m5krJTz9izdeUGxgb/QSTTQ==
+node-opcua-service-history@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-history/-/node-opcua-service-history-2.85.0.tgz#7c61837b06d9cbd806eb8f09b0d52eff5d98238d"
+  integrity sha512-vXP+kFERm0CTab7qqtebW7HOH9p/4COR5KRk9EvFAXsGTDcCjvlzp2vEl6nKcMXmgse5gpoSsoEBou8kyhiTkw==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-node-management@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-node-management/-/node-opcua-service-node-management-2.81.0.tgz#9f2a124a0f96ccb536dcc6a5b56e0d247d28ed70"
-  integrity sha512-5IiBOY0eIECzvBLilIrXy1XboJJ7v4qZ31vEZY3TscpoMrWJ/fJA8IiyIwRtbEBX8fIR8P0mkiuPjEL4Vu1Alg==
+node-opcua-service-node-management@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-node-management/-/node-opcua-service-node-management-2.85.0.tgz#19be19701c413b6daada9030957af0302f9ae5a1"
+  integrity sha512-vQ7UnnqyHesgJODSfneizmtHLDPodn/Sd2HALzoRU2S6Q+pU3yPf3UDejy+LnU/eZdsXdDhEK3K2g2LhKguruQ==
   dependencies:
-    node-opcua-types "2.81.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-query@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-query/-/node-opcua-service-query-2.81.0.tgz#e8f0521804a6aee77306c99cddafacc05d9d843c"
-  integrity sha512-L5a+92A2n5t0edDVVdHjmdJ8sH72/eFZM4IGNcKvAZFk9mb+F5ceaZGT0ixmsYK7EWuzflqwzRKogy+zPdr9gg==
+node-opcua-service-query@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-query/-/node-opcua-service-query-2.85.0.tgz#117a858abb2f48f6862745e3d4f7751e55947ad3"
+  integrity sha512-j99jPprGwOlJoL7ngB4TXBnkCI07K4ewGa8Zltv5iIAqcq8pk8igdmsclgMu87RigOMu0my62G4541gt4hxcHQ==
   dependencies:
-    node-opcua-types "2.81.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-read@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-read/-/node-opcua-service-read-2.81.0.tgz#3c4f4be24a9e3ca8246e87a4a49811d8ca7023de"
-  integrity sha512-3+2NHbyuoxBPkO52P2Li5UjLCfq/bkYzBAcj+cKOJUe5otjBr00LJE0VmMGj3u7jmKDCUdOYRDDW9A1mgIExTw==
-  dependencies:
-    node-opcua-assert "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-service-secure-channel "2.81.0"
-    node-opcua-types "2.81.0"
-
-node-opcua-service-register-node@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-register-node/-/node-opcua-service-register-node-2.81.0.tgz#0dd5d98057e4fca0b7d1865e4f2990c559a1f132"
-  integrity sha512-WTD4tpTlkDLWbVnnsh1XyNPuJAtvMO6YyhzXmkwRsLVucIYIdYXyy1M3GjEFtywoLjkm8MvI3NFP2ONuTbJQIg==
-  dependencies:
-    node-opcua-types "2.81.0"
-
-node-opcua-service-secure-channel@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-secure-channel/-/node-opcua-service-secure-channel-2.81.0.tgz#b6101822ab02f5ac7a2069047464607576987a13"
-  integrity sha512-+TOZEXaqXg9XgAXyRGDcfHhUfh1Zx9zW1BzVjqDK6DJI4uwZbpmxlVz4m18kIco53EPoQ7M9iVWLx6RJkqwLYg==
+node-opcua-service-read@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-read/-/node-opcua-service-read-2.85.0.tgz#af32af02e2ff51ed520df9e9978774a28f7b4c5b"
+  integrity sha512-NPrbQJaSr9q7An4XRmq0pCR+c03o8QoyCX64mDTsrahzq3aM39FcdrwxJZhdHXb7Co7K1C94uQodQGvJrscasg==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-service-secure-channel "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-session@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-session/-/node-opcua-service-session-2.81.0.tgz#38fbcd5850a5dc3f258c9de24ea16d2192551138"
-  integrity sha512-ztWpHTcBpvuBrpRr7FR4OeICEW+/e3zexrqHMG2TZmO2WgThLqqiBuj31qTI4zppYPcUEb7S8aj5bs4gwNoG3g==
+node-opcua-service-register-node@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-register-node/-/node-opcua-service-register-node-2.85.0.tgz#947cae0dba1aba9d300ea7f51416af6ebfbf9b4c"
+  integrity sha512-u7b1OYo6Um6PHrTnhFhgMV1Db/180lv4keI3DiPKJTfU2HhJ5gArhcWYVDHxkvqm0JbK1WI62syGonJFTHtE3Q==
   dependencies:
-    node-opcua-factory "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-subscription@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-subscription/-/node-opcua-service-subscription-2.81.0.tgz#e983f53771841938df74b8ebd7dcf3cfb216e47e"
-  integrity sha512-kaT7EZWvLrqi+bP49skUyflPZ7LCKUYH0PD8z6myR6rDgT+KRooozfZt5AHFJ4ItNI6kLaBg4jzU/DhHawo5oA==
+node-opcua-service-secure-channel@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-secure-channel/-/node-opcua-service-secure-channel-2.85.0.tgz#6012de638638f3b0c903caf8b351d607165938b4"
+  integrity sha512-A3ACa8ItfLS3qI3F+Anet6m5da1WI1v1aWtSistKmSWs+6KoW7aJizGhu7EwzgVKHs7P4cg1xrcX1dz3mOdeqA==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-types "2.81.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-translate-browse-path@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-translate-browse-path/-/node-opcua-service-translate-browse-path-2.81.0.tgz#72e96304cfcb309394d37081dd03ae2723e57479"
-  integrity sha512-0nvMKvdnDBtTKPsoKwXtTS0DN9ftxW6BDccTw9Iqt/ZYwEQe2LbUnv+gg+E1TdmFCpktiF+R2SAR1oYYt4l68Q==
+node-opcua-service-session@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-session/-/node-opcua-service-session-2.85.0.tgz#ba5d0e3cd404694309c8f515b8431d0798a5186d"
+  integrity sha512-GLBuDMWA0SgC/1nhERRFK9tW0jScgQDD+HVK3lSOr9jeTtHKGIAl9hjbfo77J+kVIC54/qq6+yS5kzSv8ADmag==
+  dependencies:
+    node-opcua-factory "2.85.0"
+    node-opcua-types "2.85.0"
+
+node-opcua-service-subscription@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-subscription/-/node-opcua-service-subscription-2.85.0.tgz#6ec5f3ff1d773e26512d679f403f21b7d9cbba6f"
+  integrity sha512-QXxbPTJlevATNrc472LOzEX2EVDEiUFGfAsfFtLtmhBBIRb3rNdDlUB7gpQkMGqVux196dTX912FhP+zLgbtPQ==
+  dependencies:
+    node-opcua-assert "2.77.0"
+    node-opcua-types "2.85.0"
+    node-opcua-variant "2.85.0"
+
+node-opcua-service-translate-browse-path@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-translate-browse-path/-/node-opcua-service-translate-browse-path-2.85.0.tgz#29e250a1e5e7c03e93f0eff907f93aeac8f0f1a2"
+  integrity sha512-5jBv5brkp1LhcwvRkvWsw//Excvqev7TY32LaTP7WVnsQWaL9bJePARnBvJ03+8uOVCtuli66/Lkysu747YVUg==
   dependencies:
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-types "2.81.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-service-write@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-service-write/-/node-opcua-service-write-2.81.0.tgz#9691ed9599d3b1bb8f432cb5a015707493adffac"
-  integrity sha512-lL6FKexyG3KpMk+ulE9n5hy5m8/U2txytbUBZjQpxeQ/hPxDgnVP2OsG+IoCW8uUDfOs3HC88RlLgmY0P106iw==
+node-opcua-service-write@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-service-write/-/node-opcua-service-write-2.85.0.tgz#bece596968491c57f832d2afc8638c49ecc7910d"
+  integrity sha512-IpvuOBAMLFkRqF5UyBQeLxWcgGU1o0LLGvylEkUjLeD2pegJTwz+VHMP3bB92lKKXyTWTCneISyP0wEn+/7UCA==
   dependencies:
-    node-opcua-types "2.81.0"
+    node-opcua-types "2.85.0"
 
-node-opcua-status-code@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-status-code/-/node-opcua-status-code-2.77.0.tgz#d4e3f5405a156540b299261329b9fdc127969b71"
-  integrity sha512-HSjZBLz+S6bvJecTz8lKkKvz7mejPYTLEDIJ+3u03tYAhu8NGLU67fk34KqTZhypFrZ7jHvEYtbGBFGUCWLh3Q==
+node-opcua-status-code@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-status-code/-/node-opcua-status-code-2.85.0.tgz#89b58c990f3c09563e428c2182ed3924b7d3e155"
+  integrity sha512-qaOo4r0BdEcciFVN+46dV6PXAs/OmQbMMwwd1MZtT5RyWmgp90oGNw0Q0PEjUWNP/YaBxUwle91sHEGPbc+QrQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-binary-stream "2.77.0"
+    node-opcua-binary-stream "2.85.0"
 
-node-opcua-transport@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-transport/-/node-opcua-transport-2.81.0.tgz#4bf3b0082f6c6142f7cf7eea7114da1738f3c16c"
-  integrity sha512-aVFCyVK32k0eUvRj3zcFrGCwvksIqiN2YSVKwdMM62Nn4k5A02w7qDmt1F37DsIfakffh2Tj7njz5oQfHt3z9g==
+node-opcua-transport@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-transport/-/node-opcua-transport-2.85.0.tgz#5726ee73f6faf4ffe9af21d19b878eed79b6c2b3"
+  integrity sha512-fdHTuDkfFKtLONyEgYSPRfj9RLKfvBsSBqML6iQcLayn+66/pkk/NWPnbae131EXLMYcBZRwD1jlI0RIWvsM8Q==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-buffer-utils "2.77.0"
-    node-opcua-chunkmanager "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-object-registry "2.77.0"
-    node-opcua-packet-assembler "2.77.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-buffer-utils "2.85.0"
+    node-opcua-chunkmanager "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-object-registry "2.85.0"
+    node-opcua-packet-assembler "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-types@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-types/-/node-opcua-types-2.81.0.tgz#02d13a3dd9233493a2a0a0e89ecce0b3699b1c40"
-  integrity sha512-J4Pypg9gI8NAGqQvTnwEbLPXeNZCsWvlEAfaWZni/Ts3rr/wFvq6iWX2t93MnUqPJ+MJGwPbG9OJ0615O1ftdg==
+node-opcua-types@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-types/-/node-opcua-types-2.85.0.tgz#0fe7b9b8a1e7d23c5d8bd5cd500018bfe54cab57"
+  integrity sha512-coBUTQtr9t/zX+/+9pgYh7XdhO/remob7+hBS+HUHBEZXtQnrA9nldAR/YbyJARRjxFNp6kYXRFnFZBel18rDA==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-extension-object "2.81.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-generator "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-extension-object "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-generator "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-utils@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-utils/-/node-opcua-utils-2.77.0.tgz#18cc9436a19f423ac9aae70d306b58408b4fb5e3"
-  integrity sha512-uCZ/OXVX04HwniTW5GTtJG3LcsOlyrxdd9bxh0h0in9jPrIQh1Qb/VnaXR/CAHGXpVplay2vptRQ9b1tHclAww==
+node-opcua-utils@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-utils/-/node-opcua-utils-2.85.0.tgz#8ba8004fc8fddb24fb7aa5749fadcf5564abe4a5"
+  integrity sha512-LsbYPcQ0QyaQBBDu/kqCdTIRTDDxyEslJMN3Kh5EhZFFG51sy+ETRblOUsnB9v9xt05avddq68vA3X3pyHxUeA==
   dependencies:
     chalk "4.1.2"
     node-opcua-assert "2.77.0"
 
-node-opcua-variant@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-variant/-/node-opcua-variant-2.81.0.tgz#301990f93bb056a6f397eb8f176b660860f6d5ca"
-  integrity sha512-zOehzcgXSSjTB1uLRIgmKgg5CXDL3u5aQPWelHPHayXUG29MjXZCc7LdnAvPdloUdXG0KRxR4UUD0tnRl6/uVg==
+node-opcua-variant@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-variant/-/node-opcua-variant-2.85.0.tgz#d1ac88ab7ad45b5f4f1d883809bc8ccfe4790d29"
+  integrity sha512-9qxyIGRWZdlW9U8kPQp402W04kU49Q0c7DXb4zQcdUkLDGGHmVTVbibghiKe2R4GpDC3CikfQs4wEdUz3jEhJQ==
   dependencies:
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-factory "2.81.0"
-    node-opcua-nodeid "2.81.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-factory "2.85.0"
+    node-opcua-nodeid "2.85.0"
+    node-opcua-utils "2.85.0"
 
-node-opcua-vendor-diagnostic@2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-vendor-diagnostic/-/node-opcua-vendor-diagnostic-2.81.0.tgz#1cf68c817e342a0994dc36b752f799881a6b8cef"
-  integrity sha512-DZ7Og9tCOR2L2pERwaeVO46BHz+0L7rncO+O8239wLTpJGDBVbdTQgIUV/Fwnfl7YcW2qpD7hHQR/zLUpVFBQg==
+node-opcua-vendor-diagnostic@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-vendor-diagnostic/-/node-opcua-vendor-diagnostic-2.85.0.tgz#5cbcd13fd2f7c5551350f3c66c2d65a3018c996e"
+  integrity sha512-fWSBjxyYzO8gp7kACRFpaMe3b7eE3ybgjBVeIx8ToL7LUV+nsKkDUGwAKF2wx0jAJDKjVMBYhWdx/ru9j1GIGA==
   dependencies:
     humanize "0.0.9"
-    node-opcua-address-space "2.81.0"
+    node-opcua-address-space "2.85.0"
     node-opcua-assert "2.77.0"
     node-opcua-constants "2.77.0"
-    node-opcua-server "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-variant "2.81.0"
+    node-opcua-server "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-variant "2.85.0"
 
-node-opcua-xml2json@2.77.0:
-  version "2.77.0"
-  resolved "https://registry.yarnpkg.com/node-opcua-xml2json/-/node-opcua-xml2json-2.77.0.tgz#e73ca85108f7532ee3d48e11466bf9b58d1d1d39"
-  integrity sha512-hpx9LtCAc1fiUZhtLGtl76p/BRjjYqtNQcLny76ov+DiieUvFUhWzMLSLSPksQ5HR3aUZROO7cOXXZMPw+ahPA==
+node-opcua-xml2json@2.85.0:
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua-xml2json/-/node-opcua-xml2json-2.85.0.tgz#ea0d9f305f29db50889f092c05d65c838be6a073"
+  integrity sha512-+VbNLDsY0Ybun7R5PXslFj0620CqDLiXxmiknKtraCwt3M5gGBFP5ZlnknXJ+VOgkr+las46Uk6HLHf9hcWedw==
   dependencies:
     ltx "^3.0.0"
     node-opcua-assert "2.77.0"
-    node-opcua-utils "2.77.0"
+    node-opcua-utils "2.85.0"
     thenify "^3.3.1"
     xml-writer "^1.7.0"
 
 node-opcua@^2.81.0:
-  version "2.81.0"
-  resolved "https://registry.yarnpkg.com/node-opcua/-/node-opcua-2.81.0.tgz#01c28b858e780b0af2326fd261fac0388bcf6374"
-  integrity sha512-r590PNEVJ1esJYJ8CLp3b6tU/5GI0NOzLxFWdW+C19ms5YQYXq2TulgFE+G+o3Q34zi5yiwRUKRFam4mhX86og==
+  version "2.85.0"
+  resolved "https://registry.yarnpkg.com/node-opcua/-/node-opcua-2.85.0.tgz#e3730d4226ebcf912e3d5c51e3f3987831fae5a7"
+  integrity sha512-cXUqB0p/nvQX2hb6hGKlsnmrrON6rGk/6Rzifm8Xe8oqzHw3TCGIeuk3lh+FFT/6Oog8ZDZhEcC45xCYt7Exlg==
   dependencies:
-    "@types/semver" "^7.3.12"
+    "@types/semver" "^7.3.13"
     chalk "4.1.2"
-    node-opcua-address-space "2.81.0"
-    node-opcua-address-space-for-conformance-testing "2.81.0"
-    node-opcua-aggregates "2.81.0"
+    node-opcua-address-space "2.85.0"
+    node-opcua-address-space-for-conformance-testing "2.85.0"
+    node-opcua-aggregates "2.85.0"
     node-opcua-assert "2.77.0"
-    node-opcua-basic-types "2.81.0"
-    node-opcua-binary-stream "2.77.0"
-    node-opcua-certificate-manager "2.77.0"
-    node-opcua-client "2.81.0"
-    node-opcua-client-crawler "2.81.0"
-    node-opcua-client-proxy "2.81.0"
-    node-opcua-common "2.81.0"
+    node-opcua-basic-types "2.85.0"
+    node-opcua-binary-stream "2.85.0"
+    node-opcua-certificate-manager "2.85.0"
+    node-opcua-client "2.85.0"
+    node-opcua-client-crawler "2.85.0"
+    node-opcua-client-proxy "2.85.0"
+    node-opcua-common "2.85.0"
     node-opcua-constants "2.77.0"
-    node-opcua-crypto "^1.11.0"
-    node-opcua-data-access "2.81.0"
-    node-opcua-data-model "2.81.0"
-    node-opcua-data-value "2.81.0"
-    node-opcua-debug "2.77.0"
-    node-opcua-enum "2.77.0"
-    node-opcua-factory "2.81.0"
+    node-opcua-crypto "^1.12.0"
+    node-opcua-data-access "2.85.0"
+    node-opcua-data-model "2.85.0"
+    node-opcua-data-value "2.85.0"
+    node-opcua-debug "2.85.0"
+    node-opcua-enum "2.85.0"
+    node-opcua-factory "2.85.0"
     node-opcua-hostname "2.77.0"
-    node-opcua-nodeid "2.81.0"
+    node-opcua-nodeid "2.85.0"
     node-opcua-nodesets "2.77.0"
-    node-opcua-numeric-range "2.81.0"
-    node-opcua-packet-analyzer "2.81.0"
-    node-opcua-secure-channel "2.81.0"
-    node-opcua-server "2.81.0"
-    node-opcua-server-discovery "2.81.0"
-    node-opcua-service-browse "2.81.0"
-    node-opcua-service-call "2.81.0"
-    node-opcua-service-discovery "2.81.0"
-    node-opcua-service-endpoints "2.81.0"
-    node-opcua-service-filter "2.81.0"
-    node-opcua-service-history "2.81.0"
-    node-opcua-service-node-management "2.81.0"
-    node-opcua-service-query "2.81.0"
-    node-opcua-service-read "2.81.0"
-    node-opcua-service-register-node "2.81.0"
-    node-opcua-service-secure-channel "2.81.0"
-    node-opcua-service-session "2.81.0"
-    node-opcua-service-subscription "2.81.0"
-    node-opcua-service-translate-browse-path "2.81.0"
-    node-opcua-service-write "2.81.0"
-    node-opcua-status-code "2.77.0"
-    node-opcua-transport "2.81.0"
-    node-opcua-types "2.81.0"
-    node-opcua-utils "2.77.0"
-    node-opcua-variant "2.81.0"
-    node-opcua-vendor-diagnostic "2.81.0"
-    semver "^7.3.7"
+    node-opcua-numeric-range "2.85.0"
+    node-opcua-packet-analyzer "2.85.0"
+    node-opcua-secure-channel "2.85.0"
+    node-opcua-server "2.85.0"
+    node-opcua-server-discovery "2.85.0"
+    node-opcua-service-browse "2.85.0"
+    node-opcua-service-call "2.85.0"
+    node-opcua-service-discovery "2.85.0"
+    node-opcua-service-endpoints "2.85.0"
+    node-opcua-service-filter "2.85.0"
+    node-opcua-service-history "2.85.0"
+    node-opcua-service-node-management "2.85.0"
+    node-opcua-service-query "2.85.0"
+    node-opcua-service-read "2.85.0"
+    node-opcua-service-register-node "2.85.0"
+    node-opcua-service-secure-channel "2.85.0"
+    node-opcua-service-session "2.85.0"
+    node-opcua-service-subscription "2.85.0"
+    node-opcua-service-translate-browse-path "2.85.0"
+    node-opcua-service-write "2.85.0"
+    node-opcua-status-code "2.85.0"
+    node-opcua-transport "2.85.0"
+    node-opcua-types "2.85.0"
+    node-opcua-utils "2.85.0"
+    node-opcua-variant "2.85.0"
+    node-opcua-vendor-diagnostic "2.85.0"
+    semver "^7.3.8"
 
 normalize-path@^3.0.0, normalize-path@~3.0.0:
   version "3.0.0"
@@ -2121,7 +2217,7 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha512-4jbtZXNAsfZbAHiiqjLPBiCl16dES1zI4Hpzzxw61Tk+loF+sBDBKx1ICKKKwIqQ7M0mFn1TmkN7euSncWgHiQ==
 
-object-assign@^4.1.0:
+object-assign@^4, object-assign@^4.1.0:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/object-assign/-/object-assign-4.1.1.tgz#2109adc7965887cfc05cbbd442cac8bfbb360863"
   integrity sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==
@@ -2138,7 +2234,7 @@ on-finished@2.4.1:
   dependencies:
     ee-first "1.1.1"
 
-once@^1.3.1, once@^1.4.0:
+once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   integrity sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==
@@ -2154,6 +2250,11 @@ parseurl@~1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
+
+path-is-absolute@^1.0.0:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/path-is-absolute/-/path-is-absolute-1.0.1.tgz#174b9268735534ffbc7ace6bf53a5a9e1b5c5f5f"
+  integrity sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==
 
 path-parse@^1.0.7:
   version "1.0.7"
@@ -2349,6 +2450,13 @@ reusify@^1.0.4:
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
 
+rimraf@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/rimraf/-/rimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
+  integrity sha512-JZkJMZkAGFFPP2YqXZXPbMlMBgsxzE8ILs4lMIX/2o0L9UBw9O/Y3o6wFw/i9YLapcUJWwqbi3kdxIPdC62TIA==
+  dependencies:
+    glob "^7.1.3"
+
 run-parallel@^1.1.9:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/run-parallel/-/run-parallel-1.2.0.tgz#66d1368da7bdf921eb9d95bd1a9229e7f21a43ee"
@@ -2376,7 +2484,7 @@ semver@^5.4.1:
   resolved "https://registry.yarnpkg.com/semver/-/semver-5.7.1.tgz#a954f931aeba508d307bbf069eff0c01c96116f7"
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
-semver@^7.3.5, semver@^7.3.7:
+semver@^7.3.5, semver@^7.3.8:
   version "7.3.8"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.3.8.tgz#07a78feafb3f7b32347d725e33de7e2a2df67798"
   integrity sha512-NB1ctGL5rlHrPJtFDVIVzTyQylMLu9N9VICA6HSFJo8MCGVTMW6gfpicwKmmK/dAjTOrqu5l63JJOpDSrAis3A==
@@ -2459,6 +2567,31 @@ slash@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-3.0.0.tgz#6539be870c165adbd5240220dbe361f1bc4d4634"
   integrity sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+
+socket.io-adapter@~2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/socket.io-adapter/-/socket.io-adapter-2.4.0.tgz#b50a4a9ecdd00c34d4c8c808224daa1a786152a6"
+  integrity sha512-W4N+o69rkMEGVuk2D/cvca3uYsvGlMwsySWV447y99gUPghxq42BxqLNMndb+a1mm/5/7NeXVQS7RLa2XyXvYg==
+
+socket.io-parser@~4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-4.2.1.tgz#01c96efa11ded938dcb21cbe590c26af5eff65e5"
+  integrity sha512-V4GrkLy+HeF1F/en3SpUaM+7XxYXpuMUWLGde1kSSh5nQMN4hLrbPIkD+otwh6q9R6NOQBN4AMaOZ2zVjui82g==
+  dependencies:
+    "@socket.io/component-emitter" "~3.1.0"
+    debug "~4.3.1"
+
+socket.io@^4.5.3:
+  version "4.5.4"
+  resolved "https://registry.yarnpkg.com/socket.io/-/socket.io-4.5.4.tgz#a4513f06e87451c17013b8d13fdfaf8da5a86a90"
+  integrity sha512-m3GC94iK9MfIEeIBfbhJs5BqFibMtkRk8ZpKwG2QwxV0m/eEhPIV4ara6XCF1LWNAus7z58RodiZlAH71U3EhQ==
+  dependencies:
+    accepts "~1.3.4"
+    base64id "~2.0.0"
+    debug "~4.3.2"
+    engine.io "~6.2.1"
+    socket.io-adapter "~2.4.0"
+    socket.io-parser "~4.2.1"
 
 sshpk@^1.17.0:
   version "1.17.0"
@@ -2642,14 +2775,9 @@ type-is@~1.6.18:
     mime-types "~2.1.24"
 
 typescript@^4.8.4:
-  version "4.8.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.8.4.tgz#c464abca159669597be5f96b8943500b238e60e6"
-  integrity sha512-QCh+85mCy+h0IGff8r5XWzOVSbBO+KfeYrMQh7NJ58QujwcE22u+NUSmUxqF+un70P9GXKxa2HCNiTTMJknyjQ==
-
-underscore@^1.13.6:
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.6.tgz#04786a1f589dc6c09f761fc5f45b89e935136441"
-  integrity sha512-+A5Sja4HP1M08MaXya7p5LvjuM7K6q/2EaC0+iovj/wOcMsTzMvDFbasi/oSapiwOlt252IqsKqPjCl7huKS0A==
+  version "4.9.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.3.tgz#3aea307c1746b8c384435d8ac36b8a2e580d85db"
+  integrity sha512-CIfGzTelbKNEnLpLdGFgdyKhG23CKdKgQPOBc+OUNrkJ2vr+KSzsSV5kq5iWhEQbok+quxgGzrAtGWCyU7tHnA==
 
 universalify@^2.0.0:
   version "2.0.0"
@@ -2671,7 +2799,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==
 
-vary@~1.1.2:
+vary@^1, vary@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vary/-/vary-1.1.2.tgz#2299f02c6ded30d4a5961b0b9f74524a18f634fc"
   integrity sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==
@@ -2717,6 +2845,11 @@ wrappy@1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/wrappy/-/wrappy-1.0.2.tgz#b5243d8f3ec1aa35f1364605bc0d1036e30ab69f"
   integrity sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==
+
+ws@~8.2.3:
+  version "8.2.3"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.2.3.tgz#63a56456db1b04367d0b721a0b80cae6d8becbba"
+  integrity sha512-wBuoj1BDpC6ZQ1B7DWQBYVLphPWkm8i9Y0/3YdHjHKHiohOJ1ws+3OccDWtH+PoC9DZD5WOTrJvNbWvjS6JWaA==
 
 xml-writer@^1.7.0:
   version "1.7.0"
