@@ -3,6 +3,9 @@
   "version": "1.4.15-alpha.66",
   "description": "",
   "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "ts-node src/index.ts",
     "build": "tsc -b",
