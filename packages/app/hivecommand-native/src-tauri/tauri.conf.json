@@ -69,7 +69,7 @@
     "updater": {
       "active": true,
       "endpoints": [
-        "https://gist.github.com/balbatross/77e9107de0e9ef84260b6094089c7c97"
+        "https://gist.githubusercontent.com/balbatross/77e9107de0e9ef84260b6094089c7c97/raw/14b6c44eecbf392584b7fb8538c217640235e5eb/update.json"
       ],
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEU0ODJCQkZFQUY2MjJDMEEKUldRS0xHS3YvcnVDNUdlSmtzckxPVWxCQVF1Zk1Ec1hwNSthUnNTOUZRWTdrWXhMQUlPWWl1dlkK"
     },
