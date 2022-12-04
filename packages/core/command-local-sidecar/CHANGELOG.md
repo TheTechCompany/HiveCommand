@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.126](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.125...v1.4.15-alpha.126) (2022-12-04)
+
+**Note:** Version bump only for package @hive-command/local-sidecar
+
+
+
+
+
 ## [1.4.15-alpha.124](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.123...v1.4.15-alpha.124) (2022-12-03)
 
 **Note:** Version bump only for package @hive-command/local-sidecar
