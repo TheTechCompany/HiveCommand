@@ -44,22 +44,35 @@ class DevSidecar {
         return emitter;
     }
 
-    async browse(host: string, browsePath: string, recursive?: boolean){
+    async browse(host: string, browsePath: string, recursive?: boolean, withTypes?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
+        console.log("Browse ", browsePath)
         const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
 
         let results : any[] = [];
-        console.log("references of RootFolder :");
+
         for(const reference of browseResult || []) {
 
-            const name = reference?.browseName?.toString();
+            const name = reference?.browseName?.name?.toString();
+            const nsIdx = reference?.browseName?.namespaceIndex?.toString();
+
+            let bp = `${browsePath}/${nsIdx ? `${nsIdx}:` : ''}${name}`;
 
             if(recursive){
                 try{
-                    const innerResults = await this.browse(host, `${browsePath}/${name}`, recursive);
-                    results.push({id: reference?.nodeId, name: name, children: innerResults})
+                    console.log(bp, "With Types", withTypes)
+                    let type = withTypes ? await client.getType(bp) : null;
+                    // console.log({type})
+                    const innerResults = await this.browse(host, bp, recursive, withTypes);
+                    results.push({
+                        id: reference?.nodeId, 
+                        name: name, 
+                        path: bp,
+                        type,
+                        children: innerResults
+                    })
                 }catch(e){
                     console.log({e, name})
                 }
@@ -138,7 +151,7 @@ app.post('/:host/unsubscribe', async (req, res) => {
 
 app.get('/:host/tree', async (req, res) => {
     try{
-        const tree = await sidecar.browse(req.params.host, '/Objects', true);
+        const tree = await sidecar.browse(req.params.host, '/Objects', true, true);
         res.send({results: tree})
     }catch(e: any){
         return res.send({error: e.message})

@@ -5,6 +5,7 @@ import { SetupProvider } from "./context";
 import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage, ProvisionCodeStage } from "./stages";
 import axios from 'axios';
 import { DataContext } from "../../data";
+import { LocalPersistenceStage } from "./stages/localPersistence";
 
 export const SetupView = (props: any) => {
 
@@ -51,12 +52,15 @@ export const SetupView = (props: any) => {
             label: "OPCUA Server",
             onNext: async (state: any, setState: any) => {
 
-                axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((data) => {
+                // axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((data) => {
 
-                })
-                // setState('opcuaProvisioned', true)
+                // })
+                setState('opcuaProvisioned', true)
             }
-        }
+        },
+        // {
+        //     label: "Persistence",
+        // }
     ]
 
     const finish = () => {
@@ -105,6 +109,10 @@ export const SetupView = (props: any) => {
                 return (
                     <OPCUAServerStage />
                 )
+            case 4:
+                return (
+                    <LocalPersistenceStage />
+                )
         }
     }
 
@@ -118,7 +126,7 @@ export const SetupView = (props: any) => {
             <Box sx={{ flex: 1, display: 'flex', background: '#dfdfdf', alignItems: 'center', justifyContent: 'center' }}>
 
                 <Paper sx={{ display: 'flex', flexDirection: 'column', height: '70%', width: '70%' }}>
-                    <Box sx={{ marginBottom: '3px', padding: '6px', color: 'white', bgcolor: 'secondary.main' }}>
+                    <Box sx={{ marginBottom: '6px', padding: '6px', color: 'white', bgcolor: 'secondary.main' }}>
                         <Typography>HiveCommand Setup Wizard</Typography>
                     </Box>
                     <Stepper activeStep={activeIndex}>

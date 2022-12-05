@@ -249,7 +249,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'devices-root',
             name: 'Devices',
-            children: program?.devices?.map((x) => ({
+            children: program?.devices?.sort((a, b) => {
+                let aTag = `${a.type?.tagPrefix || ''}${a.tag}`;
+                let bTag = `${b.type?.tagPrefix || ''}${b.tag}`;
+                
+                return aTag.localeCompare(bTag);
+                
+            }).map((x) => ({    
                 id: x.id,
                 name: `${x.type?.tagPrefix || ''}${x.tag}`
             })),

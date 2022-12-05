@@ -240,9 +240,22 @@ export default class Client {
     async getDetails(path: string){
         const nodeId = await this.getPathID(path)
         return await this.session?.read({
-                nodeId: nodeId,
-                attributeId: AttributeIds.Value
-            })
+            nodeId: nodeId,
+            attributeId: AttributeIds.Value
+        })
+    }
+
+    async getType(path: string){
+        console.log("Get type", path)
+        const nodeId = await this.getPathID(path)
+        const typeResp = await this.session?.read({
+            nodeId,
+            attributeId: AttributeIds.DataType
+        })
+        console.log({path, typeResp})
+        if(!typeResp) return;
+
+        return DataType[typeResp?.value.value?.value] //DataType[typeResp?.value.value]
     }
 
     async browse(path: string){
