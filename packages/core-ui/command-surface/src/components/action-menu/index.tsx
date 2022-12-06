@@ -77,7 +77,13 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 		
 	}
 
+	console.log({
+		values, 
+		devices: getDevicesForNode(hmi?.nodes?.find((a) => (selected || []).map((x) => x.id).indexOf(a.id) > -1))
+	});
+
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
+		console.log({deviceName})
 		let deviceValueBlob = values?.[deviceName] //getDeviceValue(deviceName, deviceInfo.state)
         let value = deviceValueBlob?.[state.key];
 

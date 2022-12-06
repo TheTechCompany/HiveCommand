@@ -79,16 +79,16 @@ export const OPCUAServerStage = () => {
         setGlobalState?.((state) => ({...state, deviceMap}))
     }
 
-    const updateSubscriptionMap = (path: string) => {
+    const updateSubscriptionMap = (path: string, tag: string) => {
         
         setGlobalState?.((state) => {
             // 'subscriptionMap', subscriptionMap
             let subscriptionMap = state?.subscriptionMap?.slice() || [];
 
-            let ix = subscriptionMap.indexOf(path)
+            let ix = subscriptionMap.map((x) => x.path).indexOf(path)
 
             if(ix < 0){
-                subscriptionMap.push(path)
+                subscriptionMap.push({path, tag})
             }else{
                 subscriptionMap.splice(ix, 1)
             }
@@ -155,12 +155,16 @@ export const OPCUAServerStage = () => {
 
                     // console.log({item})
 
-                    const isChecked = (item: any) => {
-                        return (globalState?.subscriptionMap || []).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
+                    const isChecked = (item: OPCUAServerItem) : boolean => {
+                        const children = item.children || [];
+
+                        return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path || '') > -1 || (children.filter((x: any) => isChecked(x)).length > 0 && children.filter((x: any) => isChecked(x)).length == children.length)
                     }
 
-                    const isInDeterminate = (item: any) => {
-                        return item.children?.length > 0 ? (item.children?.filter((x: any) => isInDeterminate(x) || isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length != item.children.length) : false
+                    const isInDeterminate = (item: OPCUAServerItem) : boolean => {
+                        const children = item.children || [];
+
+                        return children.length > 0 ? (children.filter((x: any) => isInDeterminate(x) || isChecked(x)).length > 0 && children.filter((x: any) => isChecked(x)).length != children.length) : false
                     }
 
                     const checked = isChecked(item)
@@ -188,27 +192,27 @@ export const OPCUAServerStage = () => {
 
                                 let direction = e.target.checked ? 'create' : 'remove';
 
-                                const updateRec = (arr: any[]) => {
+                                const updateRec = (arr: any[], parent?: string) => {
                                     arr.forEach((x) => {
 
                                         if(direction == 'create' && !isChecked(x)){
                                             console.log("Update", x.path, x.children);
-                                            if(x.path &&( !x.children || x.children.length == 0)) updateSubscriptionMap(x.path)
+                                            if(x.path &&( !x.children || x.children.length == 0)) updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
 
                                         }else if(direction == 'remove' && isChecked(x)){
-                                            updateSubscriptionMap(x.path)
+                                            updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
                                         }
 
-                                        if(x.children) updateRec(x.children || [])
+                                        if(x.children) updateRec(x.children || [], `${parent ? parent + '.' : ''}${x.name}`)
                                     })
                                 } 
 
                                 if(!item.path) return;
 
                                 if(item.children && item.children.length > 0){
-                                    updateRec(item.children)
+                                    updateRec(item.children, item.name)
                                 }else{
-                                    updateSubscriptionMap(item.path)
+                                    updateSubscriptionMap(item.path, item.name)
                                 }
                             }}
                             // disabled
@@ -256,7 +260,7 @@ export const OPCUAServerStage = () => {
     }, [devices]);
 
     const isChecked = (item: any) => {
-        return (globalState?.subscriptionMap || []).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
+        return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
     }
 
     const isInDeterminate = (item: any) => {

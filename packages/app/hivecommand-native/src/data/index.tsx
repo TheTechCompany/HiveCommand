@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { writeTextFile, readTextFile, removeFile, BaseDirectory } from "@tauri-apps/api/fs";
-import { StateUpdateFn } from "../views/setup/context";
+import { GlobalState, StateUpdateFn } from "../views/setup/context";
 
 export const DataContext = React.createContext<{
-    authState?: AuthState & {isAuthed: () => boolean},
-    globalState?: any;
+    authState?: (AuthState & {isAuthed: () => boolean}),
+    globalState?: GlobalState;
     updateAuthState?: (key: string, value: any) => void;
     updateGlobalState?: StateUpdateFn
 }>({});
@@ -57,7 +57,7 @@ export const DataProvider = (props: any) => {
     }
 
     useEffect(() => {
-        removeFile(props.storagePath, {dir: BaseDirectory.App})
+        // removeFile(props.storagePath, {dir: BaseDirectory.App})
 
         readBlob().then(({globalState, authState}) => {
             setGlobalState(globalState)
