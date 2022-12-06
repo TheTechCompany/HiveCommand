@@ -129,8 +129,12 @@ export default class Client {
         if(this.subscription){
             let s = this.subscription
 
+            const group =  ClientMonitoredItemGroup.create(s, items, baseSubscriptionParams, TimestampsToReturn.Both)
             return {
-                monitors: ClientMonitoredItemGroup.create(s, items, baseSubscriptionParams, TimestampsToReturn.Both),
+                unsubscribe: () => {
+                    group.terminate();
+                },
+                monitors: group,
                 unwrap: (ix: number) => {
                     return items[ix].tag
                 }
@@ -143,6 +147,9 @@ export default class Client {
         }
 
         return {
+            unsubscribe: () => {
+
+            },
             monitors: null,
             unwrap: () => {}
         }
@@ -205,7 +212,6 @@ export default class Client {
         return await new Promise(async (resolve, reject) => {
             let nodeId, methodId;
             try{
-                console.log("Call method", path, method)
                  nodeId = await this.getPathID(path)
                  methodId = await this.getPathID(`${path}${method}`)
     
@@ -240,9 +246,21 @@ export default class Client {
     async getDetails(path: string){
         const nodeId = await this.getPathID(path)
         return await this.session?.read({
-                nodeId: nodeId,
-                attributeId: AttributeIds.Value
-            })
+            nodeId: nodeId,
+            attributeId: AttributeIds.Value
+        })
+    }
+
+    async getType(path: string){
+        const nodeId = await this.getPathID(path)
+        const typeResp = await this.session?.read({
+            nodeId,
+            attributeId: AttributeIds.DataType
+        })
+
+        if(!typeResp) return;
+
+        return DataType[typeResp?.value.value?.value] //DataType[typeResp?.value.value]
     }
 
     async browse(path: string){
@@ -266,7 +284,6 @@ export default class Client {
                 let extension = `${startPath}/${result.browseName.namespaceIndex}:${result.browseName.name}`
 
                 if((blacklist || []).map((x) => x.indexOf(extension) > -1).indexOf(true) < 0){
-                    console.log({extension})
 
                     const type = await this.session?.read({
                         nodeId: result.nodeId,

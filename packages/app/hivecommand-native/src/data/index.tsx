@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { writeTextFile, readTextFile, BaseDirectory } from "@tauri-apps/api/fs";
+import { writeTextFile, readTextFile, removeFile, BaseDirectory } from "@tauri-apps/api/fs";
+import { GlobalState, StateUpdateFn } from "../views/setup/context";
 
 export const DataContext = React.createContext<{
-    authState?: AuthState & {isAuthed: () => boolean},
-    globalState?: any;
+    authState?: (AuthState & {isAuthed: () => boolean}),
+    globalState?: GlobalState;
     updateAuthState?: (key: string, value: any) => void;
-    updateGlobalState?: (key: string, updateFn: any) => void;
+    updateGlobalState?: StateUpdateFn
 }>({});
 
 /*
@@ -36,6 +37,7 @@ export const DataProvider = (props: any) => {
 
     const STORAGE = props.storagePath;
 
+
     const readBlob = async ()  : Promise<{globalState: any, authState: AuthState}> => {
         try{
             const stringBlob = await readTextFile(STORAGE,  {dir: BaseDirectory.App})
@@ -55,7 +57,8 @@ export const DataProvider = (props: any) => {
     }
 
     useEffect(() => {
-        
+        // removeFile(props.storagePath, {dir: BaseDirectory.App})
+
         readBlob().then(({globalState, authState}) => {
             setGlobalState(globalState)
             setAuthState(authState)
@@ -63,12 +66,11 @@ export const DataProvider = (props: any) => {
 
     }, [])
 
-    const updateGlobalState = async (key: string, value: any) => {
-        console.log(key)
-        setGlobalState((state: any) => ({
-            ...state,
-            [key]: value
-        }));
+    const updateGlobalState : StateUpdateFn = async (stateUpdate) => {
+        // console.log(key)
+
+        
+        setGlobalState(stateUpdate);
 
         writeBlob()
     }

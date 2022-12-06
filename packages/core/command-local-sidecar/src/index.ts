@@ -29,7 +29,7 @@ class DevSidecar {
     async subscribe(host: string, paths: {tag: string, path: string}[]){
         const client = await this.connect(host);
 
-        const { monitors, unwrap } = await client.subscribeMulti(paths)
+        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths)
 
         const emitter = new EventEmitter()
 
@@ -40,26 +40,39 @@ class DevSidecar {
 
             emitter.emit('data-changed', {key, value: value.value})
         })
+
+        // emitter.on('')
         
-        return emitter;
+        return {emitter, unsubscribe};
     }
 
-    async browse(host: string, browsePath: string, recursive?: boolean){
+    async browse(host: string, browsePath: string, recursive?: boolean, withTypes?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
         const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
 
         let results : any[] = [];
-        console.log("references of RootFolder :");
+
         for(const reference of browseResult || []) {
 
-            const name = reference?.browseName?.toString();
+            const name = reference?.browseName?.name?.toString();
+            const nsIdx = reference?.browseName?.namespaceIndex?.toString();
+
+            let bp = `${browsePath}/${nsIdx ? `${nsIdx}:` : ''}${name}`;
 
             if(recursive){
                 try{
-                    const innerResults = await this.browse(host, `${browsePath}/${name}`, recursive);
-                    results.push({id: reference?.nodeId, name: name, children: innerResults})
+                    let type = withTypes ? await client.getType(bp) : null;
+                    // console.log({type})
+                    const innerResults = await this.browse(host, bp, recursive, withTypes);
+                    results.push({
+                        id: reference?.nodeId, 
+                        name: name, 
+                        path: bp,
+                        type,
+                        children: innerResults
+                    })
                 }catch(e){
                     console.log({e, name})
                 }
@@ -96,9 +109,16 @@ const app = express();
 
 const http = require('http');
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    allowRequest: (req, fn) => {
+        fn(null, true)
+    },
+    cors: {
+        
+    }
+});
 
-let subscriptions : {[key: string]: EventEmitter}= {};
+let subscriptions : {[key: string]: {events: EventEmitter, unsubscribe: () => void}}= {};
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
@@ -111,13 +131,18 @@ app.post('/:host/subscribe', async (req, res) => {
     if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
 
     try{
-        const events = await sidecar.subscribe(req.params.host, req.body.paths)
+        const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
+
+        console.log("Subscribed to", req.body.paths)
 
         events.on('data-changed', dataChanged)
 
-        subscriptions[req.params.host] = events;
-    }catch(e){
-        return res.send({error: e})
+        subscriptions[req.params.host] = {
+            events,
+            unsubscribe
+        };
+    }catch(e: any){
+        return res.send({error: e.message})
     }
 
     res.send({success: true})
@@ -127,21 +152,22 @@ app.post('/:host/unsubscribe', async (req, res) => {
     if(!subscriptions[req.params.host]) return res.send({error: "No subscription found"});
 
     try{
-        const eventEmitter = subscriptions[req.params.host];
+        const {events: eventEmitter, unsubscribe} = subscriptions[req.params.host];
 
         eventEmitter.removeListener('data-changed', dataChanged);
-    }catch(e){
-        return res.send({error: e})
+        unsubscribe()
+    }catch(e: any){
+        return res.send({error: e.message})
     }
     res.send({success: true})
 })
 
 app.get('/:host/tree', async (req, res) => {
     try{
-        const tree = await sidecar.browse(req.params.host, '/Objects', true);
+        const tree = await sidecar.browse(req.params.host, '/Objects', true, true);
         res.send({results: tree})
-    }catch(e){
-        return res.send({error: e})
+    }catch(e: any){
+        return res.send({error: e.message})
     }
 });
 

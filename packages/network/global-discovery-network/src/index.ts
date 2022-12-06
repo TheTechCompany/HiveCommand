@@ -87,6 +87,13 @@ app.get('/network-layout', verifyAccess, async (req, res) => {
 
 app.get('/control-layout', verifyAccess, async (req, res) => {
     
+    let deviceInclude = {
+        type: {
+            include: {
+                state: true
+            }
+        }
+    }
     const device = await prisma.device.findFirst({
         where: {
             id: (req as any).deviceId?.toString(),
@@ -109,9 +116,7 @@ app.get('/control-layout', verifyAccess, async (req, res) => {
                             nodes: {
                                 include:{
                                     devicePlaceholder: {
-                                        include: {
-                                            type: true
-                                        }
+                                        include: deviceInclude
                                     }
                                 }
                             },
@@ -125,13 +130,7 @@ app.get('/control-layout', verifyAccess, async (req, res) => {
                         }
                     },
                     devices: {
-                        include: {
-                            type: {
-                                include: {
-                                    state: true
-                                }
-                            }
-                        }
+                        include: deviceInclude
                     }
                 }
             }

@@ -26,7 +26,7 @@ import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
 import { RemoteComponentCache } from './hooks/remote-components';
 import { Header } from './components/Header';
-
+import { merge } from 'lodash'
 export * from './hooks/remote-components'
 
 
@@ -92,7 +92,7 @@ export interface CommandSurfaceProps {
     }[]
 
     // seekValue?: (startDate: Date, endDate: Date) => any[];
-    // values: { id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
+    values: {[key: string]: any} //{ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
 
     watching?: { id: string, name: string, color: string }[];
 
@@ -117,19 +117,32 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         }
     */
 
-    // const deviceValues: { [key: string]: { [key: string]: any } } = useMemo(() => {
-    //     if (Array.isArray(props.values)) {
-    //         return props.values.reduce((prev, curr) => ({
-    //             ...prev,
-    //             [curr.id]: {
-    //                 ...prev[curr.id],
-    //                 [curr.key]: curr.value
-    //             }
-    //         }), {})
-    //     } else {
-    //         return props.values;
-    //     }
+    const deviceValues = props.values;
+    // : { [key: string]: { [key: string]: any } } = useMemo(() => {
+       
+
+    //     return Object.keys(props.values).map((devicePath) => {
+
+    //         let value = props.values[devicePath];
+    //         let obj = devicePath.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), value)
+
+    //         return obj
+    //     }).reduce((prev, curr) => merge(prev, curr), {})
+
+    //     // if (Array.isArray(props.values)) {
+    //     //     return props.values.reduce((prev, curr) => ({
+    //     //         ...prev,
+    //     //         [curr.id]: {
+    //     //             ...prev[curr.id],
+    //     //             [curr.key]: curr.value
+    //     //         }
+    //     //     }), {})
+    //     // } else {
+    //     //     return props.values;
+    //     // }
     // }, [props.values])
+
+    console.log({deviceValues})
 
 
     const [activePage, setActivePage] = useState<any>(null)
@@ -390,7 +403,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     client?.changeMode?.(mode);
                     // props.onCommand?.('CHANGE-MODE', { mode })
                 },
-                // values: deviceValues,
+                values: deviceValues,
                 program,
                 watching: watching || [],
                 // values,

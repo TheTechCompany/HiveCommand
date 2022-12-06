@@ -14,12 +14,12 @@ export const LayoutDownload = () => {
         axios.get(`${state.discoveryServer}/control-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("controlLayout", {res})
 
-            await setGlobalState('controlLayout', res.data.results)
+            await setGlobalState?.((state) => ({...state, controlLayout: res.data.results}))
         })
 
         axios.get(`${state.discoveryServer}/network-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("networkLayout", {res})
-            await setGlobalState('networkLayout', res.data.results)
+            await setGlobalState?.((state) => ({...state, networkLayout: res.data.results}))
         })
 
     }, [])
@@ -32,14 +32,14 @@ export const LayoutDownload = () => {
             <Box sx={{display: 'flex', flexDirection: 'column',}}>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Box sx={{marginRight: '6px'}}>
-                        {(globalState.controlLayout == undefined || globalState.controlLayout == null) ? <CircularProgress size={18} /> : <CheckCircle />}
+                        {(globalState?.controlLayout == undefined || globalState?.controlLayout == null) ? <CircularProgress size={18} /> : <CheckCircle />}
                     </Box>
                     <Typography>HMI Layout</Typography>
 
                 </Box>
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Box sx={{marginRight: '6px'}}>
-                        {(globalState.networkLayout == undefined || globalState.networkLayout == null) ? <CircularProgress  size={18} /> : <CheckCircle />}
+                        {(globalState?.networkLayout == undefined || globalState?.networkLayout == null) ? <CircularProgress  size={18} /> : <CheckCircle />}
                     </Box>
                     <Typography>Network layout</Typography>
                 </Box>
