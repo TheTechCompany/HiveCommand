@@ -25,21 +25,7 @@ const load_exports = (code: string,) => {
 export const Controller = () => {
     // const ref = useRef<any>();
 
-      useEffect(() => {
-        const output = ts.transpile('export const getter = () => { return 123 }', {module: ModuleKind.CommonJS});
-
-        new Function()
-        // console.log({output});
-
-        console.log({exports: load_exports(output).getter()})
-        // startService().then(() => {
-        //     esbuild.transform('export const getter = () => {}').then((r) => console.log({r}))
-        // }).catch((e: any) => {
-        //     console.log({e})
-        //     // esbuild.transform('export const getter = () => {}').then((r) => console.log({r}))
-
-        // });
-      }, []);
+    
 
     const { authState, globalState } = useContext(DataContext);
 
@@ -55,7 +41,6 @@ export const Controller = () => {
     const valueStructure = useMemo(() => {
         return subscriptionMap?.map((subscription) => {
  
-            console.log(subscription.tag.split('.'), valueStore)
              // let value = props.values[devicePath];
              let value = valueStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
 
@@ -65,7 +50,6 @@ export const Controller = () => {
          }).reduce((prev, curr) => merge(prev, curr), {})
     }, [valueStore])
 
-    console.log({valueStructure})
 
     const socket = useRef<Socket>()
 

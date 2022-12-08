@@ -103,7 +103,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             //     [curr.key]: curr.value
             // }), {})
 
-            console.log({node})
             let values = props.deviceValues?.[node?.extras?.devicePlaceholder?.tag];
 
             return {
