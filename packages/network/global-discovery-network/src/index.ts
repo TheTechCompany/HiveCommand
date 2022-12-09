@@ -90,10 +90,12 @@ app.get('/control-layout', verifyAccess, async (req, res) => {
     let deviceInclude = {
         type: {
             include: {
-                state: true
+                state: true,
+                actions: true
             }
         }
-    }
+    };
+
     const device = await prisma.device.findFirst({
         where: {
             id: (req as any).deviceId?.toString(),
