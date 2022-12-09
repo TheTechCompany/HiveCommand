@@ -83,9 +83,9 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	});
 
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
-		console.log({deviceName})
 		let deviceValueBlob = values?.[deviceName] //getDeviceValue(deviceName, deviceInfo.state)
         let value = deviceValueBlob?.[state.key];
+		console.log({deviceName, deviceValueBlob, value, state})
 
 		if (state.writable && operatingMode == "manual") {
 			return (
@@ -106,7 +106,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 					value={workingState?.[deviceName]?.[state.key] ?? parseFloat(value)} />
 			)
 		} else {
-			return <Typography>{value}</Typography>
+			return <Typography>{`${value}`}</Typography>
 		}
 	}
 
