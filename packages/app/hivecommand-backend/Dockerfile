@@ -7,13 +7,22 @@ RUN apk update && apk add openssl
 
 WORKDIR /app
 
-COPY . . 
+COPY package.json .
+COPY yarn.lock .
+COPY lerna.json .
 
 RUN yarn
+
+COPY packages/app/hivecommand-backend/* packages/app/hivecommand-backend/
+COPY packages/core/command-data/* packages/core/command-data/
+# COPY . . 
+
 
 RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
 
 ENV NODE_ENV="production"
+
+RUN cd packages/core/command-data; npx prisma generate
 
 RUN npx lerna run build --scope @hive-command/backend --include-dependencies
 
