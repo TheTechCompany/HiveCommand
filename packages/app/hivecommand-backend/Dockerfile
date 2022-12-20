@@ -1,9 +1,9 @@
-FROM node:16-alpine as build
+FROM node:16-slim as build
 
 ARG BUILD_ENV=github
 
 
-RUN apk update && apk add openssl
+RUN apt-get update && apt-get install openssl
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
 
 ENV NODE_ENV="production"
 
-RUN cd packages/core/command-data; npx prisma generate
+# RUN cd packages/core/command-data; npx prisma generate
 
 RUN npx lerna run build --scope @hive-command/backend --include-dependencies
 
@@ -30,7 +30,7 @@ WORKDIR /app/packages/app/hivecommand-backend
 
 RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
 
-FROM node:16-alpine
+FROM node:16
 
 WORKDIR /app
 
