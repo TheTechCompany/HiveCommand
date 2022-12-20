@@ -1,6 +1,9 @@
 import { gql, useApolloClient, useQuery, useLazyQuery } from "@apollo/client";
 
-export const useDeviceValues = (id: string) => {
+export const useDeviceValues = (id: string) : {
+	refetch: () => void;
+	results: {id: string, key: string, value: string}[]
+} => {
 
     const client = useApolloClient();
 
