@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Box } from '@mui/material';
 import { CommandSurface } from '@hive-command/command-surface';
 import { useWatchers } from './utils/watchers';
@@ -38,6 +38,36 @@ export const DeviceControlView = () => {
     const daysHorizon = 14;
     const [ lastDate, setLastDate ] = useState(null)
     
+    const normalisedValues = useMemo(() => {
+       
+        return values.reduce((prev, curr) => ({
+            ...prev,
+            [curr.id]: {
+                ...prev[curr.id],
+                [curr.key]: curr.value
+            }
+        }), {})
+            // return Object.keys(props.values).map((devicePath) => {
+    
+            //     let value = props.values[devicePath];
+            //     let obj = devicePath.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), value)
+    
+            //     return obj
+            // }).reduce((prev, curr) => merge(prev, curr), {})
+    
+            // // if (Array.isArray(props.values)) {
+            // //     return props.values.reduce((prev, curr) => ({
+            //         ...prev,
+            //         [curr.id]: {
+            //             ...prev[curr.id],
+            //             [curr.key]: curr.value
+            //         }
+            //     }), {})
+            // } else {
+            //     return props.values;
+            // }
+    }, [values])
+
     useEffect(() => {
         const interval = setInterval(() => {
             refetchValues();
@@ -52,7 +82,7 @@ export const DeviceControlView = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
-                values={values}
+                values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}
