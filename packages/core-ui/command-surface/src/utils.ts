@@ -14,6 +14,7 @@ export interface DevicePlaceholder {
 		}[]
 		actions?: {
 			key: string;
+			func?: string;
 		}[]
 	}
 }

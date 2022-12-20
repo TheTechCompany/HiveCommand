@@ -11,6 +11,10 @@ import bodyParser from 'body-parser'
 import cors from 'cors';
 import {Server} from 'socket.io'
 import OPCUAClient from '@hive-command/opcua-client';
+import { DataType } from 'node-opcua';
+import { isEqual } from 'lodash'
+
+import { Client } from 'pg';
 
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
 
@@ -26,6 +30,19 @@ class DevSidecar {
 
     }
 
+    async getDataType(host: string, path: string){
+        const client = await this.connect(host);
+
+        return await client.getType(path)
+    }
+
+    async setData(host: string, path: string, dataType: DataType, value: any){
+        const client = await this.connect(host);
+
+        const statusCode = await client.setDetails(path, dataType, value)
+        return statusCode?.value;
+    }
+
     async subscribe(host: string, paths: {tag: string, path: string}[]){
         const client = await this.connect(host);
 
@@ -34,11 +51,13 @@ class DevSidecar {
         const emitter = new EventEmitter()
 
         monitors?.on('changed', async (item, value, index) => {
-            const key = unwrap(index)
+            try{
+                const key = unwrap(index)
 
-            console.log(key, value.value)
-
-            emitter.emit('data-changed', {key, value: value.value})
+                emitter.emit('data-changed', {key, value: value.value})
+            }catch(e: any){
+                console.log("Error in monitors.changed", e.message)
+            }
         })
 
         // emitter.on('')
@@ -86,6 +105,27 @@ class DevSidecar {
         return results;
     }
 
+    private async onClientLost(endpointUrl: string){
+        console.log(`Connection to ${endpointUrl} lost. Retrying...`);
+        //Reconnect client
+        // try{
+        //     await this.clients[endpointUrl].connect(endpointUrl);
+        //     console.log(`Reconnected to ${endpointUrl}`);
+        // }catch(e: any){
+        //     //Backoff
+        //     console.error(e.message)
+        //     console.log("Retrying in 10 seconds...");
+        //     setTimeout(() => {
+        //         this.onClientLost(endpointUrl)
+        //     }, 10 * 1000);
+        // }
+
+        //Resubscribe
+
+        //Failover and message
+
+    }
+
     async connect(host: string, port?: number){
         const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
@@ -93,6 +133,9 @@ class DevSidecar {
 
         this.clients[endpointUrl] = new OPCUAClient();
 
+
+		this.clients[endpointUrl].on('close', this.onClientLost.bind(this, endpointUrl))
+		this.clients[endpointUrl].on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
         await this.clients[endpointUrl].connect(endpointUrl)
       
@@ -118,7 +161,7 @@ const io = new Server(server, {
     }
 });
 
-let subscriptions : {[key: string]: {events: EventEmitter, unsubscribe: () => void}}= {};
+let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
@@ -127,23 +170,51 @@ const dataChanged = (data: any) => {
 app.use(bodyParser.json());
 app.use(cors());
 
+app.route('/:host/set_data')
+    .post(async (req, res) => {
+        // if(subscriptions[req.params.host]) return res.send({error:})
+
+        let { path, value } = req.body;
+
+        const dt = await sidecar.getDataType(req.params.host, path)
+        if(!dt) return res.send({error: "No datatype"})
+        //TODO pickup dataType from somewhere dynamic
+        const code = await sidecar.setData(req.params.host, path, (DataType as any)[dt as any], value);
+
+        res.send({code})
+    })
+
 app.post('/:host/subscribe', async (req, res) => {
-    if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
+    // if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
 
-    try{
-        const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
+    if(subscriptions[req.params.host] && !isEqual(req.body.paths, subscriptions[req.params.host]?.paths)){
+        const {events: eventEmitter, unsubscribe} = subscriptions[req.params.host];
 
-        console.log("Subscribed to", req.body.paths)
-
-        events.on('data-changed', dataChanged)
-
-        subscriptions[req.params.host] = {
-            events,
-            unsubscribe
-        };
-    }catch(e: any){
-        return res.send({error: e.message})
+        eventEmitter.removeListener('data-changed', dataChanged);
+        unsubscribe() 
+        
+        delete subscriptions[req.params.host];
     }
+
+    if(subscriptions[req.params.host]) return res.send("Already subscribed");
+
+        try{
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
+
+            console.log("Subscribed to", req.body.paths)
+
+            events.on('data-changed', dataChanged)
+
+            subscriptions[req.params.host] = {
+                events,
+                paths: req.body.paths || [],
+                unsubscribe
+            };
+        }catch(e: any){
+            return res.send({error: e.message})
+        }
+
+    
 
     res.send({success: true})
 })

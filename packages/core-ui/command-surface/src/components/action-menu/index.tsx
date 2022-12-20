@@ -8,6 +8,20 @@ import { useUpdateDeviceSetpoint } from '@hive-command/api';
 import { isEqual } from 'lodash'
 import { InfiniteCanvasContext } from '@hexhive/ui';
 
+// const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+export const getDeviceFunction = (func_desc: string) => {
+	// const func = vm.runInNewContext(
+	  	const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+		return new AsyncFunction(
+				  'state',
+				  'setState',
+				  'requestState',
+				  func_desc
+			  )
+	// return func;
+};
+
+  
 export interface ActionMenuProps {
     values?: {
 		[key: string]: {
@@ -24,7 +38,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
     const { values } = props;
 
-    const { program, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
+    const { program, client, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
 
     const { selected } = useContext(InfiniteCanvasContext)
 	const [editSetpoint, setEditSetpoint] = useState<string>();
@@ -68,6 +82,10 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	// }
 
     const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
+		console.log({deviceName, stateKey, stateValue});
+
+		client?.changeDeviceValue?.(deviceName, stateKey, stateValue);
+
 		// sendAction?.('UPDATE-DEVICE-STATE', { deviceName, stateKey: stateKey, value: stateValue})
 		
 		// let ws = Object.assign({}, workingState);
@@ -77,16 +95,12 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 		
 	}
 
-	console.log({
-		values, 
-		devices: getDevicesForNode(hmi?.nodes?.find((a) => (selected || []).map((x) => x.id).indexOf(a.id) > -1))
-	});
-
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
 		let deviceValueBlob = values?.[deviceName] //getDeviceValue(deviceName, deviceInfo.state)
         let value = deviceValueBlob?.[state.key];
-		console.log({deviceName, deviceValueBlob, value, state})
 
+		console.log({deviceValueBlob, value, state, deviceName});
+		
 		if (state.writable && operatingMode == "manual") {
 			return (
 				<TextField
@@ -230,7 +244,6 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 									<Box sx={{ flex: 1 }}>{renderActionValue(deviceName, deviceInfo, deviceMode || '', state)}</Box>
 									{workingState?.[deviceName]?.[state.key] != undefined ? (
 										<IconButton
-
 											onClick={() => {
 												sendChanges?.(deviceName, state.key, workingState?.[deviceName]?.[state.key])
 											}}>
@@ -246,6 +259,35 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 									fullWidth
 									onClick={() => {
 
+										if(!action.func) return;
+						
+										const f = getDeviceFunction(action.func)
+
+										// const func = f
+										// 	`		
+													
+										// 		`,
+										// 	{
+										// 	  func: action.func,
+										// 	  setTimeout,
+										// 	}
+										//   );
+										// return func;
+
+										// console.log(action.func)
+										// const f = new Function('setState', 'requestState', `function action(setState, requestState){ ${action.func} } `);
+
+										f({},
+											async (state) => {
+												await Promise.all(Object.keys(state).map((key) => {
+													sendChanges?.(deviceName, key, state[key]);
+												}))
+												// console.log({state})
+											 }, 
+											 (state) => console.log({state})
+										);
+
+										// console.log({action: action.func})
 										// sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});
 
 										// performAction(

@@ -212,7 +212,7 @@ export const OPCUAServerStage = () => {
                                 if(item.children && item.children.length > 0){
                                     updateRec(item.children, item.name)
                                 }else{
-                                    updateSubscriptionMap(item.path, item.name)
+                                    updateSubscriptionMap(item.path, `${parent.name ? parent.name + '.' : ''}${item.name}`)
                                 }
                             }}
                             // disabled

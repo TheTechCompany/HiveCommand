@@ -59,19 +59,37 @@ export const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
     const [ packs, setPacks ] = cache ? cache : useState<{[key: string]: RemoteComponent[]}>({});
 
+    const lock = useRef<any>({})
+
     const getPack = async (id: string, base_url: string, url: string) => {
-        if(packs[id]){
-            return packs[id];
+
+        if(packs[id] || lock.current[id]){
+            if(lock.current[id] instanceof Promise){
+                let data = await lock.current[id]
+                return Object.keys(data).map((x) => ({name: x, component: data[x]}));
+
+            }else{
+                return packs[id];
+            }
         }else{
+
             try{
-                const data : any = await Loader(base_url, `${url}?now=${Date.now()}`)
+                let loader = Loader(base_url, `${url}?now=${Date.now()}`)
+                lock.current[id] = loader;
+                
+                const data : any = await loader
                 setPacks({
                     ...packs,
                     [id]: Object.keys(data).map((x) => ({name: x, component: data[x]}))
                 })
+
+                lock.current[id] = undefined;
+     
                 return Object.keys(data).map((x) => ({name: x, component: data[x]}))
             }catch(e){
                 console.log({e, base_url, url})
+                lock.current[id] = undefined;
+
             }
         }
     }   

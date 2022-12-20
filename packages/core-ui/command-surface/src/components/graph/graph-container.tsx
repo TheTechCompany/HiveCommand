@@ -41,7 +41,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
       <Box
         sx={{
           color: 'white',
-          padding: 3, 
+          padding: '3px', 
           justifyContent: 'space-between', 
           flexDirection: 'row',
           alignItems: 'center',

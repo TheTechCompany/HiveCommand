@@ -1,7 +1,9 @@
 import { CommandSurfaceClient } from "@hive-command/command-surface";
-import { useDeviceReportActions } from "./report";
+import { useDeviceReportActions, useDeviceReports } from "./report";
 
 export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
+
+    const { results: reports } = useDeviceReports(deviceId)
 
 
     const { 
@@ -16,6 +18,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
 
     return {
+        reports,
         createReportPage,
         updateReportPage,
         removeReportPage,

@@ -111,6 +111,13 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
   const [modalOpen, openModal] = useState(false);
 
+
+  const charts = useMemo(() => {
+    return reports?.find((a) => a.id == activePage)?.charts || []
+  }, [activePage, reports]);
+
+  console.log("REPORTS", charts)
+
   return (
     <Box
       style={{position: 'relative', flex: 1, display: 'flex', flexDirection: 'column'}}
@@ -188,7 +195,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
             });
         }}
           noWrap
-          layout={reports?.find((a) => a.id == activePage)?.charts || []}
+          layout={charts}
           >
         {(item: any) => (
         <GraphContainer

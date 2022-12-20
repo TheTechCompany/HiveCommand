@@ -20,6 +20,9 @@ export const SetupView = (props: any) => {
 
     const steps = [
         {
+            label: "Persistence",
+        },
+        {
             label: "Discovery server"
         },
         {
@@ -58,9 +61,6 @@ export const SetupView = (props: any) => {
                 setState('opcuaProvisioned', true)
             }
         },
-        // {
-        //     label: "Persistence",
-        // }
     ]
 
     const finish = () => {
@@ -95,24 +95,25 @@ export const SetupView = (props: any) => {
         switch (activeIndex) {
             case 0:
                 return (
+                    <LocalPersistenceStage />
+                )
+            case 1:
+                return (
                     <DiscoveryServerStage />
                 );
-            case 1:
+            case 2:
                 return (
                     <ProvisionCodeStage />
                 )
-            case 2:
+            case 3:
                 return (
                     <LayoutDownload />
                 )
-            case 3:
+            case 4:
                 return (
                     <OPCUAServerStage />
                 )
-            case 4:
-                return (
-                    <LocalPersistenceStage />
-                )
+  
         }
     }
 
