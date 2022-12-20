@@ -71,6 +71,7 @@ export const Controller = () => {
                 [data.key]: data.value.value
             }));
         })
+        
 
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`, {
                 paths
