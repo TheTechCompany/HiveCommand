@@ -52,9 +52,9 @@ export const DeviceControlView = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
-                values={{}}
+                values={values}
                 title={`${results?.[0]?.name} - ${program?.name}`}
-                reports={reports}
+                // reports={reports}
                 client={client}
                 // values={values}
                 // seekValue={(startDate, endDate) => {

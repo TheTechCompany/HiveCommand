@@ -31,6 +31,11 @@ export * from './hooks/remote-components'
 
 
 export interface CommandSurfaceClient {
+    reports?: {
+        id: string;
+        name: string;
+        charts: ReportChart[];
+    }[]
 
     createReportPage?: (name: string) => Promise<any>;
     updateReportPage?: (id: string, name: string) => Promise<any>;
@@ -45,6 +50,7 @@ export interface CommandSurfaceClient {
     getValues?: (horizon: {start: Date, end: Date}) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
     performDeviceAction?: (device: string, action: string) => void;
     changeDeviceValue?: (device: string, state: string, value: any) => void;
+
 }
 
 export interface CommandSurfaceProps {
@@ -72,11 +78,6 @@ export interface CommandSurfaceProps {
 
     client?: CommandSurfaceClient;
 
-    reports?: {
-        id: string;
-        name: string;
-        charts: ReportChart[];
-    }[]
 
 
     mode?: string;
@@ -101,7 +102,9 @@ export interface CommandSurfaceProps {
 
 export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
-    const { program: activeProgram, reports = [], defaultPage, client, watching } = props;
+    const { program: activeProgram, defaultPage, client, watching } = props;
+
+    const { reports = [] } = client || {};
 
     const devices = activeProgram?.devices?.map((device) => ({
         ...device,
@@ -141,8 +144,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     //     //     return props.values;
     //     // }
     // }, [props.values])
-
-    console.log({deviceValues})
 
 
     const [activePage, setActivePage] = useState<any>(null)
@@ -199,6 +200,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         // }
     ]
 
+    console.log({activeView, activePage})
+
     const { view, toolbarMenu } = useMemo(() => {
         const view = toolbar_menu.find((a) => {
             return matchPath(window.location.pathname, `${a.id}`) != null;
@@ -209,11 +212,12 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         if (activeView != 'controls') {
             toolbarMenu = toolbarMenu.filter((a) => a.id != 'time-machine')
         }
+
         return {
             toolbarMenu,
             view,
         }
-    }, [window.location.href])
+    }, [window.location.href, activeView])
 
 
     const deviceInfo: any = {};
@@ -223,8 +227,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     // const createReportPage = useCreateReportPage(id);
 
     const onTreeAdd = (nodeId?: string) => {
+        console.log({nodeId});
+
         switch (nodeId) {
-            case 'analytics-root':
+            case 'analytics':
                 setEditReportPage(true);
                 break;
         }
@@ -251,7 +257,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node?.parent;
 
-                console.log({page})
+                console.log({page, nodeId})
 
                 if(!page) page = node.id;
                 

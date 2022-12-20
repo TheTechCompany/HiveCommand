@@ -8292,6 +8292,11 @@ react-resizable@^3.0.4:
     prop-types "15.x"
     react-draggable "^4.0.3"
 
+react-resize-aware@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/react-resize-aware/-/react-resize-aware-3.1.1.tgz#a428fd53f34dec3a52b68c923a6ebe51a192c63c"
+  integrity sha512-M8IyVLBN8D6tEUss+bxQlWte3ZYtNEGhg7rBxtCVG8yEBjUlZwUo5EFLq6tnvTZXcgAbCLjsQn+NCoTJKumRYg==
+
 react-resize-aware@^3.1.1:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/react-resize-aware/-/react-resize-aware-3.1.2.tgz#a5e6fe4691a3ac8d3b0fadd37008339db2294c4f"

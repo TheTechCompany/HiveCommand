@@ -21,6 +21,7 @@ export interface GlobalState {
             type: {
                 tagPrefix?: string;
                 state: {
+                    type: string;
                     key: string
                 }[];
             }
