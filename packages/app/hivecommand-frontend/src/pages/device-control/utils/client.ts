@@ -1,3 +1,4 @@
+import { gql, useMutation } from "@apollo/client";
 import { CommandSurfaceClient } from "@hive-command/command-surface";
 import { useDeviceReportActions, useDeviceReports } from "./report";
 
@@ -5,6 +6,22 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
     const { results: reports } = useDeviceReports(deviceId)
 
+    const [ _changeDevValue ] = useMutation(gql`
+        mutation ChangeDeviceValue($deviceId: String, $deviceName: String, $key: String, $value: String) {
+            changeDeviceValue(deviceId: $deviceId, deviceName: $deviceName, key: $key, value: $value)
+        }
+    `)
+
+    const changeDeviceValue = (deviceName: string, stateKey: string, value: any) => {
+        return _changeDevValue({
+            variables: {
+                deviceId, 
+                deviceName,
+                key: stateKey,
+                value
+            }
+        })
+    }
 
     const { 
         addChart, 
@@ -25,6 +42,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         addChart,
         updateChart,
         updateChartGrid,
-        removeChart
+        removeChart,
+        changeDeviceValue
     }
 }
