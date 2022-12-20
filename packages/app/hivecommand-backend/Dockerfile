@@ -1,4 +1,4 @@
-FROM node:16-alpine as build
+FROM node:16.18-alpine as build
 
 ARG BUILD_ENV=github
 
@@ -30,7 +30,7 @@ WORKDIR /app/packages/app/hivecommand-backend
 
 RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
 
-FROM node:16-alpine
+FROM node:16.18-alpine
 
 WORKDIR /app
 
