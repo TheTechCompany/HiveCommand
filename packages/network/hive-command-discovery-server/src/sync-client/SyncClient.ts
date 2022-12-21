@@ -136,15 +136,15 @@ export class SyncClient {
 				console.log({serverUrl});
 
 				if(!serverUrl) return;
-				let serverUri = serverUrl;
+				// let serverUri = serverUrl;
 
-				if(!this.clients[serverUri] && serverUrl){
+				if(!this.clients[serverUrl] && serverUrl){
 				
 					const controlDevice = await this.onClientDiscovered(serverUrl)
 					//Match networkName to device id 
 					
 					
-					const devices = await this.clients[serverUri].browse(`/Objects/1:Devices`)
+					const devices = await this.clients[serverUrl].browse(`/Objects/1:Devices`)
 
 					// const actions = await this.clients[serverUri].browse(`/Objects/1:Plant/1:Actions`)
 			
@@ -206,7 +206,7 @@ export class SyncClient {
 
 						// console.log("Subscribing to", datapoints.map((x) => x.tag))
 	
-						const monitor = await this.clients[serverUri].subscribeMulti(datapoints || [])
+						const monitor = await this.clients[serverUrl].subscribeMulti(datapoints || [])
 	
 						monitor.monitors?.on('initialized', () => {
 							console.log("Subscription initialized")
@@ -229,7 +229,7 @@ export class SyncClient {
 					
 				}
 
-				this.servers[serverUri] = server;
+				this.servers[serverUrl] = server;
 
 			}else{
 				// console.log({productUri: server.productUri})
@@ -261,6 +261,16 @@ export class SyncClient {
 	}
 
 	async write(serverUri: string, path: string, dataType: DataType, value: any){
+		console.log("Writing ", serverUri, path, dataType, value);
+
+		/*
+			TODO
+
+			Add type rectifying here so a boolean comes out as a boolean rather than a number
+
+			If that doesn't work, well too bad
+		*/	
+
 		await this.clients?.[serverUri]?.setDetails(path, dataType, value)
 	}
 
@@ -298,7 +308,7 @@ export class SyncClient {
 		// let port = portAndKey.split('-')[0]
 		// let valueKey = portAndKey.split('-')[1]
 
-		if(value?.value?.toString() == "NaN" || value.value == NaN || value?.value?.toString() == '{"low":-100,"high":100}') return;
+		if(value?.value?.toString() == "NaN" || Number.isNaN(value.value) || value?.value?.toString() == '{"low":-100,"high":100}') return;
 
 		// console.log("Key ", key, bus, port, valueKey, value.value)
 

@@ -269,13 +269,25 @@ export class DiscoveryServer {
                 authorizedBy: string,
                 address: string,
                 busPath: string,
-                value: string                
+                dataType: "UIntegerT" | "BooleanT" | "Boolean" | "IntegerT",
+                value: string                        
             } = JSON.parse(msg?.content.toString() || '{}')
 
-            log(stateUpdate.authorizedBy, `Changing value ${stateUpdate.busPath} to ${stateUpdate.value}`)
+            log(stateUpdate.authorizedBy, `Changing value ${stateUpdate.busPath} to ${stateUpdate.value} dt: ${stateUpdate.dataType}`)
+
             if(!stateUpdate.address) return console.error(`No address in value event`)
 
-            await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, DataType.Double, stateUpdate.value)
+            let dt = DataType.Double;
+
+            if(stateUpdate.dataType == "BooleanT" || stateUpdate.dataType == "Boolean"){
+                dt = DataType.Boolean;
+            }
+
+            try{
+                await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, dt, stateUpdate.value)
+            }catch(e: any){
+                console.error(e.message)
+            }
         
         }, {
             noAck: true

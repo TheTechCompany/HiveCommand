@@ -221,13 +221,38 @@ export default (prisma: PrismaClient, channel: Channel) => {
 						id: args.deviceId,
 						organisation: context?.jwt?.organisation
 					}
-				})	
+				})
+
+				const program = await prisma.program.findFirst({
+					where: {
+						usedBy: {
+							some: {
+								id: args.deviceId
+							}
+						}
+					},
+					include: {
+						devices: {
+							include: {
+								type: {
+									include: {
+										state: true
+										
+									}
+								}
+							}
+						}
+					}
+				})
+		
+				const dataType = program?.devices?.find((a) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}` == args.deviceName)?.type?.state?.find((a) => a.key == args.key)?.type;
 
 				if(!device) return new Error("No device found")
 
 				let stateChange = {
 					address: `opc.tcp://${device?.network_name}:8440`,
 					busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`,
+					dataType,
 					value: args.value
 				}
 
