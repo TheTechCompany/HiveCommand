@@ -263,6 +263,14 @@ export class SyncClient {
 	async write(serverUri: string, path: string, dataType: DataType, value: any){
 		console.log("Writing ", serverUri, path, dataType, value);
 
+		switch(dataType){
+			case DataType.Boolean:
+				value = (value == 'true' || value == true) ? true : false;
+				break;
+			case DataType.Double:
+				value = parseFloat(value);
+				break;
+		}
 		/*
 			TODO
 
