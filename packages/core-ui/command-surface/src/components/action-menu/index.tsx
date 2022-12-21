@@ -259,6 +259,8 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 									fullWidth
 									onClick={() => {
 
+										console.log({action});
+										
 										if(!action.func) return;
 						
 										const f = getDeviceFunction(action.func)

@@ -13,12 +13,13 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
     `)
 
     const changeDeviceValue = (deviceName: string, stateKey: string, value: any) => {
+        console.log("Change device value", deviceName, stateKey, value);
         return _changeDevValue({
             variables: {
                 deviceId, 
                 deviceName,
                 key: stateKey,
-                value
+                value: `${value}`
             }
         })
     }
