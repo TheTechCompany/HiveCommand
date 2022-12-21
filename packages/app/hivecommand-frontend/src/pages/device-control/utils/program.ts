@@ -106,6 +106,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                     type {
                                         actions {
                                             key
+                                            func
                                         }
 
                                         tagPrefix
@@ -156,6 +157,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                     type {
                                         actions {
                                             key
+                                            func
                                         }
                                         tagPrefix
                                         state {
@@ -213,6 +215,9 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                         type {
                             tagPrefix
 
+                            actions {
+                                id
+                            }
                             state {
                                 id
                                 inputUnits
