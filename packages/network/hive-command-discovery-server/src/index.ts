@@ -273,9 +273,13 @@ export class DiscoveryServer {
             } = JSON.parse(msg?.content.toString() || '{}')
 
             log(stateUpdate.authorizedBy, `Changing value ${stateUpdate.busPath} to ${stateUpdate.value}`)
-            if(!stateUpdate.address) return console.error(`No address in value event`)
 
-            await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, DataType.Double, stateUpdate.value)
+            if(!stateUpdate.address) return console.error(`No address in value event`)
+            try{
+                await this.syncClient.write(stateUpdate.address, stateUpdate.busPath, DataType.Double, stateUpdate.value)
+            }catch(e: any){
+                console.error(e.message)
+            }
         
         }, {
             noAck: true
