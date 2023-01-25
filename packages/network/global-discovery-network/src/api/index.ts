@@ -109,13 +109,7 @@ export const API = (prisma: PrismaClient) => {
                         },
                         interface: {
                             include: {
-                                nodes: {
-                                    include: {
-                                        devicePlaceholder: {
-                                            include: deviceInclude
-                                        }
-                                    }
-                                },
+                                nodes: true,
                                 edges: {
                                     include: {
                                         from: true,

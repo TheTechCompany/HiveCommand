@@ -1,3 +1,4 @@
+import { HMIProgram } from '@hive-command/command-surface';
 import React from 'react'
 
 export type StateUpdateFn = (stateUpdate: (state: GlobalState) => any) => void;
@@ -9,24 +10,25 @@ export interface GlobalState {
         path: string,
         tag: string
     }[],
-    controlLayout?: {
-        interface: {
-            id: string,
-            nodes: any[],
-            edges: any[]
-        }
-        devices: {
-            id: string;
-            tag: string;
-            type: {
-                tagPrefix?: string;
-                state: {
-                    type: string;
-                    key: string
-                }[];
-            }
-        }[]
-    },
+    controlLayout?: HMIProgram,
+    // {
+    //     interface: {
+    //         id: string,
+    //         nodes: any[],
+    //         edges: any[]
+    //     }
+    //     devices: {
+    //         id: string;
+    //         tag: string;
+    //         type: {
+    //             tagPrefix?: string;
+    //             state: {
+    //                 type: string;
+    //                 key: string
+    //             }[];
+    //         }
+    //     }[]
+    // },
     networkLayout?: any[]
     deviceMap?: {
         path: string,
