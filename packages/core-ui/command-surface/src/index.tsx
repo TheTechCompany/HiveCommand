@@ -118,7 +118,7 @@ export interface CommandSurfaceProps {
 
     title?: string;
 
-    program: HMIProgram;
+    program?: HMIProgram;
 
     client?: CommandSurfaceClient;
 
@@ -430,11 +430,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const program = {
         ...activeProgram,
         interface: {
-            ...activeProgram.interface,
+            ...activeProgram?.interface,
             nodes: hmi
         },
-        devices: devices
-    };
+        devices: devices || []
+    }
 
 
     return (

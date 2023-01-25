@@ -1,6 +1,6 @@
 import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api';
 import React from 'react';
-import { CommandSurfaceClient, HMIDevice, HMIProgram, HMIView } from '.';
+import { CommandSurfaceClient, HMIDevice, HMINode, HMIProgram, HMIView } from '.';
 import { RemoteComponentCache } from './hooks/remote-components';
 
 export const DeviceControlContext = React.createContext<{
@@ -18,7 +18,13 @@ export const DeviceControlContext = React.createContext<{
 
 	cache?: RemoteComponentCache;
 
-	program?: HMIProgram;
+	program?: {
+		id?: string,
+		interface: {
+			nodes: HMINode[]
+		},
+		devices: HMIDevice[]
+	};
 	
 	alarms?: any[];
 
