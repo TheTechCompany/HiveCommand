@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
-import { Box, Button, Collapse, IconButton } from '@mui/material'
+import { Box, Button, Collapse, IconButton, Paper } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
-import { GridView as Nodes, Construction as Action } from '@mui/icons-material'
+import { GridView as Nodes, Construction as Action, Assignment } from '@mui/icons-material'
 import Settings from './Settings'
 import { useParams } from 'react-router-dom';
 import { useAssignHMINode, useCreateHMIAction, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
@@ -96,6 +96,29 @@ export const Controls = (props) => {
                 id
                 name
 
+                variables {
+                    id
+                    name
+                    type
+                }
+
+                templates {
+                    id
+                    name
+
+                    inputs {
+                        id
+                        name
+                        type
+                    }
+
+                    outputs {
+                        id
+                        name
+                        type
+                    }
+                }
+
                 templatePacks {
                     id
                     name
@@ -141,26 +164,6 @@ export const Controls = (props) => {
 
                         options
 
-                        devicePlaceholder {
-                            id
-                            
-                            tag
-
-                            type {
-                                tagPrefix
-                            }
-
-                            setpoints {
-                                id
-                                name
-                                key {
-                                    id
-                                    key
-                                }
-                                value
-                                type
-                            }
-                        }
                         x
                         y
 
@@ -172,6 +175,23 @@ export const Controls = (props) => {
                         showTotalizer
                         rotation
                         
+                        dataTransformer {
+                            id
+
+                            template {
+                                id
+                            }
+
+                            configuration {
+                                id
+                                field {
+                                    id
+                                }
+                                value
+                            }
+
+                        }
+
                         width
                         height
 
@@ -191,10 +211,7 @@ export const Controls = (props) => {
                             
                             rotation
 
-                            devicePlaceholder {
-                                id
-                                tag
-                            }
+                           
                         }
 
                         ports {
@@ -340,10 +357,12 @@ export const Controls = (props) => {
                         scaleY: x.scaleY != undefined ? x.scaleY : 1,
                         rotation: x.rotation || 0,
                         options: x.options,
+                        templateOptions: x.dataTransformer?.configuration || [],
 
                         //  width: `${x?.type?.width || 50}px`,
                         // height: `${x?.type?.height || 50}px`,
                         extras: {
+                            template: x.dataTransformer?.template?.id,
                             options: x.icon?.metadata?.options || {},
                             devicePlaceholder: {
                                 ...x.devicePlaceholder,
@@ -509,6 +528,8 @@ export const Controls = (props) => {
                 refetch,
                 selected,
                 devices,
+                variables: program?.variables || [],
+                templates: program?.templates || [],
                 nodes: nodes,
                 updateNode
             }}>
@@ -519,7 +540,9 @@ export const Controls = (props) => {
                     position: 'relative',
                 }}>
 
-                <InfiniteScrubber time={new Date().getTime()} />
+                {/* <Paper sx={{aspectRatio: '16/9', display: 'flex'}}> */}
+
+                {/* <InfiniteScrubber time={new Date().getTime()} /> */}
                
                 {(<InfiniteCanvas
                     finite
@@ -710,6 +733,13 @@ export const Controls = (props) => {
                         <Nodes />
                     </IconButton>
                     </div>
+                    <div style={{background: menuOpen === 'template' ? '#dfdfdfdf' :undefined}}>
+                        <IconButton 
+                            sx={{color: 'white'}}
+                            onClick={() => changeMenu('template')}>
+                                <Assignment style={{fill: 'white'}} width="24px" />
+                        </IconButton>
+                    </div>
                     <div style={{background: menuOpen == 'config' ? '#dfdfdfdf' : undefined}}>
                     <IconButton
                         sx={{color: 'white'}}
@@ -728,6 +758,7 @@ export const Controls = (props) => {
                     </IconButton>
                     </div> */}
                 </Box>
+                {/* </Paper> */}
             </Box>
         </HMIContext.Provider>
     )

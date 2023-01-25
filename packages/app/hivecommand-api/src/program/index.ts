@@ -6,6 +6,7 @@ export * from './placeholders'
 export * from './conditions'
 export * from './actions'
 export * from './variables'
+export * from './templates';
 
 export const useCreateProgram = (organisation: string) => {
 

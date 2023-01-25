@@ -91,48 +91,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                 scaleY
 
                                 rotation
-                                devicePlaceholder {
-                                    id
-                                    tag 
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
-
-                                    type {
-                                        actions {
-                                            key
-                                            func
-                                        }
-
-                                        tagPrefix
-    
-                                        state {
-                                            type
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
-
-
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
-    
-                                }
+                                
                             
                             children {
                                 id
@@ -142,45 +101,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                 x
                                 y
 
-                                devicePlaceholder {
-                                    id
-                                    tag
-                                    units {
-                                        inputUnit
-                                        displayUnit
-                                        state {
-                                            id
-                                            key
-                                        }
-                                    }
-
-                                    type {
-                                        actions {
-                                            key
-                                            func
-                                        }
-                                        tagPrefix
-                                        state {
-                                            units
-                                            inputUnits
-                                            key
-                                            writable
-                                        }
-                                    }
-
-
-                                    setpoints {
-                                        id
-                                        name
-                                        key {
-                                            id
-                                            key
-                                        }
-                                        value
-                                        type
-                                    }
-    
-                                }
+                               
                             }
 
                             ports {
@@ -210,6 +131,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                             state {
                                 id
                                 key
+                                type
                             }
                         }
                         type {

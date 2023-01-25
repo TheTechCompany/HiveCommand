@@ -1,0 +1,19 @@
+{
+  "name": "@hive-command/opcua-mqtt-hub",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.3"
+  },
+  "author": "",
+  "license": "ISC"
+}

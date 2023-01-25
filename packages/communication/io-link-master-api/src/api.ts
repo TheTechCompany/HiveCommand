@@ -14,7 +14,7 @@
 
 
 import { Configuration } from './configuration';
-import globalAxios, { AxiosPromise, AxiosInstance } from 'axios';
+import globalAxios, { AxiosPromise, AxiosInstance, AxiosRequestConfig } from 'axios';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { DUMMY_BASE_URL, assertParamExists, setApiKeyToObject, setBasicAuthToObject, setBearerAuthToObject, setOAuthToObject, setSearchParams, serializeDataIfNeeded, toPathString, createRequestFunction } from './common';
@@ -32,19 +32,19 @@ export interface ApiResponse {
      * @type {number}
      * @memberof ApiResponse
      */
-    code?: number;
+    'code'?: number;
     /**
      * 
      * @type {string}
      * @memberof ApiResponse
      */
-    type?: string;
+    'type'?: string;
     /**
      * 
      * @type {string}
      * @memberof ApiResponse
      */
-    message?: string;
+    'message'?: string;
 }
 /**
  * 
@@ -57,13 +57,13 @@ export interface Category {
      * @type {number}
      * @memberof Category
      */
-    id?: number;
+    'id'?: number;
     /**
      * 
      * @type {string}
      * @memberof Category
      */
-    name?: string;
+    'name'?: string;
 }
 /**
  * 
@@ -76,19 +76,19 @@ export interface GenericResponse {
      * @type {number}
      * @memberof GenericResponse
      */
-    cid?: number;
+    'cid'?: number;
     /**
      * 
      * @type {GenericResponseData}
      * @memberof GenericResponse
      */
-    data?: GenericResponseData;
+    'data'?: GenericResponseData;
     /**
      * 
      * @type {number}
      * @memberof GenericResponse
      */
-    code?: number;
+    'code'?: number;
 }
 /**
  * 
@@ -101,145 +101,7 @@ export interface GenericResponseData {
      * @type {object}
      * @memberof GenericResponseData
      */
-    value?: object;
-}
-/**
- * 
- * @export
- * @interface InlineObject
- */
-export interface InlineObject {
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject
-     */
-    adr?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineObject
-     */
-    cid?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject
-     */
-    code?: string;
-    /**
-     * 
-     * @type {IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData}
-     * @memberof InlineObject
-     */
-    data?: IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData;
-}
-/**
- * 
- * @export
- * @interface InlineObject1
- */
-export interface InlineObject1 {
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    adr?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineObject1
-     */
-    cid?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject1
-     */
-    code?: string;
-    /**
-     * 
-     * @type {IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData}
-     * @memberof InlineObject1
-     */
-    data?: IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData;
-}
-/**
- * 
- * @export
- * @interface InlineObject2
- */
-export interface InlineObject2 {
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject2
-     */
-    adr?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof InlineObject2
-     */
-    cid?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof InlineObject2
-     */
-    code?: string;
-    /**
-     * 
-     * @type {IolinkmasterPortPortIolinkdevicePdoutSetdataData}
-     * @memberof InlineObject2
-     */
-    data?: IolinkmasterPortPortIolinkdevicePdoutSetdataData;
-}
-/**
- * 
- * @export
- * @interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData
- */
-export interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData {
-    /**
-     * The URL that will be called when data changes
-     * @type {string}
-     * @memberof IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData
-     */
-    callback?: string;
-    /**
-     * The Datapoint to monitor
-     * @type {Array<string>}
-     * @memberof IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedSubscribeData
-     */
-    datatosend?: Array<string>;
-}
-/**
- * 
- * @export
- * @interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData
- */
-export interface IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData {
-    /**
-     * The URL that will be called when data changes
-     * @type {string}
-     * @memberof IolinkmasterPortPortIolinkdeviceIolinkeventDatachangedUnsubscribeData
-     */
-    callback?: string;
-}
-/**
- * 
- * @export
- * @interface IolinkmasterPortPortIolinkdevicePdoutSetdataData
- */
-export interface IolinkmasterPortPortIolinkdevicePdoutSetdataData {
-    /**
-     * New value to set
-     * @type {string}
-     * @memberof IolinkmasterPortPortIolinkdevicePdoutSetdataData
-     */
-    newvalue?: string;
+    'value'?: object;
 }
 /**
  * 
@@ -252,48 +114,46 @@ export interface Order {
      * @type {number}
      * @memberof Order
      */
-    id?: number;
+    'id'?: number;
     /**
      * 
      * @type {number}
      * @memberof Order
      */
-    petId?: number;
+    'petId'?: number;
     /**
      * 
      * @type {number}
      * @memberof Order
      */
-    quantity?: number;
+    'quantity'?: number;
     /**
      * 
      * @type {string}
      * @memberof Order
      */
-    shipDate?: string;
+    'shipDate'?: string;
     /**
      * Order Status
      * @type {string}
      * @memberof Order
      */
-    status?: OrderStatusEnum;
+    'status'?: OrderStatusEnum;
     /**
      * 
      * @type {boolean}
      * @memberof Order
      */
-    complete?: boolean;
+    'complete'?: boolean;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum OrderStatusEnum {
-    Placed = 'placed',
-    Approved = 'approved',
-    Delivered = 'delivered'
-}
+export const OrderStatusEnum = {
+    Placed: 'placed',
+    Approved: 'approved',
+    Delivered: 'delivered'
+} as const;
+
+export type OrderStatusEnum = typeof OrderStatusEnum[keyof typeof OrderStatusEnum];
 
 /**
  * 
@@ -306,49 +166,216 @@ export interface Pet {
      * @type {number}
      * @memberof Pet
      */
-    id?: number;
+    'id'?: number;
     /**
      * 
      * @type {Category}
      * @memberof Pet
      */
-    category?: Category;
+    'category'?: Category;
     /**
      * 
      * @type {string}
      * @memberof Pet
      */
-    name: string;
+    'name': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof Pet
      */
-    photoUrls: Array<string>;
+    'photoUrls': Array<string>;
     /**
      * 
      * @type {Array<Tag>}
      * @memberof Pet
      */
-    tags?: Array<Tag>;
+    'tags'?: Array<Tag>;
     /**
      * pet status in the store
      * @type {string}
      * @memberof Pet
      */
-    status?: PetStatusEnum;
+    'status'?: PetStatusEnum;
 }
+
+export const PetStatusEnum = {
+    Available: 'available',
+    Pending: 'pending',
+    Sold: 'sold'
+} as const;
+
+export type PetStatusEnum = typeof PetStatusEnum[keyof typeof PetStatusEnum];
 
 /**
-    * @export
-    * @enum {string}
-    */
-export enum PetStatusEnum {
-    Available = 'available',
-    Pending = 'pending',
-    Sold = 'sold'
+ * 
+ * @export
+ * @interface SetFieldBusIPRequest
+ */
+export interface SetFieldBusIPRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SetFieldBusIPRequest
+     */
+    'adr'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SetFieldBusIPRequest
+     */
+    'cid'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SetFieldBusIPRequest
+     */
+    'code'?: string;
+    /**
+     * 
+     * @type {SetFieldBusIPRequestData}
+     * @memberof SetFieldBusIPRequest
+     */
+    'data'?: SetFieldBusIPRequestData;
 }
-
+/**
+ * 
+ * @export
+ * @interface SetFieldBusIPRequestData
+ */
+export interface SetFieldBusIPRequestData {
+    /**
+     * 
+     * @type {SetFieldBusIPRequestDataDatatoset}
+     * @memberof SetFieldBusIPRequestData
+     */
+    'datatoset'?: SetFieldBusIPRequestDataDatatoset;
+}
+/**
+ * 
+ * @export
+ * @interface SetFieldBusIPRequestDataDatatoset
+ */
+export interface SetFieldBusIPRequestDataDatatoset {
+    /**
+     * 
+     * @type {string}
+     * @memberof SetFieldBusIPRequestDataDatatoset
+     */
+    'ipaddress'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof SetFieldBusIPRequestDataDatatoset
+     */
+    'ipdefaultgateway'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SetFieldBusIPRequestDataDatatoset
+     */
+    'dhcp'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SetFieldBusIPRequestDataDatatoset
+     */
+    'subnetmask'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SetPortDataRequest
+ */
+export interface SetPortDataRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SetPortDataRequest
+     */
+    'adr'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SetPortDataRequest
+     */
+    'cid'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SetPortDataRequest
+     */
+    'code'?: string;
+    /**
+     * 
+     * @type {SetPortDataRequestData}
+     * @memberof SetPortDataRequest
+     */
+    'data'?: SetPortDataRequestData;
+}
+/**
+ * 
+ * @export
+ * @interface SetPortDataRequestData
+ */
+export interface SetPortDataRequestData {
+    /**
+     * New value to set
+     * @type {string}
+     * @memberof SetPortDataRequestData
+     */
+    'newvalue'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface SubcribeToPortRequest
+ */
+export interface SubcribeToPortRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof SubcribeToPortRequest
+     */
+    'adr'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof SubcribeToPortRequest
+     */
+    'cid'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof SubcribeToPortRequest
+     */
+    'code'?: string;
+    /**
+     * 
+     * @type {SubcribeToPortRequestData}
+     * @memberof SubcribeToPortRequest
+     */
+    'data'?: SubcribeToPortRequestData;
+}
+/**
+ * 
+ * @export
+ * @interface SubcribeToPortRequestData
+ */
+export interface SubcribeToPortRequestData {
+    /**
+     * The URL that will be called when data changes
+     * @type {string}
+     * @memberof SubcribeToPortRequestData
+     */
+    'callback'?: string;
+    /**
+     * The Datapoint to monitor
+     * @type {Array<string>}
+     * @memberof SubcribeToPortRequestData
+     */
+    'datatosend'?: Array<string>;
+}
 /**
  * 
  * @export
@@ -360,13 +387,13 @@ export interface Tag {
      * @type {number}
      * @memberof Tag
      */
-    id?: number;
+    'id'?: number;
     /**
      * 
      * @type {string}
      * @memberof Tag
      */
-    name?: string;
+    'name'?: string;
 }
 /**
  * 
@@ -379,25 +406,25 @@ export interface TreeFormat {
      * @type {string}
      * @memberof TreeFormat
      */
-    type?: string;
+    'type'?: string;
     /**
      * 
      * @type {string}
      * @memberof TreeFormat
      */
-    namespace?: string;
+    'namespace'?: string;
     /**
      * 
      * @type {string}
      * @memberof TreeFormat
      */
-    encoding?: string;
+    'encoding'?: string;
     /**
      * 
      * @type {object}
      * @memberof TreeFormat
      */
-    valuation?: object;
+    'valuation'?: object;
 }
 /**
  * 
@@ -410,42 +437,40 @@ export interface TreeItem {
      * @type {string}
      * @memberof TreeItem
      */
-    identifier?: string;
+    'identifier'?: string;
     /**
      * 
      * @type {string}
      * @memberof TreeItem
      */
-    type?: TreeItemTypeEnum;
+    'type'?: TreeItemTypeEnum;
     /**
      * 
      * @type {Array<TreeItem>}
      * @memberof TreeItem
      */
-    subs?: Array<TreeItem>;
+    'subs'?: Array<TreeItem>;
     /**
      * 
      * @type {TreeFormat}
      * @memberof TreeItem
      */
-    format?: TreeFormat;
+    'format'?: TreeFormat;
     /**
      * 
      * @type {object}
      * @memberof TreeItem
      */
-    profiles?: object;
+    'profiles'?: object;
 }
 
-/**
-    * @export
-    * @enum {string}
-    */
-export enum TreeItemTypeEnum {
-    Structure = 'structure',
-    Data = 'data',
-    Service = 'service'
-}
+export const TreeItemTypeEnum = {
+    Structure: 'structure',
+    Data: 'data',
+    Service: 'service'
+} as const;
+
+export type TreeItemTypeEnum = typeof TreeItemTypeEnum[keyof typeof TreeItemTypeEnum];
 
 /**
  * 
@@ -458,13 +483,13 @@ export interface TreeResponse {
      * @type {number}
      * @memberof TreeResponse
      */
-    cid?: number;
+    'cid'?: number;
     /**
      * 
      * @type {TreeResponseData}
      * @memberof TreeResponse
      */
-    data?: TreeResponseData;
+    'data'?: TreeResponseData;
 }
 /**
  * 
@@ -477,19 +502,63 @@ export interface TreeResponseData {
      * @type {string}
      * @memberof TreeResponseData
      */
-    identifier?: string;
+    'identifier'?: string;
     /**
      * 
      * @type {string}
      * @memberof TreeResponseData
      */
-    type?: string;
+    'type'?: string;
     /**
      * 
      * @type {Array<TreeItem>}
      * @memberof TreeResponseData
      */
-    subs?: Array<TreeItem>;
+    'subs'?: Array<TreeItem>;
+}
+/**
+ * 
+ * @export
+ * @interface UnsubscribeFromPortRequest
+ */
+export interface UnsubscribeFromPortRequest {
+    /**
+     * 
+     * @type {string}
+     * @memberof UnsubscribeFromPortRequest
+     */
+    'adr'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof UnsubscribeFromPortRequest
+     */
+    'cid'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UnsubscribeFromPortRequest
+     */
+    'code'?: string;
+    /**
+     * 
+     * @type {UnsubscribeFromPortRequestData}
+     * @memberof UnsubscribeFromPortRequest
+     */
+    'data'?: UnsubscribeFromPortRequestData;
+}
+/**
+ * 
+ * @export
+ * @interface UnsubscribeFromPortRequestData
+ */
+export interface UnsubscribeFromPortRequestData {
+    /**
+     * The URL that will be called when data changes
+     * @type {string}
+     * @memberof UnsubscribeFromPortRequestData
+     */
+    'callback'?: string;
 }
 /**
  * 
@@ -502,49 +571,49 @@ export interface User {
      * @type {number}
      * @memberof User
      */
-    id?: number;
+    'id'?: number;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    username?: string;
+    'username'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    firstName?: string;
+    'firstName'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    lastName?: string;
+    'lastName'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    email?: string;
+    'email'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    password?: string;
+    'password'?: string;
     /**
      * 
      * @type {string}
      * @memberof User
      */
-    phone?: string;
+    'phone'?: string;
     /**
      * User Status
      * @type {number}
      * @memberof User
      */
-    userStatus?: number;
+    'userStatus'?: number;
 }
 
 /**
@@ -559,7 +628,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFieldbusType: async (options: any = {}): Promise<RequestArgs> => {
+        getFieldbusType: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/deviceinfo/fieldbustype/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -574,7 +643,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -589,7 +658,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getProductCode: async (options: any = {}): Promise<RequestArgs> => {
+        getProductCode: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/deviceinfo/productcode/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -604,7 +673,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -619,7 +688,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSerial: async (options: any = {}): Promise<RequestArgs> => {
+        getSerial: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/deviceinfo/serialnumber/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -634,7 +703,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -649,7 +718,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTree: async (options: any = {}): Promise<RequestArgs> => {
+        getTree: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/gettree`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -664,7 +733,7 @@ export const DeviceInfoApiAxiosParamCreator = function (configuration?: Configur
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -689,7 +758,7 @@ export const DeviceInfoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFieldbusType(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getFieldbusType(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFieldbusType(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -699,7 +768,7 @@ export const DeviceInfoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getProductCode(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getProductCode(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getProductCode(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -709,7 +778,7 @@ export const DeviceInfoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSerial(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getSerial(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSerial(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -719,7 +788,7 @@ export const DeviceInfoApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTree(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TreeResponse>> {
+        async getTree(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<TreeResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTree(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -786,7 +855,7 @@ export class DeviceInfoApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeviceInfoApi
      */
-    public getFieldbusType(options?: any) {
+    public getFieldbusType(options?: AxiosRequestConfig) {
         return DeviceInfoApiFp(this.configuration).getFieldbusType(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -797,7 +866,7 @@ export class DeviceInfoApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeviceInfoApi
      */
-    public getProductCode(options?: any) {
+    public getProductCode(options?: AxiosRequestConfig) {
         return DeviceInfoApiFp(this.configuration).getProductCode(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -808,7 +877,7 @@ export class DeviceInfoApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeviceInfoApi
      */
-    public getSerial(options?: any) {
+    public getSerial(options?: AxiosRequestConfig) {
         return DeviceInfoApiFp(this.configuration).getSerial(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -819,7 +888,7 @@ export class DeviceInfoApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DeviceInfoApi
      */
-    public getTree(options?: any) {
+    public getTree(options?: AxiosRequestConfig) {
         return DeviceInfoApiFp(this.configuration).getTree(options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -837,7 +906,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getCurrent: async (options: any = {}): Promise<RequestArgs> => {
+        getCurrent: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/processdatamaster/current/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -852,7 +921,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -867,7 +936,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getSupervised: async (options: any = {}): Promise<RequestArgs> => {
+        getSupervised: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/processdatamaster/supervisionstatus/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -882,7 +951,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -897,7 +966,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getTemperature: async (options: any = {}): Promise<RequestArgs> => {
+        getTemperature: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/processdatamaster/temperature/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -912,7 +981,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -927,7 +996,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVoltage: async (options: any = {}): Promise<RequestArgs> => {
+        getVoltage: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/processdatamaster/voltage/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -942,7 +1011,7 @@ export const DiagnosticsApiAxiosParamCreator = function (configuration?: Configu
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -967,7 +1036,7 @@ export const DiagnosticsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getCurrent(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getCurrent(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getCurrent(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -977,7 +1046,7 @@ export const DiagnosticsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getSupervised(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getSupervised(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getSupervised(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -987,7 +1056,7 @@ export const DiagnosticsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getTemperature(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getTemperature(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getTemperature(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -997,7 +1066,7 @@ export const DiagnosticsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getVoltage(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getVoltage(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getVoltage(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1064,7 +1133,7 @@ export class DiagnosticsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DiagnosticsApi
      */
-    public getCurrent(options?: any) {
+    public getCurrent(options?: AxiosRequestConfig) {
         return DiagnosticsApiFp(this.configuration).getCurrent(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1075,7 +1144,7 @@ export class DiagnosticsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DiagnosticsApi
      */
-    public getSupervised(options?: any) {
+    public getSupervised(options?: AxiosRequestConfig) {
         return DiagnosticsApiFp(this.configuration).getSupervised(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1086,7 +1155,7 @@ export class DiagnosticsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DiagnosticsApi
      */
-    public getTemperature(options?: any) {
+    public getTemperature(options?: AxiosRequestConfig) {
         return DiagnosticsApiFp(this.configuration).getTemperature(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1097,7 +1166,7 @@ export class DiagnosticsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof DiagnosticsApi
      */
-    public getVoltage(options?: any) {
+    public getVoltage(options?: AxiosRequestConfig) {
         return DiagnosticsApiFp(this.configuration).getVoltage(options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -1115,7 +1184,7 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFieldBusDHCP: async (options: any = {}): Promise<RequestArgs> => {
+        getFieldBusDHCP: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/fieldbussetup/network/dhcp/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1130,7 +1199,7 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1145,7 +1214,7 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFieldBusHostname: async (options: any = {}): Promise<RequestArgs> => {
+        getFieldBusHostname: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/fieldbussetup/hostname/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1160,7 +1229,7 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1175,7 +1244,7 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getFieldBusIP: async (options: any = {}): Promise<RequestArgs> => {
+        getFieldBusIP: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/fieldbussetup/network/ipaddress/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1190,9 +1259,43 @@ export const FieldBusApiAxiosParamCreator = function (configuration?: Configurat
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Assign FieldBus IP Settings
+         * @param {SetFieldBusIPRequest} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setFieldBusIP: async (data?: SetFieldBusIPRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/fieldbussetup/network/setblock`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1215,7 +1318,7 @@ export const FieldBusApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFieldBusDHCP(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getFieldBusDHCP(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFieldBusDHCP(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1225,7 +1328,7 @@ export const FieldBusApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFieldBusHostname(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getFieldBusHostname(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFieldBusHostname(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1235,8 +1338,19 @@ export const FieldBusApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getFieldBusIP(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getFieldBusIP(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getFieldBusIP(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Assign FieldBus IP Settings
+         * @param {SetFieldBusIPRequest} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async setFieldBusIP(data?: SetFieldBusIPRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.setFieldBusIP(data, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
     }
@@ -1276,6 +1390,16 @@ export const FieldBusApiFactory = function (configuration?: Configuration, baseP
         getFieldBusIP(options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.getFieldBusIP(options).then((request) => request(axios, basePath));
         },
+        /**
+         * 
+         * @summary Assign FieldBus IP Settings
+         * @param {SetFieldBusIPRequest} [data] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        setFieldBusIP(data?: SetFieldBusIPRequest, options?: any): AxiosPromise<GenericResponse> {
+            return localVarFp.setFieldBusIP(data, options).then((request) => request(axios, basePath));
+        },
     };
 };
 
@@ -1293,7 +1417,7 @@ export class FieldBusApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FieldBusApi
      */
-    public getFieldBusDHCP(options?: any) {
+    public getFieldBusDHCP(options?: AxiosRequestConfig) {
         return FieldBusApiFp(this.configuration).getFieldBusDHCP(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1304,7 +1428,7 @@ export class FieldBusApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FieldBusApi
      */
-    public getFieldBusHostname(options?: any) {
+    public getFieldBusHostname(options?: AxiosRequestConfig) {
         return FieldBusApiFp(this.configuration).getFieldBusHostname(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1315,8 +1439,20 @@ export class FieldBusApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof FieldBusApi
      */
-    public getFieldBusIP(options?: any) {
+    public getFieldBusIP(options?: AxiosRequestConfig) {
         return FieldBusApiFp(this.configuration).getFieldBusIP(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Assign FieldBus IP Settings
+     * @param {SetFieldBusIPRequest} [data] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FieldBusApi
+     */
+    public setFieldBusIP(data?: SetFieldBusIPRequest, options?: AxiosRequestConfig) {
+        return FieldBusApiFp(this.configuration).setFieldBusIP(data, options).then((request) => request(this.axios, this.basePath));
     }
 }
 
@@ -1333,7 +1469,7 @@ export const IOTApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIoTDHCP: async (options: any = {}): Promise<RequestArgs> => {
+        getIoTDHCP: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/iotsetup/network/dhcp/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1348,7 +1484,7 @@ export const IOTApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1363,7 +1499,7 @@ export const IOTApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getIoTIP: async (options: any = {}): Promise<RequestArgs> => {
+        getIoTIP: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/iotsetup/network/ipaddress/getdata`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1378,7 +1514,7 @@ export const IOTApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1403,7 +1539,7 @@ export const IOTApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getIoTDHCP(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getIoTDHCP(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getIoTDHCP(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1413,7 +1549,7 @@ export const IOTApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getIoTIP(options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getIoTIP(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getIoTIP(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1462,7 +1598,7 @@ export class IOTApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof IOTApi
      */
-    public getIoTDHCP(options?: any) {
+    public getIoTDHCP(options?: AxiosRequestConfig) {
         return IOTApiFp(this.configuration).getIoTDHCP(options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1473,7 +1609,7 @@ export class IOTApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof IOTApi
      */
-    public getIoTIP(options?: any) {
+    public getIoTIP(options?: AxiosRequestConfig) {
         return IOTApiFp(this.configuration).getIoTIP(options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -1493,7 +1629,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deletePet: async (petId: number, apiKey?: string, options: any = {}): Promise<RequestArgs> => {
+        deletePet: async (petId: number, apiKey?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'petId' is not null or undefined
             assertParamExists('deletePet', 'petId', petId)
             const localVarPath = `/pet/{petId}`
@@ -1513,13 +1649,13 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
             // oauth required
             await setOAuthToObject(localVarHeaderParameter, "petstore_auth", ["write:pets", "read:pets"], configuration)
 
-            if (apiKey !== undefined && apiKey !== null) {
+            if (apiKey != null) {
                 localVarHeaderParameter['api_key'] = String(apiKey);
             }
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1535,7 +1671,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        findPetsByStatus: async (status: Array<'available' | 'pending' | 'sold'>, options: any = {}): Promise<RequestArgs> => {
+        findPetsByStatus: async (status: Array<'available' | 'pending' | 'sold'>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'status' is not null or undefined
             assertParamExists('findPetsByStatus', 'status', status)
             const localVarPath = `/pet/findByStatus`;
@@ -1560,7 +1696,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1574,9 +1710,10 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
          * @summary Finds Pets by tags
          * @param {Array<string>} tags Tags to filter by
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
-        findPetsByTags: async (tags: Array<string>, options: any = {}): Promise<RequestArgs> => {
+        findPetsByTags: async (tags: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'tags' is not null or undefined
             assertParamExists('findPetsByTags', 'tags', tags)
             const localVarPath = `/pet/findByTags`;
@@ -1601,7 +1738,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1617,7 +1754,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPetById: async (petId: number, options: any = {}): Promise<RequestArgs> => {
+        getPetById: async (petId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'petId' is not null or undefined
             assertParamExists('getPetById', 'petId', petId)
             const localVarPath = `/pet/{petId}`
@@ -1638,7 +1775,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1656,7 +1793,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePetWithForm: async (petId: number, name?: string, status?: string, options: any = {}): Promise<RequestArgs> => {
+        updatePetWithForm: async (petId: number, name?: string, status?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'petId' is not null or undefined
             assertParamExists('updatePetWithForm', 'petId', petId)
             const localVarPath = `/pet/{petId}`
@@ -1689,7 +1826,7 @@ export const PetApiAxiosParamCreator = function (configuration?: Configuration) 
     
             localVarHeaderParameter['Content-Type'] = 'application/x-www-form-urlencoded';
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = localVarFormParams.toString();
@@ -1717,7 +1854,7 @@ export const PetApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deletePet(petId: number, apiKey?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async deletePet(petId: number, apiKey?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.deletePet(petId, apiKey, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1728,7 +1865,7 @@ export const PetApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async findPetsByStatus(status: Array<'available' | 'pending' | 'sold'>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pet>>> {
+        async findPetsByStatus(status: Array<'available' | 'pending' | 'sold'>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pet>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findPetsByStatus(status, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1737,9 +1874,10 @@ export const PetApiFp = function(configuration?: Configuration) {
          * @summary Finds Pets by tags
          * @param {Array<string>} tags Tags to filter by
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
-        async findPetsByTags(tags: Array<string>, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pet>>> {
+        async findPetsByTags(tags: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Pet>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.findPetsByTags(tags, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1750,7 +1888,7 @@ export const PetApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPetById(petId: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Pet>> {
+        async getPetById(petId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Pet>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPetById(petId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1763,7 +1901,7 @@ export const PetApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePetWithForm(petId: number, name?: string, status?: string, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async updatePetWithForm(petId: number, name?: string, status?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePetWithForm(petId, name, status, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1803,6 +1941,7 @@ export const PetApiFactory = function (configuration?: Configuration, basePath?:
          * @summary Finds Pets by tags
          * @param {Array<string>} tags Tags to filter by
          * @param {*} [options] Override http request option.
+         * @deprecated
          * @throws {RequiredError}
          */
         findPetsByTags(tags: Array<string>, options?: any): AxiosPromise<Array<Pet>> {
@@ -1849,7 +1988,7 @@ export class PetApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PetApi
      */
-    public deletePet(petId: number, apiKey?: string, options?: any) {
+    public deletePet(petId: number, apiKey?: string, options?: AxiosRequestConfig) {
         return PetApiFp(this.configuration).deletePet(petId, apiKey, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1861,7 +2000,7 @@ export class PetApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PetApi
      */
-    public findPetsByStatus(status: Array<'available' | 'pending' | 'sold'>, options?: any) {
+    public findPetsByStatus(status: Array<'available' | 'pending' | 'sold'>, options?: AxiosRequestConfig) {
         return PetApiFp(this.configuration).findPetsByStatus(status, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1870,10 +2009,11 @@ export class PetApi extends BaseAPI {
      * @summary Finds Pets by tags
      * @param {Array<string>} tags Tags to filter by
      * @param {*} [options] Override http request option.
+     * @deprecated
      * @throws {RequiredError}
      * @memberof PetApi
      */
-    public findPetsByTags(tags: Array<string>, options?: any) {
+    public findPetsByTags(tags: Array<string>, options?: AxiosRequestConfig) {
         return PetApiFp(this.configuration).findPetsByTags(tags, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1885,7 +2025,7 @@ export class PetApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PetApi
      */
-    public getPetById(petId: number, options?: any) {
+    public getPetById(petId: number, options?: AxiosRequestConfig) {
         return PetApiFp(this.configuration).getPetById(petId, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -1899,7 +2039,7 @@ export class PetApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PetApi
      */
-    public updatePetWithForm(petId: number, name?: string, status?: string, options?: any) {
+    public updatePetWithForm(petId: number, name?: string, status?: string, options?: AxiosRequestConfig) {
         return PetApiFp(this.configuration).updatePetWithForm(petId, name, status, options).then((request) => request(this.axios, this.basePath));
     }
 }
@@ -1918,7 +2058,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortData: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortData: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortData', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/pdin/getdata`
@@ -1936,7 +2076,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1952,7 +2092,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortDeviceId: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortDeviceId: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortDeviceId', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/deviceid/getdata`
@@ -1970,7 +2110,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -1986,7 +2126,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortProduct: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortProduct: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortProduct', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/productname/getdata`
@@ -2004,7 +2144,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2020,7 +2160,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortSerial: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortSerial: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortSerial', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/serial/getdata`
@@ -2038,7 +2178,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2054,7 +2194,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortSetting: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortSetting: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortSetting', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/iolreadacyclic`
@@ -2072,7 +2212,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2088,7 +2228,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortStatus: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortStatus: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortStatus', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/status/getdata`
@@ -2106,7 +2246,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2122,7 +2262,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortSubscriptionInfo: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortSubscriptionInfo: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortSubscriptionInfo', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/iolinkevent/datachanged/getsubscriptioninfo`
@@ -2140,7 +2280,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2156,7 +2296,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortTag: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortTag: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortTag', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/applicationspecifictag/getdata`
@@ -2174,7 +2314,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2190,7 +2330,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getPortVendorId: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        getPortVendorId: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('getPortVendorId', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/vendorid/getdata`
@@ -2208,7 +2348,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2221,11 +2361,11 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Set data on port
          * @param {number} port Port index to set data for
-         * @param {InlineObject2} [data] 
+         * @param {SetPortDataRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setPortData: async (port: number, data?: InlineObject2, options: any = {}): Promise<RequestArgs> => {
+        setPortData: async (port: number, data?: SetPortDataRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('setPortData', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/pdout/setdata`
@@ -2245,7 +2385,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
@@ -2259,11 +2399,11 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Subscribe to port info events
          * @param {number} port Port index to lookup data for
-         * @param {InlineObject1} [data] 
+         * @param {SubcribeToPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        subcribeToPort: async (port: number, data?: InlineObject1, options: any = {}): Promise<RequestArgs> => {
+        subcribeToPort: async (port: number, data?: SubcribeToPortRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('subcribeToPort', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/iolinkevent/datachanged/subscribe`
@@ -2283,7 +2423,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
@@ -2297,11 +2437,11 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * 
          * @summary Unsubscribe from port events
          * @param {number} port Port index
-         * @param {InlineObject} [data] 
+         * @param {UnsubscribeFromPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        unsubscribeFromPort: async (port: number, data?: InlineObject, options: any = {}): Promise<RequestArgs> => {
+        unsubscribeFromPort: async (port: number, data?: UnsubscribeFromPortRequest, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('unsubscribeFromPort', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/iolinkevent/datachanged/unsubscribe`
@@ -2321,7 +2461,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
     
             localVarHeaderParameter['Content-Type'] = 'application/json';
 
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(data, localVarRequestOptions, configuration)
@@ -2338,7 +2478,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        updatePortSetting: async (port: number, options: any = {}): Promise<RequestArgs> => {
+        updatePortSetting: async (port: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'port' is not null or undefined
             assertParamExists('updatePortSetting', 'port', port)
             const localVarPath = `/iolinkmaster/port[{port}]/iolinkdevice/iolwriteacyclic`
@@ -2356,7 +2496,7 @@ export const PortsApiAxiosParamCreator = function (configuration?: Configuration
 
 
     
-            setSearchParams(localVarUrlObj, localVarQueryParameter, options.query);
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
@@ -2382,7 +2522,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortData(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortData(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortData(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2393,7 +2533,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortDeviceId(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortDeviceId(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortDeviceId(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2404,7 +2544,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortProduct(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortProduct(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortProduct(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2415,7 +2555,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortSerial(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortSerial(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortSerial(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2426,7 +2566,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortSetting(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortSetting(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortSetting(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2437,7 +2577,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortStatus(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortStatus(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortStatus(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2448,7 +2588,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortSubscriptionInfo(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortSubscriptionInfo(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortSubscriptionInfo(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2459,7 +2599,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortTag(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortTag(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortTag(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2470,7 +2610,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getPortVendorId(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async getPortVendorId(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getPortVendorId(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2478,11 +2618,11 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Set data on port
          * @param {number} port Port index to set data for
-         * @param {InlineObject2} [data] 
+         * @param {SetPortDataRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async setPortData(port: number, data?: InlineObject2, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async setPortData(port: number, data?: SetPortDataRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.setPortData(port, data, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2490,11 +2630,11 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Subscribe to port info events
          * @param {number} port Port index to lookup data for
-         * @param {InlineObject1} [data] 
+         * @param {SubcribeToPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async subcribeToPort(port: number, data?: InlineObject1, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async subcribeToPort(port: number, data?: SubcribeToPortRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.subcribeToPort(port, data, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2502,11 +2642,11 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * 
          * @summary Unsubscribe from port events
          * @param {number} port Port index
-         * @param {InlineObject} [data] 
+         * @param {UnsubscribeFromPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async unsubscribeFromPort(port: number, data?: InlineObject, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async unsubscribeFromPort(port: number, data?: UnsubscribeFromPortRequest, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.unsubscribeFromPort(port, data, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2517,7 +2657,7 @@ export const PortsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async updatePortSetting(port: number, options?: any): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
+        async updatePortSetting(port: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<GenericResponse>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.updatePortSetting(port, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -2625,33 +2765,33 @@ export const PortsApiFactory = function (configuration?: Configuration, basePath
          * 
          * @summary Set data on port
          * @param {number} port Port index to set data for
-         * @param {InlineObject2} [data] 
+         * @param {SetPortDataRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        setPortData(port: number, data?: InlineObject2, options?: any): AxiosPromise<GenericResponse> {
+        setPortData(port: number, data?: SetPortDataRequest, options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.setPortData(port, data, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Subscribe to port info events
          * @param {number} port Port index to lookup data for
-         * @param {InlineObject1} [data] 
+         * @param {SubcribeToPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        subcribeToPort(port: number, data?: InlineObject1, options?: any): AxiosPromise<GenericResponse> {
+        subcribeToPort(port: number, data?: SubcribeToPortRequest, options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.subcribeToPort(port, data, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Unsubscribe from port events
          * @param {number} port Port index
-         * @param {InlineObject} [data] 
+         * @param {UnsubscribeFromPortRequest} [data] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        unsubscribeFromPort(port: number, data?: InlineObject, options?: any): AxiosPromise<GenericResponse> {
+        unsubscribeFromPort(port: number, data?: UnsubscribeFromPortRequest, options?: any): AxiosPromise<GenericResponse> {
             return localVarFp.unsubscribeFromPort(port, data, options).then((request) => request(axios, basePath));
         },
         /**
@@ -2682,7 +2822,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortData(port: number, options?: any) {
+    public getPortData(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortData(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2694,7 +2834,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortDeviceId(port: number, options?: any) {
+    public getPortDeviceId(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortDeviceId(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2706,7 +2846,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortProduct(port: number, options?: any) {
+    public getPortProduct(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortProduct(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2718,7 +2858,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortSerial(port: number, options?: any) {
+    public getPortSerial(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortSerial(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2730,7 +2870,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortSetting(port: number, options?: any) {
+    public getPortSetting(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortSetting(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2742,7 +2882,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortStatus(port: number, options?: any) {
+    public getPortStatus(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortStatus(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2754,7 +2894,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortSubscriptionInfo(port: number, options?: any) {
+    public getPortSubscriptionInfo(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortSubscriptionInfo(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2766,7 +2906,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortTag(port: number, options?: any) {
+    public getPortTag(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortTag(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2778,7 +2918,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public getPortVendorId(port: number, options?: any) {
+    public getPortVendorId(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).getPortVendorId(port, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2786,12 +2926,12 @@ export class PortsApi extends BaseAPI {
      * 
      * @summary Set data on port
      * @param {number} port Port index to set data for
-     * @param {InlineObject2} [data] 
+     * @param {SetPortDataRequest} [data] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public setPortData(port: number, data?: InlineObject2, options?: any) {
+    public setPortData(port: number, data?: SetPortDataRequest, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).setPortData(port, data, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2799,12 +2939,12 @@ export class PortsApi extends BaseAPI {
      * 
      * @summary Subscribe to port info events
      * @param {number} port Port index to lookup data for
-     * @param {InlineObject1} [data] 
+     * @param {SubcribeToPortRequest} [data] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public subcribeToPort(port: number, data?: InlineObject1, options?: any) {
+    public subcribeToPort(port: number, data?: SubcribeToPortRequest, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).subcribeToPort(port, data, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2812,12 +2952,12 @@ export class PortsApi extends BaseAPI {
      * 
      * @summary Unsubscribe from port events
      * @param {number} port Port index
-     * @param {InlineObject} [data] 
+     * @param {UnsubscribeFromPortRequest} [data] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public unsubscribeFromPort(port: number, data?: InlineObject, options?: any) {
+    public unsubscribeFromPort(port: number, data?: UnsubscribeFromPortRequest, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).unsubscribeFromPort(port, data, options).then((request) => request(this.axios, this.basePath));
     }
 
@@ -2829,7 +2969,7 @@ export class PortsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof PortsApi
      */
-    public updatePortSetting(port: number, options?: any) {
+    public updatePortSetting(port: number, options?: AxiosRequestConfig) {
         return PortsApiFp(this.configuration).updatePortSetting(port, options).then((request) => request(this.axios, this.basePath));
     }
 }

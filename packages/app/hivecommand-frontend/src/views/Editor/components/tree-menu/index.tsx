@@ -43,6 +43,7 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
         
             <TreeView
                 onNodeSelect={(event, nodeId) => {
+                    console.log({nodeId})
                     props.onNodeSelect?.(nodeId);
                 }}
                 selected={props.selected}

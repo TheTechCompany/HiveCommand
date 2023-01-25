@@ -32,6 +32,7 @@
     "@io-link/iodd": "^1.4.3",
     "@io-link/master-api": "^1.4.3",
     "@io-link/master-discovery": "^1.4.3",
+    "axios": "^1.2.3",
     "nanoid": "^3.2.0"
   },
   "devDependencies": {

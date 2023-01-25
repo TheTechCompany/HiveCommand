@@ -23,6 +23,8 @@
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
 		
+		"@hive-command/opcua-mqtt-hub": ["./communication/opc-mqtt-hub"],
+		"@hive-command/opcua-mqtt": ["./communication/opc-mqtt"],
 		/* Core UI */
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],

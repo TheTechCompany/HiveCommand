@@ -122,7 +122,6 @@ export const setter = (data: ${getOPCType(props.dataType || 'String')}, tags: Va
                             allowNonTsExtensions: true
                           });
 
-                        console.log({monaco})
 
                       
                           var libSource = `

@@ -530,6 +530,53 @@ paths:
             $ref: "#/definitions/GenericResponse"
 
       
+  /fieldbussetup/network/setblock:
+    post:
+      tags: 
+        - "FieldBus"
+      summary: "Assign FieldBus IP Settings"
+      operationId: "setFieldBusIP"
+      produces:
+      - "application/json"
+      parameters:
+        - in: body
+          name: data
+          schema: 
+            properties:
+              adr:
+                type: string
+                required: true
+              cid: 
+                type: integer
+                default: -1
+                required: true
+              code:
+                type: string
+                default: request
+                required: true
+              data: 
+                type: object
+                properties: 
+                  datatoset:
+                    type: object
+                    properties:
+                      ipaddress: 
+                        type: string
+                      ipdefaultgateway:
+                        type: string
+                        default: 0.0.0.0
+                      dhcp: 
+                        type: number
+                        default: 0
+                      subnetmask:
+                        type: string
+                        default: 255.255.255.0
+      responses:
+        "200":
+          description: "Succesfully executed"
+          schema: 
+            $ref: "#/definitions/GenericResponse"
+
   /fieldbussetup/network/dhcp/getdata:
     get:
       tags:

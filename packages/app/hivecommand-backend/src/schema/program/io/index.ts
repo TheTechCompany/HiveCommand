@@ -145,6 +145,12 @@ export default (prisma: PrismaClient) => {
             device: CommandProgramDevice
             type: String
             value: String
+        } 
+
+        input CommandProgramTemplateInput {
+            name: String
+            
+            
         }
 
 
@@ -264,7 +270,11 @@ export default (prisma: PrismaClient) => {
     const resolvers = {
         Query: {
             commandProgramDevices: async (parent: any, args: any, context: any, info: any) => {
-                return await prisma.iOTemplate.findMany();
+                return await prisma.iOTemplate.findMany({
+                    include: {
+                        state: true
+                    }
+                });
             },
             commandProgramDevicePlugins: async (parent: any, args: any, context: any, info: any) => {
                 return await prisma.iOPluginTemplate.findMany({

@@ -1,5 +1,5 @@
 import { AvatarList } from '@hexhive/ui';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
 import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
@@ -43,14 +43,74 @@ export interface CommandSurfaceClient {
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
-    updateChartGrid?: (pageId: string, layout: {id: string, x: number, y: number, w: number, h: number}[]) => Promise<any>;
+    updateChartGrid?: (pageId: string, layout: { id: string, x: number, y: number, w: number, h: number }[]) => Promise<any>;
     removeChart?: (pageId: string, id: string) => Promise<any>;
 
     changeMode?: (mode: string) => void;
-    getValues?: (horizon: {start: Date, end: Date}) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
+    getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
     performDeviceAction?: (device: string, action: string) => void;
     changeDeviceValue?: (device: string, state: string, value: any) => void;
 
+}
+
+export interface HMITemplate {
+    id: string;
+
+    inputs?: {id: string, key: string}[]
+    outputs?: {id: string, key: string}[]
+
+    configuration?: {id: string, from: { id: string }, to: { id: string }, script: string }[]
+}
+
+export interface HMIView {
+    id: string,
+    nodes: HMINode[],
+    edges: HMIEdge[],
+    actions: {}[]
+}
+
+export interface HMINode {
+    id: string;
+
+    template?: HMITemplate;
+    templateOptions?: {}[];
+
+    options: {[key: string]: string | {fn: string}}
+}
+
+export interface HMIEdge {
+
+}
+
+export interface HMIDevice {
+
+    id: string;
+    tag: string;
+    type: {
+        tagPrefix: string;
+        state: any[]
+    }
+
+}
+
+export interface HMIProgram {
+    id: string,
+    variables: {}[],
+    interface: HMIView[]
+    devices: HMIDevice[]
+    // {
+    //     id: string;
+    //     tag: string;
+    //     type: {
+    //         tagPrefix?: string;
+    //         state: {
+    //             key: string
+    //         }[];
+    //     }
+    // }[],
+    alarms: {}[]
+
+    templatePacks: {}[]
 }
 
 export interface CommandSurfaceProps {
@@ -58,23 +118,7 @@ export interface CommandSurfaceProps {
 
     title?: string;
 
-    program: ({ 
-        interface: { 
-            id: string, 
-            nodes: any[], 
-            edges: any[] 
-        } 
-        devices: {
-            id: string;
-            tag: string;
-            type: {
-                tagPrefix?: string;
-                state: {
-                    key: string
-                }[];
-            }
-        }[]
-    } & any);
+    program: HMIProgram;
 
     client?: CommandSurfaceClient;
 
@@ -93,7 +137,7 @@ export interface CommandSurfaceProps {
     }[]
 
     // seekValue?: (startDate: Date, endDate: Date) => any[];
-    values: {[key: string]: any} //{ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
+    values: { [key: string]: any } //{ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
 
     watching?: { id: string, name: string, color: string }[];
 
@@ -101,6 +145,8 @@ export interface CommandSurfaceProps {
 }
 
 export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
+
+    const surfaceRef = useRef<HTMLDivElement>(null);
 
     const { program: activeProgram, defaultPage, client, watching } = props;
 
@@ -122,7 +168,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const deviceValues = props.values;
     // : { [key: string]: { [key: string]: any } } = useMemo(() => {
-       
+
 
     //     return Object.keys(props.values).map((devicePath) => {
 
@@ -200,7 +246,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         // }
     ]
 
-    console.log({activeView, activePage})
+    console.log({ activeView, activePage })
 
     const { view, toolbarMenu } = useMemo(() => {
         const view = toolbar_menu.find((a) => {
@@ -227,7 +273,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     // const createReportPage = useCreateReportPage(id);
 
     const onTreeAdd = (nodeId?: string) => {
-        console.log({nodeId});
+        console.log({ nodeId });
 
         switch (nodeId) {
             case 'analytics':
@@ -237,7 +283,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const onTreeSelect = (nodeId: string) => {
-        console.log({nodeId});
+        console.log({ nodeId });
 
         switch (nodeId) {
             // case 'analytics-root':
@@ -253,15 +299,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             //     break;
             default:
                 let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
-                console.log({nodes})
+                console.log({ nodes })
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node?.parent;
 
-                console.log({page, nodeId})
+                console.log({ page, nodeId })
 
-                if(!page) page = node.id;
-                
-                if(nodeId != 'controls' && nodeId != 'analytics'){
+                if (!page) page = node.id;
+
+                if (nodeId != 'controls' && nodeId != 'analytics') {
                     setView(page);
                 }
 
@@ -278,7 +324,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const alarms = activeProgram?.alarms || [];
 
-    const actions = activeProgram?.interface?.actions || [];
 
     const templatePacks = activeProgram?.templatePacks || [];
 
@@ -329,7 +374,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
 
 
-    const drawerMenu: (TreeMenuItem & {component?: JSX.Element})[] = [
+    const drawerMenu: (TreeMenuItem & { component?: JSX.Element })[] = [
         {
             id: 'controls',
             name: 'Controls',
@@ -395,7 +440,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
             <DeviceControlProvider value={{
-                actions,
                 historize,
                 alarms,
                 client,
@@ -445,10 +489,18 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     onClose={() => setEditReportPage(null)}
                     open={Boolean(editReportPage)} />
                 <Paper
+                    ref={surfaceRef}
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 
                     <Header
                         title={props.title}
+                        fullscreenHandler={() => {
+                            if (document.fullscreenElement) {
+                                document.exitFullscreen();
+                            } else {
+                                surfaceRef.current?.requestFullscreen();
+                            }
+                        }}
                         activeUsers={watching}
                         menuItems={toolbarMenu}
                     />

@@ -2,6 +2,8 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "
 import React, { useEffect, useState } from "react";
 import { EditorMenuProvider } from "./context";
 import { DeviceView, HMIView, ProgramView } from "./views";
+import { TemplateView } from "./views/templates";
+import { VariableView } from "./views/variable";
 
 export interface EditorMenuDialogProps {
     open: boolean;
@@ -26,13 +28,15 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getTitle = () => {
         switch(type){
+            case 'templates':
+                return `${selected ? 'Edit' : 'Create'} Template`;
             case 'program':
                 return `${selected ? 'Edit' : 'Create'} Program`
             case 'hmi':
                 return `${selected ? 'Edit' : 'Create'} HMI`
             case 'devices':
                 return `${selected ? 'Edit' : 'Create'} Device`
-            case 'variable':
+            case 'variables':
                 return `${selected ? 'Edit' : 'Create'} Variable`
             case 'alarm':
                 return `${selected ? 'Edit' : 'Create'} Alarm`
@@ -41,21 +45,26 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getContent = () => {
         switch(type){
+            case 'templates':
+                return <TemplateView />;
             case 'program':
                 return <ProgramView />
             case 'hmi':
                 return <HMIView />
             case 'devices':
                 return <DeviceView />
+            case 'variables':
+                return <VariableView />
         }
     }
 
-    console.log({props})
     const getActions = () => {
         switch(type){
+            case 'templates':
             case 'program':
             case 'hmi':
             case 'devices':
+            case 'variables':
                 return <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: ( Boolean(props.selected?.id) ? 'space-between' : 'flex-end') }}>
                     {props.selected?.id ? (
                         <Button variant="contained" color="error" onClick={props.onDelete}>

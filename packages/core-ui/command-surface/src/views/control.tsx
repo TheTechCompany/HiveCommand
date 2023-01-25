@@ -70,7 +70,7 @@ export default () => {
 		templatePacks,
 		// seekValue,
 
-		values,
+		values = {},
 		// controlId = '',
 		// device,
 	} = useContext(DeviceControlContext)
@@ -161,6 +161,59 @@ export default () => {
 	// 	})
 	// }, [device, deviceValueData])
 
+	const parseValue = (value: any, type: "BooleanT" | "Boolean" | "IntegerT" | "UIntegerT") => {
+		switch(type){
+			case "Boolean":
+			case "BooleanT":
+				return (value == true || value == "true" || value == 1 || value == "1");
+			case "UIntegerT":
+			case "IntegerT":
+				let val = parseFloat(value || 0);
+				if(Number.isNaN(val)){
+					val = 0;
+				}
+				return val.toFixed(2);
+			default:
+				console.log({type})
+				break;
+		}
+	}
+
+	const normalisedValues = useMemo(() => {
+		console.log("Devices", program?.devices)
+		return program?.devices?.map((device) => {
+
+			let deviceKey = `${device.tag}`;
+
+			// let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
+
+			// device.type.state
+			let deviceValues = device?.type.state?.map((stateItem) => {
+
+				// let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+
+				let currentValue = values?.[deviceKey]?.[stateItem.key];
+
+				return {
+					key: stateItem.key,
+					value: parseValue(currentValue, stateItem.type)
+				}
+			}).reduce((prev, curr) => ({
+				...prev,
+				[curr.key]: curr.value
+			}), {})
+
+			return {
+				key: deviceKey,
+				values: deviceValues
+			}
+		}).reduce((prev, curr) => ({
+			...prev,
+			[curr.key]: curr.values
+		}), {})
+	}, [values])
+
+	console.log({normalisedValues})
 
 	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
 	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
@@ -227,12 +280,12 @@ export default () => {
 					paths={hmi?.edges || []}
 					functions={functions}
 					// program={program}
-					deviceValues={values}
+					deviceValues={normalisedValues}
 					modes={[]}
 					information={infoTarget != undefined ? (
 						<Bubble
 							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
-							<ActionMenu selected={selected} values={values} />
+							<ActionMenu selected={selected} values={normalisedValues} />
 						</Bubble>
 					) : null}
 					onBackdropClick={() => {
@@ -284,62 +337,7 @@ export default () => {
 					time={time} />
 			</Paper>}
 
-			<Paper
-				sx={{ position: 'absolute', display: 'flex', flexDirection: 'column', width: '200px', right: 6, top: 6, padding: '6px' }}>
-				<Box sx={{ display: 'flex', justifyContent: 'center' }}>
-					<Typography fontWeight={'bold'}>Controls</Typography>
-				</Box>
-				<Divider />
-				<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column'}}>
-					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-
-						<Box sx={{ marginTop: '6px', display: 'flex', marginBottom: '6px' }}>
-							<FormControl size="small" fullWidth>
-								<InputLabel id="mode-label">Mode</InputLabel>
-								<Select
-									label="Mode"
-									fullWidth
-									labelId='mode-label'
-									value={operatingMode}
-									onChange={(event) => {
-										changeOperationMode?.(event.target.value);
-									}}>
-									{operatingModes.map((mode) => (
-										<MenuItem value={mode.key}>{mode.label}</MenuItem>
-									))}
-
-								</Select>
-							</FormControl>
-
-							
-						</Box>
-						<ActionButton
-							size={'small'}
-							color={'secondary'}
-							disabled={operatingMode != 'auto' || (operatingStatus == "STARTING" || operatingStatus == "STOPPING")}
-							onClick={() => {
-								// changeOperationState((!operatingState || operatingState == 'off') ? 'on' : 'off')
-							}}
-							label={
-								(operatingStatus == "ON" || operatingStatus == "STOPPING") ?
-									(<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>{operatingStatus == "STOPPING" && <Spinner />}Shutdown</div>) :
-									(<div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>{operatingStatus == "STARTING" && <Spinner />}Start</div>)
-							} />
-					</Box>
-
-					{operatingMode == "manual" && <Box border={{ side: 'bottom', size: 'small' }}>
-						<Typography>Commands</Typography>
-						<Box gap="xsmall">
-							{/* {actions?.map((action) => (
-								<ActionButton
-									waiting={waitingForActions[action.id]}
-									// onClick={() => controlAction(action)}
-									label={action.name} />
-							))} */}
-						</Box>
-					</Box>}
-				</Box>
-			</Paper>
+			
 		</Box>
 	)
 }

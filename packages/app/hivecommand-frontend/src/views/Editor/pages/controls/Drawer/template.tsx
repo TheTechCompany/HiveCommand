@@ -1,0 +1,359 @@
+import React, { useMemo, useEffect, useState, useContext } from 'react';
+import { Autocomplete, Box, Divider, FormGroup, IconButton, TextField, Typography } from '@mui/material'
+import { HMIContext } from '../context';
+import { useUpdateHMINode } from '@hive-command/api';
+import { Javascript } from '@mui/icons-material'
+import { useMutation, gql } from '@apollo/client';
+import { TemplateInput } from '../../../../../components/template-input';
+
+export type ConfigInputType = 'Template' | 'Function' | 'Device' | 'String' | 'Number' | 'Boolean'
+
+export const TemplateMenu = () => {
+
+    const {  templates, selected, refetch, programId, devices, nodes } = useContext(HMIContext);
+
+    const item = nodes?.find((a) => a.id == selected.id);
+
+    const options = item?.extras?.options || {};
+
+    const templateOptions = item?.templateOptions || [];
+
+    const [ templateState, setTemplateState ] = useState<any>([])
+
+    const [ state, setState ] = useState<any>([])
+
+    const updateHMINode = useUpdateHMINode(programId)
+
+    const [ assignNodeTemplate ] = useMutation(gql`
+        mutation AssignNode ($nodeId: ID, $template: String){
+            updateCommandProgramInterfaceNode(id: $nodeId, input: {template: $template}){
+                id
+            }
+        }
+    `)
+
+    const [ updateNodeTemplateConfig ] = useMutation(gql`
+        mutation UpdateNodeTemplateConfig ($nodeId: ID, $fieldId: ID, $value: String){
+            updateCommandProgramInterfaceNodeTemplateConfiguration(node: $nodeId, field: $fieldId, value: $value)
+        }
+    `)
+
+    useEffect(() => {
+        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
+
+        setState(newState)
+
+    }, [selected, options])
+
+    useEffect(() => {
+        setTemplateState(templateOptions);
+    }, [templateOptions])
+
+
+    console.log({templateState});
+
+    const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
+
+    const _updateState = (key: string, value: any) => {
+        setState((state) => {
+            let ix = state.map((x) => x.key).indexOf(key)
+            state[ix].value = value;
+            return state;
+        })
+
+        if(updateBouncer){
+            clearTimeout(updateBouncer)
+            setUpdateBouncer(null)
+        }
+        setUpdateBouncer(
+            setTimeout(() => {
+                updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+                    refetch?.()
+                })
+            }, 500)
+        )
+
+    }
+
+    const assignableDevices = useMemo(() => {
+
+        let devs = devices;
+
+        // if(item?.extras?.metadata?.type){
+        //     devs = devs.filter((a) => a.type?.type == item?.extras?.metadata?.type);
+        // }
+
+        return devs;
+        // devices?.filter((a) => a.type?.type?.indexOf(item?.extras?.metadata) > -1)
+    }, [devices, item])
+
+    
+    const renderConfigInput = ({type, value, label, id}: {type: ConfigInputType, value: any, label: string, id?: string}, updateState: ((key: string, value: any) => void) = _updateState) => {
+        console.log({label, value})
+
+        // label = id || label;
+
+        const type_parts = type.split(':');
+        if(type_parts.length > 1){
+            type = type_parts[0] as ConfigInputType;
+        }
+
+        switch(type){
+            case 'Device':
+
+                let options = assignableDevices?.slice()?.sort((a, b) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}`.localeCompare(`${b.type?.tagPrefix ? b.type?.tagPrefix : ''}${b.tag}`));
+
+                if(type_parts[1]){
+                    options = options.filter((a) => a?.type?.id == type_parts[1]);
+                }
+
+                console.log({options, value})
+
+                return (
+                // <Box>
+
+                    <Autocomplete 
+                        disablePortal
+                        options={options}
+                        value={options?.find((a) => a.id == value) || null}
+                        
+                        onChange={(event, newValue) => {
+                            updateState(id || label, newValue?.id)
+                            // if(!newValue){
+                            //     updateState(label, null)
+                            // }else{
+                            //     setFunctionArgs(newValue);
+                            //     setFunctionOpt(label)
+                            // }
+                        }}
+                        getOptionLabel={(option) => typeof(option) == "string" ? option : `${option.type?.tagPrefix ? option.type?.tagPrefix : ''}${option.tag}`}
+                        // isOptionEqualToValue={(option, value) => option.id == value.id}
+                        renderInput={(params) => 
+                            <TextField 
+                                {...params} 
+                                label={label}
+                                />
+                        }
+                        // value={value || ''}
+                        // onChange={(e) => {
+                        //     updateState(label, e.target.value)
+                        // }}
+                        size="small" 
+                        // label={label} />
+                        />
+
+                // </Box>
+                )
+            case 'Boolean':
+                return (
+                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <input 
+                        checked={Boolean(value)}
+                        type="checkbox" 
+                        onChange={(evt) => {
+                            updateState(id || label, evt.target.checked)
+                        }} />
+
+                        <Typography>{label}</Typography>
+                    </Box>
+                )
+            case 'Function':
+                return (
+                    <Autocomplete 
+                        disablePortal
+                        options={[]} //functions}
+                        value={undefined} //functions?.find((a) => a.id == value?.fn)}
+                        
+                        onChange={(event, newValue) => {
+                            // if(!newValue){
+                            //     updateState(label, null)
+                            // }else{
+                            //     setFunctionArgs(newValue);
+                            //     setFunctionOpt(label)
+                            // }
+                        }}
+                        getOptionLabel={(option) => typeof(option) == "string" ? option : option.label}
+                        // isOptionEqualToValue={(option, value) => option.id == value.id}
+                        renderInput={(params) => 
+                            <TextField 
+                                {...params} 
+                                label={label}
+                                />
+                        }
+                        // value={value || ''}
+                        // onChange={(e) => {
+                        //     updateState(label, e.target.value)
+                        // }}
+                        size="small" 
+                        // label={label} />
+                        />
+                );
+            case 'String':
+                return (
+                    <TemplateInput
+                        label={label}
+                        value={value}
+                        onChange={(e) => {
+                            console.log(e)
+                            updateState(id || label, e)
+                        }}
+                        />
+
+                    // <TextField 
+                    //     value={value || ''}
+                    //     onChange={(e) => {
+                    //         updateState(id || label, e.target.value)
+                    //     }}
+                    //     size="small" 
+                    //     label={label} />
+                );
+            case 'Number':
+                return (
+                    <TextField 
+                        value={value || ''}
+                        type="number"
+                        onChange={(e) => {
+                            updateState(id || label, e.target.value)
+                        }}
+                        size="small" 
+                        label={label} />
+                );
+            case 'Template':
+                return (
+
+                    // <Autocomplete
+                    //     size="small"
+                    //     multiple={true}
+                    //     options={[{label: 'BLO701.on'}, {label: 'FIT101.flow'}]}
+                    //     inputValue={templateValue}
+                    //     onInputChange={(event, value, reason) => {
+                    //         if ( event && event.type === 'blur' ) {
+                    //             console.log("BLur", value)
+                    //               setTemplateValue('');
+                    //         } else if ( reason !== 'reset' ) {
+                    //             console.log("Non blur", value)
+                    //           setTemplateValue(value);
+                    //         }
+                    //     }}
+                    //     getOptionLabel={(option) => typeof(option) == 'string' ? option : option.label }
+                    //     renderInput={(params) => (
+                            <TextField 
+                                label={label}
+                                value={value}
+                                size="small"
+                                onChange={(e) => {
+                                    updateState(id || label, e.target.value)
+                                }} />
+                        // )} />
+                );
+            default:
+                return (<span>{type} not found in renderConfigInput</span>)
+        }
+    }
+
+    const activeTemplate = useMemo(() => templates?.find((a) => a.id === item?.extras?.template), [item?.extras?.template]);
+
+    const templateInputs = useMemo(() => {
+        
+
+        return (
+            <Box>
+                <Typography fontSize={'small'}>Template Options</Typography>
+                {activeTemplate?.inputs?.map((input) => (
+                    <Box sx={{marginBottom: '6px'}}>
+                        {renderConfigInput(
+                            { id: input.id, type: input.type, value: templateState?.find((a) => input.id === a.field?.id)?.value || null, label: input.name },
+                            (key, value) => {
+                                console.log({key, value})
+                                updateNodeTemplateConfig({
+                                    variables: {
+                                        nodeId: selected?.id,
+                                        fieldId: key,
+                                        value
+                                    }
+                                })
+                            }
+                        )}
+                    </Box>
+                ))}
+            </Box>
+        )
+    }, [activeTemplate, templateState])
+
+    return (
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: '6px', paddingTop: '6px', paddingRight: '6px'}}>
+           
+           <Box sx={{marginBottom: '6px'}}>
+                <Autocomplete
+                    fullWidth
+                    options={templates || []}
+                    value={templates?.find((a) => a.id === item?.extras?.template) || null}
+                    disablePortal
+                    onChange={(e, newVal) => {
+                        if(typeof(newVal) === 'string') return;
+                        if(!selected?.id) return
+                        assignNodeTemplate({
+                            variables: {
+                                nodeId: selected?.id,
+                                template: newVal.id
+                            }
+                        }).then(() => refetch?.());
+                    }}
+                    getOptionLabel={(option) => typeof(option) === 'string' ? option : option?.name}
+                    renderInput={(params) => <TextField  {...params} size="small" label="Template" />}
+                    />
+
+            </Box>
+            {templateInputs}
+
+            <Divider />
+            <Typography fontSize="small">Node Options</Typography>
+            <FormGroup>
+                    {Object.keys(options).map((optionKey) => {
+                        const type = options[optionKey];
+                        const value = state?.find((a) => a.key == optionKey)?.value;
+                        const label = optionKey
+
+                        const templateOutput = activeTemplate?.outputs?.find((a) => a.name === label && a.type === type)
+
+                        return (<Box sx={{marginTop: '6px', alignItems: 'center', display: 'flex'}}>
+                            {templateOutput ? (
+                                <>
+                                    <Typography color={'gray'} fontSize={'small'}>{label} - provided by template</Typography>
+                                </>
+                            ) : (
+                                <>
+                                 <Box sx={{flex: 1, opacity: templateOutput ? 0.1 : 1}}>
+                                    {renderConfigInput({type, value, label})}
+                                </Box>
+                                <IconButton
+                                    onClick={() => {
+    //                                     setFunctionOpt(label);
+
+    //                                     setFunctionArgs({
+    //                                         defaultValue: `export const getter = (values: ValueStore, variables: VariableStore) : ${getFunctionType(type)} => {
+
+    // }`,
+    //                                         extraLib: `
+    //                                         interface ValueStore {
+    //                                             ${devices?.map((dev) => `${dev.name}: string`).join(';\n')}
+    //                                         }   
+
+    //                                         interface VariableStore {
+    //                                             ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
+    //                                         }`
+    //                                     });
+                                    }}
+                                    size="small">
+                                    <Javascript fontSize="inherit" />
+                                </IconButton>
+                                </>
+                            )}
+                           
+                        </Box>)
+
+                    })}
+                </FormGroup>
+        </Box>
+    )
+}

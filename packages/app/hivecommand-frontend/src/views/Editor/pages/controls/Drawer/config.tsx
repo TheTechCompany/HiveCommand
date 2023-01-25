@@ -1,7 +1,7 @@
 import { BumpInput } from "@hexhive/ui";
 import { HMIGroupModal } from "../../../../../components/modals/hmi-group";
-import { Autocomplete, Box, Checkbox, FormControlLabel, InputAdornment, Select, TextField, Typography } from "@mui/material";
-import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add } from '@mui/icons-material';
+import { Autocomplete, Box, Checkbox, FormControlLabel, IconButton, InputAdornment, Select, TextField, Typography } from "@mui/material";
+import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add, Javascript } from '@mui/icons-material';
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useAssignHMINode, useUpdateHMIGroup, useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
@@ -10,6 +10,7 @@ import { MenuItem } from "@mui/material";
 import { FormControl } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { FormGroup } from "@mui/material";
+import { ScriptEditorModal } from "../../../../../components/script-editor";
 // import { HMICanvasContext } from "../context";
 
 export interface ConfigMenuProps {
@@ -31,7 +32,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
         }
     ]
 
-    const [ functionArgs, setFunctionArgs ] = useState<any>(null);
+
+    const [ functionArgs, setFunctionArgs ] = useState<{extraLib?: string, defaultValue?: string} | null>(null);
     const [ functionOpt, setFunctionOpt ] = useState<any>()
 
     const [ aggregate, setAggregate ] = useState<any>()
@@ -39,7 +41,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     // const { interfaces } = useContext(HMICanvasContext)
 
-    const { programId, interfaces, refetch, selected, nodes, devices } = useHMIContext();
+    const { programId, interfaces, refetch, selected, nodes, devices, variables } = useHMIContext();
 
     const updateHMIGroup = useUpdateHMIGroup(programId)
     const assignHMINode = useAssignHMINode(programId)
@@ -82,125 +84,46 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     const [ templateValue, setTemplateValue ] = useState('');
 
-    const renderConfigInput = ({type, value, label}: {type: 'Template' | 'Function' | 'String' | 'Number' | 'Boolean', value: any, label: string}) => {
-        switch(type){
-            case 'Boolean':
-                return (
-                    <Box sx={{display: 'flex', alignItems: 'center'}}>
-                        <input 
-                        checked={Boolean(value)}
-                        type="checkbox" 
-                        onChange={(evt) => {
-                            updateState(label, evt.target.checked)
-                        }} />
-
-                        <Typography>{label}</Typography>
-                    </Box>
-                )
-            case 'Function':
-                return (
-                    <Autocomplete 
-                        disablePortal
-                        options={functions}
-                        value={functions?.find((a) => a.id == value?.fn) || {label: ""}}
-                        
-                        onChange={(event, newValue) => {
-                            if(!newValue){
-                                updateState(label, null)
-                            }else{
-                                setFunctionArgs(newValue);
-                                setFunctionOpt(label)
-                            }
-                        }}
-                        getOptionLabel={(option) => typeof(option) == "string" ? option : option.label}
-                        // isOptionEqualToValue={(option, value) => option.id == value.id}
-                        renderInput={(params) => 
-                            <TextField 
-                                {...params} 
-                                label={label}
-                                />
-                        }
-                        // value={value || ''}
-                        // onChange={(e) => {
-                        //     updateState(label, e.target.value)
-                        // }}
-                        size="small" 
-                        // label={label} />
-                        />
-                );
-            case 'String':
-                return (
-                    <TextField 
-                        value={value || ''}
-                        onChange={(e) => {
-                            updateState(label, e.target.value)
-                        }}
-                        size="small" 
-                        label={label} />
-                );
-            case 'Number':
-                return (
-                    <TextField 
-                        value={value || ''}
-                        type="number"
-                        onChange={(e) => {
-                            updateState(label, e.target.value)
-                        }}
-                        size="small" 
-                        label={label} />
-                );
-            case 'Template':
-                return (
-
-                    // <Autocomplete
-                    //     size="small"
-                    //     multiple={true}
-                    //     options={[{label: 'BLO701.on'}, {label: 'FIT101.flow'}]}
-                    //     inputValue={templateValue}
-                    //     onInputChange={(event, value, reason) => {
-                    //         if ( event && event.type === 'blur' ) {
-                    //             console.log("BLur", value)
-                    //               setTemplateValue('');
-                    //         } else if ( reason !== 'reset' ) {
-                    //             console.log("Non blur", value)
-                    //           setTemplateValue(value);
-                    //         }
-                    //     }}
-                    //     getOptionLabel={(option) => typeof(option) == 'string' ? option : option.label }
-                    //     renderInput={(params) => (
-                            <TextField 
-                                label={label}
-                                value={value}
-                                size="small"
-                                onChange={(e) => {
-                                    updateState(label, e.target.value)
-                                }} />
-                        // )} />
-                );
-            default:
-                return (<span>{type} not found in renderConfigInput</span>)
-        }
-    }
-
-    const assignableDevices = useMemo(() => {
-
-        let devs = devices;
-
-        if(item?.extras?.metadata?.type){
-            devs = devs.filter((a) => a.type?.type == item?.extras?.metadata?.type);
-        }
-
-        return devs;
-        // devices?.filter((a) => a.type?.type?.indexOf(item?.extras?.metadata) > -1)
-    }, [devices, item])
 
     // console.log({devices})
+
+    const getFunctionType = (type: any) => {
+        switch(type){
+            default:
+            case 'String':
+                return 'string';
+            case 'Number':
+                return 'number';
+            case 'Boolean':
+                return 'boolean';
+        }
+    }
 
     return (
 
         <Box
             >
 
+            <ScriptEditorModal
+                open={Boolean(functionOpt)}
+                onClose={() => {
+                    setFunctionOpt(null);
+                }}
+
+                defaultValue={functionArgs?.defaultValue}
+                extraLib={functionArgs?.extraLib}
+
+                // variables={variables}
+                // deviceValues={[{name: 'PMP101', children: [{name: 'on', type: 'BooleanT'}]}]}
+                // actions={[
+                //     {
+                //         name: 'setView',
+                //         type: 'void',
+                //         args: [{name: 'view', type: 'string'}]
+                //     }
+                // ]}
+                />
+{/*                 
             <FunctionArgumentsModal
                 interfaces={interfaces}
                 function={functionArgs}
@@ -215,7 +138,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 onClose={() => {
                     setFunctionArgs(null)
                     setFunctionOpt(null)
-                }} />
+                }} /> */}
 
             <HMIGroupModal
                 devices={devices}
@@ -258,19 +181,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 paddingLeft: '3px',
                 paddingRight: '3px'
             }}>
-                <FormGroup>
-                    {Object.keys(options).map((optionKey) => {
-
-                        const type = options[optionKey];
-                        const value = state?.find((a) => a.key == optionKey)?.value;
-                        const label = optionKey
-
-                        return (<Box sx={{marginTop: '6px'}}>
-                            {renderConfigInput({type, value, label})}
-                        </Box>)
-
-                    })}
-                </FormGroup>
+              
             </Box>
             
             <Box sx={{display :'flex'}}>
@@ -285,7 +196,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     style={{ padding: 6, borderRadius: 3 }}
                     icon={<Aggregate />} /> */}
             </Box>
-            <FormControl sx={{marginTop: '6px', marginBottom: '6px'}} fullWidth size="small">
+            {/* <FormControl sx={{marginTop: '6px', marginBottom: '6px'}} fullWidth size="small">
                 <InputLabel>Device</InputLabel>
                 <Select
                     label="Device"
@@ -304,7 +215,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     ))}    
                 </Select>
             </FormControl>
-           
+            */}
 
             {/* <Box>
                 <CheckBox

@@ -218,60 +218,32 @@ export default (prisma: PrismaClient, mq: Channel) => {
 									include: {
 										nodes: {
 											include: {
-												devicePlaceholder: {
-													include: {
-														type: {
-															include: {
-																actions: true,
-																state: true
-															}
-														},
-														setpoints: true,
-														interlocks: {
-															include: {
-																device: true,
-																inputDevice: true,
-																inputDeviceKey: true,
-																assertion: {
-																	include: {
-																		setpoint: true,
-																		variable: true
-																	}
-																},
-																action: true
-															}
-														}
-													}
-												},
-												children: {
-													include: {
-														devicePlaceholder: {
-															include: {
-																type: {
-																	include: {
-																		actions: true,
-																		state: true
-																	}
-																},
-																setpoints: true,
-																interlocks: {
-																	include: {
-																		device: true,
-																		inputDevice: true,
-																		inputDeviceKey: true,
-																		assertion: {
-																			include: {
-																				setpoint: true,
-																				variable: true
-																			}
-																		},
-																		action: true
-																	}
-																}
-															}
-														}
-													}
-												},
+												// devicePlaceholder: {
+												// 	include: {
+												// 		type: {
+												// 			include: {
+												// 				actions: true,
+												// 				state: true
+												// 			}
+												// 		},
+												// 		setpoints: true,
+												// 		interlocks: {
+												// 			include: {
+												// 				device: true,
+												// 				inputDevice: true,
+												// 				inputDeviceKey: true,
+												// 				assertion: {
+												// 					include: {
+												// 						setpoint: true,
+												// 						variable: true
+												// 					}
+												// 				},
+												// 				action: true
+												// 			}
+												// 		}
+												// 	}
+												// },
+												children: true,
 												ports: true
 											}
 										}, 
