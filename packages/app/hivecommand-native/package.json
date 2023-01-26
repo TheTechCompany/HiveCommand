@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/native",
-	"version": "1.4.15-alpha.130",
+	"version": "1.4.15-alpha.131",
 	"private": true,
 	"dependencies": {
 		"@emotion/react": "11.10.4",
@@ -9,7 +9,7 @@
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@hive-command/api": "^1.4.15-alpha.130",
 		"@hive-command/command-surface": "^1.4.15-alpha.130",
-		"@hive-command/local-sidecar": "^1.4.15-alpha.130",
+		"@hive-command/local-sidecar": "^1.4.15-alpha.131",
 		"@monaco-editor/react": "^4.4.6",
 		"@mui/lab": "5.0.0-alpha.102",
 		"@mui/material": "5.10.11",
