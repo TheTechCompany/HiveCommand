@@ -12,8 +12,8 @@ export interface MQTTPublisherOptions {
 
 export class MQTTPublisher {
     
-    private connection : Connection;
-    private channel : Channel;
+    private connection? : Connection;
+    private channel? : Channel;
 
     private options: MQTTPublisherOptions;
 
@@ -29,18 +29,19 @@ export class MQTTPublisher {
     }
 
     //Subscribe to changes requested by other entities
-    async subscribe(key: string, onMessage: (message: ConsumeMessage) => void){
-        const generatedQueue = await this.channel.assertQueue('')
+    async subscribe(key: string, onMessage: (message: ConsumeMessage | null) => void){
+        const generatedQueue = await this.channel?.assertQueue('')
+        if(!generatedQueue) return;
 
-        await this.channel.bindQueue(generatedQueue.queue, this.options.exchange, key);
+        await this.channel?.bindQueue(generatedQueue.queue, this.options.exchange, key);
 
-        this.channel.consume(generatedQueue.queue, onMessage);
+        this.channel?.consume(generatedQueue.queue, onMessage);
     }
 
     //Publish current state to other entities
     async publish(key: string, dataType: DataType, value: any){
 
-        this.channel.publish(
+        this.channel?.publish(
             this.options.exchange, 
             key, 
             Buffer.from(JSON.stringify({
