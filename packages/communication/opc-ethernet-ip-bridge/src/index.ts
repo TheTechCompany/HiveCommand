@@ -292,6 +292,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 
                 if(tag.type.structureObj){
                     Object.keys(tag.type.structureObj).forEach((key) => {
+
+                        console.log(`Adding child tag 2: ${tag.name}.${key}`, key, tag.name);
+
                         childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
                     })
                 }
