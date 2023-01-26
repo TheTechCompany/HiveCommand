@@ -3,6 +3,9 @@
   "version": "1.4.15-alpha.130",
   "description": "",
   "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
