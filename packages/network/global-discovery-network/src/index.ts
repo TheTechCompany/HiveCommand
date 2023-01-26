@@ -5,7 +5,6 @@ import cors from 'cors';
 
 import { MQTTHub } from '@hive-command/opcua-mqtt-hub'
 import { AlarmCenter } from './alarm-center';
-import amqplib from 'amqplib';
 
 import { PrismaClient } from '@hive-command/data';
 import { API } from './api';
