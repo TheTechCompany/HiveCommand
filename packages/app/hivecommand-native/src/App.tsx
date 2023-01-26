@@ -18,7 +18,6 @@ const cmd = Command.sidecar('binaries/sidecar')
 
 const CONF_FILE = 'conf/app.conf.json';
 
-
 function App() {
 
   const { authState } = useContext(DataContext)
