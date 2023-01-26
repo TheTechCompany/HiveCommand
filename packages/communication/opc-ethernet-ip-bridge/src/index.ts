@@ -287,7 +287,6 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 //     console.error({msg: (e as any).message})
                 // }
 
-                // PLC.subscribe(enipTag);
                 let childTags : {key: string, tag: Tag | null }[] = [];
                 
                 if(tag.type.structureObj){
