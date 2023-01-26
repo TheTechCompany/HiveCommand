@@ -51,6 +51,10 @@ export const getOPCType = (type: string) => {
 
 
 
+export const hasOPCChildren = (elem: {type?: string, children?: any[]}) => {
+    return !elem.type && elem.children && elem.children.length > 0
+}
+
 export const ScriptEditorModal : React.FC<ScriptEditorProps> = (props) => {
 
     const defaultValue = `//Transform data before returning to getter
@@ -79,11 +83,12 @@ export const setter = (data: ${getOPCType(props.dataType || 'String')}, tags: Va
 
             if(elem.name.match('[-=.\/:]') != null) return '';
             
-            return elem.children && elem.children.length > 0 ? 
+            return hasOPCChildren(elem) ? 
                 `${elem.name}: { ${elem.children.map(printJson).join('\n')} }` : 
                 `${elem.name}: ${getOPCType(elem.type)};`
         }
         
+        console.log(props.deviceValues)
 
         //TODO add readonly fields
         let inf = `interface ValueStore {

@@ -239,6 +239,13 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     console.error({msg: (e as any).message})
                 }
 
+                let childTags : {key: string, tag: Tag | null }[] = [];
+                
+                if(fromTagListChildren){
+                    Object.keys(fromTagListChildren).forEach((key) => {
+                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
+                    })
+                }
                 // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
@@ -246,12 +253,19 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 }, (value, key) => {
                     if(enipTag && key){
                         // if(!enipTag?.value) enipTag.value = {};
-                        (enipTag.value as any)[key] = value;
+                        let tag = childTags.find((a) => a.key === key)?.tag
+                        if(!tag) return;
+                        tag.value = value;
+
+                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+
+                        // (enipTag.value as any)[key] = value;
                     }else if(enipTag){
                         enipTag.value = value;
-                    }
+    
+                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
 
-                    controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
+                    }
 
                     console.log("Set it")
                 }, fromTagListChildren)
@@ -272,18 +286,33 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 // }
 
                 // PLC.subscribe(enipTag);
+                let childTags : {key: string, tag: Tag | null }[] = [];
+                
+                if(tag.type.structureObj){
+                    Object.keys(tag.type.structureObj).forEach((key) => {
+                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
+                    })
+                }
 
                 addTag(server, tag.name, tag.type.typeName || '', () => {
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){
-                        if(!enipTag?.value) enipTag.value = {};
-                        (enipTag.value as any)[key] = value.value;
+                        // if(!enipTag?.value) enipTag.value = {};
+                        // (enipTag.value as any)[key] = value.value;
+
+                        let tag = childTags.find((a) => a.key === key)?.tag
+                        if(!tag) return;
+                        tag.value = value;
+
+                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+
                     }else if(enipTag){
                         enipTag.value = value.value;
-                    }
 
-                    controller.PLC?.writeTag(enipTag);
+                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
+
+                    }
 
                     console.log("Set it")
                     
