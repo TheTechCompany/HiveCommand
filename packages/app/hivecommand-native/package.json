@@ -2,6 +2,7 @@
 	"name": "@hive-command/native",
 	"version": "1.4.15-alpha.131",
 	"private": true,
+	"sideEffects": false,
 	"dependencies": {
 		"@emotion/react": "11.10.4",
 		"@hexhive/styles": "^1.0.1-alpha.77",
