@@ -1,6 +1,6 @@
 {
   "name": "client-plugins",
-  "version": "1.4.15-alpha.131",
+  "version": "1.4.15-alpha.132",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hive-command/plugin-iolink": "^1.4.15-alpha.131",
+    "@hive-command/plugin-iolink": "^1.4.15-alpha.132",
     "@hive-command/plugin-revpi": "^1.4.15-alpha.130",
     "@hivecommand-clients/revpi": "^1.3.6-alpha.36"
   },
