@@ -1,6 +1,6 @@
 {
   "name": "@io-link/core",
-  "version": "1.4.15-alpha.66",
+  "version": "1.4.15-alpha.130",
   "description": "> TODO: description",
   "author": "The Tech Company",
   "homepage": "https://github.com/TheTechCompany/ifm-core/tree/main/packages/ifm-core#readme",
@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "@io-link/iodd": "^1.4.3",
-    "@io-link/master-api": "^1.4.3",
+    "@io-link/master-api": "^1.4.15-alpha.130",
     "@io-link/master-discovery": "^1.4.3",
     "axios": "^1.2.3",
     "nanoid": "^3.2.0"

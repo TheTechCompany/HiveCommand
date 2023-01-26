@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/discovery-server",
-  "version": "1.4.15-alpha.129",
+  "version": "1.4.15-alpha.130",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/HiveCommand#readme",
@@ -30,10 +30,10 @@
     "url": "https://github.com/TheTechCompany/HiveCommand/issues"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.66",
+    "@hive-command/data": "^1.4.15-alpha.130",
     "@hive-command/data-types": "^1.4.15-alpha.52",
-    "@hive-command/iot-server": "^1.4.15-alpha.66",
-    "@hive-command/opcua-client": "^1.4.15-alpha.129",
+    "@hive-command/iot-server": "^1.4.15-alpha.130",
+    "@hive-command/opcua-client": "^1.4.15-alpha.130",
     "@hive-command/opcua-lds": "^1.4.15-alpha.66",
     "amqplib": "^0.8.0",
     "dotenv": "^10.0.0",
