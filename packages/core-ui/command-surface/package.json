@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.130",
+	"version": "1.4.15-alpha.133",
 	"description": "",
 	"private": true,
 	"main": "dist/index.js",
