@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-sidecar",
-  "version": "1.4.15-alpha.133",
+  "version": "1.4.15-alpha.134",
   "main": "dist/index.js",
   "private": true,
   "license": "MIT",

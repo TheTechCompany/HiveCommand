@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-mqtt",
-  "version": "1.4.15-alpha.133",
+  "version": "1.4.15-alpha.134",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
