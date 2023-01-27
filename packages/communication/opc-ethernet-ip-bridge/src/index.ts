@@ -1,4 +1,5 @@
-import { ControllerManager, ManagedController, Tag, TagList } from '@hive-command/ethernet-ip';
+import { ControllerManager, CIP, ManagedController, Tag, TagList } from '@hive-command/ethernet-ip';
+
 
 import EventEmitter from 'events'
 
@@ -244,9 +245,12 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 
                 if(fromTagListChildren){
                     Object.keys(fromTagListChildren).forEach((key) => {
-                        console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name);
-                        
-                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
+
+                        let type : CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+
+                        console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
+
+                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`, null, type) })
                     })
                 }
                 // PLC.subscribe(enipTag);

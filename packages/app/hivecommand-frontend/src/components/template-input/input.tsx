@@ -1,7 +1,7 @@
 import { Box, styled } from "@mui/material";
 import { forwardRef, MutableRefObject, useRef } from "react";
 
-import { EditorState, EditorView, useCodeMirror } from "./codeMirror";
+import { EditorState, EditorView, useCodeMirror } from "./codemirror";
 
 function canShowCard(props: any) {
     return !props.disableCard && (props.codeType !== "Function" || props.hasError);

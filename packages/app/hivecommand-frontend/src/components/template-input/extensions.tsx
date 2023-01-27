@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { autocompletion, closeCompletion, moveCompletionSelection, acceptCompletion, CompletionContext, CompletionSource } from "@codemirror/autocomplete";
-import { Compartment, CompletionResult, EditorState, EditorView, Extension, keymap, StateEffect, ViewUpdate } from "./codeMirror";
+import { Compartment, CompletionResult, EditorState, EditorView, Extension, keymap, StateEffect, ViewUpdate } from "./codemirror";
 import { Prec } from "@codemirror/state";
 import { basicSetup } from 'codemirror'
 import { bracketMatching, syntaxTree } from '@codemirror/language'

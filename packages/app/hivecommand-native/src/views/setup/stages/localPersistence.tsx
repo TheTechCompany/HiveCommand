@@ -1,9 +1,6 @@
-import { TreeItem, TreeView } from '@mui/lab';
-import { Box, Button, Checkbox, Collapse, Divider, InputAdornment, Paper, TextField, Typography } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { Box, Checkbox, Collapse, Divider, Paper, TextField, Typography } from '@mui/material'
+import React, { useContext, useState } from 'react'
 import { SetupContext } from '../context';
-import { ChevronRight, ExpandMore } from '@mui/icons-material';
-import axios from 'axios';
 
 export interface OPCUAServerItem {
     id: string;

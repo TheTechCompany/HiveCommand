@@ -5,11 +5,7 @@ import { SetupContext } from '../context';
 import { ChevronRight, Javascript, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import clsx from 'clsx';
-import { promoteOpaqueStructureInNotificationData } from 'node-opcua';
-import { render } from 'react-dom';
-import { ProvidedRequiredArgumentsOnDirectivesRule } from 'graphql/validation/rules/ProvidedRequiredArgumentsRule';
-import { AnyAaaaRecord } from 'dns';
-import { getOPCType, hasOPCChildren, ScriptEditorModal } from '../modals/script-editor';
+import { hasOPCChildren, ScriptEditorModal } from '../modals/script-editor';
 
 export interface OPCUAServerItem {
     id: string;
