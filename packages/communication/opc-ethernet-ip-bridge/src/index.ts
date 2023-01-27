@@ -241,7 +241,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 //     console.error({msg: (e as any).message})
                 // }
 
-                let childTags : {key: string, tag: Tag | null }[] = [];
+                let childTags : {key: string, tag: Tag | undefined }[] = [];
                 
                 if(fromTagListChildren){
                     Object.keys(fromTagListChildren).forEach((key) => {
@@ -250,7 +250,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                         console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
 
-                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`, null, type) })
+                        childTags.push({ key: key, tag: controller.PLC?.newTag(`${tag.name}.${key}`, null, false, type) })
                     })
                 }
                 // PLC.subscribe(enipTag);
