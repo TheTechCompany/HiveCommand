@@ -102,7 +102,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": ["src/"],
-  "exclude": ["jest.config.js"],
+  "exclude": ["jest.config.js", "node_modules/"],
   "references": [
     {"path": "../command-canvas-nodes"},
     {"path": "../../app/hivecommand-api"}

@@ -197,6 +197,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
       
 
         if(listenTags){
+            //Tags have been specified in a tag json file
 
             for(var i = 0; i < templates.length; i++){
                 let template = templates[i];
@@ -232,12 +233,12 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 const enipTag = controller.addTag(tag.name)
 
-                try{
-                    if(!enipTag) continue;
-                    await controller.PLC?.readTag(enipTag);
-                }catch(e){
-                    console.error({msg: (e as any).message})
-                }
+                // try{
+                //     if(!enipTag) continue;
+                //     await controller.PLC?.readTag(enipTag);
+                // }catch(e){
+                //     console.error({msg: (e as any).message})
+                // }
 
                 let childTags : {key: string, tag: Tag | null }[] = [];
                 
@@ -276,6 +277,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             }
 
         }else{
+            //Tags have not been explicitly set, show all
 
             for(var i = 0; i < (tagList || []).length; i++){
                 let tag = (tagList || [])[i];
