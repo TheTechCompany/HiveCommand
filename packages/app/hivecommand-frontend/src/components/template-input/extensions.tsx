@@ -157,17 +157,19 @@ export function getDataInfo(data: Record<string, unknown>, path: string) {
 class ExposingCompletionSource {
     data?: Record<string, unknown>;
 
+    options: {label: string, type: 'keyword'}[] = [];
+
     completionSource(
         context: CompletionContext
     ): CompletionResult | Promise<CompletionResult | null> | null {
         const matchPath = context.matchBefore(/(\w+(\[\s*\d+\s*\])*\.)*\w*/);
         if(!matchPath) return null
 
-        const info = getDataInfo(this.data, matchPath.text);
+        // const info = getDataInfo(this.data, matchPath.text);
 
-        const [ currentData, offset ] = info;
+        // const [ currentData, offset ] = info;
 
-        console.log({offset, matchPath: matchPath.from})
+        console.log({matchPath: matchPath.from})
         // let nodeBefore = syntaxTree(context.state).resolveInner(context.pos, -1)
         // // if (nodeBefore.name != "BlockComment" ||
         // //     context.state.sliceDoc(nodeBefore.from, nodeBefore.from + 3) != "/**")
@@ -177,16 +179,46 @@ class ExposingCompletionSource {
         // console.log({tagBefore, textBefore})
         // if (!tagBefore && !context.explicit) return null
 
-        if(context.matchBefore(/\{\{\s*/) === null) return null
+        if(context.matchBefore(/\{\{\s*[\w\.]*/) === null) return null
+
+        const matchString = context.state.doc.toString().slice(matchPath.from, matchPath.to)
+        
+        //AV101.op
+        //AV101.open AV101.struct.on | AV101 AV101.open - object AV101.struct
+        // let reduced_options = this.options.
+
+        let dotCount = ((matchString || '').match(/\./) || []).length
+        console.log(dotCount)
+
+        let options = this.options.slice().filter((a) => {
+            return (a.label?.match(/\./) || []).length === dotCount && a.label.indexOf(matchString) > -1
+        });
+
+        console.log("Matching options", matchString, this.options);
+
+        //Start matching based on segment with reduced set
+        // item1.item2.item3
+        // item1 -> 
+        // item2
 
         return {
-            from: matchPath.from + offset,
-            options: [
-                { label: 'match', type: 'keyword' },
-                { label: 'test', type: 'stuff' }
-            ],
-            validFor: /^\w*$/,
+            from: matchPath.from,
+            options: options,
+            filter: false,
+            // validFor: ((text: string,
+            //     from: number,
+            //     to: number,
+            //     state: EditorState) => {
+            //         console.log({text, from, to, state});
+            //         return (text.length % 1 == 0 && text.length % 2 != 0) ? true: false;
+            //     }) || /^\w*$/,
         }
+    }
+
+    constructor(options: any[]){
+        this.options = options
+
+        this.completionSource = this.completionSource.bind(this);
     }
 }
 export function useCompletionSources(props: any) {
@@ -194,7 +226,7 @@ export function useCompletionSources(props: any) {
     // const context = useContext(QueryContext); // FIXME: temporarily handle, expect to delete after the backend supports eval
     
     // auto-completion for comp exposing
-    const exposingSource = useMemo(() => new ExposingCompletionSource(), []);
+    const exposingSource = useMemo(() => new ExposingCompletionSource(exposingData), [exposingData]);
 
 
     // // javascript syntax auto-completion
@@ -241,17 +273,23 @@ export function useCompletionSources(props: any) {
     //     c.setIsFunction(codeType === "Function");
     //     return c.completionSource;
     //   });
-    }, [enableMetaCompletion, language, codeType]);
+    }, [enableMetaCompletion, exposingData, language, codeType]);
     return completionSources;
 }
 
   
 export function useAutocompletionExtension(props: any) {
-    const completions = useCompletionSources(props);
+    const completions = useCompletionSources({
+        ...props,
+        exposingData: props.exposingData
+    });
+
     return useMemo(
       () => [
         autocompletion({
           override: completions,
+        //   activateOnTyping: false,
+
           defaultKeymap: false,
         }),
         keyMapExtensions,

@@ -48,6 +48,7 @@ export interface CommandSurfaceClient {
 
     changeMode?: (mode: string) => void;
     getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
+    
     performDeviceAction?: (device: string, action: string) => void;
     changeDeviceValue?: (device: string, state: string, value: any) => void;
 
@@ -150,6 +151,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { program: activeProgram, defaultPage, client, watching } = props;
 
+    console.log({activeProgram});
+    
     const { reports = [] } = client || {};
 
     const devices = activeProgram?.devices?.map((device) => ({

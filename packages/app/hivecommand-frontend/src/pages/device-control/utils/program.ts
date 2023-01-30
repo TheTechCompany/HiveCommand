@@ -91,6 +91,23 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                 scaleY
 
                                 rotation
+
+                                dataTransformer {
+                                    id
+        
+                                    template {
+                                        id
+                                    }
+        
+                                    configuration {
+                                        id
+                                        field {
+                                            id
+                                        }
+                                        value
+                                    }
+        
+                                }
                                 
                             
                             children {

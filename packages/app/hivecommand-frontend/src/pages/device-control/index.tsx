@@ -78,6 +78,7 @@ export const DeviceControlView = () => {
         }
     }, [])
 
+    console.log({program})
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>

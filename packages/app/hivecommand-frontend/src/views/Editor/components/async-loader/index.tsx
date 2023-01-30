@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react'
-import script from 'scriptjs'
-// import resolve from 'jspm-resolve'
 
 //  import { createRemoteComponent } from "@paciolan/remote-component/dist/createRemoteComponent";
 //  import { createRequires } from "@paciolan/remote-component/dist/createRequires";

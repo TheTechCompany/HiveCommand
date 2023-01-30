@@ -19,22 +19,6 @@ export interface ConfigMenuProps {
 
 export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
-    const functions = [
-        {
-            id: 'change-view',
-            label: "Change View",
-            args: [
-                {
-                    key: 'view',
-                    type: 'View'
-                }
-            ]
-        }
-    ]
-
-
-    const [ functionArgs, setFunctionArgs ] = useState<{extraLib?: string, defaultValue?: string} | null>(null);
-    const [ functionOpt, setFunctionOpt ] = useState<any>()
 
     const [ aggregate, setAggregate ] = useState<any>()
     const [ modalOpen, openModal ] = useState<boolean>(false);
@@ -87,42 +71,15 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     // console.log({devices})
 
-    const getFunctionType = (type: any) => {
-        switch(type){
-            default:
-            case 'String':
-                return 'string';
-            case 'Number':
-                return 'number';
-            case 'Boolean':
-                return 'boolean';
-        }
-    }
+
 
     return (
 
         <Box
+            sx={{padding: '6px'}}
             >
 
-            <ScriptEditorModal
-                open={Boolean(functionOpt)}
-                onClose={() => {
-                    setFunctionOpt(null);
-                }}
-
-                defaultValue={functionArgs?.defaultValue}
-                extraLib={functionArgs?.extraLib}
-
-                // variables={variables}
-                // deviceValues={[{name: 'PMP101', children: [{name: 'on', type: 'BooleanT'}]}]}
-                // actions={[
-                //     {
-                //         name: 'setView',
-                //         type: 'void',
-                //         args: [{name: 'view', type: 'string'}]
-                //     }
-                // ]}
-                />
+          
 {/*                 
             <FunctionArgumentsModal
                 interfaces={interfaces}
@@ -177,14 +134,9 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                 nodeMenu={props.nodes} />
 
 
-            <Box sx={{
-                paddingLeft: '3px',
-                paddingRight: '3px'
-            }}>
-              
-            </Box>
+    
             
-            <Box sx={{display :'flex'}}>
+            <Box sx={{display :'flex', padding: '6px'}}>
                 <Typography>Config</Typography>
                 {/* <Button
                     onClick={() => {

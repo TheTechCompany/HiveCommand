@@ -17,6 +17,8 @@ export interface CodeMirrorProps {
     onChange?: (value: string) => void;
 
     showLineNum?: boolean;
+
+    exposingData?: any[];
 }
 
 
@@ -44,6 +46,7 @@ export const useCodeMirror = (props: CodeMirrorProps, container: MutableRefObjec
         ...props,
         showLineNum,
         onChange: handleChange,
+        exposingData: props.exposingData
       });
       
       useEffect(() => reconfigure(viewRef.current), [reconfigure]);

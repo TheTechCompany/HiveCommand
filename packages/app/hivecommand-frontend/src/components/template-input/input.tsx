@@ -45,11 +45,16 @@ const CodeEditorPanelContainer = styled(forwardRef<HTMLDivElement>(({ children }
     }
   `;
 
+// export interface BaseInputProps {
+//     editor: 
+// }
 
 export const BaseInput = (props) => {
     const { editor, editorProps = {}, cardStyle, disabled, children, onClick } = props;
 
-    const { view, isFocus } = useCodeMirror(editorProps, editor);
+    const { view, isFocus } = useCodeMirror({
+        ...editorProps,
+    }, editor);
 
     return (
         <Box
@@ -77,7 +82,7 @@ export const BaseTemplateInput = (props: any) => {
     const editor = useRef<HTMLDivElement>();
 
     return (
-        <BaseInput editorProps={props} editor={editor} cardStyle={{ borderRadius: "8px" }}>
+        <BaseInput editorProps={{...props, exposingData: props.options }} editor={editor} cardStyle={{ borderRadius: "8px" }}>
             <CodeEditorPanelContainer
                 // styleName={props.styleName}
                 ref={editor as MutableRefObject<HTMLDivElement>}

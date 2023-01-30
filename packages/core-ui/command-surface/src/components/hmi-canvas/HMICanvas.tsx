@@ -22,6 +22,7 @@ export interface HMICanvasProps {
     deviceValues?: {[key: string]: {[key: string]: any}};
     // program?: any;
     functions?: {id: string, fn: any}[];
+    
     nodes?: any[];
     paths?: any[];
 

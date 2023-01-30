@@ -13,17 +13,18 @@ export interface TemplateInputProps {
     onChange?: (value: string) => void;
 
     label?: string;
+    options?: {label: string, type: string}[]
 }
 
-export const TemplateInput : React.FC<TemplateInputProps> = (props) => {
+export const TemplateInput: React.FC<TemplateInputProps> = (props) => {
 
-    const [ value, setValue ] = useState(props.value);
+    const [value, setValue] = useState(props.value);
 
     useEffect(() => {
         setValue(props.value)
     }, [props.value])
 
-    const [ focused, setFocused ] = useState(false);
+    const [focused, setFocused] = useState(false);
 
     const handleFocus = () => {
         setFocused(true)
@@ -38,25 +39,25 @@ export const TemplateInput : React.FC<TemplateInputProps> = (props) => {
     return (
         <Box
             className="template-input"
-            sx={{position: 'relative'}}>
+            sx={{ position: 'relative' }}>
             {focused ? (
                 <>
-                    <TextField size="small" sx={{opacity: 0, pointerEvents: 'none'}} />
+                    <TextField size="small" sx={{ opacity: 0, pointerEvents: 'none' }} />
 
                     <Paper
                         elevation={3}
                         sx={{
-                            position: 'absolute', 
+                            position: 'absolute',
                             overflowY: 'auto',
                             // overflow: 'visible', 
                             width: '100%',
-                            paddingTop: "6px", 
-                            paddingLeft: '6px', 
-                            paddingRight: '6px', 
-                            height: '222%', 
-                            display: 'flex', 
-                            zIndex: 9, 
-                            top: 0, 
+                            paddingTop: "6px",
+                            paddingLeft: '6px',
+                            paddingRight: '6px',
+                            height: '222%',
+                            display: 'flex',
+                            zIndex: 9,
+                            top: 0,
                             left: 0
                         }}>
                         {/* <Editor
@@ -65,7 +66,9 @@ export const TemplateInput : React.FC<TemplateInputProps> = (props) => {
                              /> */}
                         <BaseTemplateInput
                             value={props.value}
-                            onChange={props.onChange} />
+                            options={props.options}
+                            onFocus={(focus) => !focus && handleBlur()}
+                            onChange={(e) => setValue(e)} />
                         {/* <TextField 
                             onBlur={handleBlur}
                             multiline 
@@ -78,20 +81,20 @@ export const TemplateInput : React.FC<TemplateInputProps> = (props) => {
 
                         <IconButton
                             onClick={handleBlur}
-                            sx={{position: 'absolute', top: 0, right: 0}}
+                            sx={{ position: 'absolute', top: 0, right: 0 }}
                             size="small">
                             <Cancel fontSize='inherit' />
                         </IconButton>
                     </Paper>
                 </>
             ) : (
-                <TextField 
+                <TextField
                     size="small"
                     onFocus={handleFocus}
                     label={props.label}
                     value={value}
-                    // onBlur={handleBlur}
-                    />
+                // onBlur={handleBlur}
+                />
             )}
         </Box>
     )

@@ -244,6 +244,10 @@ export const Controls = (props) => {
                         type
                         tagPrefix
 
+                        state {
+                            key
+                            type
+                        }
                     }
                 }
             }

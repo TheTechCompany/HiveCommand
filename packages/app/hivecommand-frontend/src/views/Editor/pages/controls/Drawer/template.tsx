@@ -5,12 +5,13 @@ import { useUpdateHMINode } from '@hive-command/api';
 import { Javascript } from '@mui/icons-material'
 import { useMutation, gql } from '@apollo/client';
 import { TemplateInput } from '../../../../../components/template-input';
+import { getOPCType, ScriptEditorModal } from '../../../../../components/script-editor';
 
 export type ConfigInputType = 'Template' | 'Function' | 'Device' | 'String' | 'Number' | 'Boolean'
 
 export const TemplateMenu = () => {
 
-    const {  templates, selected, refetch, programId, devices, nodes } = useContext(HMIContext);
+    const {  templates, selected, refetch, variables, programId, devices, nodes } = useContext(HMIContext);
 
     const item = nodes?.find((a) => a.id == selected.id);
 
@@ -21,6 +22,11 @@ export const TemplateMenu = () => {
     const [ templateState, setTemplateState ] = useState<any>([])
 
     const [ state, setState ] = useState<any>([])
+
+
+    const [ functionArgs, setFunctionArgs ] = useState<{extraLib?: string, defaultValue?: string} | null>(null);
+    const [ functionOpt, setFunctionOpt ] = useState<any>()
+
 
     const updateHMINode = useUpdateHMINode(programId)
 
@@ -46,7 +52,9 @@ export const TemplateMenu = () => {
     }, [selected, options])
 
     useEffect(() => {
-        setTemplateState(templateOptions);
+        if(templateOptions){
+            setTemplateState(templateOptions);
+        }
     }, [templateOptions])
 
 
@@ -83,7 +91,10 @@ export const TemplateMenu = () => {
         //     devs = devs.filter((a) => a.type?.type == item?.extras?.metadata?.type);
         // }
 
-        return devs;
+        return (devs || []).map((value) => ({
+            ...value,
+            tag: `${value.type?.tagPrefix ? value.type?.tagPrefix : ''}${value.tag}`
+        }));
         // devices?.filter((a) => a.type?.type?.indexOf(item?.extras?.metadata) > -1)
     }, [devices, item])
 
@@ -101,7 +112,7 @@ export const TemplateMenu = () => {
         switch(type){
             case 'Device':
 
-                let options = assignableDevices?.slice()?.sort((a, b) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}`.localeCompare(`${b.type?.tagPrefix ? b.type?.tagPrefix : ''}${b.tag}`));
+                let options = assignableDevices?.slice()?.sort((a, b) => `${a.tag}`.localeCompare(`${b.tag}`));
 
                 if(type_parts[1]){
                     options = options.filter((a) => a?.type?.id == type_parts[1]);
@@ -126,7 +137,7 @@ export const TemplateMenu = () => {
                             //     setFunctionOpt(label)
                             // }
                         }}
-                        getOptionLabel={(option) => typeof(option) == "string" ? option : `${option.type?.tagPrefix ? option.type?.tagPrefix : ''}${option.tag}`}
+                        getOptionLabel={(option) => typeof(option) == "string" ? option : `${option.tag}`}
                         // isOptionEqualToValue={(option, value) => option.id == value.id}
                         renderInput={(params) => 
                             <TextField 
@@ -188,11 +199,18 @@ export const TemplateMenu = () => {
                         // label={label} />
                         />
                 );
+
             case 'String':
+                //[{label: 'AV101', type: "keyword"}, {label: 'AV101.open', type: 'keyword'}, {label: 'AV201.open', type: 'keyword'}]
+
                 return (
                     <TemplateInput
                         label={label}
                         value={value}
+                        options={assignableDevices.map((device) => {
+
+                            return [{label: device.tag, type: 'keyword'}].concat(device.type?.state?.map((stateItem) => ({label: `${device.tag}.${stateItem.key}`, type: 'keyword' })))
+                        }).reduce((prev, curr) => prev.concat(curr), []) }
                         onChange={(e) => {
                             console.log(e)
                             updateState(id || label, e)
@@ -280,9 +298,43 @@ export const TemplateMenu = () => {
         )
     }, [activeTemplate, templateState])
 
+    const getFunctionType = (type: any) => {
+        switch(type){
+            default:
+            case 'String':
+                return 'string';
+            case 'Number':
+                return 'number';
+            case 'Boolean':
+                return 'boolean';
+        }
+    }
+    
+    console.log({devices});
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: '6px', paddingTop: '6px', paddingRight: '6px'}}>
            
+           <ScriptEditorModal
+                open={Boolean(functionOpt)}
+                onClose={() => {
+                    setFunctionOpt(null);
+                }}
+
+                defaultValue={functionArgs?.defaultValue}
+                extraLib={functionArgs?.extraLib}
+
+                // variables={variables}
+                // deviceValues={[{name: 'PMP101', children: [{name: 'on', type: 'BooleanT'}]}]}
+                // actions={[
+                //     {
+                //         name: 'setView',
+                //         type: 'void',
+                //         args: [{name: 'view', type: 'string'}]
+                //     }
+                // ]}
+                />
+
            <Box sx={{marginBottom: '6px'}}>
                 <Autocomplete
                     fullWidth
@@ -328,21 +380,26 @@ export const TemplateMenu = () => {
                                 </Box>
                                 <IconButton
                                     onClick={() => {
-    //                                     setFunctionOpt(label);
+                                        setFunctionOpt(label);
 
-    //                                     setFunctionArgs({
-    //                                         defaultValue: `export const getter = (values: ValueStore, variables: VariableStore) : ${getFunctionType(type)} => {
+                                        setFunctionArgs({
+                                            defaultValue: `export const getter = (values: ValueStore, variables: VariableStore) : ${getFunctionType(type)} => {
 
-    // }`,
-    //                                         extraLib: `
-    //                                         interface ValueStore {
-    //                                             ${devices?.map((dev) => `${dev.name}: string`).join(';\n')}
-    //                                         }   
+}
 
-    //                                         interface VariableStore {
-    //                                             ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
-    //                                         }`
-    //                                     });
+export const setter = (setValues: (values: DeepPartial<ValueStore>) => void, setVariables: (variables: DeepPartial<VariableStore>) => void) => {
+
+}
+`,
+                                            extraLib: `
+                                            interface ValueStore {
+                                                ${assignableDevices?.map((dev) => `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')}
+                                            }   
+
+                                            interface VariableStore {
+                                                ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
+                                            }`
+                                        });
                                     }}
                                     size="small">
                                     <Javascript fontSize="inherit" />
