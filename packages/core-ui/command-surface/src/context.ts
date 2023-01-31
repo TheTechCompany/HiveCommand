@@ -7,6 +7,9 @@ export const DeviceControlContext = React.createContext<{
 	// controlId?: string;
 	// device?: any;
 
+	infoTarget?: any;
+	setInfoTarget?: any;
+	
 	values?: {[key: string]: {[key: string]: any}}
 
 	// sendAction?: (type: string, action: any) => void;
@@ -20,9 +23,10 @@ export const DeviceControlContext = React.createContext<{
 
 	program?: {
 		id?: string,
-		interface: {
-			nodes: HMINode[]
-		},
+		interface: HMIView
+		//  {
+		// 	nodes: HMINode[]
+		// },
 		devices: HMIDevice[]
 	};
 	

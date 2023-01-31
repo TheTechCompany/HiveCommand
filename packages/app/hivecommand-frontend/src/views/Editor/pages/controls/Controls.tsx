@@ -549,7 +549,6 @@ export const Controls = (props) => {
                 {/* <InfiniteScrubber time={new Date().getTime()} /> */}
                
                 {(<InfiniteCanvas
-                    finite
                     style={CanvasStyle}
                     snapToGrid={true}
                     grid={{divisions: 20, width: 100, height: 100}}

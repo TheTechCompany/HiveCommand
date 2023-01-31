@@ -629,7 +629,7 @@ model CanvasNode {
 model CanvasDataTransformer {
   id String @id
   
-  node CanvasNode @relation(name: "transformsCanvasNodeData", fields: [nodeId], references: [id])
+  node CanvasNode @relation(name: "transformsCanvasNodeData", fields: [nodeId], references: [id], onDelete: Cascade)
   nodeId String @unique
 
   template CanvasDataTemplate @relation(name: "transformsCanvasData", fields: [templateId], references: [id])
@@ -645,7 +645,7 @@ model CanvasDataTransformerConfiguration {
   field CanvasDataTemplateIO @relation(name: "configuresTransformerIO", fields: [fieldId], references: [id])
   fieldId String
 
-  transformer CanvasDataTransformer @relation(name: "configuresTransformer", fields: [transformerId], references: [id])
+  transformer CanvasDataTransformer @relation(name: "configuresTransformer", fields: [transformerId], references: [id], onDelete: Cascade)
   transformerId String
 
   @@unique([fieldId, transformerId])

@@ -54,7 +54,8 @@ export default () => {
 	]
 
 
-	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number }>();
+	// const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, dataFunction: () => any }>();
+
 	const [selected, setSelected] = useState<{ key?: string, id?: string }>()
 
 
@@ -68,6 +69,9 @@ export default () => {
 		activePage,
 		defaultPage,
 		templatePacks,
+
+		infoTarget,
+		setInfoTarget,
 		// seekValue,
 
 		values = {},
@@ -111,10 +115,8 @@ export default () => {
 
 	// const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
 
-	
-	const hmi = useMemo(() => {
-		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage)
-	}, [ hmis, defaultPage, activePage ])
+	const hmi = program?.interface
+
 
 	// const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
 	// 	//Find map between P&ID tag and bus-port
@@ -179,9 +181,10 @@ export default () => {
 		}
 	}
 
-	const normalisedValues = useMemo(() => {
-		console.log("Devices", program?.devices)
-		return program?.devices?.map((device) => {
+	const [ stateValues, setStateValues ] = useState<any>({});
+
+	useEffect(() => {
+		setStateValues(program?.devices?.map((device) => {
 
 			let deviceKey = `${device.tag}`;
 
@@ -210,10 +213,8 @@ export default () => {
 		}).reduce((prev, curr) => ({
 			...prev,
 			[curr.key]: curr.values
-		}), {})
+		}), {}))
 	}, [values])
-
-	console.log({normalisedValues})
 
 	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
 	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
@@ -269,6 +270,10 @@ export default () => {
 	// console.log({ hmiNodes, operatingMode, operatingModes })
 
 
+	const infoBubble = useMemo(() => {
+		
+	}, [])
+
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>
@@ -278,16 +283,41 @@ export default () => {
 					nodes={hmi?.nodes || []}
 					templatePacks={templatePacks}
 					paths={hmi?.edges || []}
-					functions={functions}
+					// functions={functions}
+
+					// functions={{
+					// 	showWindow
+					// }}
 					// program={program}
-					deviceValues={normalisedValues}
+					deviceValues={stateValues}
 					modes={[]}
-					information={infoTarget != undefined ? (
-						<Bubble
-							style={{ position: 'absolute', zIndex: 99, pointerEvents: 'all', left: infoTarget?.x, top: infoTarget?.y }}>
-							<ActionMenu selected={selected} values={normalisedValues} />
-						</Bubble>
-					) : null}
+					information={infoTarget != undefined ? (() => {
+
+						const DataComponent : any = infoTarget.dataFunction(stateValues);
+						console.log("INFO TARGET HANDLER", {DataComponent, stateValues})
+
+						return (<Bubble
+							style={{ 
+								position: 'absolute', 
+								zIndex: 99, 
+								pointerEvents: 'all', 
+								display: 'flex',
+								flexDirection: 'column',
+								padding: '6px',
+								left: infoTarget?.x + infoTarget?.width, 
+								top: infoTarget?.y + infoTarget?.height,
+								
+							}}>
+							<Box>
+								{DataComponent}
+								{/* {Object.keys(dataFunction).map((key) => 
+									<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
+								)} */}
+							</Box>
+							
+							{/* <ActionMenu selected={selected} values={normalisedValues} /> */}
+						</Bubble>)
+					})() : null}
 					onBackdropClick={() => {
 
 						// setSelected(undefined)
@@ -313,7 +343,8 @@ export default () => {
 						// // 	height = 25 //node.type.height * scaleY;
 						// // }
 
-						setInfoTarget({ x: (x || 0) + (width||0), y: (y||0) + (height||0) })
+						// setInfoTarget({ x: (x || 0) + (width||0), y: (y||0) + (height||0) })
+
 						// setEditSetpoint(undefined)
 						// setSelected(select)
 					}}

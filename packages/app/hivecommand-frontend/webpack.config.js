@@ -32,6 +32,7 @@ module.exports = (webpackConfigEnv, argv) => {
     // },
     resolve: {
       alias: {
+        'react-resize-aware': path.resolve(__dirname, 'node_modules/react-resize-aware'),
         '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material')
       },
       plugins: [

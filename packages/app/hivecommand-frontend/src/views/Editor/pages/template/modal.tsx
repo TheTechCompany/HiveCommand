@@ -15,7 +15,7 @@ export const TemplateModal= (props) => {
 
     const [ io, setIO ] = useState<{name?: string, type?: string}>({});
 
-    const dataTypes = [{name: 'Boolean'}, {name: 'String'}, {name: 'Number'}, {name: 'Device'}];
+    const dataTypes = [{name: 'Boolean'}, {name: 'String'}, {name: 'Number'}, {name: 'Function'}, {name: 'Device'}];
 
     const onSubmit = () => {
         props.onSubmit?.(io);

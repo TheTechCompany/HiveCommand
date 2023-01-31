@@ -98,6 +98,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
                 module: monaco.languages.typescript.ModuleKind.CommonJS,
                 noEmit: true,
+                jsx: monaco.languages.typescript.JsxEmit.Preserve
                 // typeRoots: ["node_modules/@types"]
             });
 
@@ -145,8 +146,6 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 // theme: 'vs-dark'
 				// language: 'typescript',
 			});
-
-            monaco.editor.colorizeElement(divEl.current, {})
 
             editor.current.onDidChangeModelContent((e) => {
                 props.onChange?.(editor.current.getValue())

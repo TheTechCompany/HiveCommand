@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { Box } from '@mui/material'
-import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath } from '@hexhive/ui';
+import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath, ZoomControls } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 // import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';
@@ -21,10 +21,11 @@ export interface HMICanvasProps {
     }[]
     deviceValues?: {[key: string]: {[key: string]: any}};
     // program?: any;
-    functions?: {id: string, fn: any}[];
-    
+    // functions?: {[key: string]: Function};
+
     nodes?: any[];
     paths?: any[];
+    
 
     templatePacks?: any;
 	
@@ -106,11 +107,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
             let values = props.deviceValues?.[node?.extras?.devicePlaceholder?.tag];
 
+            console.log({dataValue: node.options})
             return {
                 ...node,
                 extras: {
                     ...node.extras,
-                    dataValue: values
+                    // dataValue: node.options
                 }
             }
         });
@@ -122,10 +124,13 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             
             // let hmi = program.interface //TODO change to a default flag on the HMI
             console.log("Register nodes", {nodes: props.nodes})
-            registerNodes(props.nodes, props.templatePacks, values, getPack, props.functions).then((nodes) => {
-                console.log("Registered nodes", {nodes})
-                setNodes(nodes);
-            })
+
+            setNodes(props.nodes)
+
+            // registerNodes(props.nodes, props.templatePacks, values, getPack, props.functions).then((nodes) => {
+            //     console.log("Registered nodes", {nodes})
+            //     setNodes(nodes);
+            // });
 
             // const nodes = props?.nodes?.filter((a) => !a.children || a.children.length == 0);
             // const groups = props?.nodes?.filter((a) => a.children && a.children.length > 0);
@@ -248,14 +253,18 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     flex: 1
                 }}>
                 <InfiniteCanvas
-                    finite
+                    // finite
                     style={CanvasStyle}
                     zoom={zoom}
-                    offset={offset}
+                    // offset={offset}
                     selected={[selected] as any}
                     onViewportChanged={({zoom, offset}) => {
+
+                        console.log({zoom, offset});
+
                         setZoom(zoom)
-                        setOffset(offset)
+                        // setOffset(offset)
+
                     }}
                     onBackdropClick={props.onBackdropClick}
                     onSelect={(key, id) => {
@@ -275,7 +284,13 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
         
                         updateRef.current?.addPath?.(path);
                     }}
-                />
+                >
+                <ZoomControls
+                    anchor={{
+                        vertical: 'bottom',
+                        horizontal: 'right'
+                    }}  />
+            </InfiniteCanvas>
             
             </Box>
         </HMICanvasProvider>

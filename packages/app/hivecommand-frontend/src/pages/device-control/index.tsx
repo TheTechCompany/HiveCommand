@@ -80,10 +80,28 @@ export const DeviceControlView = () => {
 
     console.log({program})
 
+    const [ testValues, setValues ] = useState<any>({BLO701: {on: false}, BLO601: {on: false}});
+
+    useEffect(() => {
+        
+        
+        const timer = setTimeout(() => {
+            // console.log("Timer")
+
+            console.log("TEST VALUES")
+            setValues({BLO601: {on: true}})
+
+        }, 10 * 1000)
+
+        return () => {
+            clearInterval(timer);
+        }
+    }, [])
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
-                values={normalisedValues}
+                values={testValues || normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}

@@ -97,6 +97,27 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
         
                                     template {
                                         id
+                                        
+                                        inputs {
+                                            id
+                                            name
+                                            type
+                                        }
+
+                                        outputs {
+                                            id
+                                            name
+                                        }
+
+                                        edges {
+                                            from {
+                                                id
+                                            }
+                                            to {
+                                                id
+                                            }
+                                            script
+                                        }
                                     }
         
                                     configuration {

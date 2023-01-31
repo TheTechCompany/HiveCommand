@@ -42,14 +42,15 @@ export const parseTransformerValue = (value: TransformerValue) => {
 
 export const getNodeValues = (node: HMINode) : {[key: string]: any }=> {
     
-    const templatedKeys = node.template?.outputs?.map((x) => x.key) || [];
+    
+    const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
 
     let nodeValues = Object.keys(node.options).map((optionKey) => {
         if(templatedKeys.indexOf(optionKey) > -1){
             //Has templated override
-            let templateOutput = node.template?.outputs?.[templatedKeys.indexOf(optionKey)];
+            let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
-            let templateOverride = node?.template?.configuration?.find((a) => a.to.id == templateOutput?.id)?.script;
+            let templateOverride = node?.dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
             
             // if(typeof(templateOverride) === 'string'){
             //     //Override is either literal or template

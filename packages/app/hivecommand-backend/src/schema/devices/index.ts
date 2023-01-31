@@ -146,6 +146,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 											include: {
 												nodes: {
 													include: {
+														
 														actions: {
 															include: {
 																request: true,
@@ -181,6 +182,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 										},
 										nodes: {
 											include: {
+												
 												actions: {
 													include: {
 														request: true,
@@ -218,6 +220,27 @@ export default (prisma: PrismaClient, mq: Channel) => {
 									include: {
 										nodes: {
 											include: {
+												dataTransformer: {
+													include: {
+														configuration: {
+															include: {
+																field: true
+															}
+														},
+														template: {
+															include: {
+																outputs: true,
+																inputs: true,
+																edges: {
+																	include: {
+																		to: true,
+																		from: true
+																	}
+																}
+															}
+														}
+													}
+												},
 												// devicePlaceholder: {
 												// 	include: {
 												// 		type: {

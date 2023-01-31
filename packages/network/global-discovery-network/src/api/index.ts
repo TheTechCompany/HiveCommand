@@ -109,7 +109,20 @@ export const API = (prisma: PrismaClient) => {
                         },
                         interface: {
                             include: {
-                                nodes: true,
+                                nodes: {
+                                    include: {
+                                        dataTransformer: {
+                                            include: {
+                                                template: true,
+                                                configuration: {
+                                                    include: {
+                                                        field: true
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
                                 edges: {
                                     include: {
                                         from: true,

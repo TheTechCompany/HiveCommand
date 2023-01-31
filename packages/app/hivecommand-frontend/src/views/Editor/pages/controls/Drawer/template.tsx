@@ -170,34 +170,50 @@ export const TemplateMenu = () => {
                 )
             case 'Function':
                 return (
-                    <Autocomplete 
-                        disablePortal
-                        options={[]} //functions}
-                        value={undefined} //functions?.find((a) => a.id == value?.fn)}
-                        
-                        onChange={(event, newValue) => {
-                            // if(!newValue){
-                            //     updateState(label, null)
-                            // }else{
-                            //     setFunctionArgs(newValue);
-                            //     setFunctionOpt(label)
-                            // }
-                        }}
-                        getOptionLabel={(option) => typeof(option) == "string" ? option : option.label}
-                        // isOptionEqualToValue={(option, value) => option.id == value.id}
-                        renderInput={(params) => 
-                            <TextField 
-                                {...params} 
-                                label={label}
-                                />
-                        }
-                        // value={value || ''}
-                        // onChange={(e) => {
-                        //     updateState(label, e.target.value)
-                        // }}
-                        size="small" 
-                        // label={label} />
-                        />
+                   <Box sx={{display: 'flex', alignItems: 'center'}}>
+                        <Typography sx={{flex: 1}} fontSize={'small'}>{label}</Typography>
+                        <IconButton
+                            size="small"
+                            onClick={() => {
+                            setFunctionOpt(label);
+
+                            setFunctionArgs({
+                                defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: () => ValueStore) : ${getFunctionType(type)} => {
+
+    showDeviceWindow(elem, 'device');
+
+}`,
+                                extraLib: `
+                                declare function showWindow(
+                                    position: {x: number, y: number, width: number, height: number, anchor?: string},
+                                    data: () => any
+                                ){
+
+                                }
+
+                                declare function showDeviceWindow(
+                                    position: {x: number, y: number, width: number, height: number, anchor?: string},
+                                    deviceTag: string
+                                ){
+                                    
+                                }
+
+                                declare function changeView(view: string){
+
+                                }
+
+                                interface ValueStore {
+                                    ${assignableDevices?.map((dev) => `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')}
+                                }   
+
+                                interface VariableStore {
+                                    ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
+                                }`
+                            });
+                        }}>
+                            <Javascript fontSize='inherit' />
+                        </IconButton>
+                   </Box>
                 );
 
             case 'String':
@@ -321,6 +337,20 @@ export const TemplateMenu = () => {
                     setFunctionOpt(null);
                 }}
 
+                onSubmit={(code) => {
+                    _updateState(functionOpt, `script://${code}`)
+                    // updateNodeTemplateConfig({
+                    //     variables: {
+                    //         nodeId: selected?.id,
+                    //         fieldId: functionOpt,
+                    //         value: `script://${code}`
+                    //     }
+                    // }).then(() => {
+                        setFunctionOpt(null);
+                    // })
+
+                    // updateState(functionOpt, `script://${code}`)
+                }}
                 defaultValue={functionArgs?.defaultValue}
                 extraLib={functionArgs?.extraLib}
 
@@ -378,7 +408,7 @@ export const TemplateMenu = () => {
                                  <Box sx={{flex: 1, opacity: templateOutput ? 0.1 : 1}}>
                                     {renderConfigInput({type, value, label})}
                                 </Box>
-                                <IconButton
+                                {type !== "Function" && <IconButton
                                     onClick={() => {
                                         setFunctionOpt(label);
 
@@ -403,7 +433,7 @@ export const setter = (setValues: (values: DeepPartial<ValueStore>) => void, set
                                     }}
                                     size="small">
                                     <Javascript fontSize="inherit" />
-                                </IconButton>
+                                </IconButton>}
                                 </>
                             )}
                            

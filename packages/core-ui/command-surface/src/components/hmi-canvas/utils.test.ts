@@ -7,27 +7,23 @@ describe('Command Surface - Utils', () => {
             options: {
                 on: ''
             },
-            template: {
-                id: '102',
-                inputs: [{id: '103', key: 'device'}],
-                outputs: [{id: '104', key: 'on'}],
-                configuration: [{
-                    id: '105',
-                    from: {id: '103'},
-                    to: {id: '104'},
-                    script: `
-                        export const getter = (inputs: any) => inputs.device.on;
-                        export const setter = (setInputs: any) => setInputs({ device: {on: false} });
-                    `
-                }]
-            },
-            templateOptions: [
-                {
-                    device: {
-                        on: '1234'
-                    },
-                }
-            ]
+            dataTransformer: {
+                template: {
+                    id: '102',
+                    inputs: [{id: '103', key: 'device'}],
+                    outputs: [{id: '104', key: 'on'}],
+                    configuration: [{
+                        id: '105',
+                        from: {id: '103'},
+                        to: {id: '104'},
+                        script: `
+                            export const getter = (inputs: any) => inputs.device.on;
+                            export const setter = (setInputs: any) => setInputs({ device: {on: false} });
+                        `
+                    }]
+                },
+                configuration: [{id: '1', field: {id: '103'}, value: {on: '1234'}}]
+            }
         });
 
         console.log(nodeValues)

@@ -72,6 +72,12 @@ export const TemplateEditor = (props: any) => {
     
 
     const getDefault = (type: string) => {
+        if(type === 'Function'){
+            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs) => {
+
+}`
+        }else{ 
+
         return `export const getter = (inputs: Inputs) : ${getInputType(type)} => {
     return inputs;
 }
@@ -81,6 +87,7 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
 
     })
 }`
+        }
     }
 
     const getInputType = (type: string) => {
@@ -109,6 +116,19 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
                     }
 
                     declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
+
+                    declare function showWindow (elem: any, data: Function){
+
+                    }
+
+
+                    declare function showDeviceWindow(
+                        position: {x: number, y: number, width: number, height: number, anchor?: string},
+                        deviceTag: string
+                    ){
+                        
+                    }
+
                 `
     }, [activeTemplate])
 
@@ -151,13 +171,7 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
                     }
                 }}
                 defaultValue={defaultSrc?.src}
-                extraLib={`
-                    interface Inputs {
-                        ${activeTemplate.inputs?.map((input) => `${input.name}: ${getInputType(input.type)}`).join(';\n')}
-                    }
-
-                    declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
-                `}
+                extraLib={extraLib}
                 
                 />
             <TemplateModal 
