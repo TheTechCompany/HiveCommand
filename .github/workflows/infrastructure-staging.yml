@@ -200,7 +200,9 @@ jobs:
         
       - name: Build web
         run: (export NODE_ENV=production CI=false; lerna run build --scope @hive-command/${{ matrix.apps }} --include-dependencies)
-      
+        env:
+          NODE_OPTIONS: "--max-old-space-size=7168"
+
       - name: Configure AWS Creds
         uses: aws-actions/configure-aws-credentials@v1
         with: 
