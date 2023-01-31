@@ -88,6 +88,18 @@ export default (prisma: PrismaClient) => {
 					}, include: {
 						remoteHomepage: true,
 						localHomepage: true,
+						templates: {
+							include: {
+								inputs: true,
+								outputs: true,
+								edges: {
+									include: {
+										from: true,
+										to: true
+									}
+								}
+							}
+						},
 						program: {
 							include: {
 								parent: true,
@@ -105,15 +117,33 @@ export default (prisma: PrismaClient) => {
 								remoteHomepage: true,
 								nodes: {
 									include: {
-										devicePlaceholder: true,
+										// devicePlaceholder: true,
 										inputs: true,
 										outputs: true,
-										children: {
+										children: true,
+										ports: true,
+
+										dataTransformer: {
 											include: {
-												devicePlaceholder: true
+												configuration: {
+													include: {
+														field: true
+													}
+												},
+												template: {
+													include: {
+														outputs: true,
+														inputs: true,
+														edges: {
+															include: {
+																to: true,
+																from: true
+															}
+														}
+													}
+												}
 											}
-										},
-										ports: true
+										}
 									}
 								},
 								// groups: {
@@ -562,6 +592,8 @@ export default (prisma: PrismaClient) => {
 		
 		alarms: [CommandProgramAlarm] 
 		variables: [CommandProgramVariable]
+
+		templates: [CommandTemplateTransformer]
 
 		createdAt: DateTime 
 

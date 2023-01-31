@@ -50,10 +50,10 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
-"@hive-command/ethernet-ip@^2.5.6-alpha.21":
-  version "2.5.6-alpha.21"
-  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.21.tgz#1363a0cd402c9efa21ee712519a10c8c0087ad8d"
-  integrity sha512-jXrfFkPSI6WnSh4j8LyUKOJZMUMmvsPOKiuJoili7p2AemapyBgiCJ9wleErCh8FXAHBIR5D4HP0K7jTtxwo4Q==
+"@hive-command/ethernet-ip@^2.5.6-alpha.23":
+  version "2.5.6-alpha.23"
+  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.23.tgz#799e2d80c2a520a8037014634c28203b669c2b8e"
+  integrity sha512-kBEQbARk+FsKWBBbOhmULUOLXHLl2oH947e/niu9kXRgvgrvenPZvqILA5RLPDeBQ48F6vvuJXHkvYe4+aOwwA==
   dependencies:
     dateformat "^3.0.3"
     deep-equal "^1.1.1"

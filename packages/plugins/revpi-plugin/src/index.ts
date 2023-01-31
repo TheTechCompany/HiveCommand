@@ -99,8 +99,8 @@ export default class RevPiPlugin extends BasePlugin {
 
 	async write(bus: string | null, port: string, value: any){
 		let writeVal = 0;
-		if(value || (value == 'true' || value == 'open' || value == 1 || value == '1')) writeVal = 1;
-		if(!value || value == 'false' || value == 'close' || value == 0 || value == '0') writeVal = 0;
+		if(value.active || (value.active == 'true' || value.active == 'open' || value.active == 1 || value.active == '1')) writeVal = 1;
+		if(!value.active || value.active == 'false' || value.active == 'close' || value.active == 0 || value.active == '0') writeVal = 0;
 		await this.pi.writeValue(port, writeVal)
 	}
 }

@@ -1,6 +1,7 @@
-import { DeviceInfoApi, PortsApi, TreeResponse } from "@io-link/master-api";
+import { DeviceInfoApi, FieldBusApi, PortsApi, TreeResponse,  } from "@io-link/master-api";
 import EventEmitter from "events";
 import { nanoid } from "nanoid";
+// import { AxiosResponse } from 'axios';
 
 export class IOMaster extends EventEmitter {
 
@@ -9,6 +10,8 @@ export class IOMaster extends EventEmitter {
 
     private infoClient?: DeviceInfoApi;
     private portClient?: PortsApi;
+
+    private fieldbusClient?: FieldBusApi;
 
     public tree?: TreeResponse;
     public product?: string;
@@ -24,6 +27,7 @@ export class IOMaster extends EventEmitter {
 
         this.infoClient = new DeviceInfoApi(undefined, this.url)
         this.portClient = new PortsApi(undefined, this.url)
+        this.fieldbusClient = new FieldBusApi(undefined, this.url);
 
         this.init();
     }
@@ -35,6 +39,28 @@ export class IOMaster extends EventEmitter {
         this.serial = (await this.infoClient?.getSerial())?.data.data?.value?.toString()
 
         this.emit('init')
+    }
+
+    async getIP() {
+        const res = await this.fieldbusClient?.getFieldBusIP()
+        return res?.data
+    }
+
+    async setIP(ip: string) {
+        const res = await this.fieldbusClient?.setFieldBusIP({
+            code: 'request',
+            adr: '/fieldbussetup/network/setblock',
+            cid: 4,
+            data: {
+                datatoset: {
+                    ipaddress: ip,
+                    ipdefaultgateway: '0.0.0.0',
+                    dhcp: 0,
+                    subnetmask: '255.255.255.0'
+                }
+            }
+        })
+        return res?.data
     }
 
     get num_ports(){

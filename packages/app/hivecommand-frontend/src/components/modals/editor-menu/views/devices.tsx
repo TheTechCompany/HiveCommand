@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem } from '@mui/material';
+import { Autocomplete, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { Box, Select, TextField } from '@mui/material'
 import { CommandEditorContext } from '../../../../views/Editor/context';
 import React, { useContext } from 'react'
@@ -14,18 +14,19 @@ export const DeviceView = () => {
     //     }
     // ]
 
-    const {item, setItem} = useMenuContext();
+    const { item, setItem } = useMenuContext();
 
     const { deviceTypes } = useContext(CommandEditorContext)
 
-    const deviceType = deviceTypes?.find((a) => a.id == item?.type) || {tagPrefix: ''}
+    const deviceType = deviceTypes?.find((a) => a.id == item?.type) || { tagPrefix: '' }
 
     return (
-        <Box sx={{flex: 1}}>
-            <TextField 
+        <Box sx={{ flex: 1 }}>
+            <TextField
                 value={item?.tag || ''}
+                sx={{marginBottom: '12px'}}
                 onChange={(e) => {
-                    setItem({...item, tag: e.target.value})
+                    setItem({ ...item, tag: e.target.value })
                 }}
                 InputProps={{
                     startAdornment: <InputAdornment position="start">{deviceType?.tagPrefix}</InputAdornment>
@@ -33,10 +34,42 @@ export const DeviceView = () => {
                 fullWidth
                 size="small"
                 label="Device Tag Name" />
-            <FormControl
-                sx={{marginTop: '12px'}} fullWidth size="small" >
+
+            <Autocomplete
+                // disablePortal
+                options={deviceTypes}
+                // assignableDevices?.slice()?.sort((a, b) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}`.localeCompare(`${b.type?.tagPrefix ? b.type?.tagPrefix : ''}${b.tag}`))}
+                value={deviceTypes?.find((a) => a.id == item.type)}
+
+                onChange={(event, newValue) => {
+                    setItem({...item, type: typeof(newValue) === 'string' ? newValue : newValue.id});
+                    // updateState(label, newValue.id)
+                    // if(!newValue){
+                    //     updateState(label, null)
+                    // }else{
+                    //     setFunctionArgs(newValue);
+                    //     setFunctionOpt(label)
+                    // }
+                }}
+                getOptionLabel={(option) => typeof (option) == "string" ? option : `${option.name}`}
+                // isOptionEqualToValue={(option, value) => option.id == value.id}
+                renderInput={(params) =>
+                    <TextField
+                        {...params}
+                        label={"Device Type"}
+                    />
+                }
+                // value={value || ''}
+                // onChange={(e) => {
+                //     updateState(label, e.target.value)
+                // }}
+                size="small"
+            // label={label} />
+            />
+            {/* <FormControl
+                sx={{ marginTop: '12px' }} fullWidth size="small" >
                 <InputLabel>Device Type</InputLabel>
-                <Select 
+                <Select
                     value={item?.type}
                     onChange={(evt) => setItem({ ...item, type: evt.target.value })}
                     label="Device Type">
@@ -45,7 +78,7 @@ export const DeviceView = () => {
                     ))}
                 </Select>
 
-            </FormControl>
+            </FormControl> */}
 
         </Box>
     )

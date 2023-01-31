@@ -1,6 +1,6 @@
 import { Box, Typography, Divider, List, ListItem, Popover,  Paper, IconButton } from '@mui/material'
-import { KeyboardArrowLeft, KeyboardArrowRight, Home } from '@mui/icons-material'
-import React, { useState } from 'react'
+import { KeyboardArrowLeft, KeyboardArrowRight, Home, Fullscreen, FullscreenExit } from '@mui/icons-material'
+import React, { useEffect, useState } from 'react'
 import Toolbar from '../../toolbar'
 import { AvatarList } from '@hexhive/ui'
 
@@ -19,12 +19,32 @@ export interface HeaderProps {
         id: string;
         name: string;
     }[]
+
+    fullscreenHandler?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = (props) => {
 
     const [ avatarAnchor, setAvatarAnchor ] = useState<any>(null);
 
+    const [ isFullScreen, setFullScreen ] = useState(false);
+
+    useEffect(() => {
+        let fullscreenChanged = () => {
+            if(document.fullscreenElement){
+                setFullScreen(true)
+            }else{
+                setFullScreen(false)
+            }
+        }
+
+        document.addEventListener('fullscreenchange', fullscreenChanged)
+
+        return () => {
+            document.removeEventListener('fullscreenchange', fullscreenChanged)
+        }
+
+    }, [])
     return (
         <Paper
             elevation={6}
@@ -105,6 +125,9 @@ export const Header: React.FC<HeaderProps> = (props) => {
                 }}
                 items={props.menuItems} />
 
+            <IconButton onClick={props.fullscreenHandler}>
+                {isFullScreen ? <FullscreenExit sx={{color: "white"}} /> : <Fullscreen sx={{color: "white"}}/>}
+            </IconButton>
             <Box
                 sx={{ marginLeft: '6px' }}
                 onMouseEnter={(evt) => {

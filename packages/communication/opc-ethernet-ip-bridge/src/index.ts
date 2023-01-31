@@ -1,4 +1,5 @@
-import { ControllerManager, ManagedController, Tag, TagList } from '@hive-command/ethernet-ip';
+import { ControllerManager, CIP, ManagedController, Tag, TagList } from '@hive-command/ethernet-ip';
+
 
 import EventEmitter from 'events'
 
@@ -197,6 +198,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
       
 
         if(listenTags){
+            //Tags have been specified in a tag json file
 
             for(var i = 0; i < templates.length; i++){
                 let template = templates[i];
@@ -232,13 +234,25 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                 const enipTag = controller.addTag(tag.name)
 
-                try{
-                    if(!enipTag) continue;
-                    await controller.PLC?.readTag(enipTag);
-                }catch(e){
-                    console.error({msg: (e as any).message})
-                }
+                // try{
+                //     if(!enipTag) continue;
+                //     await controller.PLC?.readTag(enipTag);
+                // }catch(e){
+                //     console.error({msg: (e as any).message})
+                // }
 
+                let childTags : {key: string, tag: Tag | undefined }[] = [];
+                
+                if(fromTagListChildren){
+                    Object.keys(fromTagListChildren).forEach((key) => {
+
+                        let type : CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+
+                        console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
+
+                        childTags.push({ key: key, tag: controller.PLC?.newTag(`${tag.name}.${key}`, null, false, type) })
+                    })
+                }
                 // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
@@ -246,12 +260,19 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 }, (value, key) => {
                     if(enipTag && key){
                         // if(!enipTag?.value) enipTag.value = {};
-                        (enipTag.value as any)[key] = value;
+                        let tag = childTags.find((a) => a.key === key)?.tag
+                        if(!tag) return;
+                        tag.value = value;
+
+                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+
+                        // (enipTag.value as any)[key] = value;
                     }else if(enipTag){
                         enipTag.value = value;
-                    }
+    
+                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
 
-                    controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
+                    }
 
                     console.log("Set it")
                 }, fromTagListChildren)
@@ -260,6 +281,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
             }
 
         }else{
+            //Tags have not been explicitly set, show all
 
             for(var i = 0; i < (tagList || []).length; i++){
                 let tag = (tagList || [])[i];
@@ -271,19 +293,36 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 //     console.error({msg: (e as any).message})
                 // }
 
-                // PLC.subscribe(enipTag);
+                let childTags : {key: string, tag: Tag | null }[] = [];
+                
+                if(tag.type.structureObj){
+                    Object.keys(tag.type.structureObj).forEach((key) => {
+
+                        console.log(`Adding child tag 2: ${tag.name}.${key}`, key, tag.name);
+
+                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
+                    })
+                }
 
                 addTag(server, tag.name, tag.type.typeName || '', () => {
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){
-                        if(!enipTag?.value) enipTag.value = {};
-                        (enipTag.value as any)[key] = value.value;
+                        // if(!enipTag?.value) enipTag.value = {};
+                        // (enipTag.value as any)[key] = value.value;
+
+                        let tag = childTags.find((a) => a.key === key)?.tag
+                        if(!tag) return;
+                        tag.value = value;
+
+                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+
                     }else if(enipTag){
                         enipTag.value = value.value;
-                    }
 
-                    controller.PLC?.writeTag(enipTag);
+                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
+
+                    }
 
                     console.log("Set it")
                     

@@ -7,17 +7,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
-import { useEffect, useState } from 'react';
-import { DataContext, DataProvider } from './data';
-import { readTextFile, writeTextFile, createDir, BaseDirectory } from '@tauri-apps/api/fs';
+import { useEffect } from 'react';
+import { DataContext } from './data';
+import { BaseDirectory } from '@tauri-apps/api/fs';
 import { Controller } from './views/controller';
 
 import { Command } from '@tauri-apps/api/shell';
 
 const cmd = Command.sidecar('binaries/sidecar')
-
-const CONF_FILE = 'conf/app.conf.json';
-
 
 function App() {
 

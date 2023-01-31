@@ -146,6 +146,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 											include: {
 												nodes: {
 													include: {
+														
 														actions: {
 															include: {
 																request: true,
@@ -181,6 +182,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 										},
 										nodes: {
 											include: {
+												
 												actions: {
 													include: {
 														request: true,
@@ -218,60 +220,53 @@ export default (prisma: PrismaClient, mq: Channel) => {
 									include: {
 										nodes: {
 											include: {
-												devicePlaceholder: {
+												dataTransformer: {
 													include: {
-														type: {
+														configuration: {
 															include: {
-																actions: true,
-																state: true
+																field: true
 															}
 														},
-														setpoints: true,
-														interlocks: {
+														template: {
 															include: {
-																device: true,
-																inputDevice: true,
-																inputDeviceKey: true,
-																assertion: {
+																outputs: true,
+																inputs: true,
+																edges: {
 																	include: {
-																		setpoint: true,
-																		variable: true
-																	}
-																},
-																action: true
-															}
-														}
-													}
-												},
-												children: {
-													include: {
-														devicePlaceholder: {
-															include: {
-																type: {
-																	include: {
-																		actions: true,
-																		state: true
-																	}
-																},
-																setpoints: true,
-																interlocks: {
-																	include: {
-																		device: true,
-																		inputDevice: true,
-																		inputDeviceKey: true,
-																		assertion: {
-																			include: {
-																				setpoint: true,
-																				variable: true
-																			}
-																		},
-																		action: true
+																		to: true,
+																		from: true
 																	}
 																}
 															}
 														}
 													}
 												},
+												// devicePlaceholder: {
+												// 	include: {
+												// 		type: {
+												// 			include: {
+												// 				actions: true,
+												// 				state: true
+												// 			}
+												// 		},
+												// 		setpoints: true,
+												// 		interlocks: {
+												// 			include: {
+												// 				device: true,
+												// 				inputDevice: true,
+												// 				inputDeviceKey: true,
+												// 				assertion: {
+												// 					include: {
+												// 						setpoint: true,
+												// 						variable: true
+												// 					}
+												// 				},
+												// 				action: true
+												// 			}
+												// 		}
+												// 	}
+												// },
+												children: true,
 												ports: true
 											}
 										}, 

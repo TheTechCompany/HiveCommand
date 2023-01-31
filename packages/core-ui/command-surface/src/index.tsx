@@ -1,5 +1,5 @@
 import { AvatarList } from '@hexhive/ui';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
 import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
@@ -24,9 +24,11 @@ import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
-import { RemoteComponentCache } from './hooks/remote-components';
+import { RemoteComponentCache, useRemoteComponents } from './hooks/remote-components';
 import { Header } from './components/Header';
 import { merge } from 'lodash'
+import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
+import { template } from 'dot';
 export * from './hooks/remote-components'
 
 
@@ -43,14 +45,107 @@ export interface CommandSurfaceClient {
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
-    updateChartGrid?: (pageId: string, layout: {id: string, x: number, y: number, w: number, h: number}[]) => Promise<any>;
+    updateChartGrid?: (pageId: string, layout: { id: string, x: number, y: number, w: number, h: number }[]) => Promise<any>;
     removeChart?: (pageId: string, id: string) => Promise<any>;
 
     changeMode?: (mode: string) => void;
-    getValues?: (horizon: {start: Date, end: Date}) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
+    getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
+
     performDeviceAction?: (device: string, action: string) => void;
     changeDeviceValue?: (device: string, state: string, value: any) => void;
 
+}
+
+export interface HMITemplate {
+    id: string;
+
+    inputs?: { id: string, name: string, type: string }[]
+    outputs?: { id: string, name: string, type: string }[]
+
+    edges?: { id: string, from: { id: string }, to: { id: string }, script: string }[]
+}
+
+export interface HMIView {
+    id: string,
+    nodes: HMINode[],
+    edges?: HMIEdge[],
+    actions?: {}[]
+}
+
+export interface HMINode {
+    id: string;
+
+    type: string;
+
+    x: number;
+    y: number;
+
+    width?: number;
+    height?: number;
+
+    zIndex?: number;
+
+    rotation?: number;
+
+    scaleX?: number;
+    scaleY?: number;
+
+    dataTransformer?: {
+        template: HMITemplate
+
+        configuration: {
+            id: string
+            field: {
+                id: string
+            }
+            value: any
+        }[]
+    };
+
+    // template?: HMITemplate;
+    // templateOptions?: {}[];
+
+    options: { [key: string]: string | { fn: string } }
+}
+
+export interface HMIEdge {
+
+}
+
+export interface HMIDevice {
+
+    id: string;
+    tag: string;
+    type: {
+        tagPrefix: string;
+        state: any[]
+    }
+
+}
+
+export interface HMITemplatePack {
+    id: string
+    url: string;
+}
+
+export interface HMIProgram {
+    id: string,
+    variables: {}[],
+    interface: HMIView[]
+    devices: HMIDevice[]
+    // {
+    //     id: string;
+    //     tag: string;
+    //     type: {
+    //         tagPrefix?: string;
+    //         state: {
+    //             key: string
+    //         }[];
+    //     }
+    // }[],
+    alarms: {}[]
+
+    templatePacks: HMITemplatePack[]
 }
 
 export interface CommandSurfaceProps {
@@ -58,23 +153,7 @@ export interface CommandSurfaceProps {
 
     title?: string;
 
-    program: ({ 
-        interface: { 
-            id: string, 
-            nodes: any[], 
-            edges: any[] 
-        } 
-        devices: {
-            id: string;
-            tag: string;
-            type: {
-                tagPrefix?: string;
-                state: {
-                    key: string
-                }[];
-            }
-        }[]
-    } & any);
+    program?: HMIProgram;
 
     client?: CommandSurfaceClient;
 
@@ -93,7 +172,7 @@ export interface CommandSurfaceProps {
     }[]
 
     // seekValue?: (startDate: Date, endDate: Date) => any[];
-    values: {[key: string]: any} //{ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
+    values: { [key: string]: any } //{[key: deviceName]: deviceValues} //{ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } }
 
     watching?: { id: string, name: string, color: string }[];
 
@@ -102,14 +181,18 @@ export interface CommandSurfaceProps {
 
 export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
+    const surfaceRef = useRef<HTMLDivElement>(null);
+
     const { program: activeProgram, defaultPage, client, watching } = props;
 
     const { reports = [] } = client || {};
 
-    const devices = activeProgram?.devices?.map((device) => ({
-        ...device,
-        tag: `${device?.type?.tagPrefix || ''}${device?.tag}`
-    }))
+    const devices = useMemo(() =>
+        activeProgram?.devices?.map((device) => ({
+            ...device,
+            tag: `${device?.type?.tagPrefix || ''}${device?.tag}`
+        }))
+        , [activeProgram?.devices])
 
     /*
         Parse the values blob internally and represent it as a clean tag system
@@ -122,7 +205,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const deviceValues = props.values;
     // : { [key: string]: { [key: string]: any } } = useMemo(() => {
-       
+
 
     //     return Object.keys(props.values).map((devicePath) => {
 
@@ -156,14 +239,37 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const [editReportPage, setEditReportPage] = useState<any>(null)
 
-    const functions = [
-        {
-            id: 'change-view',
-            fn: (args: { view: string }) => {
+	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
+
+    const functions = {
+        changeView: (args: { view: string }) => {
                 setActivePage(args.view);
-            }
+        },
+        showDeviceWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, deviceTag: string) => {
+            functions.showWindow({
+                x: position?.x,
+                y: position?.y,
+                width: position?.width,
+                height: position?.height,
+            }, (state: any) => (
+                    <Box>
+                        <Typography>{deviceTag}</Typography>
+                        <Button>Start</Button>
+                    </Box>
+            ))
+        },
+        showWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, dataFunction : (state: any) => any) => {
+        //    alert("STUFF");
+            console.log("SHOW WINDOW HANDLER")
+            setInfoTarget({
+                x: position?.x,
+                y: position?.y,
+                width: position?.width,
+                height: position?.height,
+                dataFunction
+            });
         }
-    ]
+    }
 
     const toolbar_menu = [
         {
@@ -200,7 +306,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         // }
     ]
 
-    console.log({activeView, activePage})
+    const { getPack } = useRemoteComponents(props.cache)
+
+    console.log({ activeView, activePage })
 
     const { view, toolbarMenu } = useMemo(() => {
         const view = toolbar_menu.find((a) => {
@@ -227,7 +335,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     // const createReportPage = useCreateReportPage(id);
 
     const onTreeAdd = (nodeId?: string) => {
-        console.log({nodeId});
+        console.log({ nodeId });
 
         switch (nodeId) {
             case 'analytics':
@@ -237,7 +345,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const onTreeSelect = (nodeId: string) => {
-        console.log({nodeId});
+        console.log({ nodeId });
 
         switch (nodeId) {
             // case 'analytics-root':
@@ -253,15 +361,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             //     break;
             default:
                 let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
-                console.log({nodes})
+                console.log({ nodes })
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node?.parent;
 
-                console.log({page, nodeId})
+                console.log({ page, nodeId })
 
-                if(!page) page = node.id;
-                
-                if(nodeId != 'controls' && nodeId != 'analytics'){
+                if (!page) page = node.id;
+
+                if (nodeId != 'controls' && nodeId != 'analytics') {
                     setView(page);
                 }
 
@@ -278,7 +386,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const alarms = activeProgram?.alarms || [];
 
-    const actions = activeProgram?.interface?.actions || [];
 
     const templatePacks = activeProgram?.templatePacks || [];
 
@@ -306,30 +413,233 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         return activeProgram?.interface?.map(mapHMI);
     }, [activeProgram?.interface])
 
+    const hmi = useMemo(() => {
+        const activeInterface = activeProgram?.interface?.find((a) => activePage ? a.id === activePage : a.id === defaultPage);
 
-    const hmi = activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)?.nodes?.filter((a: any) => !a.children || a.children.length == 0)?.map((node: any) => {
-        const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
-            let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a: any) => a.setpoint?.id == setpoint.id);
+        return activeInterface;
+
+
+
+        //         /*
+        //   let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+        //         let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
+
+        //         let opts = Object.keys(x.options || {}).map((key) => {
+        //             if(x.options[key]?.fn){
+        //                 return {key, value: functions?.find((a) => a.id == x.options[key]?.fn)?.fn?.bind(this, x.options[key]?.args)}
+        //             }
+
+
+        //             // console.log(template('{{=it.stuff}}', {varname: 'stuff',})({stuff: 'abc'}))
+        //             let value;
+        //             try{
+        //             // console.log({varname, tmpl: x.options[key], values})
+        //                 value = template(x.options[key] || '')(values)
+        //             }catch(e){
+        //                 value = x.options[key];
+        //             };
+        // //x.options[key] /
+        //             return {key, value: value}
+        //         }).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+
+        //         return {
+        //             id: x.id,
+        //             x: x.x,
+        //             y: x.y,
+        //             zIndex: x.zIndex || 1,
+        //             rotation: x.rotation || 0,
+        //             scaleX: x.scaleX || 1,
+        //             scaleY: x.scaleY || 1,
+        //             width,
+        //             height,
+
+        //             options: opts,
+        //             //  width: `${x?.type?.width || 50}px`,
+        //             // height: `${x?.type?.height || 50}px`,
+        //             extras: {
+        //                 options: x.icon?.metadata?.options || {},
+        //                 devicePlaceholder: x.devicePlaceholder,
+        //                 rotation: x.rotation || 0,
+        //                 zIndex: x.zIndex || 1,
+        //                 scaleX: x.scaleX != undefined ? x.scaleX : 1,
+        //                 scaleY: x.scaleY != undefined ? x.scaleY : 1,
+        //                 // showTotalizer: x.showTotalizer || false,
+        //                 ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || [],
+        //                 // iconString: x.type?.name,
+        //                 icon: x.icon, //HMIIcons[x.type?.name],
+        //                 // ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
+        //             },
+        //             type: 'hmi-node',
+
+        //         }
+        //         */
+
+        //         // activeProgram?.interface?.find((a) => activePage ? a.id == activePage : a.id == defaultPage)
+        //         //     ?.nodes?.filter((a: any) => !a.children || a.children.length == 0)
+        //         //     ?.map((node: any) => {
+
+        //         //         //Get node 
+        //         //         const options = node.
+
+        //         //         const setpoints = (node?.devicePlaceholder?.setpoints || [])?.map((setpoint: any) => {
+        //         //             let s = deviceInfo?.commandDevices?.[0]?.setpoints?.find((a: any) => a.setpoint?.id == setpoint.id);
+
+        //         //             return {
+        //         //                 ...setpoint,
+        //         //                 value: s?.value || setpoint.value
+        //         //             };
+        //         //         });
+
+
+        //         //         return {
+        //         //             ...node,
+        //         //             devicePlaceholder: {
+        //         //                 ...node.devicePlaceholder,
+        //         //                 setpoints: setpoints
+        //         //             }
+        //         //         }
+        //         //     }) || []
+        //         return nodesWithElems;
+
+    }, [activeProgram, activePage, defaultPage])
+
+    const [hmiWithElems, setHMIWithElems] = useState<any[]>([])
+
+    useEffect(() => {
+
+        (async () => {
+            const activeNodes = (hmi?.nodes || []).filter((a: any) => !a.children || a.children.length == 0);
+
+            console.log("Active nodes");
+            const nodesWithElems = await Promise.all(activeNodes.map(async (node) => {
+
+                const nodeElem = await getNodePack(node.type, templatePacks, getPack)
+
+                let width = node.width || nodeElem?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                let height = node.height || nodeElem?.metadata?.height //|| x.type.height ? x.type.height : 50;
+
+
+                return {
+                    id: node.id,
+                    type: 'hmi-node',
+                    x: node.x,
+                    y: node.y,
+                    zIndex: node.zIndex || 1,
+                    rotation: node.rotation || 0,
+                    scaleX: node.scaleX || 1,
+                    scaleY: node.scaleY || 1,
+                    width,
+                    height,
+                    options: node.options,
+                    
+                    dataTransformer: node?.dataTransformer,
+
+                    extras: {
+                        icon: nodeElem, //Icon from template pack
+                        options: nodeElem?.metadata?.options || {}, //Options for node - related to extras.icon
+
+                        //TODO: Figure out how to remove the duplication of options
+                        rotation: node.rotation || 0,
+                        zIndex: node.zIndex || 1,
+                        scaleX: node.scaleX != undefined ? node.scaleX : 1,
+                        scaleY: node.scaleY != undefined ? node.scaleY : 1,
+                        // showTotalizer: x.showTotalizer || false,
+                        ports: nodeElem?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || [],
+                    }
+                }
+
+            }));
+
+            setHMIWithElems(nodesWithElems)
+        })();
+    }, [hmi])
+
+
+    const parseValue = (value: any, type: "BooleanT" | "Boolean" | "IntegerT" | "UIntegerT") => {
+        switch (type) {
+            case "Boolean":
+            case "BooleanT":
+                return (value == true || value == "true" || value == 1 || value == "1");
+            case "UIntegerT":
+            case "IntegerT":
+                let val = parseFloat(value || 0);
+                if (Number.isNaN(val)) {
+                    val = 0;
+                }
+                return val.toFixed(2);
+            default:
+                console.log({ type })
+                break;
+        }
+    }
+
+    const [normalisedValues, setNormalisedValues] = useState<any>({});
+    
+    useEffect(() => {
+        console.log("Devices", devices)
+        setNormalisedValues(devices?.map((device) => {
+
+            let deviceKey = `${device.tag}`;
+
+            // let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
+
+            // device.type.state
+            let deviceValues = device?.type.state?.map((stateItem) => {
+
+                // let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+
+                let currentValue = props.values?.[deviceKey]?.[stateItem.key];
+
+                return {
+                    key: stateItem.key,
+                    value: parseValue(currentValue, stateItem.type)
+                }
+            }).reduce((prev, curr) => ({
+                ...prev,
+                [curr.key]: curr.value
+            }), {})
 
             return {
-                ...setpoint,
-                value: s?.value || setpoint.value
-            };
-        });
-
-
-        return {
-            ...node,
-            devicePlaceholder: {
-                ...node.devicePlaceholder,
-                setpoints: setpoints
+                key: deviceKey,
+                values: deviceValues
             }
-        }
-    }) || [];
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.values
+        }), {}))
 
+    }, [props.values, devices])
 
+    const fullHMIElements = useNodesWithValues(hmiWithElems, devices || [], functions, normalisedValues || {})
 
-    const drawerMenu: (TreeMenuItem & {component?: JSX.Element})[] = [
+    console.log({fullHMIElements})
+
+    // const fullHMIElements = useMemo(() => {
+    //     //Map HMI elements to their templated or real values
+
+    //     console.log({hmiWithElems})
+    //     return hmiWithElems.map((node) => {
+
+    //         let opts = Object.keys(node.extras?.options || {}).map((key) => {
+
+    //             const hmiNode = hmi?.nodes.find((a) => a.id === node.id)
+
+    //             return { key, value: getOptionValues({...node, dataTransformer: hmiNode?.dataTransformer}, devices || [], functions.showWindow, normalisedValues, key, node.options?.[key]) };
+
+    //         }).reduce((prev, curr) => ({ ...prev, [curr.key]: curr.value }), {})
+
+    //         console.log({opts})
+
+    //         return {
+    //             ...node,
+    //             options: opts
+    //         }
+
+    //     })
+
+    // }, [hmiWithElems, hmi, normalisedValues])
+
+    const drawerMenu: (TreeMenuItem & { component?: JSX.Element })[] = [
         {
             id: 'controls',
             name: 'Controls',
@@ -382,26 +692,29 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         }
     }
 
-    const program = {
+    const program = useMemo(() => ({
         ...activeProgram,
         interface: {
-            ...activeProgram.interface,
-            nodes: hmi
+            id: '',
+            // ...activeProgram?.interface,
+            ...hmi,
+            nodes: fullHMIElements
         },
-        devices: devices
-    };
+        devices: devices || []
+    }), [activeProgram, hmi, fullHMIElements, devices])
 
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
             <DeviceControlProvider value={{
-                actions,
                 historize,
                 alarms,
                 client,
                 // sendAction: props.onCommand,
                 setView,
 
+                infoTarget,
+                setInfoTarget,
                 // seekValue: props.seekValue,
                 // waitingForActions,
 
@@ -417,7 +730,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 hmis: memoisedHmi,
                 defaultPage,
                 activePage,
-                functions,
+                // functions,
                 templatePacks,
             }}>
                 <MaintenanceWindow
@@ -445,10 +758,18 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     onClose={() => setEditReportPage(null)}
                     open={Boolean(editReportPage)} />
                 <Paper
+                    ref={surfaceRef}
                     sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 
                     <Header
                         title={props.title}
+                        fullscreenHandler={() => {
+                            if (document.fullscreenElement) {
+                                document.exitFullscreen();
+                            } else {
+                                surfaceRef.current?.requestFullscreen();
+                            }
+                        }}
                         activeUsers={watching}
                         menuItems={toolbarMenu}
                     />

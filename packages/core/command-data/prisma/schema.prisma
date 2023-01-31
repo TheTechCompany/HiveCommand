@@ -191,7 +191,7 @@ model IOTemplate {
   id String @id
   name String
 
-  type String
+  type String?
 
   tagPrefix String?
 
@@ -199,6 +199,8 @@ model IOTemplate {
   actions IOTemplateAction[] @relation(name: "hasAction")
 
   // config IOTemplateConfig[] @relation(name: "hasIOConfig")
+  // program Program? @relation(name: "hasTemplates", fields: [programId], references: [id])
+  // programId String?
 
   createdAt DateTime @default(now())
   
@@ -278,11 +280,14 @@ model Program {
 
   devices ProgramFlowIO[]
 
+  templates CanvasDataTemplate[] @relation(name: "hasTemplates")
+
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
   variables ProgramVariable[] @relation(name: "useVariable")
 
   usedBy Device[] @relation(name: "useProgram")
+
 
   createdAt DateTime @default(now())
 
@@ -313,9 +318,9 @@ model ProgramAlarmCondition {
 
 model ProgramVariable {
   id String @id
+
   name String
   type String
-  defaultValue String
 
   value String?
 
@@ -338,8 +343,6 @@ model ProgramFlowIO {
   dataInterlocks ProgramDataInterlock[] @relation(name: "useDataInterlock")
 
   plugins IOPlugin[] @relation(name: "usePlugin")
-
-  shownBy CanvasNode[] @relation(name: "shownOn")
 
   observedBy ProgramInterlock[] @relation(name: "observesDevice")
   observedByData ProgramDataInterlock[] @relation(name: "observesDataDevice")
@@ -605,10 +608,9 @@ model CanvasNode {
 
 	type String?
 
-  options Json?
+  dataTransformer CanvasDataTransformer? @relation(name: "transformsCanvasNodeData")
 
-	devicePlaceholder ProgramFlowIO?  @relation(name: "shownOn", fields: [deviceId], references: [id])
-  deviceId String?
+  options Json?
 
   children CanvasNode[] @relation(name: "hasNode")
 
@@ -624,6 +626,87 @@ model CanvasNode {
   hmiId String?
 }
 
+model CanvasDataTransformer {
+  id String @id
+  
+  node CanvasNode @relation(name: "transformsCanvasNodeData", fields: [nodeId], references: [id], onDelete: Cascade)
+  nodeId String @unique
+
+  template CanvasDataTemplate @relation(name: "transformsCanvasData", fields: [templateId], references: [id])
+  templateId String
+
+  configuration CanvasDataTransformerConfiguration[]  @relation(name: "configuresTransformer")
+  
+}
+
+model CanvasDataTransformerConfiguration {
+  id String @id
+
+  field CanvasDataTemplateIO @relation(name: "configuresTransformerIO", fields: [fieldId], references: [id])
+  fieldId String
+
+  transformer CanvasDataTransformer @relation(name: "configuresTransformer", fields: [transformerId], references: [id], onDelete: Cascade)
+  transformerId String
+
+  @@unique([fieldId, transformerId])
+
+  value String
+}
+
+model CanvasDataTemplate {
+  id String @id
+
+  name String
+
+  inputs CanvasDataTemplateIO[] @relation(name: "inputForTransformer")
+  outputs CanvasDataTemplateIO[] @relation(name: "outputForTransformer")
+
+  edges CanvasDataTemplateEdge[] @relation(name: "transformsAlongEdge")
+
+  transforms CanvasDataTransformer[] @relation(name: "transformsCanvasData")
+
+  program Program @relation(name: "hasTemplates", fields: [programId], references: [id])
+  programId String
+}
+
+model CanvasDataTemplateIO {
+  id String @id
+
+  name String
+
+  type String
+
+
+  sourcedBy CanvasDataTemplateEdge[] @relation(name: "fromDataIO")
+  
+  //Use this as transformers
+  targetedBy CanvasDataTemplateEdge[] @relation(name: "toDataIO")
+
+
+  inputFor CanvasDataTemplate[] @relation(name: "inputForTransformer")
+  outputFor CanvasDataTemplate[] @relation(name: "outputForTransformer")
+
+  configuredBy CanvasDataTransformerConfiguration[] @relation(name: "configuresTransformerIO")
+}
+
+model CanvasDataTemplateEdge {
+  id String @id
+
+  //From->To relationship deals with 1:1 mapping
+  from CanvasDataTemplateIO? @relation(name: "fromDataIO", fields: [fromId], references: [id])
+  fromId String?
+
+
+  //Script->To relationship deals with data aggregation
+  script String?
+
+  to CanvasDataTemplateIO? @relation(name: "toDataIO", fields: [toId], references: [id])
+  toId String?
+
+
+  template CanvasDataTemplate @relation(name: "transformsAlongEdge", fields: [templateId], references: [id])
+  templateId String
+}
 
 model CanvasPort {
 		id String @id

@@ -31,6 +31,7 @@ class DevSidecar {
     }
 
     async getDataType(host: string, path: string){
+        console.log(host, path)
         const client = await this.connect(host);
 
         return await client.getType(path)

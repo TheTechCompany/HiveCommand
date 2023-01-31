@@ -358,11 +358,7 @@ export default (prisma: PrismaClient) => {
 			},
 			createCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
 				let deviceUpdate: any = {};
-				if (args.input.devicePlaceholder) {
-					deviceUpdate['devicePlaceholder'] = {
-						connect: { id: args.input.devicePlaceholder }
-					}
-				}
+			
 				return await prisma.canvasNode.create({
 					data: {
 						id: nanoid(),
@@ -383,14 +379,41 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
+
+			updateCommandProgramInterfaceNodeTemplateConfiguration: async (root: any, args: any, context: any) => {
+				const transformer = await prisma.canvasDataTransformer.findFirst({where: {nodeId: args.node}});
+				
+				if(!transformer) throw new Error("No transformer found");
+				
+				return await prisma.canvasDataTransformer.update({
+					where: {
+						nodeId: args.node
+					},
+					data: {
+						configuration: {
+							upsert: [{
+								where: {
+									fieldId_transformerId: {
+										fieldId: args.field,
+										transformerId: transformer?.id
+									}
+								},
+								create: {
+									id: nanoid(),
+									fieldId: args.field,
+									value: args.value
+								},
+								update: {
+									value: args.value
+								}
+							}]
+						}
+					}
+				})
+			},
 			updateCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
 				let deviceUpdate: any = {};
-				if (args.input.devicePlaceholder) {
-					deviceUpdate['devicePlaceholder'] = {
-						connect: { id: args.input.devicePlaceholder }
-					}
-				}
-
+			
 				if (args.input.showTotalizer != undefined) deviceUpdate['showTotalizer'] = args.ianput.showTotalizer;
 				if (args.input.x != undefined) deviceUpdate['x'] = args.input.x;
 				if (args.input.y != undefined) deviceUpdate['y'] = args.input.y;
@@ -405,6 +428,22 @@ export default (prisma: PrismaClient) => {
 
 				if (args.input.rotation != undefined) deviceUpdate['rotation'] = args.input.rotation;
 				if (args.input.type) deviceUpdate['type'] = args.input.type //{ connect: { id: args.input.type } };
+
+				if(args.input.template) deviceUpdate['dataTransformer'] = {
+					upsert: {
+						update: {
+							template: {
+								connect: {id: args.input.template}
+							}
+						},
+						create: {
+							id: nanoid(),
+							template: {
+								connect: {id: args.input.template}
+							}
+						}
+					}
+				};
 
 				if(args.input.options) deviceUpdate['options'] = args.input.options;
 
@@ -433,7 +472,6 @@ export default (prisma: PrismaClient) => {
 									zIndex: child.zIndex || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
-									deviceId: child.devicePlaceholder,
 									// type: {connect: {id: child.type}},
 								}))
 							}
@@ -453,7 +491,6 @@ export default (prisma: PrismaClient) => {
 									zIndex: child.zIndex || 1,
 									showTotalizer: child.showTotalizer || false,
 									templateId: child.type,
-									deviceId: child.devicePlaceholder,
 								}
 							}))
 						}
@@ -525,7 +562,6 @@ export default (prisma: PrismaClient) => {
 					where: { id: args.id },
 					data: {
 						...deviceUpdate,
-						
 						// hmi: {
 						// 	connect: { programId: args.program }
 						// }
@@ -762,6 +798,9 @@ export default (prisma: PrismaClient) => {
 		updateCommandProgramInterfaceNode (program: ID, hmi: ID, id: ID, input: ComandProgramInterfaceNodeInput!): CommandHMINode
 		deleteCommandProgramInterfaceNode (program: ID, hmi: ID, id: ID!): CommandHMINode
 
+		
+		updateCommandProgramInterfaceNodeTemplateConfiguration (node: ID, field: ID, value: String): Boolean
+
 		createCommandProgramInterfaceEdge (program: ID, hmi: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
 		updateCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
 		deleteCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID!): CommandHMIEdge
@@ -857,7 +896,8 @@ export default (prisma: PrismaClient) => {
 		showTotalizer : Boolean
 		
 		type: String
-		devicePlaceholder: String
+
+		template: String
 
 		children: [ComandProgramInterfaceNodeInput]
 		ports: [CommandHMIPortInput]
@@ -885,7 +925,7 @@ export default (prisma: PrismaClient) => {
 		
 		type: String 
 
-		devicePlaceholder: CommandProgramDevicePlaceholder 
+		dataTransformer: CommandDataTransformer
 
 		children: [CommandHMINode]
 		ports: [CommandHMIPort]

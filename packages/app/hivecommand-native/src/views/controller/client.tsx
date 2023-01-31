@@ -36,11 +36,12 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         if(tag?.indexOf('script://') == 0){
             const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
             const { getter, setter } = load_exports(jsCode)
-
+            console.log({jsCode})
             return setter(value, valueStructure, (values: any) => {
                 
                 let tags = getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
 
+                console.log({tags, values, subscriptionMap})
                 let newValues = tags.map((t: any) => {
                  
                     let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
@@ -75,7 +76,7 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         console.log({deviceName, stateKey, value});
 
         setTag(`${deviceName}.${stateKey}`, value, async (values) => {
-            // console.log({values});
+            console.log({values});
             
             await Promise.all(values.map(async (value) => {
                 await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {

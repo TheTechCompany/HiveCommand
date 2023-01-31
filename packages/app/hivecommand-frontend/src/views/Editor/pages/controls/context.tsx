@@ -6,6 +6,23 @@ export interface HMINodeData {
     rotation?: number;
 }
 
+export interface HMIVariable {
+    id: string;
+    name: string;
+    type: string;
+}
+
+export interface HMITemplate {
+    id: string;
+    name: string;
+
+    inputs?: any[];
+    outputs?: any[];
+
+    edges?: any[];
+
+}
+
 export const HMIContext = React.createContext<{
     programId?: string;
     actions?: any[]
@@ -14,6 +31,10 @@ export const HMIContext = React.createContext<{
     refetch?: () => void;
     selected?: any;
     devices?: any[]
+    variables?: HMIVariable[];
+
+    templates?: HMITemplate[];
+
     nodes?: any[]
 
     updateNode?: (

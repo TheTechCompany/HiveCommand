@@ -7,7 +7,7 @@ export const useCreateProgramVariable = (programId: string) => {
 		input: {
 			name: string;
 			type: string;
-			defaultValue: string;
+			defaultValue?: string;
 		}
 	}) => {
 
@@ -32,7 +32,7 @@ export const useCreateProgramVariable = (programId: string) => {
 		input: {
 			name: string;
 			type: string;
-			defaultValue: string;
+			defaultValue?: string;
 		}
 	) => {
 		return await mutateFn({
@@ -52,7 +52,7 @@ export const useUpdateProgramVariable = (programId: string) => {
 		input: {
 			name: string;
 			type: string;
-			defaultValue: string;
+			defaultValue?: string;
 		}
 	}) => {
 
@@ -79,7 +79,7 @@ export const useUpdateProgramVariable = (programId: string) => {
 		input: {
 			name: string;
 			type: string;
-			defaultValue: string;
+			defaultValue?: string;
 		}
 	) => {
 		return await mutateFn({

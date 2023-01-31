@@ -82,14 +82,15 @@ export const MenuItem : React.FC<MenuItemProps> = forwardRef<HTMLDivElement, Men
             <div onClick={handleExpansionClick} className={classes.iconContainer}>
                 {icon}
             </div>
-            <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+            <div 
+                onClick={handleSelectionClick}        
+                style={{display: 'flex', alignItems: 'center',  height: '100%', width: '100%'}}>
                 {props.decoration ? (
-                    <div style={{marginRight: '3px', display: 'flex', alignItems: 'center'}}>
+                    <div style={{marginRight: '3px', display: 'flex', pointerEvents: 'none', alignItems: 'center'}}>
                         {props.decoration}
                     </div>
                 ): undefined}
                 <Typography
-                        onClick={handleSelectionClick}
                         sx={{fontSize: '0.8em', width: '100%'}}
                     >
                         {label}
@@ -126,9 +127,9 @@ export interface MenuItemGroupProps {
 export const CustomTreeItem = (props: any) => {
     // console.log({props})
     return (<TreeItem
-            ContentProps={{style: {width: 'unset'}, decoration: props.decoration, dontAdd: props.dontAdd, dontEdit: props.dontEdit}}
-            ContentComponent={MenuItem} 
-            {...props} />)
+                ContentProps={{style: {width: 'unset'}, decoration: props.decoration, dontAdd: props.dontAdd, dontEdit: props.dontEdit}}
+                ContentComponent={MenuItem} 
+                {...props} />)
 }
 
 export const MenuItemGroup = (props) => {

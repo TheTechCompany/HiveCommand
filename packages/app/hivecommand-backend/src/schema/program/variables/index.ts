@@ -36,7 +36,6 @@ export default (prisma: PrismaClient) => {
                             id: nanoid(),
                             name: input.name,
                             type: input.type,
-                            defaultValue: input.defaultValue,   
                             program: {
                                 connect: {id: program}
                             }
@@ -49,7 +48,6 @@ export default (prisma: PrismaClient) => {
                         data: {
                             name: input.name,
                             type: input.type,
-                            defaultValue: input.defaultValue,
                         }
                     })
                 },

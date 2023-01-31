@@ -411,7 +411,7 @@ export const useAssignHMINode = (programId: string) => {
     const item = mutation.updateCommandProgramInterfaceNode({
       id: args.nodeId,
       input: {
-        devicePlaceholder: args.deviceId
+        // devicePlaceholder: args.deviceId
       }
     })
 

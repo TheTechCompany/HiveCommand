@@ -8,6 +8,7 @@ import program from './program';
 import operations from './operations'
 import { Channel } from 'amqplib';
 import { Pool } from 'pg';
+import templates from "./program/templates";
 
 export default (prisma: PrismaClient, channel: Channel) => {
 
@@ -16,13 +17,16 @@ export default (prisma: PrismaClient, channel: Channel) => {
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
+	const { typeDefs: templateTypeDefs, resolvers: templateResolvers } = templates(prisma);
+
 	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, channel)
 
 	const resolvers = mergeResolvers([
 		deviceResolvers,
 		programResolvers,
 		hmiResolvers,
-		operationResolvers
+		operationResolvers,
+		templateResolvers
 	]);
 
 	/*
@@ -53,6 +57,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 			value: String
 		}
 		`,
+		templateTypeDefs,
 		operationTypeDefs,
 		deviceTypeDefs,
 		programTypeDefs,

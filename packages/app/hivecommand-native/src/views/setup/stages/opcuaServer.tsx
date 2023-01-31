@@ -5,11 +5,7 @@ import { SetupContext } from '../context';
 import { ChevronRight, Javascript, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import clsx from 'clsx';
-import { promoteOpaqueStructureInNotificationData } from 'node-opcua';
-import { render } from 'react-dom';
-import { ProvidedRequiredArgumentsOnDirectivesRule } from 'graphql/validation/rules/ProvidedRequiredArgumentsRule';
-import { AnyAaaaRecord } from 'dns';
-import { getOPCType, ScriptEditorModal } from '../modals/script-editor';
+import { hasOPCChildren, ScriptEditorModal } from '../modals/script-editor';
 
 export interface OPCUAServerItem {
     id: string;
@@ -196,24 +192,33 @@ export const OPCUAServerStage = () => {
                                     arr.forEach((x) => {
 
                                         if(direction == 'create' && !isChecked(x)){
-                                            console.log("Update", x.path, x.children);
-                                            if(x.path &&( !x.children || x.children.length == 0)) updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
+                                            //!x.children || x.children.length == 0)
+                                            console.log({x})
+                                            if(x.path && (!x.children || x.children.length == 0 || x.type)){
+                                                 updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
+        
+                                                 console.log("Update", x.path, x.children);
+
+                                            }
 
                                         }else if(direction == 'remove' && isChecked(x)){
                                             updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
                                         }
 
-                                        if(x.children) updateRec(x.children || [], `${parent ? parent + '.' : ''}${x.name}`)
+                                        if(hasOPCChildren(x)) updateRec(x.children || [], `${parent ? parent + '.' : ''}${x.name}`)
                                     })
                                 } 
 
                                 if(!item.path) return;
 
-                                if(item.children && item.children.length > 0){
-                                    updateRec(item.children, item.name)
+                                if(hasOPCChildren(item)){
+                                    console.log("Update rec for", item)
+                                    updateRec(item.children || [], item.name)
                                 }else{
                                     updateSubscriptionMap(item.path, `${parent.name ? parent.name + '.' : ''}${item.name}`)
                                 }
+
+                                console.log({subs: globalState?.subscriptionMap})
                             }}
                             // disabled
                             // checked={globalState.subscriptionMap?.indexOf(item.path) > -1}

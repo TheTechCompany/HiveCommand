@@ -3,9 +3,11 @@ import React from "react";
 import { ActionMenu } from "./actions";
 import { ConfigMenu } from "./config";
 import { NodeMenu } from "./nodes";
+import { TemplateMenu } from "./template";
 
 export interface HMIDrawerProps {
     menu?: string;
+    
     nodes?: any[];
 }
 
@@ -25,7 +27,11 @@ export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
                 // let item = selected.key == 'node' ? nodes.find((a) => a.id == selected.id) : undefined
                 return (
                     <ConfigMenu nodes={props.nodes}/>
-                 )
+                )
+            case 'template':
+                return (
+                    <TemplateMenu />
+                )
         }
        
     }
@@ -35,7 +41,7 @@ export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
             sx={{
                 overflow: 'auto',
                 height: '100%',
-                width: '175px'
+                width: '200px'
             }}
             onClick={(e) => {
                 e.stopPropagation()

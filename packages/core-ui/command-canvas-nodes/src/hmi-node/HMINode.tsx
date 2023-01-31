@@ -76,11 +76,13 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
         setRotation(props?.extras?.rotation || 0)
     }, [props?.extras?.rotation])
 
+    console.log({id: props.id, extras: props.extras, dataValue: props.extras?.dataValue});
+
     return (
         <Box
             style={{ 
                 position: 'relative',
-                pointerEvents: 'none', // props.building ? 'none' : undefined,
+                // pointerEvents: 'none', // props.building ? 'none' : undefined,
                 width: props.width || '72px',
                 height: props.height || '72px',
                 display :'flex',

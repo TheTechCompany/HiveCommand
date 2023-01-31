@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.134](https://github.com/TheTechCompany/ifm-core/compare/v1.4.15-alpha.133...v1.4.15-alpha.134) (2023-01-27)
+
+**Note:** Version bump only for package @io-link/core
+
+
+
+
+
+## [1.4.15-alpha.133](https://github.com/TheTechCompany/ifm-core/compare/v1.4.15-alpha.132...v1.4.15-alpha.133) (2023-01-27)
+
+**Note:** Version bump only for package @io-link/core
+
+
+
+
+
+## [1.4.15-alpha.132](https://github.com/TheTechCompany/ifm-core/compare/v1.4.15-alpha.131...v1.4.15-alpha.132) (2023-01-26)
+
+**Note:** Version bump only for package @io-link/core
+
+
+
+
+
+## [1.4.15-alpha.131](https://github.com/TheTechCompany/ifm-core/compare/v1.4.15-alpha.130...v1.4.15-alpha.131) (2023-01-26)
+
+**Note:** Version bump only for package @io-link/core
+
+
+
+
+
 ## [1.4.3](https://github.com/TheTechCompany/ifm-core/compare/v1.4.2...v1.4.3) (2022-05-14)
 
 **Note:** Version bump only for package @io-link/core

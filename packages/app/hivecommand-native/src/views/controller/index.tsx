@@ -5,7 +5,6 @@ import { useRemoteCache } from '../../integrations/remote-cache';
 import { DataContext } from '../../data';
 import axios from 'axios';
 import io, {Socket} from 'socket.io-client'
-import * as esbuild from 'esbuild-wasm'
 import ts, { ModuleKind } from 'typescript'
 import {merge} from 'lodash';
 import { useLocalClient } from './client';

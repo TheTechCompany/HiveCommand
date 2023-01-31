@@ -2,11 +2,27 @@ import { discoverDevices, discoverMasters, IOMaster } from "../src";
 
 (async () => {
 
-	const master = new IOMaster('192.168.88.250')
+	const master = new IOMaster('192.168.47.137')
 
 	master.on('init', async () => {
-		const port = await master.getPortInfo(2)
-		console.log({port})
+		
+		// master.
+		// const ipResp = await master.getIP();
+		// console.log({ipResp: ipResp?.data})
+
+		const res = await master.getPortInfo(1)
+		console.log({res});
+		// console.log("Set IP");
+		// const res = await master.setIP('192.168.44.155') //151
+
+		// console.log(res?.config)
+
+		// const data = res?.data;
+		// console.log(data)
+
+
+		// const port = await master.getPortInfo(2)
+		// console.log({port})
 
 	})
 
