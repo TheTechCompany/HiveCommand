@@ -250,7 +250,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
                         console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
 
-                        childTags.push({ key: key, tag: controller.PLC?.newTag(`${tag.name}.${key}`, null, false, type) })
+                        childTags.push({ key: key, tag: controller.PLC?.newTag(`${tag.name}.${key}`, null, false, type, 10) })
                     })
                 }
                 // PLC.subscribe(enipTag);
