@@ -14,33 +14,33 @@ import { API } from './api';
     const alarmCenter = new AlarmCenter();
 
 
-    const mqttHub = new MQTTHub({
-        user: 'user1',
-        pass: 'pass1',
-        host: 'localhost',
-        port: 5673,
+    // const mqttHub = new MQTTHub({
+    //     user: 'user1',
+    //     pass: 'pass1',
+    //     host: 'localhost',
+    //     port: 5673,
         
-        exchange: 'device_values',
-        onMessage: ({ routingKey, messageContent, userId }) => {
+    //     exchange: 'device_values',
+    //     onMessage: ({ routingKey, messageContent, userId }) => {
 
-            //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
+    //         //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
 
-            // prisma.deviceValue.create({
-            //     data: {
-            //         deviceId,
-            //         key: routingKey,
-            //         value: messageContent.value,
-            //         a
-            //     }
-            // })
+    //         // prisma.deviceValue.create({
+    //         //     data: {
+    //         //         deviceId,
+    //         //         key: routingKey,
+    //         //         value: messageContent.value,
+    //         //         a
+    //         //     }
+    //         // })
 
-            //Call alarm center hook to allow for business logic based alarm signals
-            alarmCenter.hook({routingKey, messageContent, userId})
-        }
-    });
+    //         //Call alarm center hook to allow for business logic based alarm signals
+    //         alarmCenter.hook({routingKey, messageContent, userId})
+    //     }
+    // });
 
-    await mqttHub.setup();
-    await mqttHub.subscribe();
+    // await mqttHub.setup();
+    // await mqttHub.subscribe();
 
     const app = express();
 

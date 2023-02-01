@@ -1,5 +1,4 @@
 import React, { useMemo, useState, useContext, useEffect } from "react";
-import { Box, Button, Text } from "grommet";
 // import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../components/modals/device-control-graph";
@@ -11,9 +10,8 @@ import { GraphGrid } from '@hexhive/ui'
 import moment from "moment";
 import { Graph, GraphContainer } from "../components/graph";
 // import { useApolloClient } from "@apollo/client";
-import { LoadingIndicator } from "../components/LoadingIndicator";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
-import { Menu, Paper } from "@mui/material";
+import { Menu, Paper, Box, Typography, Button, IconButton } from "@mui/material";
 
 export const DeviceControlGraph: React.FC<any> = (props) => {
 
@@ -177,35 +175,31 @@ export const DeviceControlGraph: React.FC<any> = (props) => {
         
         }}
       />
-      <Box justify="end" direction="row">
-        <Box direction="row" align="center" justify="center" flex>
-          <Button 
-            onClick={prevWeek}
-            plain 
-            style={{padding: 6, borderRadius: 3}} 
-            hoverIndicator 
-            icon={<Previous />} />
-          <Text>{startOfWeek.format('DD/MM/yy')} - {endOfWeek.format('DD/MM/yy')}</Text>
-          <Button 
-            onClick={nextWeek}
-            plain 
-            style={{padding: 6, borderRadius: 3}} 
-            hoverIndicator 
-            icon={<Next />} />
+      <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <IconButton 
+            onClick={prevWeek}>
+              <Previous />
+          </IconButton>
+          <Typography>{startOfWeek.format('DD/MM/yy')} - {endOfWeek.format('DD/MM/yy')}</Typography>
+          <IconButton 
+            onClick={nextWeek}>
+<Next />
+            </IconButton>
 
         </Box>
-        <Button
+        <IconButton
           onClick={() => openModal(true)}
-          icon={<Add  />}
-          plain
-          style={{ padding: 6, borderRadius: 3 }}
-          hoverIndicator
-        />
+        >
+          <Add  />
+        </IconButton>
       </Box>
     <Box 
-      flex 
-      overflow='auto'>
-      {/* {loading && <LoadingIndicator />} */}
+      sx={{
+        flex: 1,
+        display: 'flex',
+        overflow: 'auto'
+      }}>
       <GraphGrid 
        
         onLayoutChange={(layout: any) => {

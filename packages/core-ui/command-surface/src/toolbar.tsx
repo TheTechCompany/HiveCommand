@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, IconButton, Tab, Tabs } from '@mui/material'
+import { Box, IconButton, Button, Tab, Tabs } from '@mui/material'
 // import { matchPath, useLocation, useMatch, useResolvedPath } from 'react-router-dom';
-import { Button } from 'grommet'
 // const ToolbarButton = (props) => {
 
 // 	const path = useResolvedPath(props.id);
@@ -31,15 +30,11 @@ export default (props: {
 		<Box>
 			{props.items?.map((item) => {
 				// const path = useResolvedPath(item.id);
-				return <Button 
-					plain
-					size='small'
-					onClick={() => props.onItemClick?.(item.id)}
-					active={item.active}
-					style={{padding: 6, color: 'white', marginRight: 3, borderRadius: 3}}
-					hoverIndicator 
-					icon={item.icon}
-					label={item.label} />
+				return <Button
+						onClick={() => props.onItemClick?.(item.id)}>
+					{item.icon}
+					{item.label}
+				</Button>
 			})}
 		</Box>
 		

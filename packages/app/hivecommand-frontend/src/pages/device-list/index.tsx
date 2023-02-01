@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DeviceModal } from '../../components/modals/device';
 import { useCreateDevice, useUpdateDevice } from '@hive-command/api'
-import { DeploymentList, DeploymentInfo } from '../../components/deployment-list';
+import { DeploymentList } from '../../components/deployment-list';
 import { Box, TextField, Button, IconButton, Paper } from '@mui/material';
 import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
@@ -210,10 +210,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                     console.log("Edit", datum)
                 }}
                  />
-            {/* <DeploymentInfo 
-                deployment={selectedDevice}
-                open={Boolean(selectedDevice)}/>
-                 */}
+        
             </Box>
             
         </Paper>

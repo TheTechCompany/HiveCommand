@@ -39,8 +39,10 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 	const [ valueState, setValues ] = useState<any>(values || {})
 
 	useEffect(() => {
-		valueRef.current.values = values;
-		setValues(values)
+		if(values){
+			valueRef.current.values = values;
+			setValues(values)
+		}
 	}, [values])
 
 

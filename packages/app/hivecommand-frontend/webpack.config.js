@@ -4,6 +4,7 @@ const webpack = require('webpack')
 const path = require('path')
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = (webpackConfigEnv, argv) => {
   // webpackConfigEnv.analyze = true;
@@ -14,7 +15,7 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
-  console.log(defaultConfig.output);
+  console.log(defaultConfig.optimization);
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
@@ -30,6 +31,10 @@ module.exports = (webpackConfigEnv, argv) => {
     //   filename: '[name].bundle.js',
     //   path: path.resolve(__dirname, 'dist')
     // },
+    optimization: {
+      usedExports: true
+    },
+
     resolve: {
       alias: {
         'react-resize-aware': path.resolve(__dirname, 'node_modules/react-resize-aware'),
@@ -82,8 +87,9 @@ module.exports = (webpackConfigEnv, argv) => {
         PUBLIC_URL: process.env.NODE_ENV == 'production' ? '/dashboard/command' : '/dashboard/hive-command'
       }), 
       new MonacoWebpackPlugin({
-        languages: ['typescript', 'javascript', 'css']
-      })
+        languages: ['typescript']
+      }),
+      new BundleAnalyzerPlugin()
     ]
   });
 };

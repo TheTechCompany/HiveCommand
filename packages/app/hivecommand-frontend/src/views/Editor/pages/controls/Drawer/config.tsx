@@ -1,5 +1,4 @@
 import { BumpInput } from "@hexhive/ui";
-import { HMIGroupModal } from "../../../../../components/modals/hmi-group";
 import { Autocomplete, Box, Checkbox, FormControlLabel, IconButton, InputAdornment, Select, TextField, Typography } from "@mui/material";
 import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add, Javascript } from '@mui/icons-material';
 import React, { useContext, useEffect, useMemo, useState } from "react";
@@ -97,7 +96,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     setFunctionOpt(null)
                 }} /> */}
 
-            <HMIGroupModal
+            {/* <HMIGroupModal
                 devices={devices}
                 base={aggregate}
                 open={modalOpen}
@@ -131,7 +130,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     })
                 }}
                 onClose={() => openModal(false)}
-                nodeMenu={props.nodes} />
+                nodeMenu={props.nodes} /> */}
 
 
     
