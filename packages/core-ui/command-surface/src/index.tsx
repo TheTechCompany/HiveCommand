@@ -515,6 +515,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 const nodeElem = await getNodePack(node.type, templatePacks, getPack)
 
+                console.log({nodeElem, node, templatePacks});
+                
                 let width = node.width || nodeElem?.metadata?.width //|| x.type.width ? x.type.width : 50;
                 let height = node.height || nodeElem?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
