@@ -91,11 +91,11 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
     }
 
     const getInputType = (type: string) => {
-        if(type.indexOf("Device:") > -1){
+        if(type.indexOf("Device") > -1){
             //Return device interface by id
             const typeParts = type?.split(':')
             console.log(deviceTypes, type, deviceTypes?.find((a) => a.id == typeParts?.[1]))
-            let deviceInterface = deviceTypes?.find((a) => a.id === typeParts?.[1])?.state?.map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
+            let deviceInterface = (deviceTypes?.find((a) => a.id === typeParts?.[1])?.state || []).concat([{key: 'tag', type: 'String'}]).map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
             return `{ ${deviceInterface} }`
         }
 
@@ -126,7 +126,7 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
                         position: {x: number, y: number, width: number, height: number, anchor?: string},
                         deviceTag: string
                     ){
-                        
+
                     }
 
                 `

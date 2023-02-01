@@ -177,6 +177,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 
                             actions {
                                 id
+                                key
+                                func
                             }
                             state {
                                 id

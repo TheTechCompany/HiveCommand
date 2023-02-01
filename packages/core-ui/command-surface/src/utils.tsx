@@ -57,7 +57,7 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 	useEffect(() => {
 
 		console.log("Parse nodes", nodes);
-		
+
 		nodes.forEach((node) => {
 
 			let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
@@ -67,7 +67,11 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 				console.log({inputTemplate});
 	
 				if(inputTemplate.type?.split(':')[0] === 'Device'){
-					value = values[ devices?.find((a) => a.id === value).tag ];
+					let tag = devices?.find((a) => a.id === value).tag 
+					value = {
+						tag,
+						...values[ tag ]
+					}
 				}
 	
 				return {
@@ -232,7 +236,11 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 		
 		
 					if(inputTemplate.type?.split(':')[0] === 'Device'){
-						value = state[ devices?.find((a) => a.id === value).tag ];
+						let tag = devices?.find((a) => a.id === value).tag 
+						value = {
+							tag,
+							...state[ tag ]
+						}
 					}
 
 					console.log({inputTemplate, state});

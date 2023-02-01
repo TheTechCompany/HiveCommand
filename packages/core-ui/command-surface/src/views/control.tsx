@@ -308,12 +308,10 @@ export default () => {
 								top: infoTarget?.y + infoTarget?.height,
 								
 							}}>
-							<Box>
 								{DataComponent}
 								{/* {Object.keys(dataFunction).map((key) => 
 									<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
 								)} */}
-							</Box>
 							
 							{/* <ActionMenu selected={selected} values={normalisedValues} /> */}
 						</Bubble>)
