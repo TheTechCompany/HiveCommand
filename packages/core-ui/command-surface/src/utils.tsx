@@ -56,6 +56,8 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 
 	useEffect(() => {
 
+		console.log("Parse nodes", nodes);
+		
 		nodes.forEach((node) => {
 
 			let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
@@ -341,6 +343,8 @@ export const getNodePack = async (type: string, templatePacks: HMITemplatePack[]
 		base = base.join('/');
 
 		const pack = await getPack(packId, `${base}/`, url_slug)
+
+		console.log("Found pack", pack)
 
 		return pack.find((a: any) => a.name == templateName)?.component
 		
