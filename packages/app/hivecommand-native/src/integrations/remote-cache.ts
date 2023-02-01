@@ -1,3 +1,4 @@
+import React from 'react';
 import { RemoteComponentCache, RemoteComponent } from "@hive-command/command-surface";
 import { BaseDirectory, readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { useEffect, useState } from "react";
@@ -42,12 +43,12 @@ export const useRemoteCache = (confPath: string) => {
 
                         console.log("Component", x.component);
 
-                        let fn = new Function("module", "exports", x.component);
+                        let fn = new Function("module", "exports", "React", x.component);
 
                         let exports : any = {};
                         let module = {exports};
                         
-                        fn(module, exports);
+                        fn(module, exports, React);
 
                         console.log({module})
 
@@ -64,7 +65,7 @@ export const useRemoteCache = (confPath: string) => {
                 (window as any).parsed = parsedPacks;
                 console.log("Get packs", parsedPacks)
 
-                _setPacks(parsedPacks);
+                // _setPacks(parsedPacks);
             }catch(e){
                 console.error('RemoteCache', e)
             }

@@ -9,14 +9,18 @@ import { isEqual } from 'lodash'
 import { InfiniteCanvasContext } from '@hexhive/ui';
 
 // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
-export const getDeviceFunction = (func_desc: string) => {
+export const getDeviceFunction = async (func_desc: string) => {
 	// const func = vm.runInNewContext(
 	  	const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
+	
 		return new AsyncFunction(
 				  'state',
 				  'setState',
 				  'requestState',
-				  func_desc
+				  
+				  `(async () => {
+				  ${func_desc}
+				  })()`
 			  )
 	// return func;
 };
@@ -263,7 +267,19 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 										
 										if(!action.func) return;
 						
-										const f = getDeviceFunction(action.func)
+										getDeviceFunction(action.func).then((f) => {
+
+											f({},
+												async (state) => {
+													await Promise.all(Object.keys(state).map((key) => {
+														sendChanges?.(deviceName, key, state[key]);
+													}))
+													// console.log({state})
+												 }, 
+												 (state) => console.log({state})
+											);
+
+										})
 
 										// const func = f
 										// 	`		
@@ -279,15 +295,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 										// console.log(action.func)
 										// const f = new Function('setState', 'requestState', `function action(setState, requestState){ ${action.func} } `);
 
-										f({},
-											async (state) => {
-												await Promise.all(Object.keys(state).map((key) => {
-													sendChanges?.(deviceName, key, state[key]);
-												}))
-												// console.log({state})
-											 }, 
-											 (state) => console.log({state})
-										);
+										
 
 										// console.log({action: action.func})
 										// sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});

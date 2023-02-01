@@ -14,7 +14,7 @@ import { ReportChart, ReportView } from './views/reports'
 
 import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, useCreateDeviceMaintenanceWindow, useCreateReportPage, usePerformDeviceAction } from '@hive-command/api';
 
-import { Paper, Box, Button, Typography, IconButton, Popover, Divider, List, ListItem } from '@mui/material';
+import { Paper, Box, Button, Typography, IconButton, Popover, List, ListItem, Divider } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
 // import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
@@ -29,6 +29,7 @@ import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { template } from 'dot';
+import { getDeviceFunction } from './components/action-menu';
 export * from './hooks/remote-components'
 
 
@@ -119,6 +120,7 @@ export interface HMIDevice {
     type: {
         tagPrefix: string;
         state: any[]
+        actions: {key: string, func: string}[];
     }
 
 }
@@ -251,12 +253,45 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 y: position?.y,
                 width: position?.width,
                 height: position?.height,
-            }, (state: any) => (
-                    <Box>
-                        <Typography>{deviceTag}</Typography>
-                        <Button>Start</Button>
+            }, (state: any) => {
+
+                let values = state[deviceTag];
+
+                let actions = devices?.find((a) => a.tag === deviceTag)?.type.actions || [];
+                
+                console.log({values, actions});
+
+                    return <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
+                        <Typography sx={{fontWeight: 'bold'}}>{deviceTag}</Typography>
+                        <Divider />
+                        <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
+                            {Object.keys(values).map((valueKey) => (
+                                <Typography>{valueKey}: {`${values[valueKey]}`}</Typography>
+                            ))}
+                        </Box>
+                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                            {actions.slice().sort((a, b) => a.key.localeCompare(b.key)).map((action) => (
+                                <Button onClick={() => {
+                                    console.log(action.func)
+                                    getDeviceFunction(action.func).then((f) => {
+                                        
+                                        f({},
+                                            async (state) => {
+                                                await Promise.all(Object.keys(state).map((key) => {
+                                                    client?.changeDeviceValue?.(deviceTag, key, state[key]);
+                                                }))
+                                                // console.log({state})
+                                             }, 
+                                             (state) => console.log({state})
+                                        );
+                                    })
+
+                          
+                                }}>{action.key}</Button>
+                            ))}
+                        </Box>
                     </Box>
-            ))
+            })
         },
         showWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, dataFunction : (state: any) => any) => {
         //    alert("STUFF");
@@ -516,7 +551,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const nodeElem = await getNodePack(node.type, templatePacks, getPack)
 
                 console.log({nodeElem, node, templatePacks});
-                
+
                 let width = node.width || nodeElem?.metadata?.width //|| x.type.width ? x.type.width : 50;
                 let height = node.height || nodeElem?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
