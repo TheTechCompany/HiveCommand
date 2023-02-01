@@ -89,7 +89,7 @@ module.exports = (webpackConfigEnv, argv) => {
       new MonacoWebpackPlugin({
         languages: ['typescript']
       }),
-      new BundleAnalyzerPlugin()
+      // new BundleAnalyzerPlugin()
     ]
   });
 };
