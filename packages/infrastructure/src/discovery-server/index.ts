@@ -5,7 +5,7 @@ import { Service } from './service'
 import { Config, Output } from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 
-export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1.Namespace, dbUrl: Output<any>, dbPass: Output<any>, discoveryUrl: string) => {
+export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1.Namespace, dbUrl: Output<any>, dbPass: Output<any>, discoveryUrl: string, rabbitHost: Output<any>) => {
 
     const config = new Config();
 
@@ -17,7 +17,7 @@ export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1
 
     const appLabels = { appClass: appName };
 
-    const deployment = Deployment(provider, namespace, appName, appLabels, dbUrl, dbPass);
+    const deployment = Deployment(provider, namespace, appName, appLabels, dbUrl, dbPass, rabbitHost);
     const service = Service(provider, namespace, appName, appLabels, discoveryUrl, hexhiveZone.id);
 
     return {deployment,service}

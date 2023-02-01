@@ -1,5 +1,3 @@
-import { BaseModal } from '../base';
-import { Text, TextInput } from 'grommet';
 import React, {useState, useEffect} from 'react';
 import { 
 	Box,

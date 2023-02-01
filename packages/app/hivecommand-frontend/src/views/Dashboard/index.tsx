@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 
 import { Route, Routes, matchPath, useNavigate, Outlet } from 'react-router-dom';
-import { Spinner } from 'grommet'
-import { Box } from '@mui/material';
+import { Box, CircularProgress } from '@mui/material';
 import { Header } from '../../components/ui/header'
 import {Map, Handyman, Extension} from '@mui/icons-material';
 import { EditorPage } from '../Editor';
@@ -12,13 +11,10 @@ import { ElementEditor } from '../../pages/element-editor';
 import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';
 import { DeviceSettings } from '../../pages/device-settings';
-const PluginEditor = React.lazy(() => import('../../pages/plugin-editor').then((r) => ({default: r.PluginEditorPage})))
 
 const Devices = React.lazy(() => import('../../pages/device-list').then((r) => ({ default: r.Devices })))
 
 const ProgramList = React.lazy(() => import('../../pages/program-list').then((r) => ({ default: r.ProgramList })));
-const PluginList = React.lazy(() => import('../../pages/plugin-list').then((r) => ({ default: r.PluginList })));
-const PluginSingle = React.lazy(() => import('../../pages/plugin-single').then((r) => ({ default: r.PluginSingle })));
 
 
 const pages = [
@@ -87,7 +83,7 @@ const Dashboard : React.FC<any> = (props) => {
                     sx={{flex: 1, display: 'flex', padding: '6px'}}>
                     <React.Suspense fallback={(
                         <Box sx={{flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <Spinner color="gold" size="medium" />
+                            <CircularProgress color="primary" size="medium" />
                         </Box>)}>
 
                         <Routes>
@@ -104,8 +100,6 @@ const Dashboard : React.FC<any> = (props) => {
                             <Route path={'devices/:id/settings'} element={<DeviceSettings/>} />
                             <Route path={`device-map/:id`} element={<DeviceMapper />} />
                             {/* <Route path={`programs/:id/*`} element={<EditorPage/>} /> */}
-                            <Route path={`plugins/:id/editor`} element={<PluginEditor/>} />
-                            <Route path={`plugins/:id`} element={<PluginSingle/>} />
                         </Routes>
                     </React.Suspense>
 

@@ -1,8 +1,6 @@
 import React, { forwardRef } from "react";
-import { Text, Button } from "grommet";
-import { Graph } from ".";
 import { MoreVert, Close } from "@mui/icons-material";
-import { Menu, MenuItem, Box, IconButton, Paper } from "@mui/material";
+import { Typography, Menu, MenuItem, Box, IconButton, Paper } from "@mui/material";
 
 export interface GraphContainerProps {
   dataKey: string;
@@ -51,8 +49,8 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
 
       >
         <Box style={{display: 'flex', flexDirection: 'column', paddingLeft: 8}}>
-          <Text>{props.label}</Text>
-          <Text size="small">{props.total && `total: ${props.total?.toFixed(2)}`}</Text>
+          <Typography>{props.label}</Typography>
+          <Typography fontSize="small">{props.total && `total: ${props.total?.toFixed(2)}`}</Typography>
         </Box>
 
         <IconButton

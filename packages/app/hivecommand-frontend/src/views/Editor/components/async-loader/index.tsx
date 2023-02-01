@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 
 import { Loader, useRemote } from './loader';
 // import { requireAsync } from './load';
-// import * as requirejs from 'requirejs'
 
 // import button from "https://jspm.dev/react-button"
 
@@ -28,57 +27,6 @@ export const AsyncLoader = () => {
     // const [Component, setComponent] = useState<any>();
 
     const {Component, componentList} = useRemote(url, 'index.js');
-
-    useEffect(() => {
-
-        // Loader(url, 'tank.js').then((data) => {
-        //     console.log({data: (data as any).Tank()})
-        //     setComponent((data as any).Tank)
-        // })
-
-        // requireAsync('react-button').then((data) => {
-        //     console.log("Button", {data})
-        // })
-
-
-        // script(['https://ga.jspm.io/npm:es-module-shims@0.10.1/dist/es-module-shims.min.js', 'https://ga.jspm.io/npm:systemjs@6.8.3/dist/s.js'], () => {
-        //     console.log("React button");
-        //     // System.import('https://cdn.jsdeliver.net/npm/registerjs');
-            
-        //     // requirejs.config({
-        //     //     paths: { button: 'https://unpkg.com/react-button' }
-        //     // });
-        //     // requirejs(['button'], (data) => {
-        //     //     console.log({data})
-        //     // })
-
-        //     // (globalThis as any).System.config({
-        //     //     packages: {
-        //     //         'https://cdn.jsdelivr.net/npm/react-button/+esm': {
-        //     //             format: 'esm'
-        //     //         }
-        //     //     }
-        //     // })
-        //     // (globalThis as any).System.import('https://cdn.jsdelivr.net/npm/react-button/+esm').then((button) => {
-        //     //     console.log({button})
-        //     // })
-        // })
-        // resolve('react', {}, (err, result) => {
-        //     console.log({err, result})
-        //     // (global as any).System.config({
-        //     //     packages: {
-
-        //     //     }
-        //     // })
-        //     // (global as any).System.import('https://cdn.jsdelivr.net/npm/react-button').then((Component) => {
-        //     //     console.log({Component})
-        //     // })
-        // })
-    }, [])
-
-    // const HelloWorld = props => <RemoteComponent url={url} {...props} />;
-
-    console.log({Component, componentList})
 
     const RemoteComponent = Component[componentList[1]] || (() => <div>loading...</div>);
     return (

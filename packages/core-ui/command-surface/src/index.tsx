@@ -612,7 +612,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const fullHMIElements = useNodesWithValues(hmiWithElems, devices || [], functions, normalisedValues || {})
 
-    console.log({fullHMIElements})
+    // console.log({fullHMIElements})
 
     // const fullHMIElements = useMemo(() => {
     //     //Map HMI elements to their templated or real values

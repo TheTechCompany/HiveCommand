@@ -82,7 +82,6 @@
     "@types/webpack-env": "^1.16.0",
     "codemirror": "^6.0.1",
     "graphql": "^16.2.0",
-    "grommet": "^2.19.1",
     "mathjs": "^10.0.1",
     "moment-timezone": "^0.5.34",
     "monaco-editor": "^0.34.1",
@@ -92,7 +91,6 @@
     "react-querybuilder": "^3.12.1",
     "react-resize-aware": "3.1.0",
     "react-router-dom": "^6.2.1",
-    "requirejs": "^2.3.6",
     "single-spa-react": "^4.2.0",
     "systemjs": "^6.12.1"
   }

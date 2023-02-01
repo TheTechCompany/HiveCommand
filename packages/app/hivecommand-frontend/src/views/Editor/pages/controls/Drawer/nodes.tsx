@@ -1,6 +1,6 @@
 import { NodeDropdown } from "../../../../../components/node-dropdown";
-import { Box } from "grommet";
 import React, { useMemo } from "react";
+import { Box } from '@mui/material'
 
 export const NodeMenu = (props) => {
 
@@ -12,7 +12,7 @@ export const NodeMenu = (props) => {
     }, [props.nodes])
 
     return (
-        <Box flex pad="xsmall">
+        <Box sx={{flex: 1, display: 'flex', padding: '6px'}}>
             <NodeDropdown
                 items={items.map((node) => ({
                     // extras: {

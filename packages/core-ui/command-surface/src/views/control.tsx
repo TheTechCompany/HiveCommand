@@ -1,6 +1,6 @@
 import { HMICanvas } from '../components/hmi-canvas';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import { Spinner } from 'grommet';
+import { CircularProgress } from '@mui/material';
 import { Check as Checkmark, ChevronLeft, SettingsEthernet } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
 import { getDevicesForNode } from '../utils';
@@ -29,7 +29,7 @@ const ActionButton = (props: any) => {
 			>
 				<Box sx={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'between' }}>
 					<Typography>{props.label}</Typography>
-					{props.waiting && <Spinner size="xsmall" />}
+					{props.waiting && <CircularProgress size="xsmall" />}
 				</Box>
 			</Button>
 

@@ -1,23 +1,19 @@
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import React, { Suspense, lazy, useEffect, useRef, useState, useCallback } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
-import { Spinner } from 'grommet'
+import { Box, Paper, Typography, CircularProgress } from '@mui/material';
 import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { Home } from './pages/home'
 import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
 
+
 import { Routes, Route } from 'react-router-dom';
-import {Program} from './pages/program'
 import {Controls} from './pages/controls'
-import { Alarms } from './pages/alarms';
-import { Devices, DeviceSingle } from './pages/devices';
 
 import { useCreateProgramFlow, useCreateProgramHMI, useCreateProgramPlaceholder, useCreateProgramTemplate, useCreateProgramVariable, useDeleteProgramHMI, useUpdateProgramFlow, useUpdateProgramHMI, useUpdateProgramPlaceholder, useUpdateProgramTemplate, useUpdateProgramVariable } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
-import { Variables } from './pages/variables';
 import { IconButton } from '@mui/material';
 import { TreeMenu } from './components/tree-menu';
 import { EditorMenuDialog } from '../../components/modals/editor-menu';
@@ -269,20 +265,20 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             dontAdd: true,
             element: <Home />
         },
-        {
-            id: 'program-root',
-            name: 'Program',
-            children: program?.program?.map((x) => ({
-                id: x.id,
-                name: x.name,
-                children: x.children?.map((y) => ({
-                    id: y.id,
-                    name: y.name
-                }))
-            })),
-            element: <div>Program</div>,
-            editor: <Program activeProgram={selected?.id} />
-        },
+        // {
+        //     id: 'program-root',
+        //     name: 'Program',
+        //     children: program?.program?.map((x) => ({
+        //         id: x.id,
+        //         name: x.name,
+        //         children: x.children?.map((y) => ({
+        //             id: y.id,
+        //             name: y.name
+        //         }))
+        //     })),
+        //     element: <div>Program</div>,
+        //     editor: <Program activeProgram={selected?.id} />
+        // },
         {
             id: 'hmi-root',
             name: 'HMI',
@@ -317,18 +313,18 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 id: x.id,
                 name: `${x.type?.tagPrefix || ''}${x.tag}`
             })),
-            element: <Devices />
+            // element: <Devices />
         },
         {
             id: 'variables-root',
             name: 'Variables',
-            element: <Variables />,
+            // element: <Variables />,
             children: program?.variables?.slice()
         },
         {
             id: 'alarms-root',
             name: 'Alarms',
-            element: <Alarms />
+            // element: <Alarms />
 
         }
     ];
@@ -373,7 +369,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                         alignItems: 'center',
                         justifyContent: 'center'
                     }}>
-                    <Spinner size="medium"/>
+                    <CircularProgress size="medium"/>
                     <Typography>Loading Editor ...</Typography>
                 </Box>)}>
             <Paper 
