@@ -256,6 +256,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
+                    console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
+                    
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){
