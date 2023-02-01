@@ -7,7 +7,7 @@ export * from './reports'
 	@param {string} network_name - DNS prefix for the device
 	@param {string} program - program id to connect to
 */
-export const useCreateDevice = (user: string) => {
+export const useCreateDevice = () => {
   const [mutateFn, info] = useMutation(
     (
       mutation,
@@ -83,7 +83,7 @@ export const useCreateDevice = (user: string) => {
 	@param {string} network_name - DNS prefix for the device
 	@param {string} program - program id to connect to
 */
-export const useUpdateDevice = (user: string) => {
+export const useUpdateDevice = () => {
   const [mutateFn] = useMutation(
     (
       mutation,

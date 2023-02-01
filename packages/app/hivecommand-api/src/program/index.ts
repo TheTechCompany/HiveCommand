@@ -8,7 +8,7 @@ export * from './actions'
 export * from './variables'
 export * from './templates';
 
-export const useCreateProgram = (organisation: string) => {
+export const useCreateProgram = () => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {
 		name: string

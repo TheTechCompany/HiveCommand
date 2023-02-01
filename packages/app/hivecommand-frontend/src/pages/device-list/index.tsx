@@ -7,7 +7,6 @@ import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
 import { Add } from '@mui/icons-material'
 import { useQuery as useApollo, gql, useApolloClient } from '@apollo/client'
-import { useAuth } from '@hexhive/auth-ui';
 import { useNavigate } from 'react-router-dom';
 export interface DevicePageProps {
     match?: any;
@@ -22,8 +21,6 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
 
     const [ selectedDevice, setSelectedDevice ] = useState<any>();
     const [ editDevice, setEditDevice ] = useState<any>();
-
-    const { activeUser } = useAuth()
 
     // const [ _devices, setDevices ] = useState<CommandDevice[]>([])
 
@@ -65,8 +62,8 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
     const devices = data?.commandDevices || [];
     const programs = data?.commandPrograms || []
 
-    const createDevice = useCreateDevice(activeUser?.id)
-    const updateDevice = useUpdateDevice(activeUser?.id)
+    const createDevice = useCreateDevice()
+    const updateDevice = useUpdateDevice()
 
     // useEffect(() => {
     //     if(devices){

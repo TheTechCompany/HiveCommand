@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 
-import { Route, Routes, matchPath, useNavigate, Outlet } from 'react-router-dom';
+import { Route, Routes, useNavigate, Outlet } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
-import { Header } from '../../components/ui/header'
 import {Map, Handyman, Extension} from '@mui/icons-material';
-import { EditorPage } from '../Editor';
+
 import { Sidebar } from '@hexhive/ui'
-import { DeviceDevices } from '../../pages/device-devices';
 import { ElementEditor } from '../../pages/element-editor';
 import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';

@@ -17,7 +17,7 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
     const navigate = useNavigate()
 
 
-    const createProgram = useCreateProgram(activeUser?.id)//(activeUser as any)?._json?.organisation)
+    const createProgram = useCreateProgram()//(activeUser as any)?._json?.organisation)
     
     const [ modalOpen, openModal ] = useState(false)
     const [ selectedProgram, setSelectedProgram ] = useState<any>()
