@@ -54,7 +54,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     const manager = new ControllerManager();
 
-    const controller : ManagedController = manager.addController(host, slot)
+    const controller : ManagedController = manager.addController(host, slot, 10000, false)
 
     await server.start();
 
