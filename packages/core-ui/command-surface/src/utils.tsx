@@ -285,13 +285,15 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 			// let templateString : string = node.options[key];
 			let templateString = optionValue.replaceAll(/{{\s*(.*)\s*}}/g, "{{= it.$1 }}")
 			//Replace {{}} with {{ it.${matched} }}
-			console.log({nodeOptions:templateString, normalisedValues})
+			console.log({nodeOptions: templateString, normalisedValues, vsl: template(templateString)(normalisedValues) })
 
 			try {
 				// console.log({varname, tmpl: x.options[key], values})
 
 				return template(templateString)(normalisedValues /*values*/)
 			} catch (e) {
+				console.error(e)
+
 				return optionValue;
 			};
 		} else if(typeof(optionValue) === 'string' && optionValue?.indexOf('script://') > -1){

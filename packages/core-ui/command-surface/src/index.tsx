@@ -28,7 +28,6 @@ import { RemoteComponentCache, useRemoteComponents } from './hooks/remote-compon
 import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
-import { template } from 'dot';
 import { getDeviceFunction } from './components/action-menu';
 export * from './hooks/remote-components'
 

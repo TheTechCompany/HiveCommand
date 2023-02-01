@@ -91,6 +91,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
             onClick={props.onClick ? props.onClick : undefined}
             className={props.className}>
             {props.children?.(
+                
                 <Icon
                     editing={props.building}
                     rotation={props.extras?.rotation}
@@ -99,7 +100,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
                     scaleY={props.extras?.scaleY}
                     conf={conf}
                     options={props.extras?.dataValue}
-                    {...props.options}
+                    // {...props.options}
                     size="medium" />
             )}
         </Box>
