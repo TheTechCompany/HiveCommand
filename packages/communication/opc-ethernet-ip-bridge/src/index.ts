@@ -54,7 +54,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     const manager = new ControllerManager();
 
-    const controller : ManagedController = manager.addController(host, slot)
+    const controller : ManagedController = manager.addController(host, slot, 10000, false)
 
     await server.start();
 
@@ -256,6 +256,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 // PLC.subscribe(enipTag);
 
                 addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
+                    // console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
+                    
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){

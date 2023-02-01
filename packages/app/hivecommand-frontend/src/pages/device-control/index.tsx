@@ -101,7 +101,7 @@ export const DeviceControlView = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <CommandSurface
-                values={testValues || normalisedValues}
+                values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}

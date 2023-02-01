@@ -28,7 +28,6 @@ import { RemoteComponentCache, useRemoteComponents } from './hooks/remote-compon
 import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
-import { template } from 'dot';
 import { getDeviceFunction } from './components/action-menu';
 export * from './hooks/remote-components'
 
@@ -265,7 +264,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Typography sx={{fontWeight: 'bold'}}>{deviceTag}</Typography>
                         <Divider />
                         <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-                            {Object.keys(values).map((valueKey) => (
+                            {Object.keys(values).slice().sort((a,b) => a.localeCompare(b)).map((valueKey) => (
                                 <Typography>{valueKey}: {`${values[valueKey]}`}</Typography>
                             ))}
                         </Box>
@@ -274,7 +273,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                 <Button onClick={() => {
                                     console.log(action.func)
                                     getDeviceFunction(action.func).then((f) => {
-                                        
+
                                         f({},
                                             async (state) => {
                                                 await Promise.all(Object.keys(state).map((key) => {

@@ -62,9 +62,13 @@ export const Controller = () => {
 
         socket.current.on('connected', () => {
             console.log("Connected");
+            alert("Connected to io socket")
         })
 
         socket.current.on('data-changed', (data) => {
+            console.log("Datachanged", data)
+            alert("Datachange on io socket" + JSON.stringify({data}))
+
             setValueStore((store) => ({
                 ...store,
                 [data.key]: data.value.value
@@ -75,6 +79,7 @@ export const Controller = () => {
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`, {
                 paths
         }).then((r) => r.data).then((data) => {
+            // alert("Subscribe")
             // if(data.results){
             //     setOPCUA(data.results || [])
             // }else{

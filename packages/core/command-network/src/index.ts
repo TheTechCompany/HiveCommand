@@ -24,6 +24,7 @@ export interface ValueBankInterface {
 }
 
 export interface CommandNetworkOptions{
+	
 	baseURL?: string;
 
 	controller: {
