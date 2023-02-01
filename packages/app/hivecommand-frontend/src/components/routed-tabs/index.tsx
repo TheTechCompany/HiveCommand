@@ -1,4 +1,4 @@
-import { Box } from "grommet"
+import { Box } from "@mui/material"
 import { RoutedTabButton } from "./RoutedTabButton"
 
 export interface RoutedTabProps{
@@ -11,7 +11,7 @@ export interface RoutedTabProps{
 
 export const RoutedTabs : React.FC<RoutedTabProps> = (props) => {
 	return (
-		<Box direction="row" >
+		<Box sx={{display: 'flex'}} >
 			{props.tabs.map((tab) => (
 				<RoutedTabButton
 					default={tab.default}

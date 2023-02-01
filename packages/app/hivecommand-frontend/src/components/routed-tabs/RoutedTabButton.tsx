@@ -1,4 +1,4 @@
-import { Button } from "grommet"
+import { Button } from "@mui/material"
 import { useMatch, useNavigate, useResolvedPath } from "react-router-dom"
 
 export interface RoutedTabButtonProps {
@@ -20,15 +20,16 @@ export const RoutedTabButton : React.FC<RoutedTabButtonProps> = (props) => {
 	return (
 		<Button 
 					
-			hoverIndicator
+			
 			onClick={() => {
 				// setActiveProgram(undefined)
 				// setView(menu_item as any)
 				navigate(`${props.path}`)
 			}}
-			style={{padding: 6, marginRight: '3px', borderRadius: 3, color: '#fff'}} 
-			active={match !== null || (props.default && defaultMatch !== null)} 
-			plain 
-			label={props.label} />
+			// style={{padding: 6, marginRight: '3px', borderRadius: 3, color: '#fff'}} 
+			// active={match !== null || (props.default && defaultMatch !== null)} 
+			>
+			{props.label}
+		</Button>
 	)
 }
