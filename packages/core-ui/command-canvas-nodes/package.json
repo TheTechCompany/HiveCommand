@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/canvas-nodes",
-  "version": "1.4.15-alpha.136",
+  "version": "1.4.15-alpha.141",
   "main": "dist/index.js",
   "files": [
     "dist/"
