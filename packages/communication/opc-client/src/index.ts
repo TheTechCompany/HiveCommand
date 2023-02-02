@@ -251,16 +251,32 @@ export default class Client {
         })
     }
 
-    async getType(path: string){
+    async getType(path: string, isArray?: boolean) : Promise<{type: string, isArray: boolean}> {
         const nodeId = await this.getPathID(path)
-        const typeResp = await this.session?.read({
+        // this.session.read
+
+        let attributesToRead = [{
             nodeId,
             attributeId: AttributeIds.DataType
-        })
+        }];
 
-        if(!typeResp) return;
+        if(isArray){
+            attributesToRead.push({
+                nodeId,
+                attributeId: AttributeIds.ValueRank
+            })
+        }
 
-        return DataType[typeResp?.value.value?.value] //DataType[typeResp?.value.value]
+        const resp = await this.session?.read(attributesToRead)
+
+        if(!resp) throw new Error("No response from node " + path);
+
+        let [ typeResp, arrayResp ] = resp;
+
+        return {
+            type: DataType[typeResp?.value.value?.value],
+            isArray: arrayResp.value.value > 0 //DataType[typeResp?.value.value]
+        }
     }
 
     async browse(path: string){
