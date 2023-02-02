@@ -2,6 +2,9 @@
   "name": "@hive-command/canvas-nodes",
   "version": "1.4.15-alpha.136",
   "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/"
   ],

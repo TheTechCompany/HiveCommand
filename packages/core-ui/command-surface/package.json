@@ -3,6 +3,9 @@
 	"version": "1.4.15-alpha.137",
 	"description": "",
 	"private": true,
+	"publishConfig": {
+		"access": "public"
+	},
 	"main": "dist/index.js",
 	"files": [
 		"dist/"
