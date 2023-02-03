@@ -43,6 +43,13 @@ export const OPCUAServerStage = () => {
                     type: 'Boolean'
                 }
             ]
+        },
+        {
+            id: '108',
+            name: 'Variable',
+            path: '/Variable',
+            type: 'Boolean',
+            isArray: true
         }
     ]);
 
@@ -220,7 +227,7 @@ export const OPCUAServerStage = () => {
                                     console.log("Update rec for", item)
                                     updateRec(item.children || [], item.name)
                                 }else{
-                                    updateSubscriptionMap(item.path, `${parent.name ? parent.name + '.' : ''}${item.name}`)
+                                    updateSubscriptionMap(item.path, `${parent?.name ? parent.name + '.' : ''}${item.name}`)
                                 }
 
                                 console.log({subs: globalState?.subscriptionMap})

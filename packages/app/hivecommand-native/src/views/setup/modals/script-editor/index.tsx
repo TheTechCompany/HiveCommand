@@ -82,18 +82,21 @@ export const setter = (data: ${fromOPCType(props.dataType || 'String')}, tags: V
 
         const printJson =  (elem: any) => {
 
-            if(elem.name.match('[-=.\/:]') != null) return {key: undefined, value: undefined};
+            if(elem.name.match('[-=.\/:]') != null || elem.type === undefined) return {key: undefined, value: undefined};
             
-        
+            // if(elem.type) console.log(elem.type, fromOPCType(elem.type))
+            
+
             return hasOPCChildren(elem) ? 
                  { key: elem.name, value: elem.children.map(printJson).reduce((prev: any, curr: any) => ({...prev, [curr.key] : curr.value}), {}) } : 
-                { key: elem.name, value: elem.isArray ? [lookupType(elem.type)] : lookupType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
+                { key: elem.name, value: elem.isArray ? [fromOPCType(elem.type)] : fromOPCType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
         }
 
         const deviceValues = (props.deviceValues || []).map(printJson).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
         
         const valueInterface = formatInterface('ValueStore', deviceValues)
 
+        // console.log({valueInterface, deviceValues, dv: props.deviceValues})
         // //TODO add readonly fields
         // let inf = `interface ValueStore {
         //     ${(props.deviceValues || [])?.map(printJson).join(';\n')}
