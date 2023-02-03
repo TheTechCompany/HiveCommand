@@ -88,10 +88,12 @@ export const Controller = () => {
         })
     }
 
+
     const unsubscribe = () => {
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
     }
 
+    
     //Subscribe to datapoints
     useEffect(() => {
         if(globalState?.subscriptionMap)
