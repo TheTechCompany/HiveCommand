@@ -34,7 +34,7 @@ class DevSidecar {
         console.log(host, path)
         const client = await this.connect(host);
 
-        return await client.getType(path)
+        return await client.getType(path, true)
     }
 
     async setData(host: string, path: string, dataType: DataType, value: any){
@@ -83,7 +83,7 @@ class DevSidecar {
 
             if(recursive){
                 try{
-                    let {type, isArray} = withTypes ? await client.getType(bp) : {type: null, isArray: false};
+                    let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
                     // console.log({type})
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
                     results.push({
