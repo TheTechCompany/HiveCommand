@@ -5,7 +5,9 @@ import { TemplateModal } from './modal';
 import { useMutation, gql } from '@apollo/client'
 import { useCommandEditor } from '../../context';
 import { useParams } from 'react-router-dom';
-import { getOPCType, ScriptEditorModal } from '../../../../components/script-editor';
+import { ScriptEditorModal } from '../../../../components/script-editor';
+
+import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-command/scripting'
 
 export const TemplateEditor = (props: any) => {
 
@@ -71,18 +73,18 @@ export const TemplateEditor = (props: any) => {
     const activeTemplate = templates?.find((a) => a.id === id);
     
 
-    const getDefault = (type: string) => {
+    const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
         if(type === 'Function'){
             return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs) => {
 
 }`
         }else{ 
 
-        return `export const getter = (inputs: Inputs) : ${getInputType(type)} => {
+        return `export const getter = (inputs: Inputs) : ${lookupType(type)} => {
     return inputs;
 }
         
-export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
+export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
     setInputs({
 
     })
@@ -90,31 +92,51 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
         }
     }
 
-    const getInputType = (type: string) => {
-        if(type.indexOf("Device") > -1){
-            //Return device interface by id
-            const typeParts = type?.split(':')
-            console.log(deviceTypes, type, deviceTypes?.find((a) => a.id == typeParts?.[1]))
-            let deviceInterface = (deviceTypes?.find((a) => a.id === typeParts?.[1])?.state || []).concat([{key: 'tag', type: 'String'}]).map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
-            return `{ ${deviceInterface} }`
-        }
-
-        switch(type){
-            case 'Boolean':
-                return 'boolean';
-            case 'String':
-                return 'string';
-            case 'Number':
-                return 'number';
-        }
-    }
-
+    
     const extraLib = useMemo(() => {
-        return `
-                    interface Inputs {
+
+        //Parse device types early
+
+        const activeInputs = activeTemplate.inputs.map((input) => {
+            if(input.type.indexOf('Device') > -1){
+                const typeParts = input.type?.split(':')
+                // let deviceInterface = ().concat([{key: 'tag', type: 'String'}]).map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
+
+                const stateObject = (deviceTypes?.find((a) => a.id === typeParts?.[1])?.state || []).map((stateItem) => {
+                    return { key: stateItem.key, type: stateItem.type }
+                }).reduce((prev, curr) => ({
+                    ...prev,
+                    [curr.key]: fromOPCType(curr.type)
+                }), {})
+
+                return {
+                    key: input.name, 
+                    value: {
+                        tag: DataTypes.String,
+                        ...stateObject
+                    }
+                }
+            }
+
+            return { key: input.name, value: lookupType(input.type) }
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.value
+        }), {})
+
+        const inputInterface = formatInterface('Inputs', activeInputs)
+
+        /*
+    interface Inputs {
                         ${activeTemplate.inputs?.map((input) => `${input.name}: ${getInputType(input.type)}`).join(';\n')}
                     }
 
+        */
+
+                    console.log({inputInterface})
+        return `
+                ${inputInterface}
+                
                     declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
 
                     declare function showWindow (elem: any, data: Function){
@@ -293,7 +315,8 @@ export const setter = (value: ${getInputType(type)}, setInputs: SetInputs) => {
                                                 if(activeScript){
                                                     setDefaultSrc({src: activeScript.script, srcId: activeScript.id, id: output.id});
                                                 }else{
-                                                    const defaultSrc = getDefault(output.type)
+                                                    // output.type
+                                                    const defaultSrc = getDefault(output.type as any)
 
                                                     setDefaultSrc({src: defaultSrc, id: output.id})
                                                 }

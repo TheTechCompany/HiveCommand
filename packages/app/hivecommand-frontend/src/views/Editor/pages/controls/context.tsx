@@ -17,7 +17,7 @@ export interface HMITemplate {
     name: string;
 
     inputs?: any[];
-    outputs?: any[];
+    outputs?: {id: string, name: string, type: string}[];
 
     edges?: any[];
 

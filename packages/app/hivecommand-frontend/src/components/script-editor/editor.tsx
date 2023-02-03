@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import * as monaco from 'monaco-editor';
-import { getOPCType } from '.';
 import { HMIVariable } from '../../views/Editor/pages/controls/context';
 import { styled } from '@mui/material';
 

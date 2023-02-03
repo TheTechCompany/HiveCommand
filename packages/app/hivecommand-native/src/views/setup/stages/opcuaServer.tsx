@@ -11,6 +11,7 @@ export interface OPCUAServerItem {
     id: string;
     name: string;
     type?: string;
+    isArray?: boolean;
     path?: string;
     children?: OPCUAServerItem[]
 }
@@ -26,15 +27,19 @@ export const OPCUAServerStage = () => {
         {
             id: '101',
             name: 'Device',
+            path: '/Device',
             children: [
                 {
                     id: '102',
                     name: 'Open',
+                    isArray: true,
+                    path: '/Device/Open',
                     type: 'Boolean'
                 },
                 {
                     id: '103',
                     name: "Closed",
+                    path: '/Device/Closed',
                     type: 'Boolean'
                 }
             ]
@@ -46,13 +51,13 @@ export const OPCUAServerStage = () => {
     const [ editItem, setEditItem ] = useState<any | null>();
 
     const scanOPCUA = () => {
-        return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data).then((data) => {
-            if(data.results){
-                setOPCUA(data.results || [])
-            }else{
-                console.log({data})
-            }
-        })
+        // return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data).then((data) => {
+        //     if(data.results){
+        //         setOPCUA(data.results || [])
+        //     }else{
+        //         console.log({data})
+        //     }
+        // })
     }
 
     useEffect(() => {
@@ -229,7 +234,7 @@ export const OPCUAServerStage = () => {
                             // checked={mapping?.filter((a: any) => a.path.indexOf(item.name) > -1).length == item.children?.length}
                             size="small" />
                         {/* {parent ? <Checkbox disableFocusRipple size='small' /> : null} */}
-                        <Typography sx={{flex: 1}}>{item.name} {item.type ? `- ${item.type}` : ''}</Typography>
+                        <Typography sx={{flex: 1}}>{item.name} {item.type ? `- ${item.type}${item.isArray ? `[]` : ''}` : ''}</Typography>
                        
                     </Box>)
                 })}

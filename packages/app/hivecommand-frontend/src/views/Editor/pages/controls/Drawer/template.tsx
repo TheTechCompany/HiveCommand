@@ -5,7 +5,8 @@ import { useUpdateHMINode } from '@hive-command/api';
 import { Javascript } from '@mui/icons-material'
 import { useMutation, gql } from '@apollo/client';
 import { TemplateInput } from '../../../../../components/template-input';
-import { getOPCType, ScriptEditorModal } from '../../../../../components/script-editor';
+import { ScriptEditorModal } from '../../../../../components/script-editor';
+import { formatInterface, fromOPCType } from '@hive-command/scripting';
 
 export type ConfigInputType = 'Template' | 'Function' | 'Device' | 'String' | 'Number' | 'Boolean'
 
@@ -177,6 +178,23 @@ export const TemplateMenu = () => {
                             onClick={() => {
                             setFunctionOpt(label);
 
+
+                            const valueState = assignableDevices?.map((dev) => {
+                                let state = dev.type.state.map((stateItem) => { 
+                                    return {key: stateItem.key, value: fromOPCType(stateItem.type)}
+                                 }).reduce((prev, curr) => ({
+                                    ...prev,
+                                    [curr.key]: curr.value
+                                 }), {})
+
+                                 return {key: dev.tag, value: state}
+                            // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
+                            }).reduce((prev, curr) => ({
+                                ...prev,
+                                [curr.key]: curr.value
+                            }), {});
+
+
                             setFunctionArgs({
                                 defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: () => ValueStore) : ${getFunctionType(type)} => {
 
@@ -202,10 +220,8 @@ export const TemplateMenu = () => {
 
                                 }
 
-                                interface ValueStore {
-                                    ${assignableDevices?.map((dev) => `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')}
-                                }   
-
+                                ${formatInterface('ValueStore', valueState)}
+                         
                                 interface VariableStore {
                                     ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
                                 }`
@@ -412,6 +428,23 @@ export const TemplateMenu = () => {
                                     onClick={() => {
                                         setFunctionOpt(label);
 
+
+
+                                        const valueState = assignableDevices?.map((dev) => {
+                                            let state = dev.type.state.map((stateItem) => { 
+                                                return {key: stateItem.key, value: fromOPCType(stateItem.type)}
+                                            }).reduce((prev, curr) => ({
+                                                ...prev,
+                                                [curr.key]: curr.value
+                                            }), {})
+
+                                            return {key: dev.tag, value: state}
+                                        // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
+                                        }).reduce((prev, curr) => ({
+                                            ...prev,
+                                            [curr.key]: curr.value
+                                        }), {});
+
                                         setFunctionArgs({
                                             defaultValue: `export const getter = (values: ValueStore, variables: VariableStore) : ${getFunctionType(type)} => {
 
@@ -422,10 +455,8 @@ export const setter = (setValues: (values: DeepPartial<ValueStore>) => void, set
 }
 `,
                                             extraLib: `
-                                            interface ValueStore {
-                                                ${assignableDevices?.map((dev) => `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')}
-                                            }   
-
+                                            ${formatInterface('ValueStore', valueState)}
+                                        
                                             interface VariableStore {
                                                 ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
                                             }`

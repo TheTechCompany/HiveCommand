@@ -27,6 +27,7 @@
   ],
   "references": [
     {"path": "../../core-ui/command-surface"},
-    {"path": "../../core/command-local-sidecar"}
+    {"path": "../../core/command-local-sidecar"},
+    {"path": "../../core/command-scripting"}
   ]
 }

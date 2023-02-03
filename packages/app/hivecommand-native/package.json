@@ -11,6 +11,7 @@
 		"@hive-command/api": "^1.4.15-alpha.137",
 		"@hive-command/command-surface": "^1.4.15-alpha.141",
 		"@hive-command/local-sidecar": "^1.4.15-alpha.134",
+		"@hive-command/scripting": "^1.0.0",
 		"@monaco-editor/react": "^4.4.6",
 		"@mui/lab": "5.0.0-alpha.102",
 		"@mui/material": "5.10.11",

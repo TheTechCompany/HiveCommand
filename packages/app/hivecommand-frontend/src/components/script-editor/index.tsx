@@ -34,31 +34,31 @@ export interface ScriptEditorProps {
 }
 
 
-export const getOPCType = (type: string) => {
-    switch(type){
-        case 'NodeId':
-        case 'LocalizedText':
-        case 'QualifiedName':
-        case 'String':
-            return 'string';
-        case 'Boolean':
-        case 'BooleanT':
-            return 'boolean';
-        case 'Byte':
-        case 'Float':
-        case 'Double':
-        case 'UInt16':
-        case 'UInt32':
-        case 'UInt64':
-        case 'UIntegerT':
-        case "IntegerT":
-            return 'number';
-        case 'DateTime':
-            return 'Date'
-        default:
-            return type || 'string';
-    }
-}
+// export const getOPCType = (type: string) => {
+//     switch(type){
+//         case 'NodeId':
+//         case 'LocalizedText':
+//         case 'QualifiedName':
+//         case 'String':
+//             return 'string';
+//         case 'Boolean':
+//         case 'BooleanT':
+//             return 'boolean';
+//         case 'Byte':
+//         case 'Float':
+//         case 'Double':
+//         case 'UInt16':
+//         case 'UInt32':
+//         case 'UInt64':
+//         case 'UIntegerT':
+//         case "IntegerT":
+//             return 'number';
+//         case 'DateTime':
+//             return 'Date'
+//         default:
+//             return type || 'string';
+//     }
+// }
 
 
 
@@ -105,7 +105,6 @@ export const handler = () => {
                     defaultValue={props.defaultValue}
                     value={value}
                     onChange={(editorValue) => {
-                        console.log(editorValue)
                         setValue(editorValue)
                     }}
                     />
