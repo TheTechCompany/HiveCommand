@@ -27,6 +27,7 @@ function App() {
     });
   }, [])
   
+  
   useEffect(() => {
     console.log({ BaseDirectory: BaseDirectory.App })
     

@@ -53,6 +53,12 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=8192"
         run: npx lerna run build --scope @hive-command/command-surface --include-dependencies
         
+      - name: Build
+        env:
+          CI: false
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: npx lerna run build --scope @hive-command/scripting --include-dependencies
+        
       
       - name: Build
         env:
