@@ -53,6 +53,8 @@ export const addTag = async (
 
     let dataType : OPC_TYPE = OPC_TYPE.String;
 
+    let isArray = false;
+
     console.log(`Add tag ${tagname}:${type} struct:${structure && type !== 'STRING'}`);
 
     if(structure){
@@ -96,6 +98,9 @@ export const addTag = async (
         switch(type){
            
             case TAG_TYPE.BIT_STRING:
+                isArray = true;
+                dataType = OPC_TYPE.Boolean;
+                break;
             case TAG_TYPE.BOOL:
                 dataType = OPC_TYPE.Boolean;
                 break;
@@ -138,6 +143,6 @@ export const addTag = async (
     // }
 
     if(dataType != OPC_TYPE.Structure){
-        await server.addVariable(tagname, dataType, _getter, setter, parent)
+        await server.addVariable(tagname, dataType, isArray, _getter, setter, parent)
     }
 }

@@ -164,6 +164,7 @@ export default class Server {
     async addVariable(
         name: string, 
         type: 'String' | 'Number' | 'Boolean', 
+        isArray: boolean,
         getter: () => any, 
         setter: (value: any) => void,
         parent?: UAObject
@@ -195,6 +196,7 @@ export default class Server {
             browseName: name || `value`,
             modellingRule: "Mandatory",
             dataType,
+            valueRank: isArray ? 1 : undefined,
             value: {
                 get: () => {
                 

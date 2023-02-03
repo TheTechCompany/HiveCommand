@@ -132,7 +132,7 @@ export class CommandNetwork {
 		await Promise.all(variables.map(async (variable) => {
 			console.log(`Adding variable ${variable.name} to OPC-UA`);
 
-			await this.opc?.addVariable(variable.name, variable.type as any, () => {
+			await this.opc?.addVariable(variable.name, variable.type as any, false, () => {
 				return this.valueBank.getVariable?.(variable.name)
 			}, (value: Variant) => {
 				console.log("Set value", variable.name, {value: value.value})
