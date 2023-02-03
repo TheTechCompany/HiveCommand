@@ -51,13 +51,13 @@ export const OPCUAServerStage = () => {
     const [ editItem, setEditItem ] = useState<any | null>();
 
     const scanOPCUA = () => {
-        // return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data).then((data) => {
-        //     if(data.results){
-        //         setOPCUA(data.results || [])
-        //     }else{
-        //         console.log({data})
-        //     }
-        // })
+        return axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((r) => r.data).then((data) => {
+            if(data.results){
+                setOPCUA(data.results || [])
+            }else{
+                console.log({data})
+            }
+        })
     }
 
     useEffect(() => {
