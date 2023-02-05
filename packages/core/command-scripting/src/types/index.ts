@@ -9,6 +9,8 @@ export enum DataTypes {
     // Structure = 'Structure'
 }
 
+// export const 
+
 export const lookupType = (type: keyof typeof DataTypes) => {
     return DataTypes[type]
 }

@@ -93,28 +93,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						maintenanceWindows: true,
 						alarms: true,
 						screens: true,
-						setpoints: {
-							include: {
-								setpoint: {
-									include: {
-										device: true,
-										key: true
-									}
-								}
-							}
-						},
-						calibrations: {
-							include: {
-								placeholder: true,
-								stateItem: true
-							}
-						},
+			
 						reports: {
 							include: {
 								charts: {
 									include: {
 										dataKey: true,
-										dataDevice: true,
 									}
 								},
 								device: true
@@ -125,95 +109,21 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						// 	orderBy: {lastUpdated: 'desc'},
 						// },
 
-						deviceMapping: {
-							include: {
-								device: {
-									include: {
-										type: true
-									}
-								},
-								deviceState: true
-							}
-						},
+				
 						activeProgram: {
 							include: {
 								remoteHomepage: true,
 								localHomepage: true,
 								templatePacks: true,
-								program: {
+							
+								tags: {
 									include: {
-										children: {
-											include: {
-												nodes: {
-													include: {
-														
-														actions: {
-															include: {
-																request: true,
-																device: true
-															}
-														},
-														subprocess: {
-															include: {
-																program: true
-															}
-														},
-													}
-												},
-												edges: {
-													include: {
-														from: true,
-														to: true,
-														conditions: {
-															include: {
-																inputDevice: true,
-																inputDeviceKey: true,
-																assertion: {
-																	include: {
-																		setpoint: true,
-																		variable: true
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										},
-										nodes: {
-											include: {
-												
-												actions: {
-													include: {
-														request: true,
-														device: true
-													}
-												},
-												subprocess: {
-													include: {
-														program: true
-													}
-												},
-											}
-										},
-										edges: {
-											include: {
-												from: true,
-												to: true,
-												conditions: {
-													include: {
-														inputDevice: true,
-														inputDeviceKey: true,
-														assertion: {
-															include: {
-																setpoint: true,
-																variable: true
-															}
-														}
-													}
-												}
-											}
-										}
+										type: true
+									}
+								},
+								types: {
+									include: {
+										fields: true
 									}
 								},
 								interface: {
@@ -275,7 +185,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 												from: true, to: true
 											}
 										}, 
-										actions: true
 									}
 								},
 								
@@ -438,60 +347,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 			deleteCommandDeviceMaintenanceWindow: async (root: any, args: any, context: any) => {
 				return await prisma.maintenanceWindow.delete({where: {id: args.id}});
 			},
-			updateCommandDeviceSetpoint: async (root: any, args: {device: string, setpoint: string, value: string}, context: any) => {
-
-				const result = await prisma.device.update({
-					where: {id: args.device},
-					data: {
-						setpoints: {
-							upsert: [{
-								where: {
-									setpointId_deviceId: {
-										setpointId: args.setpoint,
-										deviceId: args.device
-									}
-								},
-								update: {
-									value: args.value
-								},
-								create: {
-									id: nanoid(),
-									value: args.value,
-									setpointId: args.setpoint
-								}
-							}]
-						}
-					},
-					include: {
-						setpoints: {
-							include: {
-								setpoint: {
-									include: {
-										device: true
-									}
-								},
-								device: true
-							}
-						}
-					}
-				})
-			
-				const setpoint = result?.setpoints?.find((a) => a.setpoint.id == args.setpoint);
-
-				let stateUpdate = {
-					address: `opc.tcp://${result?.network_name}.hexhive.io:8440`,
-					deviceName: setpoint?.setpoint.device?.tag,
-					deviceSetpoint:  setpoint?.setpoint.name,
-					value: args.value,
-					authorizedBy: context.jwt?.name
-				}
-
-				console.log("Setpoint update", {stateUpdate})
-
-				mq.sendToQueue(`COMMAND:DEVICE:SETPOINT`, Buffer.from(JSON.stringify(stateUpdate)))
-
-				return args.value
-			},
 			createCommandDevice: async (root: any, args: {input: {name: string, network_name: string, program: string}}, context: any) => {
 				return await prisma.device.create({
 					data: {
@@ -576,88 +431,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 				if(args.where.network_name) deviceWhere.network_name = args.where.network_name;
 
 				return await prisma.device.delete({where: deviceWhere});
-			},
-			createCommandDeviceCalibration: async (root: any, args: any, context: any) => {
-				return await prisma.deviceCalibration.create({
-					data: {
-						id: nanoid(),
-						device: {connect: {id: args.device}},
-						placeholder: {connect: {id: args.input.placeholder}},
-						stateItem: {connect: {id: args.input.stateItem}},
-						min: args.input.min,
-						max: args.input.max
-					}
-				})
-			},
-			updateCommandDeviceCalibration: async (root: any, args: any, context: any) => {
-				return await prisma.deviceCalibration.update({
-					where: {
-						id: args.id
-					},
-					data: {
-						min: args.input.min,
-						max: args.input.max
-					}
-				})
-			},
-			deleteCommandDeviceCalibration: async (root: any, args: any, context: any) => {
-				return await prisma.deviceCalibration.delete({where: {id: args.id}})
-			},
-			connectCommandDeviceData: async (root: any, args: any, context: any) => {
-				return await prisma.device.update({
-					where: {
-						id: args.where.id,
-					},
-					data: {
-						deviceMapping: {
-							create: [{
-								id: nanoid(),
-								path: args.input.path,
-								deviceState: {
-									connect: {id: args.input.deviceState}
-								},
-								device: {
-									connect: {id: args.input.device}
-								}
-							}]
-						}
-					}
-				})
-			},
-			updateCommandDeviceData: async (root: any, args: any, context: any) => {
-				return await prisma.device.update({
-					where: {
-						id: args.where.id
-					},
-					data: {
-						deviceMapping: {
-							update: {
-								where: {
-									id: args.input.id
-								},
-								data: {
-									path: args.input.path
-								}
-							}
-						}
-					}
-				})
-			},
-			disconnectCommandDeviceData: async (root: any, args: any, context: any) => {
-				return await prisma.device.update({
-					where: {
-						id: args.where.id
-					},
-					data: {
-						deviceMapping: {
-							delete: [{
-									id: args.input.id
-							}]
-						}
-					}
-				})
 			}
-
 		}
 	}])
 
@@ -682,10 +456,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		updateCommandDeviceUptime(where: CommandDeviceWhere!, uptime: DateTime): CommandDevice!
 		deleteCommandDevice(where: CommandDeviceWhere!): CommandDevice!
 
-		connectCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
-		updateCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
-		disconnectCommandDeviceData(where: CommandDeviceWhere!, input: ConnectDevicesInput!): CommandDeviceMapping
-
 		createDeviceScreen(device: ID, input: DeviceScreenInput!): CommandDeviceScreen
 		updateDeviceScreen(device: ID, id: ID!, input: DeviceScreenInput!): CommandDeviceScreen
 		deleteDeviceScreen(device: ID, id: ID!): CommandDeviceScreen
@@ -694,13 +464,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		createCommandDeviceMaintenanceWindow(device: ID, input: MaintenanceWindowInput!): MaintenanceWindow!
 		updateCommandDeviceMaintenanceWindow(device: ID, id: ID!, input: MaintenanceWindowInput!): MaintenanceWindow!
 		deleteCommandDeviceMaintenanceWindow(device: ID, id: ID!): MaintenanceWindow!
-
-
-		updateCommandDeviceSetpoint(device: ID!, setpoint: ID!, value: String): String
-
-		createCommandDeviceCalibration(device: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
-		updateCommandDeviceCalibration(device: ID!, id: ID!, input: CommandProgramDeviceCalibrationInput): CommandProgramDeviceCalibration
-		deleteCommandDeviceCalibration(device: ID!, id: ID!): CommandProgramDeviceCalibration
 	}
 
 	input ConnectDevicesInput {
@@ -744,11 +507,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		network_name: String
 	}
 
-	type CommandDeviceSetpointCalibration {
-		id: ID
-		setpoint: CommandDeviceSetpoint
-		value: String
-	}
 
 	input CommandDeviceSnapshotWhere {
 		startDate: DateTime
@@ -775,19 +533,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 
 		dataLayout: JSON
 
-		deviceMapping: [CommandDeviceMapping]
-
-		calibrations: [CommandProgramDeviceCalibration] 
-		setpoints: [CommandDeviceSetpointCalibration]
-		
 		deviceSnapshot(where: CommandDeviceSnapshotWhere): [CommandDeviceSnapshot]
 
 		alarms: [DeviceAlarm]
 
 		operatingMode: String
 		operatingState: String
-
-		waitingForActions: [CommandProgramAction]
 
 		online: Boolean
 		lastSeen: DateTime
@@ -797,16 +548,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		organisation: HiveOrganisation 
 	}
 
-	type CommandDeviceMapping {
-		id: ID
-
-		path: String
-
-		deviceState: CommandProgramDeviceState 
-
-		device: CommandProgramDevicePlaceholder
-	}
-
+	
 	type DeviceAlarm {
 		id: ID
 
@@ -856,16 +598,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		max: String
 	}
 
-	type CommandProgramDeviceCalibration {
-		id: ID 
-		device: CommandDevice 
-
-		placeholder: CommandProgramDevicePlaceholder 
-		stateItem: CommandProgramDeviceState 
-
-		min: String
-		max: String
-	}
+	
 
 	`]);
 

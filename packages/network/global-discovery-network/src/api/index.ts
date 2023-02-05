@@ -66,7 +66,7 @@ export const API = (prisma: PrismaClient) => {
             include: {
                 deviceMapping: {
                     include: {
-                        device: true,
+                        // device: true,
                         deviceState: true
                     }
                 }
@@ -143,8 +143,15 @@ export const API = (prisma: PrismaClient) => {
 
                             }
                         },
-                        devices: {
-                            include: deviceInclude
+                        tags: {
+                            include: {
+                                type: true
+                            }
+                        },
+                        types: {
+                            include: {
+                                fields: true
+                            }
                         }
                     }
                 }

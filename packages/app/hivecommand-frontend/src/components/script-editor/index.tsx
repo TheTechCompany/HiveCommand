@@ -1,6 +1,5 @@
 import { Button, Dialog, DialogActions, TextareaAutosize, DialogContent, DialogTitle, TextField, Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import { HMIVariable } from '../../views/Editor/pages/controls/context';
 import {Editor} from "./editor";
 
 const systemJsDefine = window.define;

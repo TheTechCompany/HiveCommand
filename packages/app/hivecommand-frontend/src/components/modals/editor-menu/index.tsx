@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { EditorMenuProvider } from "./context";
 import { DeviceView, HMIView, ProgramView } from "./views";
 import { TemplateView } from "./views/templates";
+import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
 
 export interface EditorMenuDialogProps {
@@ -28,6 +29,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getTitle = () => {
         switch(type){
+            case 'types':
+                return `${selected ? 'Edit' : 'Create'} Type`;
             case 'templates':
                 return `${selected ? 'Edit' : 'Create'} Template`;
             case 'program':
@@ -45,6 +48,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getContent = () => {
         switch(type){
+            case 'types':
+                return <TypeView />;
             case 'templates':
                 return <TemplateView />;
             case 'program':
@@ -60,6 +65,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getActions = () => {
         switch(type){
+            case 'types':
             case 'templates':
             case 'program':
             case 'hmi':

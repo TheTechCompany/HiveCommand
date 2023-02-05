@@ -8,14 +8,15 @@ import { Autocomplete, Box } from '@mui/material'
 
 import React, { useEffect, useState } from 'react';
 import { useCommandEditor } from '../../context';
+import { DataTypes } from '@hive-command/scripting';
 
 export const TemplateModal= (props) => {
 
-    const { deviceTypes } = useCommandEditor();
+    const { program: {types} } = useCommandEditor();
 
     const [ io, setIO ] = useState<{name?: string, type?: string}>({});
 
-    const dataTypes = [{name: 'Boolean'}, {name: 'String'}, {name: 'Number'}, {name: 'Function'}, {name: 'Device'}];
+    const dataTypes = Object.keys(DataTypes).map((x) => ({name: x})).concat([{name: 'Tag'}, {name: 'Function'}]) //[{name: 'Boolean'}, {name: 'String'}, {name: 'Number'}, {name: 'Function'}, {name: 'Device'}];
 
     const onSubmit = () => {
         props.onSubmit?.(io);
@@ -64,20 +65,20 @@ export const TemplateModal= (props) => {
                         renderInput={(params) => <TextField {...params} label={`${props.direction} Type`} size="small" />}
                         />
                     
-                    {io.type?.indexOf("Device") > -1 && (
+                    {io.type?.indexOf("Tag") > -1 && (
                         <Autocomplete
                             sx={{marginTop: '12px'}}
                             onChange={(e, newVal) => {
                                 if(typeof(newVal) === 'string') return;
                                 setIO({
                                     ...io,
-                                    type: newVal ? `Device:${newVal?.id}` : `Device`
+                                    type: newVal ? `Tag:${newVal?.id}` : `Tag`
                                 })
                             }}
-                            value={deviceTypes?.find((a) => a.id === io?.type?.split(':')?.[1]) || null}
+                            value={types?.find((a) => a.id === io?.type?.split(':')?.[1]) || null}
                             getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
-                            renderInput={(params) => <TextField {...params} label="Device Type" size="small" />}
-                            options={deviceTypes || []} />
+                            renderInput={(params) => <TextField {...params} label="Tag Type" size="small" />}
+                            options={types || []} />
                     )}
                 </Box>
             </DialogContent>

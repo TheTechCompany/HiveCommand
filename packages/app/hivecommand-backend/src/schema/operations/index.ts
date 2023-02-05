@@ -55,39 +55,39 @@ export default (prisma: PrismaClient, channel: Channel) => {
 					include: {
 						activeProgram: {
 							include: {
-								devices: {
-									// where: {tag: args.deviceName},
-									include: {
-										type: {
-											include: {
-												actions: true,
-											}
-										}
-									}
-								}
+								// devices: {
+								// 	// where: {tag: args.deviceName},
+								// 	include: {
+								// 		type: {
+								// 			include: {
+								// 				actions: true,
+								// 			}
+								// 		}
+								// 	}
+								// }
 							}
 						}
 					}
 				})
 
-				const actions = device?.activeProgram?.devices?.find((a) => `${a.type?.tagPrefix || ''}${a.tag}` == args.deviceName)?.type?.actions
+				// const actions = device?.activeProgram?.devices?.find((a) => `${a.type?.tagPrefix || ''}${a.tag}` == args.deviceName)?.type?.actions
 
-				let action = actions?.find((a: any) => a.key == args.action)
+				// let action = actions?.find((a: any) => a.key == args.action)
 
-				if(action && device){
-					let actionRequest = {
-						address: `opc.tcp://${device?.network_name}:8440`,
-						deviceId: args.deviceId,
-						deviceName: args.deviceName,
-						action: action.key,
-						authorizedBy: context.jwt?.name
-					}
+				// if(action && device){
+				// 	let actionRequest = {
+				// 		address: `opc.tcp://${device?.network_name}:8440`,
+				// 		deviceId: args.deviceId,
+				// 		deviceName: args.deviceName,
+				// 		action: action.key,
+				// 		authorizedBy: context.jwt?.name
+				// 	}
 
-					// channel.
-					return await channel.sendToQueue(`COMMAND:DEVICE:CONTROL`, Buffer.from(JSON.stringify(actionRequest)))
-				}else{
-					return new Error("No device control found")
-				}
+				// 	// channel.
+				// 	return await channel.sendToQueue(`COMMAND:DEVICE:CONTROL`, Buffer.from(JSON.stringify(actionRequest)))
+				// }else{
+				// 	return new Error("No device control found")
+				// }
 				
 			},
 			changeMode: async (root: any, args: {
@@ -231,57 +231,21 @@ export default (prisma: PrismaClient, channel: Channel) => {
 							}
 						}
 					},
-					include: {
-						devices: {
-							include: {
-								type: {
-									include: {
-										state: true
-										
-									}
-								}
-							}
-						}
-					}
 				})
 		
-				const dataType = program?.devices?.find((a) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}` == args.deviceName)?.type?.state?.find((a) => a.key == args.key)?.type;
+				// const dataType = program?.devices?.find((a) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}` == args.deviceName)?.type?.state?.find((a) => a.key == args.key)?.type;
 
-				if(!device) return new Error("No device found")
-
-				let stateChange = {
-					address: `opc.tcp://${device?.network_name}:8440`,
-					busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`,
-					dataType,
-					value: args.value
-				}
-
-				return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
-
-				// const device = await session.readTransaction(async (tx) => {
-
-				// 	const result = await tx.run(`
-				// 		MATCH (device:CommandDevice {id: $id})
-				// 		RETURN device{
-				// 			.*
-				// 		}
-				// 	`, {
-				// 		id: args.deviceId,
-				// 	})
-				// 	return result?.records?.[0]?.get(0)
-				// })
-
-				// console.log(args.value)
+				// if(!device) return new Error("No device found")
 
 				// let stateChange = {
-				// 	address: `opc.tcp://${device.network_name}.hexhive.io:8440`, //opc.tcp://${network_name}.hexhive.io:8440
-				// 	busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`, ///1:Objects/1:Devices/${TYPE|SERIAL|PORT}/${key}
+				// 	address: `opc.tcp://${device?.network_name}:8440`,
+				// 	busPath: `/Objects/1:Devices/1:${args.deviceName}/1:${args.key}`,
+				// 	dataType,
 				// 	value: args.value
 				// }
 
-				// console.log("Sending state change", stateChange)
-			
 				// return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
+
 			}
 		}
 

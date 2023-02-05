@@ -374,13 +374,7 @@ export class Data {
 						id
 						name
 
-						variables {
-							id
-							name
-							type
-							defaultValue
-						}
-
+					
 						devices {
 							id
 							name

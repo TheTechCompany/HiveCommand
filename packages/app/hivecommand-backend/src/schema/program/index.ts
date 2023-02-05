@@ -1,85 +1,23 @@
 import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers } from '@graphql-tools/merge'
-import io from './io'
+// import io from './io'
 import variables from "./variables";
+import tags from './tags';
+import types from './types';
 
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
 
 export default (prisma: PrismaClient) => {
 	
-	const { typeDefs: ioTypeDefs, resolvers: ioResolvers } = io(prisma)
+	// const { typeDefs: ioTypeDefs, resolvers: ioResolvers } = io(prisma)
 	const { typeDefs: variableTypeDefs, resolvers: variableResolvers } = variables(prisma)
+	const { typeDefs: tagTypeDefs, resolvers: tagResolvers } = tags(prisma);
+	const { typeDefs: typeTypeDefs, resolvers: typeResolvers } = types(prisma);
+
 
 	const resolvers = mergeResolvers([
 		{
-			CommandProgram: {
-				devices: async (root: any, args: any, context: any) => {
-					let whereArgs : any = {program: {id: root.id}};
-
-					if(args.where?.id) whereArgs['id'] = args.where?.id;
-					
-					return await prisma.programFlowIO.findMany({
-						where: whereArgs,
-						include: {
-							type: {
-								include: {
-									actions: true, 
-									state: true
-								}
-							},
-							plugins: {
-								include: {
-									plugin: true,
-									rules: true,
-									config: {
-										include: {
-											key: true,
-										}
-									}
-								}
-							},
-							interlocks: {
-								include: {
-									action: true,
-									inputDevice: true,
-									inputDeviceKey: true,
-									assertion: {
-										include: {
-											setpoint: true,
-											variable: true
-										}
-									}
-								}
-							},
-							dataInterlocks: {
-								include: {
-									inputDevice: true,
-									inputDeviceKey: true,
-									assertion: {
-										include: {
-											setpoint: true,
-											variable: true
-										}
-									},
-									device: true,
-									deviceKey: true
-								}
-							},
-							setpoints: {
-								include: {
-									key: true
-								}
-							}
-						}
-					})
-				},
-				variables: async (root: any, args: any, context: any) => {
-					return await prisma.programVariable.findMany({
-						where: {program: {id: root.id}}
-					})
-				}
-			},
 			Query: {
 				commandPrograms: async (root: any, args: any, context: any) => {
 					let filter = args.where || {}
@@ -100,15 +38,27 @@ export default (prisma: PrismaClient) => {
 								}
 							}
 						},
-						program: {
-							include: {
-								parent: true,
-								children: true
-							}
-						},
 						templatePacks: {
 							include: {
 								elements: true
+							}
+						},
+						tags: {
+							include: {
+								type: {
+									include: {
+										type: true
+									}
+								}
+							}
+						},
+						types: {
+							include: {
+								fields: {
+									include: {
+										type: true
+									}
+								}
 							}
 						},
 						interface: {
@@ -162,11 +112,6 @@ export default (prisma: PrismaClient) => {
 										to: true,
 										
 									}
-								},
-								actions: {
-									include: {
-										flow: true
-									}
 								}
 							}
 						},
@@ -187,52 +132,7 @@ export default (prisma: PrismaClient) => {
 						// }
 					}});
 				},
-				commandProgramFlows: async (root: any, args: any) => {
-					let filter : any = {};
-					if(args.where.program) {
-						filter['program'] = {id: args.where.program}
-					}
-					if(args.where.id){
-						filter['id'] = args.where.id
-					}
-
-					const flow = await prisma.programFlow.findMany({
-						where: filter, 
-						include: {
-							children: true,
-							parent: true,
-							nodes: {
-								include: {
-									actions: {
-										include: {device: true, request: true}
-									},
-									subprocess: true,
-									
-								}
-							}, 
-							edges: {
-								include: { 
-									from: true, 
-									to: true, 
-									conditions: {
-										include: {
-											inputDevice: true, 
-											inputDeviceKey: true,
-											assertion: {
-												include: {
-													setpoint: true,
-													variable: true
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					});
-					return flow;
-
-				}
+				
 			},
 			Mutation: {
 				createCommandProgram: async (root: any, args: {input: {name: string, templatePacks: string[]}}, context: any) => {
@@ -242,12 +142,6 @@ export default (prisma: PrismaClient) => {
 							name: args.input.name,
 							templatePacks: {
 								connect: (args.input.templatePacks || []).map((x) => ({id: x}))
-							},
-							program: {
-								create: {
-									id: nanoid(),
-									name: 'Default'
-								}
 							},
 							interface: {
 								create: {
@@ -276,263 +170,22 @@ export default (prisma: PrismaClient) => {
 				deleteCommandProgram: async (root: any, args: {id: string}, context: any) => {
 					const res = await prisma.program.delete({where: {id: args.id}})
 					return res != null
-				},
-
-				createCommandProgramFlow: async (root: any, args: any) => {
-					let parentQuery : any = {};
-
-					if(args.input.parent){
-						parentQuery['parent'] = {
-							connect: {id: args.input.parent}
-						}
-					}else{
-						parentQuery['program'] = {
-							connect: {id: args.program}
-						}
-					}
-
-					const flow = await prisma.programFlow.create({
-						data: {
-							id: nanoid(),
-							name: args.input.name,
-							...parentQuery,
-							
-						}
-					})
-
-					return flow;
-				},
-				updateCommandProgramFlow: async (root: any, args: any) => {
-					const flow = await prisma.programFlow.update({
-						where: {id: args.id},
-						data: {
-							name: args.input.name
-						}
-					})
-
-					return flow
-				},
-				deleteCommandProgramFlow: async (root: any, args: any) => {
-					const res = await prisma.programFlow.delete({where: {id: args.id}})
-					return res != null
-				},
-				createCommandProgramFlowNode: async (root: any, args: any) => {
-					let subprocessQuery : any = {};
-					if(args.input?.subprocess) subprocessQuery['subprocess'] = {connect: {id: args.input.subprocess}};
-
-					const flowNode = await prisma.programFlowNode.create({
-						data: {
-							id: nanoid(),
-							x: args.input.x,
-							y: args.input.y,
-							type: args.input.type,
-							...subprocessQuery,
-							programFlow: {
-								connect: {id: args.flow}
-							}
-						}
-					})
-					return flowNode
-				},
-				updateCommandProgramFlowNode: async (root: any, args: any) => {
-
-					let timerQuery : any = {};
-					if(args.input?.timer && args.input.timerUnit){
-						timerQuery = {
-							timer: {
-								value: args.input.timer,
-								unit: args.input.timerUnit
-							}
-						};
-					}
-
-					let update : any = {};
-					if(args.input.x) update.x = args.input.x;
-					if(args.input.y) update.y = args.input.y;
-					if(args.input.type) update.type = args.input.type;
-
-					const flowNode = await prisma.programFlowNode.update({
-						where: {id: args.id},
-						data: {
-							...update,
-							...timerQuery
-						}
-					})
-					return flowNode
-				},
-				deleteCommandProgramFlowNode: async (root: any, args: any) => {
-					const res = await prisma.programFlowNode.delete({where: {id: args.id}})
-					return res != null
-				},
-				createCommandProgramFlowNodeAction: async (root: any, args: any) => {
-					return await prisma.programFlowNodeAction.create({
-						data: {
-							id: nanoid(),
-							device: {
-								connect: {id: args.input.device}
-							},
-							request: {
-								connect: {id: args.input.request}
-							},
-							node: {
-								connect: {id: args.node}
-							}
-						}
-					})
-				},
-				updateCommandProgramFlowNodeAction: async (root: any, args: any) => {
-					return await prisma.programFlowNodeAction.update({
-						where: {id: args.id},
-						data: {
-							device: {
-								connect: {id: args.input.device}
-							},
-							request: {
-								connect: {id: args.input.request}
-							}
-						}
-					})
-				},
-				deleteCommandProgramFlowNodeAction: async (root: any, args: any) => {
-					const res = await prisma.programFlowNodeAction.delete({where: {id: args.id}})
-					return res != null
-				},
-				createCommandProgramFlowEdge: async (root: any, args: any) => {
-					return await prisma.programFlowEdge.create({
-						data: {
-							id: nanoid(),
-							points: args.input.points,
-							from: {connect: {id: args.input.from}},
-							fromHandle: args.input.fromHandle,
-							to: {connect: {id: args.input.to}},
-							toHandle: args.input.toHandle,
-							programFlow: {
-								connect: {id: args.flow}
-							}
-						}
-					})
-				},
-				updateCommandProgramFlowEdge: async (root: any, args: any) => {
-					return await prisma.programFlowEdge.update({
-						where: {id: args.id},
-						data: {
-							points: args.input.points,
-							from: {connect: {id: args.input.from}},
-							fromHandle: args.input.fromHandle,
-							to: {connect: {id: args.input.to}},
-							toHandle: args.input.toHandle
-						}
-					})
-				},
-				deleteCommandProgramFlowEdge: async (root: any, args: any) => {
-					const res = await prisma.programFlowEdge.delete({where: {id: args.id}})
-					return res != null
-				},
-				createCommandProgramFlowEdgeCondition: async (root: any, args: any) => {
-					let assertionCreate : any = {
-
-					};
-					if(args.input.assertion.type == 'value'){
-						assertionCreate['value'] = args.input.assertion.value;
-					}else if(args.input.assertion.type == 'setpoint'){
-						assertionCreate['setpoint'] = {
-							connect: {id: args.input.assertion.setpoint}
-						}
-					}else if(args.input.assertion.type == 'variable'){
-						assertionCreate['variable'] = {
-							connect: {id: args.input.assertion.variable}
-						}
-					}
-					return await prisma.programFlowEdgeCondition.create({
-						data: {
-							id: nanoid(),
-							inputDevice: {
-								connect: {id: args.input.inputDevice}
-							},
-							inputDeviceKey: {
-								connect: {id: args.input.inputDeviceKey}
-							},
-							comparator: args.input.comparator,
-							assertion: {
-								create: {
-									id: nanoid(),
-									type: args.input.assertion.type,
-									...assertionCreate
-								}
-							}, 
-							edge: {
-								connect: {id: args.edge}
-							}
-							
-						}
-					})
-				},
-				updateCommandProgramFlowEdgeCondition: async (root: any, args: any) => {
-					let update : any = {};
-
-					let assertionUpdate : any = {};
-					if(args.input){
-						if(args.input.inputDeviceKey) update['inputDeviceKey'] = {connect: {id: args.input.inputDeviceKey}}
-						if(args.input.inputDevice) update['inputDevice'] = {connect: {id: args.input.inputDevice}}
-
-						if(args.input.assertion.type == 'value'){
-							assertionUpdate['value'] = args.input.assertion.value;
-							assertionUpdate['setpoint'] = {
-								disconnect: true
-							}
-							assertionUpdate['variable'] = {
-								disconnect: true
-							}
-						}else if(args.input.assertion.type == 'setpoint'){
-							assertionUpdate['value'] = undefined
-							assertionUpdate['setpoint'] = {
-								connect: {id: args.input.assertion.setpoint}
-							}
-							assertionUpdate['variable'] = {
-								disconnect: true
-							}
-						}else if(args.input.assertion.type == 'variable'){
-							assertionUpdate['variable'] = {
-								connect: {id: args.input.assertion.variable}
-							}
-							assertionUpdate['setpoint'] = {
-								disconnect: true
-							}
-							assertionUpdate['value'] = undefined
-						}
-					}
-					return await prisma.programFlowEdgeCondition.update({
-						where: {id: args.id},
-						data: {
-							...update,
-							comparator: args.input.comparator,
-							assertion: {
-								update: {
-									type: args.input.assertion.type,
-									...assertionUpdate
-								}
-							}
-						}
-					})
-				},
-				deleteCommandProgramFlowEdgeCondition: async (root: any, args: any) => {
-					const res = await prisma.programFlowEdgeCondition.delete({where: {id: args.id}})
-					return res != null
 				}
 			}
 		},
-		ioResolvers,
+		tagResolvers,
+		typeResolvers,
 		variableResolvers
 	])
 	
 	const typeDefs = `
 
-	${ioTypeDefs}
+	${tagTypeDefs}
+	${typeTypeDefs}
 	${variableTypeDefs}
 
 	type Query {
 		commandPrograms(where: CommandProgramWhere): [CommandProgram]!
-		commandProgramFlows(where: CommandProgramFlowWhere): [CommandProgramFlow]!
 	}
 
 	type Mutation {
@@ -540,25 +193,6 @@ export default (prisma: PrismaClient) => {
 		updateCommandProgram(id: ID!, input: CommandProgramInput!): CommandProgram!
 		deleteCommandProgram(id: ID!): Boolean!
 
-		createCommandProgramFlow(program: ID, input: CommandProgramFlowInput!): CommandProgramFlow!
-		updateCommandProgramFlow(program: ID, id: ID!, input: CommandProgramFlowInput!): CommandProgramFlow!
-		deleteCommandProgramFlow(program: ID, id: ID!): Boolean!
-
-		createCommandProgramFlowNode(program: ID, flow: ID, input: CommandProgramFlowNodeInput!): CommandProgramNode!
-		updateCommandProgramFlowNode(program: ID, flow: ID, id: ID!, input: CommandProgramFlowNodeInput!): CommandProgramNode!
-		deleteCommandProgramFlowNode(program: ID, flow: ID, id: ID!): Boolean!
-
-		createCommandProgramFlowNodeAction(program: ID, flow: ID, node: ID, input: CommandProgramFlowNodeActionInput!): CommandActionItem!
-		updateCommandProgramFlowNodeAction(program: ID, flow: ID, node: ID, id: ID, input: CommandProgramFlowNodeActionInput!): CommandActionItem!
-		deleteCommandProgramFlowNodeAction(program: ID, flow: ID, node: ID, id: ID!): Boolean!
-
-		createCommandProgramFlowEdge(program: ID, flow: ID, input: CommandProgramFlowEdgeInput!): CommandProgramEdge!
-		updateCommandProgramFlowEdge(program: ID, flow: ID, id: ID!, input: CommandProgramFlowEdgeInput!): CommandProgramEdge!
-		deleteCommandProgramFlowEdge(program: ID, flow: ID, id: ID!): Boolean!
-
-		createCommandProgramFlowEdgeCondition(program: ID, flow: ID, edge: ID, input: CommandProgramFlowEdgeConditionInput!): CommandProgramEdgeCondition!
-		updateCommandProgramFlowEdgeCondition(program: ID, flow: ID, edge: ID, id: ID!, input: CommandProgramFlowEdgeConditionInput!): CommandProgramEdgeCondition!
-		deleteCommandProgramFlowEdgeCondition(program: ID, flow: ID, edge: ID, id: ID!): Boolean!
 	}
 
 
@@ -582,17 +216,15 @@ export default (prisma: PrismaClient) => {
 
 		templatePacks: [CommandHMIDevicePack]
 
-		program: [CommandProgramFlow]
 		interface: [CommandProgramHMI]
 
 		localHomepage: CommandProgramHMI
 		remoteHomepage: CommandProgramHMI
 
-		devices(where: CommandProgramDeviceWhere): [CommandProgramDevicePlaceholder]
-		
 		alarms: [CommandProgramAlarm] 
-		variables: [CommandProgramVariable]
 
+		tags: [CommandProgramTag]
+		types: [CommandProgramType]
 		templates: [CommandTemplateTransformer]
 
 		createdAt: DateTime 
@@ -600,34 +232,6 @@ export default (prisma: PrismaClient) => {
 		usedOn: CommandDevice 
 
 		organisation: HiveOrganisation
-	}
-
-	input CommandProgramFlowInput {
-		name: String
-		parent: String
-	}
-
-	input CommandProgramFlowWhere {
-		id: ID
-		program: ID
-	}
-
-	type CommandProgramFlow {
-		id: ID! 
-		name: String
-		parent: CommandProgramFlow
-		children: [CommandProgramFlow] 
-
-		nodes: [CommandProgramNode] 
-		edges: [CommandProgramEdge]
-
-		program: CommandProgram
-	}
-
-	type CommandProgramAction {
-		id: ID! 
-		name: String
-		flow: [CommandProgramFlow]
 	}
 
 	type CommandProgramAlarm {
@@ -638,25 +242,6 @@ export default (prisma: PrismaClient) => {
 
 
 
-	type CommandProgramNodeConfiguration {
-		id: ID! 
-
-		key: String
-		value: String
-	} 
-
-		input CommandProgramFlowNodeInput {
-			x: Float
-			y: Float
-
-			timer: String
-			timerUnit: String
-
-			subprocess: String
-
-			type: String
-		}
-
 	input PointInput {
 		x: Float
 		y: Float
@@ -665,94 +250,6 @@ export default (prisma: PrismaClient) => {
 	type Point {
 		x: Float
 		y: Float
-	}
-
-	input CommandProgramFlowEdgeInput {
-		from: ID
-		to: ID
-		fromHandle: String
-		toHandle: String
-		points: [PointInput]
-	}
-
-	type CommandProgramEdge {
-		id: ID!
-
-		points: [Point]
-		from: CommandProgramNode
-		fromHandle: String
-
-		to: CommandProgramNode
-		toHandle: String
-
-		conditions: [CommandProgramEdgeCondition] 
-	}
-
-	input CommandProgramFlowEdgeConditionInput {
-		inputDevice: ID
-		inputDeviceKey: String
-		comparator: String
-		assertion: CommandAssertionInput
-	}
-
-	type CommandProgramEdgeCondition {
-		id: ID!
-
-		inputDevice: CommandProgramDevicePlaceholder
-		inputDeviceKey: CommandProgramDeviceState 
-		comparator: String
-		assertion: CommandAssertion
-
-		flow: CommandProgramFlow 
-	}
-
-
-	type CommandProgramNode {
-		id: ID! 
-		x: Float
-		y: Float
-		type: String
-		flow: [CommandProgramFlow] 
-
-		actions: [CommandActionItem] 
-		subprocess: CommandProgramFlow 
-
-		timer: CommandProgramNodeTimer
-
-		configuration: [CommandProgramNodeConfiguration]
-
-
-		inputs: [CommandProgramNode]
-		outputs: [CommandProgramNode]
-	}
-
-	type CommandProgramNodeTimer {
-		id: ID!
-		value: String
-		unit: String	  
-	}
-
-	input CommandProgramFlowNodeActionInput {
-		id: ID
-		device: ID
-		request: ID
-	}
-
-	type CommandActionItem {
-		id: ID! 
-		device: CommandProgramDevicePlaceholder 
-		request: CommandProgramDeviceAction
-		release: Boolean
-	}
-
-	type CommandProgramNodeFlowConfiguration {
-		id: ID!
-		inputDevice: CommandProgramDevicePlaceholder
-		inputDeviceKey: CommandProgramDeviceState 
-		comparator: String
-		assertion: String
-
-		flow: CommandProgramFlow 
 	}
 
 

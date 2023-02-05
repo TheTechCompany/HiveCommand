@@ -44,6 +44,7 @@
 	},
 	"dependencies": {
 		"@hive-command/canvas-nodes": "^1.4.15-alpha.143",
+		"@hive-command/scripting": "^1.4.15-alpha.143",
 		"dot": "^1.1.3"
 	}
 }

@@ -17,7 +17,7 @@ export const TemplateEditor = (props: any) => {
 
     const [ selected, setSelected ] = useState<any>();
 
-    const { refetch, deviceTypes, program: {templates} } = useCommandEditor()
+    const { refetch, program: {templates, types} } = useCommandEditor()
 
     const [ defaultSrc, setDefaultSrc ] = useState<{src: string, srcId?: string, id: string} | null>()
 
@@ -75,7 +75,7 @@ export const TemplateEditor = (props: any) => {
 
     const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
         if(type === 'Function'){
-            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs) => {
+            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[]) => {
 
 }`
         }else{ 
@@ -98,12 +98,12 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
         //Parse device types early
 
         const activeInputs = activeTemplate.inputs.map((input) => {
-            if(input.type.indexOf('Device') > -1){
+            if(input.type.indexOf('Tag') > -1){
                 const typeParts = input.type?.split(':')
                 // let deviceInterface = ().concat([{key: 'tag', type: 'String'}]).map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
 
-                const stateObject = (deviceTypes?.find((a) => a.id === typeParts?.[1])?.state || []).map((stateItem) => {
-                    return { key: stateItem.key, type: stateItem.type }
+                const stateObject = (types?.find((a) => a.id === typeParts?.[1])?.fields || []).map((stateItem) => {
+                    return { key: stateItem.name, type: stateItem.type }
                 }).reduce((prev, curr) => ({
                     ...prev,
                     [curr.key]: fromOPCType(curr.type)
@@ -144,9 +144,10 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     }
 
 
-                    declare function showDeviceWindow(
+                    declare function showTagWindow(
                         position: {x: number, y: number, width: number, height: number, anchor?: string},
-                        deviceTag: string
+                        deviceTag: string,
+                        actions: {label: string, func: string}[]
                     ){
 
                     }

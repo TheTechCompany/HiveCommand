@@ -1,18 +1,18 @@
 import React, { useMemo, useEffect, useState, useContext } from 'react';
-import { Autocomplete, Box, Divider, FormGroup, IconButton, TextField, Typography } from '@mui/material'
+import { Autocomplete, Box, Divider, FormGroup, IconButton, Select, TextField, Typography } from '@mui/material'
 import { HMIContext } from '../context';
 import { useUpdateHMINode } from '@hive-command/api';
-import { Javascript } from '@mui/icons-material'
+import { Close, Delete, Javascript } from '@mui/icons-material'
 import { useMutation, gql } from '@apollo/client';
 import { TemplateInput } from '../../../../../components/template-input';
 import { ScriptEditorModal } from '../../../../../components/script-editor';
-import { formatInterface, fromOPCType } from '@hive-command/scripting';
+import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-command/scripting';
 
-export type ConfigInputType = 'Template' | 'Function' | 'Device' | 'String' | 'Number' | 'Boolean'
+export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Number' | 'Boolean'
 
 export const TemplateMenu = () => {
 
-    const {  templates, selected, refetch, variables, programId, devices, nodes } = useContext(HMIContext);
+    const {  templates, selected, refetch, programId, tags, types, nodes } = useContext(HMIContext);
 
     const item = nodes?.find((a) => a.id == selected.id);
 
@@ -24,6 +24,7 @@ export const TemplateMenu = () => {
 
     const [ state, setState ] = useState<any>([])
 
+    let scalarTypes = Object.keys(DataTypes).concat(Object.keys(DataTypes).map((x) => `${x}[]`))
 
     const [ functionArgs, setFunctionArgs ] = useState<{extraLib?: string, defaultValue?: string} | null>(null);
     const [ functionOpt, setFunctionOpt ] = useState<any>()
@@ -44,6 +45,35 @@ export const TemplateMenu = () => {
             updateCommandProgramInterfaceNodeTemplateConfiguration(node: $nodeId, field: $fieldId, value: $value)
         }
     `)
+
+    const typeSchema = useMemo(() => {
+        let typeSchema = types?.map((type) => {
+            return formatInterface(type.name, type.fields?.reduce((prev, curr) => ({
+                ...prev,
+                [curr.name]: lookupType(curr.type as keyof typeof DataTypes)
+            }), {}))   
+        }).join('\n')
+
+        return typeSchema
+    }, [types])
+
+    const tagSchema = useMemo(() => {
+        console.log({tags}, scalarTypes)
+
+        let tagSchema = tags?.reduce((prev, curr) => {
+            console.log({inScalar: curr.type in scalarTypes, index: curr.type.indexOf('[]') > -1, replace: curr.type.replace(/[]/, '')})
+            return {
+                ...prev,
+                [curr.name]: scalarTypes.indexOf(curr.type) > -1 ? 
+                    ( curr.type.indexOf('[]') > -1 ? `${lookupType(curr.type?.replace('[]', '') as keyof typeof DataTypes)}[]` : lookupType(curr.type as keyof typeof DataTypes) )
+                    : curr.type
+            }
+
+        }, {});
+
+        return tagSchema
+
+    }, [tags, types])
 
     useEffect(() => {
         let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
@@ -84,21 +114,6 @@ export const TemplateMenu = () => {
 
     }
 
-    const assignableDevices = useMemo(() => {
-
-        let devs = devices;
-
-        // if(item?.extras?.metadata?.type){
-        //     devs = devs.filter((a) => a.type?.type == item?.extras?.metadata?.type);
-        // }
-
-        return (devs || []).map((value) => ({
-            ...value,
-            tag: `${value.type?.tagPrefix ? value.type?.tagPrefix : ''}${value.tag}`
-        }));
-        // devices?.filter((a) => a.type?.type?.indexOf(item?.extras?.metadata) > -1)
-    }, [devices, item])
-
     
     const renderConfigInput = ({type, value, label, id}: {type: ConfigInputType, value: any, label: string, id?: string}, updateState: ((key: string, value: any) => void) = _updateState) => {
         console.log({label, value})
@@ -111,12 +126,12 @@ export const TemplateMenu = () => {
         }
 
         switch(type){
-            case 'Device':
+            case 'Tag':
 
-                let options = assignableDevices?.slice()?.sort((a, b) => `${a.tag}`.localeCompare(`${b.tag}`));
+                let options = tags?.slice()?.sort((a, b) => `${a.name}`.localeCompare(`${b.name}`));
 
                 if(type_parts[1]){
-                    options = options.filter((a) => a?.type?.id == type_parts[1]);
+                    options = options.filter((a) => a?.type == types.find((a) => a.id === type_parts[1]).name );
                 }
 
                 console.log({options, value})
@@ -130,6 +145,7 @@ export const TemplateMenu = () => {
                         value={options?.find((a) => a.id == value) || null}
                         
                         onChange={(event, newValue) => {
+                            if(typeof(newValue) === 'string') return console.error("Tag input with string value")
                             updateState(id || label, newValue?.id)
                             // if(!newValue){
                             //     updateState(label, null)
@@ -138,7 +154,7 @@ export const TemplateMenu = () => {
                             //     setFunctionOpt(label)
                             // }
                         }}
-                        getOptionLabel={(option) => typeof(option) == "string" ? option : `${option.tag}`}
+                        getOptionLabel={(option) => typeof(option) == "string" ? option : `${option.name}`}
                         // isOptionEqualToValue={(option, value) => option.id == value.id}
                         renderInput={(params) => 
                             <TextField 
@@ -179,26 +195,25 @@ export const TemplateMenu = () => {
                             setFunctionOpt(label);
 
 
-                            const valueState = assignableDevices?.map((dev) => {
-                                let state = dev.type.state.map((stateItem) => { 
-                                    return {key: stateItem.key, value: fromOPCType(stateItem.type)}
-                                 }).reduce((prev, curr) => ({
-                                    ...prev,
-                                    [curr.key]: curr.value
-                                 }), {})
+                            // const valueState = assignableDevices?.map((dev) => {
+                            //     let state = dev.type.state.map((stateItem) => { 
+                            //         return {key: stateItem.key, value: fromOPCType(stateItem.type)}
+                            //      }).reduce((prev, curr) => ({
+                            //         ...prev,
+                            //         [curr.key]: curr.value
+                            //      }), {})
 
-                                 return {key: dev.tag, value: state}
-                            // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
-                            }).reduce((prev, curr) => ({
-                                ...prev,
-                                [curr.key]: curr.value
-                            }), {});
+                            //      return {key: dev.tag, value: state}
+                            // // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
+                            // }).reduce((prev, curr) => ({
+                            //     ...prev,
+                            //     [curr.key]: curr.value
+                            // }), {});
 
 
                             setFunctionArgs({
-                                defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: () => ValueStore) : ${getFunctionType(type)} => {
+                                defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Tags, setState: (values: DeepPartial<Tags>) => void, args: any[]) => {
 
-    showDeviceWindow(elem, 'device');
 
 }`,
                                 extraLib: `
@@ -220,18 +235,53 @@ export const TemplateMenu = () => {
 
                                 }
 
-                                ${formatInterface('ValueStore', valueState)}
-                         
-                                interface VariableStore {
-                                    ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
-                                }`
+                                ${typeSchema}
+
+                                ${formatInterface('Tags', tagSchema)}
+                            `
                             });
                         }}>
                             <Javascript fontSize='inherit' />
                         </IconButton>
                    </Box>
                 );
+            case '[String]':
+                return (() => {
 
+                    const [ws, setWs] = useState('');
+
+                    return (<Autocomplete
+                        options={value || []}
+                        size="small"
+                        value={ws}
+                        
+                        renderOption={(props, option) => (
+                            <Box sx={{display: 'flex', position: 'relative', alignItems: 'center', '& .MuiIconButton-root': {opacity: 0}, '&:hover .MuiIconButton-root': {opacity: 1} }}>
+                                <li style={{flex: 1}} {...props as any}>
+                                    <Typography>{option}</Typography>
+                                </li>
+                                <Box sx={{
+                                    position: 'absolute',
+                                    right: '6px',
+                                    top: 0,
+                                    bottom: 0,
+                                    display: 'flex',
+                                    alignItems: 'center'
+                                }}>
+                                    <IconButton size="small"><Delete color='error' fontSize='inherit' /></IconButton>
+                                </Box>
+                            </Box>)}
+                        onKeyDown={(e) => {
+                            if(e.key === "Enter"){
+                                updateState(id || label, [ ...new Set((value || []).concat(ws)) ])
+                                setWs('')
+                            }
+                        }}
+                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs(e.target.value)} label={label} />}
+                        freeSolo
+                        />)
+                })();
+                    
             case 'String':
                 //[{label: 'AV101', type: "keyword"}, {label: 'AV101.open', type: 'keyword'}, {label: 'AV201.open', type: 'keyword'}]
 
@@ -239,10 +289,10 @@ export const TemplateMenu = () => {
                     <TemplateInput
                         label={label}
                         value={value}
-                        options={assignableDevices.map((device) => {
+                        options={[] /* assignableDevices.map((device) => {
 
                             return [{label: device.tag, type: 'keyword'}].concat(device.type?.state?.map((stateItem) => ({label: `${device.tag}.${stateItem.key}`, type: 'keyword' })))
-                        }).reduce((prev, curr) => prev.concat(curr), []) }
+                        }).reduce((prev, curr) => prev.concat(curr), []) */}
                         onChange={(e) => {
                             console.log(e)
                             updateState(id || label, e)
@@ -268,34 +318,7 @@ export const TemplateMenu = () => {
                         size="small" 
                         label={label} />
                 );
-            case 'Template':
-                return (
-
-                    // <Autocomplete
-                    //     size="small"
-                    //     multiple={true}
-                    //     options={[{label: 'BLO701.on'}, {label: 'FIT101.flow'}]}
-                    //     inputValue={templateValue}
-                    //     onInputChange={(event, value, reason) => {
-                    //         if ( event && event.type === 'blur' ) {
-                    //             console.log("BLur", value)
-                    //               setTemplateValue('');
-                    //         } else if ( reason !== 'reset' ) {
-                    //             console.log("Non blur", value)
-                    //           setTemplateValue(value);
-                    //         }
-                    //     }}
-                    //     getOptionLabel={(option) => typeof(option) == 'string' ? option : option.label }
-                    //     renderInput={(params) => (
-                            <TextField 
-                                label={label}
-                                value={value}
-                                size="small"
-                                onChange={(e) => {
-                                    updateState(id || label, e.target.value)
-                                }} />
-                        // )} />
-                );
+            
             default:
                 return (<span>{type} not found in renderConfigInput</span>)
         }
@@ -308,7 +331,7 @@ export const TemplateMenu = () => {
 
         return (
             <Box>
-                <Typography fontSize={'small'}>Template Options</Typography>
+                <Typography sx={{marginBottom: '6px'}} fontSize={'small'}>Template Options</Typography>
                 {activeTemplate?.inputs?.map((input) => (
                     <Box sx={{marginBottom: '6px'}}>
                         {renderConfigInput(
@@ -330,19 +353,6 @@ export const TemplateMenu = () => {
         )
     }, [activeTemplate, templateState])
 
-    const getFunctionType = (type: any) => {
-        switch(type){
-            default:
-            case 'String':
-                return 'string';
-            case 'Number':
-                return 'number';
-            case 'Boolean':
-                return 'boolean';
-        }
-    }
-    
-    console.log({devices});
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: '6px', paddingTop: '6px', paddingRight: '6px'}}>
@@ -429,37 +439,34 @@ export const TemplateMenu = () => {
                                         setFunctionOpt(label);
 
 
+                                        // const valueState = assignableDevices?.map((dev) => {
+                                        //     let state = dev.type.state.map((stateItem) => { 
+                                        //         return {key: stateItem.key, value: fromOPCType(stateItem.type)}
+                                        //     }).reduce((prev, curr) => ({
+                                        //         ...prev,
+                                        //         [curr.key]: curr.value
+                                        //     }), {})
 
-                                        const valueState = assignableDevices?.map((dev) => {
-                                            let state = dev.type.state.map((stateItem) => { 
-                                                return {key: stateItem.key, value: fromOPCType(stateItem.type)}
-                                            }).reduce((prev, curr) => ({
-                                                ...prev,
-                                                [curr.key]: curr.value
-                                            }), {})
-
-                                            return {key: dev.tag, value: state}
-                                        // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
-                                        }).reduce((prev, curr) => ({
-                                            ...prev,
-                                            [curr.key]: curr.value
-                                        }), {});
+                                        //     return {key: dev.tag, value: state}
+                                        // // `${dev.tag}: { ${dev.type?.state?.map((stateItem) => `${stateItem.key}: ${ getOPCType(stateItem.type) }`).join('\n')} }`).join(';\n')
+                                        // }).reduce((prev, curr) => ({
+                                        //     ...prev,
+                                        //     [curr.key]: curr.value
+                                        // }), {});
 
                                         setFunctionArgs({
-                                            defaultValue: `export const getter = (values: ValueStore, variables: VariableStore) : ${getFunctionType(type)} => {
+                                            defaultValue: `export const getter = (values: Tags) : ${lookupType(type)} => {
 
 }
 
-export const setter = (setValues: (values: DeepPartial<ValueStore>) => void, setVariables: (variables: DeepPartial<VariableStore>) => void) => {
+export const setter = (setValues: (values: DeepPartial<Tags>) => void) => {
 
 }
 `,
                                             extraLib: `
-                                            ${formatInterface('ValueStore', valueState)}
-                                        
-                                            interface VariableStore {
-                                                ${variables?.map((variable) => `${variable.name}: ${variable.type}`).join(';\n')}
-                                            }`
+                                            ${typeSchema}
+                                            ${formatInterface('Tags', tagSchema)}
+                                        `
                                         });
                                     }}
                                     size="small">

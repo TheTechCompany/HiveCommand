@@ -254,27 +254,27 @@ export const OPCUAServerStage = () => {
 
 
 
-    const devices = useMemo(() => (controlLayout?.devices || []).map((x: any) => {
-            return {
-                id: x.id,
-                name: `${x.type?.tagPrefix ? x.type?.tagPrefix : ''}${x.tag}`,
-                children: (x.type?.state)?.map((y: any) => ({
-                    id: `${x.id}.${y.key}`,
-                    name: y.key,
-                    type: y.type
-                }))
-            }
-        })
-    , [controlLayout?.devices || []])
+    // const devices = useMemo(() => (controlLayout?.devices || []).map((x: any) => {
+    //         return {
+    //             id: x.id,
+    //             name: `${x.type?.tagPrefix ? x.type?.tagPrefix : ''}${x.tag}`,
+    //             children: (x.type?.state)?.map((y: any) => ({
+    //                 id: `${x.id}.${y.key}`,
+    //                 name: y.key,
+    //                 type: y.type
+    //             }))
+    //         }
+    //     })
+    // , [controlLayout?.devices || []])
 
 
     const opcuaTree = useMemo(() => {
         return renderTree(opcua)
     }, [opcua])
 
-    const deviceTree = useMemo(() => {
-        return renderTree(devices, true)
-    }, [devices]);
+    // const deviceTree = useMemo(() => {
+    //     return renderTree(devices, true)
+    // }, [devices]);
 
     const isChecked = (item: any) => {
         return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
@@ -345,7 +345,7 @@ export const OPCUAServerStage = () => {
                     <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                         <Box>
-                            {devices.map((device: any) => (
+                            {/* {devices.map((device: any) => (
                                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                         <IconButton sx={{marginRight: '6px'}} size="small" onClick={() => {
@@ -398,7 +398,7 @@ export const OPCUAServerStage = () => {
                                         </Box>
                                     </Collapse>
                                 </Box>
-                            ))}
+                            ))} */}
                         </Box>
                         {/* <TreeView
                             sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}

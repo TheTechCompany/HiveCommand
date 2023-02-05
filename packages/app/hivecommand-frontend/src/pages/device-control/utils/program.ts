@@ -31,6 +31,22 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                     id
                     name
 
+                    types {
+                        id
+                        name
+                        fields {
+                            id
+                            name
+                            type
+                        }
+                    }
+
+                    tags {
+                        id
+                        name
+                        type
+                    }
+                    
                     templatePacks {
                         id
                         url
@@ -45,15 +61,7 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                         id
                         name
 
-                        actions {
-                            id
-                            name
-                            flow {
-                                id
-                                name
-                            }
-                        }
-
+                  
                         edges {
                             from {
                                 id
@@ -154,42 +162,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                             
                     }
 
-                    variables {
-                        id
-                        name
-                        type
-                    }
-
-                    devices {
-                        id
-                        tag
-                        units {
-                            inputUnit
-                            displayUnit
-                            state {
-                                id
-                                key
-                                type
-                            }
-                        }
-                        type {
-                            tagPrefix
-
-                            actions {
-                                id
-                                key
-                                func
-                            }
-                            state {
-                                id
-                                inputUnits
-                                units
-                                key
-                                type
-                                id
-                            }
-                        }
-                    }
+                  
+                  
                 }
 
             }

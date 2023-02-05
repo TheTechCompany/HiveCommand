@@ -40,7 +40,6 @@ const Loader = async (base_url: string, start: string) => {
     const data = await fetch(url)
     const stringFunc = await data.text()
 
-    console.log({stringFunc});
 
     const exports = {};
     const module = { exports };

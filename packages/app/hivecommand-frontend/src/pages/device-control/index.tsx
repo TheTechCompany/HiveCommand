@@ -98,8 +98,10 @@ export const DeviceControlView = () => {
         }
     }, [])
 
+    console.log({normalisedValues})
+
     return (
-        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+        <Box sx={{flex: 1, display: 'flex', padding: '6px', flexDirection: 'column'}}>
             <CommandSurface
                 values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}

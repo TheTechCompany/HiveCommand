@@ -96,10 +96,19 @@ export const Controls = (props) => {
                 id
                 name
 
-                variables {
+                tags {
                     id
                     name
                     type
+                }
+
+                types {
+                    id 
+                    name
+                    fields {
+                        name
+                        type
+                    }
                 }
 
                 templates {
@@ -131,11 +140,6 @@ export const Controls = (props) => {
                 interface {
                     id
                     name
-
-                    actions {
-                        id
-                        name
-                    }
 
                     edges {
                         id
@@ -224,32 +228,7 @@ export const Controls = (props) => {
                         }
                     }
 
-                }
-
-                program {
-                    id
-                    name
-                    children {
-                        id
-                        name
-                    }
-                }
-
-                devices {
-                    id
-                    tag
-                    type {
-                        id
-                        name
-                        type
-                        tagPrefix
-
-                        state {
-                            key
-                            type
-                        }
-                    }
-                }
+                }               
             }
         }
     `, {
@@ -531,8 +510,8 @@ export const Controls = (props) => {
                 interfaces: program?.interface || [],
                 refetch,
                 selected,
-                devices,
-                variables: program?.variables || [],
+                tags: program?.tags || [],
+                types: program?.types || [],
                 templates: program?.templates || [],
                 nodes: nodes,
                 updateNode

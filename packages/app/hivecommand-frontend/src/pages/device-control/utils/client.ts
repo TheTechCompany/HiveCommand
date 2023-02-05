@@ -12,7 +12,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         }
     `)
 
-    const changeDeviceValue = (deviceName: string, stateKey: string, value: any) => {
+    const writeTagValue = (deviceName: string, value: any, stateKey?: string) => {
         console.log("Change device value", deviceName, stateKey, value);
         return _changeDevValue({
             variables: {
@@ -44,6 +44,6 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         updateChart,
         updateChartGrid,
         removeChart,
-        changeDeviceValue
+        writeTagValue
     }
 }
