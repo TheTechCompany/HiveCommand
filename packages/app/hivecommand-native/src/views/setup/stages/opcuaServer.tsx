@@ -254,18 +254,22 @@ export const OPCUAServerStage = () => {
 
 
 
-    // const devices = useMemo(() => (controlLayout?.devices || []).map((x: any) => {
-    //         return {
-    //             id: x.id,
-    //             name: `${x.type?.tagPrefix ? x.type?.tagPrefix : ''}${x.tag}`,
-    //             children: (x.type?.state)?.map((y: any) => ({
-    //                 id: `${x.id}.${y.key}`,
-    //                 name: y.key,
-    //                 type: y.type
-    //             }))
-    //         }
-    //     })
-    // , [controlLayout?.devices || []])
+    const tags = useMemo(() => (controlLayout?.tags || []).map((x: any) => {
+        let type = controlLayout?.types.find((a) => a.name === x.type);
+        let hasChildren = (type?.fields || []).length > 0;
+
+            return {
+                id: x.id,
+                name: x.name,
+                children: hasChildren ? type?.fields.map((typeField) => ({id: `${x.id}.${typeField.name}`, name: typeField.name, type: typeField.type})) : []
+                // (x.type?.state)?.map((y: any) => ({
+                //     id: `${x.id}.${y.key}`,
+                //     name: y.key,
+                //     type: y.type
+                // }))
+            }
+        })
+    , [controlLayout?.tags || []])
 
 
     const opcuaTree = useMemo(() => {
@@ -400,13 +404,13 @@ export const OPCUAServerStage = () => {
                                 </Box>
                             ))} */}
                         </Box>
-                        {/* <TreeView
+                        <TreeView
                             sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
                             defaultCollapseIcon={<ExpandMore />}
                             defaultExpandIcon={<ChevronRight />}
                             >
-                            {renderTree(devices, true)}
-                        </TreeView> */}
+                            {renderTree(tags, true)}
+                        </TreeView>
                     </Box>
                 </Box>
             </Box>
