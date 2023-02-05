@@ -13,7 +13,9 @@ import { HMIDrawer } from './Drawer';
 import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
-import { useRemoteComponents } from '../../../../hooks/remote-components';
+
+import { useRemoteComponents } from '@hive-command/command-surface';
+
 import { size } from 'mathjs';
 import { PipePathFactory } from "@hexhive/ui";
 
@@ -306,7 +308,7 @@ export const Controls = (props) => {
 
                     return {
                         ...node,
-                        metadata: item?.metadata,
+                        metadata: item?.component?.metadata,
                         icon: item?.component
                     }
                 }
