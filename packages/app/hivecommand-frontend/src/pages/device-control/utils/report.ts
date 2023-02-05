@@ -25,15 +25,7 @@ export const useDeviceReports = (id: string) => {
                 id
                 name
             }
-            dataDevice {
-                id
-                tag
-            }
-            dataKey {
-                id
-                key
-            }
-
+   
           }
       
         }

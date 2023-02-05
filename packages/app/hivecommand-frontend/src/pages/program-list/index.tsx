@@ -3,7 +3,6 @@ import { ProgramModal } from '../../components/modals/program';
 import { useNavigate } from 'react-router-dom';
 import { useCreateProgram } from '@hive-command/api';
 import { gql, useQuery, useApolloClient } from '@apollo/client';
-import { useAuth } from '@hexhive/auth-ui';
 import { Box, IconButton, List, ListItem, Paper } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
@@ -12,7 +11,6 @@ export interface ProgramListProps  {
 
 export const ProgramList: React.FC<ProgramListProps> = (props) => {
 
-    const {activeUser} = useAuth()
     
     const navigate = useNavigate()
 

@@ -34,7 +34,7 @@ class DevSidecar {
         console.log(host, path)
         const client = await this.connect(host);
 
-        return await client.getType(path)
+        return await client.getType(path, true)
     }
 
     async setData(host: string, path: string, dataType: DataType, value: any){
@@ -83,7 +83,7 @@ class DevSidecar {
 
             if(recursive){
                 try{
-                    let type = withTypes ? await client.getType(bp) : null;
+                    let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
                     // console.log({type})
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
                     results.push({
@@ -91,6 +91,7 @@ class DevSidecar {
                         name: name, 
                         path: bp,
                         type,
+                        isArray,
                         children: innerResults
                     })
                 }catch(e){
@@ -177,7 +178,8 @@ app.route('/:host/set_data')
 
         let { path, value } = req.body;
 
-        const dt = await sidecar.getDataType(req.params.host, path)
+        const { type: dt, isArray } = await sidecar.getDataType(req.params.host, path)
+        
         if(!dt) return res.send({error: "No datatype"})
         //TODO pickup dataType from somewhere dynamic
         const code = await sidecar.setData(req.params.host, path, (DataType as any)[dt as any], value);

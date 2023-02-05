@@ -6,10 +6,16 @@ export interface HMINodeData {
     rotation?: number;
 }
 
-export interface HMIVariable {
+export interface HMITag {
     id: string;
     name: string;
     type: string;
+}
+
+export interface HMIType {
+    id: string;
+    name: string;
+    fields: {name: string, type: string}[];
 }
 
 export interface HMITemplate {
@@ -17,7 +23,7 @@ export interface HMITemplate {
     name: string;
 
     inputs?: any[];
-    outputs?: any[];
+    outputs?: {id: string, name: string, type: string}[];
 
     edges?: any[];
 
@@ -30,8 +36,9 @@ export const HMIContext = React.createContext<{
     interfaces?: any[];
     refetch?: () => void;
     selected?: any;
-    devices?: any[]
-    variables?: HMIVariable[];
+    
+    tags?: HMITag[]
+    types?: HMIType[];
 
     templates?: HMITemplate[];
 

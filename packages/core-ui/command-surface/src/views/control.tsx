@@ -14,6 +14,8 @@ import { InfiniteScrubber } from '@hexhive/ui';
 import { ActionMenu } from '../components/action-menu';
 import moment from 'moment';
 
+import { DataTypes } from '@hive-command/scripting'
+
 
 const ActionButton = (props: any) => {
 	return (
@@ -163,18 +165,18 @@ export default () => {
 	// 	})
 	// }, [device, deviceValueData])
 
-	const parseValue = (value: any, type: "BooleanT" | "Boolean" | "IntegerT" | "UIntegerT") => {
+	const parseValue = (value: any, typeKey: keyof typeof DataTypes) => {
+		let type = DataTypes[typeKey];
+
 		switch(type){
-			case "Boolean":
-			case "BooleanT":
+			case DataTypes.Boolean:
 				return (value == true || value == "true" || value == 1 || value == "1");
-			case "UIntegerT":
-			case "IntegerT":
+			case DataTypes.Number:
 				let val = parseFloat(value || 0);
 				if(Number.isNaN(val)){
 					val = 0;
 				}
-				return val.toFixed(2);
+				return val % 1 != 0 ? val.toFixed(2) : val;
 			default:
 				console.log({type})
 				break;
@@ -184,37 +186,55 @@ export default () => {
 	const [ stateValues, setStateValues ] = useState<any>({});
 
 	useEffect(() => {
-		setStateValues(program?.devices?.map((device) => {
 
-			let deviceKey = `${device.tag}`;
+
+		setStateValues(program?.tags?.map((device) => {
+
+			let deviceKey = `${device.name}`;
 
 			// let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
 
 			// device.type.state
-			let deviceValues = device?.type.state?.map((stateItem) => {
 
-				// let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+			let fields = program.types?.find((a) => a.name === device.type)?.fields;
+			let hasFields = (fields || []).length > 0;
 
-				let currentValue = values?.[deviceKey]?.[stateItem.key];
+
+			if(hasFields){
+				let deviceValues = fields?.map((stateItem) => {
+
+					// let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+
+					let currentValue = values?.[deviceKey]?.[stateItem.name];
+
+					return {
+						key: stateItem.name,
+						value: parseValue(currentValue, stateItem.type as keyof typeof DataTypes)
+					}
+
+				}).reduce((prev, curr) => ({
+					...prev,
+					[curr.key]: curr.value
+				}), {})
 
 				return {
-					key: stateItem.key,
-					value: parseValue(currentValue, stateItem.type)
+					key: deviceKey,
+					values: deviceValues
 				}
-			}).reduce((prev, curr) => ({
-				...prev,
-				[curr.key]: curr.value
-			}), {})
-
-			return {
-				key: deviceKey,
-				values: deviceValues
+			}else{
+				return {
+					key: deviceKey,
+					values: parseValue(values?.[deviceKey], device.type as keyof typeof DataTypes)
+				}
 			}
 		}).reduce((prev, curr) => ({
 			...prev,
 			[curr.key]: curr.values
 		}), {}))
-	}, [values])
+
+	}, [values, program])
+
+	console.log({stateValues})
 
 	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
 	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
@@ -274,6 +294,8 @@ export default () => {
 		
 	}, [])
 
+	console.log({stateValues})
+
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>
@@ -294,7 +316,6 @@ export default () => {
 					information={infoTarget != undefined ? (() => {
 
 						const DataComponent : any = infoTarget.dataFunction(stateValues);
-						console.log("INFO TARGET HANDLER", {DataComponent, stateValues})
 
 						return (<Bubble
 							style={{ 

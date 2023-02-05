@@ -11,6 +11,7 @@ export interface OPCUAServerItem {
     id: string;
     name: string;
     type?: string;
+    isArray?: boolean;
     path?: string;
     children?: OPCUAServerItem[]
 }
@@ -26,18 +27,29 @@ export const OPCUAServerStage = () => {
         {
             id: '101',
             name: 'Device',
+            path: '/Device',
             children: [
                 {
                     id: '102',
                     name: 'Open',
+                    isArray: true,
+                    path: '/Device/Open',
                     type: 'Boolean'
                 },
                 {
                     id: '103',
                     name: "Closed",
+                    path: '/Device/Closed',
                     type: 'Boolean'
                 }
             ]
+        },
+        {
+            id: '108',
+            name: 'Variable',
+            path: '/Variable',
+            type: 'Boolean',
+            isArray: true
         }
     ]);
 
@@ -215,7 +227,7 @@ export const OPCUAServerStage = () => {
                                     console.log("Update rec for", item)
                                     updateRec(item.children || [], item.name)
                                 }else{
-                                    updateSubscriptionMap(item.path, `${parent.name ? parent.name + '.' : ''}${item.name}`)
+                                    updateSubscriptionMap(item.path, `${parent?.name ? parent.name + '.' : ''}${item.name}`)
                                 }
 
                                 console.log({subs: globalState?.subscriptionMap})
@@ -229,7 +241,7 @@ export const OPCUAServerStage = () => {
                             // checked={mapping?.filter((a: any) => a.path.indexOf(item.name) > -1).length == item.children?.length}
                             size="small" />
                         {/* {parent ? <Checkbox disableFocusRipple size='small' /> : null} */}
-                        <Typography sx={{flex: 1}}>{item.name} {item.type ? `- ${item.type}` : ''}</Typography>
+                        <Typography sx={{flex: 1}}>{item.name} {item.type ? `- ${item.type}${item.isArray ? `[]` : ''}` : ''}</Typography>
                        
                     </Box>)
                 })}
@@ -242,27 +254,31 @@ export const OPCUAServerStage = () => {
 
 
 
-    const devices = useMemo(() => (controlLayout?.devices || []).map((x: any) => {
+    const tags = useMemo(() => (controlLayout?.tags || []).map((x: any) => {
+        let type = controlLayout?.types.find((a) => a.name === x.type);
+        let hasChildren = (type?.fields || []).length > 0;
+
             return {
                 id: x.id,
-                name: `${x.type?.tagPrefix ? x.type?.tagPrefix : ''}${x.tag}`,
-                children: (x.type?.state)?.map((y: any) => ({
-                    id: `${x.id}.${y.key}`,
-                    name: y.key,
-                    type: y.type
-                }))
+                name: x.name,
+                children: hasChildren ? type?.fields.map((typeField) => ({id: `${x.id}.${typeField.name}`, name: typeField.name, type: typeField.type})) : []
+                // (x.type?.state)?.map((y: any) => ({
+                //     id: `${x.id}.${y.key}`,
+                //     name: y.key,
+                //     type: y.type
+                // }))
             }
         })
-    , [controlLayout?.devices || []])
+    , [controlLayout?.tags || []])
 
 
     const opcuaTree = useMemo(() => {
         return renderTree(opcua)
     }, [opcua])
 
-    const deviceTree = useMemo(() => {
-        return renderTree(devices, true)
-    }, [devices]);
+    // const deviceTree = useMemo(() => {
+    //     return renderTree(devices, true)
+    // }, [devices]);
 
     const isChecked = (item: any) => {
         return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
@@ -333,7 +349,7 @@ export const OPCUAServerStage = () => {
                     <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                         <Box>
-                            {devices.map((device: any) => (
+                            {/* {devices.map((device: any) => (
                                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                         <IconButton sx={{marginRight: '6px'}} size="small" onClick={() => {
@@ -386,15 +402,15 @@ export const OPCUAServerStage = () => {
                                         </Box>
                                     </Collapse>
                                 </Box>
-                            ))}
+                            ))} */}
                         </Box>
-                        {/* <TreeView
+                        <TreeView
                             sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
                             defaultCollapseIcon={<ExpandMore />}
                             defaultExpandIcon={<ChevronRight />}
                             >
-                            {renderTree(devices, true)}
-                        </TreeView> */}
+                            {renderTree(tags, true)}
+                        </TreeView>
                     </Box>
                 </Box>
             </Box>

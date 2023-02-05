@@ -1,22 +1,15 @@
+// import { HMIType } from "@hive-command/command-surface";
 import React from "react";
-import { HMITemplate } from "../pages/controls/context";
+import { HMITemplate, HMIType } from "../pages/controls/context";
 
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
 	refetch?: () => void;
-	deviceTypes?: {
-		id: string;
-		state: {
-			key: string,
-			type: string
-		}[]
-		tagPrefix?: string;
-		name: string;
-	}[];
 	program?: {
 		id?: string;
 		templatePacks?: any[];
 		templates?: HMITemplate[];
+		types?: HMIType[]
 		program?: any[];
 		hmi?: any[]
 	}

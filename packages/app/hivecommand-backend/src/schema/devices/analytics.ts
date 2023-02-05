@@ -62,8 +62,6 @@ export default (prisma: PrismaClient) => {
 			width: Int
 			height: Int
 	
-			dataDevice: CommandProgramDevicePlaceholder 
-			dataKey: CommandProgramDeviceState
 			total: Boolean
 			type: String
 
@@ -338,9 +336,7 @@ export default (prisma: PrismaClient) => {
 						width: args.input.width,
 						height: args.input.height,
 
-						dataDevice: {
-							connect: {id: args.input.dataDevice}
-						},
+				
 						dataKey: {
 							connect: {id: args.input.dataKey}
 						},
@@ -361,7 +357,6 @@ export default (prisma: PrismaClient) => {
 						y: args.input.y,
 						width: args.input.width,
 						height: args.input.height,
-						dataDeviceId: args.input.dataDevice,
 						dataKeyId: args.input.dataKey
 					}
 				})

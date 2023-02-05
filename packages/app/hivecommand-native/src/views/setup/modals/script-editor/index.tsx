@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, TextareaAutosize, DialogContent, DialogTitle, TextField, Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import Editor from "@monaco-editor/react";
+import { formatInterface, fromOPCType, lookupType } from '@hive-command/scripting'
 
 export interface DeviceValue {
     id: string,
@@ -58,12 +59,12 @@ export const hasOPCChildren = (elem: {type?: string, children?: any[]}) => {
 export const ScriptEditorModal : React.FC<ScriptEditorProps> = (props) => {
 
     const defaultValue = `//Transform data before returning to getter
-export const getter = (tags: ValueStore) : ${getOPCType(props.dataType || 'String')} => {
+export const getter = (tags: ValueStore) : ${fromOPCType(props.dataType || 'String')} => {
 
 }
 
 //Transform data before sending to OPC-UA
-export const setter = (data: ${getOPCType(props.dataType || 'String')}, tags: ValueStore, setTags: SetTags) => {
+export const setter = (data: ${fromOPCType(props.dataType || 'String')}, tags: ValueStore, setTags: SetTags) => {
 
 }`
     const [ value, setValue ] = useState<string | undefined>(defaultValue);
@@ -81,20 +82,26 @@ export const setter = (data: ${getOPCType(props.dataType || 'String')}, tags: Va
 
         const printJson =  (elem: any) => {
 
-            if(elem.name.match('[-=.\/:]') != null) return '';
+            if(elem.name.match('[-=.\/:]') != null || elem.type === undefined) return {key: undefined, value: undefined};
             
-            return hasOPCChildren(elem) ? 
-                `${elem.name}: { ${elem.children.map(printJson).join('\n')} }` : 
-                `${elem.name}: ${getOPCType(elem.type)};`
-        }
-        
-        console.log(props.deviceValues)
+            // if(elem.type) console.log(elem.type, fromOPCType(elem.type))
+            
 
-        //TODO add readonly fields
-        let inf = `interface ValueStore {
-            ${(props.deviceValues || [])?.map(printJson).join(';\n')}
-        }`
-        return inf;
+            return hasOPCChildren(elem) ? 
+                 { key: elem.name, value: elem.children.map(printJson).reduce((prev: any, curr: any) => ({...prev, [curr.key] : curr.value}), {}) } : 
+                { key: elem.name, value: elem.isArray ? [fromOPCType(elem.type)] : fromOPCType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
+        }
+
+        const deviceValues = (props.deviceValues || []).map(printJson).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+        
+        const valueInterface = formatInterface('ValueStore', deviceValues)
+
+        // console.log({valueInterface, deviceValues, dv: props.deviceValues})
+        // //TODO add readonly fields
+        // let inf = `interface ValueStore {
+        //     ${(props.deviceValues || [])?.map(printJson).join(';\n')}
+        // }`
+        return valueInterface //formatInterface('ValueStore', deviceValues);
 
     }, [props.deviceValues])
 

@@ -32,6 +32,9 @@
 		"@hive-command/iot-server": ["./communication/iot-server/src"],
 
 		"@hive-command/data": ["./core/command-data/src"],
+
+		"@hive-command/scripting": ["./core/command-scripting/src"],
+
 		/* Runtime */
 		"@hive-command/data-types": ["./core/command-data-types/src"],
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],

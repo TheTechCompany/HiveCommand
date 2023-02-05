@@ -49,7 +49,7 @@ export const Controller = () => {
          }).reduce((prev, curr) => merge(prev, curr), {})
     }, [JSON.stringify(valueStore)])
 
-    const LocalClient = useLocalClient(controlLayout?.devices || [], deviceMap || [], subscriptionMap || [], valueStructure, valueStore)
+    const LocalClient = useLocalClient( [], deviceMap || [], subscriptionMap || [], valueStructure, valueStore)
 
 
 
@@ -88,9 +88,11 @@ export const Controller = () => {
         })
     }
 
+
     const unsubscribe = () => {
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
     }
+
 
     //Subscribe to datapoints
     useEffect(() => {
@@ -122,43 +124,43 @@ export const Controller = () => {
         }
     }
 
-    const values = useMemo(() => {
-        return controlLayout?.devices.map((device) => {
+    // const values = useMemo(() => {
+    //     return controlLayout?.devices.map((device) => {
 
-            return {
-                key: `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}`,
-                value: device.type.state.map((x) => {
-                    let path = `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}.${x.key}`
+    //         return {
+    //             key: `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}`,
+    //             value: device.type.state.map((x) => {
+    //                 let path = `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}.${x.key}`
 
-                    let tag = deviceMap?.find((a) => a.path == path)?.tag
+    //                 let tag = deviceMap?.find((a) => a.path == path)?.tag
 
-                    let type = x.type;
+    //                 let type = x.type;
 
-                    if(tag?.indexOf('script://') == 0){
-                        // console.log({tag})
-                        const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
-                        const { getter, setter } = load_exports(jsCode)
+    //                 if(tag?.indexOf('script://') == 0){
+    //                     // console.log({tag})
+    //                     const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
+    //                     const { getter, setter } = load_exports(jsCode)
 
-                        let value = parseValue(x.type, getter(valueStructure));
+    //                     let value = parseValue(x.type, getter(valueStructure));
 
-                        return {key: x.key,value: value}
+    //                     return {key: x.key,value: value}
 
-                    }else{
-                        let rawTag = subscriptionMap?.find((a) => a.path == tag)?.tag
+    //                 }else{
+    //                     let rawTag = subscriptionMap?.find((a) => a.path == tag)?.tag
                         
-                        let value = parseValue(x.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-                        return {key: x.key, value: value}
-                    }
-                }).reduce((prev, curr) => ({
-                    ...prev,
-                    [curr.key]: curr.value
-                }), {}),
-            }
-        }).reduce((prev, curr) => ({
-            ...prev,
-            [curr.key]: curr.value
-        }), {})
-    }, [valueStructure, controlLayout?.devices])
+    //                     let value = parseValue(x.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
+    //                     return {key: x.key, value: value}
+    //                 }
+    //             }).reduce((prev, curr) => ({
+    //                 ...prev,
+    //                 [curr.key]: curr.value
+    //             }), {}),
+    //         }
+    //     }).reduce((prev, curr) => ({
+    //         ...prev,
+    //         [curr.key]: curr.value
+    //     }), {})
+    // }, [valueStructure, controlLayout?.devices])
 
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
@@ -167,7 +169,7 @@ export const Controller = () => {
         <Box sx={{flex: 1, display: 'flex'}}>
 
             <CommandSurface 
-                values={values as any}
+                values={{} }//values as any}
                 client={LocalClient}
                 cache={[packs, setPacks] as any}
                 program={controlLayout} />

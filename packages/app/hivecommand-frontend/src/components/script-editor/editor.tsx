@@ -1,7 +1,5 @@
 import React, { useRef, useEffect, useMemo } from 'react';
 import * as monaco from 'monaco-editor';
-import { getOPCType } from '.';
-import { HMIVariable } from '../../views/Editor/pages/controls/context';
 import { styled } from '@mui/material';
 
 // // @ts-ignore
@@ -119,6 +117,25 @@ export const Editor: React.FC<EditorProps> = (props) => {
             }else{
               monaco.editor.createModel(extraLib, "typescript", monaco.Uri.parse(libUri));
             }
+
+            //LIBS
+
+            var modelLib = "ts:filename/libs.d.ts";
+
+            let libModel = monaco.editor.getModel(monaco.Uri.parse(modelLib));
+    
+            if(libModel){
+                libModel.setValue(`
+              declare module "@mui/material";
+              declare module "@mui/x-date-pickers";
+              declare module "@hexhive/ui";
+              `)
+            }else{
+              monaco.editor.createModel( `
+              declare module "@mui/material";
+              `, "typescript", monaco.Uri.parse(modelLib));
+            }
+            //ENDLIBS
 
             let mainModel = monaco.editor.getModel(monaco.Uri.parse("file:///main.tsx"));
 

@@ -1,8 +1,11 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.137",
+	"version": "1.4.15-alpha.146",
 	"description": "",
 	"private": true,
+	"publishConfig": {
+		"access": "public"
+	},
 	"main": "dist/index.js",
 	"files": [
 		"dist/"
@@ -40,7 +43,8 @@
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
-		"@hive-command/canvas-nodes": "^1.4.15-alpha.136",
+		"@hive-command/canvas-nodes": "^1.4.15-alpha.146",
+		"@hive-command/scripting": "^1.4.15-alpha.146",
 		"dot": "^1.1.3"
 	}
 }

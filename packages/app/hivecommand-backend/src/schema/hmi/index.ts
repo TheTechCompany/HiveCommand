@@ -824,8 +824,6 @@ export default (prisma: PrismaClient) => {
 		localHomepage: Boolean
 		remoteHomepage: Boolean
 
-		actions: [CommandProgramAction] 
-
 		edges: [CommandHMIEdge]
 
 		nodes: [CommandHMINode]

@@ -20,6 +20,9 @@ import { EditorMenuDialog } from '../../components/modals/editor-menu';
 
 import { Home as HomeIcon  } from '@mui/icons-material'
 import { TemplateEditor } from './pages/template';
+import { TagEditor } from './pages/tags';
+import { TypeEditor } from './pages/types';
+import { useCreateProgramType, useUpdateProgramType } from './api';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
@@ -47,20 +50,25 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const { data } = useQuery(gql`
         query EditorCommandProgram ($id: ID){
 
-            commandProgramDevices { 
-                id
-                name
-                tagPrefix
-
-                state {
-                    key
-                    type
-                }
-            }
-
             commandPrograms(where: {id: $id}){
                 id
                 name
+
+                tags {
+                    id
+                    name
+                    type
+                }
+
+                types {
+                    id
+                    name
+                    fields {
+                        id
+                        name
+                        type
+                    }
+                }
 
                 templates {
                     id
@@ -97,17 +105,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     url
                     name
                 }
-                
-                devices {
-                    id
-                    tag
-
-                    type {
-                        tagPrefix
-
-                        
-                    }
-                }
+            
 
                 interface {
                     id
@@ -123,20 +121,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     }
                 }
 
-                program {
-                    id
-                    name
-                    children {
-                        id
-                        name
-                    }
-                }
-
-                variables {
-                    id
-                    name
-                    type
-                }
              
             }
         }
@@ -147,21 +131,20 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     })
 
 
-    const deviceTypes = data?.commandProgramDevices || [];
-
-    console.log({deviceTypes})
-
     const createProgramFlow = useCreateProgramFlow(id)
     const createProgramHMI = useCreateProgramHMI(id)
     const createProgramPlaceholder = useCreateProgramPlaceholder(id);
     const createProgramVariable = useCreateProgramVariable(id);
     const createProgramTemplate = useCreateProgramTemplate(id);
+    const createProgramType = useCreateProgramType(id);
 
     const updateProgramFlow = useUpdateProgramFlow(id)
     const updateProgramHMI = useUpdateProgramHMI(id)
     const updateProgramPlaceholder = useUpdateProgramPlaceholder(id);
     const updateProgramVariable = useUpdateProgramVariable(id);
     const updateProgramTemplate = useUpdateProgramTemplate(id);
+    const updateProgramType = useUpdateProgramType(id);
+
     
     const deleteProgramHMI = useDeleteProgramHMI(id);
 
@@ -190,6 +173,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         if(editItem){
             switch(type){
+                case 'types':
+                    promise = updateProgramType(editItem.id, data.name);
+                    break;
                 case 'templates':
                     promise = updateProgramTemplate(editItem.id, {name: data.name})
                     break;
@@ -208,6 +194,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             }
         }else{
             switch(type){
+                case 'types':
+                    promise = createProgramType(data.name);
+                    break;
                 case 'templates':
                     promise = createProgramTemplate({name: data.name});
                     break;
@@ -281,7 +270,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         // },
         {
             id: 'hmi-root',
-            name: 'HMI',
+            name: 'Views',
             children: program?.interface?.map((x) => ({
                 id: x.id,
                 name: x.name,
@@ -294,32 +283,39 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             element: <div>HMI</div>,
             editor: <Controls activeProgram={selected?.id} />
         },
+        // {
+        //     id: 'devices-root',
+        //     name: 'Devices',
+        //     children: program?.devices?.slice()?.sort((a, b) => {
+        //         let aTag = `${a.type?.tagPrefix || ''}${a.tag}`;
+        //         let bTag = `${b.type?.tagPrefix || ''}${b.tag}`;
+                
+        //         return aTag?.localeCompare(bTag);
+                
+        //     }).map((x) => ({    
+        //         id: x.id,
+        //         name: `${x.type?.tagPrefix || ''}${x.tag}`
+        //     })),
+        //     // element: <Devices />
+        // },
+        {
+            id: 'variables-root',
+            name: 'Tags',
+            element: <TagEditor types={program.types || []} tags={program.tags || []} program={program.id}  />,
+            // children: program?.variables?.slice()
+        },
+        {
+            id: 'types-root',
+            name: 'Types',
+            // element: <TypeEditor />,
+            children: program.types || [], //[{id: 'valve', name: 'Valve'}],
+            editor: <TypeEditor active={selected?.id} types={program.types || []} />
+        },
         {
             id: 'templates-root',
             name: 'Templates',
             children: program?.templates?.slice(),
             editor: <TemplateEditor active={selected?.id} />
-        },
-        {
-            id: 'devices-root',
-            name: 'Devices',
-            children: program?.devices?.slice()?.sort((a, b) => {
-                let aTag = `${a.type?.tagPrefix || ''}${a.tag}`;
-                let bTag = `${b.type?.tagPrefix || ''}${b.tag}`;
-                
-                return aTag?.localeCompare(bTag);
-                
-            }).map((x) => ({    
-                id: x.id,
-                name: `${x.type?.tagPrefix || ''}${x.tag}`
-            })),
-            // element: <Devices />
-        },
-        {
-            id: 'variables-root',
-            name: 'Variables',
-            // element: <Variables />,
-            children: program?.variables?.slice()
         },
         {
             id: 'alarms-root',
@@ -344,7 +340,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     return (
         <CommandEditorProvider value={{
             program,
-            deviceTypes,
             refetch: refetch
         }}>
             <EditorMenuDialog 

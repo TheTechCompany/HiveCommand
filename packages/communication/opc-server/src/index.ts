@@ -164,6 +164,7 @@ export default class Server {
     async addVariable(
         name: string, 
         type: 'String' | 'Number' | 'Boolean', 
+        isArray: boolean,
         getter: () => any, 
         setter: (value: any) => void,
         parent?: UAObject
@@ -191,38 +192,59 @@ export default class Server {
         //     organizedBy: parent || this.objectFolder
         // })
 
-        const variableValue = this.namespace?.addAnalogDataItem({
+        const variableValue = this.namespace?.addVariable({
             browseName: name || `value`,
             modellingRule: "Mandatory",
             dataType,
-            minimumSamplingInterval: 500,
-            engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
-            engineeringUnitsRange: {low: -100, high: 100},
+            valueRank: isArray ? 1 : undefined,
+            value: {
+                get: () => {
+                
+                    let defaultValue = dataType == DataType.Boolean ? false : dataType == DataType.String ? '' : dataType == DataType.Float ? 0 : undefined;
+    
+                    const value = getter();
+                    return new Variant({dataType: dataType, value: value || defaultValue})
+                },
+                set: (value: Variant) => {
+                    if(!setter) return StatusCodes.BadNotWritable;
+                                
+                    try{
+                        setter?.(value.value)
+                    }catch(e){
+                        console.error("Error writing port value", e)
+                    }
+    
+                    return StatusCodes.Good;
+                }
+            },
+        //   z  minimumSamplingInterval: 500,
+        //     engineeringUnits: makeEUInformation('c', 'celsius', 'Celsius'),
+            // engineeringUnitsRange: {low: -100, high: 100},
             organizedBy: parent || this.objectFolder
             // componentOf: variable
         });
 
 
-        (variableValue)?.bindVariable({
-            get: () => {
+        // (variableValue)?.bindVariable({
+        //     get: () => {
                 
-                let defaultValue = dataType == DataType.Boolean ? false : dataType == DataType.String ? '' : dataType == DataType.Float ? 0 : undefined;
+        //         let defaultValue = dataType == DataType.Boolean ? false : dataType == DataType.String ? '' : dataType == DataType.Float ? 0 : undefined;
 
-                const value = getter();
-                return new Variant({dataType: dataType, value: value || defaultValue})
-            },
-            set: (value: Variant) => {
-                if(!setter) return StatusCodes.BadNotWritable;
+        //         const value = getter();
+        //         return new Variant({dataType: dataType, value: value || defaultValue})
+        //     },
+        //     set: (value: Variant) => {
+        //         if(!setter) return StatusCodes.BadNotWritable;
                             
-                try{
-                    setter?.(value.value)
-                }catch(e){
-                    console.error("Error writing port value", e)
-                }
+        //         try{
+        //             setter?.(value.value)
+        //         }catch(e){
+        //             console.error("Error writing port value", e)
+        //         }
 
-                return StatusCodes.Good;
-            }
-        })
+        //         return StatusCodes.Good;
+        //     }
+        // })
 
         return variableValue;
     }

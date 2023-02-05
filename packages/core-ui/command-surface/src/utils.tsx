@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { HMINode, HMITemplatePack } from ".";
+import { HMINode, HMITag, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit } from 'typescript'
 import { template } from 'dot';
 
@@ -32,7 +32,22 @@ export const getDevicesForNode = (node: any): DevicePlaceholder[] => {
 	}
 }
 
-export const useNodesWithValues = (nodes: any[], devices: any[], functions: {showDeviceWindow: any, showWindow: any}, values: any) => {
+const moduleStore = {
+	'@mui/material': require('@mui/material'),
+	'@mui/x-date-pickers': require('@mui/x-date-pickers'),
+	'@hexhive/ui': require('@hexhive/ui')
+}
+const _require = (name: string) => {
+	return moduleStore[name];
+}
+
+export const useNodesWithValues = (
+	nodes: any[], 
+	tags: HMITag[],
+	functions: {showTagWindow: any, showWindow: any}, 
+	values: any,
+	updateValues: (values: any) => void
+) => {
 
 	const valueRef = useRef<{values: any}>({values})
 
@@ -56,18 +71,16 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 
 	useEffect(() => {
 
-		console.log("Parse nodes", nodes);
-
 		nodes.forEach((node) => {
 
 			let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
 				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
 	
-				console.log({inputTemplate});
 	
-				if(inputTemplate.type?.split(':')[0] === 'Device'){
-					let tag = devices?.find((a) => a.id === value).tag 
+				if(inputTemplate.type?.split(':')[0] === 'Tag'){
+					let tag = tags?.find((a) => a.id === value)?.name 
+					if(!tag) return;
 					value = {
 						tag,
 						...values[ tag ]
@@ -79,13 +92,12 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 					value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
 				}
 	
-			}).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+			}).reduce((prev, curr) => ({...prev, ...(curr ? {[curr.key]: curr.value} : {}) }), {})
 
 
 			if(templateInputs){
 				nodeInputValues.current.values[node.id] = {...templateInputs}
 
-				console.log({templateInputs, id: node.id, nodeInputValues: nodeInputValues.current.values[node.id]});
 			}
 		})
 		
@@ -129,7 +141,6 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 	
 	return useMemo(() => nodes.map((node) => {
 
-		console.log({node});
 
 		let values = Object.keys(node.extras?.options).map((optionKey) => {
 			let optionValue = node?.options?.[optionKey]
@@ -138,12 +149,11 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 
 			try{
 				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
-				parsedValue = getOptionValues(node, devices, functions, valueRef.current.values || {}, nodeInputValues.current, optionKey, optionValue)
+				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, updateValues, optionKey, optionValue)
 			}catch(e){
-				console.log({e, node, devices, optionKey});
+				console.log({e, node, optionKey});
 			}
 
-			console.log({optionKey, parsedValue});
 
 			return {key: optionKey, value: parsedValue}
 
@@ -152,7 +162,6 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 			[curr.key]: curr.value
 		}), {})
 
-		console.log({id: node.id, values});
 
 		return {
 			...node,
@@ -167,9 +176,8 @@ export const useNodesWithValues = (nodes: any[], devices: any[], functions: {sho
 }
 
 
-export const getOptionValues = (node: HMINode, devices: any[], functions: {showDeviceWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, optionKey: string, optionValue: any) => {
+export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
     
-	console.log(node.id, {templateValues});
 
     const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
 
@@ -177,16 +185,15 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 		//Has templated override
 		let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
-		console.log("Templating", optionKey)
 		// let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
 		// 	let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
 
 		// 	console.log({inputTemplate});
 
-		// 	if(inputTemplate.type?.split(':')[0] === 'Device'){
-		// 		value = normalisedValues[ devices?.find((a) => a.id === value).tag ];
-		// 	}
+			// if(inputTemplate.type?.split(':')[0] === 'Device'){
+			// 	value = normalisedValues[ devices?.find((a) => a.id === value).tag ];
+			// }
 
 		// 	return {
 		// 		key: inputTemplate.name, 
@@ -215,17 +222,17 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 			return {key: optionKey, value: optionValue }
 		}
 
-		console.log(templateOverride)
 
-		const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any) => void }= {};
+		const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any, setValues: (values: any) => void, args: any) => void }= {};
 
 		const module = { exports };
 		const func = new Function(
 			"module", 
 			"exports", 
 			"showWindow", 
-			"showDeviceWindow",
+			"showTagWindow",
 			"React",
+			"require",
 			transpile(templateOverride, { module: ModuleKind.CommonJS, jsx: JsxEmit.React }) );
 
 		func(module, exports, (elem, data) => {
@@ -235,46 +242,44 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
 		
 		
-					if(inputTemplate.type?.split(':')[0] === 'Device'){
-						let tag = devices?.find((a) => a.id === value).tag 
+					if(inputTemplate.type?.split(':')[0] === 'Tag'){
+						let tag = tags?.find((a) => a.id === value)?.name 
+						if(!tag) return;
+
 						value = {
 							tag,
 							...state[ tag ]
 						}
 					}
 
-					console.log({inputTemplate, state});
 		
 					return {
 						key: inputTemplate.name, 
 						value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
 					}
 		
-				}).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+				}).reduce((prev, curr) => ({...prev, ...( curr ? {[curr.key]: curr.value} : {})}), {})
 	
+				console.log({ templateInputs, dataTransformer: node.dataTransformer, state })
 	
-				
 				return  data(templateInputs)
 			})
-		}, functions.showDeviceWindow, React);
+		}, functions.showTagWindow, React, _require);
 
 		// console.log({templateInputs})
 
 		let returnValue: any;
 
-		console.log(node.id, {exports})
 		
 		if('handler' in exports){
-			console.log("HANDLER", node.id, templateValues.values[node.id]);
 			//onClick uses a handler to setup showWindow, the values are bound to templateValues at that point in time
-			returnValue = () => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, templateValues.values[node.id] || {})
+			returnValue = (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, templateValues.values[node.id] || {}, (state: any) => { console.log("setState", state) }, args)
 		}else if('getter' in exports){
 			returnValue = exports?.getter?.( templateValues.values[node.id] /*normalisedValues*/ );
 		}
 
 		// const
 
-		console.log("Templated key", optionKey, normalisedValues, returnValue)
 
 		return returnValue
 	}else{
@@ -285,7 +290,6 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 			// let templateString : string = node.options[key];
 			let templateString = optionValue.replaceAll(/{{\s*(.*)\s*}}/g, "{{= it.$1 }}")
 			//Replace {{}} with {{ it.${matched} }}
-			console.log({nodeOptions: templateString, normalisedValues, vsl: template(templateString)(normalisedValues) })
 
 			try {
 				// console.log({varname, tmpl: x.options[key], values})
@@ -300,14 +304,13 @@ export const getOptionValues = (node: HMINode, devices: any[], functions: {showD
 
 			optionValue = optionValue.match(/script:\/\/(.*)/s)?.[1];
 
-			console.log("Option route script", optionValue);
 
-			const exports : { handler?: (elem: any, state: any) => void } = {};
+			const exports : { handler?: (elem: any, state: any, setState: (values: any) => void, args: any) => void } = {};
 			const module = { exports };
-			const func = new Function("module", "exports", "showWindow", "showDeviceWindow", transpile(optionValue, {kind: ModuleKind.CommonJS, jsx: JsxEmit.ReactJSX}) );
-			func(module, exports, functions.showWindow, functions.showDeviceWindow);
+			const func = new Function("module", "exports", "showWindow", "showTagWindow", "React", "require", transpile(optionValue, {kisnd: ModuleKind.CommonJS, jsx: JsxEmit.ReactJSX}) );
+			func(module, exports, functions.showWindow, functions.showTagWindow, React, _require);
 
-			return exports?.handler?.bind(this, {x: node.x, y: node.y, width: node.width, height: node.height}, normalisedValues || {})
+			return (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, normalisedValues || {}, setValues, args)
 
 		} else {
 			return optionValue;

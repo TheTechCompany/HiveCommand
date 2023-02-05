@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.146](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.145...v1.4.15-alpha.146) (2023-02-05)
+
+**Note:** Version bump only for package @hive-command/local-client
+
+
+
+
+
+## [1.4.15-alpha.145](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.144...v1.4.15-alpha.145) (2023-02-03)
+
+**Note:** Version bump only for package @hive-command/local-client
+
+
+
+
+
+## [1.4.15-alpha.144](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.143...v1.4.15-alpha.144) (2023-02-03)
+
+**Note:** Version bump only for package @hive-command/local-client
+
+
+
+
+
+## [1.4.15-alpha.143](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.142...v1.4.15-alpha.143) (2023-02-03)
+
+**Note:** Version bump only for package @hive-command/local-client
+
+
+
+
+
+## [1.4.15-alpha.142](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.141...v1.4.15-alpha.142) (2023-02-02)
+
+**Note:** Version bump only for package @hive-command/local-client
+
+
+
+
+
 ## [1.4.15-alpha.137](https://github.com/TheTechCompany/HiveCommand/compare/v0.1.5...v1.4.15-alpha.137) (2023-02-01)
 
 **Note:** Version bump only for package @hive-command/local-client

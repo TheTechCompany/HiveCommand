@@ -11,40 +11,39 @@ import { InfiniteCanvasContext } from '@hexhive/ui';
 // const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
 export const getDeviceFunction = async (func_desc: string) => {
 	// const func = vm.runInNewContext(
-	  	const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor
-	
-		return new AsyncFunction(
-				  'state',
-				  'setState',
-				  'requestState',
-				  
-				  `(async () => {
-				  ${func_desc}
-				  })()`
-			  )
+	const AsyncFunction = Object.getPrototypeOf(async function () { }).constructor
+
+	return new AsyncFunction(
+		'state',
+		'setState',
+
+		`(async () => {
+			${func_desc}
+		})()`
+	)
 	// return func;
 };
 
-  
+
 export interface ActionMenuProps {
-    values?: {
+	values?: {
 		[key: string]: {
 			[key: string]: any;
 		}
 	}
-    refetch?: () => void;
-    selected?: any;
+	refetch?: () => void;
+	selected?: any;
 }
 
-export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
+export const ActionMenu: React.FC<ActionMenuProps> = (props) => {
 
-    const [workingState, setWorkingState] = useState<any>({})
+	const [workingState, setWorkingState] = useState<any>({})
 
-    const { values } = props;
+	const { values } = props;
 
-    const { program, client, changeDeviceValue, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
+	const { program, client, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
 
-    const { selected } = useContext(InfiniteCanvasContext)
+	const { selected } = useContext(InfiniteCanvasContext)
 	const [editSetpoint, setEditSetpoint] = useState<string>();
 	const [setpointWorkstate, setSetpointWorkstate] = useState({});
 
@@ -53,11 +52,11 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
 	const operatingMode = values?.["Plant"]?.["Mode"]?.value?.toLowerCase() || '';
 
-    const hmi = useMemo(() => {
+	const hmi = useMemo(() => {
 		return hmis?.find((a: any) => activePage ? a.id == activePage : a.id == defaultPage) || {}
-	}, [ hmis, defaultPage, activePage ])
+	}, [hmis, defaultPage, activePage])
 
-    // const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
+	// const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
 	// 	//Find map between P&ID tag and bus-port
 
 	// 	if (!name) return;
@@ -85,26 +84,26 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 
 	// }
 
-    const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
-		console.log({deviceName, stateKey, stateValue});
+	const sendChanges = (deviceName: string, stateKey: string, stateValue: any) => {
+		console.log({ deviceName, stateKey, stateValue });
 
-		client?.changeDeviceValue?.(deviceName, stateKey, stateValue);
+		client?.writeTagValue?.(deviceName, stateValue, stateKey);
 
 		// sendAction?.('UPDATE-DEVICE-STATE', { deviceName, stateKey: stateKey, value: stateValue})
-		
+
 		// let ws = Object.assign({}, workingState);
 		// delete ws[stateKey]
 		// setWorkingState(ws)
 
-		
+
 	}
 
 	const renderActionValue = (deviceName: string, deviceInfo: any, deviceMode: string, state: any) => {
 		let deviceValueBlob = values?.[deviceName] //getDeviceValue(deviceName, deviceInfo.state)
-        let value = deviceValueBlob?.[state.key];
+		let value = deviceValueBlob?.[state.key];
 
-		console.log({deviceValueBlob, value, state, deviceName});
-		
+		console.log({ deviceValueBlob, value, state, deviceName });
+
 		if (state.writable && operatingMode == "manual") {
 			return (
 				<TextField
@@ -211,7 +210,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 				let deviceInfo = device?.type || {};
 				let deviceName = device?.tag || '';
 
-				let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
+				// let deviceMode = deviceModes.find((a) => a.name == deviceName)?.mode;
 
 				return (
 					<Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
@@ -245,7 +244,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 							{device?.type?.state?.map((state: any) => (
 								<Box sx={{ flexDirection: "row", display: 'flex', alignItems: "center" }}>
 									<Box sx={{ flex: 1 }}><Typography >{state.key}</Typography></Box>
-									<Box sx={{ flex: 1 }}>{renderActionValue(deviceName, deviceInfo, deviceMode || '', state)}</Box>
+									{/* <Box sx={{ flex: 1 }}>{renderActionValue(deviceName, deviceInfo, deviceMode || '', state)}</Box> */}
 									{workingState?.[deviceName]?.[state.key] != undefined ? (
 										<IconButton
 											onClick={() => {
@@ -263,10 +262,10 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 									fullWidth
 									onClick={() => {
 
-										console.log({action});
-										
-										if(!action.func) return;
-						
+										console.log({ action });
+
+										if (!action.func) return;
+
 										getDeviceFunction(action.func).then((f) => {
 
 											f({},
@@ -275,15 +274,15 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 														sendChanges?.(deviceName, key, state[key]);
 													}))
 													// console.log({state})
-												 }, 
-												 (state) => console.log({state})
+												},
+												(state) => console.log({ state })
 											);
 
 										})
 
 										// const func = f
 										// 	`		
-													
+
 										// 		`,
 										// 	{
 										// 	  func: action.func,
@@ -295,7 +294,7 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 										// console.log(action.func)
 										// const f = new Function('setState', 'requestState', `function action(setState, requestState){ ${action.func} } `);
 
-										
+
 
 										// console.log({action: action.func})
 										// sendAction?.('PERFORM-DEVICE-ACTION', {deviceName, actionKey: action.key});
@@ -316,19 +315,19 @@ export const ActionMenu : React.FC<ActionMenuProps> = (props) => {
 	}
 
 
-	const deviceModes = program?.devices?.filter((a) => a.tag).map((a) => {
-		if(!a.tag) return {name: a.tag, mode: "manual"}
-		let mode = values?.[a.tag]?.["mode"];
+	// const deviceModes = program?.devices?.filter((a) => a.tag).map((a) => {
+	// 	if(!a.tag) return {name: a.tag, mode: "manual"}
+	// 	let mode = values?.[a.tag]?.["mode"];
 
-		// values?.filter((b) => b?.placeholder == a.tag) || [];
-		// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
-		return { name: a.tag, mode };
-	}) || [];
+	// 	// values?.filter((b) => b?.placeholder == a.tag) || [];
+	// 	// if(!vals.find((a) => a.valueKey == "mode")) console.log(a.name)
+	// 	return { name: a.tag, mode };
+	// }) || [];
 
-    
-    return (
-        <>
-            {renderActions()}
-        </>
-    )
+
+	return (
+		<>
+			{renderActions()}
+		</>
+	)
 }

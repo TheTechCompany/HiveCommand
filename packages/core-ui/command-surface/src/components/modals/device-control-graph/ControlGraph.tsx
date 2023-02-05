@@ -1,8 +1,9 @@
 import { FormControl } from "@hexhive/ui"
+import { HMITag, HMIType } from "../../../";
 import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
-export const ControlGraphModal = (props: {devices: {id: string, tag: string, type: {state: any[]}}[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
+export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
   const [graph, setGraph] = useState<{
     deviceID?: string;
     keyID?: string;
@@ -34,7 +35,7 @@ export const ControlGraphModal = (props: {devices: {id: string, tag: string, typ
           <FormControl
             value={graph.deviceID}
             onChange={(value) => setGraph({ ...graph, deviceID: value })}
-            options={props.devices || []}
+            options={props.tags || []}
             labelKey="tag"
             placeholder="Select device"
           />
@@ -43,8 +44,9 @@ export const ControlGraphModal = (props: {devices: {id: string, tag: string, typ
             value={graph.keyID}
             onChange={(value) => setGraph({ ...graph, keyID: value })}
             options={
-              props.devices?.find((item) => item.id == graph.deviceID)?.type
-                .state || []
+              (props.types || []).find((a) => a.id === graph.deviceID)?.fields || []
+              // props.tags?.find((item) => item.id == graph.deviceID)?.type
+              //   .state || []
             }
             labelKey="key"
             placeholder="Select key"

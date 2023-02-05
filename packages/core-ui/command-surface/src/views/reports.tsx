@@ -125,7 +125,8 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
       <ControlGraphModal
         open={modalOpen}
         selected={selected}
-        devices={program?.devices || []}
+        tags={program?.tags || []}
+        types={program?.types || []}
         onClose={() => {
           openModal(false);
           setSelected(undefined)

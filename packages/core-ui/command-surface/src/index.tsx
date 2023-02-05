@@ -52,7 +52,7 @@ export interface CommandSurfaceClient {
     getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
 
     performDeviceAction?: (device: string, action: string) => void;
-    changeDeviceValue?: (device: string, state: string, value: any) => void;
+    writeTagValue?: (tag: string, value: any, subkey?: string) => void;
 
 }
 
@@ -124,6 +124,24 @@ export interface HMIDevice {
 
 }
 
+
+export interface HMITag {
+    id: string;
+    name: string;
+    type: string;
+}
+
+
+export interface HMIType {
+    id: string;
+    name: string;
+    fields: {
+        name: string
+        type: string;
+    }[]
+}
+
+
 export interface HMITemplatePack {
     id: string
     url: string;
@@ -131,9 +149,11 @@ export interface HMITemplatePack {
 
 export interface HMIProgram {
     id: string,
-    variables: {}[],
+
+    tags: HMITag[],
+    types: HMIType[],
+
     interface: HMIView[]
-    devices: HMIDevice[]
     // {
     //     id: string;
     //     tag: string;
@@ -188,13 +208,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { reports = [] } = client || {};
 
-    const devices = useMemo(() =>
-        activeProgram?.devices?.map((device) => ({
-            ...device,
-            tag: `${device?.type?.tagPrefix || ''}${device?.tag}`
-        }))
-        , [activeProgram?.devices])
-
+    const { tags, types } = activeProgram || {};
     /*
         Parse the values blob internally and represent it as a clean tag system
         {
@@ -246,7 +260,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         changeView: (args: { view: string }) => {
                 setActivePage(args.view);
         },
-        showDeviceWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, deviceTag: string) => {
+        showTagWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, deviceTag: string, actions: {label: string, func: string}[] ) => {
             functions.showWindow({
                 x: position?.x,
                 y: position?.y,
@@ -256,9 +270,13 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 let values = state[deviceTag];
 
-                let actions = devices?.find((a) => a.tag === deviceTag)?.type.actions || [];
+                let tag = tags?.find((a) => a.name === deviceTag);
+
+                let fields = types?.find((a) => a.name === tag?.type)?.fields || [];
+
+                // let actions = tags?.find((a) => a.name === deviceTag)?.type || [];
                 
-                console.log({values, actions});
+                // console.log({values, actions});
 
                     return <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
                         <Typography sx={{fontWeight: 'bold'}}>{deviceTag}</Typography>
@@ -269,7 +287,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                             ))}
                         </Box>
                         <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                            {actions.slice().sort((a, b) => a.key.localeCompare(b.key)).map((action) => (
+                            {actions.slice().sort((a, b) => a.label.localeCompare(b.label)).map((action) => (
                                 <Button onClick={() => {
                                     console.log(action.func)
                                     getDeviceFunction(action.func).then((f) => {
@@ -277,7 +295,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                         f({},
                                             async (state) => {
                                                 await Promise.all(Object.keys(state).map((key) => {
-                                                    client?.changeDeviceValue?.(deviceTag, key, state[key]);
+                                                    client?.writeTagValue?.(deviceTag, state[key], key);
                                                 }))
                                                 // console.log({state})
                                              }, 
@@ -286,7 +304,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                     })
 
                           
-                                }}>{action.key}</Button>
+                                }}>{action.label}</Button>
                             ))}
                         </Box>
                     </Box>
@@ -294,7 +312,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         },
         showWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, dataFunction : (state: any) => any) => {
         //    alert("STUFF");
-            console.log("SHOW WINDOW HANDLER")
             setInfoTarget({
                 x: position?.x,
                 y: position?.y,
@@ -612,68 +629,50 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const [normalisedValues, setNormalisedValues] = useState<any>({});
     
     useEffect(() => {
-        console.log("Devices", devices)
-        setNormalisedValues(devices?.map((device) => {
+        // setNormalisedValues(devices?.map((device) => {
 
-            let deviceKey = `${device.tag}`;
+        //     let deviceKey = `${device.tag}`;
 
-            // let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
+        //     // let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
 
-            // device.type.state
-            let deviceValues = device?.type.state?.map((stateItem) => {
+        //     // device.type.state
+        //     let deviceValues = device?.type.state?.map((stateItem) => {
 
-                // let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+        //         // let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
 
-                let currentValue = props.values?.[deviceKey]?.[stateItem.key];
+        //         let currentValue = props.values?.[deviceKey]?.[stateItem.key];
 
-                return {
-                    key: stateItem.key,
-                    value: parseValue(currentValue, stateItem.type)
-                }
-            }).reduce((prev, curr) => ({
-                ...prev,
-                [curr.key]: curr.value
-            }), {})
+        //         return {
+        //             key: stateItem.key,
+        //             value: parseValue(currentValue, stateItem.type)
+        //         }
+        //     }).reduce((prev, curr) => ({
+        //         ...prev,
+        //         [curr.key]: curr.value
+        //     }), {})
 
-            return {
-                key: deviceKey,
-                values: deviceValues
+        //     return {
+        //         key: deviceKey,
+        //         values: deviceValues
+        //     }
+        // }).reduce((prev, curr) => ({
+        //     ...prev,
+        //     [curr.key]: curr.values
+        // }), {}))
+
+    }, [props.values, tags])
+
+    const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
+        Object.keys(newState).map((tag) => {
+
+            if(Object.keys(newState[tag] || {}).length > 0){
+                Object.keys(newState[tag]).map((subkey) => client?.writeTagValue?.(tag, newState[tag][subkey], subkey))
+            }else{
+                client?.writeTagValue?.(tag, newState[tag])
             }
-        }).reduce((prev, curr) => ({
-            ...prev,
-            [curr.key]: curr.values
-        }), {}))
 
-    }, [props.values, devices])
-
-    const fullHMIElements = useNodesWithValues(hmiWithElems, devices || [], functions, normalisedValues || {})
-
-    // console.log({fullHMIElements})
-
-    // const fullHMIElements = useMemo(() => {
-    //     //Map HMI elements to their templated or real values
-
-    //     console.log({hmiWithElems})
-    //     return hmiWithElems.map((node) => {
-
-    //         let opts = Object.keys(node.extras?.options || {}).map((key) => {
-
-    //             const hmiNode = hmi?.nodes.find((a) => a.id === node.id)
-
-    //             return { key, value: getOptionValues({...node, dataTransformer: hmiNode?.dataTransformer}, devices || [], functions.showWindow, normalisedValues, key, node.options?.[key]) };
-
-    //         }).reduce((prev, curr) => ({ ...prev, [curr.key]: curr.value }), {})
-
-    //         console.log({opts})
-
-    //         return {
-    //             ...node,
-    //             options: opts
-    //         }
-
-    //     })
-
-    // }, [hmiWithElems, hmi, normalisedValues])
+        })
+    })
 
     const drawerMenu: (TreeMenuItem & { component?: JSX.Element })[] = [
         {
@@ -736,8 +735,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             ...hmi,
             nodes: fullHMIElements
         },
-        devices: devices || []
-    }), [activeProgram, hmi, fullHMIElements, devices])
+        tags,
+        types
+    }), [activeProgram, hmi, fullHMIElements])
 
 
     return (

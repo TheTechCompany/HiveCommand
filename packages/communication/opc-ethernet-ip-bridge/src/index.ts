@@ -7,7 +7,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 
 import OPCUAServer from '@hive-command/opcua-server'
-import { addTag } from './opc-server';
+import { addTag, TAG_TYPE } from './opc-server';
 import path from 'path';
 import { readFileSync, writeFileSync } from 'fs';
 
@@ -17,7 +17,7 @@ export interface PLCTag extends EventEmitter {
     type: {
         code: number,
         sintPos: number | null,
-        typeName: 'DINT' | 'BOOL' | 'TIMER' | 'REAL' | 'STRING',
+        typeName: 'BIT_STRING' | 'DINT' | 'BOOL' | 'TIMER' | 'REAL' | 'STRING',
         structure: boolean,
         arrayDims: number,
         reserved: boolean
@@ -232,6 +232,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     }), {}) :
                     undefined;
 
+                if(!fromTagList?.type.typeName) continue;
+                const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
+    
                 const enipTag = controller.addTag(tag.name)
 
                 // try{
@@ -255,7 +258,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 }
                 // PLC.subscribe(enipTag);
 
-                addTag(server, fromTagList?.name || '', fromTagList?.type.typeName || '', () => {
+                addTag(server, fromTagList?.name || '', TAG_TYPE[typeKey], () => {
                     // console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
                     
                     return enipTag?.value
@@ -289,6 +292,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 let tag = (tagList || [])[i];
                 let enipTag = controller.addTag(tag.name);
                
+                if(!tag.type.typeName) continue;
+                const typeKey = tag.type.typeName as keyof typeof TAG_TYPE;
+
                 // try{
                 //     await PLC.readTag(enipTag);
                 // }catch(e){
@@ -306,7 +312,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     })
                 }
 
-                addTag(server, tag.name, tag.type.typeName || '', () => {
+                addTag(server, tag.name, TAG_TYPE[typeKey], () => {
                     return enipTag?.value
                 }, (value, key) => {
                     if(enipTag && key){

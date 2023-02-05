@@ -1,0 +1,25 @@
+{
+  "name": "@hive-command/scripting",
+  "version": "1.4.15-alpha.146",
+  "description": "",
+  "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/uglify-js": "^3.17.1",
+    "jest": "27.x",
+    "prettier": "^2.8.3",
+    "typescript": "^4.9.5",
+    "uglify-js": "^3.17.4"
+  }
+}

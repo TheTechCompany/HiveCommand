@@ -24,10 +24,9 @@ function App() {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
-      // console.log(proc.stdout)
-
     });
   }, [])
+  
   
   useEffect(() => {
     console.log({ BaseDirectory: BaseDirectory.App })
