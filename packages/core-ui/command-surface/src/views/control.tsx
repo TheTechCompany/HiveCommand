@@ -176,7 +176,7 @@ export default () => {
 				if(Number.isNaN(val)){
 					val = 0;
 				}
-				return val.toFixed(2);
+				return val % 1 != 0 ? val.toFixed(2) : val;
 			default:
 				console.log({type})
 				break;
@@ -224,7 +224,7 @@ export default () => {
 			}else{
 				return {
 					key: deviceKey,
-					values: values?.[deviceKey]
+					values: parseValue(values?.[deviceKey], device.type as keyof typeof DataTypes)
 				}
 			}
 		}).reduce((prev, curr) => ({

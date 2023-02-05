@@ -224,9 +224,10 @@ export const TemplateMenu = () => {
 
                                 }
 
-                                declare function showDeviceWindow(
+                                declare function showTagWindow(
                                     position: {x: number, y: number, width: number, height: number, anchor?: string},
-                                    deviceTag: string
+                                    deviceTag: string,
+                                    actions: {label: string, func: string}[]
                                 ){
                                     
                                 }
