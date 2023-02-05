@@ -24,7 +24,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     // const { interfaces } = useContext(HMICanvasContext)
 
-    const { programId, interfaces, refetch, selected, nodes, devices, variables } = useHMIContext();
+    const { programId, interfaces, refetch, selected, nodes } = useHMIContext();
 
     const updateHMIGroup = useUpdateHMIGroup(programId)
     const assignHMINode = useAssignHMINode(programId)

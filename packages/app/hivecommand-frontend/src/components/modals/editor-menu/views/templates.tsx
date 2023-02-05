@@ -7,7 +7,7 @@ import { string } from 'mathjs';
 export const TemplateView = () => {
 
     const { item, setItem } = useMenuContext();
-    const { deviceTypes } = useContext(CommandEditorContext)
+    const { program: {types} } = useContext(CommandEditorContext)
 
     console.log({item})
     // const deviceType = deviceTypes //?.find((a) => a.id == item?.type) || { tagPrefix: '' }
@@ -21,7 +21,7 @@ export const TemplateView = () => {
                 size="small"
                 label="Name" />
 
-            <Autocomplete
+            {/* <Autocomplete
                 // disablePortal
                 options={deviceTypes?.slice()?.sort((a, b) => a.name.localeCompare(b.name))}
                 value={deviceTypes.find((a) => a.id == item.extends)}
@@ -51,7 +51,7 @@ export const TemplateView = () => {
                 // }}
                 size="small"
             // label={label} />
-            />
+            /> */}
         </Box>
     )
 }
