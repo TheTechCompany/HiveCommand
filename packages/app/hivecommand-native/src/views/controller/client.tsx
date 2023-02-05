@@ -70,12 +70,12 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
 
 
 
-    const changeDeviceValue = (deviceName: string, stateKey: string, value: any) => {
+    const changeDeviceValue = (deviceName: string, value: any, stateKey?: string ) => {
         //Get mapping
 
         console.log({deviceName, stateKey, value});
 
-        setTag(`${deviceName}.${stateKey}`, value, async (values) => {
+        setTag(`${deviceName}${stateKey ? `.${stateKey}` : ''}`, value, async (values) => {
             console.log({values});
             
             await Promise.all(values.map(async (value) => {
@@ -177,6 +177,6 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         // updateChart,
         // updateChartGrid,
         // removeChart
-        changeDeviceValue
+        writeTagValue: changeDeviceValue
     }
 }
