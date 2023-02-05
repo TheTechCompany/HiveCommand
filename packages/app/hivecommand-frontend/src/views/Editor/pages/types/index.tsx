@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Autocomplete, Box, Button, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { useCreateTypeField, useDeleteTypeField, useUpdateTypeField } from './api';
 import { useCommandEditor } from '../../context';
 import { debounce } from 'lodash'
@@ -47,46 +47,48 @@ export const TypeEditor = (props: any) => {
             <Box sx={{padding: '6px'}}>
                 <Typography>{activeType.name}</Typography>
             </Box>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{padding: '6px'}}>
-                            Name
-                        </TableCell>
-                        <TableCell sx={{padding: '6px'}}>
-                            Datatype
-                        </TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {typeFields.map((field) => (
+            <TableContainer>
+                <Table stickyHeader>
+                    <TableHead  sx={{bgcolor: 'secondary.main'}}>
                         <TableRow>
-                            <TableCell sx={{padding: '6px'}}>
-                                <TextField 
-                                    onChange={(e) => {
-                                        updateField(field.id, {name: e.target.value})
-                                    }}
-                                    fullWidth
-                                    size="small" 
-                                    value={field.name} />
+                            <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
+                                Name
                             </TableCell>
-                            <TableCell sx={{padding: '6px'}}>
-                                <Autocomplete
-                                    size="small"
-                                    value={field.type}
-                                    renderInput={(params) => <TextField {...params} />}
-                                    options={scalarTypes.concat(scalarTypes.map((x) => `${x}[]`))}
-                                    onChange={(e, newValue) => {
-                                        updateField(field.id, {type: newValue})
-                                    }}
-                                    // value={field.type}
-                                     />
-                                {/* {field.type} */}
+                            <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
+                                Datatype
                             </TableCell>
                         </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
+                    </TableHead>
+                    <TableBody  sx={{overflowY: 'auto'}}>
+                        {typeFields.map((field) => (
+                            <TableRow>
+                                <TableCell sx={{padding: '6px'}}>
+                                    <TextField 
+                                        onChange={(e) => {
+                                            updateField(field.id, {name: e.target.value})
+                                        }}
+                                        fullWidth
+                                        size="small" 
+                                        value={field.name} />
+                                </TableCell>
+                                <TableCell sx={{padding: '6px'}}>
+                                    <Autocomplete
+                                        size="small"
+                                        value={field.type}
+                                        renderInput={(params) => <TextField {...params} />}
+                                        options={scalarTypes.concat(scalarTypes.map((x) => `${x}[]`))}
+                                        onChange={(e, newValue) => {
+                                            updateField(field.id, {type: newValue})
+                                        }}
+                                        // value={field.type}
+                                        />
+                                    {/* {field.type} */}
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </TableContainer>
             <Box>
                 <Button 
                     onClick={() => {
