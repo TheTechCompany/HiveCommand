@@ -10,7 +10,7 @@ export interface BubbleProps {
 	style?: any;
 }
 
-export const UnstyledBubble : React.FC<BubbleProps> = (props) => {
+export const Bubble : React.FC<BubbleProps> = (props) => {
 	const [elem, {width, height}] = useResizeAware()
 
 	return (
@@ -32,18 +32,3 @@ export const UnstyledBubble : React.FC<BubbleProps> = (props) => {
 		</Box>
 	)
 }
-
-export const Bubble = styled(UnstyledBubble)`
-	&:before{
-		content: "";
-		position: absolute;
-		right: 100%;
-		top: 50%;
-		bottom: 50%;
-		width: 0;
-		height: 0;
-		border-top: 6px solid transparent;
-		border-right: 12px solid ${HexHiveTheme.palette.secondary.light};
-		border-bottom: 6px solid transparent;
-	}
-`
