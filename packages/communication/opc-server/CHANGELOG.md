@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.146](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.145...v1.4.15-alpha.146) (2023-02-05)
+
+**Note:** Version bump only for package @hive-command/opcua-server
+
+
+
+
+
 ## [1.4.15-alpha.145](https://github.com/TheTechCompany/sudbuster/compare/v1.4.15-alpha.144...v1.4.15-alpha.145) (2023-02-03)
 
 **Note:** Version bump only for package @hive-command/opcua-server
