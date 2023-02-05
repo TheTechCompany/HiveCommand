@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { EditorMenuProvider } from "./context";
-import { DeviceView, HMIView, ProgramView } from "./views";
+import { HMIView, ProgramView } from "./views";
 import { TemplateView } from "./views/templates";
 import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
@@ -52,14 +52,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
                 return <TypeView />;
             case 'templates':
                 return <TemplateView />;
-            case 'program':
-                return <ProgramView />
             case 'hmi':
                 return <HMIView />
-            case 'devices':
-                return <DeviceView />
-            case 'variables':
-                return <VariableView />
         }
     }
 
