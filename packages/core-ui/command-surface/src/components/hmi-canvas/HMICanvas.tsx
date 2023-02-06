@@ -254,6 +254,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 }}>
                 <InfiniteCanvas
                     // finite
+                    fitToBounds
                     style={CanvasStyle}
                     zoom={zoom}
                     // offset={offset}

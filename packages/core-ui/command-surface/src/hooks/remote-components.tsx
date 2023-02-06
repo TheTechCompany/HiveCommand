@@ -70,11 +70,9 @@ export const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
             if(lock.current[id] instanceof Promise){
                 let data = await lock.current[id]
-                console.log("Waited for Found pack", data)
                 return Object.keys(data).map((x) => ({name: x, component: data[x]}));
 
             }else{
-                console.log("Onsite Found pack", lock.current[id], packs[id])
                 return packs[id];
             }
         }else{
@@ -84,8 +82,6 @@ export const useRemoteComponents = (cache?: RemoteComponentCache) => {
                 lock.current[id] = loader;
                 
                 const data : any = await loader
-
-                console.log("Found pack", {data, packs})
 
                 setPacks({
                     ...packs,
