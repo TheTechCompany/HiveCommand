@@ -9,6 +9,7 @@ import { Service } from './src/service'
 import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
+import MQTT from './src/mqtt';
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -48,6 +49,8 @@ const main = (async () => {
     }, {
         provider
     })
+
+    const mqttServer = await MQTT(provider, vpcId, namespace)
     
     const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
