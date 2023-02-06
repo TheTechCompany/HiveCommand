@@ -25,11 +25,7 @@ export const Controls = (props) => {
 
     const { getPack } = useRemoteComponents()
 
-    const { sidebarOpen, program: { templatePacks } } = useCommandEditor()
-
-    const createProgramHMI = useCreateProgramHMI(id)
-
-    const [selectedItem, setSelectedItem] = useState<{ id?: string } | undefined>(undefined)
+    const { program: { templatePacks } } = useCommandEditor()
 
     const [selected, _setSelected] = useState<{ key?: "node" | "path", id?: string }>({})
 
@@ -40,46 +36,10 @@ export const Controls = (props) => {
         selectedRef.current.selected = s;
     }
 
-
-    const [createModalOpen, openCreateModal] = useState(false);
-
-    const [target, setTarget] = useState<{ x?: number, y?: number }>({})
-
     const [menuOpen, openMenu] = useState<string | undefined>(undefined);
 
     const [nodes, setNodes] = useState<InfiniteCanvasNode[]>([])
     const [paths, setPaths] = useState<InfiniteCanvasPath[]>([])
-
-    // const pathRef = useRef<{ paths: InfiniteCanvasPath[] }>({ paths: [] })
-
-    // const setPaths = (paths: InfiniteCanvasPath[]) => {
-    //     _setPaths(paths)
-    //     pathRef.current.paths = paths;
-    // }
-
-    // const updateRef = useRef<{ addPath?: (path: any) => void, updatePath?: (path: any) => void }>({
-    //     updatePath: (path) => {
-
-    //         console.log("Update path");
-    //         let p = pathRef.current.paths.slice()
-    //         let ix = p.map((x) => x.id).indexOf(path.id)
-    //         // if(path.sourceHandle && path.targetHandle){
-    //         //     path.draft = false;
-    //         // }
-    //         path.type = 'pipe-path';
-    //         p[ix] = path;
-    //         setPaths(p)
-    //     },
-    //     addPath: (path) => {
-
-    //         console.log("Add Path");
-    //         let p = pathRef.current.paths.slice()
-    //         path.type = 'pipe-path';
-    //         path.draft = true;
-    //         p.push(path)
-    //         setPaths(p)
-    //     }
-    // })
 
 
     const client = useApolloClient()
@@ -257,17 +217,14 @@ export const Controls = (props) => {
 
     const canvasTemplates = data?.commandInterfaceDevices || [];
 
-    // const devices = data?.commandPrograms?.[0]?.devices
-    // const flows = data?.commandPrograms?.[0]?.program;
     const { program: flows, devices} = data?.commandPrograms?.[0] || {};
 
     let program = data?.commandPrograms?.[0]
 
     let hmiTemplatePacks = program?.templatePacks || [];
 
-    let activeProgram = (program?.interface)?.find((a) => a.id == props.activeProgram)
+    let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == props.activeProgram), [props.activeProgram, program]);
 
-    // console.log({templatePacks, data, program, activeProgram})
 
 
     const nodeMenu = useMemo(() => NodeMenu.map((x) => {
@@ -368,57 +325,7 @@ export const Controls = (props) => {
                 }))
                 // setNodes(nodes);
             })
-            // setNodes(nodes.map((x) => ({
-            //     id: x.id,
-            //     x: x.x,
-            //     y: x.y,
-            //     width: x.type.width ? `${x.type.width}px` : '50px',
-            //     height: x.type.height ? `${x.type.height}px` : '50px',
-            //     //  width: `${x?.type?.width || 50}px`,
-            //     // height: `${x?.type?.height || 50}px`,
-            //     extras: {
-            //         devicePlaceholder: x.devicePlaceholder,
-            //         rotation: x.rotation || 0,
-            //         scaleX: x.scaleX != undefined ? x.scaleX : 1,
-            //         scaleY: x.scaleY != undefined ? x.scaleY : 1,
-            //         showTotalizer: x.showTotalizer || false,
-            //         iconString: x.type?.name,
-            //         icon: HMIIcons[x.type?.name],
-            //         ports: x?.type?.ports?.map((y) => ({ ...y, id: y.key })) || []
-            //     },
-            //     type: 'hmi-node',
-
-            // })).concat(groups.map((group) => ({
-            //     id: group.id,
-            //     x: group.x || 0,
-            //     y: group.y || 0,
-            //     type: 'hmi-node',
-            //     extras: {
-            //         nodes: group.children?.map((x) => ({
-            //             id: x.id,
-            //             x: x.x,
-            //             y: x.y,
-            //             z: x.z,
-            //             width: x.type.width || 50,
-            //             height: x.type.height || 50,
-            //             scaleX: x.scaleX || 1,
-            //             scaleY: x.scaleY || 1,
-            //             rotation: x.rotation || 0,
-            //             type: x.type,
-            //             devicePlaceholder: x.devicePlaceholder,
-            //         })),
-            //         ports: group.ports?.map((x) => ({
-            //             ...x,
-            //             id: x.id,
-            //             x: x.x,
-            //             y: x.y,
-            //             length: x.length || 1,
-            //             rotation: x.rotation || 0,
-            //         }))
-            //     }
-            // }))))
-
-            // console.log({intf: program.interface})
+            
             setPaths(((activeProgram)?.edges || []).map((x) => {
                 return {
                     id: x.id,
@@ -433,7 +340,7 @@ export const Controls = (props) => {
                 return prev.concat(curr)
             }, []))
         }
-    }, [data?.commandPrograms?.[0]])
+    }, [data?.commandPrograms?.[0], activeProgram])
 
 
     const changeMenu = (view: string) => {
@@ -508,7 +415,6 @@ export const Controls = (props) => {
             value={{
                 programId: id,
                 actions: activeProgram?.actions,
-                flows: flows,
                 interfaces: program?.interface || [],
                 refetch,
                 selected,
@@ -525,10 +431,6 @@ export const Controls = (props) => {
                     position: 'relative',
                 }}>
 
-                {/* <Paper sx={{aspectRatio: '16/9', display: 'flex'}}> */}
-
-                {/* <InfiniteScrubber time={new Date().getTime()} /> */}
-               
                 {(<InfiniteCanvas
                     style={CanvasStyle}
                     snapToGrid={true}
@@ -695,10 +597,6 @@ export const Controls = (props) => {
                         //     type: 'hmi-node'
                         // }])
                     }}
-
-                    onRightClick={(target, position) => {
-                        setTarget(position)
-                    }}
                 >
 
                     <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
@@ -733,16 +631,8 @@ export const Controls = (props) => {
 
                     </IconButton>
                     </div>
-                    {/* <div style={{background: menuOpen == 'actions' ? '#dfdfdfdf' : undefined}}>
-                    <IconButton
-                        sx={{color: 'white'}}
-                        onClick={() => changeMenu('actions')}
-                    >
-                        <Action />
-                    </IconButton>
-                    </div> */}
+           
                 </Box>
-                {/* </Paper> */}
             </Box>
         </HMIContext.Provider>
     )

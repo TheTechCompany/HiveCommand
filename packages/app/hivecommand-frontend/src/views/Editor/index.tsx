@@ -106,7 +106,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     name
                 }
             
-
                 interface {
                     id
                     name
@@ -464,6 +463,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                     })
                                     // setView(node.match(/(.+)-root/)?.[1] as any)
                                 }else{
+
+                                    console.log("SELECTING NEW ITEM")
 
                                     let elements = treeMenu.reduce((prev, curr) => {
                                         return [...prev, ...(curr.children || []).map((x) => ({...x, parent: curr.id}))]

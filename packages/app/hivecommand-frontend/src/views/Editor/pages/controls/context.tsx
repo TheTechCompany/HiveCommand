@@ -32,7 +32,6 @@ export interface HMITemplate {
 export const HMIContext = React.createContext<{
     programId?: string;
     actions?: any[]
-    flows?: any[]
     interfaces?: any[];
     refetch?: () => void;
     selected?: any;

@@ -261,7 +261,11 @@ export const OPCUAServerStage = () => {
             return {
                 id: x.id,
                 name: x.name,
-                children: hasChildren ? type?.fields.map((typeField) => ({id: `${x.id}.${typeField.name}`, name: typeField.name, type: typeField.type})) : []
+                type: !type && x.type,
+                children: hasChildren ? type?.fields.map((typeField) => ({
+                    id: `${x.id}.${typeField.name}`, 
+                    name: typeField.name, type: typeField.type
+                })) : []
                 // (x.type?.state)?.map((y: any) => ({
                 //     id: `${x.id}.${y.key}`,
                 //     name: y.key,
@@ -349,27 +353,59 @@ export const OPCUAServerStage = () => {
                     <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                         <Box>
-                            {/* {devices.map((device: any) => (
+                            {tags.map((tag: any) => (
                                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                        <IconButton sx={{marginRight: '6px'}} size="small" onClick={() => {
-                                            let exists = deviceExpanded.indexOf(device.id) > -1
-                                            setDeviceExpanded(exists ? deviceExpanded.filter((a) => a != device.id) : deviceExpanded.concat([device.id]))
-                                        }}>
-                                            {deviceExpanded.indexOf(device.id) > -1 ? <ExpandMore /> : <ChevronRight />}
-                                        </IconButton>  
-                                        <Checkbox 
-                                            sx={{padding: 0, paddingRight: '6px'}}
-                                            disabled
-                                            indeterminate={!(globalState?.deviceMap?.filter((a: any) => a.path.indexOf(device.name) > -1).length == device.children?.length) && (globalState?.deviceMap || []).filter((a: any) => a.path.indexOf(device.name) > -1).length > 0}
-                                            checked={globalState?.deviceMap?.filter((a: any) => a.path.indexOf(device.name) > -1).length == device.children?.length}
-                                            size="small" />
-                                        {device.name}
+                                      
+                                        {tag.children?.length > 0 ? (
+                                            <IconButton sx={{marginRight: '6px'}} size="small" onClick={() => {
+                                                let exists = deviceExpanded.indexOf(tag.id) > -1
+                                                setDeviceExpanded(exists ? deviceExpanded.filter((a) => a != tag.id) : deviceExpanded.concat([tag.id]))
+                                            }}>
+                                                {deviceExpanded.indexOf(tag.id) > -1 ? <ExpandMore /> : <ChevronRight />}
+                                            </IconButton> 
+                                        ) : (
+                                            <Box sx={{width: 40, height: 40}} />
+                                        )}
+                                        <Box sx={{flex: 1}}>
+                                            <Checkbox 
+                                                sx={{padding: 0, paddingRight: '6px'}}
+                                                disabled
+                                                indeterminate={!(globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == tag.children?.length) && (globalState?.deviceMap || []).filter((a: any) => a.path.indexOf(tag.name) > -1).length > 0}
+                                                checked={globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == tag.children?.length}
+                                                size="small" />
+                                            {tag.name}
+                                        </Box>
+
+                                        {!(tag.children.length > 0) && (
+                                            <TextField 
+                                                disabled={Boolean(deviceMap?.[tag.name]?.match(/script:\/\/([.\s\S]+)/))}
+                                                sx={{flex: 1, paddingRight: '0'}}
+                                                value={deviceMap?.[tag.name]?.match(/script:\/\/([.\s\S]+)/) ? "script" : deviceMap?.[tag.name]} 
+                                                onChange={(e) => {
+                                                    updateMap(tag.name, e.target.value)
+                                                }}
+                                                size="small"
+                                                InputProps={{
+                                                    endAdornment: (<InputAdornment position="end">
+                                                        <IconButton
+                                                            onClick={() => {
+                                                                setEditItem({
+                                                                    ...tag,
+                                                                    path: tag.name
+                                                                })
+                                                            }}
+                                                            size="small">
+                                                            <Javascript />
+                                                        </IconButton>
+                                                    </InputAdornment>)
+                                                }}     />
+                                        )}
                                     </Box>
-                                    <Collapse in={deviceExpanded.indexOf(device.id) > -1}>
+                                    <Collapse in={deviceExpanded.indexOf(tag.id) > -1}>
                                         <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                            {device.children?.map((child: any) => {
-                                                const path =  `${device.name ? device.name + '.' : ''}${child.name}`
+                                            {tag.children?.map((child: any) => {
+                                                const path =  `${tag.name ? tag.name + '.' : ''}${child.name}`
 
                                                 return <Box sx={{display: 'flex', paddingLeft: '40px', alignItems: 'center'}}>
                                                     <Typography sx={{flex: 1}}>{child.name}</Typography>
@@ -402,15 +438,15 @@ export const OPCUAServerStage = () => {
                                         </Box>
                                     </Collapse>
                                 </Box>
-                            ))} */}
+                            ))}
                         </Box>
-                        <TreeView
+                        {/* <TreeView
                             sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
                             defaultCollapseIcon={<ExpandMore />}
                             defaultExpandIcon={<ChevronRight />}
                             >
                             {renderTree(tags, true)}
-                        </TreeView>
+                        </TreeView> */}
                     </Box>
                 </Box>
             </Box>
