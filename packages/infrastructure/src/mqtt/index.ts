@@ -1,12 +1,12 @@
-import { all, Config, Output } from "@pulumi/pulumi";
+import { all, Config, Input, Output } from "@pulumi/pulumi";
 import { Provider } from '@pulumi/kubernetes'
 import { RabbitMQDeployment } from "./deployment"
 import { RabbitMQService } from "./service"
-
+import * as aws from '@pulumi/aws'
 import * as k8s from '@pulumi/kubernetes'
 import { RabbitMQPersistence } from "./persistence";
 
-export default async (provider: Provider, vpcId: Output<any>, ns: k8s.core.v1.Namespace) => {
+export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<string>, domainName: string, ns: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 
@@ -18,6 +18,22 @@ export default async (provider: Provider, vpcId: Output<any>, ns: k8s.core.v1.Na
     const deployment = await RabbitMQDeployment(provider, appName, storageClaim, ns);
 
     const service = await RabbitMQService(provider, appName, deployment, ns)
+
+
+    // Export the URL for the load balanced service.
+    const url = service.status.loadBalancer.ingress[0].hostname;
+    //service.status.loadBalancer.ingress[0].hostname;
+
+    const gatewayRecord = new aws.route53.Record(`${appName}-dns`, {
+        zoneId: zoneId,
+        name: domainName,
+        type: "A",
+        aliases: [{
+            name: url,
+            zoneId: 'Z1GM3OXH4ZPM65',
+            evaluateTargetHealth: true
+        }]   
+    })
 
     return {
         deployment,
