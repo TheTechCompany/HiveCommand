@@ -325,8 +325,8 @@ export default () => {
 								display: 'flex',
 								flexDirection: 'column',
 								padding: '6px',
-								left: infoTarget?.x + infoTarget?.width, 
-								top: infoTarget?.y + infoTarget?.height,
+								left: (infoTarget?.x + infoTarget?.width) + 6, 
+								top: (infoTarget?.y + infoTarget?.height) + (121 / 2),
 								
 							}}>
 								{DataComponent}

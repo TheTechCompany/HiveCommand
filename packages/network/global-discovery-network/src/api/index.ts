@@ -145,12 +145,20 @@ export const API = (prisma: PrismaClient) => {
                         },
                         tags: {
                             include: {
-                                type: true
+                                type: {
+                                    include: {
+                                        type: true,
+                                    }
+                                }
                             }
                         },
                         types: {
                             include: {
-                                fields: true
+                                fields: {
+                                    include: {
+                                        type: true,
+                                    }
+                                }
                             }
                         }
                     }
@@ -160,7 +168,22 @@ export const API = (prisma: PrismaClient) => {
 
         if (!device) return res.send({ error: "No device found for token" })
 
-        res.send({ results: device.activeProgram })
+        res.send({ 
+            results: { 
+                ...device.activeProgram,
+                tags: device.activeProgram?.tags.map((tag) => ({
+                    ...tag,
+                    type: tag.type?.type?.name || tag.type?.scalar
+                })),
+                types: device.activeProgram?.types.map((type) => ({
+                    ...type,
+                    fields: type.fields.map((typeField) => ({
+                        ...typeField,
+                        type: typeField.type?.name || typeField.scalar
+                    }))
+                }))
+            }
+        })
     })
 
 
