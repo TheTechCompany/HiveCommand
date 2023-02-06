@@ -106,7 +106,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     name
                 }
             
-
                 interface {
                     id
                     name
