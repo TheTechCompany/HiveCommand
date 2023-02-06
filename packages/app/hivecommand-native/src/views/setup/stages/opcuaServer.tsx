@@ -261,7 +261,11 @@ export const OPCUAServerStage = () => {
             return {
                 id: x.id,
                 name: x.name,
-                children: hasChildren ? type?.fields.map((typeField) => ({id: `${x.id}.${typeField.name}`, name: typeField.name, type: typeField.type})) : []
+                type: !type && x.type,
+                children: hasChildren ? type?.fields.map((typeField) => ({
+                    id: `${x.id}.${typeField.name}`, 
+                    name: typeField.name, type: typeField.type
+                })) : []
                 // (x.type?.state)?.map((y: any) => ({
                 //     id: `${x.id}.${y.key}`,
                 //     name: y.key,
