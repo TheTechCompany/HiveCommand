@@ -6,7 +6,7 @@ import { Config } from "@pulumi/pulumi";
 import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
-import SyncServer from './src/sync-server'
+// import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
 import MQTT from './src/mqtt';
@@ -52,7 +52,7 @@ const main = (async () => {
 
     const mqttServer = await MQTT(provider, vpcId, namespace)
     
-    const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
+    // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl)
 
@@ -63,7 +63,7 @@ const main = (async () => {
         service,
         deployment,
         rabbitURL,
-        syncServer
+        // syncServer
     }
 })()
 
