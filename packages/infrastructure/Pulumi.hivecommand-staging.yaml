@@ -3,5 +3,6 @@ config:
   hivecommand-app:org: ultraviolet
   hivecommand-app:suffix: staging 
 
+  hivecommand-app:mqttEndpoint: iot.hexhive.io
   hivecommand-app:sync-host: discovery.hexhive.io
   hivecommand-app:discoveryUrl: discovery.hexhive.io

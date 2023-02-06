@@ -4,4 +4,5 @@ config:
   hivecommand-app:suffix: prod 
 
   hivecommand-app:discoveryUrl: discovery.hexhive.io
+  hivecommand-app:mqttEndpoint: iot.hexhive.io
   hivecommand-app:sync-host: discovery.hexhive.io

@@ -40,6 +40,8 @@ const main = (async () => {
     const mongoUrl = dbRef.getOutput('mongo_url');
     const dbPass = dbRef.getOutput('postgres_pass');
 
+    const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
+
     const provider = new Provider('eks', { kubeconfig });
 
     const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {
@@ -50,7 +52,7 @@ const main = (async () => {
         provider
     })
 
-    const mqttServer = await MQTT(provider, vpcId, namespace)
+    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), namespace)
     
     // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 

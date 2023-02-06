@@ -6,7 +6,7 @@
 	"dependencies": {
 		"@emotion/react": "11.10.4",
 		"@hexhive/styles": "^1.0.1-alpha.77",
-		"@hexhive/ui": "^1.0.1-alpha.89",
+		"@hexhive/ui": "^1.0.1-alpha.103",
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@hive-command/api": "^1.4.15-alpha.137",
 		"@hive-command/command-surface": "^1.4.15-alpha.146",
