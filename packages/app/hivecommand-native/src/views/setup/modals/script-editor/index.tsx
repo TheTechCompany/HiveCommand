@@ -82,17 +82,22 @@ export const setter = (data: ${fromOPCType(props.dataType || 'String')}, tags: V
 
         const printJson =  (elem: any) => {
 
-            if(elem.name.match('[-=.\/:]') != null || elem.type === undefined) return {key: undefined, value: undefined};
+            console.log(elem.name.match('[-=.\/:]'))
+            if(elem.name.match('[-=.\/:]') != null) return {key: undefined, value: undefined};
             
             // if(elem.type) console.log(elem.type, fromOPCType(elem.type))
             
 
             return hasOPCChildren(elem) ? 
                  { key: elem.name, value: elem.children.map(printJson).reduce((prev: any, curr: any) => ({...prev, [curr.key] : curr.value}), {}) } : 
-                { key: elem.name, value: elem.isArray ? [fromOPCType(elem.type)] : fromOPCType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
+                { key: elem.name, value: elem.isArray ? [lookupType(elem.type)] : lookupType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
         }
 
+        console.log(props.deviceValues.map(printJson) )
+
         const deviceValues = (props.deviceValues || []).map(printJson).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
+        
+        console.log({deviceValues: props.deviceValues, dv: deviceValues})
         
         const valueInterface = formatInterface('ValueStore', deviceValues)
 

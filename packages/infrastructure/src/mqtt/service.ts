@@ -21,7 +21,7 @@ export const RabbitMQService = async (provider: Provider, appName: string, deplo
             }
         },
         spec: {
-            type: "ClusterIP",
+            type: "LoadBalancer",
             ports: [{ name: "amqp", port: 5672, targetPort: "amqp" }],
             selector: appLabels,
         },
