@@ -51,6 +51,8 @@ class DevSidecar {
     async subscribe(host: string, paths: {tag: string, path: string}[]){
         const client = await this.connect(host);
 
+        console.log("Subscribing to", paths);
+
         const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths)
 
         const emitter = new EventEmitter()
@@ -58,6 +60,8 @@ class DevSidecar {
         monitors?.on('changed', async (item, value, index) => {
             try{
                 const key = unwrap(index)
+
+                console.log("Datachanged at the OPCUA level", {key, value: value.value})
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){

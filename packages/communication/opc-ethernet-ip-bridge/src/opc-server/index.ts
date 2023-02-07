@@ -46,7 +46,7 @@ export const addTag = async (
     server: OPCServer, 
     tagname: string, 
     type: TAG_TYPE, 
-    getter: (() => any | undefined),
+    getter: ((key?: string) => any | undefined),
     setter: (value: any, key?: string) => void,
     structure?: {[key: string]: TAG_TYPE}, parent?: UAObject
 ) => {
@@ -87,7 +87,7 @@ export const addTag = async (
                 }
 
                 await addTag(server, key, structure?.[key], () => {
-                    return getter()?.[key] || defaultValue
+                    return getter(key) || defaultValue
                 }, (value) => setter(value, key), undefined, rootObject);
             }
 

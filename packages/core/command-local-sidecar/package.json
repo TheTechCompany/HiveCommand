@@ -6,7 +6,7 @@
   "license": "MIT",
   "bin": "dist/index.js",
   "scripts": {
-    "start": "ts-node -r tsconfig-paths/register",
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc -b && yarn package",
     "package": "pkg package.json --output dist/sidecar"
   },

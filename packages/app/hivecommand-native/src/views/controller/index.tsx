@@ -63,7 +63,7 @@ export const Controller = () => {
         })
 
         socket.current.on('data-changed', (data) => {
-            console.log("Datachanged", data.value.value)
+            console.log("Datachanged", data.key, data.value.value)
             // alert("Datachange on io socketç" + JSON.stringify({data}))
 
             setValueStore((store) => ({

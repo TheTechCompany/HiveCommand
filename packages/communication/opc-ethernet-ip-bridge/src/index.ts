@@ -235,7 +235,26 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 if(!fromTagList?.type.typeName) continue;
                 const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
     
-                const enipTag = controller.addTag(tag.name)
+                let rootTag : Tag | null = null;
+                let childTags: {key: string, tag: Tag | null}[];
+
+                if(fromTagListChildren){
+                    childTags = [];
+                    
+                    if(fromTagListChildren){
+                        Object.keys(fromTagListChildren).forEach((key) => {
+    
+                            let type : CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+    
+                            console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
+    
+                            childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) }) //, null, false, type, 10) })
+                        })
+                    }
+                }else{
+                   rootTag = controller.addTag(tag.name)
+
+                }
 
                 // try{
                 //     if(!enipTag) continue;
@@ -244,26 +263,18 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 //     console.error({msg: (e as any).message})
                 // }
 
-                let childTags : {key: string, tag: Tag | undefined }[] = [];
                 
-                if(fromTagListChildren){
-                    Object.keys(fromTagListChildren).forEach((key) => {
-
-                        let type : CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
-
-                        console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
-
-                        childTags.push({ key: key, tag: controller.PLC?.newTag(`${tag.name}.${key}`, null, false, type, 10) })
-                    })
-                }
+               
                 // PLC.subscribe(enipTag);
 
-                addTag(server, fromTagList?.name || '', TAG_TYPE[typeKey], () => {
+                addTag(server, fromTagList?.name || '', TAG_TYPE[typeKey], (key) => {
                     // console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
-                    
-                    return enipTag?.value
+                    if(key){
+                        return childTags.find((a) => a.key === key)?.tag?.value
+                    }
+                    return rootTag?.value
                 }, (value, key) => {
-                    if(enipTag && key){
+                    if(key){
                         // if(!enipTag?.value) enipTag.value = {};
                         let tag = childTags.find((a) => a.key === key)?.tag
                         if(!tag) return;
@@ -272,10 +283,10 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                         controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
 
                         // (enipTag.value as any)[key] = value;
-                    }else if(enipTag){
-                        enipTag.value = value;
+                    }else if(rootTag){
+                        rootTag.value = value;
     
-                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
+                        controller.PLC?.writeTag(rootTag).catch((err) => console.error({err}));
 
                     }
 
