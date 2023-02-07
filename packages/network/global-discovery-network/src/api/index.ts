@@ -3,6 +3,8 @@ import { PrismaClient } from "@hive-command/data";
 import { Router } from "express";
 import jwt from 'jsonwebtoken'
 
+const IOT_ENDPOINT = process.env.IOT_ENDPOINT 
+
 export const API = (prisma: PrismaClient) => {
     const router = Router();
 
@@ -50,6 +52,7 @@ export const API = (prisma: PrismaClient) => {
         next();
     }
 
+
     /* -- Protected routes -- */
 
     router.get('/network-layout', verifyAccess, async (req, res) => {
@@ -72,10 +75,20 @@ export const API = (prisma: PrismaClient) => {
                 }
             }
         });
+        
 
         if (!device) return res.send({ error: "No device found for token" })
 
-        res.send({ results: device?.deviceMapping || [] })
+
+        res.send({ 
+            results: {
+                deviceMapping: device?.deviceMapping || [],
+                deviceId: device?.id,
+                iotEndpoint: IOT_ENDPOINT,
+                iotSubject: 'IOT-SUBJECT',
+                iotToken: 'IOT-TOKEN'
+            }
+        })
 
     })
 

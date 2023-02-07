@@ -14,6 +14,8 @@ import OPCUAClient from '@hive-command/opcua-client';
 import { DataType } from 'node-opcua';
 import { isEqual } from 'lodash'
 
+import { MQTTPublisher } from '@hive-command/opcua-mqtt';
+
 import { Client } from 'pg';
 
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
@@ -24,10 +26,12 @@ class DevSidecar {
 
     private clients : {[key: string]: OPCUAClient} = {};
 
+    private mqttPublisher? : MQTTPublisher; 
+
     // private sessions : {[key: string]: ClientSession} = {};
 
     constructor(){
-
+       
     }
 
     async getDataType(host: string, path: string){
@@ -145,6 +149,22 @@ class DevSidecar {
 
     }
 
+    async setup_data(host: string){
+
+        this.mqttPublisher = new MQTTPublisher({
+            host: host,
+            user: '',
+            pass: '',
+            exchange: 'TestExchange'
+        })
+
+        await this.mqttPublisher.setup()
+    }
+
+    async publish_data(){
+        // this.mqttPublisher?.publish()
+    }
+
 
 }
 
@@ -154,6 +174,7 @@ const app = express();
 
 const http = require('http');
 const server = http.createServer(app);
+
 const io = new Server(server, {
     allowRequest: (req, fn) => {
         fn(null, true)
@@ -167,6 +188,8 @@ let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubsc
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
+    console.log({data});
+    // sidecar.publish_data()
 }
 
 app.use(bodyParser.json());

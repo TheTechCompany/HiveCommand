@@ -33,10 +33,8 @@ export const Controller = () => {
 
     const [packs, setPacks] = useRemoteCache('remote-components.json');
 
-
     const [ valueStore, setValueStore ] = useState<{[key: string]: any}>({})
     
-
     const valueStructure = useMemo(() => {
         return subscriptionMap?.map((subscription) => {
  
@@ -47,11 +45,9 @@ export const Controller = () => {
  
              return obj
          }).reduce((prev, curr) => merge(prev, curr), {})
-    }, [JSON.stringify(valueStore)])
+    }, [JSON.stringify(valueStore), subscriptionMap])
 
     const LocalClient = useLocalClient( [], deviceMap || [], subscriptionMap || [], valueStructure, valueStore)
-
-
 
     const socket = useRef<Socket>()
 
@@ -62,17 +58,18 @@ export const Controller = () => {
 
         socket.current.on('connected', () => {
             console.log("Connected");
-            alert("Connected to io socket")
+            // alert("Connected to io socket")
         })
 
         socket.current.on('data-changed', (data) => {
             console.log("Datachanged", data)
-            alert("Datachange on io socket" + JSON.stringify({data}))
+            // alert("Datachange on io socketç" + JSON.stringify({data}))
 
             setValueStore((store) => ({
                 ...store,
                 [data.key]: data.value.value
             }));
+
         })
         
 
@@ -124,44 +121,49 @@ export const Controller = () => {
         }
     }
 
-    // const values = useMemo(() => {
-    //     return controlLayout?.devices.map((device) => {
+    const values = useMemo(() => {
+        return controlLayout?.tags.map((tag) => {
 
-    //         return {
-    //             key: `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}`,
-    //             value: device.type.state.map((x) => {
-    //                 let path = `${device.type.tagPrefix ? device.type.tagPrefix  : ''}${device.tag}.${x.key}`
+            let type = controlLayout.types?.find((a) => a.name === tag.type);
 
-    //                 let tag = deviceMap?.find((a) => a.path == path)?.tag
+            return {
+                key: `${tag.name}`,
+                value: type?.fields.map((field) => {
+                    let path = `${tag.name}.${field.name}`
 
-    //                 let type = x.type;
+                    let tagValue = deviceMap?.find((a) => a.path == path)?.tag
 
-    //                 if(tag?.indexOf('script://') == 0){
-    //                     // console.log({tag})
-    //                     const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
-    //                     const { getter, setter } = load_exports(jsCode)
+                    // let type = x.type;
 
-    //                     let value = parseValue(x.type, getter(valueStructure));
+                    if(tagValue?.indexOf('script://') == 0){
+                        // console.log({tag})
+                        const jsCode = ts.transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
+                        const { getter, setter } = load_exports(jsCode)
 
-    //                     return {key: x.key,value: value}
+                        let value = parseValue(field.type, getter(valueStructure));
 
-    //                 }else{
-    //                     let rawTag = subscriptionMap?.find((a) => a.path == tag)?.tag
+                        console.log("Script function", field.name, value);
+
+                        return {key: field.name, value: value}
+
+                    }else{
+                        let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
                         
-    //                     let value = parseValue(x.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-    //                     return {key: x.key, value: value}
-    //                 }
-    //             }).reduce((prev, curr) => ({
-    //                 ...prev,
-    //                 [curr.key]: curr.value
-    //             }), {}),
-    //         }
-    //     }).reduce((prev, curr) => ({
-    //         ...prev,
-    //         [curr.key]: curr.value
-    //     }), {})
-    // }, [valueStructure, controlLayout?.devices])
+                        let value = parseValue(field.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
+                        return {key: field.name, value: value}
+                    }
+                }).reduce((prev, curr) => ({
+                    ...prev,
+                    [curr.key]: curr.value
+                }), {}),
+            }
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.value
+        }), {})
+    }, [valueStructure, controlLayout?.tags, controlLayout?.types])
 
+    console.log({values})
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     // console.log({valueStore})
@@ -169,7 +171,7 @@ export const Controller = () => {
         <Box sx={{flex: 1, display: 'flex'}}>
 
             <CommandSurface 
-                values={{} }//values as any}
+                values={values as any}//values as any}
                 client={LocalClient}
                 cache={[packs, setPacks] as any}
                 program={controlLayout} />
