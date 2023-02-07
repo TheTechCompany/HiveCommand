@@ -166,7 +166,9 @@ export const OPCUAServerStage = () => {
                     const isChecked = (item: OPCUAServerItem) : boolean => {
                         const children = item.children || [];
 
-                        return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path || '') > -1 || (children.filter((x: any) => isChecked(x)).length > 0 && children.filter((x: any) => isChecked(x)).length == children.length)
+                        // console.log(item.path, globalState?.subscriptionMap?.map((x) => x.path))
+
+                        return ( (globalState?.subscriptionMap || []).map((x) => x.path === (item.path || '') ) ).findIndex((a) => a === true) > -1 || ((children.filter((x: any) => isChecked(x)).length > 0 && children.filter((x: any) => isChecked(x)).length == children.length))
                     }
 
                     const isInDeterminate = (item: OPCUAServerItem) : boolean => {
@@ -285,7 +287,14 @@ export const OPCUAServerStage = () => {
     // }, [devices]);
 
     const isChecked = (item: any) => {
-        return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
+        const children = item.children || [];
+
+        // console.log(item.path, globalState?.subscriptionMap?.map((x) => x.path))
+
+        return ( (globalState?.subscriptionMap || []).map((x) => x.path === (item.path || '') ) ).findIndex((a) => a === true) > -1 || ((children.filter((x: any) => isChecked(x)).length > 0 && children.filter((x: any) => isChecked(x)).length == children.length))
+  
+
+        // return (globalState?.subscriptionMap || []).map((x) => x.path).indexOf(item.path) > -1 || (item.children?.filter((x: any) => isChecked(x)).length > 0 && item.children?.filter((x: any) => isChecked(x)).length == item.children.length)
     }
 
     const isInDeterminate = (item: any) => {
@@ -372,7 +381,7 @@ export const OPCUAServerStage = () => {
                                                 sx={{padding: 0, paddingRight: '6px'}}
                                                 disabled
                                                 indeterminate={!(globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == tag.children?.length) && (globalState?.deviceMap || []).filter((a: any) => a.path.indexOf(tag.name) > -1).length > 0}
-                                                checked={globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == tag.children?.length}
+                                                checked={globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == (tag.children?.length > 0 ? tag.children?.length : 1)}
                                                 size="small" />
                                             {tag.name}
                                         </Box>

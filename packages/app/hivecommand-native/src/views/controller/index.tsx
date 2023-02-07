@@ -37,10 +37,11 @@ export const Controller = () => {
     
     const valueStructure = useMemo(() => {
         return subscriptionMap?.map((subscription) => {
- 
              // let value = props.values[devicePath];
              let value = valueStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
 
+             console.log({valueStore, subscription});
+             
              let obj = subscription.tag.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), value)
  
              return obj
@@ -62,7 +63,7 @@ export const Controller = () => {
         })
 
         socket.current.on('data-changed', (data) => {
-            console.log("Datachanged", data)
+            console.log("Datachanged", data.value.value)
             // alert("Datachange on io socketç" + JSON.stringify({data}))
 
             setValueStore((store) => ({
