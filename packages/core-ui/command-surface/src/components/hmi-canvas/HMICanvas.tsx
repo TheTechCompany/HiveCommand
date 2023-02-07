@@ -52,6 +52,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
     const selectedRef = useRef<{selected?: {key?: "node" | "path", id?: string}}>({})
+
     const setSelected = (s: {key?: "node" | "path", id?: string}) => {
         _setSelected(s)
         selectedRef.current.selected = s;
@@ -107,7 +108,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
             let values = props.deviceValues?.[node?.extras?.devicePlaceholder?.tag];
 
-            console.log({dataValue: node.options})
             return {
                 ...node,
                 extras: {
@@ -123,8 +123,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
 
             
             // let hmi = program.interface //TODO change to a default flag on the HMI
-            console.log("Register nodes", {nodes: props.nodes})
-
             setNodes(props.nodes)
 
             // registerNodes(props.nodes, props.templatePacks, values, getPack, props.functions).then((nodes) => {
@@ -254,14 +252,13 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 }}>
                 <InfiniteCanvas
                     // finite
-                    fitToBounds
+
+                    // fitToBounds
                     style={CanvasStyle}
                     zoom={zoom}
                     // offset={offset}
                     selected={[selected] as any}
                     onViewportChanged={({zoom, offset}) => {
-
-                        console.log({zoom, offset});
 
                         setZoom(zoom)
                         // setOffset(offset)
@@ -282,7 +279,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     paths={paths}
                     factories={[IconNodeFactory, HMINodeFactory(false), PipePathFactory ]}
                     onPathCreate={(path) => {
-        
                         updateRef.current?.addPath?.(path);
                     }}
                 >

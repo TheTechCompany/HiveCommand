@@ -36,6 +36,7 @@ export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<stri
     })
 
     return {
+        endpoint: domainName,
         deployment,
         service,
         url: all([service.metadata.name, ns.metadata.name]).apply(([name, namespace]) => `${name}.${namespace}.svc.cluster.local`),

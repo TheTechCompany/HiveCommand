@@ -93,7 +93,7 @@ export const setter = (data: ${fromOPCType(props.dataType || 'String')}, tags: V
                 { key: elem.name, value: elem.isArray ? [lookupType(elem.type)] : lookupType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
         }
 
-        console.log(props.deviceValues.map(printJson) )
+        // console.log(props.deviceValues.map(printJson) )
 
         const deviceValues = (props.deviceValues || []).map(printJson).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})
         

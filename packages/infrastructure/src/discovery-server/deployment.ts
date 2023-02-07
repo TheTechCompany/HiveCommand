@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace, appName: any, appLabels: any, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>) => {
+export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace, appName: any, appLabels: any, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, iotEndpoint: string) => {
 
     const config = new Config();
 
@@ -32,7 +32,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                             // { name: 'CLIENT_SECRET', value: process.env.CLIENT_SECRET || 'secret' },
                             { name: 'NODE_ENV', value: 'production' },
                             // { name: 'ROOT_SERVER', value: `http://${rootServer}` },
-
+                            {name: "IOT_ENDPOINT", value: iotEndpoint},
                             {name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`)},
                             {name: "VERSION_SHIM", value: '1.0.10'},
                             // { name: 'REDIS_URL', value: redisUrl.apply(url => url)},
