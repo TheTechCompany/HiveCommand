@@ -94,7 +94,6 @@ class DevSidecar {
             if(recursive){
                 try{
                     let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
-                    // console.log({type})
 
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
 

@@ -23,6 +23,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 16
+          cache: 'yarn'
 
       - name: Rust setup
         uses: actions-rs/toolchain@v1
