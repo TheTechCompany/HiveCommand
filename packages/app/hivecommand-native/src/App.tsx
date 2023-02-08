@@ -24,6 +24,7 @@ function App() {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
+      
     });
   }, [])
   
