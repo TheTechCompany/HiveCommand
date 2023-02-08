@@ -29,6 +29,28 @@ jobs:
         with:
           toolchain: stable
 
+      - uses: Swatinem/rust-cache@v2
+        env:
+          cache-name: cache-rust
+        with:
+          shared-key: ${{ runner.os }}-buildrs-${{ env.cache-name }}
+          workspaces: |
+            packages/app/hivecommand-native/src-tauri
+          
+      # - name: Rust cache
+      #   uses: actions/cache@v2
+      #   env:
+      #     cache-name: cache-rust
+      #   with:
+      #     path: 
+      #       - ~/.cargo
+      #       - ./packages/app/hivecommand-native/src-tauri/target
+      #     key: ${{ runner.os }}-buildrs-${{ env.cache-name }}-${{ hashFiles('./packages/app/hivecommand-native/src-tauri/Cargo.lock') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-buildrs-${{ env.cache-name }}
+      #       ${{ runner.os }}-buildrs-
+      #       ${{ runner.os }}-
+
       - name: Install dependencies (ubuntu only)
         if: matrix.platform == 'ubuntu-latest'
         run: |
