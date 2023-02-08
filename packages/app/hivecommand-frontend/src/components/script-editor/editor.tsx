@@ -140,7 +140,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
             let mainModel = monaco.editor.getModel(monaco.Uri.parse("file:///main.tsx"));
 
             if(mainModel){ 
-                mainModel.setValue(props.defaultValue)
+                mainModel.setValue(props.defaultValue || '')
             }else{
                 mainModel = monaco.editor.createModel(props.defaultValue, "typescript", monaco.Uri.parse("file:///main.tsx"));
             }

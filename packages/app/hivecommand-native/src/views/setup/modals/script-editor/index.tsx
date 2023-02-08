@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, TextareaAutosize, DialogContent, DialogTitle, TextField, Box } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import Editor from "@monaco-editor/react";
-import { formatInterface, fromOPCType, lookupType } from '@hive-command/scripting'
+import { formatInterface, fromOPCType, lookupType, toJSType } from '@hive-command/scripting'
 
 export interface DeviceValue {
     id: string,
@@ -58,13 +58,16 @@ export const hasOPCChildren = (elem: {type?: string, children?: any[]}) => {
 
 export const ScriptEditorModal : React.FC<ScriptEditorProps> = (props) => {
 
+    const isDatatypeArray = (props.dataType || '').indexOf('[]') > -1;
+
+    console.log("Script editor datatype", {dataType: props.dataType})
     const defaultValue = `//Transform data before returning to getter
-export const getter = (tags: ValueStore) : ${fromOPCType(props.dataType || 'String')} => {
+export const getter = (tags: ValueStore) : ${toJSType(props.dataType?.replace('[]', '') as any || 'String')}${isDatatypeArray ? '[]' : ''} => {
 
 }
 
 //Transform data before sending to OPC-UA
-export const setter = (data: ${fromOPCType(props.dataType || 'String')}, tags: ValueStore, setTags: SetTags) => {
+export const setter = (data: ${toJSType(props.dataType?.replace('[]', '') as any || 'String')}${isDatatypeArray ? '[]' : ''}, tags: ValueStore, setTags: SetTags) => {
 
 }`
     const [ value, setValue ] = useState<string | undefined>(defaultValue);

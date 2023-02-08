@@ -1,9 +1,9 @@
 import { DataTypes } from ".";
 
 export enum OPC_TYPE {
-    Boolean = 'Boolean',
-    String = 'String',
-    Number = 'Number',
+    Boolean,
+    String,
+    Number
     // Structure = 'Structure'
 }
 

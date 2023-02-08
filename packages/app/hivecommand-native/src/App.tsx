@@ -24,12 +24,14 @@ function App() {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
+      
     });
   }, [])
   
   
   useEffect(() => {
     console.log({ BaseDirectory: BaseDirectory.App })
+    
     
     // createDir('conf', {dir: BaseDirectory.App, recursive: true}).then(() => {
     //   writeTextFile({path: CONF_FILE, contents: '{}'}, {dir: BaseDirectory.App}).then(() => {

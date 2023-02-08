@@ -16,6 +16,8 @@ import { isEqual } from 'lodash'
 
 import { MQTTPublisher } from '@hive-command/opcua-mqtt';
 
+import { fromOPCType } from '@hive-command/scripting'
+
 import { Client } from 'pg';
 
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
@@ -51,6 +53,8 @@ class DevSidecar {
     async subscribe(host: string, paths: {tag: string, path: string}[]){
         const client = await this.connect(host);
 
+        console.log("Subscribing to", paths);
+
         const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths)
 
         const emitter = new EventEmitter()
@@ -58,6 +62,8 @@ class DevSidecar {
         monitors?.on('changed', async (item, value, index) => {
             try{
                 const key = unwrap(index)
+
+                console.log("Datachanged at the OPCUA level", {key, value: value.value})
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){
@@ -88,13 +94,14 @@ class DevSidecar {
             if(recursive){
                 try{
                     let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
-                    // console.log({type})
+
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
+
                     results.push({
                         id: reference?.nodeId, 
                         name: name, 
                         path: bp,
-                        type,
+                        type: type ? fromOPCType(type) : undefined,
                         isArray,
                         children: innerResults
                     })
@@ -104,6 +111,7 @@ class DevSidecar {
             }else{
                 results.push(name)
             }
+            
             // console.log( "   -> ", reference.browseName.toString());
             // results.push(reference.browseName.toString());
         }

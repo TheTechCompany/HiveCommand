@@ -30,6 +30,8 @@ export const TemplateMenu = () => {
     const [ functionOpt, setFunctionOpt ] = useState<any>()
 
 
+    const [ws, setWs] = useState<any>({});
+
     const updateHMINode = useUpdateHMINode(programId)
 
     const [ assignNodeTemplate ] = useMutation(gql`
@@ -119,6 +121,13 @@ export const TemplateMenu = () => {
         console.log({label, value})
 
         // label = id || label;
+
+        if(typeof(value) === 'string' && value?.indexOf('script://') > -1 && type !== "Function"){
+            return  (<Box sx={{display: 'flex'}}>
+                <Typography>Provided by script</Typography>
+                
+            </Box>)
+        }
 
         const type_parts = type.split(':');
         if(type_parts.length > 1){
@@ -249,12 +258,11 @@ export const TemplateMenu = () => {
             case '[String]':
                 return (() => {
 
-                    const [ws, setWs] = useState('');
 
                     return (<Autocomplete
                         options={value || []}
                         size="small"
-                        value={ws}
+                        value={ws?.[label] || ''}
                         
                         renderOption={(props, option) => (
                             <Box sx={{display: 'flex', position: 'relative', alignItems: 'center', '& .MuiIconButton-root': {opacity: 0}, '&:hover .MuiIconButton-root': {opacity: 1} }}>
@@ -274,11 +282,11 @@ export const TemplateMenu = () => {
                             </Box>)}
                         onKeyDown={(e) => {
                             if(e.key === "Enter"){
-                                updateState(id || label, [ ...new Set((value || []).concat(ws)) ])
-                                setWs('')
+                                updateState(id || label, [ ...new Set((value || []).concat(ws?.[label])) ])
+                                setWs((ws) => { ws[label] = ''; return ws })
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs(e.target.value)} label={label} />}
+                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs((ws) => {ws[label] = e.target.value; return ws} )} label={label} />}
                         freeSolo
                         />)
                 })();
@@ -456,7 +464,7 @@ export const TemplateMenu = () => {
                                         // }), {});
 
                                         setFunctionArgs({
-                                            defaultValue: `export const getter = (values: Tags) : ${lookupType(type)} => {
+                                            defaultValue: value ? value.replace('script://', '') : `export const getter = (values: Tags) : ${lookupType(type)} => {
 
 }
 
