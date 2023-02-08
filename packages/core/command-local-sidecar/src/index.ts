@@ -95,7 +95,6 @@ class DevSidecar {
                 try{
                     let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
                     // console.log({type})
-                    if(!type) continue;
 
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
 
@@ -103,7 +102,7 @@ class DevSidecar {
                         id: reference?.nodeId, 
                         name: name, 
                         path: bp,
-                        type: fromOPCType(type),
+                        type: type ? fromOPCType(type) : undefined,
                         isArray,
                         children: innerResults
                     })
