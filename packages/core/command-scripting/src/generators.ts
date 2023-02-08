@@ -1,4 +1,4 @@
-import { DataTypes } from './types';
+import { DataTypes, toJSType } from './types';
 
 export type TypeArg = TypeDeclaration | DataTypes | DataTypes[] | TypeDeclaration[];
 export type TypeDeclaration = {[key: string]: TypeArg}
@@ -24,11 +24,14 @@ export const getKeyedValue = (key: string, type: TypeArg) : string => {
 }
 
 export const getValue = (type: TypeArg) : string => {
+    console.log("Get value", type);
+    
     if(typeof(type) === 'object' && !Array.isArray(type)){
         return `{ ${Object.keys(type).map((key) => getKeyedValue(key, type[key])).join('\n')} }`;
     }else if(Array.isArray(type)){
         return `${getValue(type[0])}[]`
     }else{
-        return type;
+        // console.log("toJS", toJSType(DataTypes[DataTypes[type as any] as any] as any))
+        return toJSType(type)
     }
 }

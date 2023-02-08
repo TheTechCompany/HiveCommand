@@ -16,6 +16,8 @@ import { isEqual } from 'lodash'
 
 import { MQTTPublisher } from '@hive-command/opcua-mqtt';
 
+import { fromOPCType } from '@hive-command/scripting'
+
 import { Client } from 'pg';
 
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
@@ -93,12 +95,15 @@ class DevSidecar {
                 try{
                     let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
                     // console.log({type})
+                    if(!type) continue;
+
                     const innerResults = await this.browse(host, bp, recursive, withTypes);
+
                     results.push({
                         id: reference?.nodeId, 
                         name: name, 
                         path: bp,
-                        type,
+                        type: fromOPCType(type),
                         isArray,
                         children: innerResults
                     })

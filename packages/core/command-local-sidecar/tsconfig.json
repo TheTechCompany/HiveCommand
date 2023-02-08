@@ -100,6 +100,7 @@
   },
   "references": [
     {"path": "../../communication/opc-mqtt"},
-    {"path": "../../communication/opc-client"}
+    {"path": "../../communication/opc-client"},
+    {"path": "../command-scripting"}
   ]
 }

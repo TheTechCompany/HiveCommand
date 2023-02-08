@@ -6,11 +6,12 @@ import { ChevronRight, Javascript, ExpandMore } from '@mui/icons-material';
 import axios from 'axios';
 import clsx from 'clsx';
 import { hasOPCChildren, ScriptEditorModal } from '../modals/script-editor';
+import { DataTypes } from '@hive-command/scripting';
 
 export interface OPCUAServerItem {
     id: string;
     name: string;
-    type?: string;
+    type?: keyof typeof DataTypes,
     isArray?: boolean;
     path?: string;
     children?: OPCUAServerItem[]
@@ -68,7 +69,8 @@ export const OPCUAServerStage = () => {
     }
 
     useEffect(() => {
-        scanOPCUA()
+        // scanOPCUA()
+        setOPCUA([{id: '101', path: '/Test', name: 'Test', type: 'Boolean'}, {id: '102', path: '/Test2', name: 'Test2', type: DataTypes.Number, isArray: true}] as any)
     }, [])
 
     const updateMap = (path: string, tag: string) => {
