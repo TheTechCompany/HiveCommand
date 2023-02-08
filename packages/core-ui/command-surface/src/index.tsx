@@ -29,6 +29,7 @@ import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { getDeviceFunction } from './components/action-menu';
+import { DataTypes } from '@hive-command/scripting';
 export * from './hooks/remote-components'
 
 
@@ -608,13 +609,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }, [hmi])
 
 
-    const parseValue = (value: any, type: "BooleanT" | "Boolean" | "IntegerT" | "UIntegerT") => {
-        switch (type) {
-            case "Boolean":
-            case "BooleanT":
+    const parseValue = (value: any, type: keyof typeof DataTypes) => {
+        switch (DataTypes[type]) {
+            case DataTypes.Boolean:
                 return (value == true || value == "true" || value == 1 || value == "1");
-            case "UIntegerT":
-            case "IntegerT":
+            case DataTypes.Number:
                 let val = parseFloat(value || 0);
                 if (Number.isNaN(val)) {
                     val = 0;
@@ -629,36 +628,40 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const [normalisedValues, setNormalisedValues] = useState<any>({});
     
     useEffect(() => {
-        // setNormalisedValues(devices?.map((device) => {
+        setNormalisedValues(tags?.map((tag) => {
 
-        //     let deviceKey = `${device.tag}`;
+            let deviceKey = `${tag.name}`;
 
-        //     // let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
+            // let device = program?.devices.find((a) => `${a.type.tagPrefix ? a.type.tagPrefix : ''}${a.tag}` == deviceKey);
 
-        //     // device.type.state
-        //     let deviceValues = device?.type.state?.map((stateItem) => {
+            // device.type.state
+            let type = types?.find((a) => a.name === tag.type);
 
-        //         // let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
+            let fields = type ? type.fields : [];
 
-        //         let currentValue = props.values?.[deviceKey]?.[stateItem.key];
+            let deviceValues = fields?.map((stateItem) => {
 
-        //         return {
-        //             key: stateItem.key,
-        //             value: parseValue(currentValue, stateItem.type)
-        //         }
-        //     }).reduce((prev, curr) => ({
-        //         ...prev,
-        //         [curr.key]: curr.value
-        //     }), {})
+                // let deviceStateItem = device?.type.state.find((a) => a.key == valueKey)
 
-        //     return {
-        //         key: deviceKey,
-        //         values: deviceValues
-        //     }
-        // }).reduce((prev, curr) => ({
-        //     ...prev,
-        //     [curr.key]: curr.values
-        // }), {}))
+                let currentValue = props.values?.[deviceKey]?.[stateItem.name];
+
+                return {
+                    key: stateItem.name,
+                    value: parseValue(currentValue, stateItem.type as keyof typeof DataTypes)
+                }
+            }).reduce((prev, curr) => ({
+                ...prev,
+                [curr.key]: curr.value
+            }), {})
+
+            return {
+                key: deviceKey,
+                values: fields.length > 0 ? deviceValues : parseValue(props.values?.[deviceKey], tag.type as keyof typeof DataTypes)
+            }
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.values
+        }), {}))
 
     }, [props.values, tags])
 

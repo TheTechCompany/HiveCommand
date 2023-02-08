@@ -81,6 +81,7 @@ export const useNodesWithValues = (
 				if(inputTemplate.type?.split(':')[0] === 'Tag'){
 					let tag = tags?.find((a) => a.id === value)?.name 
 					if(!tag) return;
+					console.log("TAG VALUES", values, tag)
 					value = {
 						tag,
 						...values[ tag ]
@@ -154,6 +155,8 @@ export const useNodesWithValues = (
 				console.log({e, node, optionKey});
 			}
 
+			console.log("PARSED", node, tags)
+
 
 			return {key: optionKey, value: parsedValue}
 
@@ -162,6 +165,7 @@ export const useNodesWithValues = (
 			[curr.key]: curr.value
 		}), {})
 
+		console.log("NODE VALUES", node, values)
 
 		return {
 			...node,
@@ -277,6 +281,8 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		}else if('getter' in exports){
 			returnValue = exports?.getter?.( templateValues.values[node.id] /*normalisedValues*/ );
 		}
+
+		console.log("Template return value", optionKey, returnValue, templateValues.values[node.id])
 
 		// const
 
