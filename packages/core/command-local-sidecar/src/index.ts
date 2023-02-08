@@ -24,12 +24,19 @@ import { Client } from 'pg';
 
 const OPC_PROXY_PORT = 8484;
 
+export interface SidecarOptions {
+    host: string,
+    user: string,
+    pass: string
+}
+
 class DevSidecar {
 
     private clients : {[key: string]: OPCUAClient} = {};
 
     private mqttPublisher? : MQTTPublisher; 
 
+    private options? : SidecarOptions;
     // private sessions : {[key: string]: ClientSession} = {};
 
     constructor(){
@@ -64,6 +71,8 @@ class DevSidecar {
                 const key = unwrap(index)
 
                 console.log("Datachanged at the OPCUA level", {key, value: value.value})
+
+                if(this.mqttPublisher) this.mqttPublisher?.publish(key, DataType.Float, value.value);
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){
@@ -111,7 +120,7 @@ class DevSidecar {
             }else{
                 results.push(name)
             }
-            
+
             // console.log( "   -> ", reference.browseName.toString());
             // results.push(reference.browseName.toString());
         }
@@ -157,12 +166,12 @@ class DevSidecar {
 
     }
 
-    async setup_data(host: string){
+    async setup_data(host: string, user: string, pass: string, exchange: string){
 
         this.mqttPublisher = new MQTTPublisher({
             host: host,
-            user: '',
-            pass: '',
+            user: user,
+            pass: pass,
             exchange: 'TestExchange'
         })
 
@@ -171,6 +180,14 @@ class DevSidecar {
 
     async publish_data(){
         // this.mqttPublisher?.publish()
+    }
+
+    setConfig(options: SidecarOptions){
+        this.options = options;
+    }  
+
+    getConfig(){
+        return this.options;
     }
 
 
@@ -202,6 +219,18 @@ const dataChanged = (data: any) => {
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.route('/setup')
+    .get((req, res) => {
+        res.send({config: sidecar.getConfig()})
+    })
+    .post(async (req, res) => {
+        const config = req.body.config;
+
+        sidecar.setConfig(config);
+
+        await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
+    })
 
 app.route('/:host/set_data')
     .post(async (req, res) => {

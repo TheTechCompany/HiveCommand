@@ -25,6 +25,8 @@ export class MQTTPublisher {
         this.connection = await connect(`amqp://${this.options.user}:${this.options.pass}@${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
         this.channel = await this.connection.createChannel();
 
+        console.log("Connected with a channel to ", this.options.host);
+
         await this.channel.assertExchange(this.options.exchange, 'topic');
     }
 
@@ -40,6 +42,8 @@ export class MQTTPublisher {
 
     //Publish current state to other entities
     async publish(key: string, dataType: DataType, value: any){
+        
+        console.log("Publishing ", key, dataType, value)
 
         this.channel?.publish(
             this.options.exchange, 
