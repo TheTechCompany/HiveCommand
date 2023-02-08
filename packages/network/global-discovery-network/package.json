@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.4.15-alpha.146",
+  "version": "1.4.15-alpha.147",
   "description": "",
   "main": "index.js",
   "publishConfig": {
@@ -21,7 +21,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.146",
+    "@hive-command/data": "^1.4.15-alpha.147",
     "@hive-command/opcua-mqtt-hub": "^1.4.15-alpha.134",
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",
