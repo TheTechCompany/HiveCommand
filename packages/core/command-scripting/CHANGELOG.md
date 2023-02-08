@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.149](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.148...v1.4.15-alpha.149) (2023-02-08)
+
+**Note:** Version bump only for package @hive-command/scripting
+
+
+
+
+
 ## [1.4.15-alpha.148](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.147...v1.4.15-alpha.148) (2023-02-08)
 
 **Note:** Version bump only for package @hive-command/scripting

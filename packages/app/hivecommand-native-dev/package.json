@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/native-dev",
-  "version": "1.4.15-alpha.148",
+  "version": "1.4.15-alpha.149",
   "private": true,
   "bin": "dist/sidecar.js",
   "dependencies": {
@@ -10,8 +10,8 @@
     "@hexhive/ui": "^1.0.1-alpha.60",
     "@hexhive/utils": "^0.0.6-alpha.13",
     "@hive-command/api": "^1.4.15-alpha.137",
-    "@hive-command/command-surface": "^1.4.15-alpha.148",
-    "@hive-command/local-sidecar": "^1.4.15-alpha.148",
+    "@hive-command/command-surface": "^1.4.15-alpha.149",
+    "@hive-command/local-sidecar": "^1.4.15-alpha.149",
     "@hive-command/opcua-client": "^1.4.15-alpha.143",
     "@mui/material": "^5.9.3",
     "@mui/x-date-pickers": "^5.0.3",
