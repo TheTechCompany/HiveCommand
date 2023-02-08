@@ -168,19 +168,48 @@ export default () => {
 	const parseValue = (value: any, typeKey: keyof typeof DataTypes) => {
 		let type = DataTypes[typeKey];
 
-		switch(type){
-			case DataTypes.Boolean:
-				return (value == true || value == "true" || value == 1 || value == "1");
-			case DataTypes.Number:
-				let val = parseFloat(value || 0);
-				if(Number.isNaN(val)){
-					val = 0;
-				}
-				return val % 1 != 0 ? val.toFixed(2) : val;
-			default:
-				console.log({type})
-				break;
-		}
+		let isArray = typeKey?.indexOf('[]') > -1;
+        
+        if(isArray && !Array.isArray(value)) value = []
+        if(isArray) typeKey = typeKey?.replace('[]', '') as any
+        
+		switch (typeKey) {
+            case DataTypes.Boolean:
+                return isArray ? value.map((value: any) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
+            case DataTypes.Number:
+
+                return isArray ? value.map((value: any) => {
+                    let val = parseFloat(value || 0);
+                    if (Number.isNaN(val)) {
+                        val = 0;
+                    }
+                    return val.toFixed(2);
+                }) : (() => {
+                    let val = parseFloat(value || 0);
+
+                    if(Number.isNaN(val)) {
+                        val = 0;
+                    }
+                    return val.toFixed(2);
+                })()
+            default:
+                console.log({ type })
+                break;
+        }
+
+		// switch(type){
+		// 	case DataTypes.Boolean:
+		// 		return (value == true || value == "true" || value == 1 || value == "1");
+		// 	case DataTypes.Number:
+		// 		let val = parseFloat(value || 0);
+		// 		if(Number.isNaN(val)){
+		// 			val = 0;
+		// 		}
+		// 		return val % 1 != 0 ? val.toFixed(2) : val;
+		// 	default:
+		// 		console.log({type})
+		// 		break;
+		// }
 	}
 
 	const [ stateValues, setStateValues ] = useState<any>({});
@@ -233,8 +262,6 @@ export default () => {
 		}), {}))
 
 	}, [values, program])
-
-	console.log({stateValues})
 
 	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
 	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
@@ -293,8 +320,6 @@ export default () => {
 	const infoBubble = useMemo(() => {
 		
 	}, [])
-
-	console.log({stateValues})
 
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>

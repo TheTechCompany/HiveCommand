@@ -211,9 +211,13 @@ const io = new Server(server, {
 
 let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};
 
+let current_data : {[key: string]: any} = {};
+
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
-    console.log({data});
+    current_data[data.key] = data.value.value;
+
+    // console.log({data});
     // sidecar.publish_data()
 }
 
@@ -260,7 +264,12 @@ app.post('/:host/subscribe', async (req, res) => {
         delete subscriptions[req.params.host];
     }
 
-    if(subscriptions[req.params.host]) return res.send("Already subscribed");
+    if(subscriptions[req.params.host]) {
+        // current_data[]
+        return res.send({
+            data: current_data
+        })
+    };
 
         try{
             const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)

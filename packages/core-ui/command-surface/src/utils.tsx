@@ -49,8 +49,6 @@ export const useNodesWithValues = (
 	updateValues: (values: any) => void
 ) => {
 
-	console.log("NODE VALUES", values);
-	
 	const valueRef = useRef<{values: any}>({values})
 
 	const [ valueState, setValues ] = useState<any>(values || {})
@@ -83,7 +81,7 @@ export const useNodesWithValues = (
 				if(inputTemplate.type?.split(':')[0] === 'Tag'){
 					let tag = tags?.find((a) => a.id === value)?.name 
 					if(!tag) return;
-					console.log("TAG VALUES", values, tag)
+
 					value = {
 						tag,
 						...values[ tag ]
@@ -157,7 +155,6 @@ export const useNodesWithValues = (
 				console.log({e, node, optionKey});
 			}
 
-			console.log("PARSED", node, tags)
 
 
 			return {key: optionKey, value: parsedValue}
@@ -166,8 +163,6 @@ export const useNodesWithValues = (
 			...prev,
 			[curr.key]: curr.value
 		}), {})
-
-		console.log("NODE VALUES", node, values)
 
 		return {
 			...node,
@@ -232,6 +227,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any, setValues: (values: any) => void, args: any) => void }= {};
 
 		const module = { exports };
+
 		const func = new Function(
 			"module", 
 			"exports", 
@@ -296,13 +292,38 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 
 		if(typeof(optionValue) === 'string' && optionValue?.indexOf('script://') > -1){
 
+			const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any, setValues: (values: any) => void, args: any) => void }= {};
+
+			const module = { exports };
+
+			const func = new Function(
+				"module", 
+				"exports", 
+				"showWindow", 
+				"showTagWindow",
+				"React",
+				"require",
+				transpile(optionValue.replace('script://', ''), { module: ModuleKind.CommonJS, jsx: JsxEmit.React }) );
+			
+
+
+			func(module, exports, functions.showWindow, functions.showTagWindow, React, _require);
+		
+			if('getter' in exports){
+				const val =  exports?.getter?.( normalisedValues );
+				return val;
+			}
+
+			if('handler' in exports){
+				return (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, normalisedValues || {}, (state: any) => { console.log("setState", state); setValues(state); }, args)
+			}
+
 		}else if (typeof(optionValue) === 'string' && optionValue?.match(/{{.*}}/) !== null) {
 			// let templateString : string = node.options[key];
 			let templateString = optionValue.replaceAll(/{{\s*(.*)\s*}}/g, "{{= it.$1 }}")
 			//Replace {{}} with {{ it.${matched} }}
 
 			try {
-				console.log("Template string", templateString, normalisedValues)
 				// console.log({varname, tmpl: x.options[key], values})
 
 				return template(templateString)(normalisedValues /*values*/)
@@ -355,8 +376,6 @@ export const getNodePack = async (type: string, templatePacks: HMITemplatePack[]
 		base = base.join('/');
 
 		const pack = await getPack(packId, `${base}/`, url_slug)
-
-		console.log("Found pack", pack)
 
 		return pack.find((a: any) => a.name == templateName)?.component
 		

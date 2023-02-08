@@ -21,8 +21,9 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         }
     */
     let getTagPaths = (object: any, parent?: string): any => {
+        // console.log("Get tag paths", object, parent)
 
-        if(typeof(object) == 'object'){
+        if(typeof(object) == 'object' && !Array.isArray(object)){
             return Object.keys(object).map((key) => getTagPaths(object[key], parent ? `${parent}.${key}` : key) ).reduce((prev, curr) => prev.concat((Array.isArray(curr) ? curr : [curr])), [])   
         }else{
             return {parent, tag: object};
@@ -36,12 +37,12 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         if(tag?.indexOf('script://') == 0){
             const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
             const { getter, setter } = load_exports(jsCode)
-            console.log({jsCode})
+            // console.log({jsCode})
             return setter(value, valueStructure, (values: any) => {
                 
                 let tags = getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
 
-                console.log({tags, values, subscriptionMap})
+                // console.log({tags, values, subscriptionMap})
                 let newValues = tags.map((t: any) => {
                  
                     let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path

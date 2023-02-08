@@ -257,6 +257,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
 	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
 
+    useEffect(() => {
+        setInfoTarget(undefined)
+    }, [activePage])
+
     const functions = {
         changeView: (args: { view: string }) => {
                 setActivePage(args.view);
@@ -562,12 +566,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         (async () => {
             const activeNodes = (hmi?.nodes || []).filter((a: any) => !a.children || a.children.length == 0);
 
-            console.log("Active nodes");
             const nodesWithElems = await Promise.all(activeNodes.map(async (node) => {
 
                 const nodeElem = await getNodePack(node.type, templatePacks, getPack)
-
-                console.log({nodeElem, node, templatePacks});
 
                 let width = node.width || nodeElem?.metadata?.width //|| x.type.width ? x.type.width : 50;
                 let height = node.height || nodeElem?.metadata?.height //|| x.type.height ? x.type.height : 50;
@@ -615,7 +616,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         if(isArray && !Array.isArray(value)) value = []
         if(isArray) type = type?.replace('[]', '') as any
         
-        console.log("Parse value", type, isArray)
         switch (DataTypes[type]) {
             case DataTypes.Boolean:
                 return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
@@ -670,6 +670,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 [curr.key]: curr.value
             }), {})
 
+            if(deviceKey === 'CEB_Days'){
+                console.log('CEB DAYS', props.values, deviceKey, deviceValues, fields)
+            }
+
             return {
                 key: deviceKey,
                 values: fields.length > 0 ? deviceValues : parseValue(props.values?.[deviceKey], tag.type as keyof typeof DataTypes)
@@ -686,7 +690,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
 
-            if(Object.keys(newState[tag] || {}).length > 0){
+            if(!Array.isArray(newState[tag]) && Object.keys(newState[tag] || {}).length > 0){
                 Object.keys(newState[tag]).map((subkey) => client?.writeTagValue?.(tag, newState[tag][subkey], subkey))
             }else{
                 client?.writeTagValue?.(tag, newState[tag])
