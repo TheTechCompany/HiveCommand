@@ -16,7 +16,6 @@ import { CanvasStyle } from '../../../../style';
 
 import { useRemoteComponents } from '@hive-command/command-surface';
 
-import { size } from 'mathjs';
 import { PipePathFactory } from "@hexhive/ui";
 
 export const Controls = (props) => {

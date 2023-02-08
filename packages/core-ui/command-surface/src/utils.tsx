@@ -292,12 +292,15 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		// let optionValue = node.options?.[optionKey];
 
 
-		if (typeof(optionValue) === 'string' && optionValue?.match(/{{.*}}/) !== null) {
+		if(typeof(optionValue) === 'string' && optionValue?.indexOf('script://') > -1){
+
+		}else if (typeof(optionValue) === 'string' && optionValue?.match(/{{.*}}/) !== null) {
 			// let templateString : string = node.options[key];
 			let templateString = optionValue.replaceAll(/{{\s*(.*)\s*}}/g, "{{= it.$1 }}")
 			//Replace {{}} with {{ it.${matched} }}
 
 			try {
+				console.log("Template string", templateString, normalisedValues)
 				// console.log({varname, tmpl: x.options[key], values})
 
 				return template(templateString)(normalisedValues /*values*/)
@@ -306,18 +309,6 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 
 				return optionValue;
 			};
-		} else if(typeof(optionValue) === 'string' && optionValue?.indexOf('script://') > -1){
-
-			optionValue = optionValue.match(/script:\/\/(.*)/s)?.[1];
-
-
-			const exports : { handler?: (elem: any, state: any, setState: (values: any) => void, args: any) => void } = {};
-			const module = { exports };
-			const func = new Function("module", "exports", "showWindow", "showTagWindow", "React", "require", transpile(optionValue, {kisnd: ModuleKind.CommonJS, jsx: JsxEmit.ReactJSX}) );
-			func(module, exports, functions.showWindow, functions.showTagWindow, React, _require);
-
-			return (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, normalisedValues || {}, setValues, args)
-
 		} else {
 			return optionValue;
 		}
