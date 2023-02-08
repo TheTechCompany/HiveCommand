@@ -17,7 +17,6 @@ import { Command } from '@tauri-apps/api/shell';
 const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
-  
 
   const { authState } = useContext(DataContext)
 
