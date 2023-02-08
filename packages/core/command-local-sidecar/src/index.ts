@@ -111,6 +111,7 @@ class DevSidecar {
             }else{
                 results.push(name)
             }
+            
             // console.log( "   -> ", reference.browseName.toString());
             // results.push(reference.browseName.toString());
         }
