@@ -610,15 +610,31 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
 
     const parseValue = (value: any, type: keyof typeof DataTypes) => {
+        let isArray = type.indexOf('[]') > -1;
+        
+        if(isArray && !Array.isArray(value)) value = []
+        if(isArray) type = type?.replace('[]', '') as any
+        
+        console.log("Parse value", type, isArray)
         switch (DataTypes[type]) {
             case DataTypes.Boolean:
-                return (value == true || value == "true" || value == 1 || value == "1");
+                return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
             case DataTypes.Number:
-                let val = parseFloat(value || 0);
-                if (Number.isNaN(val)) {
-                    val = 0;
-                }
-                return val.toFixed(2);
+
+                return isArray ? value.map((value) => {
+                    let val = parseFloat(value || 0);
+                    if (Number.isNaN(val)) {
+                        val = 0;
+                    }
+                    return val.toFixed(2);
+                }) : (() => {
+                    let val = parseFloat(value || 0);
+
+                    if(Number.isNaN(val)) {
+                        val = 0;
+                    }
+                    return val.toFixed(2);
+                })()
             default:
                 console.log({ type })
                 break;
@@ -665,7 +681,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     }, [props.values, tags])
 
-    // console.log({normalisedValues});
+    console.log({normalisedValues});
 
     const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
