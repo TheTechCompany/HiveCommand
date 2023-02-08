@@ -2,8 +2,8 @@ import { connect, ConsumeMessage, Connection, Channel } from 'amqplib'
 import { DataType } from 'node-opcua';
 
 export interface MQTTPublisherOptions {
-    user: string;
-    pass: string;
+    user?: string;
+    pass?: string;
     host: string;
     port?: number;
 
@@ -22,7 +22,9 @@ export class MQTTPublisher {
     }
 
     async setup(){
-        this.connection = await connect(`amqp://${this.options.user}:${this.options.pass}@${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
+        const authSect = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
+        console.log({authSect, opts: this.options})
+        this.connection = await connect(`amqp://${authSect ? authSect + '@' : ''}${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
         this.channel = await this.connection.createChannel();
 
         console.log("Connected with a channel to ", this.options.host);

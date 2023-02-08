@@ -170,8 +170,8 @@ class DevSidecar {
 
         this.mqttPublisher = new MQTTPublisher({
             host: host,
-            user: user,
-            pass: pass,
+            // user: user,
+            // pass: pass,
             exchange: 'TestExchange'
         })
 
@@ -230,6 +230,7 @@ app.route('/setup')
         sidecar.setConfig(config);
 
         await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
+        res.send({config: sidecar.getConfig()})
     })
 
 app.route('/:host/set_data')

@@ -13,18 +13,24 @@ import { BaseDirectory } from '@tauri-apps/api/fs';
 import { Controller } from './views/controller';
 
 import { Command } from '@tauri-apps/api/shell';
+import axios from 'axios';
 
 const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
 
-  const { authState } = useContext(DataContext)
+  const { authState, updateAuthState } = useContext(DataContext)
 
   useEffect(() => {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
-      
+      axios.get(`http://localhost:${8484}/setup`).then((data) => {
+        // if(data.config){
+        //   updateAuthState?.('opcuaProvisioned', true)
+        // }
+      })
+
     });
   }, [])
   
