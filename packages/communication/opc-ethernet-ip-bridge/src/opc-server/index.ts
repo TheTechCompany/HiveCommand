@@ -138,10 +138,7 @@ export const addTag = async (
     const _getter = () => {
         return getter() || defaultValue
     }
-    // const setter = () => {
-
-    // }
-
+ 
     if(dataType != OPC_TYPE.Structure){
         await server.addVariable(tagname, dataType, isArray, _getter, setter, parent)
     }
