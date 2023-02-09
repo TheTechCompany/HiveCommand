@@ -5,6 +5,7 @@ import { GlobalState, StateUpdateFn } from "../views/setup/context";
 export const DataContext = React.createContext<{
     authState?: (AuthState & {isAuthed: () => boolean}),
     globalState?: GlobalState;
+    setAuthState?: (authState: AuthState) => void;
     updateAuthState?: (key: string, value: any) => void;
     updateGlobalState?: StateUpdateFn
 }>({});
@@ -20,6 +21,7 @@ export interface AuthState {
     discoveryServer?: string;
     provisionCode?: string;
     authToken?: string;
+    configProvided?: boolean;
     opcuaServer?: string;
     opcuaProvisioned?: boolean;
 }
@@ -97,11 +99,12 @@ export const DataProvider = (props: any) => {
             authState: {
                 ...authState,
                 isAuthed: () => {
-                    return authState.discoveryServer && authState.provisionCode && authState.authToken && authState.opcuaServer && authState.opcuaProvisioned
+                    return authState.discoveryServer && authState.provisionCode && authState.authToken && authState.opcuaServer && authState.opcuaProvisioned && authState.configProvided
                 }
             },
             updateAuthState,
             updateGlobalState,
+            setAuthState,
             globalState
         }}>
             {props.children}

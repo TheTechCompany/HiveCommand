@@ -1,14 +1,14 @@
 import {Channel, connect, Connection, ConsumeMessage} from 'amqplib';
 
 export interface MQTTHubMessage {
-    userId: string;
+    userId?: string;
     routingKey?: string;
     messageContent?: string;
 }
 
 export interface MQTTHubOptions {
-    user: string;
-    pass: string;
+    user?: string;
+    pass?: string;
     host: string;
     port?: number;
 
@@ -38,7 +38,7 @@ export class MQTTHub {
 
         console.log({routingKey, messageContent});
 
-        if(!userId) return console.error("No userId found, private messages not allowed");
+        // if(!userId) return console.error("No userId found, private messages not allowed");
 
         this.options.onMessage?.({
             routingKey,
@@ -48,7 +48,9 @@ export class MQTTHub {
     }
 
     async setup(){
-        this.connection = await connect(`amqp://${this.options.user}:${this.options.pass}@${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
+        let authSection = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
+
+        this.connection = await connect(`amqp://${authSection ? authSection + '@' : ''}${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
         
         this.channel = await this.connection.createChannel()
 

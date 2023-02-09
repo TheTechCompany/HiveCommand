@@ -72,7 +72,7 @@ class DevSidecar {
 
                 console.log("Datachanged at the OPCUA level", {key, value: value.value})
 
-                if(this.mqttPublisher) this.mqttPublisher?.publish(key, DataType.Float, value.value);
+                if(this.mqttPublisher) this.mqttPublisher?.publish(key, value.value.dataType as any, value.value.value);
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){
@@ -172,10 +172,12 @@ class DevSidecar {
             host: host,
             // user: user,
             // pass: pass,
-            exchange: 'TestExchange'
+            exchange: exchange || 'TestExchange'
         })
 
         await this.mqttPublisher.setup()
+
+        console.log("MQTT Publisher started");
     }
 
     async publish_data(){
@@ -226,7 +228,9 @@ app.use(cors());
 
 app.route('/setup')
     .get((req, res) => {
-        res.send({config: sidecar.getConfig()})
+        const config = sidecar.getConfig();
+
+        res.send(config ? {config} : {error: "No config"}) 
     })
     .post(async (req, res) => {
         const config = req.body.config;

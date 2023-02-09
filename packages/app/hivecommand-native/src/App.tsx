@@ -19,16 +19,16 @@ const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
 
-  const { authState, updateAuthState } = useContext(DataContext)
+  const { authState, setAuthState, updateAuthState } = useContext(DataContext)
 
   useEffect(() => {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
       axios.get(`http://localhost:${8484}/setup`).then((data) => {
-        // if(data.config){
-        //   updateAuthState?.('opcuaProvisioned', true)
-        // }
+        if(data.config){
+          setAuthState?.({...authState, configProvided: true} )
+        }
       })
 
     });
