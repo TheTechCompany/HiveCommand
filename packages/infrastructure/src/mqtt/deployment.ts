@@ -1,8 +1,9 @@
 import {Provider} from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
-import { Config } from '@pulumi/pulumi';
+import { Config, Input, Output } from '@pulumi/pulumi';
 
-export const RabbitMQDeployment = async (provider: Provider, appName: string, storageClaim: k8s.core.v1.PersistentVolumeClaim, authApi: string, ns: k8s.core.v1.Namespace) => {
+export const RabbitMQDeployment = async (provider: Provider, appName: string, storageClaim: k8s.core.v1.PersistentVolumeClaim, authApi: Output<string>, ns: k8s.core.v1.Namespace) => {
+
 
     const config = new Config();
     const suffix = config.require('suffix');
@@ -14,7 +15,7 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string, st
             namespace: ns.metadata.name,
         },
         data: {
-            'rabbitmq.conf': `log.console = true
+            'rabbitmq.conf': authApi.apply(authApi => `log.console = true
 log.console.level = debug
 
 auth_backends.1 = rabbit_auth_backend_http
@@ -22,7 +23,7 @@ auth_backends.1 = rabbit_auth_backend_http
 auth_http.user_path = ${authApi}/auth/user
 auth_http.vhost_path = ${authApi}/auth/vhost
 auth_http.resource_path = ${authApi}/auth/resource
-auth_http.topic_path = ${authApi}/auth/topic`,
+auth_http.topic_path = ${authApi}/auth/topic`),
             'enabled_plugins': '[rabbitmq_prometheus,rabbitmq_auth_backend_http].'
         }
     }, {

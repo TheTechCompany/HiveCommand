@@ -2,7 +2,7 @@ import { Provider } from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
 import { Deployment } from './deployment'
 import { Service } from './service'
-import { Config, Output } from '@pulumi/pulumi'
+import { Config, Input, Output } from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 
 export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1.Namespace, dbUrl: Output<any>, dbPass: Output<any>, discoveryUrl: string, rabbitHost: Output<any>, iotEndpoint: string) => {

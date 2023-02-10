@@ -54,7 +54,8 @@ const main = (async () => {
     
     const mqttAuth = `hive-command-discovery-server-${suffix}-internal-svc`
 
-    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), `http://${mqttAuth}.svc.cluster.local`, namespace)
+    const mqttEndpoint = namespace.metadata.name.apply((ns) => `http://${mqttAuth}.${ns}.svc.cluster.local`)
+    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), mqttEndpoint, namespace)
     
     // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
