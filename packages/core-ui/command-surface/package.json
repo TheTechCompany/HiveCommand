@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.153",
+	"version": "1.4.15-alpha.154",
 	"description": "",
 	"private": true,
 	"publishConfig": {
@@ -44,7 +44,7 @@
 	},
 	"dependencies": {
 		"@hive-command/canvas-nodes": "^1.4.15-alpha.149",
-		"@hive-command/scripting": "^1.4.15-alpha.153",
+		"@hive-command/scripting": "^1.4.15-alpha.154",
 		"dot": "^1.1.3"
 	}
 }
