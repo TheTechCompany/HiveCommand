@@ -35,6 +35,9 @@ import { API } from './api';
 
         return device != null;
     }, async (username, resource) => {
+        
+        console.log("MQTT Resource", resource);
+
         return resource === process.env.IOT_EXCHANGE || resource === 'device_values'
     });
 
@@ -48,36 +51,40 @@ import { API } from './api';
     internalAuthApi.listen(8005, async () => {
         console.log("Internal API up on 8005");
 
-        const mqttHub = new MQTTHub({
-            user: process.env.IOT_USER,
-            pass: process.env.IOT_PASS,
-            host: process.env.IOT_ENDPOINT || '',        
-            exchange: process.env.IOT_EXCHANGE || 'device_values',
-            onMessage: async ({ routingKey, messageContent, userId }) => {
-    
-                console.log(`Data from ${userId} ${routingKey}`);
-    
-                const device = await prisma.device.findFirst({where: {network_name: userId}})
-                //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
-    
-                if(!device || !routingKey || !messageContent) return;
-    
-                await prisma.deviceValue.create({
-                    data: {
-                        deviceId: device.id,
-                        placeholder: routingKey,
-                        // key: routingKey,
-                        value: messageContent?.value,
-                    }
-                })
-    
-                //Call alarm center hook to allow for business logic based alarm signals
-                alarmCenter.hook({routingKey, messageContent, userId})
-            }
-        });
-    
-        await mqttHub.setup();
-        await mqttHub.subscribe();
+        try{
+            const mqttHub = new MQTTHub({
+                user: process.env.IOT_USER,
+                pass: process.env.IOT_PASS,
+                host: process.env.IOT_ENDPOINT || '',        
+                exchange: process.env.IOT_EXCHANGE || 'device_values',
+                onMessage: async ({ routingKey, messageContent, userId }) => {
+        
+                    console.log(`Data from ${userId} ${routingKey}`);
+        
+                    const device = await prisma.device.findFirst({where: {network_name: userId}})
+                    //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
+        
+                    if(!device || !routingKey || !messageContent) return;
+        
+                    await prisma.deviceValue.create({
+                        data: {
+                            deviceId: device.id,
+                            placeholder: routingKey,
+                            // key: routingKey,
+                            value: messageContent?.value,
+                        }
+                    })
+        
+                    //Call alarm center hook to allow for business logic based alarm signals
+                    alarmCenter.hook({routingKey, messageContent, userId})
+                }
+            });
+        
+            await mqttHub.setup();
+            await mqttHub.subscribe();
+        }catch(e){
+            console.error({e});
+        }
     
     })
     
