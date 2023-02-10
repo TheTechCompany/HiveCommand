@@ -32,6 +32,8 @@ import { API } from './api';
         })
 
         return device != null;
+    }, async (username, resource) => {
+        return resource === process.env.IOT_EXCHANGE || resource === 'device_values'
     });
     
     const mqttHub = new MQTTHub({

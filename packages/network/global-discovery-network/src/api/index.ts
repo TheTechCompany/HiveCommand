@@ -90,7 +90,7 @@ export const API = (prisma: PrismaClient) => {
                 deviceId: device?.id,
 
                 iotEndpoint: IOT_ENDPOINT,
-                iotSubject: 'IOT-SUBJECT',
+                iotSubject: process.env.IOT_EXCHANGE,
                 iotUser: device.network_name,
                 iotToken: token
             }

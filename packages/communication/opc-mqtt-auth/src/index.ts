@@ -2,6 +2,7 @@ import {Router} from 'express';
 
 export const MQTTAuth = (
     getUser: ( username: string, password: string ) => Promise<boolean>,
+    isValidResource: (username: string, name: string) => Promise<boolean> 
 ) => {
     const router = Router();
 
@@ -25,12 +26,17 @@ export const MQTTAuth = (
         res.send("allow");
     });
 
-    router.get('/auth/resource', (req, res) => {
-        if((req.query.name === 'tasks' && (req.query.permission === 'configure' || req.query.permission === "permission")) || req.query.name === 'amq.default'){
+    router.get('/auth/resource', async (req, res) => {
+        const { username, name } = req.query as any;
+        const isValid = await isValidResource(username, name);
+
+        if((isValid && (req.query.permission === 'configure' || req.query.permission === "permission") || req.query.permission === "write") || req.query.name === 'amq.default'){
             return res.send("allow");
+        }else{
+            console.log("Resources failed ", req.query)
         }
 
-        res.send('allow');
+        return res.send('deny');
     });
 
     router.get('/auth/topic', (req, res) => {
