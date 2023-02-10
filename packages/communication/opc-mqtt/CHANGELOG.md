@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.153](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.152...v1.4.15-alpha.153) (2023-02-10)
+
+**Note:** Version bump only for package @hive-command/opcua-mqtt
+
+
+
+
+
 ## [1.4.15-alpha.152](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.151...v1.4.15-alpha.152) (2023-02-10)
 
 **Note:** Version bump only for package @hive-command/opcua-mqtt

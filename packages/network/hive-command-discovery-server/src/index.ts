@@ -11,8 +11,6 @@ import { SyncClient } from './sync-client/SyncClient';
 import { Data } from './data';
 import { PrismaClient, cache } from '@hive-command/data'
 
-import { IOTServer } from '@hive-command/iot-server'
-
 import amqp from 'amqplib'
 import { DataType } from 'node-opcua-variant';
 
@@ -38,14 +36,10 @@ export class DiscoveryServer {
 
     private options: DiscoveryServerOptions;
 
-    // private iotServer: IOTServer;
-
     constructor(opts: DiscoveryServerOptions){
         this.options = opts;
 
         this.prisma = new PrismaClient()
-
-        // this.iotServer = new IOTServer();
 
         cache.connect_to(process.env.MONGO_URL || '');
 
