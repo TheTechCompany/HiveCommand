@@ -65,6 +65,10 @@ export const SetupView = (props: any) => {
                 }).then((data) => {
                     console.log("OPCUA PROVISIONED");
                     setState('opcuaProvisioned', true)
+                    
+                    setState('configProvided', true)
+
+                    //START MQTT?
                 })
 
             }

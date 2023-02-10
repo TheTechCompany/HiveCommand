@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
@@ -19,22 +19,29 @@ const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
 
-  const { authState, setAuthState, updateAuthState } = useContext(DataContext)
+  const { isReady, authState, setAuthState, updateAuthState } = useContext(DataContext)
+
+  const [ sidecarRunning, setSidecarRunning ] = useState(false);
 
   useEffect(() => {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
 
-      axios.get(`http://localhost:${8484}/setup`).then((data) => {
-        if(data.config){
-          setAuthState?.({...authState, configProvided: true} )
-        }
-      })
+      setSidecarRunning(true);
 
     });
   }, [])
   
 
+  useEffect(() => {
+    if(isReady && sidecarRunning){
+      axios.get(`http://localhost:${8484}/setup`).then((data) => {
+        if(data.config){
+          setAuthState?.({...authState, configProvided: true} )
+        }
+      })
+    }
+  }, [isReady, sidecarRunning])
 
   const renderView = () => {
     if (!authState?.isAuthed()) {
