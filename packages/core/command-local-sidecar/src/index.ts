@@ -24,12 +24,19 @@ import { Client } from 'pg';
 
 const OPC_PROXY_PORT = 8484;
 
+export interface SidecarOptions {
+    host: string,
+    user: string,
+    pass: string
+}
+
 class DevSidecar {
 
     private clients : {[key: string]: OPCUAClient} = {};
 
     private mqttPublisher? : MQTTPublisher; 
 
+    private options? : SidecarOptions;
     // private sessions : {[key: string]: ClientSession} = {};
 
     constructor(){
@@ -64,6 +71,8 @@ class DevSidecar {
                 const key = unwrap(index)
 
                 console.log("Datachanged at the OPCUA level", {key, value: value.value})
+
+                // if(this.mqttPublisher) this.mqttPublisher?.publish(key, value.value.dataType as any, value.value.value);
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){
@@ -111,7 +120,7 @@ class DevSidecar {
             }else{
                 results.push(name)
             }
-            
+
             // console.log( "   -> ", reference.browseName.toString());
             // results.push(reference.browseName.toString());
         }
@@ -157,20 +166,30 @@ class DevSidecar {
 
     }
 
-    async setup_data(host: string){
+    async setup_data(host: string, user: string, pass: string, exchange: string){
 
         this.mqttPublisher = new MQTTPublisher({
             host: host,
-            user: '',
-            pass: '',
-            exchange: 'TestExchange'
+            user: user,
+            pass: pass,
+            exchange: exchange || 'TestExchange'
         })
 
         await this.mqttPublisher.setup()
+
+        console.log("MQTT Publisher started");
     }
 
-    async publish_data(){
-        // this.mqttPublisher?.publish()
+    async publish_data(key: string, value: any){
+        this.mqttPublisher?.publish(key, 'Boolean', value)
+    }
+
+    setConfig(options: SidecarOptions){
+        this.options = options;
+    }  
+
+    getConfig(){
+        return this.options;
     }
 
 
@@ -192,16 +211,39 @@ const io = new Server(server, {
     }
 });
 
+io.on('publish-change', (data) => {
+    sidecar.publish_data(data.key, data.value);
+});
+
 let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};
+
+let current_data : {[key: string]: any} = {};
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
-    console.log({data});
+    current_data[data.key] = data.value.value;
+
+    // console.log({data});
     // sidecar.publish_data()
 }
 
 app.use(bodyParser.json());
 app.use(cors());
+
+app.route('/setup')
+    .get((req, res) => {
+        const config = sidecar.getConfig();
+
+        res.send(config ? {config} : {error: "No config"}) 
+    })
+    .post(async (req, res) => {
+        const config = req.body.config;
+
+        sidecar.setConfig(config);
+
+        await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
+        res.send({config: sidecar.getConfig()})
+    })
 
 app.route('/:host/set_data')
     .post(async (req, res) => {
@@ -230,7 +272,12 @@ app.post('/:host/subscribe', async (req, res) => {
         delete subscriptions[req.params.host];
     }
 
-    if(subscriptions[req.params.host]) return res.send("Already subscribed");
+    if(subscriptions[req.params.host]) {
+        // current_data[]
+        return res.send({
+            data: current_data
+        })
+    };
 
         try{
             const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)

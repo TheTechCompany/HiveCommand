@@ -10,6 +10,7 @@ import OPCUAServer from '@hive-command/opcua-server'
 import { addTag, TAG_TYPE } from './opc-server';
 import path from 'path';
 import { readFileSync, writeFileSync } from 'fs';
+import { Types } from '@hive-command/ethernet-ip/dist/enip/cip/data-types';
 
 export interface PLCTag extends EventEmitter {
     id: number,
@@ -274,20 +275,29 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     }
                     return rootTag?.value
                 }, (value, key) => {
-                    if(key){
-                        // if(!enipTag?.value) enipTag.value = {};
-                        let tag = childTags.find((a) => a.key === key)?.tag
-                        if(!tag) return;
-                        tag.value = value;
+                    if(Array.isArray(value)){
+                        value.map((idx_value, ix) => {
+                            // let type = fromTagList?.type. ? Types[fromTagList?.type.typeName] : undefined
+                            let t = new Tag(`${tag.name}[${ix}]`, null, fromTagList?.type.code)
+                            t.value = idx_value;
+                            controller.PLC?.writeTag(t).catch((err) => console.error({err, type: fromTagList?.type.typeName, value, idx_value}))
+                        })
+                    }else{
+                        if(key){
+                            // if(!enipTag?.value) enipTag.value = {};
+                            let tag = childTags.find((a) => a.key === key)?.tag
+                            if(!tag) return;
+                            tag.value = value;
 
-                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+                            controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
 
-                        // (enipTag.value as any)[key] = value;
-                    }else if(rootTag){
-                        rootTag.value = value;
-    
-                        controller.PLC?.writeTag(rootTag).catch((err) => console.error({err}));
+                            // (enipTag.value as any)[key] = value;
+                        }else if(rootTag){
+                            rootTag.value = value;
+        
+                            controller.PLC?.writeTag(rootTag).catch((err) => console.error({err}));
 
+                        }
                     }
 
                     console.log("Set it")

@@ -41,16 +41,12 @@ export const useRemoteCache = (confPath: string) => {
 
                     return {key: packId, value: data[packId].map((x: any) => {
 
-                        console.log("Component", x.component);
-
                         let fn = new Function("module", "exports", "React", x.component);
 
                         let exports : any = {};
                         let module = {exports};
                         
                         fn(module, exports, React);
-
-                        console.log({module})
 
                         let component = module.exports.default;
                         component.metadata = module.exports.metadata;
@@ -63,8 +59,6 @@ export const useRemoteCache = (confPath: string) => {
                 }).reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {});
 
                 (window as any).parsed = parsedPacks;
-                console.log("Get packs", parsedPacks)
-
                 // _setPacks(parsedPacks);
             }catch(e){
                 console.error('RemoteCache', e)

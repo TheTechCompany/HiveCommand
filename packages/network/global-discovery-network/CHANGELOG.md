@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.152](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.151...v1.4.15-alpha.152) (2023-02-10)
+
+**Note:** Version bump only for package @hive-command/gds
+
+
+
+
+
+## [1.4.15-alpha.151](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.150...v1.4.15-alpha.151) (2023-02-09)
+
+**Note:** Version bump only for package @hive-command/gds
+
+
+
+
+
 ## [1.4.15-alpha.149](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.148...v1.4.15-alpha.149) (2023-02-08)
 
 **Note:** Version bump only for package @hive-command/gds

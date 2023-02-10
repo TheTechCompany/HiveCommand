@@ -117,7 +117,7 @@ model DeviceValue {
   id Int @default(autoincrement())
 
   placeholder String
-  key String
+  key String?
   value String
 
   lastUpdated DateTime @default(now())
@@ -125,7 +125,7 @@ model DeviceValue {
   // device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
 
-  @@unique([id, lastUpdated, deviceId, placeholder, key])
+  @@unique([lastUpdated, deviceId, placeholder])
 }
 
 

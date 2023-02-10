@@ -2,8 +2,8 @@ import { connect, ConsumeMessage, Connection, Channel } from 'amqplib'
 import { DataType } from 'node-opcua';
 
 export interface MQTTPublisherOptions {
-    user: string;
-    pass: string;
+    user?: string;
+    pass?: string;
     host: string;
     port?: number;
 
@@ -22,8 +22,12 @@ export class MQTTPublisher {
     }
 
     async setup(){
-        this.connection = await connect(`amqp://${this.options.user}:${this.options.pass}@${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
+        const authSect = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
+        console.log({authSect, opts: this.options})
+        this.connection = await connect(`amqp://${authSect ? authSect + '@' : ''}${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
         this.channel = await this.connection.createChannel();
+
+        console.log("Connected with a channel to ", this.options.host);
 
         await this.channel.assertExchange(this.options.exchange, 'topic');
     }
@@ -39,7 +43,13 @@ export class MQTTPublisher {
     }
 
     //Publish current state to other entities
-    async publish(key: string, dataType: DataType, value: any){
+    async publish(key: string, dataType: string, value: any){
+        
+        console.log("Publishing ", key, dataType, value)
+        if(value.BYTES_PER_ELEMENT != undefined){
+            console.log("Publishing typed array", value);
+            value = Array.from(value)
+        }
 
         this.channel?.publish(
             this.options.exchange, 

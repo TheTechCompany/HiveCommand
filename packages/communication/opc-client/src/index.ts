@@ -25,7 +25,7 @@ export interface SubscriptionParams {
 }
 
 const baseSubscriptionParams : SubscriptionParams = {
-    samplingInterval: 1 * 1000,
+    samplingInterval: 500,
     discardOldest: true,
     queueSize: 1
 }
@@ -109,7 +109,7 @@ export default class Client {
     }
 
 
-    async subscribeMulti(targets: {path: string, tag: string}[]){
+    async subscribeMulti(targets: {path: string, tag: string}[], samplingInterval?: number){
         let nodes : any[] = [];
         for (const x of targets){
             const path_id = await this.getPathID(x.path) || ''
@@ -129,7 +129,7 @@ export default class Client {
         if(this.subscription){
             let s = this.subscription
 
-            const group =  ClientMonitoredItemGroup.create(s, items, baseSubscriptionParams, TimestampsToReturn.Both)
+            const group =  ClientMonitoredItemGroup.create(s, items, {...baseSubscriptionParams, samplingInterval}, TimestampsToReturn.Both)
             return {
                 unsubscribe: () => {
                     group.terminate();
@@ -157,7 +157,7 @@ export default class Client {
        // return this.monitors
     }
 
-    async subscribe(opts: {path?: string, nodeId?: string}){
+    async subscribe(opts: {path?: string, nodeId?: string}, samplingInterval?: number){
         let node = opts.nodeId;
         if(opts.path) node = await this.getPathID(opts.path)
         const item = {
@@ -167,7 +167,7 @@ export default class Client {
 
 
         if(this.subscription){
-            const monitored = ClientMonitoredItem.create(this.subscription, item, baseSubscriptionParams, TimestampsToReturn.Both)
+            const monitored = ClientMonitoredItem.create(this.subscription, item, {...baseSubscriptionParams, samplingInterval}, TimestampsToReturn.Both)
             return monitored
         }
     }

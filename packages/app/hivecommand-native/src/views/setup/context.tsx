@@ -29,7 +29,12 @@ export interface GlobalState {
     //         }
     //     }[]
     // },
-    networkLayout?: any[]
+    networkLayout?: {
+        deviceId: string,
+        iotEndpoint: string,
+        iotSubject: string,
+        iotToken: string,
+    },
     deviceMap?: {
         path: string,
         tag: string

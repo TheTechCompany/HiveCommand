@@ -55,10 +55,18 @@ export const SetupView = (props: any) => {
             label: "OPCUA Server",
             onNext: async (state: any, setState: any) => {
 
-                // axios.get(`http://localhost:${8484}/${state.opcuaServer}/tree`).then((data) => {
+                axios.post(`http://localhost:${8484}/setup`, {
+                    config: {
+                        host: globalState?.networkLayout?.iotEndpoint,
+                        user: globalState?.networkLayout?.deviceId,
+                        pass: globalState?.networkLayout?.iotToken,
+                        exchange: globalState?.networkLayout?.iotSubject
+                    }
+                }).then((data) => {
+                    console.log("OPCUA PROVISIONED");
+                    setState('opcuaProvisioned', true)
+                })
 
-                // })
-                setState('opcuaProvisioned', true)
             }
         },
     ]
@@ -69,6 +77,9 @@ export const SetupView = (props: any) => {
             ...authState,
             ready: true
         }
+
+        console.log("FINISH", {stateObject})
+
         // writeTextFile('app.conf.json', JSON.stringify(stateObject))
         props.onConfChange?.(stateObject)
     }

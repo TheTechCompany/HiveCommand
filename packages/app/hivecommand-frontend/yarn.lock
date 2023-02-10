@@ -1343,10 +1343,10 @@
   dependencies:
     "@emotion/styled" "^11.9.3"
 
-"@hexhive/ui@1.0.1-alpha.105":
-  version "1.0.1-alpha.105"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.105.tgz#3fedead207ec4ed6815136b051501bc98131072d"
-  integrity sha512-oEX/ZXdwRwLeG5V87nRtal4qZbIenEr+GA7xPApHmG2LspiTnJJZfkLcilWIc/ezAGxUowkkzfki9BGeAnElMw==
+"@hexhive/ui@1.0.1-alpha.106":
+  version "1.0.1-alpha.106"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.106.tgz#373ffec784d5e992d0e85f7d06467faf1d5bdb34"
+  integrity sha512-Xo1Sgme2nXceRGvU9Q+S8pnqiZJsIj3KfYjBYf6rFoScdYkYKADnajGANafyBfY9syiOCaKAAGZwAK2Ct1qvhA==
   dependencies:
     "@dnd-kit/core" "^6.0.7"
     "@dnd-kit/sortable" "^7.0.2"
