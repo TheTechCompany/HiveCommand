@@ -34,26 +34,7 @@ function App() {
     });
   }, [])
   
-  
-  useEffect(() => {
-    console.log({ BaseDirectory: BaseDirectory.App })
-    
-    
-    // createDir('conf', {dir: BaseDirectory.App, recursive: true}).then(() => {
-    //   writeTextFile({path: CONF_FILE, contents: '{}'}, {dir: BaseDirectory.App}).then(() => {
-    //     console.log("ASFD")
 
-    //     readTextFile(CONF_FILE, {dir: BaseDirectory.App}).then((confText: any) => {
-
-    //       if(confText){
-    //         setConf(JSON.parse(confText))
-    //       }
-
-    //     })
-    //   })
-    // })
-
-  }, [])
 
   const renderView = () => {
     if (!authState?.isAuthed()) {
