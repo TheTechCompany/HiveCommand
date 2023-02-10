@@ -33,7 +33,7 @@ export const MQTTAuth = (
         const { username, name } = req.query as any;
         const isValid = await isValidResource(username, name);
 
-        if((isValid && (req.query.permission === 'configure' || req.query.permission === "permission") || req.query.permission === "write") || req.query.name === 'amq.default'){
+        if((isValid && (req.query.permission === 'configure' || req.query.permission === "permission") || req.query.permission === "write") || (req.query.name as string)?.match(/amq\..*/) != null){
             return res.send("allow");
         }else{
             console.log("Resources failed ", req.query)

@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - staging
-      - master
+      # - master
     paths: ["packages/app/hivecommand-native/**", "packages/core/command-local-sidecar/**", "packages/core-ui/**"]
 
 jobs:
