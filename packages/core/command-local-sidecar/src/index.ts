@@ -168,6 +168,8 @@ class DevSidecar {
 
     async setup_data(host: string, user: string, pass: string, exchange: string){
 
+        if(this.mqttPublisher) return console.error("MQTT Publisher already existed");
+        
         this.mqttPublisher = new MQTTPublisher({
             host: host,
             user: user,
