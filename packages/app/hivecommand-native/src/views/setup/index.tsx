@@ -55,6 +55,7 @@ export const SetupView = (props: any) => {
             label: "OPCUA Server",
             onNext: async (state: any, setState: any) => {
 
+                console.log({networkLayout: globalState?.networkLayout})
                 axios.post(`http://localhost:${8484}/setup`, {
                     config: {
                         host: globalState?.networkLayout?.iotEndpoint,
