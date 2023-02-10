@@ -10,6 +10,9 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string, st
     const appLabels = { appClass: appName };
 
     const configMap = new k8s.core.v1.ConfigMap(`${appName}-config`, {
+        metadata: {
+            namespace: ns.metadata.name,
+        },
         data: {
             'rabbitmq.conf': `log.console = true
 log.console.level = debug
