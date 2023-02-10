@@ -3,6 +3,7 @@ import { writeTextFile, readTextFile, removeFile, BaseDirectory } from "@tauri-a
 import { GlobalState, StateUpdateFn } from "../views/setup/context";
 
 export const DataContext = React.createContext<{
+    isReady?: boolean,
     authState?: (AuthState & {isAuthed: () => boolean}),
     globalState?: GlobalState;
     setAuthState?: (authState: AuthState) => void;
@@ -30,6 +31,8 @@ export const DataProvider = (props: any) => {
 
     // const layoutSchema = [];
     // const dataSchema = [];
+
+    const [ isReady, setIsReady ] = useState(false);
 
     const [ authState, setAuthState ] = useState<AuthState>({
         discoveryServer: 'https://discovery.hexhive.io'
@@ -64,6 +67,8 @@ export const DataProvider = (props: any) => {
         readBlob().then(({globalState, authState}) => {
             setGlobalState(globalState)
             setAuthState(authState)
+
+            setIsReady(true);
         });
 
     }, [])
@@ -96,6 +101,7 @@ export const DataProvider = (props: any) => {
     return (
         <DataContext.Provider value={{
             ...props.value,
+            isReady,
             authState: {
                 ...authState,
                 isAuthed: () => {

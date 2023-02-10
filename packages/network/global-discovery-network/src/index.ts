@@ -34,11 +34,16 @@ import { API } from './api';
         })
 
         return device != null;
-    }, async (username, resource) => {
+    }, async (username, resource, permission) => {
         
-        console.log("MQTT Resource", resource);
+        console.log("MQTT Resource", resource, permission);
+        let permissionOk = (permission === 'configure' || permission === "permission" || permission === "write");
 
-        return resource === process.env.IOT_EXCHANGE || resource === 'device_values'
+        if(username === process.env.IOT_USER){
+            permissionOk = permissionOk || permission === "read";
+        }
+
+        return (resource === process.env.IOT_EXCHANGE || resource === 'device_values') && permissionOk
     });
 
     const internalAuthApi = express();
