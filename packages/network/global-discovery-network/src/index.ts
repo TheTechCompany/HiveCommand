@@ -25,6 +25,7 @@ import { API } from './api';
         const {deviceId} = jwt.verify(pass, process.env.IOT_SECRET || '') as any;
 
         if(!deviceId) return false;
+
         const device = await prisma.device.findFirst({
             where: {
                 id: deviceId,

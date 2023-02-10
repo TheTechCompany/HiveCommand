@@ -7,17 +7,20 @@ export const MQTTAuth = (
     const router = Router();
 
     router.get('/auth/user', async (req, res) => {
-        console.log(req.query);
+        console.log("Auth input", req.query);
         const userQuery : {username: string, password: string} = req.query as any;
 
         try{
             const isAuthed = await getUser(userQuery.username, userQuery.password);
             if(isAuthed){
+                console.log("Auth output true", req.query);
                 res.send('allow device hive-command');
             }else{
+                console.log("Auth output false", req.query);
                 res.send('deny')
             }
         }catch(e){
+            console.log("Auth output true", req.query, e);
             res.send('deny')
         }
     });
@@ -35,6 +38,8 @@ export const MQTTAuth = (
         }else{
             console.log("Resources failed ", req.query)
         }
+
+        console.log("Deny resource");
 
         return res.send('deny');
     });
