@@ -30,9 +30,9 @@ export interface GlobalState {
     //     }[]
     // },
     networkLayout?: {
-        deviceId: string,
         iotEndpoint: string,
         iotSubject: string,
+        iotUser: string,
         iotToken: string,
     },
     deviceMap?: {

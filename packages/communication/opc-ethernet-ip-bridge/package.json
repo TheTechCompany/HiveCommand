@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/enip-bridge",
-  "version": "1.4.15-alpha.154",
+  "version": "1.4.15-alpha.155",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@hive-command/ethernet-ip": "^2.5.6-alpha.24",
-    "@hive-command/opcua-server": "^1.4.15-alpha.154",
+    "@hive-command/opcua-server": "^1.4.15-alpha.155",
     "express": "^4.18.2"
   }
 }

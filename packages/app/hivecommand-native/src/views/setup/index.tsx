@@ -58,7 +58,7 @@ export const SetupView = (props: any) => {
                 axios.post(`http://localhost:${8484}/setup`, {
                     config: {
                         host: globalState?.networkLayout?.iotEndpoint,
-                        user: globalState?.networkLayout?.deviceId,
+                        user: globalState?.networkLayout?.iotUser,
                         pass: globalState?.networkLayout?.iotToken,
                         exchange: globalState?.networkLayout?.iotSubject
                     }
