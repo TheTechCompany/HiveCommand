@@ -1,6 +1,6 @@
 import {Provider} from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
-import { all, Config, Output } from '@pulumi/pulumi'
+import { all, Config, Input, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
 export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace, appName: any, appLabels: any, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, iotEndpoint: string) => {
