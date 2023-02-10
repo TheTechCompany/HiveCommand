@@ -80,13 +80,19 @@ export const API = (prisma: PrismaClient) => {
         if (!device) return res.send({ error: "No device found for token" })
 
 
+        const token = jwt.sign({
+            deviceId: device.id
+        }, process.env.IOT_SECRET || '');
+
         res.send({ 
             results: {
                 deviceMapping: device?.deviceMapping || [],
                 deviceId: device?.id,
+
                 iotEndpoint: IOT_ENDPOINT,
                 iotSubject: 'IOT-SUBJECT',
-                iotToken: 'IOT-TOKEN'
+                iotUser: device.network_name,
+                iotToken: token
             }
         })
 

@@ -24,7 +24,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                         imagePullPolicy: "Always",
                         name: appName,
                         image: `thetechcompany/hive-command-gds:${imageTag}`,
-                        ports: [{ name: "http", containerPort: 8004 }],
+                        ports: [{ name: "http", containerPort: 8004 }, {name: "internal", containerPort: 8005}],
                         volumeMounts: [
                         ],
                         env: [

@@ -5,11 +5,10 @@ import { DataType } from 'node-opcua'
     const hub = new MQTTHub({
         host: process.env.IOT_HOST || '',
         exchange: 'IOT-SUBJECT',
-        onMessage: (message) => {
-            let json = JSON.parse(message.messageContent || '{}')
+        onMessage: ({messageContent}) => {
 
-            let dt = DataType[json.dataType]
-            let val = json.value;
+            let dt = DataType[messageContent?.dataType]
+            let val = messageContent?.value;
             console.log({dt, val: val})
         }
     })

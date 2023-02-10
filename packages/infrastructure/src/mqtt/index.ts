@@ -6,7 +6,7 @@ import * as aws from '@pulumi/aws'
 import * as k8s from '@pulumi/kubernetes'
 import { RabbitMQPersistence } from "./persistence";
 
-export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<string>, domainName: string, ns: k8s.core.v1.Namespace) => {
+export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<string>, domainName: string, authApi: string, ns: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 
@@ -15,7 +15,7 @@ export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<stri
     const appName = `hivecommand-mqtt-${suffix}`
 
     const { storageClaim } = await RabbitMQPersistence(provider, vpcId, ns)
-    const deployment = await RabbitMQDeployment(provider, appName, storageClaim, ns);
+    const deployment = await RabbitMQDeployment(provider, appName, storageClaim, authApi, ns);
 
     const service = await RabbitMQService(provider, appName, deployment, ns)
 

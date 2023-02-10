@@ -3,7 +3,7 @@ import {Channel, connect, Connection, ConsumeMessage} from 'amqplib';
 export interface MQTTHubMessage {
     userId?: string;
     routingKey?: string;
-    messageContent?: string;
+    messageContent?: {[key: string]: any};
 }
 
 export interface MQTTHubOptions {
@@ -34,7 +34,7 @@ export class MQTTHub {
         // this.channel
         const routingKey = msg?.fields.routingKey;
         const userId : string | undefined = msg?.properties.userId;
-        const messageContent = msg?.content.toString();
+        const messageContent = JSON.parse(msg?.content.toString() || '{error: "No message content"}');
 
         console.log({routingKey, messageContent});
 

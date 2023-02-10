@@ -25,6 +25,28 @@ export const Service = (provider: Provider, namespace: k8s.core.v1.Namespace, ap
         })
     });
 
+    const internalService = new k8s.core.v1.Service(`${appName}-internal-svc`, {
+        metadata: {
+            name: `${appName}-internal-svc`,
+            labels: appLabels,
+            namespace: namespace.metadata.name,
+            annotations: {
+            //    'service.beta.kubernetes.io/aws-load-balancer-ssl-cert': sslValidation.certificateArn,
+            //     'service.beta.kubernetes.io/aws-load-balancer-ssl-ports': 'https',
+            //     'service.beta.kubernetes.io/aws-load-balancer-backend-protocol': 'http',
+            //     // 'service.beta.kubernetes.io/aws-load-balancer-type': 'external',
+            //     'service.beta.kubernetes.io/aws-load-balancer-type': 'nlb',
+            //     'service.beta.kubernetes.io/aws-load-balancer-nlb-target-type': 'ip',
+            //     'service.beta.kubernetes.io/aws-load-balancer-scheme': 'internet-facing',
+             }
+        },
+        spec: {
+            type: "ClusterIP",
+            ports: [{ name: "http", port: 80, targetPort: "internal" }],
+            selector: appLabels,
+        },
+    }, { provider: provider });
+
     const service = new k8s.core.v1.Service(`${appName}-svc`, {
         metadata: {
             name: `${appName}-svc`,

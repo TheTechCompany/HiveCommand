@@ -72,7 +72,7 @@ class DevSidecar {
 
                 console.log("Datachanged at the OPCUA level", {key, value: value.value})
 
-                if(this.mqttPublisher) this.mqttPublisher?.publish(key, value.value.dataType as any, value.value.value);
+                // if(this.mqttPublisher) this.mqttPublisher?.publish(key, value.value.dataType as any, value.value.value);
 
                 emitter.emit('data-changed', {key, value: value.value})
             }catch(e: any){
@@ -170,8 +170,8 @@ class DevSidecar {
 
         this.mqttPublisher = new MQTTPublisher({
             host: host,
-            // user: user,
-            // pass: pass,
+            user: user,
+            pass: pass,
             exchange: exchange || 'TestExchange'
         })
 
@@ -180,8 +180,8 @@ class DevSidecar {
         console.log("MQTT Publisher started");
     }
 
-    async publish_data(){
-        // this.mqttPublisher?.publish()
+    async publish_data(key: string, value: any){
+        this.mqttPublisher?.publish(key, 'Boolean', value)
     }
 
     setConfig(options: SidecarOptions){
@@ -209,6 +209,10 @@ const io = new Server(server, {
     cors: {
         
     }
+});
+
+io.on('publish-change', (data) => {
+    sidecar.publish_data(data.key, data.value);
 });
 
 let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};

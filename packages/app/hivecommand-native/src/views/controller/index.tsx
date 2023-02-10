@@ -6,7 +6,7 @@ import { DataContext } from '../../data';
 import axios from 'axios';
 import io, {Socket} from 'socket.io-client'
 import ts, { ModuleKind } from 'typescript'
-import {merge} from 'lodash';
+import {merge, isEqual} from 'lodash';
 import { useLocalClient } from './client';
 import { DataTypes } from '@hive-command/scripting';
 
@@ -155,6 +155,8 @@ export const Controller = () => {
         }
     }
 
+    const [ prevValues, setPrevValues ] = useState<any>({});
+
     const values = useMemo(() => {
         return controlLayout?.tags.map((tag) => {
 
@@ -230,6 +232,18 @@ export const Controller = () => {
     }, [valueStructure, controlLayout?.tags, controlLayout?.types])
 
     console.log({values})
+
+    useEffect(() => {
+        
+        Object.keys((values || {}) as any).map((valueKey) => {
+            if( !isEqual(prevValues[valueKey], (values || {} as any)[valueKey]) ){
+                socket.current?.emit('publish-change', {key: valueKey, value: (values || {} as any)[valueKey]})
+            }
+        })
+
+        setPrevValues(values)
+
+    }, [values])
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     // console.log({valueStore})
