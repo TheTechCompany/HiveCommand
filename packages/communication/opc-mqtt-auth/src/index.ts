@@ -31,17 +31,22 @@ export const MQTTAuth = (
 
     router.get('/auth/resource', async (req, res) => {
         const { username, name } = req.query as any;
-        const isValid = await isValidResource(username, name);
 
-        if((isValid && (req.query.permission === 'configure' || req.query.permission === "permission") || req.query.permission === "write") || (req.query.name as string)?.match(/amq\..*/) != null){
-            return res.send("allow");
-        }else{
-            console.log("Resources failed ", req.query)
+        try{
+            const isValid = await isValidResource(username, name);
+
+            if(name.indexOf('amq.') > -1 || (isValid && (req.query.permission === 'configure' || req.query.permission === "permission") || req.query.permission === "write")){
+                return res.send("allow");
+            }else{
+                console.log("Resources failed ", req.query)
+            }
+
+            console.log("Deny resource", name, name.indexOf('amq') > -1, name.match(/amq\..*/) != null);
+
+            return res.send('allow');
+        }catch(e){
+            res.send('deny');
         }
-
-        console.log("Deny resource");
-
-        return res.send('deny');
     });
 
     router.get('/auth/topic', (req, res) => {
