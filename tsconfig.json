@@ -30,8 +30,6 @@
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
-		"@hive-command/iot-server": ["./communication/iot-server/src"],
-
 		"@hive-command/data": ["./core/command-data/src"],
 
 		"@hive-command/scripting": ["./core/command-scripting/src"],
