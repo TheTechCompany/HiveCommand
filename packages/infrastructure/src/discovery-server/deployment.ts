@@ -36,7 +36,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                             { name: "IOT_USER", value: process.env.IOT_USER },
                             { name: "IOT_PASS", value: process.env.IOT_PASS },
                             { name: "IOT_EXCHANGE", value: process.env.IOT_EXCHANGE || 'device_values' },
-
+                            { name: "IOT_SECRET", value: process.env.IOT_SECRET },
                             {name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`)},
                             {name: "VERSION_SHIM", value: '1.0.10'},
                             // { name: 'REDIS_URL', value: redisUrl.apply(url => url)},

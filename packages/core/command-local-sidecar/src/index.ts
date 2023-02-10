@@ -175,7 +175,11 @@ class DevSidecar {
             exchange: exchange || 'TestExchange'
         })
 
-        await this.mqttPublisher.setup()
+        try{
+            await this.mqttPublisher.setup()
+        }catch(e){
+            console.log({e})
+        }
 
         console.log("MQTT Publisher started");
     }

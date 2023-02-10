@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/native",
-	"version": "1.4.15-alpha.157",
+	"version": "1.4.15-alpha.158",
 	"private": true,
 	"sideEffects": false,
 	"dependencies": {
