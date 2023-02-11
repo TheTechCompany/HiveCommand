@@ -12,7 +12,6 @@ import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, ReportView } from './views/reports'
 
-import { useChangeDeviceMode, useChangeDeviceValue, useChangeMode, useChangeState, useCreateDeviceMaintenanceWindow, useCreateReportPage, usePerformDeviceAction } from '@hive-command/api';
 
 import { Paper, Box, Button, Typography, IconButton, Popover, List, ListItem, Divider } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
