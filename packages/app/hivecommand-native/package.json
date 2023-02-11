@@ -8,6 +8,7 @@
 		"@hexhive/styles": "^1.0.1-alpha.77",
 		"@hexhive/ui": "1.0.1-alpha.111",
 		"@hexhive/utils": "^0.0.6-alpha.13",
+		"@hive-command/api": "^1.4.15-alpha.137",
 		"@hive-command/command-surface": "^1.4.15-alpha.157",
 		"@hive-command/local-sidecar": "^1.4.15-alpha.160",
 		"@hive-command/scripting": "^1.4.15-alpha.157",
