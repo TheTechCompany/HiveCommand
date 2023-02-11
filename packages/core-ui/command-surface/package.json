@@ -17,7 +17,7 @@
 	},
 	"peerDependencies": {
 		"@apollo/client": "^3.6.9",
-		"@hexhive/ui": "1.0.1-alpha.106",
+		"@hexhive/ui": "1.0.1-alpha.111",
 		"@hive-command/api": "^1.4.15-alpha.52",
 		"@mui/icons-material": "^5.10.6",
 		"@mui/lab": "5.0.0-alpha.10",
@@ -28,7 +28,7 @@
 	"devDependencies": {
 		"@emotion/react": "^11.10.5",
 		"@hexhive/styles": "^1.0.1-alpha.45",
-		"@hexhive/ui": "^1.0.1-alpha.89",
+		"@hexhive/ui": "^1.0.1-alpha.111",
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@mui/material": "5.10.11",
 		"@types/dot": "^1.1.5",

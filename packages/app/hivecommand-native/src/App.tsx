@@ -2,8 +2,6 @@ import React, { useContext, useMemo, useState } from 'react'
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
-import { CommandSurface } from '@hive-command/command-surface';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
