@@ -13,7 +13,6 @@ export const LayoutDownload = () => {
 
         axios.get(`${state.discoveryServer}/control-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("controlLayout", {res})
-
             await setGlobalState?.((state) => ({...state, controlLayout: res.data.results}))
         })
 
