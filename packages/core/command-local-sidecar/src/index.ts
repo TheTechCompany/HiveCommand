@@ -82,10 +82,10 @@ class DevSidecar {
         return {emitter, unsubscribe};
     }
 
-    async browse(host: string, browsePath: string, recursive?: boolean, withTypes?: boolean){
+    async browse(client: OPCUAClient, browsePath: string, recursive?: boolean, withTypes?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
         console.log("Browse", browsePath)
-        const client = await this.connect(host);
+        // const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
 
@@ -104,7 +104,7 @@ class DevSidecar {
                 try{
                     let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
 
-                    const innerResults = await this.browse(host, bp, recursive, withTypes);
+                    const innerResults = await this.browse(client, bp, recursive, withTypes);
 
                     results.push({
                         id: reference?.nodeId, 
@@ -371,7 +371,9 @@ app.post('/:host/unsubscribe', async (req, res) => {
 
 app.get('/:host/tree', async (req, res) => {
     try{
-        const tree = await sidecar.browse(req.params.host, '/Objects', true, true);
+        const client = await sidecar.connect(req.params.host);
+
+        const tree = await sidecar.browse(client, '/Objects', true, true);
         res.send({results: tree})
     }catch(e: any){
         return res.send({error: e.message})
