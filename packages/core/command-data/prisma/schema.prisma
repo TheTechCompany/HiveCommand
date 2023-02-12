@@ -125,7 +125,8 @@ model DeviceValue {
   // device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
 
-  @@unique([lastUpdated, deviceId, placeholder])
+  @@id([id, lastUpdated])
+  @@unique([deviceId, placeholder, key, lastUpdated])
 }
 
 
