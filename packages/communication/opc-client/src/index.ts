@@ -109,7 +109,7 @@ export default class Client {
     }
 
 
-    async subscribeMulti(targets: {path: string, tag: string}[], samplingInterval?: number){
+    async subscribeMulti(targets: {path: string, tag: string}[], samplingInterval: number = 500){
         let nodes : any[] = [];
         for (const x of targets){
             const path_id = await this.getPathID(x.path) || ''
@@ -157,7 +157,7 @@ export default class Client {
        // return this.monitors
     }
 
-    async subscribe(opts: {path?: string, nodeId?: string}, samplingInterval?: number){
+    async subscribe(opts: {path?: string, nodeId?: string}, samplingInterval: number = 500){
         let node = opts.nodeId;
         if(opts.path) node = await this.getPathID(opts.path)
         const item = {

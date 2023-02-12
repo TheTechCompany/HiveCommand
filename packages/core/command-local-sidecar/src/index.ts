@@ -62,7 +62,7 @@ class DevSidecar {
 
         console.log("Subscribing to", paths);
 
-        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths)
+        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths, 200)
 
         const emitter = new EventEmitter()
 
