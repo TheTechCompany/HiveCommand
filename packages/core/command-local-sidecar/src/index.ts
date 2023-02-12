@@ -292,7 +292,7 @@ app.post('/:host/subscribe', async (req, res) => {
     };
 
         try{
-            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, [{tag: 'AV101.OperMode', path: '/Objects/1:AV101/1:OperMode'}] || req.body.paths)
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
 
             console.log("Subscribed to", req.body.paths)
 

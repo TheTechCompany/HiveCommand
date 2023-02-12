@@ -684,8 +684,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     }, [props.values, tags])
 
-    console.log({normalisedValues});
-
     const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
 
