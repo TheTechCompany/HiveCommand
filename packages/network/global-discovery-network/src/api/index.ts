@@ -76,6 +76,7 @@ export const API = (prisma: PrismaClient) => {
             }
         });
         
+        
 
         if (!device) return res.send({ error: "No device found for token" })
 
