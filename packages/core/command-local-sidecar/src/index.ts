@@ -87,6 +87,7 @@ class DevSidecar {
 
     async browse(host: string, browsePath: string, recursive?: boolean, withTypes?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
+        console.log("Browse", browsePath)
         const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
@@ -97,6 +98,8 @@ class DevSidecar {
 
             const name = reference?.browseName?.name?.toString();
             const nsIdx = reference?.browseName?.namespaceIndex?.toString();
+
+            if(nsIdx == "0") continue;
 
             let bp = `${browsePath}/${nsIdx ? `${nsIdx}:` : ''}${name}`;
 
@@ -152,6 +155,8 @@ class DevSidecar {
     async connect(host: string, port?: number){
         const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
+        console.log(`Getting connection instance for ${endpointUrl}`);
+
         if(this.clients[endpointUrl]) return this.clients[endpointUrl];
 
         this.clients[endpointUrl] = new OPCUAClient();
@@ -161,6 +166,7 @@ class DevSidecar {
 		this.clients[endpointUrl].on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
         await this.clients[endpointUrl].connect(endpointUrl)
+        console.log(`Connected to ${endpointUrl}`)
       
         return this.clients[endpointUrl];
 
@@ -286,7 +292,7 @@ app.post('/:host/subscribe', async (req, res) => {
     };
 
         try{
-            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, [{tag: 'AV101.OperMode', path: '/Objects/1:AV101/1:OperMode'}] || req.body.paths)
 
             console.log("Subscribed to", req.body.paths)
 

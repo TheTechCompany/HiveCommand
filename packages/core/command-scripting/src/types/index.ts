@@ -16,8 +16,6 @@ function assertUnreachable (type: DataTypes) {
 
 export const toJSType = (type: DataTypes) => {
 
-    console.log("toJS", type)
-
     switch(type){
         case DataTypes.Boolean:
             return 'boolean';

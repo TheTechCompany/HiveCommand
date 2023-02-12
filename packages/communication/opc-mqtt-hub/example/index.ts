@@ -4,9 +4,9 @@ import { DataType } from 'node-opcua'
 (async () => {
     const hub = new MQTTHub({
         host: process.env.IOT_HOST || '',
-        user: 'user',
-        pass: 'pass',
-        exchange: 'exchange',
+        user: process.env.IOT_USER,
+        pass: process.env.IOT_PASS,
+        exchange: 'device_values',
         onMessage: ({messageContent}) => {
 
             let dt = DataType[messageContent?.dataType]
