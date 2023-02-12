@@ -7,11 +7,11 @@ import { DataType } from 'node-opcua'
         user: process.env.IOT_USER,
         pass: process.env.IOT_PASS,
         exchange: 'device_values',
-        onMessage: ({messageContent}) => {
+        onMessage: async ({messageContent}) => {
 
             let dt = DataType[messageContent?.dataType]
             let val = messageContent?.value;
-            console.log({dt, val: val})
+            console.log({dt, val: val, DataType: messageContent?.dataType})
         }
     })
     

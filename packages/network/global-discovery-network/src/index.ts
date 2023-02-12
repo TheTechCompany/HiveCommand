@@ -62,6 +62,7 @@ import { API } from './api';
                 pass: process.env.IOT_PASS,
                 host: process.env.IOT_ENDPOINT || '',        
                 exchange: process.env.IOT_EXCHANGE || 'device_values',
+                
                 onMessage: async ({ routingKey, messageContent, userId }) => {
         
                     console.log(`Data from ${userId} ${routingKey}`);
