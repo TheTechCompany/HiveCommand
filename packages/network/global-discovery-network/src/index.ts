@@ -70,17 +70,32 @@ import { API } from './api';
                     const device = await prisma.device.findFirst({where: {network_name: userId}})
                     //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
         
+                    if(!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
+
+                    if(typeof(messageContent.value) == "object"){
+                        await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
+                            await prisma.deviceValue.create({
+                                data: {
+                                    deviceId: device.id,
+                                    placeholder: routingKey,
+                                    key: valueKey,
+                                    value: `${messageContent?.value[valueKey]}`
+                                }
+                            })
+                        }))
+                    }else{
+                        await prisma.deviceValue.create({
+                            data: {
+                                deviceId: device.id,
+                                placeholder: routingKey,
+                                // key: routingKey,
+                                value: `${messageContent?.value}`,
+                            }
+                        })
+                    }
                     if(!device || !routingKey || !messageContent) return;
         
-                    await prisma.deviceValue.create({
-                        data: {
-                            deviceId: device.id,
-                            placeholder: routingKey,
-                            // key: routingKey,
-                            value: messageContent?.value,
-                        }
-                    })
-        
+
                     //Call alarm center hook to allow for business logic based alarm signals
                     alarmCenter.hook({routingKey, messageContent, userId})
                 }
