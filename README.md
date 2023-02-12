@@ -36,7 +36,7 @@
 <h3 align="center">HiveCommand</h3>
 
   <p align="center">
-    project_description
+    Industrial IOT without the pricetag
     <br />
     <a href="https://github.com/TheTechCompany/HiveCommand"><strong>Explore the docs »</strong></a>
     <br />
@@ -84,21 +84,7 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `TheTechCompany`, `HiveCommand`, `twitter_handle`, `linkedin_username`, `email`, `email_client`, `project_title`, `project_description`
-
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-### Built With
-
-* [React.js](https://reactjs.org/)
-* [Single SPA](https://single-spa.js.org/)
-* [Neo4J](https://neo4j.com/)
-* [GraphQL](https://graphql.org/)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->
@@ -140,7 +126,7 @@ This is an example of how to list things you need to use the software and how to
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+_For more examples, please refer to the [Documentation](https://github.com/TheTechCompany/HiveCommand/docs/README.md)_
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -157,7 +143,6 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 See the [open issues](https://github.com/TheTechCompany/HiveCommand/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- CONTRIBUTING -->
@@ -186,27 +171,14 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+Ross Leitch - ross@hexhive.io
 
 Project Link: [https://github.com/TheTechCompany/HiveCommand](https://github.com/TheTechCompany/HiveCommand)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
