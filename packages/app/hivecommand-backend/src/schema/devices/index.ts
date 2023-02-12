@@ -56,9 +56,19 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						})
 					}else{
 						//Get data from mongocache
-						result = await cache.DeviceValue.find({
-							deviceId: root.id
-						});
+						result = await prisma.deviceValue.findMany({
+							where: {
+								deviceId: root.id,
+							},
+							orderBy: {
+								lastUpdated: 'desc'
+							},
+							distinct: ['deviceId', 'placeholder', 'key']
+						})
+
+						// result = await cache.DeviceValue.find({
+						// 	deviceId: root.id
+						// });
 					}
 					// console.log(await cache.DeviceValue.find())
 					

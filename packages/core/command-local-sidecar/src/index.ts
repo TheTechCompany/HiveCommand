@@ -223,9 +223,16 @@ const io = new Server(server, {
     }
 });
 
-io.on('publish-change', (data) => {
-    sidecar.publish_data(data.key, data.value);
-});
+io.on('connection', (socket) => {
+    socket.on('publish-change', (data) => {
+        sidecar.publish_data(data.key, data.value);
+
+    })
+})
+
+// io.on('publish-change', (data) => {
+//     sidecar.publish_data(data.key, data.value);
+// });
 
 let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};
 

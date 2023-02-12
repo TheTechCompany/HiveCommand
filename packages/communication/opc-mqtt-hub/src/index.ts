@@ -38,7 +38,7 @@ export class MQTTHub {
         const userId : string | undefined = msg?.properties.userId;
         const messageContent = JSON.parse(msg?.content.toString() || '{error: "No message content"}');
 
-        console.log({routingKey, messageContent});
+        console.log({routingKey, userId, messageContent});
 
         // if(!userId) return console.error("No userId found, private messages not allowed");
 
@@ -49,6 +49,7 @@ export class MQTTHub {
                 messageContent
             })
         }catch(e){
+            console.error("Error dealing with message", e)
             return this.channel?.nack(msg)
         }
 

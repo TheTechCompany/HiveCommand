@@ -68,6 +68,8 @@ export const DeviceControlView = () => {
             // }
     }, [values])
 
+    // console.log({normalisedValues})
+
     useEffect(() => {
         const interval = setInterval(() => {
             refetchValues();
