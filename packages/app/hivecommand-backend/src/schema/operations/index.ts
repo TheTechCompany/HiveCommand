@@ -2,7 +2,7 @@ import { nanoid } from "nanoid";
 import { Channel } from 'amqplib'
 import { PrismaClient } from "@hive-command/data";
 
-export default (prisma: PrismaClient, channel: Channel) => {
+export default (prisma: PrismaClient, channel: Channel, deviceChannel: Channel) => {
 
     const typeDefs = `
         type Mutation {
@@ -235,7 +235,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 		
 				// const dataType = program?.devices?.find((a) => `${a.type?.tagPrefix ? a.type?.tagPrefix : ''}${a.tag}` == args.deviceName)?.type?.state?.find((a) => a.key == args.key)?.type;
 
-				// if(!device) return new Error("No device found")
+				if(!device) return new Error("No device found")
 
 				// let stateChange = {
 				// 	address: `opc.tcp://${device?.network_name}:8440`,
@@ -245,7 +245,11 @@ export default (prisma: PrismaClient, channel: Channel) => {
 				// }
 
 				// return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
+				await deviceChannel.assertQueue(`device:${device?.network_name}`)
 
+				await deviceChannel.sendToQueue(`device:${device?.network_name}`, Buffer.from( JSON.stringify({ key: `${args.deviceName}${args.key ? `.${args.key}` : ''}`, value: args.value }) ))
+				
+				return true;
 			}
 		}
 

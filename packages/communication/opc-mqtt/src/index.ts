@@ -33,11 +33,11 @@ export class MQTTPublisher {
     }
 
     //Subscribe to changes requested by other entities
-    async subscribe(key: string, onMessage: (message: ConsumeMessage | null) => void){
-        const generatedQueue = await this.channel?.assertQueue('')
+    async subscribe(onMessage: (message: ConsumeMessage | null) => void){
+        const generatedQueue = await this.channel?.assertQueue(`device:${this.options.user}`)
         if(!generatedQueue) return;
 
-        await this.channel?.bindQueue(generatedQueue.queue, this.options.exchange, key);
+        // await this.channel?.bindQueue(generatedQueue.queue, this.options.exchange, key);
 
         this.channel?.consume(generatedQueue.queue, onMessage);
     }

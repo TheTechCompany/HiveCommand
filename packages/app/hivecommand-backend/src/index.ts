@@ -31,9 +31,15 @@ cache.connect_to(process.env.MONGO_URL || '');
 		process.env.RABBIT_URL || 'amqp://localhost'
 	)
 
+	const deviceMQ = await amqp.connect(
+		process.env.DEVICE_MQ || ''
+	)
+
 	console.log("RabbitMQ")
 
-	const mqChannel = await mq.createChannel()
+	const deviceChannel = await deviceMQ.createChannel();
+
+	const mqChannel = await mq.createChannel();
 
 	await mqChannel.assertQueue(`COMMAND:MODE`);
 	await mqChannel.assertQueue(`COMMAND:STATE`);
@@ -45,7 +51,7 @@ cache.connect_to(process.env.MONGO_URL || '');
 	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
 
 
-	const { typeDefs, resolvers } = schema(prisma, mqChannel);
+	const { typeDefs, resolvers } = schema(prisma, mqChannel, deviceChannel);
 
 	console.log({typeDefs})
 

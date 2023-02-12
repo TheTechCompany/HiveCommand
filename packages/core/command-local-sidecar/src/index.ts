@@ -32,7 +32,8 @@ export interface SidecarOptions {
 
 class DevSidecar {
 
-    private clients : {[key: string]: OPCUAClient} = {};
+    private client? : OPCUAClient;
+    private clientEndpoint?: string;
 
     private mqttPublisher? : MQTTPublisher; 
 
@@ -43,22 +44,18 @@ class DevSidecar {
        
     }
 
-    async getDataType(host: string, path: string){
-        console.log(host, path)
-        const client = await this.connect(host);
+    async getDataType(client: OPCUAClient, path: string){;
 
         return await client.getType(path, true)
     }
 
-    async setData(host: string, path: string, dataType: DataType, value: any){
-        const client = await this.connect(host);
+    async setData(client: OPCUAClient, path: string, dataType: DataType, value: any){
 
         const statusCode = await client.setDetails(path, dataType, value)
         return statusCode?.value;
     }
 
-    async subscribe(host: string, paths: {tag: string, path: string}[]){
-        const client = await this.connect(host);
+    async subscribe(client: OPCUAClient, paths: {tag: string, path: string}[]){
 
         console.log("Subscribing to", paths);
 
@@ -157,18 +154,25 @@ class DevSidecar {
 
         console.log(`Getting connection instance for ${endpointUrl}`);
 
-        if(this.clients[endpointUrl]) return this.clients[endpointUrl];
+        //Check for host match if not reset
+        if(this.clientEndpoint !== endpointUrl) {
+            await this.client?.disconnect()
+            this.clientEndpoint = undefined;
+            this.client = undefined;
+        } 
 
-        this.clients[endpointUrl] = new OPCUAClient();
+        if(this.client) return this.client;
+
+        this.client = new OPCUAClient();
 
 
-		this.clients[endpointUrl].on('close', this.onClientLost.bind(this, endpointUrl))
-		this.clients[endpointUrl].on('connection_lost', this.onClientLost.bind(this, endpointUrl))
+		this.client.on('close', this.onClientLost.bind(this, endpointUrl))
+		this.client.on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
-        await this.clients[endpointUrl].connect(endpointUrl)
+        await this.client.connect(endpointUrl)
         console.log(`Connected to ${endpointUrl}`)
       
-        return this.clients[endpointUrl];
+        return this.client;
 
     }
 
@@ -188,6 +192,31 @@ class DevSidecar {
         }catch(e){
             console.log({e})
         }
+
+        await this.mqttPublisher.subscribe(async (message) => {
+            try{
+                const { key, value } = JSON.parse(message?.content?.toString() || '{}')
+
+                if(!this.client) {
+                    return console.error("No client currently connected");
+                }
+
+                //Get OPCUA path from state
+                let path = subscriptions?.paths.find((a) => a.tag === key)?.path
+
+                if(!path) return console.error("Couldn't find ", key)
+
+                //Get OPCUA Datatype
+                const dataType = await this.getDataType(this.client, path)
+
+                //Update current state
+                this.setData(this.client, path, (DataType as any)[dataType.type as any], value)
+
+                //Send update to frontend
+            }catch(e){
+                console.error("Error receiving MQTT Publish", message)
+            }
+        })
 
         console.log("MQTT Publisher started");
     }
@@ -234,7 +263,7 @@ io.on('connection', (socket) => {
 //     sidecar.publish_data(data.key, data.value);
 // });
 
-let subscriptions : {[key: string]: {events: EventEmitter, paths: any[], unsubscribe: () => void}}= {};
+let subscriptions : {events: EventEmitter, paths: {tag: string, path: string}[], unsubscribe: () => void} | undefined = undefined;
 
 let current_data : {[key: string]: any} = {};
 
@@ -270,11 +299,15 @@ app.route('/:host/set_data')
 
         let { path, value } = req.body;
 
-        const { type: dt, isArray } = await sidecar.getDataType(req.params.host, path)
+        const client = await sidecar.connect(req.params.host)
+
+        const { type: dt, isArray } = await sidecar.getDataType(client, path)
         
         if(!dt) return res.send({error: "No datatype"})
+
+        // const client = await sidecar.connect(req.params.host)
         //TODO pickup dataType from somewhere dynamic
-        const code = await sidecar.setData(req.params.host, path, (DataType as any)[dt as any], value);
+        const code = await sidecar.setData(client, path, (DataType as any)[dt as any], value);
 
         res.send({code})
     })
@@ -282,16 +315,17 @@ app.route('/:host/set_data')
 app.post('/:host/subscribe', async (req, res) => {
     // if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
 
-    if(subscriptions[req.params.host] && !isEqual(req.body.paths, subscriptions[req.params.host]?.paths)){
-        const {events: eventEmitter, unsubscribe} = subscriptions[req.params.host];
+    if(subscriptions && !isEqual(req.body.paths, subscriptions?.paths)){
+        const {events: eventEmitter, unsubscribe} = subscriptions
 
         eventEmitter.removeListener('data-changed', dataChanged);
         unsubscribe() 
         
-        delete subscriptions[req.params.host];
+        subscriptions = undefined
+        // delete subscriptions
     }
 
-    if(subscriptions[req.params.host]) {
+    if(subscriptions) {
         // current_data[]
         return res.send({
             data: current_data
@@ -299,13 +333,15 @@ app.post('/:host/subscribe', async (req, res) => {
     };
 
         try{
-            const {emitter: events, unsubscribe} = await sidecar.subscribe(req.params.host, req.body.paths)
+            const client = await sidecar.connect(req.params.host)
+
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(client, req.body.paths)
 
             console.log("Subscribed to", req.body.paths)
 
             events.on('data-changed', dataChanged)
 
-            subscriptions[req.params.host] = {
+            subscriptions = {
                 events,
                 paths: req.body.paths || [],
                 unsubscribe
@@ -320,10 +356,10 @@ app.post('/:host/subscribe', async (req, res) => {
 })
 
 app.post('/:host/unsubscribe', async (req, res) => {
-    if(!subscriptions[req.params.host]) return res.send({error: "No subscription found"});
+    if(!subscriptions) return res.send({error: "No subscription found"});
 
     try{
-        const {events: eventEmitter, unsubscribe} = subscriptions[req.params.host];
+        const {events: eventEmitter, unsubscribe} = subscriptions;
 
         eventEmitter.removeListener('data-changed', dataChanged);
         unsubscribe()
