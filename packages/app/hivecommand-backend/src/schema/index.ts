@@ -10,7 +10,7 @@ import { Channel } from 'amqplib';
 import { Pool } from 'pg';
 import templates from "./program/templates";
 
-export default (prisma: PrismaClient, channel: Channel) => {
+export default (prisma: PrismaClient, channel: Channel, deviceChannel: Channel) => {
 
 	
 	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, channel);
@@ -19,7 +19,7 @@ export default (prisma: PrismaClient, channel: Channel) => {
 
 	const { typeDefs: templateTypeDefs, resolvers: templateResolvers } = templates(prisma);
 
-	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, channel)
+	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, channel, deviceChannel)
 
 	const resolvers = mergeResolvers([
 		deviceResolvers,

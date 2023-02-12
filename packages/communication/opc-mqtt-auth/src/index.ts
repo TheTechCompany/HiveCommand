@@ -32,6 +32,8 @@ export const MQTTAuth = (
     router.get('/auth/resource', async (req, res) => {
         const { username, name, permission } = req.query as any;
 
+        console.log({username, name, permission}, "Resource Req");
+
         try{
             const isValid = await isValidResource(username, name, permission);
 
@@ -51,6 +53,8 @@ export const MQTTAuth = (
     });
 
     router.get('/auth/topic', (req, res) => {
+        console.log({query: req.query}, "Topic Req");
+
         res.send('allow');
     });
 

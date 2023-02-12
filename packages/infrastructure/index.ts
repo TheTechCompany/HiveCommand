@@ -61,7 +61,9 @@ const main = (async () => {
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, mqttServer.endpoint)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl));
+    const mqttURL = `${process.env.IOT_USER}:${process.env.IOT_PASS}@${mqttServer.endpoint}`
+
+    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, mqttURL));
     const service = await Service(provider)
 
     return {
