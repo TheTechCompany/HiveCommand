@@ -1,17 +1,17 @@
 {
 	"name": "@hive-command/native",
-	"version": "1.4.15-alpha.158",
+	"version": "1.4.15-alpha.164",
 	"private": true,
 	"sideEffects": false,
 	"dependencies": {
 		"@emotion/react": "11.10.4",
 		"@hexhive/styles": "^1.0.1-alpha.77",
-		"@hexhive/ui": "1.0.1-alpha.106",
+		"@hexhive/ui": "1.0.1-alpha.111",
 		"@hexhive/utils": "^0.0.6-alpha.13",
-		"@hive-command/api": "^1.4.15-alpha.137",
-		"@hive-command/command-surface": "^1.4.15-alpha.157",
-		"@hive-command/local-sidecar": "^1.4.15-alpha.157",
-		"@hive-command/scripting": "^1.4.15-alpha.157",
+		"@hive-command/api": "^1.4.15-alpha.164",
+		"@hive-command/command-surface": "^1.4.15-alpha.164",
+		"@hive-command/local-sidecar": "^1.4.15-alpha.164",
+		"@hive-command/scripting": "^1.4.15-alpha.164",
 		"@monaco-editor/react": "^4.4.6",
 		"@mui/lab": "5.0.0-alpha.102",
 		"@mui/material": "5.10.11",
@@ -30,8 +30,7 @@
 	},
 	"scripts": {
 		"start": "react-app-rewired start",
-		"build": "yarn package && react-app-rewired build",
-		"package": "node ./move-binary.js",
+		"build": "node move-binary.js && react-app-rewired build",
 		"tauri": "tauri"
 	},
 	"eslintConfig": {

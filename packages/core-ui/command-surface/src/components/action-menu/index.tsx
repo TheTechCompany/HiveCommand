@@ -4,7 +4,6 @@ import { Box, TextField, Button, Divider, Typography, IconButton, InputAdornment
 import { SettingsEthernet, ChevronLeft, Check as Checkmark } from '@mui/icons-material';
 import { DeviceControlContext } from '../../context';
 import { getDevicesForNode } from '../../utils';
-import { useUpdateDeviceSetpoint } from '@hive-command/api';
 import { isEqual } from 'lodash'
 import { InfiniteCanvasContext } from '@hexhive/ui';
 

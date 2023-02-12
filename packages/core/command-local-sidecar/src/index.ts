@@ -62,7 +62,7 @@ class DevSidecar {
 
         console.log("Subscribing to", paths);
 
-        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths)
+        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths, 200)
 
         const emitter = new EventEmitter()
 
@@ -87,6 +87,7 @@ class DevSidecar {
 
     async browse(host: string, browsePath: string, recursive?: boolean, withTypes?: boolean){
         // const endpointUrl = `opc.tcp://${host}:${port}`;
+        console.log("Browse", browsePath)
         const client = await this.connect(host);
 
         const browseResult = await client.browse(browsePath)
@@ -97,6 +98,8 @@ class DevSidecar {
 
             const name = reference?.browseName?.name?.toString();
             const nsIdx = reference?.browseName?.namespaceIndex?.toString();
+
+            if(nsIdx == "0") continue;
 
             let bp = `${browsePath}/${nsIdx ? `${nsIdx}:` : ''}${name}`;
 
@@ -152,6 +155,8 @@ class DevSidecar {
     async connect(host: string, port?: number){
         const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
+        console.log(`Getting connection instance for ${endpointUrl}`);
+
         if(this.clients[endpointUrl]) return this.clients[endpointUrl];
 
         this.clients[endpointUrl] = new OPCUAClient();
@@ -161,6 +166,7 @@ class DevSidecar {
 		this.clients[endpointUrl].on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
         await this.clients[endpointUrl].connect(endpointUrl)
+        console.log(`Connected to ${endpointUrl}`)
       
         return this.clients[endpointUrl];
 
@@ -168,6 +174,8 @@ class DevSidecar {
 
     async setup_data(host: string, user: string, pass: string, exchange: string){
 
+        if(this.mqttPublisher) return console.error("MQTT Publisher already existed");
+        
         this.mqttPublisher = new MQTTPublisher({
             host: host,
             user: user,

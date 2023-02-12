@@ -6,7 +6,7 @@ export const DataContext = React.createContext<{
     isReady?: boolean,
     authState?: (AuthState & {isAuthed: () => boolean}),
     globalState?: GlobalState;
-    setAuthState?: (authState: AuthState) => void;
+    setAuthState?: (key: string, value: any) => void;
     updateAuthState?: (key: string, value: any) => void;
     updateGlobalState?: StateUpdateFn
 }>({});
@@ -83,7 +83,7 @@ export const DataProvider = (props: any) => {
     }
 
     const updateAuthState = (key: any, value: any) => {
-        setAuthState({...authState, [key]: value})
+        setAuthState((authState) => ({...authState, [key]: value}))
         writeBlob();
     }
 
@@ -105,12 +105,13 @@ export const DataProvider = (props: any) => {
             authState: {
                 ...authState,
                 isAuthed: () => {
-                    return authState.discoveryServer && authState.provisionCode && authState.authToken && authState.opcuaServer && authState.opcuaProvisioned && authState.configProvided
+                    console.log({authState});
+                    return authState.discoveryServer != null && authState.provisionCode != undefined && authState.authToken != undefined && authState.opcuaServer != undefined && authState.opcuaProvisioned == true && authState.configProvided == true
                 }
             },
-            updateAuthState,
+            updateAuthState: (key, value) => {console.log("update auth state", {key ,value}); updateAuthState(key, value)},
             updateGlobalState,
-            setAuthState,
+            setAuthState: (key, value) => { console.log("set auth state", {key, value});  setAuthState((authState) => ({...authState, [key]: value }) )},
             globalState
         }}>
             {props.children}

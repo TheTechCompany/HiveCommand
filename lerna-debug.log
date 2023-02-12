@@ -1,6 +1,6 @@
 0 silly argv {
 0 silly argv   _: [ 'add' ],
-0 silly argv   scope: '@hive-command/native-dev',
+0 silly argv   scope: '@hive-command/native',
 0 silly argv   globs: [],
 0 silly argv   lernaVersion: '4.0.0',
 0 silly argv   '$0': '/Users/thekid/Work/Ultraviolet/apps/HiveCommand/node_modules/.bin/lerna',

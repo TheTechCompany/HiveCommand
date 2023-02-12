@@ -235,15 +235,19 @@ export const Controller = () => {
 
     useEffect(() => {
         
+        console.log(`Potential change between values`);
+        
         Object.keys((values || {}) as any).map((valueKey) => {
             if( !isEqual(prevValues[valueKey], (values || {} as any)[valueKey]) ){
+                console.log(`Publishing change for valueKey ${valueKey}`);
+
                 socket.current?.emit('publish-change', {key: valueKey, value: (values || {} as any)[valueKey]})
             }
         })
 
         setPrevValues(values)
 
-    }, [values])
+    }, [values, prevValues, socket.current])
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     // console.log({valueStore})

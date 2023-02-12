@@ -9,21 +9,21 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
-"@gqty/cli@^3.0.1":
+"@gqty/cli@3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@gqty/cli/-/cli-3.0.1.tgz#97d31b0e8782e02075604485a568489517d6bca0"
   integrity sha512-/Y4kO9O2DwMkUMrC0hDoiwVsMILEqXyP3UuBWIhCgpPOJzDGwMPMGXmzu/+CV35anKgRjWV+dBE39O5JthYkiA==
   dependencies:
     gqty "^2.1.0"
 
-"@gqty/react@^2.1.0":
+"@gqty/react@2.1.0":
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/@gqty/react/-/react-2.1.0.tgz#fed7aaa9a3c05e510b072fdb96107170b1634319"
   integrity sha512-aTQEE2voYBqvgLhOs1VgBczL/EUVnbYHFzY1HKCNONH+MyLW0SClGXUcAPcHYEAgkfUfJlbM8egPd5cY1aJZDg==
   dependencies:
     react-ssr-prepass "^1.4.0"
 
-gqty@^2.1.0:
+gqty@2.1.0, gqty@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/gqty/-/gqty-2.1.0.tgz#3ee81f4781a079eae2dac4a45a98dafb9ddd0bc9"
   integrity sha512-ncUvTivsa6hWH9Ro1pKq9GneRqbtL37cxcFtvOrxeHC2JXVQC+f7UHdTdDpkSETSy5U7X4+jGBxXDXTxsTYi9w==

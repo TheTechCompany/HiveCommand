@@ -14,7 +14,7 @@ export interface MQTTHubOptions {
 
     exchange: string;
 
-    onMessage?: (message: MQTTHubMessage) => void;
+    onMessage?: (message: MQTTHubMessage) => Promise<void>;
 }
 
 export class MQTTHub {
@@ -30,8 +30,10 @@ export class MQTTHub {
 
     }
 
-    private onMessage (msg: ConsumeMessage | null) {
+    private async onMessage (msg: ConsumeMessage | null) {
         // this.channel
+        if(!msg) return;
+
         const routingKey = msg?.fields.routingKey;
         const userId : string | undefined = msg?.properties.userId;
         const messageContent = JSON.parse(msg?.content.toString() || '{error: "No message content"}');
@@ -40,11 +42,17 @@ export class MQTTHub {
 
         // if(!userId) return console.error("No userId found, private messages not allowed");
 
-        this.options.onMessage?.({
-            routingKey,
-            userId,
-            messageContent
-        })
+        try{
+            await this.options.onMessage?.({
+                routingKey,
+                userId,
+                messageContent
+            })
+        }catch(e){
+            return this.channel?.nack(msg)
+        }
+
+        this.channel?.ack(msg)
     }
 
     async setup(){

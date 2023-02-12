@@ -9,7 +9,7 @@ import { LocalPersistenceStage } from "./stages/localPersistence";
 
 export const SetupView = (props: any) => {
 
-    const { authState, updateAuthState, globalState, updateGlobalState } = useContext(DataContext);
+    const { authState, updateAuthState, setAuthState, globalState, updateGlobalState } = useContext(DataContext);
 
     // const [ state, setState ] = useState<any>({
     //     discoveryServer: 'https://discovery.hexhive.io'
@@ -67,7 +67,7 @@ export const SetupView = (props: any) => {
                     console.log("OPCUA PROVISIONED");
                     setState('opcuaProvisioned', true)
                     
-                    setState('configProvided', true)
+                    setAuthState?.('configProvided', true)
 
                     //START MQTT?
                 })

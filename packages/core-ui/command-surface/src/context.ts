@@ -1,4 +1,3 @@
-import { CommandProgram, CommandProgramDevicePlaceholder, CommandProgramHMI } from '@hive-command/api';
 import React from 'react';
 import { CommandSurfaceClient, HMIDevice, HMINode, HMIProgram, HMITag, HMIType, HMIView } from '.';
 import { RemoteComponentCache } from './hooks/remote-components';

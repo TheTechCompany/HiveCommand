@@ -105,7 +105,6 @@
   "exclude": ["jest.config.js", "**/**.test.ts", "node_modules/"],
   "references": [
     {"path": "../command-canvas-nodes"},
-    {"path": "../../core/command-scripting"},
-    {"path": "../../app/hivecommand-api"}
+    {"path": "../../core/command-scripting"}
   ]
 }

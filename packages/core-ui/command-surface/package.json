@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.157",
+	"version": "1.4.15-alpha.164",
 	"description": "",
 	"private": true,
 	"publishConfig": {
@@ -17,8 +17,7 @@
 	},
 	"peerDependencies": {
 		"@apollo/client": "^3.6.9",
-		"@hexhive/ui": "1.0.1-alpha.106",
-		"@hive-command/api": "^1.4.15-alpha.52",
+		"@hexhive/ui": "1.0.1-alpha.111",
 		"@mui/icons-material": "^5.10.6",
 		"@mui/lab": "5.0.0-alpha.10",
 		"@mui/material": "5.10.11",
@@ -28,7 +27,7 @@
 	"devDependencies": {
 		"@emotion/react": "^11.10.5",
 		"@hexhive/styles": "^1.0.1-alpha.45",
-		"@hexhive/ui": "^1.0.1-alpha.89",
+		"@hexhive/ui": "^1.0.1-alpha.111",
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@mui/material": "5.10.11",
 		"@types/dot": "^1.1.5",
@@ -43,8 +42,8 @@
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
-		"@hive-command/canvas-nodes": "^1.4.15-alpha.149",
-		"@hive-command/scripting": "^1.4.15-alpha.157",
+		"@hive-command/canvas-nodes": "^1.4.15-alpha.164",
+		"@hive-command/scripting": "^1.4.15-alpha.164",
 		"dot": "^1.1.3"
 	}
 }

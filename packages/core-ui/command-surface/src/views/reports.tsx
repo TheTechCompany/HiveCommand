@@ -2,7 +2,6 @@ import React, { useMemo, useState, useContext, useEffect } from "react";
 // import { useQuery, gql } from "@apollo/client";
 import { DeviceControlContext } from "../context";
 import { ControlGraphModal } from "../components/modals/device-control-graph";
-// import { useAddDeviceChart, useUpdateDeviceChart, useRemoveDeviceChart, useUpdateDeviceChartGrid } from '@hive-command/api'
 import { GraphGrid } from '@hexhive/ui'
 // import { Graph, GraphContainer } from "../../../components/ui/graph";
 

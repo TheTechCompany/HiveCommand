@@ -98,8 +98,6 @@ export const DeviceControlView = () => {
         }
     }, [])
 
-    console.log({normalisedValues})
-
     return (
         <Box sx={{flex: 1, display: 'flex', padding: '6px', flexDirection: 'column'}}>
             <CommandSurface

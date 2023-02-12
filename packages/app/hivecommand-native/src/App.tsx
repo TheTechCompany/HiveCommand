@@ -1,9 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useMemo, useState } from 'react'
 import { HexHiveTheme } from '@hexhive/styles';
 import './App.css';
 import { ThemeProvider, Box } from '@mui/material';
-import { CommandSurface } from '@hive-command/command-surface';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
@@ -23,6 +21,8 @@ function App() {
 
   const [ sidecarRunning, setSidecarRunning ] = useState(false);
 
+  const [ configured,  setConfigured ] = useState(false);
+
   useEffect(() => {
     cmd.execute().then((proc) => {
       console.log("Sidecar running");
@@ -34,16 +34,22 @@ function App() {
   
 
   useEffect(() => {
-    if(isReady && sidecarRunning){
+    console.log({isReady, sidecarRunning});
+
+    if(!configured && isReady && sidecarRunning){
+      console.log("Getting config");
+
       axios.get(`http://localhost:${8484}/setup`).then((data) => {
         if(data.config){
-          setAuthState?.({...authState, configProvided: true} )
+          setAuthState?.('configProvided', true)
+          setConfigured(true)
         }
       })
     }
-  }, [isReady, sidecarRunning])
+  }, [authState, isReady, configured, sidecarRunning])
 
-  const renderView = () => {
+  const renderView = useMemo(() => {
+    console.log({isAuthed: authState?.isAuthed(), authState})
     if (!authState?.isAuthed()) {
       return (
         <SetupView />
@@ -53,7 +59,7 @@ function App() {
         <Controller />
       )
     }
-  }
+  }, [authState, authState?.isAuthed()])
 
 
   return (
@@ -62,7 +68,7 @@ function App() {
       <ThemeProvider theme={HexHiveTheme}>
         <Box style={{ height: '100vh', width: '100vw', display: 'flex' }}>
 
-          {renderView()}
+          {renderView}
         </Box>
       </ThemeProvider>
     </LocalizationProvider>
