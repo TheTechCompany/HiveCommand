@@ -196,8 +196,23 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
         console.log(`Connected to ${properties?.name} @ ${host}:${slot || 0}`);
 
         console.log(`Found ${tagList?.length} tags`);
-      
 
+    //Get Array sizing for tagList
+    // await Promise.all(tagList.map(async (tag) => {
+    //     if(tag.type.arrayDims > 0){
+    //         const t = new Tag(tag.name)
+    //         const arraySize = await controller.PLC?.getTagArraySize(t)
+    //         return {
+    //             ...tag,
+    //             type: {
+    //                 ...tag.type,
+    //                 arraySize
+    //             }
+    //         }
+    //     }
+    //     return tag;
+    // }))
+    
         if(listenTags){
             //Tags have been specified in a tag json file
 
@@ -236,6 +251,10 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 if(!fromTagList?.type.typeName) continue;
                 const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
     
+                let isArray = fromTagList.type.arrayDims > 0
+                let arraySize = 0;
+                
+
                 let rootTag : Tag | null = null;
                 let childTags: {key: string, tag: Tag | null}[];
 
@@ -255,6 +274,17 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 }else{
                    rootTag = controller.addTag(tag.name)
 
+                   if(isArray){
+                    console.log("isArray")
+                    arraySize = await controller.PLC?.getTagArraySize(rootTag)
+
+                    childTags = [];
+                    for(var idx = 0; idx < arraySize; idx++){
+                        childTags.push({key: `${idx}`, tag: controller.addTag(`${tag.name}[${idx}]`) })
+                    }
+
+                    rootTag = null;
+                   }
                 }
 
                 // try{
@@ -272,6 +302,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                     // console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
                     if(key){
                         return childTags.find((a) => a.key === key)?.tag?.value
+                    }else if(!key && childTags){
+                        return childTags.sort((a: any, b: any) => a.key - b.key).map((x) => x.tag?.value)
                     }
                     return rootTag?.value
                 }, (value, key) => {

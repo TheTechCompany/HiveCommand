@@ -23,8 +23,7 @@
     "pkg": "^5.8.0",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.1",
-    "typescript": "^4.8.4"
+    "tsconfig-paths": "^4.1.1"
   },
   "dependencies": {
     "@hive-command/opcua-client": "^1.4.15-alpha.168",
@@ -35,6 +34,7 @@
     "lodash": "^4.17.21",
     "node-opcua": "^2.81.0",
     "pg": "^8.8.0",
+    "typescript": "^4.8.4",
     "socket.io": "^4.5.3"
   }
 }
