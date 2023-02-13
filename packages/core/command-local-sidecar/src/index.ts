@@ -13,7 +13,7 @@ import {Server} from 'socket.io'
 import { DataType } from 'node-opcua';
 import { isEqual } from 'lodash'
 
-import { Sidecar } from './sidecar';
+import { Sidecar } from './wrapper';
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
 
 const OPC_PROXY_PORT = 8484;
