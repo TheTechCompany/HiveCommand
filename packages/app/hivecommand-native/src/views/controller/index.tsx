@@ -55,7 +55,7 @@ export const Controller = () => {
 
     const socket = useRef<Socket>()
 
-    const subscribe = (paths: {path: string, tag: string}[]) => {
+    const subscribe = (paths: {path: string, tag: string}[], devices: {path: string, tag: string}[]) => {
         socket.current = io(`http://localhost:${8484}`)
 
         socket.current.on('connected', () => {
@@ -76,7 +76,8 @@ export const Controller = () => {
         
 
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`, {
-                paths
+                paths,
+                devices
         }).then((r) => r.data).then((data) => {
             if(data.data){
                 console.log("Initial state store", data.data)
@@ -100,7 +101,7 @@ export const Controller = () => {
     //Subscribe to datapoints
     useEffect(() => {
         if(globalState?.subscriptionMap)
-            subscribe(globalState?.subscriptionMap)
+            subscribe(globalState?.subscriptionMap, globalState.deviceMap || [])
 
         //Cleanup subscription
         return () => {

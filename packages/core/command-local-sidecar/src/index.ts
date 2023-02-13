@@ -10,233 +10,17 @@ import express from 'express';
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import {Server} from 'socket.io'
-import OPCUAClient from '@hive-command/opcua-client';
 import { DataType } from 'node-opcua';
 import { isEqual } from 'lodash'
 
-import { MQTTPublisher } from '@hive-command/opcua-mqtt';
-
-import { fromOPCType } from '@hive-command/scripting'
-
-import { Client } from 'pg';
-
+import { Sidecar } from './sidecar';
 // import { BrowsePath, ClientSession, OPCUAClient } from 'node-opcua'
 
 const OPC_PROXY_PORT = 8484;
 
-export interface SidecarOptions {
-    host: string,
-    user: string,
-    pass: string
-}
-
-class DevSidecar {
-
-    private client? : OPCUAClient;
-    private clientEndpoint?: string;
-
-    private mqttPublisher? : MQTTPublisher; 
-
-    private options? : SidecarOptions;
-    // private sessions : {[key: string]: ClientSession} = {};
-
-    constructor(){
-       
-    }
-
-    async getDataType(client: OPCUAClient, path: string){;
-
-        return await client.getType(path, true)
-    }
-
-    async setData(client: OPCUAClient, path: string, dataType: DataType, value: any){
-
-        const statusCode = await client.setDetails(path, dataType, value)
-        return statusCode?.value;
-    }
-
-    async subscribe(client: OPCUAClient, paths: {tag: string, path: string}[]){
-
-        console.log("Subscribing to", paths);
-
-        const { monitors, unsubscribe, unwrap } = await client.subscribeMulti(paths, 200)
-
-        const emitter = new EventEmitter()
-
-        monitors?.on('changed', async (item, value, index) => {
-            try{
-                const key = unwrap(index)
-
-                console.log("Datachanged at the OPCUA level", {key, value: value.value})
-
-                // if(this.mqttPublisher) this.mqttPublisher?.publish(key, value.value.dataType as any, value.value.value);
-
-                emitter.emit('data-changed', {key, value: value.value})
-            }catch(e: any){
-                console.log("Error in monitors.changed", e.message)
-            }
-        })
-
-        // emitter.on('')
-        
-        return {emitter, unsubscribe};
-    }
-
-    async browse(client: OPCUAClient, browsePath: string, recursive?: boolean, withTypes?: boolean){
-        // const endpointUrl = `opc.tcp://${host}:${port}`;
-        console.log("Browse", browsePath)
-        // const client = await this.connect(host);
-
-        const browseResult = await client.browse(browsePath)
-
-        let results : any[] = [];
-
-        for(const reference of browseResult || []) {
-
-            const name = reference?.browseName?.name?.toString();
-            const nsIdx = reference?.browseName?.namespaceIndex?.toString();
-
-            if(nsIdx == "0") continue;
-
-            let bp = `${browsePath}/${nsIdx ? `${nsIdx}:` : ''}${name}`;
-
-            if(recursive){
-                try{
-                    let {type, isArray} = withTypes ? await client.getType(bp, true) : {type: null, isArray: false};
-
-                    const innerResults = await this.browse(client, bp, recursive, withTypes);
-
-                    results.push({
-                        id: reference?.nodeId, 
-                        name: name, 
-                        path: bp,
-                        type: type ? fromOPCType(type) : undefined,
-                        isArray,
-                        children: innerResults
-                    })
-                }catch(e){
-                    console.log({e, name})
-                }
-            }else{
-                results.push(name)
-            }
-
-            // console.log( "   -> ", reference.browseName.toString());
-            // results.push(reference.browseName.toString());
-        }
-
-        return results;
-    }
-
-    private async onClientLost(endpointUrl: string){
-        console.log(`Connection to ${endpointUrl} lost. Retrying...`);
-        //Reconnect client
-        // try{
-        //     await this.clients[endpointUrl].connect(endpointUrl);
-        //     console.log(`Reconnected to ${endpointUrl}`);
-        // }catch(e: any){
-        //     //Backoff
-        //     console.error(e.message)
-        //     console.log("Retrying in 10 seconds...");
-        //     setTimeout(() => {
-        //         this.onClientLost(endpointUrl)
-        //     }, 10 * 1000);
-        // }
-
-        //Resubscribe
-
-        //Failover and message
-
-    }
-
-    async connect(host: string, port?: number){
-        const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
-
-        console.log(`Getting connection instance for ${endpointUrl}`);
-
-        //Check for host match if not reset
-        if(this.clientEndpoint !== endpointUrl) {
-            await this.client?.disconnect()
-            this.clientEndpoint = undefined;
-            this.client = undefined;
-        } 
-
-        if(this.client) return this.client;
-
-        this.client = new OPCUAClient();
-
-
-		this.client.on('close', this.onClientLost.bind(this, endpointUrl))
-		this.client.on('connection_lost', this.onClientLost.bind(this, endpointUrl))
-
-        await this.client.connect(endpointUrl)
-        console.log(`Connected to ${endpointUrl}`)
-      
-        return this.client;
-
-    }
-
-    async setup_data(host: string, user: string, pass: string, exchange: string){
-
-        if(this.mqttPublisher) return console.error("MQTT Publisher already existed");
-        
-        this.mqttPublisher = new MQTTPublisher({
-            host: host,
-            user: user,
-            pass: pass,
-            exchange: exchange || 'TestExchange'
-        })
-
-        try{
-            await this.mqttPublisher.setup()
-        }catch(e){
-            console.log({e})
-        }
-
-        await this.mqttPublisher.subscribe(async (message) => {
-            try{
-                const { key, value } = JSON.parse(message?.content?.toString() || '{}')
-
-                if(!this.client) {
-                    return console.error("No client currently connected");
-                }
-
-                //Get OPCUA path from state
-                let path = subscriptions?.paths.find((a) => a.tag === key)?.path
-
-                if(!path) return console.error("Couldn't find ", key)
-
-                //Get OPCUA Datatype
-                const dataType = await this.getDataType(this.client, path)
-
-                //Update current state
-                this.setData(this.client, path, (DataType as any)[dataType.type as any], value)
-
-                //Send update to frontend
-            }catch(e){
-                console.error("Error receiving MQTT Publish", message)
-            }
-        })
-
-        console.log("MQTT Publisher started");
-    }
-
-    async publish_data(key: string, value: any){
-        this.mqttPublisher?.publish(key, 'Boolean', value)
-    }
-
-    setConfig(options: SidecarOptions){
-        this.options = options;
-    }  
-
-    getConfig(){
-        return this.options;
-    }
-
-
-}
-
-const sidecar = new DevSidecar();
+const sidecar = new Sidecar({
+    
+});
 
 const app = express();
 
@@ -290,6 +74,7 @@ app.route('/setup')
         sidecar.setConfig(config);
 
         await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
+
         res.send({config: sidecar.getConfig()})
     })
 
@@ -299,15 +84,17 @@ app.route('/:host/set_data')
 
         let { path, value } = req.body;
 
-        const client = await sidecar.connect(req.params.host)
-
-        const { type: dt, isArray } = await sidecar.getDataType(client, path)
-        
-        if(!dt) return res.send({error: "No datatype"})
+        const code = await sidecar.setTag(path, value);
 
         // const client = await sidecar.connect(req.params.host)
-        //TODO pickup dataType from somewhere dynamic
-        const code = await sidecar.setData(client, path, (DataType as any)[dt as any], value);
+
+        // const { type: dt, isArray } = await sidecar.getDataType(client, path)
+        
+        // if(!dt) return res.send({error: "No datatype"})
+
+        // // const client = await sidecar.connect(req.params.host)
+        // //TODO pickup dataType from somewhere dynamic
+        // const code = await sidecar.setData(client, path, (DataType as any)[dt as any], value);
 
         res.send({code})
     })

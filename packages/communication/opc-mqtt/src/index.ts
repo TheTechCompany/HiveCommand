@@ -33,13 +33,21 @@ export class MQTTPublisher {
     }
 
     //Subscribe to changes requested by other entities
-    async subscribe(onMessage: (message: ConsumeMessage | null) => void){
+    async subscribe(onMessage: (message: {routingKey?: string, userId?: string, messageContent: any}) => Promise<void>){
         const generatedQueue = await this.channel?.assertQueue(`device:${this.options.user}`)
         if(!generatedQueue) return;
 
+
         // await this.channel?.bindQueue(generatedQueue.queue, this.options.exchange, key);
 
-        this.channel?.consume(generatedQueue.queue, onMessage);
+        this.channel?.consume(generatedQueue.queue, (message) => {
+            const routingKey = message?.fields.routingKey;
+            const userId : string | undefined = message?.properties.userId;
+            const messageContent = JSON.parse(message?.content.toString() || '{error: "No message content"}');
+    
+    
+            onMessage({routingKey, userId, messageContent})
+        });
     }
 
     //Publish current state to other entities

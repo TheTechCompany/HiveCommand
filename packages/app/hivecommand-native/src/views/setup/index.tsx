@@ -58,10 +58,16 @@ export const SetupView = (props: any) => {
                 console.log({networkLayout: globalState?.networkLayout})
                 axios.post(`http://localhost:${8484}/setup`, {
                     config: {
-                        host: globalState?.networkLayout?.iotEndpoint,
-                        user: globalState?.networkLayout?.iotUser,
-                        pass: globalState?.networkLayout?.iotToken,
-                        exchange: globalState?.networkLayout?.iotSubject
+                        tags: globalState?.controlLayout?.tags,
+                        types: globalState?.controlLayout?.types,
+                        iot: {
+                            host: globalState?.networkLayout?.iotEndpoint,
+                            user: globalState?.networkLayout?.iotUser,
+                            pass: globalState?.networkLayout?.iotToken,
+                            exchange: globalState?.networkLayout?.iotSubject
+                        },
+                        subscriptionMap: globalState?.subscriptionMap,
+                        deviceMap: globalState?.deviceMap
                     }
                 }).then((data) => {
                     console.log("OPCUA PROVISIONED");
