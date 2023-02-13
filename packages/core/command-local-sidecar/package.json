@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-sidecar",
-  "version": "1.4.15-alpha.169",
+  "version": "1.4.15-alpha.170",
   "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
@@ -26,15 +26,15 @@
     "tsconfig-paths": "^4.1.1"
   },
   "dependencies": {
-    "@hive-command/opcua-client": "^1.4.15-alpha.169",
-    "@hive-command/opcua-mqtt": "^1.4.15-alpha.169",
-    "@hive-command/scripting": "^1.4.15-alpha.169",
+    "@hive-command/opcua-client": "^1.4.15-alpha.170",
+    "@hive-command/opcua-mqtt": "^1.4.15-alpha.170",
+    "@hive-command/scripting": "^1.4.15-alpha.170",
     "body-parser": "^1.20.1",
     "express": "^4.18.2",
     "lodash": "^4.17.21",
     "node-opcua": "^2.81.0",
     "pg": "^8.8.0",
-    "typescript": "^4.8.4",
-    "socket.io": "^4.5.3"
+    "socket.io": "^4.5.3",
+    "typescript": "^4.8.4"
   }
 }
