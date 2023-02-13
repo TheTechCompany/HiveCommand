@@ -19,6 +19,8 @@ export interface SidecarOptions {
         pass: string
     }
 
+    opcuaServer?: string;
+
     deviceMap?: {
         path: string,
         tag: string
@@ -52,6 +54,9 @@ export class Sidecar {
 
     constructor(config?: SidecarOptions){
         this.conf = new SidecarConf({ filename:  'hive-command.json', options: config });
+
+
+        this.setTag = this.setTag.bind(this)
     }
 
     get values(){
@@ -60,12 +65,16 @@ export class Sidecar {
 
     async getDataType(client: OPCUAClient, path: string){;
 
+        console.log("GetDataType", path)
+
         return await client.getType(path, true)
     }
 
     async setData(client: OPCUAClient, path: string, dataType: DataType, value: any){
-
+        console.log("Set Data")
         const statusCode = await client.setDetails(path, dataType, value)
+        console.log("Set Data Done")
+
         return statusCode?.value;
     }
 
@@ -86,6 +95,8 @@ export class Sidecar {
     async setTag(tagPath: string, value: any){
         if(!this.client) return;
 
+        console.log("SetTag", tagPath)
+
         const { deviceMap, subscriptionMap } = this.conf.getConf()
 
     // const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
@@ -100,9 +111,10 @@ export class Sidecar {
                 
                 let tags = this.getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
 
-                let newValues = tags.map((t: any) => {
+                let newValues : ({path: string, value: any} | null)[] = tags.map((t: any) => {
                  
                     let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
+
                     if(!path) return null;
 
                     return {
@@ -112,32 +124,24 @@ export class Sidecar {
 
                 })
 
-                await Promise.all(newValues.map(async (value: any) => {
-
+                for(value of newValues){
                     if(this.client){
                         const { type: dt, isArray } = await this.getDataType(this.client, value.path)
 
-                        this.setData(this.client, value.path, (DataType as any)[dt as any], value.value)
+                        await this.setData(this.client, value.path, (DataType as any)[dt as any], value.value)
                     }
 
-                }))
+                }
 
             }) 
         }else{
-            // let devicePath = deviceMap?.find((a) => a.path == path)?.tag
-            // let valuePath = subscriptionMap?.find((a) => a.path == devicePath)?.tag;
-            // console.log({valuePath, subscriptionMap, devicePath, deviceMap, path})
             if(!tag) return; //valueFn([]);
 
             const { type: dt, isArray } = await this.getDataType(this.client, tag)
 
             
-            this.setData(this.client, tag, (DataType as any)[dt as any], value)
+            await this.setData(this.client, tag, (DataType as any)[dt as any], value)
 
-            // valueFn( [{path: tag, value}] ) 
-
-            // console.log({tag})
-            // tag?.split('.').reduce((prev, curr) => prev[curr], valueStore)
         }
     // }
 
@@ -291,7 +295,7 @@ export class Sidecar {
 
                 this.internalValueStore = {
                     ...this.internalValueStore,
-                    [key]: value.value
+                    [key]: value.value.value
                 }
 
                 this.normaliseValueStore();
@@ -299,6 +303,7 @@ export class Sidecar {
                 const changed_keys = this.normaliseValues();
 
                 changed_keys.map((changed) => {
+                    if(this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
                     emitter.emit('data-changed', { key: changed.key, value: changed.value })
                 })
             }catch(e: any){
@@ -377,18 +382,22 @@ export class Sidecar {
     }
 
     async connect(host: string, port?: number){
-        const endpointUrl = `opc.tcp://${host}${port ? `:${port}` : ''}`;
+        const endpointUrl = host.indexOf('opc.tcp://') > -1 ? host : `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
         console.log(`Getting connection instance for ${endpointUrl}`);
 
         //Check for host match if not reset
         if(this.clientEndpoint !== endpointUrl) {
+            console.debug(`Disconnecting client`);
             await this.client?.disconnect()
             this.clientEndpoint = undefined;
             this.client = undefined;
         } 
 
-        if(this.client) return this.client;
+        if(this.client) {
+            console.debug("Returning client");
+            return this.client;
+        }
 
         this.client = new OPCUAClient();
 
@@ -397,6 +406,9 @@ export class Sidecar {
 		this.client.on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
         await this.client.connect(endpointUrl)
+
+        this.clientEndpoint = endpointUrl
+        
         console.log(`Connected to ${endpointUrl}`)
       
         return this.client;
@@ -428,7 +440,10 @@ export class Sidecar {
                     return console.error("No client currently connected");
                 }
 
+                console.log("SET TAG", key, value)
                 await this.setTag(key, value)
+
+
 
                 // //Get OPCUA path from state
                 // let path = this.subscription?.paths.find((a) => a.tag === key)?.path

@@ -17,6 +17,7 @@ export const SetupView = (props: any) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
 
+    console.log({globalState})
 
     const steps = [
         {
@@ -60,13 +61,14 @@ export const SetupView = (props: any) => {
                     config: {
                         tags: globalState?.controlLayout?.tags,
                         types: globalState?.controlLayout?.types,
+                        opcuaServer: authState?.opcuaServer,
                         iot: {
                             host: globalState?.networkLayout?.iotEndpoint,
                             user: globalState?.networkLayout?.iotUser,
                             pass: globalState?.networkLayout?.iotToken,
                             exchange: globalState?.networkLayout?.iotSubject
                         },
-                        subscriptionMap: globalState?.subscriptionMap,
+                        subscriptionMap:  [{path: '/Objects/1:AV101/1:OperMode', tag: 'AV101.OperMode'}, {path: '/Objects/1:AV101/1:Eng', tag: 'AV101.Eng'}, {path: '/Objects/1:AV101/1:Den', tag: 'AV101.Den'}] || globalState?.subscriptionMap,
                         deviceMap: globalState?.deviceMap
                     }
                 }).then((data) => {

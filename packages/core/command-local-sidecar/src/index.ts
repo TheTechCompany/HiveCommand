@@ -19,7 +19,7 @@ import { Sidecar } from './sidecar';
 const OPC_PROXY_PORT = 8484;
 
 const sidecar = new Sidecar({
-    
+
 });
 
 const app = express();
@@ -49,12 +49,9 @@ io.on('connection', (socket) => {
 
 let subscriptions : {events: EventEmitter, paths: {tag: string, path: string}[], unsubscribe: () => void} | undefined = undefined;
 
-let current_data : {[key: string]: any} = {};
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
-    current_data[data.key] = data.value.value;
-
     // console.log({data});
     // sidecar.publish_data()
 }
@@ -69,9 +66,13 @@ app.route('/setup')
         res.send(config ? {config} : {error: "No config"}) 
     })
     .post(async (req, res) => {
-        const config = req.body.config;
+        const mainConfig = req.body.config;
 
-        sidecar.setConfig(config);
+        sidecar.setConfig(mainConfig);
+
+        const config = mainConfig.iot;
+
+        await sidecar.connect(mainConfig.opcuaServer)
 
         await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
 
@@ -102,35 +103,38 @@ app.route('/:host/set_data')
 app.post('/:host/subscribe', async (req, res) => {
     // if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
 
-    if(subscriptions && !isEqual(req.body.paths, subscriptions?.paths)){
-        const {events: eventEmitter, unsubscribe} = subscriptions
 
-        eventEmitter.removeListener('data-changed', dataChanged);
-        unsubscribe() 
+    // if(subscriptions && !isEqual(subscriptionMap, subscriptions?.paths)){
+    //     const {events: eventEmitter, unsubscribe} = subscriptions
+
+    //     eventEmitter.removeListener('data-changed', dataChanged);
+    //     unsubscribe() 
         
-        subscriptions = undefined
-        // delete subscriptions
-    }
+    //     subscriptions = undefined
+    //     // delete subscriptions
+    // }
 
     if(subscriptions) {
         // current_data[]
         return res.send({
-            data: current_data
+            data: sidecar.values
         })
     };
+
+    const { subscriptionMap, deviceMap } = sidecar.getConfig() || {}
 
         try{
             const client = await sidecar.connect(req.params.host)
 
-            const {emitter: events, unsubscribe} = await sidecar.subscribe(client, req.body.paths)
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(client, subscriptionMap || [])
 
-            console.log("Subscribed to", req.body.paths)
+            console.log("Subscribed to", subscriptionMap)
 
             events.on('data-changed', dataChanged)
 
             subscriptions = {
                 events,
-                paths: req.body.paths || [],
+                paths: subscriptionMap || [],
                 unsubscribe
             };
         }catch(e: any){

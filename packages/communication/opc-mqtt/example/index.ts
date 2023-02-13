@@ -4,7 +4,9 @@ import { MQTTPublisher } from "../src";
 (async () => {
     const publisher = new MQTTPublisher({
         host: process.env.IOT_HOST || '',
-        exchange: 'IOT-SUBJECT',
+        user: process.env.IOT_USER || '',
+        pass: process.env.IOT_PASS || '',
+        exchange: 'device_values',
         // onMessage: (message) => console.log({message})
     })
     
@@ -12,7 +14,11 @@ import { MQTTPublisher } from "../src";
 
     console.log("Connected")
 
-    await publisher.publish('asdf', 'Boolean', false);
+    await publisher.subscribe(async (message) => {
+        console.log("STUFF", message)
+    })
+
+    // await publisher.publish('asdf', 'Boolean', false);
     
     console.log("Subscribed");
 })()

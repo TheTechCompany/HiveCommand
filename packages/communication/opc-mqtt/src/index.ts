@@ -37,16 +37,19 @@ export class MQTTPublisher {
         const generatedQueue = await this.channel?.assertQueue(`device:${this.options.user}`)
         if(!generatedQueue) return;
 
-
-        // await this.channel?.bindQueue(generatedQueue.queue, this.options.exchange, key);
-
-        this.channel?.consume(generatedQueue.queue, (message) => {
+        this.channel?.consume(generatedQueue.queue, async (message) => {
+            if(!message) return;
             const routingKey = message?.fields.routingKey;
             const userId : string | undefined = message?.properties.userId;
             const messageContent = JSON.parse(message?.content.toString() || '{error: "No message content"}');
     
-    
-            onMessage({routingKey, userId, messageContent})
+            try{
+                await onMessage({routingKey, userId, messageContent})
+            }catch(e){
+                console.error("Error leading to nack", message)
+                return this.channel?.nack(message)
+            }
+            return this.channel?.ack(message)
         });
     }
 
@@ -55,7 +58,6 @@ export class MQTTPublisher {
         
         console.log("Publishing ", key, dataType, value)
         if(value.BYTES_PER_ELEMENT != undefined){
-            console.log("Publishing typed array", value);
             value = Array.from(value)
         }
 
