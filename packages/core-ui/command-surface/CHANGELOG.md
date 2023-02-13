@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.168](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.167...v1.4.15-alpha.168) (2023-02-13)
+
+**Note:** Version bump only for package @hive-command/command-surface
+
+
+
+
+
 ## [1.4.15-alpha.167](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.166...v1.4.15-alpha.167) (2023-02-12)
 
 **Note:** Version bump only for package @hive-command/command-surface
