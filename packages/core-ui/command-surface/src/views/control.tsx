@@ -182,14 +182,14 @@ export default () => {
                     if (Number.isNaN(val)) {
                         val = 0;
                     }
-                    return val.toFixed(2);
+                    return val % 1 != 0 ? val.toFixed(2) : val;
                 }) : (() => {
                     let val = parseFloat(value || 0);
 
                     if(Number.isNaN(val)) {
                         val = 0;
                     }
-                    return val.toFixed(2);
+                    return val % 1 != 0 ? val.toFixed(2) : val;
                 })()
             default:
                 console.log({ type })

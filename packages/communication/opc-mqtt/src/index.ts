@@ -55,13 +55,14 @@ export class MQTTPublisher {
 
     //Publish current state to other entities
     async publish(key: string, dataType: string, value: any){
-        
+        if(!value) return null;
+
         console.log("Publishing ", key, dataType, value)
         if(value.BYTES_PER_ELEMENT != undefined){
             value = Array.from(value)
         }
 
-        this.channel?.publish(
+        return this.channel?.publish(
             this.options.exchange, 
             key, 
             Buffer.from(JSON.stringify({
