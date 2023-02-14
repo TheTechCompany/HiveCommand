@@ -18,7 +18,7 @@ export const DeviceControlView = () => {
 
     const { results, refetch } = useDevice(id);
 
-    const { results: values, refetch: refetchValues } = useDeviceValues(id);
+    // const { results: values, refetch: refetchValues } = useDeviceValues(id);
 
     const { getHistoricValues, data: historicValues } = useDeviceHistory(id);
 
@@ -35,18 +35,62 @@ export const DeviceControlView = () => {
 
     const defaultPage = program?.remoteHomepage?.id;
 
+    const values : any[] = [{id: 'Time', key: '0', value: '1'}, {id: 'Time', key: '1', value: '2'}, {id: 'Mins', value: ['2', '3']}]
     const daysHorizon = 14;
     const [ lastDate, setLastDate ] = useState(null)
     
     const normalisedValues = useMemo(() => {
        
-        return values.reduce((prev, curr) => ({
-            ...prev,
-            [curr.id]: {
-                ...prev[curr.id],
-                [curr.key]: curr.value
+        let valueObj = values.reduce((prev, curr) => {
+
+            let key = curr.key;
+            
+            let update = {};
+            
+            if(key){
+                update = {
+                    ...prev[curr.id],
+                    [key]: curr.value
+                }
+            }else{
+                update = curr.value;
             }
+
+            return {
+                ...prev,
+                [curr.id]: update
+            }
+        }, {});
+
+        return program?.tags?.map((tag) => {
+
+            let type = program?.types?.find((a) => a.name === tag.type) || tag.type;
+
+            let hasFields = (type?.fields || []).length > 0;
+
+            let value = valueObj[tag.name];
+
+            if(type.indexOf('[]') > -1 && typeof(value) === "object" && !Array.isArray(value) && Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0){
+                value = Object.keys(value).map((x) => value[x]);
+            }
+
+            return {
+                key: `${tag.name}`,
+                value: value
+            }
+
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.value
         }), {})
+
+        // return values.reduce((prev, curr) => ({
+        //     ...prev,
+        //     [curr.id]: {
+        //         ...prev[curr.id],
+        //         [curr.key]: curr.value
+        //     }
+        // }), {})
             // return Object.keys(props.values).map((devicePath) => {
     
             //     let value = props.values[devicePath];
@@ -66,13 +110,13 @@ export const DeviceControlView = () => {
             // } else {
             //     return props.values;
             // }
-    }, [values])
+    }, [program.tags, program.types, values])
 
     // console.log({normalisedValues})
 
     useEffect(() => {
         const interval = setInterval(() => {
-            refetchValues();
+            // refetchValues();
         }, 2000)
 
         return () => {
@@ -80,12 +124,11 @@ export const DeviceControlView = () => {
         }
     }, [])
 
-    console.log({program})
+    console.log({program, normalisedValues})
 
     const [ testValues, setValues ] = useState<any>({BLO701: {on: false}, BLO601: {on: false}});
 
     useEffect(() => {
-        
         
         const timer = setTimeout(() => {
             // console.log("Timer")

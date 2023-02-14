@@ -31,68 +31,79 @@ export const useLocalClient = (devices: any[], deviceMap: any[], subscriptionMap
         
     }
 
-    const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
-        let tag = deviceMap?.find((a) => a.path == path)?.tag;
+    // const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
+    //     let tag = deviceMap?.find((a) => a.path == path)?.tag;
 
-        if(tag?.indexOf('script://') == 0){
-            const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
-            const { getter, setter } = load_exports(jsCode)
-            // console.log({jsCode})
-            return setter(value, valueStructure, (values: any) => {
+    //     if(tag?.indexOf('script://') == 0){
+    //         const jsCode = ts.transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
+    //         const { getter, setter } = load_exports(jsCode)
+    //         // console.log({jsCode})
+    //         return setter(value, valueStructure, (values: any) => {
                 
-                let tags = getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
+    //             let tags = getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
 
-                // console.log({tags, values, subscriptionMap})
-                let newValues = tags.map((t: any) => {
+    //             // console.log({tags, values, subscriptionMap})
+    //             let newValues = tags.map((t: any) => {
                  
-                    let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
-                    if(!path) return null;
+    //                 let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
+    //                 if(!path) return null;
 
-                    return {
-                        path,
-                        value: t.tag
-                    }
+    //                 return {
+    //                     path,
+    //                     value: t.tag
+    //                 }
 
-                })
+    //             })
 
-                valueFn(newValues)//({path: subscriptionMap.find((a) => a.tag == t.parent).path, value: t.tag}))
-                // console.log("Set values from setter func", tags);
-            }) 
-        }else{
-            // let devicePath = deviceMap?.find((a) => a.path == path)?.tag
-            // let valuePath = subscriptionMap?.find((a) => a.path == devicePath)?.tag;
-            // console.log({valuePath, subscriptionMap, devicePath, deviceMap, path})
-            if(!tag) return valueFn([]);
-            valueFn( [{path: tag, value}] ) 
-            // console.log({tag})
-            // tag?.split('.').reduce((prev, curr) => prev[curr], valueStore)
-        }
-    }
+    //             valueFn(newValues)//({path: subscriptionMap.find((a) => a.tag == t.parent).path, value: t.tag}))
+    //             // console.log("Set values from setter func", tags);
+    //         }) 
+    //     }else{
+    //         // let devicePath = deviceMap?.find((a) => a.path == path)?.tag
+    //         // let valuePath = subscriptionMap?.find((a) => a.path == devicePath)?.tag;
+    //         // console.log({valuePath, subscriptionMap, devicePath, deviceMap, path})
+    //         if(!tag) return valueFn([]);
+    //         valueFn( [{path: tag, value}] ) 
+    //         // console.log({tag})
+    //         // tag?.split('.').reduce((prev, curr) => prev[curr], valueStore)
+    //     }
+    // }
 
 
 
-    const changeDeviceValue = (deviceName: string, value: any, stateKey?: string ) => {
+    const changeDeviceValue = async (deviceName: string, value: any, stateKey?: string ) => {
         //Get mapping
 
         console.log({deviceName, stateKey, value});
 
-        setTag(`${deviceName}${stateKey ? `.${stateKey}` : ''}`, value, async (values) => {
-            console.log({values});
-            
-            await Promise.all(values.map(async (value) => {
-                await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
+        await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        path: value.path,
-                        value: value.value
+                        path: `${deviceName}${stateKey ? `.${stateKey}`: ''}`,
+                        value: value
                     })
-                })
-            }))
+        })
+
+        // setTag(`${deviceName}${stateKey ? `.${stateKey}` : ''}`, value, async (values) => {
+        //     console.log({values});
             
-        });
+        //     await Promise.all(values.map(async (value) => {
+        //         await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type": "application/json"
+        //             },
+        //             body: JSON.stringify({
+        //                 path: value.path,
+        //                 value: value.value
+        //             })
+        //         })
+        //     }))
+            
+        // });
 
         // console.log({paths})
         //Check for script tag

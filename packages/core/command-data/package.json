@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/data",
-  "version": "1.4.15-alpha.166",
+  "version": "1.4.15-alpha.172",
   "description": "",
   "main": "dist/index.js",
   "private": true,

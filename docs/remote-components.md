@@ -9,3 +9,13 @@ Components can be group into component packs similar to a normal node module, th
 ## Component
 
 A remote component is a react component exported from a component pack
+
+```js
+export const Component = () => {
+
+}
+
+Component.metadata = {
+
+}
+```

@@ -69,7 +69,7 @@ export const OPCUAServerStage = () => {
     }
 
     useEffect(() => {
-        scanOPCUA()
+        // scanOPCUA()
         // setOPCUA([{id: '101', path: '/Test', name: 'Test', type: 'Boolean'}, {id: '102', path: '/Test2', name: 'Test2', type: DataTypes.Number, isArray: true}] as any)
     }, [])
 

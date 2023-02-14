@@ -62,6 +62,10 @@ export default class Client {
     //     return this.client.on(key, listener)
     // }
 
+    // get isConnected(){
+    //     // return this.session.
+    // }
+
     on(event: any, eventHandler: any){
         return this.client.on(event, eventHandler)
     }
@@ -83,6 +87,8 @@ export default class Client {
     async connect(endpoint: string){
         await this.client.connect(endpoint)
         this.session = await this.client.createSession()
+
+        this.session.on('session_closed', () => console.debug("Session closed"))
 
         this.session.on('keepalive', () => {
             console.log("keep alive packet");
@@ -235,6 +241,7 @@ export default class Client {
     }
 
     async setDetails(path: string, dataType: DataType, value: any){
+        // console.log("SeDetails")
         const nodeId = await this.getPathID(path)
         return await this.session?.write({
             nodeId: nodeId,
@@ -255,6 +262,8 @@ export default class Client {
         const nodeId = await this.getPathID(path)
         // this.session.read
 
+        // if(!this.session) throw new Error("Session isn't available");
+        
         let attributesToRead = [{
             nodeId,
             attributeId: AttributeIds.DataType

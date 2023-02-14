@@ -37,25 +37,33 @@ export const Controller = () => {
     const [ valueStore, setValueStore ] = useState<{[key: string]: any}>({})
     
     const valueStructure = useMemo(() => {
-        return subscriptionMap?.map((subscription) => {
-             // let value = props.values[devicePath];
-             let value = valueStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
+        return Object.keys(valueStore).map((valueKey) => {
+            if(valueKey.indexOf('.') > -1){
+                return valueKey.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), valueStore[valueKey])
+            }else{
+                return {[valueKey]: valueStore[valueKey]}
+            }
+        }).reduce((prev, curr) => merge(prev, curr), {})
+       
+        // return subscriptionMap?.map((subscription) => {
+        //      // let value = props.values[devicePath];
+        //      let value = valueStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
 
-             if(subscription.tag.indexOf('.') > -1){
-                return subscription.tag.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), value)
-             }else{
-                return {[subscription.tag]: value};
-             }
+        //      if(subscription.tag.indexOf('.') > -1){
+        //         return subscription.tag.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), value)
+        //      }else{
+        //         return {[subscription.tag]: value};
+        //      }
 
-            //  return obj
-         }).reduce((prev, curr) => merge(prev, curr), {})
+        //     //  return obj
+        //  }).reduce((prev, curr) => merge(prev, curr), {})
     }, [JSON.stringify(valueStore), subscriptionMap])
 
     const LocalClient = useLocalClient( [], deviceMap || [], subscriptionMap || [], valueStructure, valueStore)
 
     const socket = useRef<Socket>()
 
-    const subscribe = (paths: {path: string, tag: string}[]) => {
+    const subscribe = (paths: {path: string, tag: string}[], devices: {path: string, tag: string}[]) => {
         socket.current = io(`http://localhost:${8484}`)
 
         socket.current.on('connected', () => {
@@ -64,20 +72,18 @@ export const Controller = () => {
         })
 
         socket.current.on('data-changed', (data) => {
-            console.log("Datachanged", data.key, data.value.value)
+            console.log("Datachanged", data.key, data.value)
             // alert("Datachange on io socketç" + JSON.stringify({data}))
 
             setValueStore((store) => ({
                 ...store,
-                [data.key]: data.value.value
+                [data.key]: data.value
             }));
 
         })
         
 
-        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`, {
-                paths
-        }).then((r) => r.data).then((data) => {
+        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
             if(data.data){
                 console.log("Initial state store", data.data)
                 setValueStore(data.data)
@@ -100,7 +106,7 @@ export const Controller = () => {
     //Subscribe to datapoints
     useEffect(() => {
         if(globalState?.subscriptionMap)
-            subscribe(globalState?.subscriptionMap)
+            subscribe(globalState?.subscriptionMap, globalState.deviceMap || [])
 
         //Cleanup subscription
         return () => {
@@ -166,65 +172,9 @@ export const Controller = () => {
 
             return {
                 key: `${tag.name}`,
-                value: hasFields ? type?.fields.map((field) => {
-                    let path = `${tag.name}.${field.name}`
-
-                    let tagValue = deviceMap?.find((a) => a.path == path)?.tag
-
-                    // let type = x.type;
-
-                    if(tagValue?.indexOf('script://') == 0){
-                        // console.log({tag})
-                        const jsCode = ts.transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
-                        const { getter, setter } = load_exports(jsCode)
-
-                        let value = parseValue(field.type, getter(valueStructure));
-
-                        console.log("Script function", field.name, value);
-
-                        return {key: field.name, value: value}
-
-                    }else{
-                        let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
-                        
-                        let value = parseValue(field.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-                        return {key: field.name, value: value}
-                    }
-                }).reduce((prev, curr) => ({
-                    ...prev,
-                    [curr.key]: curr.value
-                }), {}) : (() => {
-
-                    let path = `${tag.name}`
-
-                    let tagValue = deviceMap?.find((a) => a.path == path)?.tag
-
-                    console.log("RAW", tagValue, path, deviceMap)
-                    // let type = x.type;
-
-                    if(tagValue?.indexOf('script://') == 0){
-                        // console.log({tag})
-                        const jsCode = ts.transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', {module: ModuleKind.CommonJS})
-                        const { getter, setter } = load_exports(jsCode)
-
-                        let value = parseValue(tag.type, getter(valueStructure));
-
-                        console.log("Script function", tag.name, tag.type, value, valueStructure);
-
-                        return value
-
-                    }else{
-                        let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
-                        
-                        let value = parseValue(tag.type, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-
-                        console.log("RAW", rawTag, valueStructure, value)
-
-                        return value
-                    }
-
-                })(),
+                value: valueStructure[tag.name]
             }
+
         }).reduce((prev, curr) => ({
             ...prev,
             [curr.key]: curr.value
@@ -233,21 +183,22 @@ export const Controller = () => {
 
     console.log({values})
 
-    useEffect(() => {
+    // useEffect(() => {
         
-        console.log(`Potential change between values`);
+    //     console.log(`Potential change between values`);
         
-        Object.keys((values || {}) as any).map((valueKey) => {
-            if( !isEqual(prevValues[valueKey], (values || {} as any)[valueKey]) ){
-                console.log(`Publishing change for valueKey ${valueKey}`);
+    //     Object.keys((values || {}) as any).map((valueKey) => {
+    //         if( !isEqual(prevValues[valueKey], (values || {} as any)[valueKey]) ){
+    //             console.log(`Publishing change for valueKey ${valueKey}`);
 
-                socket.current?.emit('publish-change', {key: valueKey, value: (values || {} as any)[valueKey]})
-            }
-        })
+    //             socket.current?.emit('publish-change', {key: valueKey, value: (values || {} as any)[valueKey]})
+    //         }
+    //     })
 
-        setPrevValues(values)
+    //     setPrevValues(values)
 
-    }, [values, prevValues, socket.current])
+    // }, [values, prevValues, socket.current])
+    
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     // console.log({valueStore})
