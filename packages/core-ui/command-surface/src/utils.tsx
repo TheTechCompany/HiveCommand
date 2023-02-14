@@ -219,7 +219,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 	
 		//TODO make this run through the normal channel for options
 		if(!templateOverride) {
-			console.error("no template override")
+			// console.error("no template override")
 			return {key: optionKey, value: optionValue }
 		}
 

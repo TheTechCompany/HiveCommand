@@ -315,10 +315,8 @@ export default () => {
 
 	// console.log({ hmiNodes, operatingMode, operatingModes })
 
+	console.log({values, hmi: hmi?.nodes})
 
-	const infoBubble = useMemo(() => {
-		
-	}, [])
 
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
