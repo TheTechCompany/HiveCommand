@@ -70,7 +70,7 @@ export const DeviceControlView = () => {
 
             let value = valueObj[tag.name];
 
-            if(type.indexOf('[]') > -1 && typeof(value) === "object" && !Array.isArray(value) && Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0){
+            if(type && type.indexOf('[]') > -1 && typeof(value) === "object" && !Array.isArray(value) && Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0){
                 value = Object.keys(value).map((x) => value[x]);
             }
 
