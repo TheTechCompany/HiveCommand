@@ -18,7 +18,7 @@ export const DeviceControlView = () => {
 
     const { results, refetch } = useDevice(id);
 
-    // const { results: values, refetch: refetchValues } = useDeviceValues(id);
+    const { results: values, refetch: refetchValues } = useDeviceValues(id);
 
     const { getHistoricValues, data: historicValues } = useDeviceHistory(id);
 
@@ -35,7 +35,6 @@ export const DeviceControlView = () => {
 
     const defaultPage = program?.remoteHomepage?.id;
 
-    const values : any[] = [{id: 'Time', key: '0', value: '1'}, {id: 'Time', key: '1', value: '2'}, {id: 'Mins', value: ['2', '3']}]
     const daysHorizon = 14;
     const [ lastDate, setLastDate ] = useState(null)
     
