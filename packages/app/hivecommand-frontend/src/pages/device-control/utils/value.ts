@@ -24,6 +24,8 @@ export const useDeviceValues = (id: string) : {
 		}
 	})
 
+	
+
     return {
         refetch: () => {
             client.refetchQueries({include: ['DeviceValues']})
