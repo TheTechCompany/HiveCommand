@@ -64,10 +64,6 @@ export class Sidecar {
     }
 
     async getDataType(client: OPCUAClient, path: string) {
-        ;
-
-        console.log("GetDataType", path)
-
         return await client.getType(path, true)
     }
 
@@ -96,9 +92,20 @@ export class Sidecar {
     async setTag(tagPath: string, value: any) {
         if (!this.client) return;
 
-        console.log("SetTag", tagPath)
+        const { deviceMap, tags, types, subscriptionMap } = this.conf.getConf()
 
-        const { deviceMap, subscriptionMap } = this.conf.getConf()
+        let rootTag = tags?.find((a) => a.name === tagPath?.split('.')?.[0])
+        let rootType = types?.find((a) => a.name === rootTag?.type) || rootTag?.type;
+        let childTag;
+        
+        if(typeof(rootType) === "string"){
+            value = parseValue(rootType, value);
+        }else{
+            childTag = rootType?.fields.find((a) => a.name === tagPath?.split('.')?.[1])
+            if(childTag){
+                value = parseValue(childTag?.type, value)
+            }
+        };
 
         // const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
         let tag = deviceMap?.find((a) => a.path == tagPath)?.tag;
@@ -240,7 +247,7 @@ export class Sidecar {
                 Object.keys(this._values[valueKey]).map((subValueKey) => {
                     if (!isEqual(old_values[valueKey]?.[subValueKey], this._values[valueKey]?.[subValueKey])) {
                         //TODO, go deeper
-                        changed_keys.push({ key: `${valueKey}.${subValueKey}`, value: this._values[valueKey]?.[subValueKey] })
+                        changed_keys.push({ key: valueKey, value: {[subValueKey]: this._values[valueKey]?.[subValueKey]} })
                     }
                 })
 
