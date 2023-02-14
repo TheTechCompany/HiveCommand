@@ -50,10 +50,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     await server.start();
 
-    if(configure && controller.PLC){
-      configureServer(controller.PLC, listenTags)
-    }
-
+  
     let tags : ListenTag[] = [];
     let templates : ListenTemplate[] = [];
 
@@ -65,6 +62,10 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
 
     await controller.connect();
+
+    if(configure && controller.PLC){
+        configureServer(controller.PLC, listenTags)
+    }  
     
     const tagList = controller.PLC?.tagList?.filter((a) => a.name.indexOf('__') !== 0) || []
 
@@ -131,7 +132,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 if(!fromTagList?.type.typeName) continue;
                 const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
     
-                let isArray = fromTagList.type.arrayDims > 0
+                let isArray = fromTagList.type.arrayDims > 0 && fromTagList.type.typeName !== "BIT_STRING";
                 let arraySize = 0;
                 
 

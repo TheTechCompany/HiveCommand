@@ -118,4 +118,6 @@ export const configureServer = (PLC: {templateList?: any, tagList?: any[]}, list
     app.listen(CONFIGURE_PORT, () => {
         console.log(`Configure live on ${CONFIGURE_PORT}`)
     });
+    return app;
+    
 }
