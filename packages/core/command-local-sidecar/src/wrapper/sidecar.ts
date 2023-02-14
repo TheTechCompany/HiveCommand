@@ -274,11 +274,16 @@ export class Sidecar {
             try {
                 const key = unwrap(index)
 
-                console.log("Datachanged at the OPCUA level", { key, value: value.value })
+                let curr_value = value.value.value;
+                if(curr_value.BYTES_PER_ELEMENT != undefined){
+                    curr_value = Array.from(curr_value);
+                }
+
+                console.log("Datachanged at the OPCUA level", { key, value: curr_value })
 
                 this.internalValueStore = {
                     ...this.internalValueStore,
-                    [key]: value.value.value
+                    [key]: curr_value
                 }
 
                 this.normaliseValueStore();
