@@ -48,12 +48,13 @@ export const addTag = async (
     type: TAG_TYPE, 
     getter: ((key?: string) => any | undefined),
     setter: (value: any, key?: string) => void,
-    structure?: {[key: string]: TAG_TYPE}, parent?: UAObject
+    structure?: {[key: string]: TAG_TYPE}, parent?: UAObject,
+    array: boolean = false
 ) => {
 
     let dataType : OPC_TYPE = OPC_TYPE.String;
 
-    let isArray = false;
+    let isArray = array || false;
 
     console.log(`Add tag ${tagname}:${type} struct:${structure && type !== 'STRING'}`);
 

@@ -68,7 +68,7 @@ export const SetupView = (props: any) => {
                             pass: globalState?.networkLayout?.iotToken,
                             exchange: globalState?.networkLayout?.iotSubject
                         },
-                        subscriptionMap:  [{path: '/Objects/1:AV101/1:OperMode', tag: 'AV101.OperMode'}, {path: '/Objects/1:AV101/1:Eng', tag: 'AV101.Eng'}, {path: '/Objects/1:AV101/1:Den', tag: 'AV101.Den'}] || globalState?.subscriptionMap,
+                        subscriptionMap: globalState?.subscriptionMap,
                         deviceMap: globalState?.deviceMap
                     }
                 }).then((data) => {
