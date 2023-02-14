@@ -13,7 +13,7 @@ import { InfiniteScrubber } from '@hexhive/ui';
 import { ActionMenu } from '../components/action-menu';
 import moment from 'moment';
 
-import { DataTypes } from '@hive-command/scripting'
+import { DataTypes, parseValue } from '@hive-command/scripting'
 
 
 const ActionButton = (props: any) => {
@@ -164,52 +164,52 @@ export default () => {
 	// 	})
 	// }, [device, deviceValueData])
 
-	const parseValue = (value: any, typeKey: keyof typeof DataTypes) => {
-		let type = DataTypes[typeKey];
+	// const parseValue = (value: any, typeKey: keyof typeof DataTypes) => {
+	// 	let type = DataTypes[typeKey];
 
-		let isArray = typeKey?.indexOf('[]') > -1;
+	// 	let isArray = typeKey?.indexOf('[]') > -1;
         
-        if(isArray && !Array.isArray(value)) value = []
-        if(isArray) typeKey = typeKey?.replace('[]', '') as any
+    //     if(isArray && !Array.isArray(value)) value = []
+    //     if(isArray) typeKey = typeKey?.replace('[]', '') as any
         
-		switch (typeKey) {
-            case DataTypes.Boolean:
-                return isArray ? value.map((value: any) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
-            case DataTypes.Number:
+	// 	switch (typeKey) {
+    //         case DataTypes.Boolean:
+    //             return isArray ? value.map((value: any) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
+    //         case DataTypes.Number:
 
-                return isArray ? value.map((value: any) => {
-                    let val = parseFloat(value || 0);
-                    if (Number.isNaN(val)) {
-                        val = 0;
-                    }
-                    return val % 1 != 0 ? val.toFixed(2) : val;
-                }) : (() => {
-                    let val = parseFloat(value || 0);
+    //             return isArray ? value.map((value: any) => {
+    //                 let val = parseFloat(value || 0);
+    //                 if (Number.isNaN(val)) {
+    //                     val = 0;
+    //                 }
+    //                 return val % 1 != 0 ? val.toFixed(2) : val;
+    //             }) : (() => {
+    //                 let val = parseFloat(value || 0);
 
-                    if(Number.isNaN(val)) {
-                        val = 0;
-                    }
-                    return val % 1 != 0 ? val.toFixed(2) : val;
-                })()
-            default:
-                console.log({ type })
-                break;
-        }
+    //                 if(Number.isNaN(val)) {
+    //                     val = 0;
+    //                 }
+    //                 return val % 1 != 0 ? val.toFixed(2) : val;
+    //             })()
+    //         default:
+    //             console.log({ type })
+    //             break;
+    //     }
 
-		// switch(type){
-		// 	case DataTypes.Boolean:
-		// 		return (value == true || value == "true" || value == 1 || value == "1");
-		// 	case DataTypes.Number:
-		// 		let val = parseFloat(value || 0);
-		// 		if(Number.isNaN(val)){
-		// 			val = 0;
-		// 		}
-		// 		return val % 1 != 0 ? val.toFixed(2) : val;
-		// 	default:
-		// 		console.log({type})
-		// 		break;
-		// }
-	}
+	// 	// switch(type){
+	// 	// 	case DataTypes.Boolean:
+	// 	// 		return (value == true || value == "true" || value == 1 || value == "1");
+	// 	// 	case DataTypes.Number:
+	// 	// 		let val = parseFloat(value || 0);
+	// 	// 		if(Number.isNaN(val)){
+	// 	// 			val = 0;
+	// 	// 		}
+	// 	// 		return val % 1 != 0 ? val.toFixed(2) : val;
+	// 	// 	default:
+	// 	// 		console.log({type})
+	// 	// 		break;
+	// 	// }
+	// }
 
 	const [ stateValues, setStateValues ] = useState<any>({});
 
@@ -237,7 +237,7 @@ export default () => {
 
 					return {
 						key: stateItem.name,
-						value: parseValue(currentValue, stateItem.type as keyof typeof DataTypes)
+						value: parseValue(stateItem.type as keyof typeof DataTypes, currentValue)
 					}
 
 				}).reduce((prev, curr) => ({
@@ -252,7 +252,7 @@ export default () => {
 			}else{
 				return {
 					key: deviceKey,
-					values: parseValue(values?.[deviceKey], device.type as keyof typeof DataTypes)
+					values: parseValue(device.type as keyof typeof DataTypes, values?.[deviceKey])
 				}
 			}
 		}).reduce((prev, curr) => ({
