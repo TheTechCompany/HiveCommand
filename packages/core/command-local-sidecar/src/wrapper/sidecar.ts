@@ -247,7 +247,7 @@ export class Sidecar {
                 Object.keys(this._values[valueKey]).map((subValueKey) => {
                     if (!isEqual(old_values[valueKey]?.[subValueKey], this._values[valueKey]?.[subValueKey])) {
                         //TODO, go deeper
-                        changed_keys.push({ key: `${valueKey}.${subValueKey}`, value: this._values[valueKey]?.[subValueKey] })
+                        changed_keys.push({ key: valueKey, value: {[subValueKey]: this._values[valueKey]?.[subValueKey]} })
                     }
                 })
 

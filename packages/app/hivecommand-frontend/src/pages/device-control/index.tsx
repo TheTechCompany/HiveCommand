@@ -69,7 +69,14 @@ export const DeviceControlView = () => {
 
             let value = valueObj[tag.name];
 
-            if(type && typeof(type) === "string" && type.indexOf('[]') > -1 && typeof(value) === "object" && !Array.isArray(value) && Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0){
+            if(
+                type && 
+                typeof(type) === "string" && 
+                type.indexOf('[]') > -1 && 
+                typeof(value) === "object" && 
+                !Array.isArray(value) && 
+                Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0
+            ){
                 value = Object.keys(value).map((x) => value[x]);
             }
 
@@ -115,7 +122,7 @@ export const DeviceControlView = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            // refetchValues();
+            refetchValues();
         }, 2000)
 
         return () => {
@@ -125,22 +132,6 @@ export const DeviceControlView = () => {
 
     console.log({program, normalisedValues})
 
-    const [ testValues, setValues ] = useState<any>({BLO701: {on: false}, BLO601: {on: false}});
-
-    useEffect(() => {
-        
-        const timer = setTimeout(() => {
-            // console.log("Timer")
-
-            console.log("TEST VALUES")
-            setValues({BLO601: {on: true}})
-
-        }, 10 * 1000)
-
-        return () => {
-            clearInterval(timer);
-        }
-    }, [])
 
     return (
         <Box sx={{flex: 1, display: 'flex', padding: '6px', flexDirection: 'column'}}>
