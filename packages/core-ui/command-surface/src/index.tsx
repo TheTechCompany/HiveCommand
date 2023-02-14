@@ -28,7 +28,7 @@ import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { getDeviceFunction } from './components/action-menu';
-import { DataTypes } from '@hive-command/scripting';
+import { DataTypes, parseValue } from '@hive-command/scripting';
 export * from './hooks/remote-components'
 
 
@@ -609,36 +609,36 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }, [hmi])
 
 
-    const parseValue = (value: any, type: keyof typeof DataTypes) => {
-        let isArray = type.indexOf('[]') > -1;
+    // const parseValue = (value: any, type: keyof typeof DataTypes) => {
+    //     let isArray = type.indexOf('[]') > -1;
         
-        if(isArray && !Array.isArray(value)) value = []
-        if(isArray) type = type?.replace('[]', '') as any
+    //     if(isArray && !Array.isArray(value)) value = []
+    //     if(isArray) type = type?.replace('[]', '') as any
         
-        switch (DataTypes[type]) {
-            case DataTypes.Boolean:
-                return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
-            case DataTypes.Number:
+    //     switch (DataTypes[type]) {
+    //         case DataTypes.Boolean:
+    //             return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
+    //         case DataTypes.Number:
 
-                return isArray ? value.map((value) => {
-                    let val = parseFloat(value || 0);
-                    if (Number.isNaN(val)) {
-                        val = 0;
-                    }
-                    return val.toFixed(2);
-                }) : (() => {
-                    let val = parseFloat(value || 0);
+    //             return isArray ? value.map((value) => {
+    //                 let val = parseFloat(value || 0);
+    //                 if (Number.isNaN(val)) {
+    //                     val = 0;
+    //                 }
+    //                 return val.toFixed(2);
+    //             }) : (() => {
+    //                 let val = parseFloat(value || 0);
 
-                    if(Number.isNaN(val)) {
-                        val = 0;
-                    }
-                    return val.toFixed(2);
-                })()
-            default:
-                console.log({ type })
-                break;
-        }
-    }
+    //                 if(Number.isNaN(val)) {
+    //                     val = 0;
+    //                 }
+    //                 return val.toFixed(2);
+    //             })()
+    //         default:
+    //             console.log({ type })
+    //             break;
+    //     }
+    // }
 
     const [normalisedValues, setNormalisedValues] = useState<any>({});
     
@@ -662,7 +662,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 return {
                     key: stateItem.name,
-                    value: parseValue(currentValue, stateItem.type as keyof typeof DataTypes)
+                    value: parseValue(stateItem.type as keyof typeof DataTypes, currentValue)
                 }
             }).reduce((prev, curr) => ({
                 ...prev,
@@ -675,7 +675,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
             return {
                 key: deviceKey,
-                values: fields.length > 0 ? deviceValues : parseValue(props.values?.[deviceKey], tag.type as keyof typeof DataTypes)
+                values: fields.length > 0 ? deviceValues : parseValue(tag.type as keyof typeof DataTypes, props.values?.[deviceKey])
             }
         }).reduce((prev, curr) => ({
             ...prev,
