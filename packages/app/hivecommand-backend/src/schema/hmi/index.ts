@@ -385,7 +385,7 @@ export default (prisma: PrismaClient) => {
 				
 				if(!transformer) throw new Error("No transformer found");
 				
-				return await prisma.canvasDataTransformer.update({
+				const res = await prisma.canvasDataTransformer.update({
 					where: {
 						nodeId: args.node
 					},
@@ -404,12 +404,13 @@ export default (prisma: PrismaClient) => {
 									value: args.value
 								},
 								update: {
-									value: args.value
+									value: args.value || null
 								}
 							}]
 						}
 					}
 				})
+				return res != null;
 			},
 			updateCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
 				let deviceUpdate: any = {};

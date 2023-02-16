@@ -460,7 +460,7 @@ export const Controls = (props) => {
 
                 {(<InfiniteCanvas
                     style={CanvasStyle}
-                    snapToGrid={true}
+                    // snapToGrid={true}
                     showGuides
                     grid={{divisions: 20, width: 100, height: 100}}
                     onDelete={watchEditorKeys}
