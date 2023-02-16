@@ -304,7 +304,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const rightAction = useMemo(() => {
                     if(extras?.manual){
                         if(extras.manual?.isManual?.()){
-                            return ( <FormControlLabel control={<Switch />} label="Manual" />)
+                            return ( <FormControlLabel control={<Switch checked={extras.manual?.isManual?.()} />} label="Manual" />)
                         }
                     }
                     if (extras?.setpoints) {
