@@ -6,7 +6,7 @@ import { Close, Delete, Javascript } from '@mui/icons-material'
 import { useMutation, gql } from '@apollo/client';
 import { TemplateInput } from '../../../../../components/template-input';
 import { ScriptEditorModal } from '../../../../../components/script-editor';
-import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-command/scripting';
+import { DataTypes, formatInterface, fromOPCType, lookupType, toJSType } from '@hive-command/scripting';
 
 export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Number' | 'Boolean'
 
@@ -77,6 +77,15 @@ export const TemplateMenu = () => {
 
     }, [tags, types])
 
+    const tagInputs = useMemo(() => {
+
+        return tags.map((tag) => {
+            let fields = types.find((a) => a.name === tag.type)?.fields || [];
+
+            return [{label: `${tag.name}`, type: 'keyword'}, ...fields.map((field) => ({label: `${tag.name}.${field.name}`, type: 'keyword'}))]
+        }).reduce((prev, curr) => prev.concat(curr), []);
+
+    }, [tags, types])
     useEffect(() => {
         let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
 
@@ -123,9 +132,9 @@ export const TemplateMenu = () => {
         // label = id || label;
 
         if(typeof(value) === 'string' && value?.indexOf('script://') > -1 && type !== "Function"){
-            return  (<Box sx={{display: 'flex'}}>
-                <Typography>{label}</Typography>
-                <Typography fontSize={"small"}>Provided by script</Typography>
+            return  (<Box sx={{display: 'flex', flexDirection: 'column'}}>
+                <Typography fontSize="small">{label}</Typography>
+                <Typography color="gray" fontSize={"small"}>Provided by script</Typography>
                 
             </Box>)
         }
@@ -302,8 +311,8 @@ export const TemplateMenu = () => {
                 return (
                     <TemplateInput
                         label={label}
-                        value={value}
-                        options={[] /* assignableDevices.map((device) => {
+                        value={value || ''}
+                        options={tagInputs /* assignableDevices.map((device) => {
 
                             return [{label: device.tag, type: 'keyword'}].concat(device.type?.state?.map((stateItem) => ({label: `${device.tag}.${stateItem.key}`, type: 'keyword' })))
                         }).reduce((prev, curr) => prev.concat(curr), []) */}
@@ -358,6 +367,8 @@ export const TemplateMenu = () => {
                                         fieldId: key,
                                         value
                                     }
+                                }).then(() => {
+                                    refetch();
                                 })
                             }
                         )}
@@ -469,11 +480,11 @@ export const TemplateMenu = () => {
                                         // }), {});
 
                                         setFunctionArgs({
-                                            defaultValue: value ? value.replace('script://', '') : `export const getter = (values: Tags) : ${lookupType(type)} => {
+                                            defaultValue: value ? value.replace('script://', '') : `export const getter = (values: Tags) : ${toJSType(lookupType(type))} => {
 
 }
 
-export const setter = (setValues: (values: DeepPartial<Tags>) => void) => {
+export const setter = (value: ${toJSType(lookupType(type))}, setValues: (values: DeepPartial<Tags>) => void) => {
 
 }
 `,

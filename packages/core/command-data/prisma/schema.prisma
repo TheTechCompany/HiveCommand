@@ -421,7 +421,7 @@ model CanvasDataTransformerConfiguration {
 
   @@unique([fieldId, transformerId])
 
-  value String
+  value String?
 }
 
 model CanvasDataTemplate {
