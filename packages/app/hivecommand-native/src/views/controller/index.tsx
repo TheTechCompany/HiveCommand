@@ -77,7 +77,10 @@ export const Controller = () => {
 
             setValueStore((store) => ({
                 ...store,
-                [data.key]: data.value
+                [data.key]: Object.keys(data.value) ? {
+                    ...store[data.key],
+                    ...data.value,
+                } : data.value
             }));
 
         })

@@ -124,7 +124,8 @@ export const TemplateMenu = () => {
 
         if(typeof(value) === 'string' && value?.indexOf('script://') > -1 && type !== "Function"){
             return  (<Box sx={{display: 'flex'}}>
-                <Typography>Provided by script</Typography>
+                <Typography>{label}</Typography>
+                <Typography fontSize={"small"}>Provided by script</Typography>
                 
             </Box>)
         }

@@ -136,7 +136,7 @@ export const DeviceControlView = () => {
     return (
         <Box sx={{flex: 1, display: 'flex', padding: '6px', flexDirection: 'column'}}>
             <CommandSurface
-                values={{BLO101_Speed: 20} || normalisedValues}
+                values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}
