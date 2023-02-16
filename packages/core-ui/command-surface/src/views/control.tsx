@@ -337,7 +337,7 @@ export default () => {
 					modes={[]}
 					information={infoTarget != undefined ? (() => {
 
-						const DataComponent : any = infoTarget.dataFunction(stateValues);
+						const DataComponent : any = infoTarget.dataFunction;
 
 						return (<Bubble
 							style={{ 
@@ -351,7 +351,7 @@ export default () => {
 								top: (infoTarget?.y + infoTarget?.height) + (121 / 2),
 								
 							}}>
-								{DataComponent}
+								<DataComponent {...stateValues} />
 								{/* {Object.keys(dataFunction).map((key) => 
 									<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
 								)} */}

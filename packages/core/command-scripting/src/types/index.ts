@@ -27,7 +27,7 @@ export const toJSType = (type: DataTypes) => {
             return 'number';
         default:
             console.log(`Datatype: ${type} needs help`)
-            return type;
+            return "unknown" || type;
             // return assertUnreachable(type)
             // return 'string';
     }

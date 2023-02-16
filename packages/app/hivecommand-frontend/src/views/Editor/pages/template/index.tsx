@@ -147,7 +147,11 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     declare function showTagWindow(
                         position: {x: number, y: number, width: number, height: number, anchor?: string},
                         deviceTag: string,
-                        actions: {label: string, func: string}[]
+                        extras?: {
+                            manual?: { isManual?: () => boolean, exitManual?: () => void },
+                            actions?: { label: string, func: string }[],
+                            setpoints?: { label: string, getter: () => any, setter: (value: any) => void }[]
+                        }
                     ){
 
                     }

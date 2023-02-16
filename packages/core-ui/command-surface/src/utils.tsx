@@ -82,9 +82,13 @@ export const useNodesWithValues = (
 					let tag = tags?.find((a) => a.id === value)?.name 
 					if(!tag) return;
 
+					let tagValue = values[tag];
+
 					value = {
 						tag,
-						...values[ tag ]
+						...(typeof(tagValue) === "object" && !Array.isArray(tagValue) ? tagValue : { value: tagValue })
+
+						// ...values[ tag ]
 					}
 				}
 	
@@ -248,9 +252,11 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 						let tag = tags?.find((a) => a.id === value)?.name 
 						if(!tag) return;
 
+						let tagValue = state[tag];
+					
 						value = {
 							tag,
-							...state[ tag ]
+							...(typeof(tagValue) === "object" && !Array.isArray(tagValue) ? tagValue : { value: tagValue })
 						}
 					}
 
