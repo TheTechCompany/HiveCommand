@@ -52,7 +52,7 @@ export const TemplateMenu = () => {
         let typeSchema = types?.map((type) => {
             return formatInterface(type.name, type.fields?.reduce((prev, curr) => ({
                 ...prev,
-                [curr.name]: lookupType(curr.type as keyof typeof DataTypes)
+                [curr.name]: curr.type ? lookupType(curr.type as keyof typeof DataTypes) : "unknown"
             }), {}))   
         }).join('\n')
 
@@ -63,7 +63,7 @@ export const TemplateMenu = () => {
         console.log({tags}, scalarTypes)
 
         let tagSchema = tags?.reduce((prev, curr) => {
-            console.log({inScalar: curr.type in scalarTypes, index: curr.type.indexOf('[]') > -1, replace: curr.type.replace(/[]/, '')})
+            // console.log({inScalar: curr.type in scalarTypes, index: curr.type.indexOf('[]') > -1, replace: curr.type.replace(/[]/, '')})
             return {
                 ...prev,
                 [curr.name]: scalarTypes.indexOf(curr.type) > -1 ? 
@@ -236,7 +236,11 @@ export const TemplateMenu = () => {
                                 declare function showTagWindow(
                                     position: {x: number, y: number, width: number, height: number, anchor?: string},
                                     deviceTag: string,
-                                    actions: {label: string, func: string}[]
+                                    extras?: {
+                                        manual?: { isManual?: () => boolean, exitManual?: () => void },
+                                        actions?: { label: string, func: string }[],
+                                        setpoints?: { label: string, getter: () => any, setter: (value: any) => void }[]
+                                    }
                                 ){
                                     
                                 }

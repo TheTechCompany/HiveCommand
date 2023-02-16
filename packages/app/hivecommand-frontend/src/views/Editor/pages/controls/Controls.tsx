@@ -17,6 +17,7 @@ import { CanvasStyle } from '../../../../style';
 import { useRemoteComponents } from '@hive-command/command-surface';
 
 import { PipePathFactory } from "@hexhive/ui";
+import { getOptionValues } from '@hive-command/command-surface/dist/utils';
 
 export const Controls = (props) => {
 
@@ -24,7 +25,7 @@ export const Controls = (props) => {
 
     const { getPack } = useRemoteComponents()
 
-    const { program: { templatePacks } } = useCommandEditor()
+    const { program: { templatePacks, tags, types } } = useCommandEditor()
 
     const [selected, _setSelected] = useState<{ key?: "node" | "path", id?: string }>({})
 
@@ -287,7 +288,10 @@ export const Controls = (props) => {
                     if(x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
 
 
-                    return {
+                    let extraOptions = x.icon?.metadata?.options || {};
+                    let nodeOptions = x.options;
+
+                    let node = {
                         id: x.id,
                         x: x.x,
                         y: x.y,
@@ -321,6 +325,30 @@ export const Controls = (props) => {
                         type: 'hmi-node',
         
                     }
+
+                    let values = Object.keys(extraOptions).map((optionKey) => {
+                        let optionValue = nodeOptions?.[optionKey]
+                        
+                        let parsedValue : any;
+
+                        try{
+                            // console.log({nodeValue: nodeInputValues.current.values[node.id]})
+                            parsedValue = getOptionValues(node, tags, {} as any, {}, {values: {}}, () => {}, optionKey, optionValue);
+                        }catch(e){
+                            console.log({e, node, optionKey});
+                        }
+
+                        return {key: optionKey, value: parsedValue}
+
+                    }).reduce((prev, curr) => ({
+                        ...prev,
+                        [curr.key]: curr.value
+                    }), {});
+
+                    (node.extras as any).dataValue = values;
+
+                    
+                    return node;
                 }))
                 // setNodes(nodes);
             })

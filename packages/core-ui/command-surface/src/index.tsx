@@ -7,13 +7,13 @@ import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering } from '@mui/icons-material';
+import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering, Settings, Save, ArrowLeft } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, ReportView } from './views/reports'
 
 
-import { Paper, Box, Button, Typography, IconButton, Popover, List, ListItem, Divider } from '@mui/material';
+import { Paper, Box, Button, Typography, IconButton, Popover, List, ListItem, Divider, TextField, InputAdornment, Switch, FormControlLabel } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
 // import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
@@ -119,7 +119,7 @@ export interface HMIDevice {
     type: {
         tagPrefix: string;
         state: any[]
-        actions: {key: string, func: string}[];
+        actions: { key: string, func: string }[];
     }
 
 }
@@ -254,7 +254,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const [editReportPage, setEditReportPage] = useState<any>(null)
 
-	const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
+    const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
 
     useEffect(() => {
         setInfoTarget(undefined)
@@ -262,9 +262,17 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const functions = {
         changeView: (args: { view: string }) => {
-                setActivePage(args.view);
+            setActivePage(args.view);
         },
-        showTagWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, deviceTag: string, actions: {label: string, func: string}[] ) => {
+        showTagWindow: (
+            position: { x: number, y: number, width: number, height: number, anchor?: string },
+            deviceTag: string,
+            extras?: {
+                manual?: { isManual?: () => boolean, exitManual?: () => void },
+                actions?: { label: string, func: string }[],
+                setpoints?: { label: string, getter: () => any, setter: (value: any) => void }[]
+            }
+        ) => {
             functions.showWindow({
                 x: position?.x,
                 y: position?.y,
@@ -272,50 +280,118 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 height: position?.height,
             }, (state: any) => {
 
+                const [view, setView] = useState<'info' | 'settings'>('info')
+
                 let values = state[deviceTag];
 
                 let tag = tags?.find((a) => a.name === deviceTag);
 
                 let fields = types?.find((a) => a.name === tag?.type)?.fields || [];
 
+                const { actions, setpoints } = extras || { actions: [], setpoints: [] };
                 // let actions = tags?.find((a) => a.name === deviceTag)?.type || [];
-                
+
+                const leftAction = useMemo(() => {
+                    if(extras?.setpoints){
+                        if(view == 'settings'){
+                            return (<IconButton onClick={() => setView('info')}  sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
+                                <KeyboardArrowLeft />
+                            </IconButton>)
+                        }
+                    }
+                }, [extras, view])
+
+                const rightAction = useMemo(() => {
+                    if(extras?.manual){
+                        if(extras.manual?.isManual?.()){
+                            return ( <FormControlLabel control={<Switch />} label="Manual" />)
+                        }
+                    }
+                    if (extras?.setpoints) {
+                        if(view == 'settings'){
+                            return null;
+                        }
+                        return (
+                            <IconButton onClick={() => setView('settings')} sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
+                                <Settings />
+                            </IconButton>
+                        )
+                    }
+
+                }, [extras, view, extras?.manual?.isManual?.()])
+
+                const headerExtras = useMemo(() => {
+                    if(extras?.setpoints){
+                        if(view === 'settings'){
+                            return ' - Setpoints'
+                        }
+                    }
+                    return ''
+                }, [extras, view]);
+
                 // console.log({values, actions});
 
-                    return <Box sx={{display: 'flex', flexDirection: 'column', flex: 1}}>
-                        <Typography sx={{fontWeight: 'bold'}}>{deviceTag}</Typography>
-                        <Divider />
-                        <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-                            {Object.keys(values).slice().sort((a,b) => a.localeCompare(b)).map((valueKey) => (
-                                <Typography>{valueKey}: {`${values[valueKey]}`}</Typography>
-                            ))}
-                        </Box>
-                        <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                            {actions.slice().sort((a, b) => a.label.localeCompare(b.label)).map((action) => (
-                                <Button onClick={() => {
-                                    console.log(action.func)
-                                    getDeviceFunction(action.func).then((f) => {
-
-                                        f({},
-                                            async (state) => {
-                                                await Promise.all(Object.keys(state).map((key) => {
-                                                    client?.writeTagValue?.(deviceTag, state[key], key);
-                                                }))
-                                                // console.log({state})
-                                             }, 
-                                             (state) => console.log({state})
-                                        );
-                                    })
-
-                          
-                                }}>{action.label}</Button>
-                            ))}
-                        </Box>
+                return <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: (rightAction) ? 'space-between' : 'flex-start' }}>
+                        {leftAction}
+                        <Typography sx={{ fontWeight: 'bold' }}>{deviceTag}{headerExtras}</Typography>
+                        {rightAction}
                     </Box>
+                    <Divider sx={{marginBottom: '6px'}} />
+                    {view == "info" ? (
+                        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+                            <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+                                {Object.keys(values).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
+                                    <Typography>{valueKey}: {`${values[valueKey]}`}</Typography>
+                                ))}
+                            </Box>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                {actions?.slice().sort((a, b) => a.label.localeCompare(b.label)).map((action) => (
+                                    <Button onClick={() => {
+                                        console.log(action.func)
+                                        getDeviceFunction(action.func).then((f) => {
+
+                                            f({},
+                                                async (state) => {
+                                                    await Promise.all(Object.keys(state).map((key) => {
+                                                        client?.writeTagValue?.(deviceTag, state[key], key);
+                                                    }))
+                                                    // console.log({state})
+                                                },
+                                                (state) => console.log({ state })
+                                            );
+                                        })
+
+
+                                    }}>{action.label}</Button>
+                                ))}
+                            </Box>
+                        </Box>
+                    ) : (
+                        <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
+                            {setpoints?.slice()?.sort((a, b) => a.label?.localeCompare(b.label))?.map((setpoint) => (
+                                <Box>
+                                    <TextField 
+                                        size="small"
+                                        InputProps={{
+                                            endAdornment: <InputAdornment position="end">
+                                                <IconButton sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
+                                                    <Save />
+                                                </IconButton>
+                                            </InputAdornment>
+                                        }}
+                                        value={setpoint.getter()}
+                                        // onChange={(e}
+                                        label={setpoint.label} />
+                                </Box>
+                            ))}
+                        </Box>
+                    )}
+                </Box>
             })
         },
-        showWindow: (position: {x: number, y: number, width: number, height: number, anchor?: string}, dataFunction : (state: any) => any) => {
-        //    alert("STUFF");
+        showWindow: (position: { x: number, y: number, width: number, height: number, anchor?: string }, dataFunction: (state: any) => any) => {
+            //    alert("STUFF");
             setInfoTarget({
                 x: position?.x,
                 y: position?.y,
@@ -585,7 +661,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     width,
                     height,
                     options: node.options,
-                    
+
                     dataTransformer: node?.dataTransformer,
 
                     extras: {
@@ -611,10 +687,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     // const parseValue = (value: any, type: keyof typeof DataTypes) => {
     //     let isArray = type.indexOf('[]') > -1;
-        
+
     //     if(isArray && !Array.isArray(value)) value = []
     //     if(isArray) type = type?.replace('[]', '') as any
-        
+
     //     switch (DataTypes[type]) {
     //         case DataTypes.Boolean:
     //             return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
@@ -641,7 +717,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     // }
 
     const [normalisedValues, setNormalisedValues] = useState<any>({});
-    
+
     useEffect(() => {
         setNormalisedValues(tags?.map((tag) => {
 
@@ -669,7 +745,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 [curr.key]: curr.value
             }), {})
 
-            if(deviceKey === 'CEB_Days'){
+            if (deviceKey === 'CEB_Days') {
                 console.log('CEB DAYS', props.values, deviceKey, deviceValues, fields)
             }
 
@@ -687,9 +763,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
 
-            if(!Array.isArray(newState[tag]) && Object.keys(newState[tag] || {}).length > 0){
+            if (!Array.isArray(newState[tag]) && Object.keys(newState[tag] || {}).length > 0) {
                 Object.keys(newState[tag]).map((subkey) => client?.writeTagValue?.(tag, newState[tag][subkey], subkey))
-            }else{
+            } else {
                 client?.writeTagValue?.(tag, newState[tag])
             }
 
