@@ -1,7 +1,7 @@
 import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers } from '@graphql-tools/merge'
 // import io from './io'
-import variables from "./variables";
+import alarms from "./alarms";
 import tags from './tags';
 import types from './types';
 
@@ -11,10 +11,9 @@ import { nanoid } from "nanoid";
 export default (prisma: PrismaClient) => {
 	
 	// const { typeDefs: ioTypeDefs, resolvers: ioResolvers } = io(prisma)
-	const { typeDefs: variableTypeDefs, resolvers: variableResolvers } = variables(prisma)
 	const { typeDefs: tagTypeDefs, resolvers: tagResolvers } = tags(prisma);
 	const { typeDefs: typeTypeDefs, resolvers: typeResolvers } = types(prisma);
-
+	const { typeDefs: alarmTypeDefs, resolvers: alarmResolvers } = alarms(prisma);
 
 	const resolvers = mergeResolvers([
 		{
@@ -26,6 +25,12 @@ export default (prisma: PrismaClient) => {
 					}, include: {
 						remoteHomepage: true,
 						localHomepage: true,
+						alarms: {
+							include: {
+								conditions: true,
+								actions: true
+							}
+						},
 						templates: {
 							include: {
 								inputs: true,
@@ -175,14 +180,14 @@ export default (prisma: PrismaClient) => {
 		},
 		tagResolvers,
 		typeResolvers,
-		variableResolvers
+		alarmResolvers
 	])
 	
 	const typeDefs = `
 
 	${tagTypeDefs}
 	${typeTypeDefs}
-	${variableTypeDefs}
+	${alarmTypeDefs}
 
 	type Query {
 		commandPrograms(where: CommandProgramWhere): [CommandProgram]!
@@ -232,12 +237,6 @@ export default (prisma: PrismaClient) => {
 		usedOn: CommandDevice 
 
 		organisation: HiveOrganisation
-	}
-
-	type CommandProgramAlarm {
-		id: ID! 
-		name: String
-		trigger: String
 	}
 
 

@@ -2,7 +2,7 @@ import { BumpInput } from "@hexhive/ui";
 import { Autocomplete, Box, Checkbox, FormControlLabel, IconButton, InputAdornment, Select, TextField, Typography } from "@mui/material";
 import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as Subtract, Add, Javascript } from '@mui/icons-material';
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useAssignHMINode, useUpdateHMIGroup, useUpdateHMINode } from "@hive-command/api";
+import {  useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
 import { FunctionArgumentsModal } from "../../../../../components/modals/function-arguments";
 import { MenuItem } from "@mui/material";
@@ -26,8 +26,6 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     const { programId, interfaces, refetch, selected, nodes } = useHMIContext();
 
-    const updateHMIGroup = useUpdateHMIGroup(programId)
-    const assignHMINode = useAssignHMINode(programId)
     const updateHMINode = useUpdateHMINode(programId)
 
     const item = nodes?.find((a) => a.id == selected.id);

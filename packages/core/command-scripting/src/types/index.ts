@@ -26,7 +26,7 @@ export const toJSType = (type: DataTypes) => {
         case DataTypes.Number:
             return 'number';
         default:
-            console.log(`Datatype: ${type} needs help`)
+            console.log(`Datatype: ${type || "unkown"} needs help`)
             return type || "unknown";
             // return assertUnreachable(type)
             // return 'string';

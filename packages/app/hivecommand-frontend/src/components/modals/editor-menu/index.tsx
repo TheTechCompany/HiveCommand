@@ -1,7 +1,8 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { EditorMenuProvider } from "./context";
 import { HMIView, ProgramView } from "./views";
+import { AlarmView } from "./views/alarm";
 import { TemplateView } from "./views/templates";
 import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
@@ -41,7 +42,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
                 return `${selected ? 'Edit' : 'Create'} Device`
             case 'variables':
                 return `${selected ? 'Edit' : 'Create'} Variable`
-            case 'alarm':
+            case 'alarms':
                 return `${selected ? 'Edit' : 'Create'} Alarm`
         }
     }
@@ -54,7 +55,12 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
                 return <TemplateView />;
             case 'hmi':
                 return <HMIView />
+            case 'alarms':
+                return <AlarmView />
+            default:
+                return <Typography>{type} view not found</Typography>
         }
+        
     }
 
     const getActions = () => {
@@ -64,6 +70,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
             case 'program':
             case 'hmi':
             case 'devices':
+            case 'alarms':
             case 'variables':
                 return <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: ( Boolean(props.selected?.id) ? 'space-between' : 'flex-end') }}>
                     {props.selected?.id ? (

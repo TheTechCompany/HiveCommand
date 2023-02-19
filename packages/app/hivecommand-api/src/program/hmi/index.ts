@@ -1,80 +1,4 @@
-import { mutate, mutation, useMutation } from "../gqty";
-
-export const useCreateHMIAction = (programId: string) => {
-  const [mutateFn] = useMutation(
-    (
-      mutation,
-      args: {
-        name: string;
-        flow: string[];
-      }
-    ) => {
-      
-    }
-  );
-  return async (name: string, flow: string[]) => {
-    return await mutateFn({
-      args: {
-        name,
-        flow,
-      },
-    });
-  };
-};
-
-export interface HMIGroupNode {
-	x: number,
-	y: number,
-	rotation: number,
-	scaleX: number,
-	scaleY: number,
-	showTotalizer: boolean,
-	type: string
- }
-
- export interface HMIGroupPort {
-	key: string,
-	rotation: number,
-	length: number,
-	x: number,
-	y: number
- }
-
-export const useUpdateHMIGroup = (programId: string) => {
-
-	const [ mutateFn ] = useMutation((mutation, args: {
-    node: string,
-		nodes: HMIGroupNode[]
-		ports: HMIGroupPort[]
-	}) => {
-
-    const item = mutation.updateCommandProgramInterfaceNode({
-      id: args.node,
-      input: {
-        children: args.nodes,
-        ports: args.ports
-      }
-    })
-
-    return {
-      item: {
-        ...item
-      }
-    }
-	})
-
-	return async (nodeId: string, nodes: HMIGroupNode[], ports: HMIGroupPort[]) => {
-		return await mutateFn({
-			args: {
-        node: nodeId,
-				nodes,
-				ports
-			}
-		})	
-	}
-
-};
-
+import { mutate, mutation, useMutation } from "../../gqty";
 
 export const useCreateHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
@@ -188,15 +112,6 @@ export const useUpdateHMINode = (programId: string) => {
   };
 };
 
-export const useDeleteHMIAction = (programId: string) => {
-  const [ mutateFn ] = useMutation((mutation, args: {actionId: string}) => {
-  
-  })
-
-  return async (actionId: string) => {
-    return await mutateFn({args: {actionId}})
-  }
-}
 
 export const useDeleteHMINode = (programId: string) => {
   const [mutateFn] = useMutation(
@@ -404,33 +319,4 @@ export const useCreateHMIPath = (programId: string, hmiId: string) => {
       },
     });
   };
-};
-
-export const useAssignHMINode = (programId: string) => {
-	const [ mutateFn ] = useMutation((mutation, args: {nodeId: string, deviceId: string}) => {
-    const item = mutation.updateCommandProgramInterfaceNode({
-      id: args.nodeId,
-      input: {
-        // devicePlaceholder: args.deviceId
-      }
-    })
-
-    return {
-      item: {
-        ...item
-      }
-    }
-	})
-
-	return async (
-		node_id: string,
-		device_id: string
-	) => {
-		return await mutateFn({
-			args: {
-				nodeId: node_id,
-				deviceId: device_id
-			}
-		})
-	}
 };

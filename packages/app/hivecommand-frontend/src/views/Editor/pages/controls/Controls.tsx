@@ -7,7 +7,7 @@ import * as HMIIcons from '../../../../assets/hmi-elements'
 import { GridView as Nodes, Construction as Action, Assignment } from '@mui/icons-material'
 import Settings from './Settings'
 import { useParams } from 'react-router-dom';
-import { useAssignHMINode, useCreateHMIAction, useCreateHMINode, useCreateProgramHMI, useUpdateHMIGroup, useDeleteHMINode, useDeleteHMIPath, useDeleteHMIAction, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
+import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { HMIDrawer } from './Drawer';
 import { HMIContext, HMINodeData } from './context';
