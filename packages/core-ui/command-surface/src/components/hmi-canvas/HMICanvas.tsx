@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { Box } from '@mui/material'
-import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath, ZoomControls } from '@hexhive/ui';
+import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath, ZoomControls, LinePathFactory } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 // import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { HMICanvasProvider } from './HMICanvasContext';
@@ -196,10 +196,12 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             //     }   
             // })))
 
+            console.log({paths: props.paths});
+
             setPaths((props.paths || []).map((x) => {
                 return {
                     id: x.id,
-                    type: 'pipe-path',
+                    type: 'line',
                     source: x?.from?.id,
                     sourceHandle: x.fromPoint || x.fromHandle,
                     target: x?.to?.id,
@@ -252,6 +254,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 }}>
                 <InfiniteCanvas
                     // finite
+                    
                     fitToBounds
                     style={CanvasStyle}
                     zoom={zoom}
@@ -276,7 +279,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     editable={false}
                     nodes={dataNodes}
                     paths={paths}
-                    factories={[IconNodeFactory, HMINodeFactory(false), PipePathFactory ]}
+                    factories={[IconNodeFactory, HMINodeFactory(false), LinePathFactory(true) ]}
                     onPathCreate={(path) => {
                         updateRef.current?.addPath?.(path);
                     }}

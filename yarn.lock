@@ -529,10 +529,10 @@
   dependencies:
     "@emotion/styled" "^11.9.3"
 
-"@hexhive/ui@1.0.1-alpha.112":
-  version "1.0.1-alpha.112"
-  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.112.tgz#2e415abe07ee60e09093907c50c5442769ae88f4"
-  integrity sha512-WunF8uPMs/Aokiq+/HYraP7xNn+ER8lxFuukrZILA51QVuRnta+xXYgDZX4gDRKwXWOlUOgGj+PnOygWhlY7Og==
+"@hexhive/ui@1.0.1-alpha.113":
+  version "1.0.1-alpha.113"
+  resolved "https://registry.yarnpkg.com/@hexhive/ui/-/ui-1.0.1-alpha.113.tgz#35ff479d2c1a2fafffb34805f2544753fb73f7ee"
+  integrity sha512-iXO4qStB6mbaUNzFWnhXKy8aEMYSbNJm05CDaeISx8HsffbihuFaJpAZxeggiWJtgwlasFonAIx0EG6ShGPHWA==
   dependencies:
     "@dnd-kit/core" "^6.0.7"
     "@dnd-kit/sortable" "^7.0.2"

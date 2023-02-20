@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton, Paper } from '@mui/material'
-import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber } from '@hexhive/ui';
+import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber, LinePathFactory } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
@@ -356,7 +356,8 @@ export const Controls = (props) => {
             setPaths(((activeProgram)?.edges || []).map((x) => {
                 return {
                     id: x.id,
-                    type: 'pipe-path',
+                    type: 'line',
+
                     source: x?.from?.id,
                     sourceHandle: x.fromPoint || x.fromHandle,
                     target: x?.to?.id,
@@ -487,12 +488,12 @@ export const Controls = (props) => {
                     editable={true}
                     nodes={nodes}
                     paths={paths}
-                    factories={[HMINodeFactory(true), PipePathFactory]}
+                    factories={[HMINodeFactory(true), LinePathFactory(false)]}
                     onPathCreate={(path) => {
 
                         setPaths((paths) => {
                             let p = paths.slice();
-                            path.type = 'pipe-path';
+                            path.type = 'line';
                             path.draft = true;
                             p.push(path)
                             return p;
@@ -566,7 +567,7 @@ export const Controls = (props) => {
                         setPaths((paths) => {
                             let p = paths.slice();
                             let ix = p.map((x) => x.id).indexOf(path.id)
-                            path.type = 'pipe-path';
+                            path.type = 'line';
                             p[ix] = path;
                             return p;
                         })
