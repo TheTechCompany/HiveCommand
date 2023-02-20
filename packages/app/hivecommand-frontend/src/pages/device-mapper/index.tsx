@@ -1,5 +1,4 @@
 import { gql, useQuery } from "@apollo/client";
-import { useMapPort } from "@hive-command/api";
 import { ChevronLeft } from "@mui/icons-material";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 import React, { useState } from "react";
@@ -71,8 +70,6 @@ export const DeviceMapper = () => {
 
     const navigate = useNavigate();
 
-    const connectDevice = useMapPort(id)
-
     return (
         <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
 
@@ -82,9 +79,7 @@ export const DeviceMapper = () => {
                 dataLayout={dataLayout}
                 onSubmit={(nodeId) => {
                     console.log("Create connection", {selectedElement, nodeId});
-                    connectDevice(selectedElement.parent.id, selectedElement.id, nodeId).then(() => {
-                        setSelectedElement(null)
-                    })
+                  
                 }}
                 onClose={() => {
                     setSelectedElement(null)
