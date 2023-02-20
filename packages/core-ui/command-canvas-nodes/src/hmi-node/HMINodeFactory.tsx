@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { cloneElement, useContext } from "react";
 import { AbstractNodeFactory } from "@hexhive/ui";
 import { HMINode } from "./HMINode";
 import { EditorHandles } from "./EditorHandles";
@@ -10,7 +10,8 @@ export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (buil
         return {
             type: 'hmi-node',
             renderNodeContainer: (node: any, props: any, children: any) => {
-
+                children = cloneElement(children, {width: node.width, height: node.height});
+                
                 return building ? (
                     <EditorHandles 
                         extraProps={props}
