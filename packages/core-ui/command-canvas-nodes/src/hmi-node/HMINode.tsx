@@ -158,8 +158,8 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                                 flex: 1, 
                                 display: 'flex', 
                                 border: props.building ? ( (selected || []).map((x) => x.id)?.indexOf(props.id) > -1  ?  '1px solid black' : undefined ): undefined,
-                                justifyContent: props.extras?.label ? 'space-between' : 'center',
-                                alignItems: props.extras?.label ? 'center' : 'center',
+                                // justifyContent: props.extras?.label ? 'space-between' : 'center',
+                                // alignItems: props.extras?.label ? 'center' : 'center',
                                 flexDirection: props.extras?.label ? 'row' : 'column'
                             }}
                             // style={{ pointerEvents: props.building ? 'all' : undefined}}
