@@ -125,7 +125,12 @@ export default (prisma: PrismaClient, mq: Channel) => {
 								remoteHomepage: true,
 								localHomepage: true,
 								templatePacks: true,
-							
+								alarms: {
+									include: {
+										conditions: true,
+										actions: true
+									}
+								},
 								tags: {
 									include: {
 										type: true

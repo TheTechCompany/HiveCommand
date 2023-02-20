@@ -7,11 +7,10 @@ import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useRe
 import { Home } from './pages/home'
 import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
 
-
 import { Routes, Route } from 'react-router-dom';
 import {Controls} from './pages/controls'
 
-import { useCreateProgramFlow, useCreateProgramHMI, useCreateProgramPlaceholder, useCreateProgramTemplate, useCreateProgramVariable, useDeleteProgramHMI, useUpdateProgramFlow, useUpdateProgramHMI, useUpdateProgramPlaceholder, useUpdateProgramTemplate, useUpdateProgramVariable } from '@hive-command/api';
+import { useCreateProgramHMI, useCreateProgramTemplate, useCreateProgramAlarm, useUpdateProgramAlarm, useDeleteProgramHMI, useUpdateProgramHMI, useUpdateProgramTemplate } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { IconButton } from '@mui/material';
@@ -23,6 +22,7 @@ import { TemplateEditor } from './pages/template';
 import { TagEditor } from './pages/tags';
 import { TypeEditor } from './pages/types';
 import { useCreateProgramType, useUpdateProgramType } from './api';
+import { AlarmEditor } from './pages/alarms';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
@@ -58,6 +58,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     id
                     name
                     type
+                }
+
+                alarms {
+                    id
+                    name
                 }
 
                 types {
@@ -130,17 +135,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     })
 
 
-    const createProgramFlow = useCreateProgramFlow(id)
+    const createProgramAlarm = useCreateProgramAlarm(id)
     const createProgramHMI = useCreateProgramHMI(id)
-    const createProgramPlaceholder = useCreateProgramPlaceholder(id);
-    const createProgramVariable = useCreateProgramVariable(id);
     const createProgramTemplate = useCreateProgramTemplate(id);
     const createProgramType = useCreateProgramType(id);
 
-    const updateProgramFlow = useUpdateProgramFlow(id)
+    const updateProgramAlarm = useUpdateProgramAlarm(id)
     const updateProgramHMI = useUpdateProgramHMI(id)
-    const updateProgramPlaceholder = useUpdateProgramPlaceholder(id);
-    const updateProgramVariable = useUpdateProgramVariable(id);
     const updateProgramTemplate = useUpdateProgramTemplate(id);
     const updateProgramType = useUpdateProgramType(id);
 
@@ -172,47 +173,36 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         if(editItem){
             switch(type){
+                case 'alarms':
+                    promise = updateProgramAlarm(editItem.id, data.name, data.description)
+                    break;
                 case 'types':
                     promise = updateProgramType(editItem.id, data.name);
                     break;
                 case 'templates':
                     promise = updateProgramTemplate(editItem.id, {name: data.name})
                     break;
-                case 'program':
-                    promise = updateProgramFlow(editItem.id, data.name)
-                    break;
                 case 'hmi':
                     promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
                     break;
-                case 'devices':
-                    promise = updateProgramPlaceholder(editItem.id, data.tag, data.type);
-                    break;
-                case 'variables':
-                    promise = updateProgramVariable(editItem.id, {name: data.name, type: data.type});
-                    break;
+       
             }
         }else{
             switch(type){
+                case 'alarms':
+                    promise = createProgramAlarm(data.name, data.description)
+                    break;
                 case 'types':
                     promise = createProgramType(data.name);
                     break;
                 case 'templates':
                     promise = createProgramTemplate({name: data.name});
                     break;
-                case 'program':
-                    //Add parent opt
-                    promise = createProgramFlow(data.name)
-                    break;
                 case 'hmi':
                     //Add parent opt
                     promise = createProgramHMI(data.name, data.localHomepage, data.remoteHomepage)
                     break;
-                case 'devices':
-                    promise = createProgramPlaceholder(data.tag, data.type)
-                    break;
-                case 'variables':
-                    promise = createProgramVariable({name: data.name, type: data.type})
-                    break;
+            
             }
 
         }
@@ -319,6 +309,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'alarms-root',
             name: 'Alarms',
+            children: program?.alarms?.slice(),
+            editor: <AlarmEditor />
             // element: <Alarms />
 
         }

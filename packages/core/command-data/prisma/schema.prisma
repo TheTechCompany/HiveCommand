@@ -233,7 +233,6 @@ model Program {
 
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
-  variables ProgramVariable[] @relation(name: "useVariable")
 
   usedBy Device[] @relation(name: "useProgram")
 
@@ -247,7 +246,10 @@ model ProgramAlarm {
   id String @id
   name String
 
+  description String?
+
   conditions ProgramAlarmCondition[] @relation(name: "useCondition")
+  actions ProgramAlarmAction[] @relation(name: "useAlarmAction")
 
   program Program @relation(name: "useAlarm", fields: [programId], references: [id])
   programId String
@@ -255,27 +257,24 @@ model ProgramAlarm {
 
 model ProgramAlarmCondition {
   id String @id
-  name String
+  name String?
 
-  device String
-  variable String
+  input String
+
   value String
 
   alarm ProgramAlarm @relation(name: "useCondition", fields: [alarmId], references: [id])
   alarmId String
 }
 
-model ProgramVariable {
+model ProgramAlarmAction {
   id String @id
+  name String?
 
-  name String
-  type String
+  func String
 
-  value String?
-
-
-  program Program @relation(name: "useVariable", fields: [programId], references: [id])
-  programId String
+  alarm ProgramAlarm @relation(name: "useAlarmAction", fields: [alarmId], references: [id])
+  alarmId String
 }
 
 model ProgramHMI {

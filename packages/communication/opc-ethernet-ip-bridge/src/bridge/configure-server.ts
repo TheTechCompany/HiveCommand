@@ -10,7 +10,7 @@ export const configureServer = (PLC: {templateList?: any, tagList?: any[]}, list
 
     app.use(bodyParser.json())
 
-    app.use(express.static(path.join(__dirname, './configurator')))
+    app.use(express.static(path.join(__dirname, '../configurator')))
 
     app.get('/api/tags', (req, res) => {
 
@@ -119,5 +119,5 @@ export const configureServer = (PLC: {templateList?: any, tagList?: any[]}, list
         console.log(`Configure live on ${CONFIGURE_PORT}`)
     });
     return app;
-    
+
 }
