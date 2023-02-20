@@ -18,8 +18,8 @@ export const Bubble : React.FC<BubbleProps> = (props) => {
 			onMouseDown={(e) => e.stopPropagation()}
 			sx={{
 				borderRadius: '6px',
-				minHeight: '121px',
-				minWidth: '200px',
+				height: '195px',
+				width: '260px',
 				bgcolor: 'primary.light',
 				display: 'flex',
 				flexDirection: 'column'

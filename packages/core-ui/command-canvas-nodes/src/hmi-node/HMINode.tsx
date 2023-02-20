@@ -98,6 +98,8 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
                     scaleY={props.extras?.scaleY}
                     conf={conf}
                     options={props.extras?.dataValue}
+                    width={props?.width}
+                    height={props?.height}
                     // {...props.options}
                     size="medium" />
             )}

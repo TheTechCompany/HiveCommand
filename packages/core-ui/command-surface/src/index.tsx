@@ -7,7 +7,7 @@ import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering, Settings, Save, ArrowLeft } from '@mui/icons-material';
+import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering, Settings, Save, ArrowLeft, Lock, RestartAlt } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, ReportView } from './views/reports'
@@ -294,7 +294,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const leftAction = useMemo(() => {
                     if(extras?.setpoints){
                         if(view == 'settings'){
-                            return (<IconButton onClick={() => setView('info')}  sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
+                            return (<IconButton onClick={() => setView('info')}  sx={{ padding: 0  }}>
                                 <KeyboardArrowLeft />
                             </IconButton>)
                         }
@@ -304,15 +304,22 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const rightAction = useMemo(() => {
                     if(extras?.manual){
                         if(extras.manual?.isManual?.()){
-                            return ( <FormControlLabel control={<Switch onChange={(e) => extras.manual?.exitManual?.()} checked={extras.manual?.isManual?.()} />} label="Manual" />)
+                            return ( <FormControlLabel control={<Switch size='small' onChange={(e) => extras.manual?.exitManual?.()} checked={extras.manual?.isManual?.()} />} label="Manual" />)
                         }
                     }
                     if (extras?.setpoints) {
                         if(view == 'settings'){
-                            return null;
+                            return <Box sx={{display: 'flex'}}>
+                                <IconButton sx={{  padding: 0  }}>
+                                    <RestartAlt />
+                                </IconButton>
+                                <IconButton sx={{  padding: 0  }}>
+                                    <Save />
+                                </IconButton>
+                            </Box>
                         }
                         return (
-                            <IconButton onClick={() => setView('settings')} sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
+                            <IconButton onClick={() => setView('settings')} sx={{ padding: 0 }}>
                                 <Settings />
                             </IconButton>
                         )
@@ -332,7 +339,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 // console.log({values, actions});
 
                 return <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: (rightAction) ? 'space-between' : 'flex-start' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px', justifyContent: (rightAction) ? 'space-between' : 'flex-start' }}>
                         {leftAction}
                         <Typography sx={{ fontWeight: 'bold' }}>{deviceTag}{headerExtras}</Typography>
                         {rightAction}
@@ -342,12 +349,16 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                             <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                                 {Object.keys(values).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
-                                    <Typography>{valueKey}: {`${values[valueKey]}`}</Typography>
+                                    <Box sx={{display: 'flex'}}>
+                                        <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography><Typography>{`${values[valueKey]}`}</Typography>
+                                    </Box>
                                 ))}
                             </Box>
                             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                 {actions?.slice().sort((a, b) => a.label.localeCompare(b.label)).map((action) => (
-                                    <Button onClick={() => {
+                                    <Button 
+                                    variant="contained"    
+                                    onClick={() => {
                                         console.log(action.func)
                                         getDeviceFunction(action.func).then((f) => {
 
@@ -370,16 +381,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     ) : (
                         <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
                             {setpoints?.slice()?.sort((a, b) => a.label?.localeCompare(b.label))?.map((setpoint) => (
-                                <Box>
+                                <Box sx={{marginBottom: '12px'}}>
                                     <TextField 
                                         size="small"
-                                        InputProps={{
-                                            endAdornment: <InputAdornment position="end">
-                                                <IconButton sx={{'& .MuiSvgIcon-root': {width: '0.5em', height: '0.5em'} }}>
-                                                    <Save />
-                                                </IconButton>
-                                            </InputAdornment>
-                                        }}
+                                        fullWidth
                                         value={setpoint.getter()}
                                         // onChange={(e}
                                         label={setpoint.label} />
