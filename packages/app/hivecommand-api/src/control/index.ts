@@ -1,8 +1,5 @@
 import { useMutation } from "../gqty"
 
-export * from './calibration'
-
-
 export const useChangeDeviceMode = (deviceId: string) => {
 	
 	const [ mutateFn ] = useMutation((mutation, args: {mode: string, deviceName: string}) => {
