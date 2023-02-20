@@ -346,9 +346,9 @@ export default () => {
 								pointerEvents: 'all', 
 								display: 'flex',
 								flexDirection: 'column',
-								padding: '6px',
+								padding: '12px',
 								left: (infoTarget?.x + infoTarget?.width) + 6, 
-								top: (infoTarget?.y + infoTarget?.height) + (121 / 2),
+								top: (infoTarget?.y + infoTarget?.height) + (195 / 2),
 								
 							}}>
 								<DataComponent {...stateValues} />
