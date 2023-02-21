@@ -149,7 +149,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
     
                             console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
     
-                            childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) }) //, null, false, type, 10) })
+                            childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`, null, type ) }) //, null, false, type, 10) })
                         })
                     }
                 }else{
