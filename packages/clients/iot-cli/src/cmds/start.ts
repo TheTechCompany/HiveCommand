@@ -16,7 +16,7 @@ type Options = {
     
 };
   
-  export const command: string = 'starat';
+  export const command: string = 'start';
   export const desc: string = 'Start this ship';
   
   export const builder: CommandBuilder<Options, Options> = (yargs) =>

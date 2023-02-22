@@ -52,7 +52,7 @@ export class MQTTClient {
 
     constructor(config?: SidecarOptions) {
         this.options = config;
-        
+
         this.runner = new Runner(this, config);
 
         this.valueStore = new ValueStore({
@@ -131,6 +131,7 @@ export class MQTTClient {
                 const changed_keys = this.valueStore.updateValue(key, curr_value)
 
 
+                
                 changed_keys.map((changed) => {
                     if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
                     emitter.emit('data-changed', { key: changed.key, value: changed.value })

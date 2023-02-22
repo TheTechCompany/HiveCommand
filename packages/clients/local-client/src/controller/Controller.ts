@@ -55,6 +55,15 @@ export class Controller {
 							const isRunning = this.machine.isProgramRunning || this.machine.isProgramStopping;
 
 							return new Variant({dataType: DataType.Boolean, value: isRunning || false})
+						},
+						set: (value) => {
+							if(value.value){
+								this.machine.startProgram()
+							}else{
+								this.machine.stopProgram()
+							}
+
+							return StatusCodes.Good
 						}
 					},
 					Status: {
@@ -68,6 +77,18 @@ export class Controller {
 						type: DataType.String,
 						get: () => {
 							return new Variant({dataType: DataType.String, value: CommandStateMachineMode[this.machine.mode]})
+						},
+						set: (value) => {
+							const modeString = value.value.toString().toUpperCase()
+							let newMode = (CommandStateMachineMode as any)?.[modeString]
+
+							if(newMode != undefined){
+								log.info(`Changing machine mode to ${modeString}`, this.machine != undefined)
+
+								this.machine?.changeMode(newMode)
+							}
+
+							return StatusCodes.Good
 						}
 					}
 				},
