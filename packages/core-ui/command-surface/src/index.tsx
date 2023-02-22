@@ -379,9 +379,13 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                                             f({},
                                                 async (state) => {
-                                                    await Promise.all(Object.keys(state).map((key) => {
-                                                        client?.writeTagValue?.(deviceTag, state[key], key);
-                                                    }))
+                                                    // if(typeof(state) === 'object'){
+                                                        await Promise.all(Object.keys(state).map((key) => {
+                                                            client?.writeTagValue?.(deviceTag, state[key], key);
+                                                        }))
+                                                    // }else{
+                                                    //     client?.writeTagValue?.(deviceTag, state)
+                                                    // }
                                                     // console.log({state})
                                                 },
                                                 (state) => console.log({ state })
@@ -765,10 +769,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 [curr.key]: curr.value
             }), {})
 
-            if (deviceKey === 'CEB_Days') {
-                console.log('CEB DAYS', props.values, deviceKey, deviceValues, fields)
-            }
-
             return {
                 key: deviceKey,
                 values: fields.length > 0 ? deviceValues : parseValue(tag.type as keyof typeof DataTypes, props.values?.[deviceKey])
@@ -783,7 +783,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, normalisedValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
 
-            if (!Array.isArray(newState[tag]) && Object.keys(newState[tag] || {}).length > 0) {
+            if (!Array.isArray(newState[tag]) && typeof(newState[tag]) === 'object' && Object.keys(newState[tag] || {}).length > 0) {
                 Object.keys(newState[tag]).map((subkey) => client?.writeTagValue?.(tag, newState[tag][subkey], subkey))
             } else {
                 client?.writeTagValue?.(tag, newState[tag])
