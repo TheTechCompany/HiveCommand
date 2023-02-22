@@ -10,6 +10,7 @@ import { Service } from './src/service'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
 import MQTT from './src/mqtt';
+import MQTTAuth from './src/mqtt-auth';
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -52,10 +53,10 @@ const main = (async () => {
         provider
     })
     
-    const mqttAuth = `hive-command-discovery-server-${suffix}-internal-svc`
 
-    const mqttEndpoint = namespace.metadata.name.apply((ns) => `http://${mqttAuth}.${ns}.svc.cluster.local`)
-    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), mqttEndpoint, namespace)
+    const { url } = await MQTTAuth(provider, namespace)
+    
+    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), url, namespace)
     
     // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 

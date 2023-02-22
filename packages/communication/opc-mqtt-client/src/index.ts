@@ -51,6 +51,8 @@ export class MQTTClient {
     private runner : Runner;
 
     constructor(config?: SidecarOptions) {
+        this.options = config;
+        
         this.runner = new Runner(this, config);
 
         this.valueStore = new ValueStore({
@@ -64,14 +66,19 @@ export class MQTTClient {
     async start(){
 
         if(this.options?.opcuaServer){
+            console.log("Connecting to opcua server: ", this.options.opcuaServer)
             this.client = await this.connect(this.options.opcuaServer)
         }
 
         if(this.options?.subscriptionMap && this.options.deviceMap && this.options.tags && this.options.types){
+            console.log("Subscring to subscription-map...")
+
             await this.subscribe(this.options.subscriptionMap)
         }
 
         if(this.options?.iot && this.options.iot.host && this.options.iot.user && this.options.iot.pass && this.options.iot.exchange){
+            console.log("Publishing data...")
+
             await this.setup_data(this.options.iot.host, this.options.iot.user, this.options.iot.pass, this.options.iot.exchange)
         }
     }

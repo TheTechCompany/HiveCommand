@@ -6,7 +6,7 @@
     "dist/"
   ],
   "publishConfig": {
-    "access" :"public"
+    "access": "public"
   },
   "main": "dist/index.js",
   "bin": {
@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@hive-command/opcua-mqtt-client": "^1.4.15-alpha.182",
-    "axios": "^1.3.3"
+    "axios": "^1.3.3",
+    "loglevel": "^1.8.1"
   }
 }

@@ -16,15 +16,15 @@ type Options = {
     
 };
   
-  export const command: string = 'pilot';
-  export const desc: string = 'Pilot this ship, with a trusted commander';
+  export const command: string = 'starat';
+  export const desc: string = 'Start this ship';
   
   export const builder: CommandBuilder<Options, Options> = (yargs) =>
 	yargs
 	  .options({
         opcuaServer: {type: 'string', required: true, description: 'OPCUA server to connect to', default: 'opc.tcp://localhost:8440'},
 		
-        discoveryServer: {type: 'string', required: true, description: 'Discovery server host', default: 'iot.hexhive.io'},
+        discoveryServer: {type: 'string', required: true, description: 'Discovery server host', default: 'http://discovery.hexhive.io'},
        
         mapFile: {type: 'string', description: 'Map File unified'},
 
@@ -65,7 +65,7 @@ type Options = {
         discoveryServer,
     
         deviceMap: deviceList,
-        
+
         subscriptionMap: subscriptionList,
         provisionCode
 	})

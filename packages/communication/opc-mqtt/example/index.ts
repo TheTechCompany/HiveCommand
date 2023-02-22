@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { DataType } from "node-opcua";
 import { MQTTPublisher } from "../src";
 

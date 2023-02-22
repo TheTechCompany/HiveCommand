@@ -1,3 +1,5 @@
+import { config } from 'dotenv';
+config();
 import { MQTTHub } from "../src";
 import { DataType } from 'node-opcua'
 import { PrismaClient } from '@hive-command/data'
@@ -16,32 +18,32 @@ const prisma = new PrismaClient();
             let val = messageContent?.value;
             console.log({dt, val: val, DataType: messageContent?.dataType})
 
-            const device = await prisma.device.findFirst({where: {network_name: userId}})
+            // const device = await prisma.device.findFirst({where: {network_name: userId}})
             //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
 
-            if(!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
+            // if(!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
 
-            if(typeof(messageContent.value) == "object"){
-                await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                    await prisma.deviceValue.create({
-                        data: {
-                            deviceId: device.id,
-                            placeholder: routingKey,
-                            key: valueKey,
-                            value: `${messageContent?.value[valueKey]}`
-                        }
-                    })
-                }))
-            }else{
-                await prisma.deviceValue.create({
-                    data: {
-                        deviceId: device.id,
-                        placeholder: routingKey,
-                        // key: routingKey,
-                        value: `${messageContent?.value}`,
-                    }
-                })
-            }
+            // if(typeof(messageContent.value) == "object"){
+            //     await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
+            //         await prisma.deviceValue.create({
+            //             data: {
+            //                 deviceId: device.id,
+            //                 placeholder: routingKey,
+            //                 key: valueKey,
+            //                 value: `${messageContent?.value[valueKey]}`
+            //             }
+            //         })
+            //     }))
+            // }else{
+            //     await prisma.deviceValue.create({
+            //         data: {
+            //             deviceId: device.id,
+            //             placeholder: routingKey,
+            //             // key: routingKey,
+            //             value: `${messageContent?.value}`,
+            //         }
+            //     })
+            // }
         }
     })
     
