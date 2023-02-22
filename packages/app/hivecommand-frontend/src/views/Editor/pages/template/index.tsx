@@ -106,7 +106,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     return { key: stateItem.name, type: stateItem.type }
                 }).reduce((prev, curr) => ({
                     ...prev,
-                    [curr.key]: fromOPCType(curr.type)
+                    [curr.key]: lookupType(curr.type as keyof typeof DataTypes)
                 }), {})
 
                 return {
