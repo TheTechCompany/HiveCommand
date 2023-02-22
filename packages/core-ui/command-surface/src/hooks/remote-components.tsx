@@ -14,6 +14,7 @@ const Loader = async (base_url: string, start: string) => {
         react: require('react'),
         '@mui/material': require('@mui/material'),
         '@mui/x-date-pickers': require('@mui/x-date-pickers'),
+        '@mui/icons-material': require('@mui/icons-material'),
         '@hexhive/ui': require('@hexhive/ui')
     }
 
