@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-mqtt-client",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.182",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -21,7 +21,7 @@
   "dependencies": {
     "@hive-command/opcua-client": "^1.4.15-alpha.172",
     "@hive-command/opcua-mqtt": "^1.4.15-alpha.172",
-    "@hive-command/scripting": "^1.4.15-alpha.180",
+    "@hive-command/scripting": "^1.4.15-alpha.182",
     "lodash": "^4.17.21",
     "node-opcua": "^2.91.0",
     "yargs": "^17.7.1"
