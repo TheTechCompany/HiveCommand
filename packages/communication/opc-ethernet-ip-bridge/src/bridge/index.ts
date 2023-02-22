@@ -48,6 +48,10 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
     const controller : ManagedController = manager.addController(host, slot, 500, false)
 
+    controller.on('Error', (e) => {
+        console.log("Controller level error: ", e)
+    })
+
     await server.start();
 
   
@@ -71,6 +75,8 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
 
         // PLC.scan_rate = 500;
         // PLC.scan();
+
+        // controller.PLC?.newTag(tag, null, true, )
 
         const { properties } = controller.PLC || {};
 
@@ -140,6 +146,9 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                 let childTags: {key: string, tag: Tag | null}[];
 
                 if(fromTagListChildren){
+
+                    //Create child tag list from children object
+
                     childTags = [];
                     
                     if(fromTagListChildren){
@@ -153,6 +162,7 @@ export const EthernetIPBridge = async (options: BridgeOptions) => {
                         })
                     }
                 }else{
+                    //Create read value from rootTag if array get more specific
                    rootTag = controller.addTag(tag.name)
 
                    if(isArray){
