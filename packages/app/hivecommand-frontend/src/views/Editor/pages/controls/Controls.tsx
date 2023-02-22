@@ -333,7 +333,7 @@ export const Controls = (props) => {
 
                         try{
                             // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            parsedValue = getOptionValues(node, tags, {} as any, {}, {values: {}}, () => {}, optionKey, optionValue);
+                            parsedValue = getOptionValues(node, tags, {} as any, {}, {values: {}}, {values: {}}, () => {}, optionKey, optionValue);
                         }catch(e){
                             console.log({e, node, optionKey});
                         }
