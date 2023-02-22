@@ -54,8 +54,8 @@ const main = (async () => {
     })
     
 
-    const { url } = await MQTTAuth(provider, namespace)
-    
+    const { url } = await MQTTAuth(provider, dbUrl, dbPass, namespace)
+
     const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), url, namespace)
     
     // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
