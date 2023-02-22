@@ -281,7 +281,12 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		
 		if('handler' in exports){
 			//onClick uses a handler to setup showWindow, the values are bound to templateValues at that point in time
-			returnValue = (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, templateValues.values[node.id] || {}, (state: any) => { console.log("setState", state) }, args)
+			returnValue = (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, templateValues.values[node.id] || {}, (state: any) => { 
+				
+				//TODO map this state back over the template input to create a real state update
+				console.log("setState", state)
+			
+			}, args)
 		}else if('getter' in exports){
 			returnValue = exports?.getter?.( templateValues.values[node.id] /*normalisedValues*/ );
 		}

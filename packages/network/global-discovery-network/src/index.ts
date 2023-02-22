@@ -17,99 +17,60 @@ import { API } from './api';
     const alarmCenter = new AlarmCenter();
 
 
-    const mqttAuth = MQTTAuth(async (user, pass) => {
-        console.log("MQTT Auth", user, pass);
 
-        if(user == process.env.IOT_USER && pass == process.env.IOT_PASS) return true;
+    try {
+        const mqttHub = new MQTTHub({
+            user: process.env.IOT_USER,
+            pass: process.env.IOT_PASS,
+            host: process.env.IOT_ENDPOINT || '',
+            exchange: process.env.IOT_EXCHANGE || 'device_values',
 
-        const {deviceId} = jwt.verify(pass, process.env.IOT_SECRET || '') as any;
+            onMessage: async ({ routingKey, messageContent, userId }) => {
 
-        if(!deviceId) return false;
+                console.log(`Data from ${userId} ${routingKey}`);
 
-        const device = await prisma.device.findFirst({
-            where: {
-                id: deviceId,
-                network_name: user,
-            }
-        })
+                const device = await prisma.device.findFirst({ where: { network_name: userId } })
+                //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
 
-        return device != null;
-    }, async (username, resource, permission) => {
-        
-        console.log("MQTT Resource", resource, permission);
-        let permissionOk = (permission === 'configure' || permission === "permission" || permission === "write");
+                if (!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
 
-        if(username === process.env.IOT_USER){
-            permissionOk = permissionOk || permission === "read";
-        }
-
-        return (resource === process.env.IOT_EXCHANGE || resource === 'device_values') && permissionOk
-    });
-
-    const internalAuthApi = express();
-
-    internalAuthApi.use(cors());
-    internalAuthApi.use(bodyParser.json());
-
-    internalAuthApi.use(mqttAuth);
-
-    internalAuthApi.listen(8005, async () => {
-        console.log("Internal API up on 8005");
-
-        try{
-            const mqttHub = new MQTTHub({
-                user: process.env.IOT_USER,
-                pass: process.env.IOT_PASS,
-                host: process.env.IOT_ENDPOINT || '',        
-                exchange: process.env.IOT_EXCHANGE || 'device_values',
-                
-                onMessage: async ({ routingKey, messageContent, userId }) => {
-        
-                    console.log(`Data from ${userId} ${routingKey}`);
-        
-                    const device = await prisma.device.findFirst({where: {network_name: userId}})
-                    //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
-        
-                    if(!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
-
-                    if(typeof(messageContent.value) == "object"){
-                        await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                            await prisma.deviceValue.create({
-                                data: {
-                                    deviceId: device.id,
-                                    placeholder: routingKey,
-                                    key: valueKey,
-                                    value: `${messageContent?.value[valueKey]}`
-                                }
-                            })
-                        }))
-                    }else{
+                if (typeof (messageContent.value) == "object") {
+                    await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
                         await prisma.deviceValue.create({
                             data: {
                                 deviceId: device.id,
                                 placeholder: routingKey,
-                                // key: routingKey,
-                                value: `${messageContent?.value}`,
+                                key: valueKey,
+                                value: `${messageContent?.value[valueKey]}`
                             }
                         })
-                    }
-                    if(!device || !routingKey || !messageContent) return;
-        
-
-                    //Call alarm center hook to allow for business logic based alarm signals
-                    alarmCenter.hook({routingKey, messageContent, userId})
+                    }))
+                } else {
+                    await prisma.deviceValue.create({
+                        data: {
+                            deviceId: device.id,
+                            placeholder: routingKey,
+                            // key: routingKey,
+                            value: `${messageContent?.value}`,
+                        }
+                    })
                 }
-            });
-        
-            await mqttHub.setup();
-            await mqttHub.subscribe();
-        }catch(e){
-            console.error({e});
-        }
-    
-    })
-    
-  
+                if (!device || !routingKey || !messageContent) return;
+
+
+                //Call alarm center hook to allow for business logic based alarm signals
+                alarmCenter.hook({ routingKey, messageContent, userId })
+            }
+        });
+
+        await mqttHub.setup();
+        await mqttHub.subscribe();
+    } catch (e) {
+        console.error({ e });
+    }
+
+
+
     const app = express();
 
     app.use(cors());

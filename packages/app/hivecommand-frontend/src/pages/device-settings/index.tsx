@@ -24,6 +24,8 @@ export const DeviceSettings = () => {
     const { data } = useQuery(gql`
         query GetDeviceScreens ($device: ID) {
             commandDevices(where: {id: $device}){
+                id
+
                 screens {
                     id
                     name
@@ -34,7 +36,11 @@ export const DeviceSettings = () => {
                 }
             }
         }
-    `)
+    `, {
+        variables: {
+            device: id
+        }
+    })
 
     const screens = data?.commandDevices?.[0]?.screens || [];
 

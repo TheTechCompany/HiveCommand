@@ -242,20 +242,24 @@ export class Sidecar {
 
         Object.keys(this._values).forEach((valueKey) => {
 
-            if (typeof (this._values[valueKey]) === "object" && !Array.isArray(this._values[valueKey])) {
+            if(this._values[valueKey]){
 
-                Object.keys(this._values[valueKey]).map((subValueKey) => {
-                    if (!isEqual(old_values[valueKey]?.[subValueKey], this._values[valueKey]?.[subValueKey])) {
+                if (typeof (this._values[valueKey]) === "object" && !Array.isArray(this._values[valueKey])) {
+
+                    Object.keys(this._values[valueKey]).map((subValueKey) => {
+                        if (!isEqual(old_values[valueKey]?.[subValueKey], this._values[valueKey]?.[subValueKey])) {
+                            //TODO, go deeper
+                            changed_keys.push({ key: valueKey, value: {[subValueKey]: this._values[valueKey]?.[subValueKey]} })
+                        }
+                    })
+
+                } else {
+                    if (!isEqual(old_values[valueKey], this._values[valueKey])) {
                         //TODO, go deeper
-                        changed_keys.push({ key: valueKey, value: {[subValueKey]: this._values[valueKey]?.[subValueKey]} })
+                        changed_keys.push({ key: valueKey, value: this._values[valueKey] })
                     }
-                })
-
-            } else {
-                if (!isEqual(old_values[valueKey], this._values[valueKey])) {
-                    //TODO, go deeper
-                    changed_keys.push({ key: valueKey, value: this._values[valueKey] })
                 }
+                
             }
 
         })
