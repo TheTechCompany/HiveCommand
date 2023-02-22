@@ -5,7 +5,7 @@ import { RabbitMQService } from "./service"
 import * as aws from '@pulumi/aws'
 import * as k8s from '@pulumi/kubernetes'
 
-export default async (provider: Provider,  ns: k8s.core.v1.Namespace) => {
+export default async (provider: Provider, dbUrl: any, dbPass: any, ns: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 
@@ -13,7 +13,7 @@ export default async (provider: Provider,  ns: k8s.core.v1.Namespace) => {
 
     const appName = `hivecommand-mqtt-auth-${suffix}`
 
-    const deployment = await RabbitMQDeployment(provider, appName, ns);
+    const deployment = await RabbitMQDeployment(provider, appName, dbUrl, dbPass, ns);
 
     const service = await RabbitMQService(provider, appName, deployment, ns)
 
