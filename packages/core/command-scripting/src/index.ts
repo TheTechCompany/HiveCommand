@@ -2,12 +2,13 @@ import { DataTypes } from './types';
 
 export * from './generators'
 export * from './types'
+export * from './loaders'
 
 
 export const parseValue = (type: string, value: any ) => {
 
     if(!type) return null;
-    
+
     let isArray = type?.indexOf('[]') > -1;
 
     if (isArray && !Array.isArray(value)) value = []

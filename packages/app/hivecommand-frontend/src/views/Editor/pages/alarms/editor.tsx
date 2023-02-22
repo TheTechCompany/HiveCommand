@@ -7,16 +7,16 @@ import { DataTypes, formatInterface, lookupType, toJSType } from '@hive-command/
 
 export const AlarmEditor = () => {
 
-    const { program: {tags, types} } = useCommandEditor()
-    const [ conditions, setConditions ] = useState<any[]>([{}]);
-    const [ actions, setActions ] = useState<any[]>([{}]);
+    const { program: { tags, types } } = useCommandEditor()
+    const [conditions, setConditions] = useState<any[]>([{}]);
+    const [actions, setActions] = useState<any[]>([{}]);
 
     const tagInputs = useMemo(() => {
 
         return tags.map((tag) => {
             let fields = types.find((a) => a.name === tag.type)?.fields || [];
 
-            return [{label: `${tag.name}`, type: 'keyword'}, ...fields.map((field) => ({label: `${tag.name}.${field.name}`, type: 'keyword'}))]
+            return [{ label: `${tag.name}`, type: 'keyword' }, ...fields.map((field) => ({ label: `${tag.name}.${field.name}`, type: 'keyword' }))]
         }).reduce((prev, curr) => prev.concat(curr), []);
 
     }, [tags, types])
@@ -26,7 +26,7 @@ export const AlarmEditor = () => {
             return formatInterface(type.name, type.fields?.reduce((prev, curr) => ({
                 ...prev,
                 [curr.name]: curr.type ? lookupType(curr.type as keyof typeof DataTypes) : "unknown"
-            }), {}))   
+            }), {}))
         }).join('\n')
 
         return typeSchema
@@ -40,8 +40,8 @@ export const AlarmEditor = () => {
 
             return {
                 ...prev,
-                [curr.name]: scalarTypes.indexOf(curr.type) > -1 ? 
-                    ( curr.type?.indexOf('[]') > -1 ? [lookupType(curr.type?.replace('[]', '') as any)] : lookupType(curr.type as any) )
+                [curr.name]: scalarTypes.indexOf(curr.type) > -1 ?
+                    (curr.type?.indexOf('[]') > -1 ? [lookupType(curr.type?.replace('[]', '') as any)] : lookupType(curr.type as any))
                     : curr.type
             }
 
@@ -52,14 +52,14 @@ export const AlarmEditor = () => {
     }, [tags, types])
 
     return (
-        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-           
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-                        <Editor 
-                            value={`export const handler = (state: TagState) => {
+
+            <Editor
+                value={`export const handler = (state: TagState) => {
     
 }`}
-                            extraLib={`
+                extraLib={`
                                 declare function raiseAlarm(message: string)
                                 declare function sendSMS(number: string, message: string)
                                 declare function sendEmail(email: string[], subject: string, message: string)
@@ -67,7 +67,7 @@ export const AlarmEditor = () => {
                                 ${typeSchema}
 
                                 ${formatInterface('TagState', tagSchema)}
-                            `}/>
+                            `} />
         </Box>
     )
 }

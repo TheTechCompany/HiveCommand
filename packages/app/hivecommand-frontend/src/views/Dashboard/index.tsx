@@ -92,12 +92,9 @@ const Dashboard : React.FC<any> = (props) => {
                                     ))}
                                 </Route>
                             ))}
-                            {/* <Route path={`/devices/:id/graphs`} component={DeviceControlGraph} />
-                            <Route path={`/devices/:id/devices`} component={DeviceDevices} /> */}
-                            {/* <Route path={`/devices/:id`} component={DeviceSingle} /> */}
+                         
                             <Route path={'devices/:id/settings'} element={<DeviceSettings/>} />
                             <Route path={`device-map/:id`} element={<DeviceMapper />} />
-                            {/* <Route path={`programs/:id/*`} element={<EditorPage/>} /> */}
                         </Routes>
                     </React.Suspense>
 

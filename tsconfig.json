@@ -25,6 +25,7 @@
 		
 		"@hive-command/rabbitmq-auth": ["./communication/opc-mqtt-auth"],
 		"@hive-command/opcua-mqtt-hub": ["./communication/opc-mqtt-hub"],
+		"@hive-command/opcua-mqtt-client": ["./communication/opc-mqtt-client"],
 		"@hive-command/opcua-mqtt": ["./communication/opc-mqtt"],
 		/* Core UI */
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
