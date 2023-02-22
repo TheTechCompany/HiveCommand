@@ -20,10 +20,10 @@ log.console.level = debug
 
 auth_backends.1 = rabbit_auth_backend_http
 
-auth_http.user_path = ${authApi}/auth/user
-auth_http.vhost_path = ${authApi}/auth/vhost
-auth_http.resource_path = ${authApi}/auth/resource
-auth_http.topic_path = ${authApi}/auth/topic`),
+auth_http.user_path = http://${authApi}/auth/user
+auth_http.vhost_path = http://${authApi}/auth/vhost
+auth_http.resource_path = http://${authApi}/auth/resource
+auth_http.topic_path = http://${authApi}/auth/topic`),
             'enabled_plugins': '[rabbitmq_prometheus,rabbitmq_auth_backend_http].'
         }
     }, {
