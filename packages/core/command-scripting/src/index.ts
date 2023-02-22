@@ -48,6 +48,8 @@ export const parseValue = (type: string, value: any ) => {
                 }
                 return val % 1 != 0 ? val.toFixed(2) : val;
             })()
+        case DataTypes.String:
+            return value;
         default:
             console.log({ type })
             break;

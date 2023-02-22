@@ -13,6 +13,9 @@ export class Runner {
         this.options = options;
 
         this.client = client;
+
+        this.getTag = this.getTag.bind(this);
+        this.setTag = this.setTag.bind(this);
     }
 
     getTag(tagPath: string, tagType: string, valueStructure: any) {
@@ -64,38 +67,42 @@ export class Runner {
             const jsCode = transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
             const { getter, setter } = load_exports(jsCode)
 
-            return setter(value, allValues, async (values: any) => {
+            await new Promise((resolve, reject) => {
 
-                let tags = this.client.getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
+                setter(value, allValues, async (values: any) => {
 
-                let newValues: ({ path: string, value: any } | null)[] = tags.map((t: any) => {
-
-                    let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
-
-                    if (!path) return null;
-
-                    return {
-                        path,
-                        value: t.tag
+                    let tags = this.client.getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
+    
+                    let newValues: ({ path: string, value: any } | null)[] = tags.map((t: any) => {
+    
+                        let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
+    
+                        if (!path) return null;
+    
+                        return {
+                            path,
+                            value: t.tag
+                        }
+    
+                    })
+    
+                    for (value of newValues) {
+                        // if (this.client) {
+                            const { type: dt, isArray } = await this.client.getDataType(value.path) || {}
+    
+                            setValues.push({
+                                tag: value.path,
+                                dataType: (DataType as any)[dt as any],
+                                value: value.value
+                            })
+                            // await this.setData(this.client, value.path, (DataType as any)[dt as any], value.value)
+                        // }
+    
                     }
-
+                    resolve(true)
+    
                 })
-
-                for (value of newValues) {
-                    // if (this.client) {
-                        const { type: dt, isArray } = await this.client.getDataType(value.path) || {}
-
-                        setValues.push({
-                            tag: value.path,
-                            dataType: (DataType as any)[dt as any],
-                            value: value.value
-                        })
-                        // await this.setData(this.client, value.path, (DataType as any)[dt as any], value.value)
-                    // }
-
-                }
-
-            })
+            }) 
         } else {
             if (!tag) return null; //valueFn([]);
 
