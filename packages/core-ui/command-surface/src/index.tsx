@@ -29,6 +29,7 @@ import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { getDeviceFunction } from './components/action-menu';
 import { DataTypes, parseValue } from '@hive-command/scripting';
+import { FieldValue } from './components/field-value';
 export * from './hooks/remote-components'
 
 
@@ -336,6 +337,19 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     return ''
                 }, [extras, view]);
 
+                const renderFieldValue = (valueKey: string) => {
+
+                    let type = fields?.find((a) => a.name == valueKey)?.type;
+
+                    return <FieldValue 
+                                type={type}
+                                value={values[valueKey]}
+                                onChange={(value) => {
+                                    console.log("Change value", deviceTag, value, valueKey)
+                                    client?.writeTagValue?.(deviceTag, value, valueKey)
+                                }}  />
+                }
+
                 // console.log({values, actions});
 
                 return <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -349,8 +363,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                             <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                                 {Object.keys(values).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
-                                    <Box sx={{display: 'flex'}}>
-                                        <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography><Typography>{`${values[valueKey]}`}</Typography>
+                                    <Box sx={{display: 'flex', alignItems: 'center'}}>
+                                        <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography>
+                                        {renderFieldValue(valueKey)}
                                     </Box>
                                 ))}
                             </Box>
