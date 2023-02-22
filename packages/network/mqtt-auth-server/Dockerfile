@@ -10,7 +10,7 @@ RUN yarn
 
 RUN npx lerna bootstrap --scope @hive-command/mqtt-auth-server --include-dependencies
 
-RUN npx lerna run build --scope @hive-command/mqtt-auth-serve --include-dependencies
+RUN npx lerna run build --scope @hive-command/mqtt-auth-server --include-dependencies
 
 WORKDIR /app/packages/network/mqtt-auth-server
 
