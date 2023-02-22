@@ -51,4 +51,4 @@ const prisma = new PrismaClient();
         console.log("Internal API up on 8005");
     });
 
-})
+})()
