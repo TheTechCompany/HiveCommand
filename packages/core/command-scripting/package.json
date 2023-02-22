@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/scripting",
-  "version": "1.4.15-alpha.178",
+  "version": "1.4.15-alpha.179",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
