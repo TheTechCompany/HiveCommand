@@ -66,6 +66,7 @@ export const useNodesWithValues = (
 	const [ state, setState ] = useState<any>({abc: false});
 
 	const nodeInputValues = useRef<{values: any}>({values: {}});
+	const nodeOutputValues = useRef<{values: any}>({values: {}});
 
 	// console.log({nodeInputValues: nodeInputValues.current.values})
 
@@ -99,10 +100,33 @@ export const useNodesWithValues = (
 	
 			}).reduce((prev, curr) => ({...prev, ...(curr ? {[curr.key]: curr.value} : {}) }), {})
 
+			let templateOutputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+
+				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+	
+	
+				if(inputTemplate.type?.split(':')[0] === 'Tag'){
+					let tag = tags?.find((a) => a.id === value)?.name 
+
+					return {
+						key: inputTemplate.name,
+						value: tag
+					};
+				}
+	
+				return null;
+	
+			}).filter((a) => a).reduce((prev, curr) => ({...prev, ...(curr ? {[curr.key]: curr.value} : {}) }), {})
+
+
+
 
 			if(templateInputs){
 				nodeInputValues.current.values[node.id] = {...templateInputs}
 
+			}
+			if(templateOutputs){
+				nodeOutputValues.current.values[node.id] = {...templateOutputs}
 			}
 		})
 		
@@ -154,7 +178,7 @@ export const useNodesWithValues = (
 
 			try{
 				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
-				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, updateValues, optionKey, optionValue)
+				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
 			}catch(e){
 				console.log({e, node, optionKey});
 			}
@@ -181,7 +205,7 @@ export const useNodesWithValues = (
 }
 
 
-export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
+export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, templateOutputs: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
     
 
     const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
@@ -283,6 +307,17 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 			//onClick uses a handler to setup showWindow, the values are bound to templateValues at that point in time
 			returnValue = (...args: any[]) => exports?.handler?.({x: node.x, y: node.y, width: node.width, height: node.height}, templateValues.values[node.id] || {}, (state: any) => { 
 				
+				let rectifiedState : any = {};
+
+				let keys = Object.keys(state)
+
+				keys.forEach((key) => {
+					if(templateOutputs.values[node.id]?.[key]){
+						rectifiedState[templateOutputs.values[node.id][key]] = state[key]
+					}
+				})
+
+				setValues(rectifiedState)
 				//TODO map this state back over the template input to create a real state update
 				console.log("setState", state)
 			
