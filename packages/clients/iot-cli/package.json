@@ -5,6 +5,9 @@
   "files": [
     "dist/"
   ],
+  "publishConfig": {
+    "access" :"public"
+  },
   "main": "dist/index.js",
   "bin": {
     "iot-cli": "dist/cli.js"
