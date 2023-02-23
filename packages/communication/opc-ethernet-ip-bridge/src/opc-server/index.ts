@@ -91,7 +91,7 @@ export const addTag = async (
                     return getter(key) || defaultValue
                 }, (value) => {
                     if(value.BYTES_PER_ELEMENT != undefined) value = Array.from(value);
-                    
+
                     setter(value, key)
 
                 }, undefined, rootObject);
@@ -146,6 +146,9 @@ export const addTag = async (
     }
  
     if(dataType != OPC_TYPE.Structure){
-        await server.addVariable(tagname, dataType, isArray, _getter, setter, parent)
+        await server.addVariable(tagname, dataType, isArray, _getter, (value) => {
+            if(value.BYTES_PER_ELEMENT) value = Array.from(value);
+            setter(value)
+        }, parent)
     }
 }
