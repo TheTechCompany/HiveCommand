@@ -6,7 +6,9 @@ export const Loader = async (base_url: string, start: string) => {
 
     let baseRequirements = {
         react: require('react'),
-        ['@mui/material']: require('@mui/material')
+        '@mui/icons-material': require('@mui/icons-material'),
+	    '@mui/x-date-pickers': require('@mui/x-date-pickers'),
+        '@mui/material': require('@mui/material')
     }
 
     let requirementFetch : any[] = [];
