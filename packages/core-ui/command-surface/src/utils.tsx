@@ -34,6 +34,7 @@ export const getDevicesForNode = (node: any): DevicePlaceholder[] => {
 
 const moduleStore = {
 	'@mui/material': require('@mui/material'),
+	'@mui/icons-material': require('@mui/icons-material'),
 	'@mui/x-date-pickers': require('@mui/x-date-pickers'),
 	'@hexhive/ui': require('@hexhive/ui')
 }
