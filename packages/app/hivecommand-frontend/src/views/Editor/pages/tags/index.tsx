@@ -17,6 +17,8 @@ const filter = createFilterOptions();
 
 export const TagEditor = (props: any) => {
 
+    const [ search, setSearch ] = useState('');
+
     const { program, tags, types: extraTypes } = props;
 
     const createTag = useCreateTag();
@@ -78,6 +80,12 @@ export const TagEditor = (props: any) => {
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+            <TextField 
+                label="Search" 
+                size="small" 
+                value={search} 
+                fullWidth
+                onChange={(e) => setSearch(e.target.value)} />
             <TableContainer>
                 <Table stickyHeader>
                     <TableHead sx={{bgcolor: 'secondary.main'}}>
@@ -91,8 +99,13 @@ export const TagEditor = (props: any) => {
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{overflowY: 'auto'}}>
-                        {tagState.map((tag) => (
-                            <TableRow>
+                        {tagState.slice()?.filter((a) => {
+                            if(search && search.length > 0){
+                                return a.name?.indexOf(search) > -1
+                            }
+                            return true;
+                        })?.sort((a, b) => a.name?.localeCompare(b.name)).map((tag) => (
+                            <TableRow key={tag.id || tag.name}>
                                 <TableCell sx={{padding: '6px'}}>
                                     <TextField 
                                         // sx={{lineHeight: '1em', fontSize: '0.8rem'}}
