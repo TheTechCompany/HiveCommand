@@ -119,7 +119,7 @@ export const OPCUAServerStage = () => {
 
 
     const renderTree = (items: OPCUAServerItem[], edit?: boolean, parent?: any) => {
-        return items.map((item) => (
+        return items.slice()?.sort((a, b) => a.name?.localeCompare(b.name)).map((item) => (
             <TreeItem 
                 ContentComponent={forwardRef((props, ref) => {
 
@@ -280,9 +280,6 @@ export const OPCUAServerStage = () => {
     , [controlLayout?.tags || []])
 
 
-    const opcuaTree = useMemo(() => {
-        return renderTree(opcua)
-    }, [opcua])
 
     // const deviceTree = useMemo(() => {
     //     return renderTree(devices, true)
@@ -364,7 +361,7 @@ export const OPCUAServerStage = () => {
                     <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                         <Box>
-                            {tags.map((tag: any) => (
+                            {tags.slice()?.sort((a,b) => a.name?.localeCompare(b.name)).map((tag: any) => (
                                 <Box sx={{display: 'flex', flexDirection: 'column'}}>
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                       
