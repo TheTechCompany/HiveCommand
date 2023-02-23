@@ -89,7 +89,12 @@ export const addTag = async (
 
                 await addTag(server, key, structure?.[key], () => {
                     return getter(key) || defaultValue
-                }, (value) => setter(value, key), undefined, rootObject);
+                }, (value) => {
+                    if(value.BYTES_PER_ELEMENT != undefined) value = Array.from(value);
+                    
+                    setter(value, key)
+
+                }, undefined, rootObject);
             }
 
             // await server.addVariable(key, getOPCType(structure?.[key] || ''), )
