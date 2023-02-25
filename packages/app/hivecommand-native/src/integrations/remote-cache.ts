@@ -1,5 +1,5 @@
 import React from 'react';
-import { RemoteComponentCache, RemoteComponent } from "@hive-command/command-surface";
+import { RemoteComponentCache, RemoteComponent } from "@hive-command/remote-components";
 import { BaseDirectory, readTextFile, writeTextFile } from "@tauri-apps/api/fs";
 import { useEffect, useState } from "react";
 

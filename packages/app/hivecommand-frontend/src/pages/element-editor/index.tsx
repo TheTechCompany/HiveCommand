@@ -1,7 +1,7 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { InfiniteCanvas } from "@hexhive/ui";
 import { Box, Button, Divider, IconButton, InputAdornment, List, ListItem, Menu, MenuItem, Paper, TextField, Typography } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { HMINodeFactory } from "@hive-command/canvas-nodes";
 
@@ -13,8 +13,7 @@ import { useMutation } from "@apollo/client";
 import { ElementEditorProvider } from "./context";
 import { PreviewView } from "./views/preview";
 import { CodeView } from "./views/code";
-import { AsyncLoader } from "../../views/Editor/components/async-loader";
-import { useRemote } from "../../views/Editor/components/async-loader/loader";
+import { useRemoteComponents } from "@hive-command/remote-components";
 
 // import { System } from 'systemjs'
 
@@ -65,7 +64,12 @@ export const ElementEditor = (props) => {
 
     const url = "https://raw.githubusercontent.com/TheTechCompany/hive-command-elements/master/dist/";
 
-    const { Component, componentList } = useRemote(url, `index.js`)
+    const { getPack } = useRemoteComponents();
+
+    useMemo(() => {
+        getPack('command-elements', url, 'index.js')
+    }, [url])
+
 
     const client = useApolloClient()
 
@@ -97,7 +101,7 @@ export const ElementEditor = (props) => {
             width: 50,
             height: 50,
             name: "Test",
-            Component: Component[selected]
+            // Component: Component[selected]
         })
     }, [selected])
 

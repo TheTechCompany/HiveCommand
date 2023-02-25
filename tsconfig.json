@@ -19,6 +19,8 @@
 		"@types/react": ["../node_modules/@types/react"],
 		"node-opcua": ["../node_modules/node-opcua"],
 
+		"@hive-command/remote-components": ["../core-ui/command-remote-components"],
+
 		"@hexhive/ui": ["../node_modules/@hexhive/ui"],
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],

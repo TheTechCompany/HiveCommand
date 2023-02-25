@@ -68,6 +68,7 @@
     "@hive-command/canvas-nodes": "^1.4.15-alpha.187",
     "@hive-command/command-surface": "^1.4.15-alpha.187",
     "@hive-command/data-types": "^1.4.15-alpha.52",
+    "@hive-command/remote-components": "^1.0.0",
     "@hive-command/scripting": "^1.4.15-alpha.187",
     "@monaco-editor/react": "^4.4.6",
     "@mui/icons-material": "^5.6.2",
