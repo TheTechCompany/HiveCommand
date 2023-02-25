@@ -46,7 +46,7 @@ export class MQTTPublisher {
 
         const authSect = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
 
-        if((this.options.reconnectOptions?.maxAttempts || 0) > 0){
+        if((this.options.reconnectOptions?.maxAttempts || 0) > 0 && attempt >= ( this.options.reconnectOptions?.maxAttempts || 0 ) ){
             throw new Error('Maximum amqp reconnection attempts exceeded');
         }
 
