@@ -44,7 +44,11 @@ io.on('connection', (socket) => {
 //     sidecar.publish_data(data.key, data.value);
 // });
 
-let subscriptions : {events: EventEmitter, paths: {tag: string, path: string}[], unsubscribe: () => void} | undefined = undefined;
+let subscriptions : {
+    events: EventEmitter, 
+    paths: {tag: string, path: string}[], 
+    unsubscribe?: () => void
+} | undefined = undefined;
 
 
 const dataChanged = (data: any) => {
@@ -123,7 +127,7 @@ app.post('/:host/subscribe', async (req, res) => {
         try{
             const client = await sidecar.connect(req.params.host)
 
-            const {emitter: events, unsubscribe} = await sidecar.subscribe(client, subscriptionMap || [])
+            const {emitter: events, unsubscribe} = await sidecar.subscribe(subscriptionMap || [])
 
             console.log("Subscribed to", subscriptionMap)
 
@@ -150,7 +154,7 @@ app.post('/:host/unsubscribe', async (req, res) => {
         const {events: eventEmitter, unsubscribe} = subscriptions;
 
         eventEmitter.removeListener('data-changed', dataChanged);
-        unsubscribe()
+        unsubscribe?.()
     }catch(e: any){
         return res.send({error: e.message})
     }

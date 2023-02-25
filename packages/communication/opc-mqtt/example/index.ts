@@ -12,7 +12,7 @@ import { MQTTPublisher } from "../src";
         // onMessage: (message) => console.log({message})
     })
     
-    await publisher.setup()
+    await publisher.connect()
 
     console.log("Connected")
 

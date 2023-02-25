@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "tsc -b",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "dependencies": {
     "amqplib": "^0.10.3"
@@ -19,6 +19,7 @@
   "devDependencies": {
     "@types/amqplib": "^0.10.1",
     "dotenv": "^16.0.3",
+    "jest": "27.x",
     "typescript": "^4.9.5"
   },
   "author": "",
