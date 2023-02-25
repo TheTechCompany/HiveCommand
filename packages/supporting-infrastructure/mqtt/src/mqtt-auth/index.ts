@@ -5,7 +5,7 @@ import { RabbitMQService } from "./service"
 import * as aws from '@pulumi/aws'
 import * as k8s from '@pulumi/kubernetes'
 
-export default async (provider: Provider, dbUrl: any, dbPass: any, ns: k8s.core.v1.Namespace) => {
+export const MQTTAuth = async (provider: Provider, dbUrl: any, dbPass: any, ns: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 

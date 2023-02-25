@@ -5,7 +5,7 @@ import { Service } from './service'
 import { Config, Input, Output } from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 
-export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1.Namespace, dbUrl: Output<any>, dbPass: Output<any>, discoveryUrl: string, rabbitHost: Output<any>, iotEndpoint: string) => {
+export const DiscoveryServer = async (provider: Provider, namespace: k8s.core.v1.Namespace, dbUrl: Output<any>, dbPass: Output<any>, discoveryUrl: string, rabbitHost: Output<any>, iotEndpoint: Output<any>) => {
 
     const config = new Config();
 

@@ -6,7 +6,7 @@ import * as aws from '@pulumi/aws'
 import * as k8s from '@pulumi/kubernetes'
 import { RabbitMQPersistence } from "./persistence";
 
-export default async (provider: Provider, vpcId: Output<any>, zoneId: Input<string>, domainName: string, authApi: Output<string>, ns: k8s.core.v1.Namespace) => {
+export const MQTT = async (provider: Provider, vpcId: Output<any>, zoneId: Input<string>, domainName: string, authApi: Output<string>, ns: k8s.core.v1.Namespace) => {
 
     const config = new Config();
 

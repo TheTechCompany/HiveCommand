@@ -1,0 +1,5 @@
+config:
+  aws-native:region: ap-southeast-2
+  hivecommand-mqtt:mqttEndpoint: iot.hexhive.io
+  hivecommand-mqtt:org: ultraviolet
+  hivecommand-mqtt:suffix: prod

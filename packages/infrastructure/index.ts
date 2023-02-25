@@ -9,8 +9,7 @@ import { Service } from './src/service'
 // import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
-import MQTT from './src/mqtt';
-import MQTTAuth from './src/mqtt-auth';
+
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -25,8 +24,12 @@ const main = (async () => {
     const suffix = config.require('suffix');
 
     const stackRef = new pulumi.StackReference(`${org}/base-infrastructure/prod`)
+    
     const dbRef = new pulumi.StackReference(`${org}/hexhive-db/db-${suffix}`)
+
     const gatewayRef = new pulumi.StackReference(`${org}/apps/${suffix}`)
+
+    const mqttRef = new pulumi.StackReference(`${org}/hivecommand-mqtt`);
 
     const vpcId = stackRef.getOutput('vpcId');
 
@@ -41,6 +44,9 @@ const main = (async () => {
     const mongoUrl = dbRef.getOutput('mongo_url');
     const dbPass = dbRef.getOutput('postgres_pass');
 
+    const internalURL = mqttRef.getOutput('internalURL');
+    const externalURL = mqttRef.getOutput('externalURL');
+
     const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
     const provider = new Provider('eks', { kubeconfig });
@@ -54,15 +60,11 @@ const main = (async () => {
     })
     
 
-    const { url } = await MQTTAuth(provider, dbUrl, dbPass, namespace)
-
-    const mqttServer = await MQTT(provider, vpcId, hexhiveZone.zoneId, config.require('mqttEndpoint'), url, namespace)
-    
     // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
-    const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, mqttServer.endpoint)
+    const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 
-    const mqttURL = `amqp://${process.env.IOT_USER}:${process.env.IOT_PASS}@${mqttServer.endpoint}`
+    const mqttURL = internalURL.apply(url => `amqp://${process.env.IOT_USER}:${process.env.IOT_PASS}@${url}`)
 
     const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, mqttURL));
     const service = await Service(provider)
