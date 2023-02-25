@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/iot-cli",
-  "version": "1.4.15-alpha.185",
+  "version": "1.4.15-alpha.186",
   "description": "",
   "files": [
     "dist/"
@@ -22,7 +22,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@hive-command/opcua-mqtt-client": "^1.4.15-alpha.185",
+    "@hive-command/opcua-mqtt-client": "^1.4.15-alpha.186",
     "axios": "^1.3.3",
     "loglevel": "^1.8.1"
   }
