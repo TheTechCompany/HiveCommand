@@ -108,15 +108,17 @@ export class ValueStore {
                 if (typeof (this.values[valueKey]) === "object" && !Array.isArray(this.values[valueKey])) {
 
                     Object.keys(this.values[valueKey]).map((subValueKey) => {
-                        if (!isEqual(old_values[valueKey]?.[subValueKey], this.values[valueKey]?.[subValueKey])) {
-                            //TODO, go deeper
-                            changed_keys.push({ key: valueKey, value: {[subValueKey]: this.values[valueKey]?.[subValueKey]} })
+                        if(this.values[valueKey]?.[subValueKey] != undefined && this.values[valueKey]?.[subValueKey] != null){
+                            if ((old_values[valueKey]?.[subValueKey] == null || old_values[valueKey]?.[subValueKey] == undefined) || !isEqual(old_values[valueKey]?.[subValueKey], this.values[valueKey]?.[subValueKey])) {
+                                //TODO, go deeper
+                                changed_keys.push({ key: valueKey, value: {[subValueKey]: this.values[valueKey]?.[subValueKey]} })
+                            }
                         }
                     })
-                    
+
 
                 } else {
-                    if (!isEqual(old_values[valueKey], this.values[valueKey])) {
+                    if ((old_values[valueKey] == null || old_values[valueKey] == undefined) || !isEqual(old_values[valueKey], this.values[valueKey])) {
                         //TODO, go deeper
                         changed_keys.push({ key: valueKey, value: this.values[valueKey] })
                     }
