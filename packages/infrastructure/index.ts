@@ -29,7 +29,7 @@ const main = (async () => {
 
     const gatewayRef = new pulumi.StackReference(`${org}/apps/${suffix}`)
 
-    const mqttRef = new pulumi.StackReference(`${org}/hivecommand-mqtt`);
+    const mqttRef = new pulumi.StackReference(`${org}/hivecommand-mqtt/mqtt-${suffix}`);
 
     const vpcId = stackRef.getOutput('vpcId');
 
@@ -47,7 +47,7 @@ const main = (async () => {
     const internalURL = mqttRef.getOutput('internalURL');
     const externalURL = mqttRef.getOutput('externalURL');
 
-    const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
+    // const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
     const provider = new Provider('eks', { kubeconfig });
 
@@ -58,9 +58,6 @@ const main = (async () => {
     }, {
         provider
     })
-    
-
-    // const { deployment: syncServer } = await SyncServer(provider, dbUrl, dbPass, rabbitURL, mongoUrl, namespace)
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 

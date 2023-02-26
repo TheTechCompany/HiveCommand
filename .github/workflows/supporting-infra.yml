@@ -98,7 +98,7 @@ jobs:
 
       - name: Setup stack
         run: |
-          echo "STACK_NAME=ultraviolet/hivecommand-mqtt" >> $GITHUB_ENV      
+          echo "STACK_NAME=ultraviolet/hivecommand-mqtt/mqtt-prod" >> $GITHUB_ENV      
         if: ${{ github.ref == 'refs/heads/master' }}
 
 
