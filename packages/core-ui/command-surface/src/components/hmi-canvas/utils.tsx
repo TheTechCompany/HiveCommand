@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRemoteComponents } from "../../hooks/remote-components";
+import { useRemoteComponents } from "@hive-command/remote-components";
 import {compile, templateSettings, template} from 'dot'
 import { HMINode } from '../../';
 import {transpile, ModuleKind } from 'typescript'
