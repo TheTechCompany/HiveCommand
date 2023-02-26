@@ -15,7 +15,7 @@ export const baseRequirements : {[key: string]: any } = {
     '@hexhive/ui': require('@hexhive/ui')
 }
 
-const Loader = async (base_url: string, start: string) => {
+export const Loader = async (base_url: string, start: string) => {
     let url = base_url + start;
 
     let requirementFetch: any[] = [];
@@ -55,9 +55,6 @@ const Loader = async (base_url: string, start: string) => {
     return module.exports;
 }
 
-export {
-    Loader
-}
 
 export const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
