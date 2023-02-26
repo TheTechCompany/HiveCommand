@@ -6,7 +6,7 @@ import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINo
 import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
-import { useRemoteComponents } from '../../hooks/remote-components';
+import { useRemoteComponents } from '@hive-command/remote-components';
 import { PipePathFactory } from "@hexhive/ui";
 import { DeviceControlContext } from '../../context';
 

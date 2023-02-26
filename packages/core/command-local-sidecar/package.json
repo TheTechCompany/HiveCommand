@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-sidecar",
-  "version": "1.4.15-alpha.188",
+  "version": "1.4.15-alpha.189",
   "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
@@ -27,9 +27,9 @@
   },
   "dependencies": {
     "@hive-command/opcua-client": "^1.4.15-alpha.172",
-    "@hive-command/opcua-mqtt": "^1.4.15-alpha.188",
-    "@hive-command/opcua-mqtt-client": "^1.4.15-alpha.188",
-    "@hive-command/scripting": "^1.4.15-alpha.188",
+    "@hive-command/opcua-mqtt": "^1.4.15-alpha.189",
+    "@hive-command/opcua-mqtt-client": "^1.4.15-alpha.189",
+    "@hive-command/scripting": "^1.4.15-alpha.189",
     "body-parser": "^1.20.1",
     "express": "^4.18.2",
     "lodash": "^4.17.21",

@@ -48,5 +48,4 @@ const prisma = new PrismaClient();
     internalAuthApi.listen(8005, async () => {
         console.log("Internal API up on 8005");
     });
-
 })()

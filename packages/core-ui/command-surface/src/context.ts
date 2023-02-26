@@ -1,6 +1,6 @@
 import React from 'react';
 import { CommandSurfaceClient, HMIDevice, HMINode, HMIProgram, HMITag, HMIType, HMIView } from '.';
-import { RemoteComponentCache } from './hooks/remote-components';
+import { RemoteComponentCache } from '@hive-command/remote-components';
 
 export const DeviceControlContext = React.createContext<{
 	// controlId?: string;
