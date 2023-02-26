@@ -103,7 +103,7 @@ export class ValueStore {
 
         Object.keys(this.values).forEach((valueKey) => {
 
-            if(this.values[valueKey]){
+            if(this.values[valueKey] != undefined && this.values[valueKey] != null){
 
                 if (typeof (this.values[valueKey]) === "object" && !Array.isArray(this.values[valueKey])) {
 
