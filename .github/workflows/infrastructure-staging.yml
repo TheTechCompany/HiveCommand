@@ -182,7 +182,7 @@ jobs:
   push_infra:
     name: Update Pulumi Infra
     runs-on: ubuntu-latest
-    needs: [build_server, build_gds, build_mqtt_auth_server, build_coreapps]
+    needs: [build_server, build_gds, build_coreapps]
     env:
       COMMAND_MONGO_URL: ${{ secrets.COMMAND_MONGO_URL }}
       COMMAND_MONGO_DB: ${{ secrets.COMMAND_MONGO_DB }}
@@ -269,7 +269,7 @@ jobs:
   deploy-db:
     name: Deploy DB Migration
     runs-on: ubuntu-latest
-    needs: [build_coreapps, build_gds, build_mqtt_auth_server, build_server]
+    needs: [build_coreapps, build_gds, build_server]
     env:
       PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}  
     steps: 
