@@ -43,7 +43,7 @@ export class MQTTClient {
 
     private mqttPublisher?: MQTTPublisher;
 
-    private options?: SidecarOptions;
+    options?: SidecarOptions;
     // private sessions : {[key: string]: ClientSession} = {};
 
     private valueStore: ValueStore;
@@ -61,6 +61,10 @@ export class MQTTClient {
             types: config?.types
         }, this.runner)
 
+    }
+
+    get values(){
+        return this.valueStore.values
     }
 
     async start(){
@@ -94,6 +98,14 @@ export class MQTTClient {
         console.log("Set Data Done")
 
         return statusCode?.value;
+    }
+
+    async setTag(key: string, value: any){
+        const setTags = await this.runner.setTag(this.valueStore.values, key, value)
+
+        await Promise.all((setTags || []).map(async (tags) => {
+            await this.setData(tags.tag, tags.dataType, tags.value)
+        }))
     }
 
 
@@ -241,7 +253,7 @@ export class MQTTClient {
         })
 
         try {
-            await this.mqttPublisher.setup()
+            await this.mqttPublisher.connect()
         } catch (e) {
             console.log({ e })
         }
@@ -257,8 +269,8 @@ export class MQTTClient {
                 console.log("SET TAG", key, value)
                 const setTags = await this.runner.setTag(this.valueStore.values, key, value)
 
-                await Promise.all((setTags || []).map((tags) => {
-                    this.setData(tags.tag, tags.dataType, tags.value)
+                await Promise.all((setTags || []).map(async (tags) => {
+                    await this.setData(tags.tag, tags.dataType, tags.value)
                 }))
 
 

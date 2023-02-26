@@ -69,7 +69,7 @@ describe('Native Sidecar', () => {
                 }
             };
 
-            const { emitter } = await sidecar.subscribe((sidecar as any).client, [{ tag: 'AV101.Open', path: '/1:AV101/1:Open' }])
+            const { emitter } = await sidecar.subscribe([{ tag: 'AV101.Open', path: '/1:AV101/1:Open' }])
 
             emitter.on('data-changed', (data) => {
                 resolve(data.key === 'AV101.open' && data.value == true)
