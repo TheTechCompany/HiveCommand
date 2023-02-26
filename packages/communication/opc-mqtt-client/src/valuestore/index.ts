@@ -113,6 +113,7 @@ export class ValueStore {
                             changed_keys.push({ key: valueKey, value: {[subValueKey]: this.values[valueKey]?.[subValueKey]} })
                         }
                     })
+                    
 
                 } else {
                     if (!isEqual(old_values[valueKey], this.values[valueKey])) {
