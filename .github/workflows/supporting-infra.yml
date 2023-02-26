@@ -1,4 +1,4 @@
-name: HiveCommand Staging Infrastructure
+name: HiveCommand Supporting Infrastructure
 
 on:
   push:
