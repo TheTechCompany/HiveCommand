@@ -20,6 +20,7 @@ const main = (async () => {
 
     const kubeconfig = stackRef.getOutput('k3sconfig');
     const vpcId = stackRef.getOutput('vpcId');
+    
     const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
 
