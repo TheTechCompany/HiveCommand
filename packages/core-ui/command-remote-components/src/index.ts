@@ -7,7 +7,7 @@ export interface RemoteComponent {
 
 export type RemoteComponentCache = [packs: { [key: string]: RemoteComponent[] }, setPacks: (packs: { [key: string]: RemoteComponent[] }) => void]
 
-export const baseRequirements : {[key: string]: any } = {
+ const baseRequirements : any = {
     react: require('react'),
     '@mui/material': require('@mui/material'),
     '@mui/x-date-pickers': require('@mui/x-date-pickers'),
@@ -15,11 +15,12 @@ export const baseRequirements : {[key: string]: any } = {
     '@hexhive/ui': require('@hexhive/ui')
 }
 
-export const Loader = async (base_url: string, start: string) => {
+const Loader = async (base_url: string, start: string) => {
     let url = base_url + start;
 
     let requirementFetch: any[] = [];
     const _initialRequire = (name: string) => {
+        console.log({name, baseRequirements})
         if (!(name in baseRequirements)) {
 
             requirementFetch.push((async () => {
@@ -56,7 +57,7 @@ export const Loader = async (base_url: string, start: string) => {
 }
 
 
-export const useRemoteComponents = (cache?: RemoteComponentCache) => {
+const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
     const [packs, setPacks] = cache ? cache : useState<{ [key: string]: RemoteComponent[] }>({});
 
@@ -90,7 +91,9 @@ export const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
                 return Object.keys(data).map((x) => ({ name: x, component: data[x] }))
             } catch (e) {
-                console.log({ e, base_url, url })
+                console.log(e);
+
+                // console.log({ e, base_url, url })
                 lock.current[id] = undefined;
 
             }
@@ -102,4 +105,10 @@ export const useRemoteComponents = (cache?: RemoteComponentCache) => {
     return {
         getPack
     }
+}
+
+export {
+    useRemoteComponents,
+    Loader,
+    baseRequirements
 }

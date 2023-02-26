@@ -19,16 +19,16 @@
 		"@types/react": ["../node_modules/@types/react"],
 		"node-opcua": ["../node_modules/node-opcua"],
 
-		"@hive-command/remote-components": ["../core-ui/command-remote-components"],
+		"@hive-command/remote-components": ["../core-ui/command-remote-components/src"],
 
 		"@hexhive/ui": ["../node_modules/@hexhive/ui"],
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
 		
-		"@hive-command/rabbitmq-auth": ["./communication/opc-mqtt-auth"],
-		"@hive-command/opcua-mqtt-hub": ["./communication/opc-mqtt-hub"],
-		"@hive-command/opcua-mqtt-client": ["./communication/opc-mqtt-client"],
-		"@hive-command/opcua-mqtt": ["./communication/opc-mqtt"],
+		"@hive-command/rabbitmq-auth": ["./communication/opc-mqtt-auth/src"],
+		"@hive-command/opcua-mqtt-hub": ["./communication/opc-mqtt-hub/src"],
+		"@hive-command/opcua-mqtt-client": ["./communication/opc-mqtt-client/src"],
+		"@hive-command/opcua-mqtt": ["./communication/opc-mqtt/src"],
 		/* Core UI */
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
