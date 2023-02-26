@@ -9,8 +9,6 @@ const prisma = new PrismaClient();
 
 (async () => {
 
-
-
     const mqttAuth = MQTTAuth(async (user, pass) => {
         console.log("MQTT Auth", user, pass);
 
