@@ -101,6 +101,7 @@
   "exclude": ["dist/", "*.test.ts"],
   "references": [
     {"path": "../../communication/opc-mqtt"},
+    {"path": "../../communication/opc-mqtt-client"},
     {"path": "../../communication/opc-client"},
     {"path": "../command-scripting"}
   ]
