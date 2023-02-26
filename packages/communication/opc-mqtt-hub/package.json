@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-mqtt-hub",
-  "version": "1.4.15-alpha.188",
+  "version": "1.4.15-alpha.189",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
-    "@hive-command/data": "^1.4.15-alpha.188",
+    "@hive-command/data": "^1.4.15-alpha.189",
     "@types/amqplib": "^0.10.1",
     "dotenv": "^16.0.3",
     "typescript": "^4.9.4"
