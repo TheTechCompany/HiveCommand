@@ -14,6 +14,7 @@
     {"path": "../../core-ui/command-canvas-nodes"},
     {"path": "../hivecommand-api"},
     {"path": "../../core-ui/command-surface"},
+    {"path": "../../core-ui/command-remote-components"},
     {"path": "../../core/command-data-types"},
     {"path": "../../core/command-scripting"}
   ]

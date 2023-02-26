@@ -105,6 +105,7 @@
   "exclude": ["jest.config.js", "**/**.test.ts", "node_modules/"],
   "references": [
     {"path": "../command-canvas-nodes"},
+    {"path": "../command-remote-components"},
     {"path": "../../core/command-scripting"}
   ]
 }

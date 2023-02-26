@@ -5,22 +5,22 @@ export interface RemoteComponent {
     component: JSX.Element;
 }
 
-export type RemoteComponentCache = [ packs: {[key: string]: RemoteComponent[]},  setPacks: (packs: {[key: string]: RemoteComponent[]}) => void ]
+export type RemoteComponentCache = [packs: { [key: string]: RemoteComponent[] }, setPacks: (packs: { [key: string]: RemoteComponent[] }) => void]
+
+export const baseRequirements : {[key: string]: any } = {
+    react: require('react'),
+    '@mui/material': require('@mui/material'),
+    '@mui/x-date-pickers': require('@mui/x-date-pickers'),
+    '@mui/icons-material': require('@mui/icons-material'),
+    '@hexhive/ui': require('@hexhive/ui')
+}
 
 const Loader = async (base_url: string, start: string) => {
     let url = base_url + start;
 
-    let baseRequirements : any = {
-        react: require('react'),
-        '@mui/material': require('@mui/material'),
-        '@mui/x-date-pickers': require('@mui/x-date-pickers'),
-        '@mui/icons-material': require('@mui/icons-material'),
-        '@hexhive/ui': require('@hexhive/ui')
-    }
-
-    let requirementFetch : any[] = [];
+    let requirementFetch: any[] = [];
     const _initialRequire = (name: string) => {
-        if(!(name in baseRequirements)){
+        if (!(name in baseRequirements)) {
 
             requirementFetch.push((async () => {
                 const m_name = name;
@@ -33,7 +33,7 @@ const Loader = async (base_url: string, start: string) => {
 
     const _requires = (name: string) => {
 
-        if(!(name in baseRequirements)){
+        if (!(name in baseRequirements)) {
 
         }
         return baseRequirements[name]
@@ -55,50 +55,50 @@ const Loader = async (base_url: string, start: string) => {
     return module.exports;
 }
 
-export { 
+export {
     Loader
 }
 
 export const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
-    const [ packs, setPacks ] = cache ? cache : useState<{[key: string]: RemoteComponent[]}>({});
+    const [packs, setPacks] = cache ? cache : useState<{ [key: string]: RemoteComponent[] }>({});
 
     const lock = useRef<any>({})
 
     const getPack = async (id: string, base_url: string, url: string) => {
 
-        if(packs[id] || lock.current[id]){
+        if (packs[id] || lock.current[id]) {
 
-            if(lock.current[id] instanceof Promise){
+            if (lock.current[id] instanceof Promise) {
                 let data = await lock.current[id]
-                return Object.keys(data).map((x) => ({name: x, component: data[x]}));
+                return Object.keys(data).map((x) => ({ name: x, component: data[x] }));
 
-            }else{
+            } else {
                 return packs[id];
             }
-        }else{
+        } else {
 
-            try{
+            try {
                 let loader = Loader(base_url, `${url}?now=${Date.now()}`)
                 lock.current[id] = loader;
-                
-                const data : any = await loader
+
+                const data: any = await loader
 
                 setPacks({
                     ...packs,
-                    [id]: Object.keys(data).map((x) => ({name: x, component: data[x]}))
+                    [id]: Object.keys(data).map((x) => ({ name: x, component: data[x] }))
                 })
 
                 lock.current[id] = undefined;
-     
-                return Object.keys(data).map((x) => ({name: x, component: data[x]}))
-            }catch(e){
-                console.log({e, base_url, url})
+
+                return Object.keys(data).map((x) => ({ name: x, component: data[x] }))
+            } catch (e) {
+                console.log({ e, base_url, url })
                 lock.current[id] = undefined;
 
             }
         }
-    }   
+    }
 
     // console.log(RemoteComponent.current instanceof Function, {RemoteComponent: RemoteComponent.current}, typeof(RemoteComponent.current))
 

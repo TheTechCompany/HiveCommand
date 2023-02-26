@@ -14,9 +14,8 @@ import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
 
-import { useRemoteComponents } from '@hive-command/command-surface';
+import { useRemoteComponents } from '@hive-command/remote-components';
 
-import { PipePathFactory } from "@hexhive/ui";
 import { getOptionValues } from '@hive-command/command-surface/dist/utils';
 
 export const Controls = (props) => {

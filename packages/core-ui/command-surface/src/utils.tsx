@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HMINode, HMITag, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit } from 'typescript'
 import { template } from 'dot';
+import { baseRequirements } from '@hive-command/remote-components';
 
 export interface DevicePlaceholder {
 	tag: string,
@@ -32,14 +33,8 @@ export const getDevicesForNode = (node: any): DevicePlaceholder[] => {
 	}
 }
 
-const moduleStore = {
-	'@mui/material': require('@mui/material'),
-	'@mui/icons-material': require('@mui/icons-material'),
-	'@mui/x-date-pickers': require('@mui/x-date-pickers'),
-	'@hexhive/ui': require('@hexhive/ui')
-}
 const _require = (name: string) => {
-	return moduleStore[name];
+	return baseRequirements[name];
 }
 
 export const useNodesWithValues = (

@@ -23,14 +23,13 @@ import { DeviceReportModal } from './components/modals/device-report';
 import Control from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
-import { RemoteComponentCache, useRemoteComponents } from './hooks/remote-components';
+import { RemoteComponentCache, useRemoteComponents } from '@hive-command/remote-components';
 import { Header } from './components/Header';
 import { merge } from 'lodash'
 import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { getDeviceFunction } from './components/action-menu';
 import { DataTypes, parseValue } from '@hive-command/scripting';
 import { FieldValue } from './components/field-value';
-export * from './hooks/remote-components'
 
 
 export interface CommandSurfaceClient {

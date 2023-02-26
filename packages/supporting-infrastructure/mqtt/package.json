@@ -1,0 +1,13 @@
+{
+    "name": "hivecommand-mqtt",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^16"
+    },
+    "dependencies": {
+        "@pulumi/aws": "^5.30.0",
+        "@pulumi/aws-native": "^0.8.0",
+        "@pulumi/kubernetes": "^3.24.1",
+        "@pulumi/pulumi": "^3.0.0"
+    }
+}
