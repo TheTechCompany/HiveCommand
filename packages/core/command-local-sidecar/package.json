@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "build": "tsc -b && yarn package",
+    "build": "tsc -b",
     "package": "pkg package.json --output dist/sidecar",
     "test": "jest"
   },
