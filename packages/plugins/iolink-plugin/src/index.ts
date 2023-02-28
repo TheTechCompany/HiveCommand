@@ -63,6 +63,8 @@ export default class IOLinkPlugin extends BasePlugin {
 					
 						let device = this.masters.find((a) => a.id == subscription?.master)?.devices.find((a) => `${(a.ix + 1)}` == port)
 
+						console.log({port, device});
+
 						if(!device) return
 
 						const iodd : IODD = device.iodd;
@@ -72,7 +74,7 @@ export default class IOLinkPlugin extends BasePlugin {
 							return bits
 						})).reduce((prev, curr) => prev.concat(curr), []), iodd.gradient ? parseFloat(iodd.gradient) : 1)
 
-
+						console.log("FILTER", { port, device, data: filter(payload[k].data) })
 						// console.log({port, device, iodd: JSON.stringify(device.iodd.function.inputs), proc: filter(payload[k].data), data: payload[k].data})
 
 						this.emit('PORT:VALUE', {
