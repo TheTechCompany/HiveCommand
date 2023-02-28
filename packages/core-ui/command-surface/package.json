@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.190",
+	"version": "1.4.15-alpha.191",
 	"description": "",
 	"private": true,
 	"publishConfig": {
@@ -42,9 +42,9 @@
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
-		"@hive-command/canvas-nodes": "^1.4.15-alpha.190",
-		"@hive-command/remote-components": "^1.4.15-alpha.190",
-		"@hive-command/scripting": "^1.4.15-alpha.190",
+		"@hive-command/canvas-nodes": "^1.4.15-alpha.191",
+		"@hive-command/remote-components": "^1.4.15-alpha.191",
+		"@hive-command/scripting": "^1.4.15-alpha.191",
 		"dot": "^1.1.3"
 	}
 }
