@@ -55,11 +55,7 @@ export class MQTTClient {
 
         this.runner = new Runner(this, config);
 
-        this.valueStore = new ValueStore({
-            subscriptionMap: config?.subscriptionMap,
-            tags: config?.tags,
-            types: config?.types
-        }, this.runner)
+        this.valueStore = new ValueStore(this, this.runner)
 
     }
 
