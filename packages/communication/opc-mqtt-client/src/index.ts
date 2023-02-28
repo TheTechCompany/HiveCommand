@@ -141,8 +141,6 @@ export class MQTTClient {
                 console.log("Datachanged at the OPCUA level", { key, value: curr_value })
 
                 const changed_keys = this.valueStore.updateValue(key, curr_value)
-
-
                 
                 changed_keys.map((changed) => {
                     if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)

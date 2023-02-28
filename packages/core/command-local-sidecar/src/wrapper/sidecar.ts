@@ -1,14 +1,5 @@
-import { MQTTPublisher } from "@hive-command/opcua-mqtt";
-import OPCUAClient from "@hive-command/opcua-client";
-import { load_exports } from '../utils';
 import { SidecarConf } from "./conf";
-import { DataType } from "node-opcua";
-import ts, { ModuleKind } from "typescript";
-import { DataTypes, fromOPCType, parseValue } from "@hive-command/scripting";
-import { EventEmitter } from 'events';
-import { merge, isEqual } from 'lodash'
-
-import { MQTTClient } from '@hive-command/opcua-mqtt-client'
+import { MQTTClient } from '@hive-command/opcua-mqtt-client';
 
 export interface SidecarOptions {
 

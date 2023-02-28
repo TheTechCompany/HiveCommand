@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Input, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace, appName: any, appLabels: any, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, iotEndpoint: Output<any>) => {
+export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace, appName: any, appLabels: any, dbUrl: Output<any>, dbPass: Output<any>, redisURL: Output<any>, iotEndpoint: Output<any>) => {
 
     const config = new Config();
 
@@ -37,7 +37,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                             { name: "IOT_PASS", value: process.env.IOT_PASS },
                             { name: "IOT_EXCHANGE", value: process.env.IOT_EXCHANGE || 'device_values' },
                             { name: "IOT_SECRET", value: process.env.IOT_SECRET },
-                            { name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`) },
+                            { name: "REDIS_URL",  value: redisURL.apply(url => url) },
                             { name: "VERSION_SHIM", value: '1.0.10'},
                             // { name: 'REDIS_URL', value: redisUrl.apply(url => url)},
                             // { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`)},

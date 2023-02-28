@@ -70,6 +70,12 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=8192"
         run: npx lerna run build --scope @hive-command/local-sidecar --include-dependencies
 
+      - name: Package local-sidecar
+        env:
+          CI: false
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: npx lerna run package --scope @hive-command/local-sidecar
+        
       - name: Build
         env:
           CI: false
