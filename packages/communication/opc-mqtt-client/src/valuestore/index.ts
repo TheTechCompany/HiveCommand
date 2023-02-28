@@ -1,4 +1,5 @@
 import { isEqual, merge } from 'lodash';
+import { MQTTClient } from '..';
 import { Runner } from '../runner';
 
 export interface ValueStoreOptions {
@@ -11,24 +12,37 @@ export interface ValueStoreOptions {
 export class ValueStore {
     private internalStore : any = {};
 
-    private subscriptionMap?: {tag: string, path: string}[];
-    
-    private tags: any[];
-    private types: any[];
-
     private runner: Runner;
 
     values: any = {};
 
-    constructor(options: ValueStoreOptions, runner: Runner){
+    private mqttClient: MQTTClient;
+
+    constructor(mqttClient: MQTTClient, runner: Runner){
         this.runner = runner;
-        
-        this.subscriptionMap = options.subscriptionMap;
-        this.types = options.types || [];
-        this.tags = options.tags || [];
+        this.mqttClient = mqttClient;        
+    }
+
+    get options(){
+        return {
+            tags: this.mqttClient.options?.tags,
+            types: this.mqttClient.options?.types,
+            subscriptionMap: this.mqttClient.options?.subscriptionMap
+        }
+    }
+
+    get subscriptionMap(): {tag: string, path: string}[]{
+        return this.options?.subscriptionMap || []
+    }
+
+    get types(){
+        return this.options?.types || []
     }
 
 
+    get tags(){
+        return this.options?.tags || []
+    }
 
     updateValue(key: string, value: any) {
         this.internalStore = {
