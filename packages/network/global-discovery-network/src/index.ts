@@ -20,6 +20,8 @@ import { API } from './api';
         url: process.env.REDIS_URL ? `redis://${process.env.REDIS_URL}` : "redis://localhost:6379"
     })
 
+    await redisCli.connect();
+
     const alarmCenter = new AlarmCenter();
 
     const publishValue = async (deviceId: string, deviceName: string, value: any, key?: string ) => {
