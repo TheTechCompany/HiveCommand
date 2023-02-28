@@ -62,7 +62,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 								deviceId: root.id,
 								placeholder: r?.split(':')?.[0],
 								key: r?.split(':')?.[1],
-								value: result[r]
+								value: results?.[r]
 							}
 						})
 						// //Get data from mongocache
