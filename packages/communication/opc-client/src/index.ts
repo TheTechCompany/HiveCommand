@@ -27,7 +27,7 @@ export interface SubscriptionParams {
 const baseSubscriptionParams : SubscriptionParams = {
     samplingInterval: 500,
     discardOldest: true,
-    queueSize: 1
+    queueSize: 0
 }
 
 export default class Client {
@@ -49,7 +49,7 @@ export default class Client {
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
             requestedSessionTimeout: 60 * 1000, //10 minutes
-            // keepSessionAlive: true,
+            keepSessionAlive: true,
             connectionStrategy: {
                 maxRetry: 2,
                 initialDelay: 2000,
@@ -117,7 +117,10 @@ export default class Client {
     }
 
 
-    async subscribeMulti(targets: {path: string, tag: string}[], samplingInterval: number = 500){
+    async subscribeMulti(
+        targets: {path: string, tag: string}[], 
+        samplingInterval: number = 500,
+    ){
         let nodes : any[] = [];
         for (const x of targets){
             const path_id = await this.getPathID(x.path) || ''
