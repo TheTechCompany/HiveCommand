@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.194](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.193...v1.4.15-alpha.194) (2023-03-01)
+
+**Note:** Version bump only for package @hive-command/api
+
+
+
+
+
 ## [1.4.15-alpha.193](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.192...v1.4.15-alpha.193) (2023-02-28)
 
 **Note:** Version bump only for package @hive-command/api
