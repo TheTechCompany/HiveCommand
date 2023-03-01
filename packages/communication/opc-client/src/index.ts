@@ -32,7 +32,9 @@ const baseSubscriptionParams : SubscriptionParams = {
 
 export default class Client {
     private client: OPCUAClient;
+    
     private session?: ClientSession;
+    //TODO add extra session for writing value
 
     public monitors: {
         [key: string]: ClientMonitoredItem 
@@ -46,8 +48,8 @@ export default class Client {
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
-            requestedSessionTimeout: 10 * 60 * 1000, //10 minutes
-            keepSessionAlive: true,
+            requestedSessionTimeout: 60 * 1000, //10 minutes
+            // keepSessionAlive: true,
             connectionStrategy: {
                 maxRetry: 2,
                 initialDelay: 2000,
@@ -135,7 +137,10 @@ export default class Client {
         if(this.subscription){
             let s = this.subscription
 
-            const group =  ClientMonitoredItemGroup.create(s, items, {...baseSubscriptionParams, samplingInterval}, TimestampsToReturn.Both)
+            const group =  ClientMonitoredItemGroup.create(s, items, {
+                ...baseSubscriptionParams, 
+                samplingInterval
+            }, TimestampsToReturn.Both)
             return {
                 unsubscribe: () => {
                     group.terminate();
@@ -173,7 +178,10 @@ export default class Client {
 
 
         if(this.subscription){
-            const monitored = ClientMonitoredItem.create(this.subscription, item, {...baseSubscriptionParams, samplingInterval}, TimestampsToReturn.Both)
+            const monitored = ClientMonitoredItem.create(this.subscription, item, {
+                ...baseSubscriptionParams, 
+                samplingInterval
+            }, TimestampsToReturn.Both)
             return monitored
         }
     }

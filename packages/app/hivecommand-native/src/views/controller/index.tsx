@@ -77,7 +77,7 @@ export const Controller = () => {
 
             setValueStore((store) => ({
                 ...store,
-                [data.key]: (Object.keys(data.value).length > 0 && !Array.isArray(data.value)) ? {
+                [data.key]: (typeof(data.value) === 'object' && !Array.isArray(data.value)) ? {
                     ...store[data.key],
                     ...data.value,
                 } : data.value
