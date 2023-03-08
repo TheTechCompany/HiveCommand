@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "react": ["../../../node_modules/react"],
+      "react-dom": ["../../../node_modules/react-dom"],
+      "@mui/material": ["../../../node_modules/@mui/material"],
+      "@hive-command/remote-components": ["../command-remote-components/src"],
+      "@hive-command/canvas-nodes": ["../command-canvas-nodes/src"],
+      "@hive-command/scripting": ["../../core/command-scripting/src"]
+    }
+  },
+  "references": [
+    {
+      "path": "../command-canvas-nodes"
+    },
+    {
+      "path": "../command-remote-components"
+    },
+    {
+      "path": "../../core/command-scripting"
+    }
+  ]
+}

@@ -4,8 +4,6 @@
 	  "paths": {
 		"@hive-command/local-sidecar": ["./core/command-local-sidecar"],
 		"@mui/styled-engine": ["../node_modules/@mui/styled-engine"],
-		// "@mui/material": ["../node_modules/@mui/material"],
-		// "@mui/x-date-pickers": ["../node_modules/@mui/x-date-pickers"],
 
 		"@emotion/react": ["../node_modules/@emotion/react"],
 		"@emotion/styled": ["../node_modules/@emotion/styled"],
@@ -29,7 +27,6 @@
 		"@hive-command/opcua-mqtt-hub": ["./communication/opc-mqtt-hub/src"],
 		"@hive-command/opcua-mqtt-client": ["./communication/opc-mqtt-client/src"],
 		"@hive-command/opcua-mqtt": ["./communication/opc-mqtt/src"],
-		/* Core UI */
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
@@ -37,7 +34,6 @@
 
 		"@hive-command/scripting": ["./core/command-scripting/src"],
 
-		/* Runtime */
 		"@hive-command/data-types": ["./core/command-data-types/src"],
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],
 		"@hive-command/sms": ["./communication/sms-utils/src"],
@@ -47,25 +43,21 @@
 		"@hive-command/logging": ["./core/command-logging/src"],
 		"@hive-command/identity": ["./core/command-identity/src"],
 
-		/* Runtime plugins */
 		"@hive-command/plugin-iolink": ["./plugins/iolink-plugin/src"],
 		"@hive-command/plugin-revpi": ["./plugins/revpi-plugin/src"],
 		"@hive-command/plugin-base": ["./plugins/base-plugin/src"],
 
-		/* Discovery server */
 		"@hive-command/discovery-server": ["./network/hive-command-discovery-server/src"],
 	
-		/* OPCUA Libraries */
 		"@hive-command/opcua-lds": ["./network/opcua-lds/src"],
 		"@hive-command/opcua-server": ["./communication/opc-server/src"],
 		"@hive-command/opcua-client": ["./communication/opc-client/src"],
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
 		
-		/* IO-Link Libraries */
 		"@io-link/core": ["./communication/io-link-core/src"],
 		"@io-link/iodd": ["./communication/io-link-iodd/src"],
 		"@io-link/master-api": ["./communication/io-link-master-api/src"],
-		"@io-link/master-discovery": ["./communication/io-link-master-discovery/src"],
+		"@io-link/master-discovery": ["./communication/io-link-master-discovery/src"]
 	  }
 	}
 }

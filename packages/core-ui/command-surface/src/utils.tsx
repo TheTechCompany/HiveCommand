@@ -176,7 +176,7 @@ export const useNodesWithValues = (
 				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
 				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
 			}catch(e){
-				console.log({e, node, optionKey});
+				console.error("error parsing value", {e, node, optionKey});
 			}
 
 
@@ -288,7 +288,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		
 				}).reduce((prev, curr) => ({...prev, ...( curr ? {[curr.key]: curr.value} : {})}), {})
 	
-				console.log({ templateInputs, dataTransformer: node.dataTransformer, state })
+				// console.log({ templateInputs, dataTransformer: node.dataTransformer, state })
 	
 				return  data(templateInputs)
 			})
@@ -315,14 +315,14 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 
 				setValues(rectifiedState)
 				//TODO map this state back over the template input to create a real state update
-				console.log("setState", state)
+				// console.log("setState", state)
 			
 			}, args)
 		}else if('getter' in exports){
 			returnValue = exports?.getter?.( templateValues.values[node.id] /*normalisedValues*/ );
 		}
 
-		console.log("Template return value", optionKey, returnValue, templateValues.values[node.id])
+		// console.log("Template return value", optionKey, returnValue, templateValues.values[node.id])
 
 		// const
 

@@ -8,10 +8,15 @@
 	"files": [
 		"dist/"
 	],
+	"resolutions": {
+		"react": "17.0.2",
+		"@types/react": "17.0.39",
+		"react-dom": "17.0.2"
+	},
 	"license": "MIT",
 	"devDependencies": {
 		"@hexhive/styles": "^1.0.1-alpha.65",
-		"@hexhive/ui": "1.0.1-alpha.114",
+		"@hexhive/ui": "1.0.1-alpha.117",
 		"@types/react": "17.0.39",
 		"@types/styled-components": "^5.1.26",
 		"react": "17.0.2",
@@ -20,6 +25,7 @@
 	},
 	"peerDependencies": {
 		"@hexhive/styles": "^1.0.1-alpha.65",
-		"@hexhive/ui": "1.0.1-alpha.114"
+		"@hexhive/ui": "1.0.1-alpha.117",
+		"react": "17.x"
 	}
 }

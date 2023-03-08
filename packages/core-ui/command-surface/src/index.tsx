@@ -349,8 +349,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                 }}  />
                 }
 
-                // console.log({values, actions});
-
                 return <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px', justifyContent: (rightAction) ? 'space-between' : 'flex-start' }}>
                         {leftAction}
@@ -364,7 +362,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                 {Object.keys(values).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                         <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography>
-                                        {renderFieldValue(valueKey)}
+                                        {renderFieldValue(valueKey)} 
                                     </Box>
                                 ))}
                             </Box>
@@ -461,8 +459,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     ]
 
     const { getPack } = useRemoteComponents(props.cache)
-
-    console.log({ activeView, activePage })
 
     const { view, toolbarMenu } = useMemo(() => {
         const view = toolbar_menu.find((a) => {

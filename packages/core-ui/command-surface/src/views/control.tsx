@@ -315,9 +315,42 @@ export default () => {
 
 	// console.log({ hmiNodes, operatingMode, operatingModes })
 
-	console.log({values, hmi: hmi?.nodes})
 
+	const [ infoView, setInfoView ] = useState<any>(null)
 
+	useEffect(() => {
+
+		const DataComponent : any = infoTarget?.dataFunction;
+
+		// console.log("DC", DataComponent?.(stateValues));
+
+		const view = infoTarget != undefined ? 
+			(<Bubble
+				style={{ 
+					position: 'absolute', 
+					zIndex: 99, 
+					pointerEvents: 'all', 
+					display: 'flex',
+					flexDirection: 'column',
+					padding: '12px',
+					left: ((infoTarget?.x || 0) + (infoTarget?.width || 0)) + 6, 
+					top: ((infoTarget?.y || 0) + (infoTarget?.height || 0)) + (195 / 2),
+					
+				}}>
+					{/* {DataComponent?.(stateValues)} */}
+					<DataComponent {...stateValues} />
+					{/* {Object.keys(dataFunction).map((key) => 
+						<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
+					)} */}
+				
+				{/* <ActionMenu selected={selected} values={normalisedValues} /> */}
+			</Bubble>)
+		 : null
+
+		setInfoView(view);
+
+	}, [infoTarget, stateValues])
+	
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>
@@ -335,30 +368,7 @@ export default () => {
 					// program={program}
 					deviceValues={stateValues}
 					modes={[]}
-					information={infoTarget != undefined ? (() => {
-
-						const DataComponent : any = infoTarget.dataFunction;
-
-						return (<Bubble
-							style={{ 
-								position: 'absolute', 
-								zIndex: 99, 
-								pointerEvents: 'all', 
-								display: 'flex',
-								flexDirection: 'column',
-								padding: '12px',
-								left: (infoTarget?.x + infoTarget?.width) + 6, 
-								top: (infoTarget?.y + infoTarget?.height) + (195 / 2),
-								
-							}}>
-								<DataComponent {...stateValues} />
-								{/* {Object.keys(dataFunction).map((key) => 
-									<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
-								)} */}
-							
-							{/* <ActionMenu selected={selected} values={normalisedValues} /> */}
-						</Bubble>)
-					})() : null}
+					information={infoView}
 					onBackdropClick={() => {
 
 						// setSelected(undefined)
@@ -399,8 +409,6 @@ export default () => {
 					onTimeChange={(time) => {
 						setTime(time)
 
-						console.log({time});
-						
 						//TODO make onHorizonCHange
 						const startDate = moment(time).toDate();
 						const endDate = moment(startDate).add(1, 'week').toDate()

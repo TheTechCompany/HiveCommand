@@ -130,13 +130,22 @@ export const DeviceControlView = () => {
         }
     }, [])
 
-    console.log({program, normalisedValues})
+    const [ v, setV ] = useState({BLO101: {on: true}});
 
+    useEffect(() => {
+        let int = setInterval(() => {
+            setV((v) => ({BLO101: {on: !v.BLO101.on}}))
+        }, 1000)
+
+        return () => {
+            clearInterval(int);
+        }
+    }, [])
 
     return (
         <Box sx={{flex: 1, display: 'flex', padding: '6px', flexDirection: 'column'}}>
             <CommandSurface
-                values={normalisedValues}
+                values={v || normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}
