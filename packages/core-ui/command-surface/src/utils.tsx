@@ -3,6 +3,7 @@ import { HMINode, HMITag, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit } from 'typescript'
 import { template } from 'dot';
 import { baseRequirements } from '@hive-command/remote-components';
+import { isEqual } from 'lodash';
 
 export interface DevicePlaceholder {
 	tag: string,
@@ -50,11 +51,11 @@ export const useNodesWithValues = (
 	const [ valueState, setValues ] = useState<any>(values || {})
 
 	useEffect(() => {
-		if(values){
+		if(values && !isEqual(values, valueRef.current.values)){
 			valueRef.current.values = values;
 			setValues(values)
 		}
-	}, [values])
+	}, [JSON.stringify(values)])
 
 
 	//Playground example

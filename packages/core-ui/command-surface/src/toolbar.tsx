@@ -31,6 +31,7 @@ export default (props: {
 			{props.items?.map((item) => {
 				// const path = useResolvedPath(item.id);
 				return <Button
+						key={`toolbar-${item.id}`}
 						sx={{color: 'white'}}
 						onClick={() => props.onItemClick?.(item.id)}>
 					{item.icon}

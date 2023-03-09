@@ -76,11 +76,11 @@ export interface CommandDeviceInput {
 }
 
 export interface CommandDeviceReportInput {
-  dataDevice?: InputMaybe<Scalars["String"]>;
-  dataKey?: InputMaybe<Scalars["String"]>;
   device?: InputMaybe<Scalars["String"]>;
   height?: InputMaybe<Scalars["Int"]>;
   id?: InputMaybe<Scalars["ID"]>;
+  subkeyId?: InputMaybe<Scalars["String"]>;
+  tagId?: InputMaybe<Scalars["String"]>;
   total?: InputMaybe<Scalars["Boolean"]>;
   type?: InputMaybe<Scalars["String"]>;
   width?: InputMaybe<Scalars["Int"]>;
@@ -330,11 +330,11 @@ export const generatedSchema = {
     y: { __type: "Int" },
   },
   CommandDeviceReportInput: {
-    dataDevice: { __type: "String" },
-    dataKey: { __type: "String" },
     device: { __type: "String" },
     height: { __type: "Int" },
     id: { __type: "ID" },
+    subkeyId: { __type: "String" },
+    tagId: { __type: "String" },
     total: { __type: "Boolean" },
     type: { __type: "String" },
     width: { __type: "Int" },

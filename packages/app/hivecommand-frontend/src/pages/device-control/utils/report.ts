@@ -1,9 +1,9 @@
 import { useQuery, gql } from "@apollo/client"
 import { useAddDeviceChart, useCreateReportPage, useRemoveDeviceChart, useRemoveReportPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateReportPage } from "@hive-command/api";
 
-export const useDeviceReports = (id: string) => {
+export const useDeviceReports = (id: string, startDate: Date) => {
   const { data } = useQuery(gql`
-    query ReportData($id: ID) {
+    query ReportData($id: ID, $startDate: DateTime) {
 
       commandDevices(where: {id: $id}){
 
@@ -21,9 +21,19 @@ export const useDeviceReports = (id: string) => {
 
             total
 
-            device {
+            tag {
                 id
                 name
+            }
+
+            subkey {
+              id
+              name
+            }
+
+            values (startDate: $startDate) {
+                value
+                timestamp
             }
    
           }
@@ -34,11 +44,15 @@ export const useDeviceReports = (id: string) => {
   `, {
     variables: {
       id,
+      startDate: startDate.toISOString()
     }
   });
 
   return {
-    results: data?.commandDevices?.[0]?.reports || []
+    results: (data?.commandDevices?.[0]?.reports || [])?.map((report) => ({
+      ...report,
+      label: `${report.tag?.name}`
+    }))
   }
 }
 

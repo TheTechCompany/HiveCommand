@@ -142,8 +142,11 @@ model DeviceReport {
 
   total Boolean
 
-  dataKey IOTemplateState @relation(name: "hasDataKey", fields: [dataKeyId], references: [id])
-  dataKeyId String
+  tag ProgramTag? @relation(name: "reportsOnTag", fields: [tagId], references: [id])
+  tagId String?
+
+  subkey ProgramTypeField? @relation(name: "reportsOnTagField", fields: [subkeyId], references: [id])
+  subkeyId String?
 
   page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
   pageId String
@@ -201,10 +204,7 @@ model IOTemplateState {
 
   min String?
   max String?
-
   
-  reportedBy DeviceReport[] @relation(name: "hasDataKey")
-
   mappedBy DeviceMapping[] @relation(name: "mapsDeviceState")
 
   device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
@@ -488,6 +488,9 @@ model ProgramTag {
 
   program Program @relation(name: "hasTags", fields: [programId], references: [id])
   programId String
+
+
+  reports DeviceReport[] @relation(name: "reportsOnTag")
 }
 
 model ProgramTagType {
@@ -530,6 +533,8 @@ model ProgramTypeField {
 
   parent ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id])
   parentId String
+
+  reports DeviceReport[] @relation(name: "reportsOnTagField")
 }
 
 model CanvasPort {

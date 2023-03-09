@@ -10,8 +10,8 @@ export const FieldValue = (props: any) => {
     const [ value, setValue ] = useState(_value);
 
     useEffect(() => {
-        setValue(_value)
-    }, [_value])
+        if(!editing) setValue(_value)
+    }, [_value, editing])
 
     const onChange = () => {
         props.onChange?.(value)

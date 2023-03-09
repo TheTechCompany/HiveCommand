@@ -125,10 +125,12 @@ export interface MenuItemGroupProps {
 
 export const CustomTreeItem = (props: any) => {
     // console.log({props})
+    
     return (<TreeItem
-            ContentProps={{style: {width: 'unset'}, decoration: props.decoration, dontAdd: props.dontAdd, dontEdit: props.dontEdit}}
+            ContentProps={{style: {width: 'unset'}, decoration: props.decoration, dontAdd: props.dontAdd, dontEdit: props.dontEdit} as any}
             ContentComponent={MenuItem} 
-            {...props} />)
+            nodeId={props.id}
+            label={props.label} />)
 }
 
 export const MenuItemGroup = (props) => {

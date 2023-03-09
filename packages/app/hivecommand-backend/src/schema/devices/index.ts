@@ -118,7 +118,13 @@ export default (prisma: PrismaClient, mq: Channel) => {
 							include: {
 								charts: {
 									include: {
-										dataKey: true,
+										tag: true,
+										subkey: true,
+										page: {
+											include: {
+												device: true
+											}
+										}
 									}
 								},
 								device: true

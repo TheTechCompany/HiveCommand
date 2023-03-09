@@ -86,8 +86,8 @@ export const useAddDeviceChart = (deviceId: string) => {
 				height: args.h,
 				total: args.total,
 
-				dataDevice: args.templateId,
-				dataKey: args.keyId,
+				tagId: args.templateId,
+				subkeyId: args.keyId,
 				
 				device: deviceId
 			}
@@ -139,8 +139,9 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 				y: args.y,
 				width: args.w,
 				height: args.h,
-				dataDevice: args.templateId,
-				dataKey: args.keyId
+
+				tagId: args.templateId,
+				subkeyId: args.keyId
 			}
 		})
 

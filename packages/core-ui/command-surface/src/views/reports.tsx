@@ -19,8 +19,8 @@ export type ReportHorizon = {start: Date, end: Date};
 export interface ReportChart {
   x: number;
   y: number;
-  w: number;
-  h: number;
+  width: number;
+  height: number;
   label: string;
   values: {timestamp: any, value: any}[];
 }
@@ -112,7 +112,11 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
 
   const charts = useMemo(() => {
-    return reports?.find((a) => a.id == activePage)?.charts || []
+    return (reports?.find((a) => a.id == activePage)?.charts || []).map((chart) => ({
+      ...chart,
+      w: chart.width,
+      h: chart.height
+    }))
   }, [activePage, reports]);
 
   console.log("REPORTS", charts)
@@ -205,8 +209,8 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
               openModal(true);
               setSelected(item)
             }}
-            dataKey={item.dataKey?.key}
-            label={`${item.dataDevice?.name} - ${item.dataKey?.key}`}
+            dataKey={item.subkey?.name}
+            label={`${item.tag?.name} - ${item.subkey?.name}`}
             total={item.total}>
               <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
         </GraphContainer>
