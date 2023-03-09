@@ -5,11 +5,18 @@ export const FieldValue = (props: any) => {
 
     const { label, value: _value } = props;
 
-    const [value, setValue] = useState(_value);
+    const [ editing, setEditing ] = useState(false);
+
+    const [ value, setValue ] = useState(_value);
 
     useEffect(() => {
-        setValue(_value)
-    }, _value)
+        if(!editing) setValue(_value)
+    }, [_value, editing])
+
+    const onChange = () => {
+        props.onChange?.(value)
+        setEditing(false)
+    }
 
     switch (props.type) {
         case 'Number':
@@ -19,17 +26,18 @@ export const FieldValue = (props: any) => {
                         type="number"
                         size="small"
                         InputProps={{
-                            endAdornment: <InputAdornment position='end'>
-                                <IconButton onClick={() => {
-                                    props.onChange?.(value)
-                                }} size="small">
+                            endAdornment: editing ? <InputAdornment position='end'>
+                                <IconButton onClick={onChange} size="small">
                                     <Check fontSize='inherit' />
                                 </IconButton>
-                            </InputAdornment>
+                            </InputAdornment> : null
                         }}
                         label={label}
                         value={value}
-                        onChange={(e) => setValue(e.target.value)} />
+                        onChange={(e) => {
+                            setValue(e.target.value)
+                            setEditing(true)
+                        }} />
 
                 </Box>
             )

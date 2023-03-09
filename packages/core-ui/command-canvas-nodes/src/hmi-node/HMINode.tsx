@@ -49,25 +49,6 @@ export interface IconNodeProps {
 
 export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
 
-    
-    // const { getDeviceConf, getDeviceOptions } = useContext(HMICanvasContext)
-
-    // let options: any = props.extras?.options || {};
-    let conf: any = {};
-
-    // const tag = `${props?.extras?.devicePlaceholder?.tag}`
-    // if (getDeviceOptions && tag) {
-    //     options = getDeviceOptions(tag);
-    // }
-    // if (getDeviceConf && tag) {
-    //     conf = getDeviceConf(tag);
-    // }
-
-    // const options = getDeviceOptions(props.extras?.devicePlaceholder?.name)
-
-    // const conf = getDeviceConf(props.extras?.devicePlaceholder?.name)
-
-
     const Icon = props?.extras?.icon || (() => <div>no component found</div>)
 
     const [rotation, setRotation] = useState<number>(0);
@@ -92,11 +73,7 @@ export const BaseIconNode: React.FC<IconNodeProps> = (props) => {
                 
                 <Icon
                     editing={props.building}
-                    rotation={props.extras?.rotation}
-                    device={props.extras?.devicePlaceholder}
-                    scaleX={props.extras?.scaleX}
-                    scaleY={props.extras?.scaleY}
-                    conf={conf}
+              
                     options={props.extras?.dataValue}
                     width={props?.width}
                     height={props?.height}
@@ -118,23 +95,9 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
 
     return (
         <>
-            {/* {props.extras?.showTotalizer && (
-            <Box 
-                background="light-1"
-                align="center"
-                justify="center"
-                style={{borderRadius: '100%', width: 33, height: 33, position: 'absolute', top: -50, left: 0, right: 0}}>
-                Total
-            </Box>
-        )} */}
-
-            {/* <EditorHandles 
-                id={props.id}
-                x={props.x}
-                y={props.y}
-                active={selected?.map((x) => x.id).indexOf(props.id) > -1}> */}
+        
             <BaseIconNode
-
+                key={`base-node:${props.id}`}
                
                 width={props.extras?.label ? '96px' : '55px'}
                 height={props.extras?.label ? '42px' : '55px'}
@@ -168,19 +131,11 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             <div 
                                  style={{ pointerEvents: props.building ? 'all' : undefined}}>
 
-                            {/* {port && (
-                                <div style={{
-                                    width: 5, 
-                                    height: 5, 
-                                    background: 'green', 
-                                    left: port.x - props.x,
-                                    top: port.y - props.y, 
-                                    position: 'absolute'
-                                }} />
-                            )} */}
                             
                             {props.extras?.ports && props.extras?.ports.map((port) => (
-                                <Box sx={{visibility: props.building ? undefined : 'hidden', position: 'absolute', width: '12px', height: '12px', left: port.x, top: port.y}}>
+                                <Box
+                                    key={`base-node:${props.id}:port:${port.id}`}
+                                    sx={{visibility: props.building ? undefined : 'hidden', position: 'absolute', width: '12px', height: '12px', left: port.x, top: port.y}}>
                                     <PortWidget
                                         id="in"
                                         {...port}
@@ -199,24 +154,6 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                 )}
 
             </BaseIconNode>
-            {/* </EditorHandles> */}
-            {props.extras?.devicePlaceholder?.tag && (
-                <Box
-                    style={{
-                        transform: `
-                                    scaleX(${1 / (props.extras?.scaleX || 1)})
-                                    scaleY(${1 / (props.extras?.scaleY || 1)})
-                                `,
-                        textAlign: 'center',
-                        position: 'absolute',
-                        display: 'flex',
-                        flex: 1,
-                        flexDirection: 'row',
-                        justifyContent: 'center'
-                    }}>
-                    <Text fontSize="small">{props.extras?.devicePlaceholder?.tag}</Text>
-                </Box>
-            )}
 
         </>
     )

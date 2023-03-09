@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma } from "@hive-command/data";
+import { PrismaClient, Prisma, DeviceReport } from "@hive-command/data";
 import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
@@ -49,8 +49,8 @@ export default (prisma: PrismaClient) => {
 			total: Boolean
 			type: String
 
-			dataDevice: String
-			dataKey: String
+			tagId: String
+			subkeyId: String
 
 			device: String
 		}
@@ -64,6 +64,9 @@ export default (prisma: PrismaClient) => {
 	
 			total: Boolean
 			type: String
+
+			tag: CommandProgramTag
+			subkey: CommandProgramTypeField
 
 			values(startDate: DateTime): [CommandDeviceTimeseriesData]
 			totalValue(startDate: DateTime): CommandDeviceTimeseriesTotal
@@ -109,9 +112,12 @@ export default (prisma: PrismaClient) => {
   device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
   deviceId String 
 				*/
+
+				console.log({root});
+
 				let query = ``;
 
-				let params = [root.device?.id, root.dataDevice?.id]
+				let params = [root.page?.device?.id, root.tag?.id]
 				// console.log("Analaytics values")
 
 				const afterTime = args.startDate ? moment(args.startDate).set('hour', 0).set('minute', 0) : undefined
@@ -156,10 +162,10 @@ export default (prisma: PrismaClient) => {
 						time_bucket_gapfill('5 minute', "lastUpdated") as time, 
 						COALESCE(avg(value::float), 0) as value
 					FROM "DeviceValue" 
-						WHERE "deviceId"=${root.device?.id} AND placeholder=${root.dataDevice?.name}
+						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
 						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
 						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
-						 AND key=${root.dataKey?.key}
+						 AND key=${root.subkey?.name}
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
@@ -250,9 +256,9 @@ export default (prisma: PrismaClient) => {
 						FROM
 							"DeviceValue"
 						WHERE
-							"deviceId" = ${root.device?.id}
-							AND placeholder = ${root.dataDevice?.name}
-							AND key = ${root.dataKey?.key}
+							"deviceId" = ${root.page?.device?.id}
+							AND placeholder = ${root.tag?.name}
+							AND key = ${root.subkey?.name}
 							AND "lastUpdated" >= ${afterTime.toDate()}
 							AND "lastUpdated" < ${beforeTime.toDate()}
 						GROUP by "deviceId", placeholder, key, "lastUpdated", value
@@ -336,9 +342,11 @@ export default (prisma: PrismaClient) => {
 						width: args.input.width,
 						height: args.input.height,
 
-				
-						dataKey: {
-							connect: {id: args.input.dataKey}
+						tag: {
+							connect: {id: args.input.tagId}
+						},
+						subkey: {
+							connect: {id: args.input.subkeyId}
 						},
 						page: {
 							connect: {id: args.page}
@@ -357,7 +365,14 @@ export default (prisma: PrismaClient) => {
 						y: args.input.y,
 						width: args.input.width,
 						height: args.input.height,
-						dataKeyId: args.input.dataKey
+
+						tag: {
+							connect: {id: args.input.tagId}
+						},
+						subkey: {
+							connect: {id: args.input.subkeyId}
+						}
+
 					}
 				})
 			},

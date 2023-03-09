@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/remote-components",
-  "version": "1.4.15-alpha.191",
+  "version": "1.4.15-alpha.195",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -9,6 +9,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "resolutions": {
+    "react": "17.0.2"
+  },
   "scripts": {
     "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +19,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "react": "17.x",
     "typescript": "^4.9.5"
+  },
+  "peerDependencies": {
+    "react": "17.x"
   }
 }

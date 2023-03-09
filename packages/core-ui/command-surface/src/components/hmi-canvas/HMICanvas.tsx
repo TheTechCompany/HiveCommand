@@ -196,8 +196,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             //     }   
             // })))
 
-            console.log({paths: props.paths});
-
             setPaths((props.paths || []).map((x) => {
                 return {
                     id: x.id,
@@ -241,7 +239,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             }
         }
     }
-    
+
 	return (
         <HMICanvasProvider
             value={{

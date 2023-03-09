@@ -13,7 +13,6 @@ import { readFileSync, writeFileSync } from 'fs';
 import { Types } from '@hive-command/ethernet-ip/dist/enip/cip/data-types';
 import { EthernetIPBridge } from './bridge';
 
-
 const READ_BUFFER_TIME = 200;
 
 export * from './bridge'

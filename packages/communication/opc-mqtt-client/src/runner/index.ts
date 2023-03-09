@@ -5,17 +5,17 @@ import { MQTTClient, SidecarOptions } from "..";
 
 export class Runner {
 
-    private options?: SidecarOptions;
-
     private client: MQTTClient;
 
-    constructor(client: MQTTClient, options?: SidecarOptions){   
-        this.options = options;
-
+    constructor(client: MQTTClient){   
         this.client = client;
 
         this.getTag = this.getTag.bind(this);
         this.setTag = this.setTag.bind(this);
+    }
+
+    get options(){
+        return this.client.options;
     }
 
     getTag(tagPath: string, tagType: string, valueStructure: any) {

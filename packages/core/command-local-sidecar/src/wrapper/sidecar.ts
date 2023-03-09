@@ -37,8 +37,6 @@ export class Sidecar extends MQTTClient {
 
     }
 
-
-
     getTagPaths(object: any, parent?: string): any {
         // console.log("Get tag paths", object, parent)
 

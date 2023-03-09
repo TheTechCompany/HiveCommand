@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.191",
+	"version": "1.4.15-alpha.195",
 	"description": "",
 	"private": true,
 	"publishConfig": {
@@ -13,38 +13,48 @@
 	"author": "",
 	"license": "ISC",
 	"scripts": {
-		"build": "tsc -b"
+		"build": "tsc -b",
+		"test": "jest"
+	},
+	"resolutions": {
+		"react": "17.0.2",
+		"@types/react": "17.0.39",
+		"react-dom": "17.0.2"
 	},
 	"peerDependencies": {
 		"@apollo/client": "^3.6.9",
-		"@hexhive/ui": "1.0.1-alpha.114",
+		"@hexhive/ui": "1.0.1-alpha.117",
 		"@mui/icons-material": "^5.10.6",
 		"@mui/lab": "5.0.0-alpha.10",
 		"@mui/material": "5.10.11",
 		"@mui/x-date-pickers": "^5.0.6",
+		"react": "17.x",
 		"styled-components": "^5.3.6"
 	},
 	"devDependencies": {
+		"@babel/preset-env": "^7.20.2",
 		"@emotion/react": "^11.10.5",
 		"@hexhive/styles": "^1.0.1-alpha.45",
-		"@hexhive/ui": "1.0.1-alpha.114",
+		"@hexhive/ui": "1.0.1-alpha.117",
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@mui/material": "5.10.11",
+		"@testing-library/react": "12.0.0",
 		"@types/dot": "^1.1.5",
 		"@types/jest": "27.x",
-		"@types/react": "17.0.39",
+		"@types/react": "17.x",
 		"@types/styled-components": "^5.1.26",
+		"babel-jest": "^29.4.3",
 		"jest": "27.x",
 		"moment": "^2.29.4",
-		"react": "17.0.2",
-		"react-dom": "17.0.2",
+		"react": "17.x",
+		"react-dom": "17.x",
 		"react-router-dom": "6.4.2",
 		"typescript": "^4.8.4"
 	},
 	"dependencies": {
-		"@hive-command/canvas-nodes": "^1.4.15-alpha.191",
-		"@hive-command/remote-components": "^1.4.15-alpha.191",
-		"@hive-command/scripting": "^1.4.15-alpha.191",
+		"@hive-command/canvas-nodes": "^1.4.15-alpha.195",
+		"@hive-command/remote-components": "^1.4.15-alpha.195",
+		"@hive-command/scripting": "^1.4.15-alpha.195",
 		"dot": "^1.1.3"
 	}
 }

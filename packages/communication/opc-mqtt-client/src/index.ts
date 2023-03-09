@@ -53,7 +53,7 @@ export class MQTTClient {
     constructor(config?: SidecarOptions) {
         this.options = config;
 
-        this.runner = new Runner(this, config);
+        this.runner = new Runner(this);
 
         this.valueStore = new ValueStore(this, this.runner)
 

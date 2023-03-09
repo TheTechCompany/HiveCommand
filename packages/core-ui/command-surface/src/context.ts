@@ -1,15 +1,22 @@
 import React from 'react';
 import { CommandSurfaceClient, HMIDevice, HMINode, HMIProgram, HMITag, HMIType, HMIView } from '.';
 import { RemoteComponentCache } from '@hive-command/remote-components';
+import { ReportChart } from './views/reports';
 
 export const DeviceControlContext = React.createContext<{
 	// controlId?: string;
 	// device?: any;
 
-	infoTarget?: any;
+	infoTarget?: { 
+		x?: number, 
+		y?: number, 
+		width?: number, 
+		height?: number, 
+		dataFunction?: (state: any) => any 
+	};
 	setInfoTarget?: any;
 	
-	values?: {[key: string]: {[key: string]: any}}
+	values?: {[key: string]: {[key: string]: any} | any}
 
 	// sendAction?: (type: string, action: any) => void;
 	setView?: (view: string) => void;
@@ -22,7 +29,7 @@ export const DeviceControlContext = React.createContext<{
 
 	program?: {
 		id?: string,
-		interface: HMIView
+		interface?: HMIView
 		//  {
 		// 	nodes: HMINode[]
 		// },
@@ -44,7 +51,7 @@ export const DeviceControlContext = React.createContext<{
 
 	reports?: {
 		id: string;
-		charts: {x: number, y: number, w: number, h: number, label: string, values: {timestamp: Date, value: any}[] }[]
+		charts: ReportChart[] //{x: number, y: number, width: number, height: number, label: string, values: {timestamp: Date, value: any}[] }[]
 	}[];
 	changeDeviceMode?:any
 	actions?: any[],
