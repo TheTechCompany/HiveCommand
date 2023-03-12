@@ -106,6 +106,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					if(args.where.network_name) whereArg['network_name'] = args.where.network_name;
 				}
 
+				
 
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
