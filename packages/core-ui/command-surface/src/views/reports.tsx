@@ -17,11 +17,13 @@ import { Box, Typography, IconButton, Button} from '@mui/material'
 export type ReportHorizon = {start: Date, end: Date};
 
 export interface ReportChart {
+  id: string;
+  label: string;
+
   x: number;
   y: number;
   width: number;
   height: number;
-  label: string;
   totalValue: {total: any};
   values: {timestamp: any, value: any}[];
 }
@@ -103,9 +105,9 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   }, [startOfPeriod, endOfPeriod])
 
 
-  const values = client?.useReportValues?.(activePage || '', horizon)
+  const { results } = client?.useReportValues?.(activePage || '', horizon)
 
-  console.log("Report values", values)
+  console.log("Report values", results)
 
   const prevPeriod = () => {
     
@@ -224,14 +226,20 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
 
   const charts = useMemo(() => {
-    return (reports?.find((a) => a.id == activePage)?.charts || []).map((chart) => ({
-      ...chart,
-      w: chart.width,
-      h: chart.height
-    }))
-  }, [activePage, reports]);
+    return (reports?.find((a) => a.id == activePage)?.charts || []).map((chart) => {
 
-  console.log("REPORTS", charts)
+      let chartValue = results?.find((a) => a.id === chart.id)
+
+      return {
+        ...chart,
+        w: chart.width,
+        h: chart.height,
+        totalValue: chartValue.totalValue,
+        values: chartValue.values?.map((value) => ({...value, timestamp: moment(value.timestamp).format('DD/MM hh:mma') }))
+      }
+    })
+  
+  }, [activePage, reports, results]);
 
   return (
     <Box
@@ -247,7 +255,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
           setSelected(undefined)
         }}
         onSubmit={(graph) => {
-          console.log("Graph", {activePage, graph})
+
           if(!activePage) return;
 
           if(!graph.id){

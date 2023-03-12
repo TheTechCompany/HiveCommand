@@ -60,6 +60,8 @@ export const useDeviceReportData = (deviceId: string, reportId: string, horizon:
           id
 
           charts {
+            id
+
             totalValue(startDate: $startDate, endDate: $endDate) {
               total
             }
@@ -81,7 +83,7 @@ export const useDeviceReportData = (deviceId: string, reportId: string, horizon:
   })
 
   return {
-    results: reportData?.commandDevices?.[0]?.reports || []
+    results: reportData?.commandDevices?.[0]?.reports?.[0]?.charts || []
   }
 
 }
