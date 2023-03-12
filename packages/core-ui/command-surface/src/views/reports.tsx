@@ -234,8 +234,8 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         ...chart,
         w: chart.width,
         h: chart.height,
-        totalValue: chartValue.totalValue,
-        values: chartValue.values?.map((value) => ({...value, timestamp: moment(value.timestamp).format('DD/MM hh:mma') }))
+        totalValue: chartValue?.totalValue,
+        values: chartValue?.values?.map((value) => ({...value, timestamp: moment(value.timestamp).format('DD/MM hh:mma') }))
       }
     })
   
