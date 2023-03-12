@@ -1,4 +1,4 @@
-import { useQuery, gql } from "@apollo/client"
+import { useQuery, useApolloClient, gql } from "@apollo/client"
 import { useAddDeviceChart, useCreateReportPage, useRemoveDeviceChart, useRemoveReportPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateReportPage } from "@hive-command/api";
 
 export const useDeviceReports = (id: string, startDate: Date) => {
@@ -93,16 +93,30 @@ export const useDeviceReportData = (id: string, startDate: Date) => {
 
 }
 
+const withRefetch = (fn: any, refetch: any) => {
+  return async (...args: any[]) => {
+    const res = await fn(...args)
+    refetch();
+    return res;
+  }
+}
+
 export const useDeviceReportActions = (id: string) => {
 
-  const addDeviceChart = useAddDeviceChart(id)
-  const updateDeviceChart = useUpdateDeviceChart(id);
-  const updateChartGrid = useUpdateDeviceChartGrid(id);
-  const removeChart = useRemoveDeviceChart(id);
+  const client = useApolloClient()
 
-  const createReportPage = useCreateReportPage(id);
-  const updateReportPage = useUpdateReportPage(id);
-  const removeReportPage = useRemoveReportPage(id);
+  const refetch = () => {
+    client.refetchQueries({include: ['ReportData']});
+  }
+  
+  const addDeviceChart = withRefetch(useAddDeviceChart(id), refetch)
+  const updateDeviceChart = withRefetch(useUpdateDeviceChart(id), refetch);
+  const updateChartGrid = withRefetch(useUpdateDeviceChartGrid(id), refetch);
+  const removeChart = withRefetch(useRemoveDeviceChart(id), refetch);
+
+  const createReportPage = withRefetch(useCreateReportPage(id), refetch);
+  const updateReportPage = withRefetch(useUpdateReportPage(id), refetch);
+  const removeReportPage = withRefetch(useRemoveReportPage(id), refetch);
 
   return {
     addChart: addDeviceChart,
