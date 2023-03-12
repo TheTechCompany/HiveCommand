@@ -1,6 +1,6 @@
 import { FormControl } from "@hexhive/ui"
 import { HMITag, HMIType } from "../../../";
-import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions } from "@mui/material";
+import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions, Autocomplete, TextField } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 
 export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
@@ -42,13 +42,21 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
       <DialogContent>
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
         <div style={{marginTop: '9px'}} />
-          <FormControl
+          {/* <FormControl
             value={graph.deviceID || ''}
             onChange={(value) => setGraph({ ...graph, deviceID: value })}
             options={props.tags || []}
             labelKey="name"
             placeholder="Tag"
-          />
+          /> */}
+          <Autocomplete
+            onChange={(event, value) => setGraph({...graph, deviceID: value?.id}) }
+            options={(props.tags || [])?.slice()?.sort((a, b) => a.name?.localeCompare(b.name)) }
+            value={props.tags?.find((a) => a.id === graph.deviceID)}
+            getOptionLabel={(option: any) => typeof(option) === 'string' ? option : option.name}
+            renderInput={(params) => <TextField  {...params}  label="Select tag" size="small" />}
+            />
+ 
           <div style={{marginTop: '9px'}} />
           {subkeyOptions.length > 0 && (
               <FormControl
