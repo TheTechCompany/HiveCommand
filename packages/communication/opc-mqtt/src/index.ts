@@ -122,7 +122,7 @@ export class MQTTPublisher {
 
     //Publish current state to other entities
     async publish(key: string, dataType: string, value: any, isRetry?: number, retryCount: number = 1){
-        console.log("Publishing ", key, dataType, value)
+        // console.log("Publishing ", key, dataType, value)
 
         if(value.BYTES_PER_ELEMENT != undefined){
             value = Array.from(value)

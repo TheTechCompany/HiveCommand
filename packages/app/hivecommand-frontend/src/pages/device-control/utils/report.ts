@@ -31,6 +31,10 @@ export const useDeviceReports = (id: string, startDate: Date) => {
               name
             }
 
+            totalValue(startDate: $startDate){
+              total
+            }
+
             values (startDate: $startDate) {
                 value
                 timestamp
