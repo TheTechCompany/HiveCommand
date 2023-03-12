@@ -7,7 +7,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
     const [ startDate, setDate ] = useState(new Date(Date.now() - (7 * 24 * 60 * 60 * 1000)))
 
-    const { results: reports } = useDeviceReports(deviceId, startDate)
+    const { results: reports } = useDeviceReports(deviceId)
 
     const [ _changeDevValue ] = useMutation(gql`
         mutation ChangeDeviceValue($deviceId: String, $deviceName: String, $key: String, $value: String) {
@@ -35,11 +35,13 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         createReportPage,
         updateReportPage,
         removeReportPage,
+        useReportValues
     } = useDeviceReportActions(deviceId);
 
 
     return {
         reports,
+        useReportValues: (report: string, horizon: {start: Date, end: Date}) => useReportValues(deviceId, report, horizon),
         createReportPage,
         updateReportPage,
         removeReportPage,

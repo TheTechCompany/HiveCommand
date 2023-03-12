@@ -27,6 +27,10 @@ export default (prisma: PrismaClient) => {
 		input CommandReportPageInput {
 			name: String
 		}
+
+		input CommandReportPageWhere{
+			ids: [ID]
+		}
 	
 		type CommandReportPage {
 			id: ID
@@ -68,8 +72,8 @@ export default (prisma: PrismaClient) => {
 			tag: CommandProgramTag
 			subkey: CommandProgramTypeField
 
-			values(startDate: DateTime): [CommandDeviceTimeseriesData]
-			totalValue(startDate: DateTime): CommandDeviceTimeseriesTotal
+			values(startDate: DateTime, endDate: DateTime): [CommandDeviceTimeseriesData]
+			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
 
 			device: CommandDevice 
 		}
@@ -97,7 +101,7 @@ export default (prisma: PrismaClient) => {
 
     const resolvers = {
 		CommandDeviceReport: {
-			values: async (root: any, args: {startDate: Date}) => {
+			values: async (root: any, args: {startDate: Date, endDate?: Date}) => {
 				// const client = await pool.connect()
 				// console.log("Analaytics values")
 		
@@ -120,9 +124,9 @@ export default (prisma: PrismaClient) => {
 				let params = [root.page?.device?.id, root.tag?.id]
 				// console.log("Analaytics values")
 
-				const afterTime = args.startDate ? moment(args.startDate).set('hour', 0).set('minute', 0) : undefined
+				const afterTime = args.startDate ? moment(args.startDate) : undefined;
 
-				let beforeTime = args.startDate ? moment(args.startDate).add(1, 'week').set('hour', 0).set('minute', 0) : undefined;
+				let beforeTime = args.endDate ? moment(args.endDate) : args.startDate ? moment(args.startDate).add(1, 'week') : undefined;
 
 				if(beforeTime && moment(beforeTime).isAfter(moment())){
 					beforeTime = moment();
@@ -192,12 +196,12 @@ export default (prisma: PrismaClient) => {
 
 				if(!root.total) return null;
 				
-				const { startDate } = args
+				const { startDate, endDate } = args
 
-				let beforeTime = moment(startDate).add(1, 'week').set('hour', 23).set('minute', 59)
-				const afterTime = moment(startDate).set('hour', 0).set('minute', 0)
+				let beforeTime = endDate ? moment(endDate) : startDate ? moment(startDate).add(1, 'week') : undefined
+				const afterTime = moment(startDate)
 
-				if(moment(beforeTime).isAfter(moment())){
+				if(beforeTime && moment(beforeTime).isAfter(moment())){
 					beforeTime = moment();
 				}
 
@@ -260,7 +264,7 @@ export default (prisma: PrismaClient) => {
 							AND placeholder = ${root.tag?.name}
 							AND key = ${root.subkey?.name}
 							AND "lastUpdated" >= ${afterTime.toDate()}
-							AND "lastUpdated" < ${beforeTime.toDate()}
+							AND "lastUpdated" < ${beforeTime?.toDate()}
 						GROUP by "deviceId", placeholder, key, "lastUpdated", value
 						) as SUB
 				`;

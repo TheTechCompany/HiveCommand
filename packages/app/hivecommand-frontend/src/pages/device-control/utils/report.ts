@@ -1,9 +1,9 @@
 import { useQuery, useApolloClient, gql } from "@apollo/client"
 import { useAddDeviceChart, useCreateReportPage, useRemoveDeviceChart, useRemoveReportPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateReportPage } from "@hive-command/api";
 
-export const useDeviceReports = (id: string, startDate: Date) => {
+export const useDeviceReports = (id: string) => {
   const { data } = useQuery(gql`
-    query ReportData($id: ID, $startDate: DateTime) {
+    query ReportData($id: ID) {
 
       commandDevices(where: {id: $id}){
 
@@ -31,14 +31,6 @@ export const useDeviceReports = (id: string, startDate: Date) => {
               name
             }
 
-            totalValue(startDate: $startDate){
-              total
-            }
-
-            values (startDate: $startDate) {
-                value
-                timestamp
-            }
    
           }
       
@@ -48,7 +40,6 @@ export const useDeviceReports = (id: string, startDate: Date) => {
   `, {
     variables: {
       id,
-      startDate: startDate.toISOString()
     }
   });
 
@@ -60,19 +51,19 @@ export const useDeviceReports = (id: string, startDate: Date) => {
   }
 }
 
-export const useDeviceReportData = (id: string, startDate: Date) => {
+export const useDeviceReportData = (deviceId: string, reportId: string, horizon: {start: Date, end?: Date}) => {
   const { data: reportData, loading } = useQuery(gql`
-    query ReportDataValue($id: ID, $startDate: DateTime){
+    query ReportDataValue($id: ID, $reportId: ID, $startDate: DateTime, $endDate: DateTime){
       commandDevices(where: {id: $id}){
         
-        reports {
+        reports (where: { ids: [$reportId] }) {
           id
 
           charts {
-            totalValue(startDate: $startDate) {
+            totalValue(startDate: $startDate, endDate: $endDate) {
               total
             }
-            values (startDate: $startDate){
+            values (startDate: $startDate, endDate: $endDate){
               timestamp
               value
             }
@@ -82,8 +73,10 @@ export const useDeviceReportData = (id: string, startDate: Date) => {
     }
   `, {
     variables: {
-      id,
-      startDate: startDate.toISOString()
+      id: deviceId,
+      reportId,
+      startDate: horizon.start?.toISOString(),
+      endDate: horizon.end?.toISOString()
     }
   })
 
@@ -119,6 +112,7 @@ export const useDeviceReportActions = (id: string) => {
   const removeReportPage = withRefetch(useRemoveReportPage(id), refetch);
 
   return {
+    useReportValues: useDeviceReportData,
     addChart: addDeviceChart,
     updateChart: updateDeviceChart,
     updateChartGrid,
