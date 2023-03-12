@@ -34,6 +34,39 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		analyticResolvers,
 		{
 			CommandDevice: {
+				reports: async (root: any, args: any, content: any) => {
+					let reportWhere : any = {};
+					if(args?.where?.ids){
+						reportWhere = {id: { in: args?.where?.ids }}
+					}
+	
+					const device = await prisma.device.findFirst({
+						where: {
+							id: root.id,
+						},
+						include: {
+							reports: {
+								where: reportWhere,
+								include: {
+									charts: {
+										include: {
+											tag: true,
+											subkey: true,
+											page: {
+												include: {
+													device: true
+												}
+											}
+										}
+									},
+									device: true
+								}
+							},
+						}
+					})
+					
+					return device?.reports || [];
+				},
 				deviceSnapshot: async (root: any, args: any, context: any) => {
 
 					let result;
@@ -106,8 +139,6 @@ export default (prisma: PrismaClient, mq: Channel) => {
 					if(args.where.network_name) whereArg['network_name'] = args.where.network_name;
 				}
 
-				
-
 				const devices = await prisma.device.findMany({
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
@@ -115,22 +146,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 						alarms: true,
 						screens: true,
 			
-						reports: {
-							include: {
-								charts: {
-									include: {
-										tag: true,
-										subkey: true,
-										page: {
-											include: {
-												device: true
-											}
-										}
-									}
-								},
-								device: true
-							}
-						},
+						
 						// values: {
 						// 	where: {lastUpdated: {gt: new Date()}},
 						// 	orderBy: {lastUpdated: 'desc'},
@@ -575,7 +591,7 @@ export default (prisma: PrismaClient, mq: Channel) => {
 		online: Boolean
 		lastSeen: DateTime
 
-		reports: [CommandReportPage] 
+		reports(where: CommandReportPageWhere): [CommandReportPage] 
 
 		organisation: HiveOrganisation 
 	}

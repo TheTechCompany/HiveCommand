@@ -10,7 +10,7 @@ import moment from "moment";
 import { Graph, GraphContainer } from "../components/graph";
 // import { useApolloClient } from "@apollo/client";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
-import { Menu, Paper } from "@mui/material";
+import { ButtonGroup, Menu, Paper } from "@mui/material";
 
 import { Box, Typography, IconButton, Button} from '@mui/material'
 
@@ -34,33 +34,144 @@ export interface ReportViewProps {
   onHorizonChange?: (horizon: ReportHorizon) => void;
 
   
+  date?: Date;
 
   editable?: boolean;
 }
 
 export const ReportView: React.FC<ReportViewProps> = (props) => {
 
-  const { reports, client, activePage, refresh, program } = useContext(DeviceControlContext);
+  const { reports, client, activePage, refresh, program,  } = useContext(DeviceControlContext);
 
   const [ selected, setSelected ] = useState();
 
-  // const [datum, setDatum] = useState(props.date || new Date())
+  const report_periods = ['7d', '1d', '12hr', '1hr', '30min']
 
-  const prevWeek = () => {
+  const [ period, setPeriod ] = useState<'7d' | '1d' | '12hr' | '1hr' | '30min'>('30min');
+  const [ datum, setDatum ] = useState(props.date || new Date())
+
+  const period_format = useMemo(() => {
+    switch(period){
+      case '7d':
+        return 'DD/MM/yy';
+      case '1d':
+        return 'hh:mma DD/MM'
+      case '12hr':
+      case '1hr':
+      case '30min':
+        return 'hh:mma'
+    }
+  }, [period])
+
+  const startOfPeriod = useMemo(() => {
+    switch(period){
+      case '7d':
+        return moment(datum).startOf('isoWeek');
+      case '1d':
+        return moment(datum).startOf('day');
+      case '12hr':
+        return moment(datum).subtract(12, 'hours')
+      case '1hr':
+        return moment(datum).startOf('hour');
+      case '30min':
+      default:
+        return moment(datum).subtract(30, 'minutes')
+    }
+  }, [datum, period]);
+
+  const endOfPeriod = useMemo(() => {
+    switch(period){
+      case '7d':
+        return moment(datum).endOf('isoWeek');
+      case '1d':
+        return moment(datum).endOf('day');
+      case '12hr':
+        return moment(datum)
+      case '1hr':
+        return moment(datum).endOf('hour');
+      case '30min':
+      default:
+        return moment(datum);
+    }
+  }, [datum, period]);
+
+  const horizon = useMemo(() => {
+    return {
+      start: startOfPeriod?.toDate(),
+      end: endOfPeriod?.toDate()
+    }
+  }, [startOfPeriod, endOfPeriod])
+
+
+  const values = client?.useReportValues?.(activePage || '', horizon)
+
+  console.log("Report values", values)
+
+  const prevPeriod = () => {
     
-    let startDate = moment(props.horizon?.start).subtract(1, 'week').toDate();
-    let endDate = moment(props.horizon?.end).subtract(1, 'week').toDate();
+    let newDatum = new Date(datum);
 
-    props.onHorizonChange?.({start: startDate, end: endDate});
+    switch(period){
+      case '7d':
+        newDatum = moment(datum).subtract(1, 'week').toDate();
+        break;
+      case '1d':
+        newDatum = moment(datum).subtract(1, 'day').toDate();
+        break;
+      case '12hr':
+        newDatum = moment(datum).subtract(12, 'hours').toDate();
+        break;
+      case '1hr':
+        newDatum = moment(datum).subtract(1, 'hour').toDate();
+        break;
+      case '30min':
+        newDatum = moment(datum).subtract(30, 'minutes').toDate();
+        break;
+    }
+
+    // let startDate = moment(horizon?.start).subtract(1, 'week').toDate();
+    // let endDate = moment(horizon?.end).subtract(1, 'week').toDate();
+
+    // props.onHorizonChange?.({start: startDate, end: endDate});
+
+    setDatum(newDatum);
 
     // setDatum(moment(datum).subtract(1, 'week').toDate());
   }
 
-  const nextWeek = () => {
-    let startDate = moment(props.horizon?.start).add(1, 'week').toDate();
-    let endDate = moment(props.horizon?.end).add(1, 'week').toDate();
+  const nextPeriod = () => {
 
-    props.onHorizonChange?.({start: startDate, end: endDate});
+    let newDatum = new Date(datum);
+
+    switch(period){
+      case '7d':
+        newDatum = moment(datum).add(1, 'week').toDate();
+        break;
+      case '1d':
+        newDatum = moment(datum).add(1, 'day').toDate();
+        break;
+      case '12hr':
+        newDatum = moment(datum).add(12, 'hours').toDate();
+        break;
+      case '1hr':
+        newDatum = moment(datum).add(1, 'hour').toDate();
+        break;
+      case '30min':
+        newDatum = moment(datum).add(30, 'minutes').toDate();
+        break;
+    }
+
+    // let startDate = moment(horizon?.start).subtract(1, 'week').toDate();
+    // let endDate = moment(horizon?.end).subtract(1, 'week').toDate();
+
+    // props.onHorizonChange?.({start: startDate, end: endDate});
+
+    setDatum(newDatum);
+
+    // let startDate = moment(props.horizon?.start).add(1, 'week').toDate();
+    // let endDate = moment(props.horizon?.end).add(1, 'week').toDate();
+
+    // props.onHorizonChange?.({start: startDate, end: endDate});
     // setDatum(moment(datum).add(1, 'week').toDate());
   }
 
@@ -159,20 +270,32 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         
         }}
       />
-      <Box sx={{display: 'flex', justifyContent: 'flex-end', flexDirection: 'row'}}>
+      <Box sx={{display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+          <ButtonGroup size="small">
+            {report_periods.map((period_i) => (
+              <Button 
+                onClick={() => setPeriod(period_i as any)}
+                variant={period === period_i ? 'contained' : undefined}>
+                  {period_i}
+              </Button>
+            ))}
+          </ButtonGroup>
+        </Box>
         <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1}}>
           <IconButton 
-            onClick={prevWeek}>
+            onClick={prevPeriod}>
             <Previous />
           </IconButton>
-          <Typography>{moment(props.horizon?.start)?.format('DD/MM/yy')} - {moment(props.horizon?.end)?.format('DD/MM/yy')}</Typography>
+          <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
           <IconButton 
-            onClick={nextWeek}
+            onClick={nextPeriod}
           >
             <Next />
           </IconButton>
 
         </Box>
+
         <IconButton
           onClick={() => openModal(true)}>
           <Add />

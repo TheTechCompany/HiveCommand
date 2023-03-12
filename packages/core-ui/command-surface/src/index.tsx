@@ -43,6 +43,8 @@ export interface CommandSurfaceClient {
     updateReportPage?: (id: string, name: string) => Promise<any>;
     removeReportPage?: (id: string) => Promise<any>;
 
+    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => any;
+    
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChartGrid?: (pageId: string, layout: { id: string, x: number, y: number, w: number, h: number }[]) => Promise<any>;
