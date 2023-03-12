@@ -134,7 +134,7 @@ export class MQTTClient {
                     curr_value = Array.from(curr_value);
                 }
 
-                console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+                // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
 
                 const changed_keys = this.valueStore.updateValue(key, curr_value)
                 

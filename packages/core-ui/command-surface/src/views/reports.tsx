@@ -22,6 +22,7 @@ export interface ReportChart {
   width: number;
   height: number;
   label: string;
+  totalValue: {total: any};
   values: {timestamp: any, value: any}[];
 }
 
@@ -211,7 +212,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
             }}
             dataKey={item.subkey?.name}
             label={`${item.tag?.name} - ${item.subkey?.name}`}
-            total={item.total}>
+            total={item?.totalValue?.total}>
               <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
         </GraphContainer>
         )}

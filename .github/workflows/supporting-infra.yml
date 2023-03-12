@@ -5,7 +5,7 @@ on:
     branches:
       # - staging
       - master
-    paths: ["packages/network/mqtt-auth-server/**", "packages/supporting-infrastructure/**"]
+    paths: ["packages/network/mqtt-auth-server/src/**", "packages/supporting-infrastructure/**"]
 
 concurrency: hivecommand-supporting-infra-${{ github.ref }}
 
