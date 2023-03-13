@@ -2,6 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { CommandSurfaceClient } from "@hive-command/command-surface";
 import { useState } from "react";
 import { useDeviceReportActions, useDeviceReports } from "./report";
+import { useValues } from "./value";
 
 export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
@@ -41,6 +42,9 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
     return {
         reports,
+        useValues: (program: {tags: any[], types: any[]}) => {
+            return useValues(deviceId, program)
+        },
         useReportValues: (report: string, horizon: {start: Date, end: Date}) => useReportValues(deviceId, report, horizon),
         createReportPage,
         updateReportPage,

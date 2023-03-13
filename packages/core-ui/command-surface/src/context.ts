@@ -27,21 +27,23 @@ export const DeviceControlContext = React.createContext<{
 
 	cache?: RemoteComponentCache;
 
-	program?: {
-		id?: string,
-		interface?: HMIView
-		//  {
-		// 	nodes: HMINode[]
-		// },
-		tags?: HMITag[]
-		types?: HMIType[]
-	};
+	activeProgram?: HMIProgram & any
+
+	// program?: {
+	// 	id?: string,
+	// 	interface?: HMIView
+	// 	//  {
+	// 	// 	nodes: HMINode[]
+	// 	// },
+	// 	tags?: HMITag[]
+	// 	types?: HMIType[]
+	// };
 	
 	alarms?: any[];
 
 	watching?: {id: string, name: string}[];
 	hmis?: any;
-	functions?: any[];
+	functions?: any;
 
 	historize?: boolean;
 	

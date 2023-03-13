@@ -3,7 +3,6 @@ import { Box } from '@mui/material'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath, ZoomControls, LinePathFactory } from '@hexhive/ui';
 import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 // import { gql, useApolloClient, useQuery } from '@apollo/client';
-import { HMICanvasProvider } from './HMICanvasContext';
 import { CanvasStyle } from '../../style';
 import { registerNodes } from './utils';
 import { useRemoteComponents } from '@hive-command/remote-components';
@@ -48,6 +47,7 @@ export interface HMICanvasProps {
 export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     
     const [ zoom, setZoom ] = useState(100);
+
     const [ offset, setOffset ] = useState({x: 0, y: 0})
 
     const [ selected, _setSelected ] = useState<{key?: "node" | "path", id?: string}>({})
@@ -90,10 +90,6 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     // const refetch = () => {
     //     client.refetchQueries({include: ['Q']})
     // }
-
-    const { cache, values } = useContext(DeviceControlContext)
-
-    const { getPack } = useRemoteComponents(cache)
 
     // const getDeviceOptions = useCon
     
@@ -241,10 +237,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     }
 
 	return (
-        <HMICanvasProvider
-            value={{
-                values: props.deviceValues
-            }}>
+     
             <Box
                 sx={{
                     display: 'flex',
@@ -290,6 +283,5 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
             </InfiniteCanvas>
             
             </Box>
-        </HMICanvasProvider>
 	)
 }

@@ -163,6 +163,7 @@ export const useNodesWithValues = (
 	// }, [])
 
 
+	console.log("RETURNING NODES WITH VALUES")
 
 	
 	return useMemo(() => nodes.map((node) => {

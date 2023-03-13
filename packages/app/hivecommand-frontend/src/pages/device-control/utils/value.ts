@@ -1,4 +1,5 @@
 import { gql, useApolloClient, useQuery, useLazyQuery } from "@apollo/client";
+import { useEffect, useMemo } from "react";
 
 export const useDeviceValues = (id: string) : {
 	refetch: () => void;
@@ -56,4 +57,76 @@ export const useDeviceHistory = (id: string) => {
 		getHistoricValues,
 		data: data?.commandDevices?.[0]?.deviceSnapshot?.map((x) => ({id: x.placeholder, lastUpdated: x.lastUpdated, key: x.key, value: x.value})) || []
 	}
+}
+
+export const useValues = (deviceId: string, program: {tags: any[], types: any[]} ) => {
+    
+	const { results: values, refetch: refetchValues } = useDeviceValues(deviceId);
+
+	useEffect(() => {
+        const interval = setInterval(() => {
+            refetchValues();
+        }, 2000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
+	const normalisedValues = useMemo(() => {
+
+        let valueObj = values.reduce((prev, curr) => {
+
+            let key = curr.key;
+
+            let update = {};
+
+            if (key) {
+                update = {
+                    ...prev[curr.id],
+                    [key]: curr.value
+                }
+            } else {
+                update = curr.value;
+            }
+
+            return {
+                ...prev,
+                [curr.id]: update
+            }
+        }, {});
+
+        return program?.tags?.map((tag) => {
+
+            let type = program?.types?.find((a) => a.name === tag.type) || tag.type;
+
+            let hasFields = (type?.fields || []).length > 0;
+
+            let value = valueObj[tag.name];
+
+            if (
+                type &&
+                typeof (type) === "string" &&
+                type.indexOf('[]') > -1 &&
+                typeof (value) === "object" &&
+                !Array.isArray(value) &&
+                Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0
+            ) {
+                value = Object.keys(value).map((x) => value[x]);
+            }
+
+            return {
+                key: `${tag.name}`,
+                value: value
+            }
+
+        }).reduce((prev, curr) => ({
+            ...prev,
+            [curr.key]: curr.value
+        }), {})
+
+    
+    }, [program.tags, program.types, values])
+
+	return {values: normalisedValues};
 }
