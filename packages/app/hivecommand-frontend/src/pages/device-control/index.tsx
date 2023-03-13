@@ -18,93 +18,19 @@ export const DeviceControlView = () => {
 
     const { results, refetch } = useDevice(id);
 
-    const { results: values, refetch: refetchValues } = useDeviceValues(id);
-
-    const { getHistoricValues, data: historicValues } = useDeviceHistory(id);
-
     const watchers = useWatchers(id);
 
-    const program = results?.[0]?.activeProgram || {};
+    const program = useMemo(() => results?.[0]?.activeProgram || {}, [results])
 
-    const performDeviceAction = usePerformDeviceAction(id)
-    const changeDeviceValue = useChangeDeviceValue(id)
+    const defaultPage = useMemo(() => program?.remoteHomepage?.id, [program]);
 
-    const changeMode = useChangeMode(id)
-
-    const defaultPage = program?.remoteHomepage?.id;
-
-    const daysHorizon = 14;
-    const [lastDate, setLastDate] = useState(null)
-
-    const normalisedValues = useMemo(() => {
-
-        let valueObj = values.reduce((prev, curr) => {
-
-            let key = curr.key;
-
-            let update = {};
-
-            if (key) {
-                update = {
-                    ...prev[curr.id],
-                    [key]: curr.value
-                }
-            } else {
-                update = curr.value;
-            }
-
-            return {
-                ...prev,
-                [curr.id]: update
-            }
-        }, {});
-
-        return program?.tags?.map((tag) => {
-
-            let type = program?.types?.find((a) => a.name === tag.type) || tag.type;
-
-            let hasFields = (type?.fields || []).length > 0;
-
-            let value = valueObj[tag.name];
-
-            if (
-                type &&
-                typeof (type) === "string" &&
-                type.indexOf('[]') > -1 &&
-                typeof (value) === "object" &&
-                !Array.isArray(value) &&
-                Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0
-            ) {
-                value = Object.keys(value).map((x) => value[x]);
-            }
-
-            return {
-                key: `${tag.name}`,
-                value: value
-            }
-
-        }).reduce((prev, curr) => ({
-            ...prev,
-            [curr.key]: curr.value
-        }), {})
-
-    
-    }, [program.tags, program.types, values])
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            refetchValues();
-        }, 2000)
-
-        return () => {
-            clearInterval(interval)
-        }
-    }, [])
+    // const daysHorizon = 14;
+    // const [lastDate, setLastDate] = useState(null)
 
     return (
         <Box sx={{ flex: 1, display: 'flex', padding: '6px', flexDirection: 'column' }}>
             <CommandSurface
-                values={normalisedValues}
+                // values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}
                 // reports={reports}
                 client={client}

@@ -43,7 +43,7 @@ export interface ReportViewProps {
 
 export const ReportView: React.FC<ReportViewProps> = (props) => {
 
-  const { reports, client, activePage, refresh, program,  } = useContext(DeviceControlContext);
+  const { reports, client, activePage, refresh, activeProgram } = useContext(DeviceControlContext);
 
   const [ selected, setSelected ] = useState();
 
@@ -105,7 +105,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   }, [startOfPeriod, endOfPeriod])
 
 
-  const { results } = client?.useReportValues?.(activePage || '', horizon)
+  const { results } = client?.useReportValues?.(activePage || '', horizon) || {}
 
   console.log("Report values", results)
 
@@ -248,8 +248,8 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
       <ControlGraphModal
         open={modalOpen}
         selected={selected}
-        tags={program?.tags || []}
-        types={program?.types || []}
+        tags={activeProgram?.tags || []}
+        types={activeProgram?.types || []}
         onClose={() => {
           openModal(false);
           setSelected(undefined)

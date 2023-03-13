@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {render} from '@testing-library/react'
-import ControlView from './control'
+import { ControlView } from './control'
 import { DeviceControlProvider } from '../context';
 import { Box, Typography } from '@mui/material';
 import { act } from 'react-dom/test-utils';
@@ -11,7 +11,7 @@ describe('Control View', () => {
         const { container } = render(
             <DeviceControlProvider
                 value={{
-                    program: {
+                    activeProgram: {
                         tags: [{
                             id: '1',
                             name: 'item',
@@ -62,7 +62,7 @@ describe('Control View', () => {
 
             return <DeviceControlProvider
             value={{
-                program: {
+                activeProgram: {
                     tags: [{
                         id: '1',
                         name: 'item',

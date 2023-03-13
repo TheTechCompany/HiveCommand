@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import { Check as Checkmark, ChevronLeft, SettingsEthernet } from '@mui/icons-material';
 import { DeviceControlContext } from '../context';
-import { getDevicesForNode } from '../utils';
+import { getDevicesForNode, getNodePack, useNodesWithValues } from '../utils';
 import { Bubble } from '../components/Bubble/Bubble';
 // import { FormControl } from '@hexhive/ui';
 // import { gql, useQuery } from '@apollo/client';
@@ -14,6 +14,7 @@ import { ActionMenu } from '../components/action-menu';
 import moment from 'moment';
 
 import { DataTypes, parseValue } from '@hive-command/scripting'
+import { useRemoteComponents } from '@hive-command/remote-components';
 
 
 const ActionButton = (props: any) => {
@@ -37,7 +38,7 @@ const ActionButton = (props: any) => {
 		</Box>
 	)
 }
-export default () => {
+export const ControlView = () => {
 
 	const operatingModes = [
 		{
@@ -54,169 +55,125 @@ export default () => {
 		}
 	]
 
+	const [ infoView, setInfoView ] = useState<any>(null)
 
-	// const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, dataFunction: () => any }>();
-
-	const [selected, setSelected] = useState<{ key?: string, id?: string }>()
-
-
-	const {
-		changeOperationMode,
-		changeOperationState,
-		historize,
-		functions,
-		program,
-		hmis,
-		activePage,
-		defaultPage,
-		templatePacks,
-
-		infoTarget,
-		setInfoTarget,
-		// seekValue,
-
-		values = {},
-		// controlId = '',
-		// device,
-	} = useContext(DeviceControlContext)
-
-
-	// const requestFlow = useRequestFlow(controlId)
-	// const updateSetpoint = useUpdateDeviceSetpoint(controlId);
-
-// ?	const client = useApolloClient()
-
-	// const { data: deviceValueData } = useQuery(gql`
-	// 	query DeviceValues($id: ID) {
-		
-	// 		commandDevices (where: {id: $id}){
-	// 			deviceSnapshot {
-	// 				placeholder
-	// 				key
-	// 				value
-	// 			}
-	// 			waitingForActions {
-	// 				id
-	// 			}
-	// 		}
-	// 	}
-    // `, {
-	// 	variables: {
-	// 		id: controlId,
-	// 		idStr: controlId
-	// 	}
-	// })
-
-	// const refetch = () => {
-	// 	client.refetchQueries({include: ['DeviceValues']})
-	// }
-
-
-	// const values: { placeholder: string, key: string, value: string }[] =  [] //deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
-
-	// const waitingForActions = values?.filter((a) => a.placeholder == 'PlantActions')?.map((action) => ({ [action.key]: action.value == 'true' })).reduce((prev, curr) => ({ ...prev, ...curr }), {})
-
-	const hmi = program?.interface
-
-
-	// const getDeviceValue = (name?: string, units?: { key: string, units?: string }[]) => {
-	// 	//Find map between P&ID tag and bus-port
-
-	// 	if (!name) return;
-
-
-	// 	let v = values?.filter((a) => a?.placeholder == name);
-	// 	let state = program?.devices?.find((a) => `${a?.type?.tagPrefix || ''}${a.tag}` == name)?.type?.state;
-
-    //     console.log({name, values, v, state, program: program?.devices})
-
-	// 	return v?.reduce((prev, curr) => {
-	// 		let unit = units?.find((a) => a.key == curr.key);
-	// 		let stateItem = state?.find((a: any) => a.key == curr.key);
-	// 		let value = curr.value;
-
-	// 		if (!stateItem) return prev;
-
-	// 		if (stateItem?.type == "IntegerT" || stateItem?.type == "UIntegerT") {
-	// 			value = parseFloat(value).toFixed(2)
-	// 		}
-	// 		return {
-	// 			...prev,
-	// 			[curr.key]: value
-	// 		}
-	// 	}, {})
-
-	// }
-
-	// const hmiNodes = useMemo(() => {
-	// 	return hmi?.nodes?.map((node) => {
-
-	// 		let device = node?.devicePlaceholder?.name;
-	// 		let value = getDeviceValue(device, node?.devicePlaceholder?.type?.state);
-	// 		let conf = device?.calibrations?.filter((a) => a.device?.id == node.devicePlaceholder.id)
-
-	// 		// console.log("CONF", conf)
-	// 		return {
-	// 			...node,
-	// 			values: value,
-	// 			conf
-	// 		}
-	// 	})
-	// }, [device, deviceValueData])
-
-	// const parseValue = (value: any, typeKey: keyof typeof DataTypes) => {
-	// 	let type = DataTypes[typeKey];
-
-	// 	let isArray = typeKey?.indexOf('[]') > -1;
-        
-    //     if(isArray && !Array.isArray(value)) value = []
-    //     if(isArray) typeKey = typeKey?.replace('[]', '') as any
-        
-	// 	switch (typeKey) {
-    //         case DataTypes.Boolean:
-    //             return isArray ? value.map((value: any) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
-    //         case DataTypes.Number:
-
-    //             return isArray ? value.map((value: any) => {
-    //                 let val = parseFloat(value || 0);
-    //                 if (Number.isNaN(val)) {
-    //                     val = 0;
-    //                 }
-    //                 return val % 1 != 0 ? val.toFixed(2) : val;
-    //             }) : (() => {
-    //                 let val = parseFloat(value || 0);
-
-    //                 if(Number.isNaN(val)) {
-    //                     val = 0;
-    //                 }
-    //                 return val % 1 != 0 ? val.toFixed(2) : val;
-    //             })()
-    //         default:
-    //             console.log({ type })
-    //             break;
-    //     }
-
-	// 	// switch(type){
-	// 	// 	case DataTypes.Boolean:
-	// 	// 		return (value == true || value == "true" || value == 1 || value == "1");
-	// 	// 	case DataTypes.Number:
-	// 	// 		let val = parseFloat(value || 0);
-	// 	// 		if(Number.isNaN(val)){
-	// 	// 			val = 0;
-	// 	// 		}
-	// 	// 		return val % 1 != 0 ? val.toFixed(2) : val;
-	// 	// 	default:
-	// 	// 		console.log({type})
-	// 	// 		break;
-	// 	// }
-	// }
 
 	const [ stateValues, setStateValues ] = useState<any>({});
 
+
+	const {
+		historize,
+		client,
+		functions,
+		activePage,
+		defaultPage,
+		templatePacks = [],
+		infoTarget,
+		setInfoTarget,
+		cache,
+		activeProgram,
+	} = useContext(DeviceControlContext)
+
+	const { tags = [], types = [] } = activeProgram || {};
+
+	const { values } = client?.useValues?.({tags: tags, types: types }) || {}
+
+	const [hmiWithElems, setHMIWithElems] = useState<any[]>([])
+
+    const { getPack } = useRemoteComponents(cache)
+
+	const hmi = useMemo(() => {
+        const activeInterface = activeProgram?.interface?.find((a) => activePage ? a.id === activePage : a.id === defaultPage);
+
+        return activeInterface;
+
+    }, [activeProgram, activePage, defaultPage])
+
+
+	const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, stateValues || {}, (newState) => {
+        Object.keys(newState).map((tag) => {
+
+            if (!Array.isArray(newState[tag]) && typeof(newState[tag]) === 'object' && Object.keys(newState[tag] || {}).length > 0) {
+                Object.keys(newState[tag]).map((subkey) => client?.writeTagValue?.(tag, newState[tag][subkey], subkey))
+            } else {
+                client?.writeTagValue?.(tag, newState[tag])
+            }
+
+        })
+    })
+   
+
+	const program = useMemo(() => ({
+        ...activeProgram,
+        interface: {
+            id: '',
+            // ...activeProgram?.interface,
+            ...hmi,
+            nodes: fullHMIElements
+        },
+        tags,
+        types
+    }), [activeProgram, hmi, fullHMIElements])
+
+
+	console.log({activeProgram, hmi, fullHMIElements})
+
+    useEffect(() => {
+
+        (async () => {
+            const activeNodes = (hmi?.nodes || []).filter((a: any) => !a.children || a.children.length == 0);
+
+            const nodesWithElems = await Promise.all(activeNodes.map(async (node) => {
+
+                const nodeElem = await getNodePack(node.type, templatePacks, getPack)
+
+                let width = node.width || nodeElem?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                let height = node.height || nodeElem?.metadata?.height //|| x.type.height ? x.type.height : 50;
+
+
+                return {
+                    id: node.id,
+                    type: 'hmi-node',
+                    x: node.x,
+                    y: node.y,
+                    zIndex: node.zIndex || 1,
+                    rotation: node.rotation || 0,
+                    scaleX: node.scaleX || 1,
+                    scaleY: node.scaleY || 1,
+                    width,
+                    height,
+                    options: node.options,
+
+                    dataTransformer: node?.dataTransformer,
+
+                    extras: {
+                        icon: nodeElem, //Icon from template pack
+                        options: nodeElem?.metadata?.options || {}, //Options for node - related to extras.icon
+
+                        //TODO: Figure out how to remove the duplication of options
+                        rotation: node.rotation || 0,
+                        zIndex: node.zIndex || 1,
+                        scaleX: node.scaleX != undefined ? node.scaleX : 1,
+                        scaleY: node.scaleY != undefined ? node.scaleY : 1,
+                        // showTotalizer: x.showTotalizer || false,
+                        ports: nodeElem?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || [],
+                    }
+                }
+
+            }));
+			console.log("SET HMI WItH ELEMS")
+
+            setHMIWithElems(nodesWithElems)
+        })();
+    }, [ JSON.stringify(hmi), JSON.stringify(templatePacks) ])
+
+
+
+
+
 	useEffect(() => {
 
-
-		setStateValues(program?.tags?.map((device) => {
+		setStateValues(tags?.map((device) => {
 
 			let deviceKey = `${device.name}`;
 
@@ -224,7 +181,7 @@ export default () => {
 
 			// device.type.state
 
-			let fields = program.types?.find((a) => a.name === device.type)?.fields;
+			let fields = types?.find((a) => a.name === device.type)?.fields;
 			let hasFields = (fields || []).length > 0;
 
 
@@ -260,69 +217,13 @@ export default () => {
 			[curr.key]: curr.values
 		}), {}))
 
-	}, [values, program])
-
-	const operatingMode = values?.["Plant"]?.["Mode"]?.toLowerCase() || '';
-	const operatingState = values?.["Plant"]?.["Running"] == 'true' ? "on" : "off";
-	const operatingStatus = values?.["Plant"]?.["Status"];
+	}, [ JSON.stringify(values), JSON.stringify(tags), JSON.stringify(types) ])
 
 
-	useEffect(() => {
-		// const timer = setInterval(() => {
-		// 	client.refetchQueries({ include: ['DeviceValues'] })
-		// }, 2 * 1000)
-
-		// return () => {
-		// 	clearInterval(timer)
-		// }
-	}, [])
-
-	// const [ requestFlow, requestFlowInfo ] = useMutation((mutation, args: {
-	// 	deviceId: string,
-	// 	actionId: string
-	// }) => {
-	// 	const item = mutation.requestFlow({
-	// 		deviceId: args.deviceId,
-	// 		actionId: args.actionId
-	// 	})
-
-	// 	return {
-	// 		item: {
-	// 			success: item.success
-	// 		}
-	// 	}
-	// })
-
-	// alert(operatingMode)
-
-
-
-	
-
-	// useEffect(() => {
-	// 	setWorkingState({})
-	// }, [selected])
-
-	// const controlAction = (action) => {
-	// 	requestFlow(
-	// 		action.id
-	// 	).then(() => {
-
-	// 	})
-	// }
-
-	const [ time, setTime ] = useState(new Date().getTime());
-
-	// console.log({ hmiNodes, operatingMode, operatingModes })
-
-
-	const [ infoView, setInfoView ] = useState<any>(null)
 
 	useEffect(() => {
 
 		const DataComponent : any = infoTarget?.dataFunction;
-
-		// console.log("DC", DataComponent?.(stateValues));
 
 		const view = infoTarget != undefined ? 
 			(<Bubble
@@ -337,35 +238,26 @@ export default () => {
 					top: ((infoTarget?.y || 0) + (infoTarget?.height || 0)) + (195 / 2),
 					
 				}}>
-					{/* {DataComponent?.(stateValues)} */}
 					<DataComponent {...stateValues} />
-					{/* {Object.keys(dataFunction).map((key) => 
-						<Typography fontSize="small">{`${key}: ${dataFunction?.[key]}`}</Typography> 
-					)} */}
-				
-				{/* <ActionMenu selected={selected} values={normalisedValues} /> */}
 			</Bubble>)
 		 : null
 
 		setInfoView(view);
 
-	}, [infoTarget, stateValues])
+	}, [infoTarget, JSON.stringify(stateValues) ])
 	
+	console.log("PROGRAM NODES", program?.interface?.nodes || []);
+
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>
 
 				<HMICanvas
 					id={program?.id || ''}
-					nodes={hmi?.nodes || []}
+					nodes={program?.interface?.nodes || []}
 					templatePacks={templatePacks}
-					paths={hmi?.edges || []}
-					// functions={functions}
-
-					// functions={{
-					// 	showWindow
-					// }}
-					// program={program}
+					paths={program?.interface?.edges || []}
+		
 					deviceValues={stateValues}
 					modes={[]}
 					information={infoView}
@@ -379,31 +271,12 @@ export default () => {
 						const { x, y, width, height } = node || {x: 0, y: 0, width: 0, height: 0};
 
 
-						// // let width, height;
-						// // if (node.children && node.children.length > 0) {
-						// // 	let widths = node.children?.map((x) => x.x + ((x.type?.width * x.scaleX) || 50));
-						// // 	let xs = node.children?.map((x) => x.x);
-						// // 	let heights = node.children?.map((x) => x.y + ((x.type?.height * x.scaleY) || 50));
-						// // 	let ys = node.children?.map((x) => x.y);
-
-						// // 	width = Math.max(...widths) - Math.min(...xs)
-						// // 	height = 25// Math.min(...ys) - Math.max(...heights)
-						// // 	console.log({ width, height, widths, heights, children: node.children })
-						// // } else {
-						// // 	width = node.type.width * scaleX;
-						// // 	height = 25 //node.type.height * scaleY;
-						// // }
-
-						// setInfoTarget({ x: (x || 0) + (width||0), y: (y||0) + (height||0) })
-
-						// setEditSetpoint(undefined)
-						// setSelected(select)
 					}}
 				/>
 			</Box>
 
 			{historize && <Paper sx={{display: 'flex', flexDirection: 'column', bottom: 6, right: 6, left: 6, position: 'absolute', overflow: 'hidden'}}>
-				<InfiniteScrubber 
+				{/* <InfiniteScrubber 
 					controls
 					scale={'quarter-hour'}
 					onTimeChange={(time) => {
@@ -414,7 +287,7 @@ export default () => {
 						const endDate = moment(startDate).add(1, 'week').toDate()
 						// seekValue?.(startDate, endDate)
 					}}
-					time={time} />
+					time={time} /> */}
 			</Paper>}
 
 			
