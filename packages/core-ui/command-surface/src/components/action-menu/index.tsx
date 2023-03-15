@@ -40,7 +40,7 @@ export const ActionMenu: React.FC<ActionMenuProps> = (props) => {
 
 	const { values } = props;
 
-	const { program, client, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
+	const { client, defaultPage, activePage, hmis } = useContext(DeviceControlContext);
 
 	const { selected } = useContext(InfiniteCanvasContext)
 	const [editSetpoint, setEditSetpoint] = useState<string>();
