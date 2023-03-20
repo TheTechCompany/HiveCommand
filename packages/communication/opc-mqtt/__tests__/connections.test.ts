@@ -1,4 +1,4 @@
-import { MQTTPublisher } from "../src";
+import { MQTTClient } from "../src";
 import amqplib from 'amqplib'
 
 
@@ -35,7 +35,7 @@ describe('AMQP Client', () => {
                 }
             }) as any)
 
-            const client = new MQTTPublisher({
+            const client = new MQTTClient({
                 host: '',
                 user: '',
                 pass: '',
@@ -91,7 +91,7 @@ describe('AMQP Client', () => {
                 }
             }) as any)
 
-            const client = new MQTTPublisher({
+            const client = new MQTTClient({
                 host: '',
                 user: '',
                 pass: '',

@@ -7,8 +7,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "tsc -b",
-    "test": "jest --forceExit"
+    "build": "tsc -b"
   },
   "author": "",
   "license": "ISC",

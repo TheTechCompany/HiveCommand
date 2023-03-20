@@ -23,8 +23,7 @@
   "scripts": {
     "build": "tsc -b",
     "start": "ts-node -r tsconfig-paths/register src/cli.ts",
-    "start:prod": "node cli.js",
-    "test": "echo \"Error: run tests from root\" && exit 1"
+    "start:prod": "node cli.js"
   },
   "bugs": {
     "url": "https://github.com/TheTechCompany/HiveCommand/issues"

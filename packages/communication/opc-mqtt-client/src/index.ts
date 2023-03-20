@@ -1,4 +1,4 @@
-import { MQTTPublisher } from "@hive-command/opcua-mqtt";
+import { MQTTClient } from "@hive-command/opcua-mqtt";
 import OPCUAClient from "@hive-command/opcua-client";
 
 import { DataType } from "node-opcua";
@@ -34,14 +34,14 @@ export interface SidecarOptions {
     }[]
 }
 
-export class MQTTClient {
+export class OPCMQTTClient {
 
     private client?: OPCUAClient;
     private clientEndpoint?: string;
 
     private subscription?: { events: EventEmitter, paths: { tag: string, path: string }[], unsubscribe: () => void };
 
-    private mqttPublisher?: MQTTPublisher;
+    private mqttPublisher?: MQTTClient;
 
     options?: SidecarOptions;
     // private sessions : {[key: string]: ClientSession} = {};
@@ -130,7 +130,7 @@ export class MQTTClient {
                 const key = unwrap?.(index)
 
                 let curr_value = value.value.value;
-                if(curr_value.BYTES_PER_ELEMENT != undefined){
+                if(curr_value?.BYTES_PER_ELEMENT != undefined){
                     curr_value = Array.from(curr_value);
                 }
 
@@ -239,7 +239,7 @@ export class MQTTClient {
 
         if (this.mqttPublisher) return console.error("MQTT Publisher already existed");
 
-        this.mqttPublisher = new MQTTPublisher({
+        this.mqttPublisher = new MQTTClient({
             host: host,
             user: user,
             pass: pass,

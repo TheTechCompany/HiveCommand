@@ -6,20 +6,20 @@ import hmi from './hmi';
 import program from './program';
 
 import operations from './operations'
-import { Channel } from 'amqplib';
+import { MQTTClient } from '@hive-command/opcua-mqtt';
 import { Pool } from 'pg';
 import templates from "./program/templates";
 
-export default (prisma: PrismaClient, channel: Channel, deviceChannel: Channel) => {
+export default (prisma: PrismaClient, deviceChannel: MQTTClient) => {
 
 	
-	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma, channel);
+	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
 
 	const { typeDefs: templateTypeDefs, resolvers: templateResolvers } = templates(prisma);
 
-	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, channel, deviceChannel)
+	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, deviceChannel)
 
 	const resolvers = mergeResolvers([
 		deviceResolvers,

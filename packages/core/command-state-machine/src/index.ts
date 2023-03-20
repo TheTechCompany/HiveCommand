@@ -29,8 +29,8 @@ export enum CommandStateMachineStatus {
 export interface StateProgram {
 	initialState?: any;
 	devices?: ProgramDevice[],
-	setpoints: CommandSetpoint[];
-	variables: CommandVariable[],
+	setpoints?: CommandSetpoint[];
+	variables?: CommandVariable[],
 	processes: CommandProcess[],	
 }
 
@@ -147,8 +147,8 @@ export class CommandStateMachine extends EventEmitter {
 
 		this.state = new State(this, program.initialState || {});
 
-		this.variables = new VariableManager(program.variables);
-		this.setpoints = new SetpointManager(program.setpoints);
+		this.variables = new VariableManager(program.variables || []);
+		this.setpoints = new SetpointManager(program.setpoints || []);
 
 		console.log({variables: this.variables, setpoints: this.setpoints});
 

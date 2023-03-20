@@ -1,7 +1,7 @@
 import { connect, ConsumeMessage, Connection, Channel } from 'amqplib'
 import { DataType } from 'node-opcua';
 
-export interface MQTTPublisherOptions {
+export interface MQTTClientOptions {
     user?: string;
     pass?: string;
     host: string;
@@ -17,18 +17,18 @@ export interface MQTTPublisherOptions {
     }
 }
 
-export class MQTTPublisher {
+export class MQTTClient {
     
     private isConnected : boolean = false;
 
     private wal : any[] = [];
 
     private connection? : Connection;
-    private channel? : Channel;
+    public channel? : Channel;
 
-    private options: MQTTPublisherOptions;
+    private options: MQTTClientOptions;
 
-    constructor(options: MQTTPublisherOptions){
+    constructor(options: MQTTClientOptions){
         this.options = options;
     }
 
@@ -124,7 +124,7 @@ export class MQTTPublisher {
     async publish(key: string, dataType: string, value: any, isRetry?: number, retryCount: number = 1){
         // console.log("Publishing ", key, dataType, value)
 
-        if(value.BYTES_PER_ELEMENT != undefined){
+        if(value?.BYTES_PER_ELEMENT != undefined){
             value = Array.from(value)
         }
 

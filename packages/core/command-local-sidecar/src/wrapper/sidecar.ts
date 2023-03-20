@@ -1,5 +1,5 @@
 import { SidecarConf } from "./conf";
-import { MQTTClient } from '@hive-command/opcua-mqtt-client';
+import { OPCMQTTClient } from '@hive-command/opcua-mqtt-client';
 
 export interface SidecarOptions {
 
@@ -25,7 +25,7 @@ export interface SidecarOptions {
     }[]
 }
 
-export class Sidecar extends MQTTClient {
+export class Sidecar extends OPCMQTTClient {
 
     private conf: SidecarConf;
 

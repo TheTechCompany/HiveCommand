@@ -1,13 +1,13 @@
 import { load_exports, parseValue } from "@hive-command/scripting";
 import { DataType } from "node-opcua";
 import {transpile, ModuleKind} from 'typescript';
-import { MQTTClient, SidecarOptions } from "..";
+import { OPCMQTTClient, SidecarOptions } from "..";
 
 export class Runner {
 
-    private client: MQTTClient;
+    private client: OPCMQTTClient;
 
-    constructor(client: MQTTClient){   
+    constructor(client: OPCMQTTClient){   
         this.client = client;
 
         this.getTag = this.getTag.bind(this);

@@ -1,5 +1,5 @@
 import { isEqual, merge } from 'lodash';
-import { MQTTClient } from '..';
+import { OPCMQTTClient } from '..';
 import { Runner } from '../runner';
 
 export interface ValueStoreOptions {
@@ -16,9 +16,9 @@ export class ValueStore {
 
     values: any = {};
 
-    private mqttClient: MQTTClient;
+    private mqttClient: OPCMQTTClient;
 
-    constructor(mqttClient: MQTTClient, runner: Runner){
+    constructor(mqttClient: OPCMQTTClient, runner: Runner){
         this.runner = runner;
         this.mqttClient = mqttClient;        
     }

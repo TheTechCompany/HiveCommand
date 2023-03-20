@@ -38,8 +38,10 @@ describe('Transition Events', () => {
 									blockType: 'action',
 									actions: [
 										{
+											id: '0',
+
 											device: 'PMP101',
-											operation: 'start'
+											request: 'start'
 										}
 									]
 								}
@@ -51,8 +53,9 @@ describe('Transition Events', () => {
 									blockType: 'timer',
 									actions: [
 										{
+											id: '0',
 											device: 'PMP201',
-											operation: "stop"
+											request: "stop"
 										}
 									]
 								}
@@ -60,10 +63,12 @@ describe('Transition Events', () => {
 						],
 						edges: [
 							{
+								id: '0',
 								source: "origin",
 								target: "0.1"
 							},
 							{
+								id: '1',
 								source: '0.1',
 								target: '0.2'
 							}

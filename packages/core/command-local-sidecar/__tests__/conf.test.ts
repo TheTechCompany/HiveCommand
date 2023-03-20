@@ -1,4 +1,4 @@
-import { SidecarConf } from '.';
+import { SidecarConf } from '../src/wrapper';
 
 describe('Conf store', () => {
 

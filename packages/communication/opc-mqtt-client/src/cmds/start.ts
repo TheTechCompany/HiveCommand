@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import log from 'loglevel';
 import type { Arguments, CommandBuilder } from 'yargs';
-import { MQTTClient } from '../';
+import { OPCMQTTClient } from '../';
 
 const pkg = require('../../package.json')
 
@@ -81,7 +81,7 @@ type Options = {
         subscriptionList =  JSON.parse(readFileSync(subscriptionMap, 'utf8') || '[]')
     }
 
-	const hostCommander = new MQTTClient({
+	const hostCommander = new OPCMQTTClient({
 		iot: {
             host: mqttHost,
             user: mqttUser,

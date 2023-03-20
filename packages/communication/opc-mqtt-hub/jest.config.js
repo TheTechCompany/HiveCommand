@@ -1,3 +1,10 @@
+// /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+// module.exports = {
+//   preset: 'ts-jest',
+//   testEnvironment: 'node',
+// };
+
+
 /** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 const { pathsToModuleNameMapper } = require('ts-jest')
 
@@ -6,7 +13,7 @@ const { compilerOptions } = require('./tsconfig.paths.json');
 
 module.exports = {
   preset: 'ts-jest',
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   extensionsToTreatAsEsm: [".ts", ".tsx"],
   // testMatch: [ "**/*.test.[t]s?(x)" ],
  

@@ -1,5 +1,5 @@
 import amqplib from 'amqplib'
-import { MQTTPublisher } from '../src';
+import { MQTTClient } from '../src';
 
 describe('AMQP Publisher', () => {
     it('Retries sending when failed', async () => {
@@ -34,7 +34,7 @@ describe('AMQP Publisher', () => {
                 }
             }) as any)
 
-            const client = new MQTTPublisher({
+            const client = new MQTTClient({
                 host: '',
                 user: '',
                 pass: '',
@@ -88,7 +88,7 @@ describe('AMQP Publisher', () => {
                 }
             }) as any)
 
-            const client = new MQTTPublisher({
+            const client = new MQTTClient({
                 host: '',
                 user: '',
                 pass: '',

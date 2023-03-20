@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
-import { Channel } from 'amqplib'
+import { MQTTClient } from '@hive-command/opcua-mqtt'
 import { PrismaClient } from "@hive-command/data";
 
-export default (prisma: PrismaClient, channel: Channel, deviceChannel: Channel) => {
+export default (prisma: PrismaClient, deviceChannel: MQTTClient) => {
 
     const typeDefs = `
         type Mutation {
@@ -245,9 +245,9 @@ export default (prisma: PrismaClient, channel: Channel, deviceChannel: Channel) 
 				// }
 
 				// return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
-				await deviceChannel.assertQueue(`device:${device?.network_name}`)
+				await deviceChannel.channel?.assertQueue(`device:${device?.network_name}`)
 
-				await deviceChannel.sendToQueue(`device:${device?.network_name}`, Buffer.from( JSON.stringify({ key: `${args.deviceName}${args.key ? `.${args.key}` : ''}`, value: args.value }) ))
+				await deviceChannel.channel?.sendToQueue(`device:${device?.network_name}`, Buffer.from( JSON.stringify({ key: `${args.deviceName}${args.key ? `.${args.key}` : ''}`, value: args.value }) ))
 				
 				return true;
 			}

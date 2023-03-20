@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "amqplib": ["./node_modules/amqplib"],
+      "@hive-command/opcua-mqtt": ["../opc-mqtt"]
+    }
+  },
+  "references": [
+    {"path": "../opc-mqtt"}
+  ]
+}

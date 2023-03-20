@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@hive-command/opcua-mqtt": ["../../communication/opc-mqtt/src"],
+      "@hive-command/opcua-mqtt-client": ["../../communication/opc-mqtt-client/src"],
+      "@hive-command/opcua-client": ["../../communication/opc-client/src"],
+      "@hive-command/scripting": ["../../core/command-scripting/src"]
+    }
+  },
+  "references": [
+    {"path": "../../communication/opc-mqtt"},
+    {"path": "../../communication/opc-mqtt-client"},
+    {"path": "../../communication/opc-client"},
+    {"path": "../../core/command-scripting"}
+  ]
+}
