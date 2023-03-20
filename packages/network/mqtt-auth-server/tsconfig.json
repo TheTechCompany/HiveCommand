@@ -103,6 +103,6 @@
   },
   "references": [
     {"path": "../../core/command-data"},
-    {"path": "../../communication/opc-mqtt-auth"}
+    {"path": "../../communication/rabbitmq-auth"}
   ]
 }

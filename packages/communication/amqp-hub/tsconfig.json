@@ -103,6 +103,6 @@
   },
   "exclude": ["dist/", "__tests__", "example/"],
   "references": [
-    {"path": "../opc-mqtt"}
+    {"path": "../amqp-client"}
   ]
 }
