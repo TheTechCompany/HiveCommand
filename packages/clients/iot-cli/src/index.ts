@@ -1,5 +1,5 @@
 import { exchangeShortcode, getProgramLayout } from "./auth";
-import { MQTTClient } from '@hive-command/opcua-mqtt-client'
+import { OPCMQTTClient } from '@hive-command/opcua-mqtt-client'
 
 export interface IOTCLIOptions {
     discoveryServer: string;
@@ -19,7 +19,7 @@ export class IOTCLI {
 
     private provisionCode: string;
 
-    private opcMQTTClient? : MQTTClient;
+    private opcMQTTClient? : OPCMQTTClient;
 
     private deviceMap: any[];
     private subscriptionMap: any[];
@@ -40,7 +40,7 @@ export class IOTCLI {
 
         const [ controlLayout, networkLayout ] = await getProgramLayout(this.discoveryServer, token)
 
-        this.opcMQTTClient = new MQTTClient({
+        this.opcMQTTClient = new OPCMQTTClient({
             tags: controlLayout?.tags,
             types: controlLayout?.types,
             opcuaServer: this.opcuaServer,

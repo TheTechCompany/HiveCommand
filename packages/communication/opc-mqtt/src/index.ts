@@ -7,7 +7,7 @@ export interface MQTTClientOptions {
     host: string;
     port?: number;
 
-    exchange: string;
+    exchange?: string;
 
     reconnectOptions?: {
         maxAttempts?: number,
@@ -78,7 +78,7 @@ export class MQTTClient {
 
             await this.publishWAL()
 
-            await this.channel.assertExchange(this.options.exchange, 'topic');
+            if(this.options.exchange) await this.channel.assertExchange(this.options.exchange, 'topic');
             
             reconnecting = false;
         }catch(e: any){
@@ -133,7 +133,7 @@ export class MQTTClient {
             ix = this.wal.push({key, dataType, value});
         }
 
-        if(this.isConnected){
+        if(this.isConnected && this.options.exchange){
             try{
                 if(!ix) return;
 
