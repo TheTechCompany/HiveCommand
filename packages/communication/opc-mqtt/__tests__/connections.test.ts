@@ -11,13 +11,16 @@ afterAll(() => {
 })
 
 describe('AMQP Client', () => {
+
     it('Connects to server', async () => {
 
         let asserted = false;
 
-        await new Promise(async (resolve) => {
+        const res = await new Promise(async (resolve) => {
 
             jest.spyOn(amqplib, 'connect').mockImplementation((async (url: string) => {
+                resolve(true);
+
                 return {
                     once: (key: 'string', fn: any) => {
 
@@ -43,9 +46,9 @@ describe('AMQP Client', () => {
             });
 
             await client.connect();
-            // expect(val).toBe(true);
         })
 
+        expect(res).toBe(true);
 
     });
 
