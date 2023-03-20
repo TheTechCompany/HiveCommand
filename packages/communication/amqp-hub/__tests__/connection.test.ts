@@ -1,5 +1,5 @@
 import { MQTTHub } from '../src';
-import {MQTTClient} from '@hive-command/opcua-mqtt';
+import {MQTTClient} from '@hive-command/amqp-client';
 import amqplib from 'amqplib';
 
 

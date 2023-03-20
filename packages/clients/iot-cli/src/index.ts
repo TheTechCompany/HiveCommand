@@ -1,5 +1,5 @@
 import { exchangeShortcode, getProgramLayout } from "./auth";
-import { OPCMQTTClient } from '@hive-command/opcua-mqtt-client'
+import { OPCMQTTClient } from '@hive-command/opcua-amqp-bridge'
 
 export interface IOTCLIOptions {
     discoveryServer: string;

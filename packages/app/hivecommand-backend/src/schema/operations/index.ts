@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { MQTTClient } from '@hive-command/opcua-mqtt'
+import { MQTTClient } from '@hive-command/amqp-client'
 import { PrismaClient } from "@hive-command/data";
 
 export default (prisma: PrismaClient, deviceChannel: MQTTClient) => {

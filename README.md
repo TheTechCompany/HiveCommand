@@ -55,14 +55,14 @@ packages/
   clients/
     iot-cli/
   communication/ - MQTT, OPC, Driver libraries
+    amqp-client/
+    amqp-hub/
     opc-client/
     opc-ethernet-ip-bridge/
-    opc-mqtt/
-    opc-mqtt-auth/
-    opc-mqtt-client/
-    opc-mqtt-hub/
+    opc-amqp-bridge/
     opc-server/
     opc-utils/
+    rabbitmq-auth/
     sms-utils/
   core/ - DB defs, scripting helpers, local-bridge
     command-data/

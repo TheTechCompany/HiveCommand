@@ -1,4 +1,4 @@
-import { MQTTClient } from "@hive-command/opcua-mqtt";
+import { MQTTClient } from "@hive-command/amqp-client";
 import OPCUAClient from "@hive-command/opcua-client";
 
 import { DataType } from "node-opcua";

@@ -6,7 +6,7 @@ import hmi from './hmi';
 import program from './program';
 
 import operations from './operations'
-import { MQTTClient } from '@hive-command/opcua-mqtt';
+import { MQTTClient } from '@hive-command/amqp-client';
 import { Pool } from 'pg';
 import templates from "./program/templates";
 

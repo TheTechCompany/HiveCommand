@@ -3,7 +3,7 @@ config()
 
 import { HiveGraph } from '@hexhive/graphql-server'
 
-import { MQTTClient } from '@hive-command/opcua-mqtt'
+import { MQTTClient } from '@hive-command/amqp-client'
 import cors from 'cors';
 import express from 'express';
 import schema from './schema'

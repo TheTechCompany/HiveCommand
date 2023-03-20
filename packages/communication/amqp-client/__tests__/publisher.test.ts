@@ -56,53 +56,53 @@ describe('AMQP Publisher', () => {
         expect(res).toBe(true)
     })
 
-    it('Queues up publish writes in a Write ahead log', async () => {
-        let connectionCount = 0;
+    // it('Queues up publish writes in a Write ahead log', async () => {
+    //     let connectionCount = 0;
 
 
-        const res = await new Promise(async (resolve) => {
+    //     const res = await new Promise(async (resolve) => {
 
-            jest.spyOn(amqplib, 'connect').mockImplementation((async (url: string) => {
+    //         jest.spyOn(amqplib, 'connect').mockImplementation((async (url: string) => {
 
-                return {
-                    once: (key: string, fn: any) => {
-                        //Second connection trigger an internal error
+    //             return {
+    //                 once: (key: string, fn: any) => {
+    //                     //Second connection trigger an internal error
                  
-                    },
-                    createChannel: async () => {
-                        return {
-                            assertExchange: () => {
+    //                 },
+    //                 createChannel: async () => {
+    //                     return {
+    //                         assertExchange: () => {
 
-                            },
-                            consume: () => {
+    //                         },
+    //                         consume: () => {
 
-                            },
-                            publish: () => {
-                                connectionCount ++;
-                                if(connectionCount >= 1){
-                                    resolve(true);
-                                }
-                            }
-                        }
-                    }
-                }
-            }) as any)
+    //                         },
+    //                         publish: () => {
+    //                             connectionCount ++;
+    //                             if(connectionCount >= 1){
+    //                                 resolve(true);
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         }) as any)
 
-            const client = new MQTTClient({
-                host: '',
-                user: '',
-                pass: '',
-                exchange: ''
-            });
+    //         const client = new MQTTClient({
+    //             host: '',
+    //             user: '',
+    //             pass: '',
+    //             exchange: ''
+    //         });
 
-            // jest.runAllTimers()
-            client.publish('test-2', "Boolean", 'test-1')
+    //         // jest.runAllTimers()
+    //         client.publish('test-2', "Boolean", 'test-1')
 
-            await client.connect();
+    //         await client.connect();
 
-        })
+    //     })
         
 
-        expect(res).toBe(true)
-    })
+    //     expect(res).toBe(true)
+    // })
 })

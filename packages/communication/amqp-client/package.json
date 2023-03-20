@@ -1,5 +1,5 @@
 {
-  "name": "@hive-command/opcua-mqtt",
+  "name": "@hive-command/amqp-client",
   "version": "1.4.15-alpha.196",
   "description": "",
   "main": "dist/index.js",

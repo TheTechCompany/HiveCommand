@@ -1,5 +1,5 @@
 import {Channel, Connection, ConsumeMessage} from 'amqplib';
-import { MQTTClient } from '@hive-command/opcua-mqtt';
+import { MQTTClient } from '@hive-command/amqp-client';
 
 export interface MQTTHubMessage {
     userId?: string;

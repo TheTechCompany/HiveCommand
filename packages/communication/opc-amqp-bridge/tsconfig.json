@@ -103,7 +103,7 @@
   },
   "references": [
     {"path": "../../core/command-scripting"},
-    {"path": "../opc-mqtt"},
+    {"path": "../amqp-client"},
     {"path": "../opc-client"}
   ]
 }

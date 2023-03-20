@@ -102,6 +102,6 @@
   "exclude": ["dist/", "example/", "prisma/"],
   "references": [
     {"path": "../../core/command-data"},
-    {"path": "../../communication/opc-mqtt"},
+    {"path": "../../communication/amqp-client"},
   ]
 }

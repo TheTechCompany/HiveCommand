@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@hive-command/data": "^1.4.15-alpha.196",
-    "@hive-command/opcua-mqtt-hub": "^1.4.15-alpha.196",
+    "@hive-command/amqp-hub": "^1.4.15-alpha.196",
     "@hive-command/rabbitmq-auth": "^1.4.15-alpha.172",
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",

@@ -3,10 +3,10 @@
     "baseUrl": ".",
     "paths": {
       "amqplib": ["./node_modules/amqplib"],
-      "@hive-command/opcua-mqtt": ["../opc-mqtt"]
+      "@hive-command/amqp-client": ["../amqp-client"]
     }
   },
   "references": [
-    {"path": "../opc-mqtt"}
+    {"path": "../amqp-client"}
   ]
 }

@@ -2,8 +2,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@hive-command/opcua-mqtt": ["../../communication/opc-mqtt/src"],
-      "@hive-command/opcua-mqtt-client": ["../../communication/opc-mqtt-client/src"],
+      "@hive-command/amqp-client": ["../../communication/amqp-client/src"],
+      "@hive-command/opcua-amqp-bridge": ["../../communication/opc-amqp-bridge/src"],
       "@hive-command/opcua-client": ["../../communication/opc-client/src"],
       "@hive-command/scripting": ["../../core/command-scripting/src"]
     }
