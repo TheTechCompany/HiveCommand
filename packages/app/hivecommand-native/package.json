@@ -32,8 +32,7 @@
 	"scripts": {
 		"start": "react-app-rewired start",
 		"build:deps": "lerna run build --scope @hive-command/native --include-dependencies",
-		"build:extras": "lerna run package --scope @hive-command/local-sidecar",
-		"build": "yarn build:deps && yarn build:extras && node move-binary.js && react-app-rewired build",
+		"build": "yarn build:deps && node move-binary.js && react-app-rewired build",
 		"tauri": "tauri"
 	},
 	"eslintConfig": {

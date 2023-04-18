@@ -34,6 +34,7 @@ function App() {
 
     }).catch((err) => {
       console.error("Sidecar Error", err)
+      setSidecarRunning(false)
     });
 
     let unlisten: any;
@@ -79,7 +80,7 @@ function App() {
       )
     } else {
       return (
-        <Controller />
+        <Controller sidecar={sidecarRunning} />
       )
     }
   }, [authState, authState?.isAuthed()])
