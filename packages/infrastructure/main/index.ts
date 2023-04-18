@@ -2,7 +2,7 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import * as awsx from "@pulumi/awsx";
 import { Provider } from '@pulumi/kubernetes'
-import { Config } from "@pulumi/pulumi";
+import { all, Config } from "@pulumi/pulumi";
 import * as eks from '@pulumi/eks';
 import { Deployment } from './src/deployment'
 import { Service } from './src/service'
@@ -61,9 +61,9 @@ const main = (async () => {
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 
-    const mqttURL = internalURL.apply(url => `amqp://${process.env.IOT_USER}:${process.env.IOT_PASS}@${url}`)
 
-    const deployment = await rootServer.apply(async (url) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, mqttURL));
+
+    const deployment = await all([rootServer, internalURL]).apply(async ([url, internal]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, internal));
     const service = await Service(provider)
 
     return {
