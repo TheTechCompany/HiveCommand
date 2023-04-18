@@ -31,8 +31,7 @@
 	},
 	"scripts": {
 		"start": "react-app-rewired start",
-		"build:deps": "npx lerna run build --scope @hive-command/native --include-dependencies",
-		"build": "yarn build:deps && node move-binary.js && react-app-rewired build",
+		"build": "node move-binary.js && react-app-rewired build",
 		"tauri": "tauri"
 	},
 	"eslintConfig": {
