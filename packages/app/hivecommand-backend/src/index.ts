@@ -27,7 +27,9 @@ cache.connect_to(process.env.MONGO_URL || '');
 	await redis.connect()
 
 	const deviceMQ = new MQTTClient({
-		host: process.env.DEVICE_MQ || '',
+		host: process.env.DEVICE_MQ_HOST || '',
+		user: process.env.DEVICE_MQ_USER,
+		pass: process.env.DEVICE_MQ_PASS
 	})
 
 	await deviceMQ.connect();
