@@ -5,7 +5,7 @@ on:
     branches:
       # - staging
       - master
-    paths: ["packages/app/hivecommand-backend/**", "packages/network/**",  "packages/infrastructure/**"]
+    paths: ["packages/app/hivecommand-backend/**", "packages/network/**",  "packages/infrastructure/main/**"]
 
 concurrency: hivecommand-infra-${{ github.ref }}
 
@@ -146,7 +146,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - run: yarn
-        working-directory: ./packages/infrastructure
+        working-directory: ./packages/infrastructure/main
 
 
       - name: Setup stack
@@ -176,7 +176,7 @@ jobs:
         with:
           command: up
           stack-name: ${{env.STACK_NAME}}
-          work-dir: ./packages/infrastructure
+          work-dir: ./packages/infrastructure/main
         env:
           STAGING_SYNC_OVPN: ${{ secrets.STAGING_SYNC_OVPN }}
           HEXHIVE_API_KEY: ${{ env.HEXHIVE_API_KEY }}
@@ -189,7 +189,7 @@ jobs:
         with:
           command: up
           stack-name: ${{env.STACK_NAME}}
-          work-dir: ./packages/infrastructure
+          work-dir: ./packages/infrastructure/main
         env:
           IOT_USER: ${{ secrets.IOT_USER }}
           IOT_PASS: ${{ secrets.IOT_PASS }}
@@ -218,7 +218,7 @@ jobs:
         uses: pulumi/setup-pulumi@v2
 
       - run: pulumi stack select ultraviolet/hivecommand-staging
-        working-directory: ./packages/infrastructure
+        working-directory: ./packages/infrastructure/main
 
       - run: mkdir ~/.kube/
 
@@ -242,15 +242,15 @@ jobs:
         if: ${{ github.ref == 'refs/heads/master' }}
         
       - run: pulumi stack -s ultraviolet/base-infrastructure/prod output k3sconfig > ~/.kube/config
-        working-directory: ./packages/infrastructure
+        working-directory: ./packages/infrastructure/main
         id: kube_config
 
       - run: echo "::set-output name=postgres::$(pulumi stack -s ${{env.DB_NAME}} output timeseries_name)" 
-        working-directory: ./packages/infrastructure
+        working-directory: ./packages/infrastructure/main
         id: postgres_url
       
       - run: echo "::set-output name=pass::$(pulumi stack -s ${{env.DB_NAME}} output postgres_pass )" 
-        working-directory: ./packages/infrastructure
+        working-directory: ./packages/infrastructure/main
         id: postgres_pass
 
       - name: Configure AWS Credentials

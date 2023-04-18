@@ -168,7 +168,7 @@ export default class Server {
         type: 'String' | 'Number' | 'Boolean', 
         isArray: boolean,
         getter: () => any, 
-        setter: (value: any) => void,
+        setter?: (value: any) => void,
         parent?: UAObject
     ){
         console.log(`Add variable ${name} ${type}`)
@@ -438,7 +438,7 @@ export default class Server {
         
         const result = this.namespace?.addressSpace.browsePath(browsePath)
 
-        if(result?.targets?.[0].targetId){
+        if(result?.targets?.[0]?.targetId){
             const res : any = this.namespace?.addressSpace.findNode(result?.targets?.[0].targetId)
             let ua : UAObject = res[name];
 

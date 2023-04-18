@@ -8,7 +8,6 @@
     "start": "ts-node src/index.ts",
     "start:prod": "node index.js",
     "build": "tsc -b",
-    "test": "echo \"Error: no test specified\" && exit 1",
     "db:update": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
     "db:seed": "prisma db seed"

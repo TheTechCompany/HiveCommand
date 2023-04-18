@@ -101,6 +101,7 @@
   },
   "exclude": ["dist/", "example/", "prisma/"],
   "references": [
-    {"path": "../../core/command-data"}
+    {"path": "../../core/command-data"},
+    {"path": "../../communication/amqp-client"},
   ]
 }

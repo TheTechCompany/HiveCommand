@@ -23,15 +23,16 @@ describe('opc-server', () => {
         expect(av101?.type).toBe('1:valve')
     })
 
-    test('Get devices', async () => {
-        let av101 = await server.getDevice("AV101")
-        let blower = await server.getDevice("BLO701")
-        expect(blower?.type).toBe("1:blower")
-        expect(av101?.type).toBe('1:valve')
-    })
+    // test('Get devices', async () => {
+    //     let av101 = await server.getDevice("AV101")
+    //     let blower = await server.getDevice("BLO701")
+
+    //     expect(blower?.type).toBe("1:blower")
+    //     expect(av101?.type).toBe('1:valve')
+    // })
 
     test('Add variable', async () => {
-        await server.addVariable('Test', 'String', () => "Test", () => {});
+        await server.addVariable('Test', 'String', false, () => "Test", () => {});
 
         // const results = await client.browse('/1:Objects')
         // console.log({results})

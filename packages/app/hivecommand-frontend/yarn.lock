@@ -1382,6 +1382,11 @@
   resolved "https://registry.yarnpkg.com/@hexhive/utils/-/utils-0.0.6-alpha.13.tgz#bb2a5415a5fa39870dd40397f1e41a9c1dc89a92"
   integrity sha512-jB7lgqBbWjymdV4ZReW8zmgVOs2QCcei+8sGhqHQkZDt48IbvfrTaklKxIKnQJpX/p1JgqiO8fjoxr802sXZQw==
 
+"@hive-command/data-types@^1.4.15-alpha.52":
+  version "1.4.15-alpha.52"
+  resolved "https://registry.yarnpkg.com/@hive-command/data-types/-/data-types-1.4.15-alpha.52.tgz#accd00b70139b29969e8d598f716d9cddfe387e3"
+  integrity sha512-Z3whbBS84mUYmfyZ7hlbQEqUO6Gc6XXtVlIaxnn1wBN4EVRgLrsaq2tvevlhrPbx2x5gc78jSY7kXavx7rY+bQ==
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
