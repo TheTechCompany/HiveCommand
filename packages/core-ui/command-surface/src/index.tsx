@@ -280,7 +280,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             stateItems: string[] = [],
             actions: {label: string, func: string}[] = [],
             setpoints?: (state: any) => ({ label: string, getter: () => any, setter?: (value: any) => void }[]),
-            manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void})
+            manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void}),
+            transformer?: (state: any) => any
         ) => {
             functions.showWindow({
                 x: position?.x,
@@ -289,31 +290,31 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 height: position?.height,
             }, (state: any) => {
 
-                console.log({state});
+
+                let workingState = transformer ? transformer(state) : state;
 
                 const [view, setView] = useState<'info' | 'settings'>('info')
 
-                let values = state[deviceTag];
+                // let values = workingState[deviceTag] || workingState || {};
+                const values = state[deviceTag];
 
                 let tag = tags?.find((a) => a.name === deviceTag);
 
                 let fields = types?.find((a) => a.name === tag?.type)?.fields || [];
 
-                // let actions = tags?.find((a) => a.name === deviceTag)?.type || [];
-
                 const manualControls = useMemo(() => {
-                    return manual?.(state);
-                }, [JSON.stringify(state), manual])
+                    return manual?.(workingState);
+                }, [JSON.stringify(workingState), manual])
 
                 const leftAction = useMemo(() => {
-                    if(setpoints){
+                    if((setpoints?.(workingState) || []).length > 0){
                         if(view == 'settings'){
                             return (<IconButton onClick={() => setView('info')}  sx={{ padding: 0  }}>
                                 <KeyboardArrowLeft />
                             </IconButton>)
                         }
                     }
-                }, [setpoints, view])
+                }, [setpoints, workingState, view])
 
                 const rightAction = useMemo(() => {
                     if(manualControls){
@@ -321,7 +322,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     }
                    
 
-                }, [manualControls, view, setpoints, JSON.stringify(state)])
+                }, [manualControls, view, setpoints, JSON.stringify(workingState)])
 
                 const headerExtras = useMemo(() => {
                     // if(setpoints.length > 0){
@@ -329,7 +330,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     //         return ' - Setpoints'
                     //     }
                     // }
-                    if (setpoints) {
+                    if ((setpoints?.(workingState) || []).length > 0) {
                         // if(view == 'settings'){
                         //     return <Box sx={{display: 'flex'}}>
                         //         <IconButton sx={{  padding: 0  }}>
@@ -353,10 +354,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 }, [setpoints, view]);
 
                 const setpointValues = useMemo(() => {
-                    return setpoints?.(state)
-                }, [JSON.stringify(setpoints), JSON.stringify(state)])
-
-                console.log({state, setpointValues})
+                    return setpoints?.(workingState)
+                }, [JSON.stringify(setpoints), JSON.stringify(workingState)])
 
                 const renderFieldValue = (valueKey: string) => {
 

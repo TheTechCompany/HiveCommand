@@ -150,7 +150,8 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                         state: string[],
                         actions?: { label: string, func: string }[],
                         setpoints?: (state: any) => ({ label: string, getter: () => any, setter?: (value: any) => void }[]),
-                        manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void})
+                        manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void}),
+                        transformer?: (state: any) => any
                     ){
                         
                     }
