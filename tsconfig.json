@@ -26,7 +26,7 @@
 		
 		"@hive-command/rabbitmq-auth": ["./communication/rabbitmq-auth/src"],
 		"@hive-command/amqp-hub": ["./communication/amqp-hub/src"],
-		"@hive-command/opcua-amqp-bridge": ["./communication/opc-amqp-client/src"],
+		"@hive-command/opcua-amqp-bridge": ["./communication/opc-amqp-bridge/src"],
 		"@hive-command/amqp-client": ["./communication/amqp-client/src"],
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
