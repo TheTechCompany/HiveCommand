@@ -72,12 +72,17 @@ export const SetupView = (props: any) => {
                         deviceMap: globalState?.deviceMap
                     }
                 }).then((data) => {
-                    console.log("OPCUA PROVISIONED");
+
                     setState('opcuaProvisioned', true)
                     
                     setAuthState?.('configProvided', true)
 
                     //START MQTT?
+                }).catch((err) => {
+                    console.error("configProvided failed", err);
+
+                    setAuthState?.('configProvided', true)
+
                 })
 
             }
