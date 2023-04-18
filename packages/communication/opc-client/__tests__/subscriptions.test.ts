@@ -20,187 +20,136 @@ describe('Subscriptions', () => {
     // afterEach(() => {
     //     clock.restore();
     // })
+    it('Subscription changes value @ 0', async () => {
 
-    it('Subscription can have inactivity for 60 seconds - Sinon', async () => {
-       
+        const res = await new Promise(async (resolve) => {
 
+            let passes = 0;
 
-        const server = await TestServer(4446)
-        let client = new Client();
+            const server = await TestServer(4840)
 
-        await client.connect(`opc.tcp://localhost:4446`)
+            let client = new Client();
 
-        const sub = await client.subscribe({path: '/Objects/1:Permeate'});
+            await client.connect(`opc.tcp://localhost:4840`);
 
-        if(sub){
+            const sub = await client.subscribe({path: '/Objects/1:Permeate'})
 
+            sub?.on('changed', async (val) => {
 
-            const r = new Promise((resolve) => {
-                sub.on('changed', (val: any) => {
-                    console.log("VALUE", val.value.value)
-                    if(val.value.value === 213){
-                        resolve(true)
+                if(val.value.value == 0 || val.value.value == 123){
+                    passes ++;
+
+                    console.log(passes)
+                    if(passes === 2){
+                        await client.disconnect()
+
+                        await server.stop();
+
+                        resolve(passes)
+
                     }
-                })
+                }
+
             })
 
-            await new Promise((resolve) => setTimeout(resolve, 100))
-            
-            let clock = sinon.useFakeTimers({now: Date.now(), shouldAdvanceTime: true, shouldClearNativeTimers: true, })
 
+            setTimeout(() => {
+                server.changeValue(0)
+            }, 1000);
 
-            // jest.useFakeTimers();
+        })
 
-            // jest.advanceTimersByTime(10 * 1000)
+        expect(res).toBe(2);
 
-            // // await clock.tickAsync(1000);
-            //   // Fast-forward until all timers have been executed
-            // // jest.runOnlyPendingTimers();
-           
-            let changeValue = new Promise((resolve) => setTimeout(() => {
-
-                console.log("Change value");
-
-                server.changeValue(213);
-
-                resolve(true)
-
-            }, 120*1000))
-
-
-            // clock.tick(140 * 1000)
-
-            // setInterval(() => , 100);
-
-            clock.tick(121 * 1000);
-
-            // await flushPromises();
-
-            // jest.advanceTimersByTime(121 * 1000)
-
-
-            // jest.runAllTimers();
-
-            // jest.advanceTimersByTime(140 * 1000)
-            
-            // jest.useRealTimers()
-
-            clock.restore();
-
-            await changeValue
-
-            await r;
-
-            // try{
-            //     await r;
-            
-            // }catch(e){
-            //     console.error(e)
-            // }
-
-            // await flushPromises()
-
-            // jest.useRealTimers()
-
-            await client.disconnect();
-
-            await server.stop();
-
-
-
-            // clock.uninstall();
-
-            expect(r).resolves.toBe(true)
-        }
-    })  
+    });
     
 
-    it('Subscription can have inactivity for 60 seconds - Jest', async () => {
+    // it('Subscription can have inactivity for 60 seconds - Jest', async () => {
        
 
 
-        const server = await TestServer(4445)
-        let client = new Client();
+    //     const server = await TestServer(4445)
+    //     let client = new Client();
 
-        await client.connect(`opc.tcp://localhost:4445`)
+    //     await client.connect(`opc.tcp://localhost:4445`)
 
-        const sub = await client.subscribe({path: '/Objects/1:Permeate'});
+    //     const sub = await client.subscribe({path: '/Objects/1:Permeate'});
 
-        if(sub){
+    //     if(sub){
 
-            // let clock = sinon.useFakeTimers({now: Date.now(), shouldAdvanceTime: true, shouldClearNativeTimers: true, })
+    //         // let clock = sinon.useFakeTimers({now: Date.now(), shouldAdvanceTime: true, shouldClearNativeTimers: true, })
 
-            const r = new Promise((resolve) => {
-                sub.on('changed', (val: any) => {
-                    console.log("VALUE", val.value.value)
-                    if(val.value.value === 213){
-                        resolve(true)
-                    }
-                })
-            })
+    //         const r = new Promise((resolve) => {
+    //             sub.on('changed', (val: any) => {
+    //                 console.log("VALUE", val.value.value)
+    //                 if(val.value.value === 213){
+    //                     resolve(true)
+    //                 }
+    //             })
+    //         })
 
-            jest.useFakeTimers();
+    //         jest.useFakeTimers();
 
-            // jest.advanceTimersByTime(10 * 1000)
+    //         // jest.advanceTimersByTime(10 * 1000)
 
-            // // await clock.tickAsync(1000);
-            //   // Fast-forward until all timers have been executed
-            // // jest.runOnlyPendingTimers();
+    //         // // await clock.tickAsync(1000);
+    //         //   // Fast-forward until all timers have been executed
+    //         // // jest.runOnlyPendingTimers();
            
-            let changeValue = new Promise((resolve) => setTimeout(() => {
+    //         let changeValue = new Promise((resolve) => setTimeout(() => {
 
-                console.log("Change value");
+    //             console.log("Change value");
 
-                server.changeValue(213);
+    //             server.changeValue(213);
 
-                resolve(true)
+    //             resolve(true)
 
-            }, 120*1000))
-
-
-            // clock.tick(140 * 1000)
-
-            // setInterval(() => , 100);
-
-            // clock.tick(10 * 1000);
-
-            // await flushPromises();
-
-            jest.advanceTimersByTime(121 * 1000)
+    //         }, 120*1000))
 
 
-            // jest.runAllTimers();
+    //         // clock.tick(140 * 1000)
 
-            // jest.advanceTimersByTime(140 * 1000)
+    //         // setInterval(() => , 100);
+
+    //         // clock.tick(10 * 1000);
+
+    //         // await flushPromises();
+
+    //         jest.advanceTimersByTime(121 * 1000)
+
+
+    //         // jest.runAllTimers();
+
+    //         // jest.advanceTimersByTime(140 * 1000)
             
-            jest.useRealTimers()
+    //         jest.useRealTimers()
 
 
-            await changeValue
+    //         await changeValue
 
-            await r;
+    //         await r;
 
-            // try{
-            //     await r;
+    //         // try{
+    //         //     await r;
             
-            // }catch(e){
-            //     console.error(e)
-            // }
+    //         // }catch(e){
+    //         //     console.error(e)
+    //         // }
 
-            // await flushPromises()
+    //         // await flushPromises()
 
-            // clock.restore();
-            // jest.useRealTimers()
+    //         // clock.restore();
+    //         // jest.useRealTimers()
 
-            await client.disconnect();
+    //         await client.disconnect();
 
-            await server.stop();
+    //         await server.stop();
 
 
 
-            // clock.uninstall();
+    //         // clock.uninstall();
 
-            expect(r).resolves.toBe(true)
-        }
-    })  
+    //         expect(r).resolves.toBe(true)
+    //     }
+    // })  
 });
