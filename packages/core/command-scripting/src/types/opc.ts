@@ -23,6 +23,9 @@ export const fromOPCType = (type: string) => {
         case 'UInt16':
         case 'UInt32':
         case 'UInt64':
+        case 'Int16':
+        case 'Int32':
+        case 'Int64':
         case 'UIntegerT':
         case "IntegerT":
             return DataTypes.Number;

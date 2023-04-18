@@ -23,6 +23,8 @@ export class Runner {
         const { deviceMap, subscriptionMap } = this.options || {}
         let tagValue = deviceMap?.find((a) => a.path === tagPath)?.tag;
 
+        console.log({tagPath, tagType, valueStructure, tagValue})
+
         if (tagValue?.indexOf('script://') == 0) {
             const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
             const { getter, setter } = load_exports(jsCode)
@@ -73,9 +75,11 @@ export class Runner {
 
                     let tags = this.client.getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
     
+                    console.log({tags});
+
                     let newValues: ({ path: string, value: any } | null)[] = tags.map((t: any) => {
     
-                        let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
+                        let path = subscriptionMap?.find((a) => a.tag?.replace(/[ -]/g, '_') == t.parent)?.path
     
                         if (!path) return null;
     
@@ -85,6 +89,8 @@ export class Runner {
                         }
     
                     })
+
+                    console.log({newValues})
     
                     for (value of newValues) {
                         // if (this.client) {

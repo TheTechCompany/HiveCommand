@@ -128,11 +128,13 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 libModel.setValue(`
               declare module "@mui/material";
               declare module "@mui/x-date-pickers";
+              declare module "@mui/icons-material";
               declare module "@hexhive/ui";
               `)
             }else{
               monaco.editor.createModel( `
               declare module "@mui/material";
+              declare module "@mui/icons-material";
               `, "typescript", monaco.Uri.parse(modelLib));
             }
             //ENDLIBS

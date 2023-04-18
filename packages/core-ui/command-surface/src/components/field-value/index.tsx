@@ -9,6 +9,8 @@ export const FieldValue = (props: any) => {
 
     const [ value, setValue ] = useState(_value);
 
+    console.log(_value, value);
+
     useEffect(() => {
         if(!editing) setValue(_value)
     }, [_value, editing])
@@ -21,10 +23,10 @@ export const FieldValue = (props: any) => {
     switch (props.type) {
         case 'Number':
             return (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <TextField
                         type="number"
                         size="small"
+                        fullWidth
                         InputProps={{
                             endAdornment: editing ? <InputAdornment position='end'>
                                 <IconButton onClick={onChange} size="small">
@@ -39,7 +41,6 @@ export const FieldValue = (props: any) => {
                             setEditing(true)
                         }} />
 
-                </Box>
             )
     }
 

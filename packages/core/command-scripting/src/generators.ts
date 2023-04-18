@@ -18,9 +18,13 @@ export const isTypeDeclaration = (typeDeclaration: any) : typeDeclaration is Typ
 
 export const getKeyedValue = (key: string, type: TypeArg) : string => {
 
+
+    const templatedKey = key.replace(/[ -]/g, '_');
     const value = getValue(type);
 
-    return `${key}: ${value};`;
+    console.log(templatedKey)
+
+    return `${templatedKey}: ${value};`;
 }
 
 export const getValue = (type: TypeArg) : string => {
