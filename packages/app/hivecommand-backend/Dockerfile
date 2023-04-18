@@ -15,6 +15,7 @@ COPY lerna.json .
 RUN yarn
 
 COPY packages/app/hivecommand-backend/ packages/app/hivecommand-backend/
+COPY packages/communication/amqp-client/ packages/communication/amqp-client/
 COPY packages/core/command-data/ packages/core/command-data/
 # COPY . . 
 
