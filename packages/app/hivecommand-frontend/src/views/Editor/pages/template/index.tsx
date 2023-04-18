@@ -75,7 +75,7 @@ export const TemplateEditor = (props: any) => {
 
     const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
         if(type === 'Function'){
-            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[]) => {
+            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[], transformer: (state: any) => any) => {
 
 }`
         }else{ 

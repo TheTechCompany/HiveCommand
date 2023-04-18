@@ -231,7 +231,7 @@ export const TemplateMenu = () => {
 
 
                             setFunctionArgs({
-                                defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Tags, setState: (values: DeepPartial<Tags>) => void, args: any[]) => {
+                                defaultValue: value ? value?.match(/script:\/\/(.*)/s)?.[1] : `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Tags, setState: (values: DeepPartial<Tags>) => void, args: any[], transformer: (state: any) => any) => {
 
 
 }`,
