@@ -5,10 +5,8 @@
     "packages/communication/*",
     "packages/clients/*",
     "packages/network/*",
-    "packages/plugins/*",
-    "packages/tests/*",
     "packages/app/*"
   ],
   "npmClient": "yarn",
-  "version": "1.4.15-alpha.196"
+  "version": "1.4.15-alpha.197"
 }

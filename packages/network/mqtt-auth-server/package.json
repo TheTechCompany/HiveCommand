@@ -1,13 +1,12 @@
 {
   "name": "@hive-command/mqtt-auth-server",
-  "version": "1.4.15-alpha.196",
+  "version": "1.4.15-alpha.197",
   "description": "",
   "main": "index.js",
   "private": true,
   "scripts": {
     "build": "tsc -b",
-    "start": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -20,8 +19,8 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.196",
-    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.172",
+    "@hive-command/data": "^1.4.15-alpha.197",
+    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.197",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",

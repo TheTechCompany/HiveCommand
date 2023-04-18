@@ -98,10 +98,10 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["dist/", "*.test.ts"],
+  "exclude": ["dist/", "__tests__"],
   "references": [
-    {"path": "../../communication/opc-mqtt"},
-    {"path": "../../communication/opc-mqtt-client"},
+    {"path": "../../communication/amqp-client"},
+    {"path": "../../communication/opc-amqp-bridge"},
     {"path": "../../communication/opc-client"},
     {"path": "../command-scripting"}
   ]

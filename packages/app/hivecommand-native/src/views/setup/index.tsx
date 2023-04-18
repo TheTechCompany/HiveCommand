@@ -29,7 +29,7 @@ export const SetupView = (props: any) => {
         {
             label: "Provision code",
             onNext: async (state: any, setState: any) => {
-                if (!state.authToken) {
+                // if (!state.authToken) {
                     //Test provisionCode against discovery server
 
                     const res = await axios.post(`${state.discoveryServer}/authorize`, {
@@ -44,9 +44,9 @@ export const SetupView = (props: any) => {
                     } else {
                         console.log({ res })
                     }
-                } else {
-                    return true;
-                }
+                // } else {
+                //     return true;
+                // }
             }
         },
         {
@@ -72,12 +72,17 @@ export const SetupView = (props: any) => {
                         deviceMap: globalState?.deviceMap
                     }
                 }).then((data) => {
-                    console.log("OPCUA PROVISIONED");
+
                     setState('opcuaProvisioned', true)
                     
                     setAuthState?.('configProvided', true)
 
                     //START MQTT?
+                }).catch((err) => {
+                    console.error("configProvided failed", err);
+
+                    setAuthState?.('configProvided', true)
+
                 })
 
             }

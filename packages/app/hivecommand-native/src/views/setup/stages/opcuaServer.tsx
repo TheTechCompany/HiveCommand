@@ -211,14 +211,14 @@ export const OPCUAServerStage = () => {
                                             //!x.children || x.children.length == 0)
                                             console.log({x})
                                             if(x.path && (!x.children || x.children.length == 0 || x.type)){
-                                                 updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
+                                                 updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`.replace(/[ -]/g, '_'))
         
                                                  console.log("Update", x.path, x.children);
 
                                             }
 
                                         }else if(direction == 'remove' && isChecked(x)){
-                                            updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`)
+                                            updateSubscriptionMap(x.path, `${parent ? parent + '.' : ''}${x.name}`.replace(/[ -]/g, '_'))
                                         }
 
                                         if(hasOPCChildren(x)) updateRec(x.children || [], `${parent ? parent + '.' : ''}${x.name}`)
@@ -231,7 +231,8 @@ export const OPCUAServerStage = () => {
                                     console.log("Update rec for", item)
                                     updateRec(item.children || [], item.name)
                                 }else{
-                                    updateSubscriptionMap(item.path, `${parent?.name ? parent.name + '.' : ''}${item.name}`)
+                                    console.log(`${parent?.parentPath ? parent.parentPath + '.' : ''}${item.name}`.replace(/[ -]/g, '_'))
+                                    updateSubscriptionMap(item.path, `${parent?.parentPath ? parent.parentPath + '.' : ''}${item.name}`.replace(/[ -]/g, '_'))
                                 }
 
                                 console.log({subs: globalState?.subscriptionMap})
@@ -251,7 +252,7 @@ export const OPCUAServerStage = () => {
                 })}
                 nodeId={item.id} 
                 label={item.name}>
-                {item.children ? renderTree(item.children, edit, item) : undefined}
+                {item.children ? renderTree(item.children, edit, {...item, parentPath: parent?.parentPath ? `${parent.parentPath}.${item.name}` : item.name}) : undefined}
             </TreeItem>
         ))
     }

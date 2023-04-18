@@ -263,6 +263,13 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         setInfoTarget(undefined)
     }, [activePage])
 
+    /*
+        showTagWindow (pos, '$TAG', {manual, actions: [], setpoints: []} )
+        showTemplateWindow(pos, window, (state) => {props} )
+
+        showTemplateWindow (..., (props) => {}, (state) => {})
+    */
+
     const functions = {
         changeView: (args: { view: string }) => {
             setActivePage(args.view);
@@ -270,11 +277,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         showTagWindow: (
             position: { x: number, y: number, width: number, height: number, anchor?: string },
             deviceTag: string,
-            extras?: {
-                manual?: { isManual?: () => boolean, exitManual?: () => void },
-                actions?: { label: string, func: string }[],
-                setpoints?: { label: string, getter: () => any, setter: (value: any) => void }[]
-            }
+            stateItems: string[] = [],
+            actions: {label: string, func: string}[] = [],
+            setpoints?: (state: any) => ({ label: string, getter: () => any, setter?: (value: any) => void }[]),
+            manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void})
         ) => {
             functions.showWindow({
                 x: position?.x,
@@ -282,6 +288,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 width: position?.width,
                 height: position?.height,
             }, (state: any) => {
+
+                console.log({state});
 
                 const [view, setView] = useState<'info' | 'settings'>('info')
 
@@ -291,53 +299,64 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 let fields = types?.find((a) => a.name === tag?.type)?.fields || [];
 
-                const { actions, setpoints } = extras || { actions: [], setpoints: [] };
                 // let actions = tags?.find((a) => a.name === deviceTag)?.type || [];
 
+                const manualControls = useMemo(() => {
+                    return manual?.(state);
+                }, [JSON.stringify(state), manual])
+
                 const leftAction = useMemo(() => {
-                    if(extras?.setpoints){
+                    if(setpoints){
                         if(view == 'settings'){
                             return (<IconButton onClick={() => setView('info')}  sx={{ padding: 0  }}>
                                 <KeyboardArrowLeft />
                             </IconButton>)
                         }
                     }
-                }, [extras, view])
+                }, [setpoints, view])
 
                 const rightAction = useMemo(() => {
-                    if(extras?.manual){
-                        if(extras.manual?.isManual?.()){
-                            return ( <FormControlLabel control={<Switch size='small' onChange={(e) => extras.manual?.exitManual?.()} checked={extras.manual?.isManual?.()} />} label="Manual" />)
-                        }
+                    if(manualControls){
+                        return ( <FormControlLabel labelPlacement="start" control={<Switch size='small' onChange={(e) => manualControls?.setter?.(e.target.checked)} checked={manualControls?.getter?.()} />} label="Manual" />)
                     }
-                    if (extras?.setpoints) {
-                        if(view == 'settings'){
-                            return <Box sx={{display: 'flex'}}>
-                                <IconButton sx={{  padding: 0  }}>
-                                    <RestartAlt />
-                                </IconButton>
-                                <IconButton sx={{  padding: 0  }}>
-                                    <Save />
-                                </IconButton>
-                            </Box>
-                        }
+                   
+
+                }, [manualControls, view, setpoints, JSON.stringify(state)])
+
+                const headerExtras = useMemo(() => {
+                    // if(setpoints.length > 0){
+                    //     if(view === 'settings'){
+                    //         return ' - Setpoints'
+                    //     }
+                    // }
+                    if (setpoints) {
+                        // if(view == 'settings'){
+                        //     return <Box sx={{display: 'flex'}}>
+                        //         <IconButton sx={{  padding: 0  }}>
+                        //             <RestartAlt />
+                        //         </IconButton>
+                        //         <IconButton sx={{  padding: 0  }}>
+                        //             <Save />
+                        //         </IconButton>
+                        //     </Box>
+                        // }
+                        if(view === 'settings') return;
+
                         return (
-                            <IconButton onClick={() => setView('settings')} sx={{ padding: 0 }}>
-                                <Settings />
+                            <IconButton size="small" onClick={() => setView('settings')} sx={{ padding: 0 }}>
+                                <Settings fontSize="inherit" />
                             </IconButton>
                         )
                     }
 
-                }, [extras, view, extras?.manual?.isManual?.()])
+                    // return ''
+                }, [setpoints, view]);
 
-                const headerExtras = useMemo(() => {
-                    if(extras?.setpoints){
-                        if(view === 'settings'){
-                            return ' - Setpoints'
-                        }
-                    }
-                    return ''
-                }, [extras, view]);
+                const setpointValues = useMemo(() => {
+                    return setpoints?.(state)
+                }, [JSON.stringify(setpoints), JSON.stringify(state)])
+
+                console.log({state, setpointValues})
 
                 const renderFieldValue = (valueKey: string) => {
 
@@ -354,15 +373,20 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 return <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '12px', justifyContent: (rightAction) ? 'space-between' : 'flex-start' }}>
-                        {leftAction}
-                        <Typography sx={{ fontWeight: 'bold' }}>{deviceTag}{headerExtras}</Typography>
+                        <Box sx={{display: 'flex', alignItems: 'center'}}>
+                            {leftAction}
+                            <Typography sx={{ fontWeight: 'bold', marginRight: '6px' }}>{deviceTag}</Typography>
+                            {headerExtras}
+                        </Box>
                         {rightAction}
                     </Box>
                     <Divider sx={{marginBottom: '6px'}} />
                     {view == "info" ? (
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                             <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
-                                {Object.keys(values).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
+                                {Object.keys(values).filter((a) => {
+                                    return stateItems?.indexOf(a) > -1;
+                                }).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                         <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography>
                                         {renderFieldValue(valueKey)} 
@@ -399,14 +423,20 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         </Box>
                     ) : (
                         <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-                            {setpoints?.slice()?.sort((a, b) => a.label?.localeCompare(b.label))?.map((setpoint) => (
-                                <Box sx={{marginBottom: '12px'}}>
-                                    <TextField 
-                                        size="small"
-                                        fullWidth
+                            {setpointValues?.slice()?.sort((a, b) => a.label?.localeCompare(b.label))?.map((setpoint, ix) => (
+                                <Box sx={{marginBottom: '12px', display: 'flex'}}>
+                                    <FieldValue 
+                                        
+                                        type={"Number"}
+                                        label={setpoint.label}
                                         value={setpoint.getter()}
-                                        // onChange={(e}
-                                        label={setpoint.label} />
+                                        onChange={(value) => {
+                                            // console.log("Change value", deviceTag, value, valueKey)
+                                            // client?.writeTagValue?.(deviceTag, value, valueKey)
+
+                                            setpoint.setter?.(value)
+                                        }}  />
+                           
                                 </Box>
                             ))}
                         </Box>

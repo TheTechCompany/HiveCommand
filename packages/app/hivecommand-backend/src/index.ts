@@ -3,7 +3,7 @@ config()
 
 import { HiveGraph } from '@hexhive/graphql-server'
 
-import amqp from 'amqplib'
+import { MQTTClient } from '@hive-command/amqp-client'
 import cors from 'cors';
 import express from 'express';
 import schema from './schema'
@@ -26,32 +26,19 @@ cache.connect_to(process.env.MONGO_URL || '');
 
 	await redis.connect()
 
+	const deviceMQ = new MQTTClient({
+		host: process.env.DEVICE_MQ || '',
+	})
 
-	const mq = await amqp.connect(
-		process.env.RABBIT_URL || 'amqp://localhost'
-	)
+	await deviceMQ.connect();
 
-	const deviceMQ = await amqp.connect(
-		process.env.DEVICE_MQ || ''
-	)
+	// const deviceMQ = await amqp.connect(
+	// 	process.env.DEVICE_MQ || ''
+	// )
 
 	console.log("RabbitMQ")
 
-	const deviceChannel = await deviceMQ.createChannel();
-
-	const mqChannel = await mq.createChannel();
-
-	await mqChannel.assertQueue(`COMMAND:MODE`);
-	await mqChannel.assertQueue(`COMMAND:STATE`);
-
-	await mqChannel.assertQueue(`COMMAND:DEVICE:CONTROL`)
-	await mqChannel.assertQueue(`COMMAND:DEVICE:MODE`);
-	await mqChannel.assertQueue(`COMMAND:DEVICE:SETPOINT`);
-	
-	await mqChannel.assertQueue(`COMMAND:FLOW:PRIORITIZE`);
-
-
-	const { typeDefs, resolvers } = schema(prisma, mqChannel, deviceChannel);
+	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
 	console.log({typeDefs})
 

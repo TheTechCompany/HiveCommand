@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/api",
-  "version": "1.4.15-alpha.196",
+  "version": "1.4.15-alpha.197",
   "description": "",
   "main": "dist/index.js",
   "private": true,
@@ -10,8 +10,7 @@
   "gqty": "gqty.config.cjs",
   "scripts": {
     "generate": "gqty generate",
-    "build": "tsc -b",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -b"
   },
   "author": "",
   "license": "ISC",

@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "amqplib": ["./node_modules/amqplib"],
+      "@hive-command/amqp-client": ["../amqp-client"]
+    }
+  },
+  "references": [
+    {"path": "../amqp-client"}
+  ]
+}

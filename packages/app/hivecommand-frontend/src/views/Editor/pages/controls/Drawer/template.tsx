@@ -246,11 +246,10 @@ export const TemplateMenu = () => {
                                 declare function showTagWindow(
                                     position: {x: number, y: number, width: number, height: number, anchor?: string},
                                     deviceTag: string,
-                                    extras?: {
-                                        manual?: { isManual?: () => boolean, exitManual?: () => void },
-                                        actions?: { label: string, func: string }[],
-                                        setpoints?: { label: string, getter: () => any, setter: (value: any) => void }[]
-                                    }
+                                    state: string[],
+                                    actions?: { label: string, func: string }[],
+                                    setpoints?: (state: any) => ({ label: string, getter: () => any, setter?: (value: any) => void }[]),
+                                    manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void})
                                 ){
                                     
                                 }

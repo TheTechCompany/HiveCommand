@@ -105,8 +105,7 @@ export const DataProvider = (props: any) => {
             authState: {
                 ...authState,
                 isAuthed: () => {
-                    console.log({authState});
-                    return authState.discoveryServer != null && authState.provisionCode != undefined && authState.authToken != undefined && authState.opcuaServer != undefined && authState.opcuaProvisioned == true && authState.configProvided == true
+                    return authState.discoveryServer != null && authState.provisionCode != undefined && authState.authToken != undefined && authState.opcuaServer != undefined  && authState.configProvided == true
                 }
             },
             updateAuthState: (key, value) => {console.log("update auth state", {key ,value}); updateAuthState(key, value)},

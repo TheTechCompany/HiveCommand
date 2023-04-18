@@ -8,6 +8,9 @@ import { SetupView } from './views/setup';
 import { useEffect } from 'react';
 import { DataContext } from './data';
 import { BaseDirectory } from '@tauri-apps/api/fs';
+
+import { listen } from '@tauri-apps/api/event'
+
 import { Controller } from './views/controller';
 
 import { Command } from '@tauri-apps/api/shell';
@@ -29,8 +32,26 @@ function App() {
 
       setSidecarRunning(true);
 
+    }).catch((err) => {
+      console.error("Sidecar Error", err)
+      setSidecarRunning(false)
     });
+
+    let unlisten: any;
+
+    (async () => {
+      unlisten = listen('configure', () => {
+        setAuthState?.('configProvided', false);
+      })
+    })();
+    
+    return () => {
+      unlisten();
+    }
+
   }, [])
+
+
   
 
   useEffect(() => {
@@ -48,15 +69,18 @@ function App() {
     }
   }, [authState, isReady, configured, sidecarRunning])
 
+  console.log({isAuthed: authState?.isAuthed(), authState})
+
+
   const renderView = useMemo(() => {
-    console.log({isAuthed: authState?.isAuthed(), authState})
+
     if (!authState?.isAuthed()) {
       return (
         <SetupView />
       )
     } else {
       return (
-        <Controller />
+        <Controller sidecar={sidecarRunning} />
       )
     }
   }, [authState, authState?.isAuthed()])

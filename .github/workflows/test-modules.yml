@@ -24,7 +24,7 @@ jobs:
         yarn
         npx lerna bootstrap --no-ci
 
-        npx lerna run build
+        npx lerna run build --no-private
 
     - name: Run tests # Run tests of all packages
-      run: npx lerna exec 'npm run test --forceExit'
+      run: npx lerna run test

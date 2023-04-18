@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import cors from 'cors';
 
 import { MQTTAuth } from '@hive-command/rabbitmq-auth'
-import { MQTTHub } from '@hive-command/opcua-mqtt-hub'
+import { MQTTHub } from '@hive-command/amqp-hub'
 import { AlarmCenter } from './alarm-center';
 
 import { createClient } from "redis";

@@ -24,34 +24,6 @@ export interface ScriptEditorProps {
 }
 
 
-export const getOPCType = (type: string) => {
-    switch(type){
-        case 'NodeId':
-        case 'LocalizedText':
-        case 'QualifiedName':
-        case 'String':
-            return 'string';
-        case 'Boolean':
-        case 'BooleanT':
-            return 'boolean';
-        case 'Byte':
-        case 'Float':
-        case 'Double':
-        case 'UInt16':
-        case 'UInt32':
-        case 'UInt64':
-        case 'UIntegerT':
-        case "IntegerT":
-            return 'number';
-        case 'DateTime':
-            return 'Date'
-        default:
-            return type || 'string';
-    }
-}
-
-
-
 export const hasOPCChildren = (elem: {type?: string, children?: any[]}) => {
     return !elem.type && elem.children && elem.children.length > 0
 }
@@ -85,15 +57,18 @@ export const setter = (data: ${toJSType(props.dataType?.replace('[]', '') as any
 
         const printJson =  (elem: any) => {
 
-            console.log(elem.name.match('[-=.\/:]'))
-            if(elem.name.match('[-=.\/:]') != null) return {key: undefined, value: undefined};
+            console.log(elem.name)
+
+            // if(elem.name.match('[-=.\/:]') != null) return {key: undefined, value: undefined};
+
+            let formattedName = elem.name.replace(/[ -]/g, '_');
             
             // if(elem.type) console.log(elem.type, fromOPCType(elem.type))
             
 
             return hasOPCChildren(elem) ? 
-                 { key: elem.name, value: elem.children.map(printJson).reduce((prev: any, curr: any) => ({...prev, [curr.key] : curr.value}), {}) } : 
-                { key: elem.name, value: elem.isArray ? [lookupType(elem.type)] : lookupType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
+                 { key: formattedName, value: elem.children.map(printJson).reduce((prev: any, curr: any) => ({...prev, [curr.key] : curr.value}), {}) } : 
+                { key: formattedName, value: elem.isArray ? [lookupType(elem.type)] : lookupType(elem.type) } //`${elem.name}: ${fromOPCType(elem.type)}${elem.isArray ? '[]' : ''};`
         }
 
         // console.log(props.deviceValues.map(printJson) )

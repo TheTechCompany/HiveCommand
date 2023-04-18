@@ -246,8 +246,6 @@ export const ControlView = () => {
 
 	}, [infoTarget, JSON.stringify(stateValues) ])
 	
-	console.log("PROGRAM NODES", program?.interface?.nodes || []);
-
 	return (
 		<Box sx={{ flex: 1, display: 'flex', flexDirection: "row", position: 'relative' }}>
 			<Box sx={{ flex: 1, display: 'flex' }}>

@@ -102,8 +102,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../../communication/opc-mqtt-auth"},
-    {"path": "../../communication/opc-mqtt-hub"},
+    {"path": "../../communication/rabbitmq-auth"},
+    {"path": "../../communication/amqp-hub"},
     {"path": "../../core/command-data"}
   ]
 }

@@ -26,7 +26,7 @@ const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => 
 // const watching = {
 
 // }
-export default (prisma: PrismaClient, mq: Channel) => {
+export default (prisma: PrismaClient) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
 	

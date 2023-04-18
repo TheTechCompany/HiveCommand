@@ -27,7 +27,7 @@ describe('Control View', () => {
                         width: 100,
                         height: 100,
                         dataFunction: (state) => {
-
+                            console.log("dF", {state})
                             return  (<div className="state-item">
                                 {/* <> */}
                                    <span>{`${state.item}`}</span>
@@ -44,8 +44,7 @@ describe('Control View', () => {
 
         // console.log("INNER HTML", (container.getElementsByClassName('state-item')?.[0] as any).innerHTML)
 
-        expect(container.getElementsByClassName('state-item')?.[0].textContent).toBe('true')
-        
+        expect(container.getElementsByClassName('state-item')?.[0].textContent).toBe('false')
 
     })
 

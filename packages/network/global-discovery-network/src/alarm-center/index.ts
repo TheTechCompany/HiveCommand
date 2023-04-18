@@ -5,7 +5,7 @@
     - Submit start to new hook providing SMS + Comms out
 */
 
-import { MQTTHubMessage } from "@hive-command/opcua-mqtt-hub";
+import { MQTTHubMessage } from "@hive-command/amqp-hub";
 
 export class AlarmCenter {
 

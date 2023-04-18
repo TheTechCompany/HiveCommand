@@ -5,7 +5,7 @@ on:
     branches:
       # - staging
       - master
-    paths: ["packages/network/mqtt-auth-server/src/**", "packages/supporting-infrastructure/**"]
+    paths: ["packages/network/mqtt-auth-server/src/**", "packages/infrastructure/supporting/**"]
 
 concurrency: hivecommand-supporting-infra-${{ github.ref }}
 
@@ -93,7 +93,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - run: yarn
-        working-directory: ./packages/supporting-infrastructure/mqtt
+        working-directory: ./packages/infrastructure/supporting
 
 
       - name: Setup stack
@@ -108,7 +108,7 @@ jobs:
         with:
           command: up
           stack-name: ${{env.STACK_NAME}}
-          work-dir: ./packages/supporting-infrastructure/mqtt
+          work-dir: ./packages/infrastructure/supporting
         env:
           IOT_USER: ${{ secrets.IOT_USER }}
           IOT_PASS: ${{ secrets.IOT_PASS }}
