@@ -1,5 +1,5 @@
 import { CommandSurface } from '@hive-command/command-surface';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useRemoteCache } from '../../integrations/remote-cache';
 import { DataContext } from '../../data';
@@ -8,6 +8,7 @@ import io, {Socket} from 'socket.io-client'
 import ts, { ModuleKind } from 'typescript'
 import { useLocalClient } from './client';
 import { DataTypes } from '@hive-command/scripting';
+import moment from 'moment';
 
 export const load_exports = (code: string,) => {
 
@@ -22,7 +23,7 @@ export const load_exports = (code: string,) => {
     return module.exports;
 }
 
-export const Controller = () => {
+export const Controller = (props: {sidecar: boolean}) => {
     // const ref = useRef<any>();
 
     const { authState, globalState } = useContext(DataContext);
@@ -56,9 +57,32 @@ export const Controller = () => {
 
     // deviceValueData?.commandDevices?.[0]?.deviceSnapshot || []
     // console.log({valueStore})
-    return (
-        <Box sx={{flex: 1, display: 'flex'}}>
 
+    const [ date, setDate ] = useState(new Date());
+
+    useEffect(() => {
+
+        const dateTimer = setInterval(() => {
+            setDate(new Date());
+        }, 1 * 1000)
+
+        return () => {
+            clearInterval(dateTimer);
+        }
+    }, [])
+
+    return (
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '6px'}}>
+                <Typography>
+                    {moment(date).format('DD/MM/yyyy - hh:mma')}
+                </Typography>
+
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Typography fontSize={'12px'} sx={{marginRight: '6px'}}>{props.sidecar ? "Driver running" : "Driver not running"}</Typography>
+                    <div style={{width: '10px', height: '10px', background: props.sidecar ? 'green' : 'red', borderRadius: '10px'}} />
+                </Box>
+            </Box>
             <CommandSurface 
                 client={LocalClient}
                 cache={[packs, setPacks] as any}
