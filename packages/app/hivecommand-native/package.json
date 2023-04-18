@@ -31,7 +31,7 @@
 	},
 	"scripts": {
 		"start": "react-app-rewired start",
-		"build:deps": "lerna run build --scope @hive-command/native --include-dependencies",
+		"build:deps": "npx lerna run build --scope @hive-command/native --include-dependencies",
 		"build": "yarn build:deps && node move-binary.js && react-app-rewired build",
 		"tauri": "tauri"
 	},
