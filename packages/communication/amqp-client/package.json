@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/amqp-client",
-  "version": "1.4.15-alpha.198",
+  "version": "1.4.15-alpha.199",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
