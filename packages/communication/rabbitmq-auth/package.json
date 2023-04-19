@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/rabbitmq-auth",
-  "version": "1.4.15-alpha.197",
+  "version": "1.4.15-alpha.198",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
