@@ -76,8 +76,6 @@ export class ValueStore {
 
         // const { tags, types } = this.getConfig() || {};
 
-        console.log({subscriptionMap: this.subscriptionMap})
-        
         this.values = tags?.map((tag) => {
 
             let type = types?.find((a) => a.name === tag.type);

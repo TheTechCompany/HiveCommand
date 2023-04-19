@@ -6,4 +6,14 @@ describe("ValueStore", () => {
 
         console.log(JSON.stringify({keys}));
     })
+
+    it('Changed from real-world', () => {
+        const keys = diffKeys({
+            PMD801: {OperMode: 0, manual: null}
+        }, {
+            PMD801: {OperMode: 1, manual: true}
+        })
+
+        console.log(JSON.stringify(keys))
+    })
 })

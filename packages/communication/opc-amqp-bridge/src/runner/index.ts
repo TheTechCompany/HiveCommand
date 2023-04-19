@@ -7,34 +7,61 @@ export class Runner {
 
     private client: OPCMQTTClient;
 
+    private transformers : {path: string, fn: (values: any) => any}[] = [];
+
     constructor(client: OPCMQTTClient){   
         this.client = client;
 
         this.getTag = this.getTag.bind(this);
         this.setTag = this.setTag.bind(this);
+
+        this.setupTransformers()
     }
 
     get options(){
         return this.client.options;
     }
 
+    private setupTransformers(){
+        this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
+            let tagValue = deviceMap.tag;
+            
+            if (tagValue?.indexOf('script://') == 0) {
+                const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+                const { getter, setter } = load_exports(jsCode)
+            
+                return {path: deviceMap.path, fn: (valueStructure: any) => getter(valueStructure)};
+            } else{
+                let rawTag = this.options?.subscriptionMap?.find((a) => a.path == tagValue)?.tag;
+
+                if(!rawTag) return {path: deviceMap.path, fn: (valueStructure: any) => null};
+
+                return {path: deviceMap.path, fn: (valueStructure: any) => rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure)}
+            }
+
+            // return null;
+
+        })
+    }
+
     getTag(tagPath: string, tagType: string, valueStructure: any) {
 
-        const { deviceMap, subscriptionMap } = this.options || {}
-        let tagValue = deviceMap?.find((a) => a.path === tagPath)?.tag;
+        let fn = this.transformers?.find((a) => a.path === tagPath)?.fn;
 
-        if (tagValue?.indexOf('script://') == 0) {
-            const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
-            const { getter, setter } = load_exports(jsCode)
+        return parseValue(tagType, fn?.(valueStructure));
 
-            return parseValue(tagType, getter(valueStructure));
-        } else {
-            let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
+        // if (tagValue?.indexOf('script://') == 0) {
+        //     const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+        //     const { getter, setter } = load_exports(jsCode)
 
-            if (!rawTag) return null;
+        //     return parseValue(tagType, getter(valueStructure));
+        // } else {
+        //     let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
 
-            return parseValue(tagType, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-        }
+        //     if (!rawTag) return null;
+
+        //     return parseValue(tagType, )
+        // }
 
     }
 
