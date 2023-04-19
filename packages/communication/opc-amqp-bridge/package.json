@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-amqp-bridge",
-  "version": "1.4.15-alpha.200",
+  "version": "1.4.15-alpha.201",
   "description": "",
   "main": "dist/index.js",
   "files": [
