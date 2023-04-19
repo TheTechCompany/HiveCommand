@@ -25,9 +25,9 @@ export class ValueStore {
 
     get options(){
         return {
-            tags: this.mqttClient.options?.tags,
-            types: this.mqttClient.options?.types,
-            subscriptionMap: this.mqttClient.options?.subscriptionMap
+            tags: this.mqttClient.getConfig()?.tags,
+            types: this.mqttClient.getConfig()?.types,
+            subscriptionMap: this.mqttClient.getConfig()?.subscriptionMap
         }
     }
 

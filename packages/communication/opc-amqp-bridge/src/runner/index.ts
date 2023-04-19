@@ -12,17 +12,24 @@ export class Runner {
     constructor(client: OPCMQTTClient){   
         this.client = client;
 
+        this.setupTransformers()
+
+        this.client.on('config-update', () => {
+            this.setupTransformers()
+        })
+
         this.getTag = this.getTag.bind(this);
         this.setTag = this.setTag.bind(this);
 
-        this.setupTransformers()
     }
 
     get options(){
-        return this.client.options;
+        return this.client.getConfig();
     }
 
     private setupTransformers(){
+        console.log(this.options?.deviceMap);
+        
         this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
             let tagValue = deviceMap.tag;
             

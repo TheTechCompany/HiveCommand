@@ -50,8 +50,9 @@ export class Sidecar extends OPCMQTTClient {
 
 
     setConfig(options: SidecarOptions) {
-        this.options = options;
+        // this.options = options;
         this.conf.updateConf(options)
+        this.emit('config-update', options);
     }
 
     getConfig() {
