@@ -8,11 +8,29 @@ describe("ValueStore", () => {
     })
 
     it('Changed from real-world', () => {
+        console.time('RealWorld')
         const keys = diffKeys({
-            PMD801: {OperMode: 0, manual: null}
+            PMD801: {OperMode: 0, manual: null},
+            PMD901: {OperMode: 0, manual: null},
+            PMD1801: {OperMode: 0, manual: null},
+            PMD1901: {OperMode: 0, manual: null},
+            PMD1101: {OperMode: 0, manual: null},
+            PMD1301: {OperMode: 0, manual: null},
+            PMD1501: {OperMode: 0, manual: null},
+            PMD8101: {OperMode: 0, manual: null},
+            PMD8901: {OperMode: 0, manual: null},
+            PMD9801: {OperMode: 0, manual: null},
         }, {
-            PMD801: {OperMode: 1, manual: true}
+            PMD801: {OperMode: 0, manual: null},
+            PMD901: {OperMode: 0, manual: null},
+            PMD1801: {OperMode: 0, manual: null},
+            PMD1901: {OperMode: 0, manual: null},
+            PMD1101: {OperMode: 0, manual: null},
+            PMD1301: {OperMode: 0, manual: null},
+            PMD1501: {OperMode: 0, manual: null},
+            PMD8101: {OperMode: 0, manual: null},
         })
+        console.timeEnd('RealWorld')
 
         console.log(JSON.stringify(keys))
     })

@@ -1,6 +1,7 @@
 import { isEqual, merge } from 'lodash';
 import { OPCMQTTClient } from '..';
 import { Runner } from '../runner';
+import { diffKeys } from './utils';
 
 export interface ValueStoreOptions {
     subscriptionMap?: any[];
@@ -76,10 +77,8 @@ export class ValueStore {
     }
 
     private normaliseValues(tags: any[], types: any[]) {
-        let changed_keys: { key: string, value: any }[] = [];
-        let old_values = Object.assign({}, this.values);
 
-        // const { tags, types } = this.getConfig() || {};
+        let old_values = Object.assign({}, this.values);
 
         this.values = tags?.map((tag) => {
 
@@ -120,33 +119,7 @@ export class ValueStore {
             [curr.key]: curr.value
         }), {})
 
-        Object.keys(this.values).forEach((valueKey) => {
-
-            if(this.values[valueKey] != undefined && this.values[valueKey] != null){
-
-                if (typeof (this.values[valueKey]) === "object" && !Array.isArray(this.values[valueKey])) {
-
-                    Object.keys(this.values[valueKey]).map((subValueKey) => {
-                        if(this.values[valueKey]?.[subValueKey] != undefined && this.values[valueKey]?.[subValueKey] != null){
-                            if ((old_values[valueKey]?.[subValueKey] == null || old_values[valueKey]?.[subValueKey] == undefined) || !isEqual(old_values[valueKey]?.[subValueKey], this.values[valueKey]?.[subValueKey])) {
-                                //TODO, go deeper
-                                changed_keys.push({ key: valueKey, value: {[subValueKey]: this.values[valueKey]?.[subValueKey]} })
-                            }
-                        }
-                    })
-
-
-                } else {
-                    if ((old_values[valueKey] == null || old_values[valueKey] == undefined) || !isEqual(old_values[valueKey], this.values[valueKey])) {
-                        //TODO, go deeper
-                        changed_keys.push({ key: valueKey, value: this.values[valueKey] })
-                    }
-                }
-                
-            }
-
-        })
-        return changed_keys
+        return diffKeys(old_values, this.values)
     }
 
 }

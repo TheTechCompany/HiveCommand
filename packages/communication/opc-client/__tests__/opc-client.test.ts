@@ -67,6 +67,26 @@ describe('opc-client', () => {
         }
     })
 
+    test('Subscription with lots of items', async () => {
+        const subscription = await client.subscribe({path: '/Objects/1:Permeate'})
+
+        if(subscription){
+
+            const r = new Promise(resolve => {
+                subscription.on('changed', (val) => {
+                    console.log("Multiple", val.value.value);
+                    // resolve(val.value.value)
+                })
+            })
+
+
+            await r
+
+            expect(r).resolves.toBeGreaterThan(0)
+           
+        }
+    })
+
 
     it('Subscription to multiple handles them ASAP', () => {
 

@@ -384,7 +384,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                             <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
                                 {Object.keys(values).filter((a) => {
-                                    return stateItems?.indexOf(a) > -1;
+                                    return (stateItems || []).indexOf(a) > -1;
                                 }).slice().sort((a, b) => a.localeCompare(b)).map((valueKey) => (
                                     <Box sx={{display: 'flex', alignItems: 'center'}}>
                                         <Typography sx={{marginRight: '6px'}} fontWeight={"bold"}>{valueKey}:</Typography>
