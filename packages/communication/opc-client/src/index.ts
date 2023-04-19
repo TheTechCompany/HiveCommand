@@ -144,6 +144,7 @@ export default class Client {
                 ...baseSubscriptionParams, 
                 samplingInterval
             }, TimestampsToReturn.Both)
+            
             return {
                 unsubscribe: () => {
                     group.terminate();

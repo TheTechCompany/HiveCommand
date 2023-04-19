@@ -125,26 +125,29 @@ export class OPCMQTTClient {
 
         const emitter = new EventEmitter()
 
-        monitors?.on('changed', async (item, value, index) => {
-            try {
-                const key = unwrap?.(index)
+        monitors?.on('changed',  (item, value, index) => {
+            (async () => {
+                try {
+                    const key = unwrap?.(index)
 
-                let curr_value = value.value.value;
-                if(curr_value?.BYTES_PER_ELEMENT != undefined){
-                    curr_value = Array.from(curr_value);
+                    let curr_value = value.value.value;
+                    if(curr_value?.BYTES_PER_ELEMENT != undefined){
+                        curr_value = Array.from(curr_value);
+                    }
+
+                    // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+
+                    this.valueStore.updateValue(key, curr_value).then((changed_keys) => {
+                        changed_keys.map((changed) => {
+                            if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
+                            emitter.emit('data-changed', { key: changed.key, value: changed.value })
+                        })
+                    })
+                    
+                } catch (e: any) {
+                    console.log("Error in monitors.changed", e.message)
                 }
-
-                // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
-
-                const changed_keys = this.valueStore.updateValue(key, curr_value)
-                
-                changed_keys.map((changed) => {
-                    if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
-                    emitter.emit('data-changed', { key: changed.key, value: changed.value })
-                })
-            } catch (e: any) {
-                console.log("Error in monitors.changed", e.message)
-            }
+            })();
         })
 
         return { emitter, unsubscribe };

@@ -45,17 +45,19 @@ export class ValueStore {
     }
 
     updateValue(key: string, value: any) {
-        console.time('updateValue: '+ key);
-        this.internalStore = {
-            ...this.internalStore,
-            [key]: value
-        }
+        return (async () => {
+            console.time('updateValue: '+ key);
+            this.internalStore = {
+                ...this.internalStore,
+                [key]: value
+            }
 
-        // this.normaliseInternalValues();
+            // this.normaliseInternalValues();
 
-        let nv = this.normaliseValues(this.tags, this.types)
-        console.timeEnd('updateValue: '+ key);
-        return nv;
+            let nv = this.normaliseValues(this.tags, this.types)
+            console.timeEnd('updateValue: '+ key);
+            return nv;
+        })();
     }
 
     get internalValues(){
