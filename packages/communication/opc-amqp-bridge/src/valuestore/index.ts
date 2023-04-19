@@ -45,6 +45,7 @@ export class ValueStore {
     }
 
     updateValue(key: string, value: any) {
+        console.time('updateValue: '+ key);
         this.internalStore = {
             ...this.internalStore,
             [key]: value
@@ -52,7 +53,9 @@ export class ValueStore {
 
         // this.normaliseInternalValues();
 
-        return this.normaliseValues(this.tags, this.types)
+        let nv = this.normaliseValues(this.tags, this.types)
+        console.timeEnd('updateValue: '+ key);
+        return nv;
     }
 
     get internalValues(){
