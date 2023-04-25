@@ -52,7 +52,7 @@ export class OPCMQTTClient extends EventEmitter {
 
     constructor(config?: SidecarOptions) {
         super();
-        
+
         this.options = config;
 
         this.runner = new Runner(this);
@@ -209,7 +209,6 @@ export class OPCMQTTClient extends EventEmitter {
 
     private async onClientLost(endpointUrl: string) {
         console.log(`Connection to ${endpointUrl} lost. Retrying...`);
-
     }
 
     async connect(host: string, port?: number) {
@@ -254,7 +253,10 @@ export class OPCMQTTClient extends EventEmitter {
             host: host,
             user: user,
             pass: pass,
-            exchange: exchange || 'TestExchange'
+            exchange: exchange || 'TestExchange',
+            reconnectOptions: {
+                maxDelay: 120 * 1000 //2 min max delay
+            }
         })
 
         try {

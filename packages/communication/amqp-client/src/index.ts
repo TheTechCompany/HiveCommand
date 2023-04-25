@@ -60,7 +60,7 @@ export class MQTTClient {
 
             reconnecting = true;
 
-            console.debug(`AMQP Error retrying in ${this.backoff(attempt)}`, err);
+            console.debug(`AMQP Error retrying in ${this.backoff(attempt)}ms`, err);
 
             await new Promise( (resolve) => setTimeout(() => { resolve(true) }, this.backoff(attempt) ))
             return await this.connect(attempt + 1)
