@@ -1,7 +1,7 @@
 import {Router} from 'express';
 
 export const MQTTAuth = (
-    getUser: ( username: string, password: string ) => Promise<boolean>,
+    getUser: ( username: string, password: string ) => Promise<{allow: boolean, role?: string} | boolean>,
     isValidResource: (username: string, name: string, permission: "configure" | "permission" | "write" | "read") => Promise<boolean> 
 ) => {
     const router = Router();
@@ -11,10 +11,12 @@ export const MQTTAuth = (
         const userQuery : {username: string, password: string} = req.query as any;
 
         try{
-            const isAuthed = await getUser(userQuery.username, userQuery.password);
+            const userResp = await getUser(userQuery.username, userQuery.password);
+            const {allow: isAuthed, role} = typeof(userResp) === 'object' ? userResp : {allow: userResp, role: undefined};
+            
             if(isAuthed){
                 console.log("Auth output true", req.query);
-                res.send('allow device hive-command');
+                res.send(`allow ${role ? role + ' ' : ''}device hive-command`);
             }else{
                 console.log("Auth output false", req.query);
                 res.send('deny')
