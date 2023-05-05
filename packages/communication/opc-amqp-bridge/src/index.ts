@@ -4,7 +4,7 @@ import OPCUAClient from "@hive-command/opcua-client";
 import { DataType } from "node-opcua";
 import { DataTypes, fromOPCType, parseValue } from "@hive-command/scripting";
 import { EventEmitter } from 'events';
-import { merge, isEqual } from 'lodash'
+import { merge, isEqual, debounce, DebouncedFunc } from 'lodash'
 import { ValueStore } from "./valuestore";
 import { Runner } from "./runner";
 
@@ -49,6 +49,8 @@ export class OPCMQTTClient extends EventEmitter {
     private valueStore: ValueStore;
 
     private runner : Runner;
+
+    private tagUpdateFn: {[key: string]: DebouncedFunc<(value: any) => void>} = {};
 
     constructor(config?: SidecarOptions) {
         super();
@@ -147,7 +149,8 @@ export class OPCMQTTClient extends EventEmitter {
 
                     this.valueStore.updateValue(key, curr_value).then((changed_keys) => {
                         changed_keys.map((changed) => {
-                            if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
+                            this.publish(changed.key, changed.value);
+                            // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
                             emitter.emit('data-changed', { key: changed.key, value: changed.value })
                         })
                     })
@@ -297,6 +300,16 @@ export class OPCMQTTClient extends EventEmitter {
         }
 
         console.log("MQTT Publisher started");
+    }
+
+    publish(key: string, value: any){
+        if(!this.tagUpdateFn[key]){
+            this.tagUpdateFn[key] = debounce((value: any) => {
+                this.mqttPublisher?.publish(key, 'Boolean', value)
+            }, 1000);
+        }
+
+        this.tagUpdateFn[key]?.(value)
     }
 
     async publish_data(key: string, value: any) {

@@ -16,8 +16,13 @@ export class MQTTPublisher {
 
     private client? : MQTT.Client;
 
+    private DEVICE_CONTROL_PREFIX : string;
+
     constructor(options: MQTTPublisherOptions){
         this.options = options;
+
+        this.DEVICE_CONTROL_PREFIX = `device_control`;
+
     }
 
     connect(){
@@ -38,6 +43,10 @@ export class MQTTPublisher {
             console.log("MQTT Reconnecting...");
         });
 
+    }
+
+    publish(client: string, key: string, value: any){
+        this.client?.publish(`${this.DEVICE_CONTROL_PREFIX}/${client}/${key}`, Buffer.from(value))
     }
 
 }

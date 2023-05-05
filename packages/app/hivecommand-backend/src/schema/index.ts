@@ -6,11 +6,11 @@ import hmi from './hmi';
 import program from './program';
 
 import operations from './operations'
-import { MQTTClient } from '@hive-command/amqp-client';
+import { MQTTPublisher } from '@hive-command/amqp-client';
 import { Pool } from 'pg';
 import templates from "./program/templates";
 
-export default (prisma: PrismaClient, deviceChannel: MQTTClient) => {
+export default (prisma: PrismaClient, deviceChannel: MQTTPublisher) => {
 
 	
 	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
