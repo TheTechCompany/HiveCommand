@@ -3,7 +3,7 @@ config()
 
 import { HiveGraph } from '@hexhive/graphql-server'
 
-import { MQTTClient } from '@hive-command/amqp-client'
+import { MQTTPublisher } from '@hive-command/amqp-client'
 import cors from 'cors';
 import express from 'express';
 import schema from './schema'
@@ -26,7 +26,7 @@ cache.connect_to(process.env.MONGO_URL || '');
 
 	await redis.connect()
 
-	const deviceMQ = new MQTTClient({
+	const deviceMQ = new MQTTPublisher({
 		host: process.env.DEVICE_MQ_HOST || '',
 		user: process.env.DEVICE_MQ_USER,
 		pass: process.env.DEVICE_MQ_PASS
