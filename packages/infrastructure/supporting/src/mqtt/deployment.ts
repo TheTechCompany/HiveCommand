@@ -50,7 +50,7 @@ auth_http.topic_path = http://${authApi}/auth/topic`),
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
-                        image: `thetechcompany/mqtt:3.9`,
+                        image: `thetechcompany/mqtt:3.9.1`,
                         ports: [
                             { name: "amqp", containerPort: 5672 },
                             { name: "amqp-management", containerPort: 15672 }
