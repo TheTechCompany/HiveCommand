@@ -24,7 +24,7 @@ export const RabbitMQService = async (provider: Provider, appName: string, deplo
             type: "LoadBalancer",
             ports: [
                 { name: "amqp", port: 5672, targetPort: "amqp" },
-                { name: "mqtt", port: 1833, targetPort: "mqtt" }
+                { name: "mqtt", port: 1883, targetPort: "mqtt" }
             ],
             selector: appLabels,
         },
