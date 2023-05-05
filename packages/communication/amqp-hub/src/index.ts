@@ -1,5 +1,4 @@
-import {Channel, Connection, ConsumeMessage} from 'amqplib';
-import { MQTTClient } from '@hive-command/amqp-client';
+import MQTT from 'mqtt';
 
 export interface MQTTHubMessage {
     userId?: string;
@@ -20,73 +19,64 @@ export interface MQTTHubOptions {
 
 export class MQTTHub {
 
-    private client : MQTTClient;
+    private client? : MQTT.Client;
 
     private options : MQTTHubOptions;
+
+    private DEVICE_DATA_PREFIX: string;
 
     constructor(options: MQTTHubOptions){
         this.options = options;
 
-        this.client = new MQTTClient({
-            user: this.options.user,
-            pass: this.options.pass,
-            host: this.options.host,
-            port: this.options.port,
-            exchange: this.options.exchange        
-        })
-     
-    }
+        this.DEVICE_DATA_PREFIX = this.options.exchange || `device_values`
 
-    private async onMessage (msg: ConsumeMessage | null) {
-        // this.channel
-        if(!msg) return;
-
-        const routingKey = msg?.fields.routingKey;
-        const userId : string | undefined = msg?.properties.userId;
-        const messageContent = JSON.parse(msg?.content.toString() || '{error: "No message content"}');
-
-        console.log({routingKey, userId, messageContent});
-
-        // if(!userId) return console.error("No userId found, private messages not allowed");
-
-        try{
-            await this.options.onMessage?.({
-                routingKey,
-                userId,
-                messageContent
-            })
-        }catch(e){
-            console.error("Error dealing with message", e)
-            return this.client?.channel?.nack(msg)
-        }
-
-        this.client?.channel?.ack(msg)
     }
 
     async setup(){
         // let authSection = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
 
+        this.client = MQTT.connect(this.options.host, {
+            username: this.options.user,
+            password: this.options.pass
+        })
 
+        this.client.on('connect', () => {
+            console.log("MQTT Client connected!");
 
-        await this.client.connect();
+            this.client?.subscribe(`${this.DEVICE_DATA_PREFIX}/+/#`, (err) => {
+                if(err){
+                    console.error(`Failed to subscribe to ${this.DEVICE_DATA_PREFIX}`)
+                }else{
+                    console.log(`Subscribed to ${this.DEVICE_DATA_PREFIX}`)
+                }
+            })
+    
+        })
 
-        // this.connection = await connect(`amqp://${authSection ? authSection + '@' : ''}${this.options.host}${this.options.port ? `:${this.options.port}` : ''}`)
-        
-        // this.channel = await this.connection.createChannel()
+        this.client.on('message', (topic, payload, packet) => {
+            if(topic.indexOf(this.DEVICE_DATA_PREFIX) > -1){
 
-        await this.client?.channel?.assertExchange(this.options.exchange, 'topic')        
+                let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
+
+                const regex = new RegExp(`${this.DEVICE_DATA_PREFIX}/(.+?)/`);
+
+                this.options.onMessage?.({
+                    routingKey: topic.replace(regex, ''),
+                    messageContent: messageContent,
+                    userId: topic.match(regex)?.[1]
+                });
+            }
+        })
+
+        this.client.on('reconnect', () => {
+            console.log("MQTT Client reconnecting...");
+        })
+
+        this.client.on('error', (err) => {
+            console.error(err);
+        })
+            
     }
-
-    async subscribe(){
-
-        const generatedQueue = await this.client?.channel?.assertQueue?.('');
-
-        if(!generatedQueue) return;
-        await this.client?.channel?.bindQueue(generatedQueue.queue, this.options.exchange, '#');
-
-        this.client?.channel?.consume(generatedQueue.queue, this.onMessage.bind(this));
-    }
-
 
 
 }

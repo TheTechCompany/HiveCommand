@@ -260,43 +260,41 @@ export class OPCMQTTClient extends EventEmitter {
         })
 
         try {
-            await this.mqttPublisher.connect()
+            await this.mqttPublisher.connect(async (message) => {
+                try {
+                    const { key, value } = message.messageContent;
+    
+                    if (!this.client) {
+                        return console.error("No client currently connected");
+                    }
+    
+                    console.log("SET TAG", key, value)
+                    const setTags = await this.runner.setTag(this.valueStore.values, key, value)
+    
+                    await Promise.all((setTags || []).map(async (tags) => {
+                        await this.setData(tags.tag, tags.dataType, tags.value)
+                    }))
+    
+    
+                    // //Get OPCUA path from state
+                    // let path = this.subscription?.paths.find((a) => a.tag === key)?.path
+    
+                    // if(!path) return console.error("Couldn't find ", key)
+    
+                    // //Get OPCUA Datatype
+                    // const dataType = await this.getDataType(this.client, path)
+    
+                    // //Update current state
+                    // this.setData(this.client, path, (DataType as any)[dataType.type as any], value)
+    
+                    //Send update to frontend
+                } catch (e) {
+                    console.error("Error receiving MQTT Publish", message)
+                }
+            })
         } catch (e) {
             console.log({ e })
         }
-
-        await this.mqttPublisher.subscribe(async (message) => {
-            try {
-                const { key, value } = message.messageContent;
-
-                if (!this.client) {
-                    return console.error("No client currently connected");
-                }
-
-                console.log("SET TAG", key, value)
-                const setTags = await this.runner.setTag(this.valueStore.values, key, value)
-
-                await Promise.all((setTags || []).map(async (tags) => {
-                    await this.setData(tags.tag, tags.dataType, tags.value)
-                }))
-
-
-                // //Get OPCUA path from state
-                // let path = this.subscription?.paths.find((a) => a.tag === key)?.path
-
-                // if(!path) return console.error("Couldn't find ", key)
-
-                // //Get OPCUA Datatype
-                // const dataType = await this.getDataType(this.client, path)
-
-                // //Update current state
-                // this.setData(this.client, path, (DataType as any)[dataType.type as any], value)
-
-                //Send update to frontend
-            } catch (e) {
-                console.error("Error receiving MQTT Publish", message)
-            }
-        })
 
         console.log("MQTT Publisher started");
     }
