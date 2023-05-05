@@ -10,6 +10,9 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string, st
 
     const appLabels = { appClass: appName };
 
+    const imageTag = process.env.IMAGE_TAG;
+
+
     const configMap = new k8s.core.v1.ConfigMap(`${appName}-config`, {
         metadata: {
             namespace: ns.metadata.name,
@@ -47,8 +50,11 @@ auth_http.topic_path = http://${authApi}/auth/topic`),
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
-                        image: `rabbitmq:3.9`,
-                        ports: [{ name: "amqp", containerPort: 5672 }],
+                        image: `thetechcompany/mqtt:3.9`,
+                        ports: [
+                            { name: "amqp", containerPort: 5672 },
+                            { name: "amqp-management", containerPort: 15672 }
+                        ],
                         volumeMounts: [
                             {
                                 name: 'persistence',
@@ -64,7 +70,7 @@ auth_http.topic_path = http://${authApi}/auth/topic`),
                         // ],
                         resources: {
                             limits: {
-                                cpu: '0.25'
+                                cpu: '0.5'
                             }
                         }
                     }],
