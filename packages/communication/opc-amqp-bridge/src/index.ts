@@ -34,7 +34,7 @@ export interface SidecarOptions {
     }[]
 }
 
-export class OPCMQTTClient {
+export class OPCMQTTClient extends EventEmitter {
 
     private client?: OPCUAClient;
     private clientEndpoint?: string;
@@ -43,7 +43,7 @@ export class OPCMQTTClient {
 
     private mqttPublisher?: MQTTClient;
 
-    options?: SidecarOptions;
+    private options?: SidecarOptions;
     // private sessions : {[key: string]: ClientSession} = {};
 
     private valueStore: ValueStore;
@@ -51,6 +51,8 @@ export class OPCMQTTClient {
     private runner : Runner;
 
     constructor(config?: SidecarOptions) {
+        super();
+
         this.options = config;
 
         this.runner = new Runner(this);
@@ -59,27 +61,33 @@ export class OPCMQTTClient {
 
     }
 
+    getConfig(){
+        return this.options
+    }
+
     get values(){
         return this.valueStore.values
     }
 
     async start(){
 
-        if(this.options?.opcuaServer){
-            console.log("Connecting to opcua server: ", this.options.opcuaServer)
-            this.client = await this.connect(this.options.opcuaServer)
+        const config = this.getConfig();
+
+        if(config?.opcuaServer){
+            console.log("Connecting to opcua server: ", config?.opcuaServer)
+            this.client = await this.connect(config?.opcuaServer)
         }
 
-        if(this.options?.subscriptionMap && this.options.deviceMap && this.options.tags && this.options.types){
+        if(config?.subscriptionMap && config?.deviceMap && config?.tags && config?.types){
             console.log("Subscring to subscription-map...")
 
-            await this.subscribe(this.options.subscriptionMap)
+            await this.subscribe(config?.subscriptionMap)
         }
 
-        if(this.options?.iot && this.options.iot.host && this.options.iot.user && this.options.iot.pass && this.options.iot.exchange){
+        if(config?.iot && config?.iot.host && config?.iot.user && config?.iot.pass && config?.iot.exchange){
             console.log("Publishing data...")
 
-            await this.setup_data(this.options.iot.host, this.options.iot.user, this.options.iot.pass, this.options.iot.exchange)
+            await this.setup_data(config?.iot.host, config?.iot.user, config?.iot.pass, config?.iot.exchange)
         }
     }
 
@@ -125,26 +133,29 @@ export class OPCMQTTClient {
 
         const emitter = new EventEmitter()
 
-        monitors?.on('changed', async (item, value, index) => {
-            try {
-                const key = unwrap?.(index)
+        monitors?.on('changed',  (item, value, index) => {
+            (async () => {
+                try {
+                    const key = unwrap?.(index)
 
-                let curr_value = value.value.value;
-                if(curr_value?.BYTES_PER_ELEMENT != undefined){
-                    curr_value = Array.from(curr_value);
+                    let curr_value = value.value.value;
+                    if(curr_value?.BYTES_PER_ELEMENT != undefined){
+                        curr_value = Array.from(curr_value);
+                    }
+
+                    // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+
+                    this.valueStore.updateValue(key, curr_value).then((changed_keys) => {
+                        changed_keys.map((changed) => {
+                            if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
+                            emitter.emit('data-changed', { key: changed.key, value: changed.value })
+                        })
+                    })
+                    
+                } catch (e: any) {
+                    console.log("Error in monitors.changed", e.message)
                 }
-
-                // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
-
-                const changed_keys = this.valueStore.updateValue(key, curr_value)
-                
-                changed_keys.map((changed) => {
-                    if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
-                    emitter.emit('data-changed', { key: changed.key, value: changed.value })
-                })
-            } catch (e: any) {
-                console.log("Error in monitors.changed", e.message)
-            }
+            })();
         })
 
         return { emitter, unsubscribe };
@@ -198,7 +209,6 @@ export class OPCMQTTClient {
 
     private async onClientLost(endpointUrl: string) {
         console.log(`Connection to ${endpointUrl} lost. Retrying...`);
-
     }
 
     async connect(host: string, port?: number) {
@@ -243,7 +253,10 @@ export class OPCMQTTClient {
             host: host,
             user: user,
             pass: pass,
-            exchange: exchange || 'TestExchange'
+            exchange: exchange || 'TestExchange',
+            reconnectOptions: {
+                maxDelay: 120 * 1000 //2 min max delay
+            }
         })
 
         try {

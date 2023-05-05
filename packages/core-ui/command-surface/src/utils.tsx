@@ -64,6 +64,7 @@ export const useNodesWithValues = (
 
 	const nodeInputValues = useRef<{values: any}>({values: {}});
 	const nodeOutputValues = useRef<{values: any}>({values: {}});
+	const nodeTransformers = useRef<{values: any}>({values: {}});
 
 	// console.log({nodeInputValues: nodeInputValues.current.values})
 
@@ -97,6 +98,35 @@ export const useNodesWithValues = (
 	
 			}).reduce((prev, curr) => ({...prev, ...(curr ? {[curr.key]: curr.value} : {}) }), {})
 
+			let templateTransformers = (state: any) => {
+				return node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+
+					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+		
+		
+					if(inputTemplate.type?.split(':')[0] === 'Tag'){
+						let tag = tags?.find((a) => a.id === value)?.name 
+						if(!tag) return;
+
+						let tagValue = state[tag];
+
+						value = {
+							tag,
+							...(typeof(tagValue) === "object" && !Array.isArray(tagValue) ? tagValue : { value: tagValue })
+
+							// ...values[ tag ]
+						}
+					}
+		
+					return {
+						key: inputTemplate.name, 
+						value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
+					}
+		
+				}).reduce((prev, curr) => ({...prev, ...(curr ? {[curr.key]: curr.value} : {}) }), {})
+			}
+
+
 			let templateOutputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
 				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
@@ -122,6 +152,11 @@ export const useNodesWithValues = (
 				nodeInputValues.current.values[node.id] = {...templateInputs}
 
 			}
+
+			if(templateTransformers){
+				nodeTransformers.current.values[node.id] = templateTransformers
+			}
+
 			if(templateOutputs){
 				nodeOutputValues.current.values[node.id] = {...templateOutputs}
 			}
@@ -173,7 +208,7 @@ export const useNodesWithValues = (
 
 			try{
 				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
-				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
+				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, nodeTransformers.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
 			}catch(e){
 				console.error("error parsing value", {e, node, optionKey});
 			}
@@ -200,7 +235,7 @@ export const useNodesWithValues = (
 }
 
 
-export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, templateOutputs: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
+export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, templateTransformers: {values: {[key: string]: (state: any) => any }}, templateOutputs: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
     
 
     const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
@@ -247,7 +282,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 		}
 
 
-		const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any, setValues: (values: any) => void, args: any) => void }= {};
+		const exports : {getter?: (inputs: any) => void, setter?: () => void } | { handler?: (elem: any, values: any, setValues: (values: any) => void, args: any, transformer: ((state: any) => any)) => void }= {};
 
 		const module = { exports };
 
@@ -316,7 +351,9 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 				//TODO map this state back over the template input to create a real state update
 				// console.log("setState", state)
 			
-			}, args)
+			}, args, (state) => {
+				return templateTransformers?.values?.[node.id]?.(state)
+			})
 		}else if('getter' in exports){
 			returnValue = exports?.getter?.( templateValues.values[node.id] /*normalisedValues*/ );
 		}

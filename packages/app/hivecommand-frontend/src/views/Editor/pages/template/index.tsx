@@ -75,7 +75,7 @@ export const TemplateEditor = (props: any) => {
 
     const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
         if(type === 'Function'){
-            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[]) => {
+            return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[], transformer: (state: any) => any) => {
 
 }`
         }else{ 
@@ -150,7 +150,8 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                         state: string[],
                         actions?: { label: string, func: string }[],
                         setpoints?: (state: any) => ({ label: string, getter: () => any, setter?: (value: any) => void }[]),
-                        manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void})
+                        manual?: (state: any) => ({getter: () => boolean, setter: (value: boolean) => void}),
+                        transformer?: (state: any) => any
                     ){
                         
                     }

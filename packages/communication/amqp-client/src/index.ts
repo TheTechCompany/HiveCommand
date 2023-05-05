@@ -60,7 +60,7 @@ export class MQTTClient {
 
             reconnecting = true;
 
-            console.debug(`AMQP Error retrying in ${this.backoff(attempt)}`, err);
+            console.debug(`AMQP Error retrying in ${this.backoff(attempt)}ms`, err);
 
             await new Promise( (resolve) => setTimeout(() => { resolve(true) }, this.backoff(attempt) ))
             return await this.connect(attempt + 1)
@@ -121,8 +121,7 @@ export class MQTTClient {
 
 
     //Publish current state to other entities
-    async publish(key: string, dataType: string, value: any, isRetry?: number, retryCount: number = 1){
-        // console.log("Publishing ", key, dataType, value)
+    async publish(key: string, dataType: string, value: any, timestamp: number = Date.now(), isRetry?: number, retryCount: number = 1){
 
         if(value?.BYTES_PER_ELEMENT != undefined){
             value = Array.from(value)
@@ -142,7 +141,8 @@ export class MQTTClient {
                     key, 
                     Buffer.from(JSON.stringify({
                         dataType,
-                        value
+                        value,
+                        timestamp
                     })), 
                     {userId: this.options.user});
                 
@@ -153,7 +153,7 @@ export class MQTTClient {
                 await new Promise((resolve) => setTimeout(() => resolve(true), this.backoff(retryCount)) )
 
                 if(retryCount < 5){
-                    await this.publish(key, dataType, value, ix, retryCount + 1);
+                    await this.publish(key, dataType, value, timestamp, ix, retryCount + 1);
                 }
             }
         }

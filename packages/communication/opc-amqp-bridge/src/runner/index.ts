@@ -7,36 +7,68 @@ export class Runner {
 
     private client: OPCMQTTClient;
 
+    private transformers : {path: string, fn: (values: any) => any}[] = [];
+
     constructor(client: OPCMQTTClient){   
         this.client = client;
 
+        this.setupTransformers()
+
+        this.client.on('config-update', () => {
+            this.setupTransformers()
+        })
+
         this.getTag = this.getTag.bind(this);
         this.setTag = this.setTag.bind(this);
+
     }
 
     get options(){
-        return this.client.options;
+        return this.client.getConfig();
+    }
+
+    private setupTransformers(){
+        console.log(this.options?.deviceMap);
+        
+        this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
+            let tagValue = deviceMap.tag;
+            
+            if (tagValue?.indexOf('script://') == 0) {
+                const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+                const { getter, setter } = load_exports(jsCode)
+            
+                return {path: deviceMap.path, fn: (valueStructure: any) => getter(valueStructure)};
+            } else{
+                let rawTag = this.options?.subscriptionMap?.find((a) => a.path == tagValue)?.tag;
+
+                if(!rawTag) return {path: deviceMap.path, fn: (valueStructure: any) => null};
+
+                return {path: deviceMap.path, fn: (valueStructure: any) => rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure)}
+            }
+
+            // return null;
+
+        })
     }
 
     getTag(tagPath: string, tagType: string, valueStructure: any) {
 
-        const { deviceMap, subscriptionMap } = this.options || {}
-        let tagValue = deviceMap?.find((a) => a.path === tagPath)?.tag;
+        let fn = this.transformers?.find((a) => a.path === tagPath)?.fn;
 
-        console.log({tagPath, tagType, valueStructure, tagValue})
+        return parseValue(tagType, fn?.(valueStructure));
 
-        if (tagValue?.indexOf('script://') == 0) {
-            const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
-            const { getter, setter } = load_exports(jsCode)
+        // if (tagValue?.indexOf('script://') == 0) {
+        //     const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+        //     const { getter, setter } = load_exports(jsCode)
 
-            return parseValue(tagType, getter(valueStructure));
-        } else {
-            let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
+        //     return parseValue(tagType, getter(valueStructure));
+        // } else {
+        //     let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
 
-            if (!rawTag) return null;
+        //     if (!rawTag) return null;
 
-            return parseValue(tagType, rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure))
-        }
+        //     return parseValue(tagType, )
+        // }
 
     }
 

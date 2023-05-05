@@ -24,6 +24,11 @@ export interface SubscriptionParams {
     queueSize: number //Max number of notifications that can be in queue (default: 1)
 }
 
+export interface OPCSubscription {
+    path: string;
+    tag?: string;
+}
+
 const baseSubscriptionParams : SubscriptionParams = {
     samplingInterval: 500,
     discardOldest: true,
@@ -42,6 +47,8 @@ export default class Client {
 
     private subscription?: ClientSubscription;
 
+    private subscribedTo: (OPCSubscription | OPCSubscription[])[] = [];
+
     constructor(discoveryServer?: string){
         // super();
 
@@ -51,9 +58,9 @@ export default class Client {
             requestedSessionTimeout: 60 * 1000, //10 minutes
             keepSessionAlive: true,
             connectionStrategy: {
-                maxRetry: 2,
-                initialDelay: 2000,
-                maxDelay: 10 * 1000
+                // maxRetry: 2,
+                initialDelay: 1000,
+                maxDelay: 60 * 1000
             }
         })
 
@@ -87,7 +94,11 @@ export default class Client {
     }
 
     async connect(endpoint: string){
+
+        //TODO if reconnect make sure subscription is re-instated.
+
         await this.client.connect(endpoint)
+
         this.session = await this.client.createSession()
 
         this.session.on('session_closed', () => console.debug("Session closed"))
@@ -118,7 +129,7 @@ export default class Client {
 
 
     async subscribeMulti(
-        targets: {path: string, tag: string}[], 
+        targets: OPCSubscription[], 
         samplingInterval: number = 500,
     ){
         let nodes : any[] = [];
@@ -144,6 +155,9 @@ export default class Client {
                 ...baseSubscriptionParams, 
                 samplingInterval
             }, TimestampsToReturn.Both)
+            
+            this.subscribedTo.push(targets)
+
             return {
                 unsubscribe: () => {
                     group.terminate();
@@ -154,10 +168,7 @@ export default class Client {
                 }
             }
  
-            for(const item of items){
-             //   let m = ClientMonitoredItem.create(s, item, params, TimestampsToReturn.Both)
-              //  this.monitors[item.tag] = m
-            }
+       
         }
 
         return {
@@ -171,20 +182,23 @@ export default class Client {
        // return this.monitors
     }
 
-    async subscribe(opts: {path?: string, nodeId?: string}, samplingInterval: number = 500){
-        let node = opts.nodeId;
-        if(opts.path) node = await this.getPathID(opts.path)
+    async subscribe(target: OPCSubscription, samplingInterval: number = 500){
+
+        const path_id = await this.getPathID(target.path) || ''
+
         const item = {
-            nodeId: node,
+            nodeId: path_id,
             attributeId: AttributeIds.Value
         }
-
 
         if(this.subscription){
             const monitored = ClientMonitoredItem.create(this.subscription, item, {
                 ...baseSubscriptionParams, 
                 samplingInterval
             }, TimestampsToReturn.Both)
+
+            this.subscribedTo.push(target)
+
             return monitored
         }
     }

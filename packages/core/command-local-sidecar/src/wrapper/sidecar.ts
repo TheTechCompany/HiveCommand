@@ -27,13 +27,15 @@ export interface SidecarOptions {
 
 export class Sidecar extends OPCMQTTClient {
 
-    private conf: SidecarConf;
+    private conf?: SidecarConf;
 
 
     constructor(config?: SidecarOptions) {
         super(config);
 
         this.conf = new SidecarConf({ filename: 'hive-command.json', options: config });
+
+        this.getConfig = this.getConfig.bind(this);
 
     }
 
@@ -50,12 +52,13 @@ export class Sidecar extends OPCMQTTClient {
 
 
     setConfig(options: SidecarOptions) {
-        this.options = options;
-        this.conf.updateConf(options)
+        // this.options = options;
+        this.conf?.updateConf(options)
+        this.emit('config-update', options);
     }
 
     getConfig() {
-        return this.conf.getConf();
+        return this.conf?.getConf();
     }
 
 

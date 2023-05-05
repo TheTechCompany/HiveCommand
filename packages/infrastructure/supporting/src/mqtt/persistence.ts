@@ -23,7 +23,7 @@ export const RabbitMQPersistence = async (provider: Provider, vpcId: Output<any>
             // volumeName: storagePv.metadata.name,
             resources: {
                 requests: {
-                    storage: '10Gi'
+                    storage: '20Gi'
                 }
             }
         }   
