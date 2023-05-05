@@ -27,7 +27,7 @@ auth_http.user_path = http://${authApi}/auth/user
 auth_http.vhost_path = http://${authApi}/auth/vhost
 auth_http.resource_path = http://${authApi}/auth/resource
 auth_http.topic_path = http://${authApi}/auth/topic`),
-            'enabled_plugins': '[rabbitmq_prometheus,rabbitmq_auth_backend_http].'
+            'enabled_plugins': '[rabbitmq_prometheus,rabbitmq_management,rabbitmq_mqtt,rabbitmq_auth_backend_http].'
         }
     }, {
         provider
