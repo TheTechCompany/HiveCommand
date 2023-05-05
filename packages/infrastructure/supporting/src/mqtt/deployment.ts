@@ -21,6 +21,18 @@ export const RabbitMQDeployment = async (provider: Provider, appName: string, st
             'rabbitmq.conf': authApi.apply(authApi => `log.console = true
 log.console.level = debug
 
+mqtt.listeners.tcp.default = 1883
+
+mqtt.vhost            = /
+mqtt.exchange         = amq.topic
+
+mqtt.tcp_listen_options.backlog = 4096
+mqtt.tcp_listen_options.recbuf  = 131072
+mqtt.tcp_listen_options.sndbuf  = 131072
+
+mqtt.tcp_listen_options.keepalive = true
+mqtt.tcp_listen_options.nodelay   = true
+
 auth_backends.1 = rabbit_auth_backend_http
 
 auth_http.user_path = http://${authApi}/auth/user
@@ -52,6 +64,7 @@ auth_http.topic_path = http://${authApi}/auth/topic`),
                         name: appName,
                         image: `thetechcompany/mqtt:3.9.1`,
                         ports: [
+                            { name: "mqtt", containerPort: 1883 },
                             { name: "amqp", containerPort: 5672 },
                             { name: "amqp-management", containerPort: 15672 }
                         ],
