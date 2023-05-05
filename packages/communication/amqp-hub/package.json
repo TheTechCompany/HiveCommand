@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@hive-command/amqp-client": "^1.4.15-alpha.202",
-    "amqplib": "^0.10.3"
+    "amqplib": "^0.10.3",
+    "mqtt": "^4.3.7"
   },
   "author": "",
   "license": "ISC"

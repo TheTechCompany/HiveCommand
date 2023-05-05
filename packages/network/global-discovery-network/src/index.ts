@@ -80,7 +80,6 @@ import { API } from './api';
         });
 
         await mqttHub.setup();
-        await mqttHub.subscribe();
     } catch (e) {
         console.error({ e });
     }

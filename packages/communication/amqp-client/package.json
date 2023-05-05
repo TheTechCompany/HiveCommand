@@ -14,10 +14,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "amqplib": "^0.10.3"
+    "mqtt": "^4.3.7"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.1",
     "dotenv": "^16.0.3",
     "jest": "27.x",
     "typescript": "^4.9.5"
