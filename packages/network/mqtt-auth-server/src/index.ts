@@ -12,7 +12,7 @@ const prisma = new PrismaClient();
     const mqttAuth = MQTTAuth(async (user, pass) => {
         console.log("MQTT Auth", user, pass);
 
-        if(user == process.env.IOT_USER && pass == process.env.IOT_PASS) return true;
+        if(user == process.env.IOT_USER && pass == process.env.IOT_PASS) return {allow: true, role: 'administrator'};
 
         const {deviceId} = jwt.verify(pass, process.env.IOT_SECRET || '') as any;
 
