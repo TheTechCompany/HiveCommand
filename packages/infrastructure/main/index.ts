@@ -63,7 +63,7 @@ const main = (async () => {
 
 
 
-    const deployment = await all([rootServer, internalURL]).apply(async ([url, internal]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, internal));
+    const deployment = await all([rootServer, internalURL]).apply(async ([url, internal]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`));
     const service = await Service(provider)
 
     return {
