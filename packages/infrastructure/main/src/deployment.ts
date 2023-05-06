@@ -36,7 +36,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             { name: 'NODE_ENV', value: 'production' },
                             { name: 'ROOT_SERVER', value: `http://${rootServer}` },
                             { name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`) },
-                            { name: 'DEVICE_MQ_HOST', value: mqttURL },
+                            { name: 'DEVICE_MQ_HOST', value: mqttURL.apply(url => `mqtt://${url}`) },
                             { name: 'DEVICE_MQ_USER', value: process.env.IOT_USER },
                             { name: 'DEVICE_MQ_PASS', value: process.env.IOT_PASS },
                             { name: "VERSION_SHIM", value: '1.0.10' },
