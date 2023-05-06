@@ -51,7 +51,7 @@ export default (prisma: PrismaClient, deviceChannel: MQTTPublisher) => {
 				// return await channel.sendToQueue(`COMMAND:DEVICE:VALUE`, Buffer.from(JSON.stringify(stateChange)))
 				// await deviceChannel.channel?.assertQueue(`device:${device?.network_name}`)
 
-				await deviceChannel.publish(device.network_name, `${args.deviceName}${args.key ? `/${args.key}` : ''}`, 'Boolean', args.value)
+				await deviceChannel.publish(device.network_name, `${args.deviceName}${args.key ? `/${args.key}` : ''}`, args.value)
 				// .channel?.sendToQueue(`device:${device?.network_name}`, Buffer.from( JSON.stringify({ key: `${args.deviceName}${args.key ? `.${args.key}` : ''}`, value: args.value }) ))
 				
 				return true;
