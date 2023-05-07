@@ -265,14 +265,17 @@ export class OPCMQTTClient extends EventEmitter {
         try {
             await this.mqttPublisher.connect(async (message) => {
                 try {
-                    const { key, value } = message.messageContent;
+                    const { routingKey: key, messageContent: {value} } = message;
     
                     if (!this.client) {
                         return console.error("No client currently connected");
                     }
     
                     console.log("SET TAG", key, value)
-                    const setTags = await this.runner.setTag(this.valueStore.values, key, value)
+
+                    if(!key) return console.error("Set Tag Failed: " + value)
+
+                    const setTags = await this.runner.setTag(this.valueStore.values, key.replace(/\//, '.'), value)
     
                     await Promise.all((setTags || []).map(async (tags) => {
                         await this.setData(tags.tag, tags.dataType, tags.value)

@@ -29,7 +29,7 @@ export class Runner {
 
     private setupTransformers(){
         console.log(this.options?.deviceMap);
-        
+
         this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
             let tagValue = deviceMap.tag;
             
@@ -72,7 +72,9 @@ export class Runner {
 
     }
 
-
+    /*
+        tagPath: AV101.open
+    */
     async setTag(allValues: any, tagPath: string, value: any) : Promise<{tag: string, dataType: DataType, value: any}[] | null> {
         // if (!this.client) return;
 
