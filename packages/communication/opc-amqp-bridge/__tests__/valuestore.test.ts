@@ -1,6 +1,12 @@
 import { diffKeys } from "../src/valuestore/utils"
 
 describe("ValueStore", () => {
+
+    it('Changes to 0', () => {
+        const keys = diffKeys({PMP101: {speed: '26.15'}}, {PMP101: {speed: '0.00'}})
+        
+    })  
+
     it('Changed values', () => {
         const keys = diffKeys({PMP101: {speed: 27}}, {PMP101: {speed: 0}});
 

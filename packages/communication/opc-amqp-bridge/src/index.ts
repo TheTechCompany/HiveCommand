@@ -50,7 +50,7 @@ export class OPCMQTTClient extends EventEmitter {
 
     private runner : Runner;
 
-    private tagUpdateFn: {[key: string]: DebouncedFunc<(value: any) => void>} = {};
+    private tagUpdateFn: {[key: string]: DebouncedFunc<(value: any) => void> | { [key: string]: DebouncedFunc<(value: any) => void> }} = {};
 
     constructor(config?: SidecarOptions) {
         super();
@@ -131,7 +131,7 @@ export class OPCMQTTClient extends EventEmitter {
 
         console.log("Subscribing to", paths);
 
-        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 200) || {}
+        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 500) || {}
 
         const emitter = new EventEmitter()
 
@@ -305,14 +305,9 @@ export class OPCMQTTClient extends EventEmitter {
         console.log("MQTT Publisher started");
     }
 
+    //
     publish(key: string, value: any){
-        if(!this.tagUpdateFn[key]){
-            this.tagUpdateFn[key] = debounce((value: any) => {
-                this.mqttPublisher?.publish(key, 'Boolean', value)
-            }, 1000);
-        }
-
-        this.tagUpdateFn[key]?.(value)
+        this.mqttPublisher?.publish(key, 'Boolean', value);
     }
 
     async publish_data(key: string, value: any) {
