@@ -115,7 +115,10 @@ export class MQTTClient {
                 dataType,
                 value,
                 timestamp
-            }))
+            })),
+            {
+                qos: 1
+            }
         );
 
     }
