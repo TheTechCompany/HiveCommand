@@ -46,7 +46,7 @@ export class MQTTPublisher {
     }
 
     publish(client: string, key: string, value: any){
-        this.client?.publish(`${this.DEVICE_CONTROL_PREFIX}/${client}/${key}`, Buffer.from(JSON.stringify({value})))
+        this.client?.publish(`${this.DEVICE_CONTROL_PREFIX}/${client}/${key}`, Buffer.from(JSON.stringify({value})), {qos: 1})
     }
 
 }
