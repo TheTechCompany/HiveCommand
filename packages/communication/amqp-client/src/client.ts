@@ -59,7 +59,7 @@ export class MQTTClient {
             if (topic.indexOf(this.DEVICE_CONTROL_PREFIX) > -1){
 
                 let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
-                onMessage({ routingKey: topic.split(this.DEVICE_CONTROL_PREFIX)?.[1], messageContent })
+                onMessage({ routingKey: topic.split(`${this.DEVICE_CONTROL_PREFIX}/`)?.[1], messageContent })
             }
         })
 

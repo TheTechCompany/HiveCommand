@@ -48,7 +48,8 @@ import { API } from './api';
             userId?: string
         }) => {
 
-            console.log(`Data from ${userId} ${routingKey}`);
+            console.log(`Data from ${userId} ${routingKey}`)
+            console.log(messageContent?.value);
 
             const device = await prisma.device.findFirst({ where: { network_name: userId } })
             //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
