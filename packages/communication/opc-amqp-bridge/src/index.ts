@@ -135,8 +135,10 @@ export class OPCMQTTClient extends EventEmitter {
 
         const emitter = new EventEmitter()
 
-        monitors?.on('changed',  (item, value, index) => {
-            (async () => {
+        monitors?.on('changed', (item, value, index) => {
+            //zeroed timeout or async await block (macrotask/microtask)
+            setTimeout(() => {
+
                 try {
                     const key = unwrap?.(index)
 
@@ -158,7 +160,7 @@ export class OPCMQTTClient extends EventEmitter {
                 } catch (e: any) {
                     console.log("Error in monitors.changed", e.message)
                 }
-            })();
+            })
         })
 
         return { emitter, unsubscribe };
