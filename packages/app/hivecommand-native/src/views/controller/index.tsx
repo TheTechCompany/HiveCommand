@@ -9,6 +9,7 @@ import ts, { ModuleKind } from 'typescript'
 import { useLocalClient } from './client';
 import { DataTypes } from '@hive-command/scripting';
 import moment from 'moment';
+import { useNativeContext } from '../../context';
 
 export const load_exports = (code: string,) => {
 
@@ -25,6 +26,8 @@ export const load_exports = (code: string,) => {
 
 export const Controller = (props: {sidecar: boolean}) => {
     // const ref = useRef<any>();
+
+    const { isSidecarRunning } = useNativeContext();
 
     const { authState, globalState } = useContext(DataContext);
 
@@ -79,8 +82,8 @@ export const Controller = (props: {sidecar: boolean}) => {
                 </Typography>
 
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
-                    <Typography fontSize={'12px'} sx={{marginRight: '6px'}}>{props.sidecar ? "Driver running" : "Driver not running"}</Typography>
-                    <div style={{width: '10px', height: '10px', background: props.sidecar ? 'green' : 'red', borderRadius: '10px'}} />
+                    <Typography fontSize={'12px'} sx={{marginRight: '6px'}}>{isSidecarRunning == true ? "Driver running" : "Driver not running"}</Typography>
+                    <div style={{width: '10px', height: '10px', background: isSidecarRunning  == true ? 'green' : 'red', borderRadius: '10px'}} />
                 </Box>
             </Box>
             <CommandSurface 

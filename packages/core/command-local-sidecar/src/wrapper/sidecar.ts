@@ -1,28 +1,15 @@
 import { SidecarConf } from "./conf";
-import { OPCMQTTClient } from '@hive-command/opcua-amqp-bridge';
+import { OPCMQTTClient, SidecarOptions } from '@hive-command/opcua-amqp-bridge';
 
-export interface SidecarOptions {
-
-    tags?: { name: string, type: string }[]
-    types?: { name: string, fields: { name: string, type: string }[] }[]
+export interface LocalOptions extends SidecarOptions {
 
     iot?: {
         host: string,
         user: string,
-        pass: string
+        pass: string,
+        exchange: string
     }
 
-    opcuaServer?: string;
-
-    deviceMap?: {
-        path: string,
-        tag: string
-    }[]
-
-    subscriptionMap?: {
-        path: string,
-        tag: string
-    }[]
 }
 
 export class Sidecar extends OPCMQTTClient {
@@ -30,7 +17,7 @@ export class Sidecar extends OPCMQTTClient {
     private conf?: SidecarConf;
 
 
-    constructor(config?: SidecarOptions) {
+    constructor(config?: LocalOptions) {
         super(config);
 
         this.conf = new SidecarConf({ filename: 'hive-command.json', options: config });
@@ -51,8 +38,11 @@ export class Sidecar extends OPCMQTTClient {
     }
 
 
-    setConfig(options: SidecarOptions) {
+    setConfig(options: LocalOptions) {
         // this.options = options;
+
+        console.log("Options", {options});
+
         this.conf?.updateConf(options)
         this.emit('config-update', options);
     }

@@ -10,8 +10,8 @@ import { Runner } from "./runner";
 
 export interface SidecarOptions {
 
-    tags?: { name: string, type: string }[]
-    types?: { name: string, fields: { name: string, type: string }[] }[]
+    tags: { name: string, type: string }[]
+    types: { name: string, fields: { name: string, type: string }[] }[]
 
     iot?: {
         host?: string;
@@ -23,12 +23,15 @@ export interface SidecarOptions {
 
     opcuaServer?: string;
 
+    //Provided at boot to map subscription tags to deviceMap paths
     deviceMap?: {
         path: string,
         tag: string
     }[]
 
-    subscriptionMap?: {
+    //Provided at boot to kick-start subscriptions to the OPCUA-Server
+    // Important to be provided at oot for runner value mapping
+    subscriptionMap: {
         path: string,
         tag: string
     }[]
@@ -60,6 +63,20 @@ export class OPCMQTTClient extends EventEmitter {
         this.runner = new Runner(this);
 
         this.valueStore = new ValueStore(this, this.runner)
+
+        this.valueStore.on('keys-changed', this.onKeyChanged.bind(this))
+
+    }
+
+    updateConfig(config: SidecarOptions){
+
+        let lastConfig = Object.assign({}, this.options);
+
+        this.options = config;
+
+        this.runner = new Runner(this);
+        this.valueStore = new ValueStore(this, this.runner);
+        this.valueStore.on('keys-changed', this.onKeyChanged.bind(this))
 
     }
 
@@ -93,6 +110,11 @@ export class OPCMQTTClient extends EventEmitter {
         }
     }
 
+    shutdown(){
+    
+        this.client?.disconnect()
+
+    }
     
     async getDataType(path: string) {
         return await this.client?.getType(path, true)
@@ -127,15 +149,14 @@ export class OPCMQTTClient extends EventEmitter {
     }
 
 
+    //Must be starte
     async subscribe(paths: { tag: string, path: string }[]) {
+        if(!this.client) throw new Error("Client must be started before subscribing");
 
-        console.log("Subscribing to", paths);
-
-        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 500) || {}
-
-        const emitter = new EventEmitter()
+        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 1000) || {}
 
         monitors?.on('changed', (item, value, index) => {
+
             //zeroed timeout or async await block (macrotask/microtask)
             setTimeout(() => {
 
@@ -149,13 +170,7 @@ export class OPCMQTTClient extends EventEmitter {
 
                     // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
 
-                    this.valueStore.updateValue(key, curr_value).then((changed_keys) => {
-                        changed_keys.map((changed) => {
-                            this.publish(changed.key, changed.value);
-                            // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
-                            emitter.emit('data-changed', { key: changed.key, value: changed.value })
-                        })
-                    })
+                    this.valueStore.updateValue(key, curr_value)
                     
                 } catch (e: any) {
                     console.log("Error in monitors.changed", e.message)
@@ -163,7 +178,17 @@ export class OPCMQTTClient extends EventEmitter {
             })
         })
 
-        return { emitter, unsubscribe };
+        return { unsubscribe };
+    }
+
+
+    onKeyChanged(changed_keys: {key: string, value: any}[]){
+        changed_keys.map((changed) => {
+            this.publish(changed.key, changed.value);
+
+            // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
+            this.emit('data-changed', { key: changed.key, value: changed.value })
+        })
     }
 
     async browse(client: OPCUAClient, browsePath: string, recursive?: boolean, withTypes?: boolean) {

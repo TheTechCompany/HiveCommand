@@ -9,7 +9,7 @@ import { merge } from 'lodash'
 import axios from "axios";
 import { io, Socket } from "socket.io-client";
 
-export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
+export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
 
     const { authState, globalState } = useContext(DataContext)
@@ -28,26 +28,26 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
     let getTagPaths = (object: any, parent?: string): any => {
         // console.log("Get tag paths", object, parent)
 
-        if(typeof(object) == 'object' && !Array.isArray(object)){
-            return Object.keys(object).map((key) => getTagPaths(object[key], parent ? `${parent}.${key}` : key) ).reduce((prev, curr) => prev.concat((Array.isArray(curr) ? curr : [curr])), [])   
-        }else{
-            return {parent, tag: object};
+        if (typeof (object) == 'object' && !Array.isArray(object)) {
+            return Object.keys(object).map((key) => getTagPaths(object[key], parent ? `${parent}.${key}` : key)).reduce((prev, curr) => prev.concat((Array.isArray(curr) ? curr : [curr])), [])
+        } else {
+            return { parent, tag: object };
         }
-        
+
     }
 
 
-    const [ valueStore, setValueStore ] = useState<{[key: string]: any}>({})
-    
+    const [valueStore, setValueStore] = useState<{ [key: string]: any }>({})
+
     const valueStructure = useMemo(() => {
         return Object.keys(valueStore).map((valueKey) => {
-            if(valueKey.indexOf('.') > -1){
-                return valueKey.split('.').reverse().reduce((prev, curr) => ({[curr]: prev}), valueStore[valueKey])
-            }else{
-                return {[valueKey]: valueStore[valueKey]}
+            if (valueKey.indexOf('.') > -1) {
+                return valueKey.split('.').reverse().reduce((prev, curr) => ({ [curr]: prev }), valueStore[valueKey])
+            } else {
+                return { [valueKey]: valueStore[valueKey] }
             }
         }).reduce((prev, curr) => merge(prev, curr), {})
-       
+
         // return subscriptionMap?.map((subscription) => {
         //      // let value = props.values[devicePath];
         //      let value = valueStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
@@ -65,7 +65,7 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
 
     const socket = useRef<Socket>()
 
-    const subscribe = (paths: {path: string, tag: string}[], devices: {path: string, tag: string}[]) => {
+    const subscribe = (paths: { path: string, tag: string }[], devices: { path: string, tag: string }[]) => {
         socket.current = io(`http://localhost:${8484}`)
 
         socket.current.on('connected', () => {
@@ -74,26 +74,30 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
         })
 
         socket.current.on('data-changed', (data) => {
-            console.log("Datachanged", data.key, data.value)
-            // alert("Datachange on io socketç" + JSON.stringify({data}))
 
-            setValueStore((store) => ({
-                ...store,
-                [data.key]: (typeof(data.value) === 'object' && !Array.isArray(data.value)) ? {
-                    ...store[data.key],
-                    ...data.value,
-                } : data.value
-            }));
+            setTimeout(() => {
+                setValueStore((store) => {
+
+                    store[data.key] = (typeof (data.value) === 'object' && !Array.isArray(data.value)) ? {
+                        ...store[data.key],
+                        ...data.value,
+                    } : data.value;
+
+                    // ...store,
+                    // [data.key]: 
+                    return store;
+                });
+            })
 
         })
-        
+
 
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
-            if(data.data){
+            if (data.data) {
                 console.log("Initial state store", data.data)
                 setValueStore(data.data)
             }
-           
+
         })
     }
 
@@ -105,7 +109,7 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
 
     //Subscribe to datapoints
     useEffect(() => {
-        if(globalState?.subscriptionMap)
+        if (globalState?.subscriptionMap)
             subscribe(globalState?.subscriptionMap, globalState.deviceMap || [])
 
         //Cleanup subscription
@@ -132,6 +136,7 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
             ...prev,
             [curr.key]: curr.value
         }), {})
+
     }, [valueStructure, controlLayout?.tags, controlLayout?.types])
 
 
@@ -143,12 +148,12 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
     //         const { getter, setter } = load_exports(jsCode)
     //         // console.log({jsCode})
     //         return setter(value, valueStructure, (values: any) => {
-                
+
     //             let tags = getTagPaths(values) //.reduce((prev: any, curr: any) => [...prev, ...curr], []);
 
     //             // console.log({tags, values, subscriptionMap})
     //             let newValues = tags.map((t: any) => {
-                 
+
     //                 let path = subscriptionMap?.find((a) => a.tag == t.parent)?.path
     //                 if(!path) return null;
 
@@ -175,25 +180,25 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
 
 
 
-    const changeDeviceValue = async (deviceName: string, value: any, stateKey?: string ) => {
+    const changeDeviceValue = async (deviceName: string, value: any, stateKey?: string) => {
         //Get mapping
 
-        console.log({deviceName, stateKey, value});
+        console.log({ deviceName, stateKey, value });
 
         await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        path: `${deviceName}${stateKey ? `.${stateKey}`: ''}`,
-                        value: value
-                    })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                path: `${deviceName}${stateKey ? `.${stateKey}` : ''}`,
+                value: value
+            })
         })
 
         // setTag(`${deviceName}${stateKey ? `.${stateKey}` : ''}`, value, async (values) => {
         //     console.log({values});
-            
+
         //     await Promise.all(values.map(async (value) => {
         //         await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
         //             method: "POST",
@@ -206,17 +211,17 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
         //             })
         //         })
         //     }))
-            
+
         // });
 
         // console.log({paths})
         //Check for script tag
-            //If script tag use setter
+        //If script tag use setter
 
-            //Else use valueStore
+        //Else use valueStore
     }
 
-    const [ reportPages, setReportPages ] = useState<any[]>([]);
+    const [reportPages, setReportPages] = useState<any[]>([]);
 
     // const { 
     //     addChart, 
@@ -235,32 +240,32 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
             let reports = reportPages.slice();
             // let ix = reports.map((x) => x.name).indexOf(name)
             // if(ix < 0){
-            reports.push({id: nanoid(), name})
-            console.log({reports})
+            reports.push({ id: nanoid(), name })
+            console.log({ reports })
             // }
             setReportPages(reports)
         },
         updateReportPage: async (id, name) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(id)
-            if(ix > -1){
-                reports[ix] = {...reports[ix], name}
+            if (ix > -1) {
+                reports[ix] = { ...reports[ix], name }
             }
             setReportPages(reports)
         },
         removeReportPage: async (id) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(id)
-            if(ix > -1){
+            if (ix > -1) {
                 reports.splice(ix, 1);
             }
-            
+
             setReportPages(reports)
         },
         addChart: async (pageId, type, deviceId, keyId, x, y, w, h, totalize) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(pageId)
-            if(ix > -1){
+            if (ix > -1) {
                 let charts = reports[ix]?.charts?.slice() || [];
 
                 let dev = devices.find((a) => a.id == deviceId);
@@ -291,7 +296,7 @@ export const useLocalClient = (devices: any[]) : CommandSurfaceClient => {
             setReportPages(reports)
         },
         useValues: (program) => {
-            return {values};
+            return { values };
         },
         // updateChart,
         // updateChartGrid,

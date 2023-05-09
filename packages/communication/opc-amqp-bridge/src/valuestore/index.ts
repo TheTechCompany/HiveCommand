@@ -2,6 +2,8 @@ import { isEqual, merge } from 'lodash';
 import { OPCMQTTClient } from '..';
 import { Runner } from '../runner';
 import { diffKeys } from './utils';
+import { EventEmitter } from 'events'
+import crypto from 'crypto'
 
 export interface ValueStoreOptions {
     subscriptionMap?: any[];
@@ -10,8 +12,8 @@ export interface ValueStoreOptions {
     types?: any[];
 }
 
-export class ValueStore {
-    private internalStore : any = {};
+export class ValueStore extends EventEmitter {
+    private internalStore: any = {};
 
     private runner: Runner;
 
@@ -19,12 +21,14 @@ export class ValueStore {
 
     private mqttClient: OPCMQTTClient;
 
-    constructor(mqttClient: OPCMQTTClient, runner: Runner){
+    constructor(mqttClient: OPCMQTTClient, runner: Runner) {
+        super();
+
         this.runner = runner;
-        this.mqttClient = mqttClient;        
+        this.mqttClient = mqttClient;
     }
 
-    get options(){
+    get options() {
         return {
             tags: this.mqttClient.getConfig()?.tags,
             types: this.mqttClient.getConfig()?.types,
@@ -32,36 +36,39 @@ export class ValueStore {
         }
     }
 
-    get subscriptionMap(): {tag: string, path: string}[]{
+    get subscriptionMap(): { tag: string, path: string }[] {
         return this.options?.subscriptionMap || []
     }
 
-    get types(){
+    get types() {
         return this.options?.types || []
     }
 
 
-    get tags(){
+    get tags() {
         return this.options?.tags || []
     }
 
     updateValue(key: string, value: any) {
-        return (async () => {
-            console.time('updateValue: '+ key);
-            this.internalStore = {
-                ...this.internalStore,
-                [key]: value
-            }
+        console.time('updatedValue: ' + key);
 
-            // this.normaliseInternalValues();
+        this.internalStore[key] = value;
 
-            let nv = this.normaliseValues(this.tags, this.types)
-            console.timeEnd('updateValue: '+ key);
-            return nv;
-        })();
+        //  {
+        //     ...this.internalStore,
+        //     [key]: value
+        // }
+
+        // this.normaliseInternalValues();
+
+
+        let nv = this.normaliseValues(this.tags, this.types)
+        console.timeEnd('updatedValue: ' + key);
+
+        if (nv.length > 0) this.emit('keys-changed', nv);
     }
 
-    get internalValues(){
+    get internalValues() {
         return this.subscriptionMap?.map((subscription) => {
             // let value = props.values[devicePath];
             let value = this.internalStore[subscription.tag] //.split('.').reduce((prev, curr) => prev?.[curr] || undefined, valueStore)
@@ -119,6 +126,7 @@ export class ValueStore {
             [curr.key]: curr.value
         }), {})
 
+        
         return diffKeys(old_values, this.values)
     }
 

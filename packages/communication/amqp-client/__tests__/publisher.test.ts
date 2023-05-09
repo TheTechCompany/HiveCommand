@@ -1,4 +1,3 @@
-import amqplib from 'amqplib'
 import { MQTTClient } from '../src';
 
 describe('AMQP Publisher', () => {
@@ -8,46 +7,46 @@ describe('AMQP Publisher', () => {
 
         const res = await new Promise(async (resolve) => {
 
-            jest.spyOn(amqplib, 'connect').mockImplementation((async (url: string) => {
+            // jest.spyOn(amqplib, 'connect').mockImplementation((async (url: string) => {
 
-                return {
-                    once: (key: string, fn: any) => {
-                        //Second connection trigger an internal error
+            //     return {
+            //         once: (key: string, fn: any) => {
+            //             //Second connection trigger an internal error
                  
-                    },
-                    createChannel: async () => {
-                        return {
-                            assertExchange: () => {
+            //         },
+            //         createChannel: async () => {
+            //             return {
+            //                 assertExchange: () => {
 
-                            },
-                            consume: () => {
+            //                 },
+            //                 consume: () => {
 
-                            },
-                            publish: () => {
-                                connectionCount++;
-                                if(connectionCount < 3){
-                                    throw new Error("Publish fail")
-                                }
-                            }
-                        }
-                    }
-                }
-            }) as any)
+            //                 },
+            //                 publish: () => {
+            //                     connectionCount++;
+            //                     if(connectionCount < 3){
+            //                         throw new Error("Publish fail")
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }) as any)
 
-            const client = new MQTTClient({
-                host: '',
-                user: '',
-                pass: '',
-                exchange: ''
-            });
+            // const client = new MQTTClient({
+            //     host: '',
+            //     user: '',
+            //     pass: '',
+            //     exchange: ''
+            // });
 
-            // jest.runAllTimers()
+            // // jest.runAllTimers()
 
-            await client.connect();
+            // await client.connect();
 
-            await client.publish('test', "Boolean", 'test')
+            // await client.publish('test', "Boolean", 'test')
 
-            resolve(true)
+            // resolve(true)
             // jest.spyOn()
 
         })

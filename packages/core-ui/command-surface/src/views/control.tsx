@@ -115,9 +115,6 @@ export const ControlView = () => {
         types
     }), [activeProgram, hmi, fullHMIElements])
 
-
-	console.log({activeProgram, hmi, fullHMIElements})
-
     useEffect(() => {
 
         (async () => {

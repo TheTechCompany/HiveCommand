@@ -1,5 +1,5 @@
 import { readFileSync, existsSync, writeFileSync } from 'fs';
-import { SidecarOptions } from '.';
+import { LocalOptions } from '.';
 import path from 'path';
 
 export interface Configuration { 
@@ -17,9 +17,9 @@ export class SidecarConf {
     
     private path? : string;
 
-    private conf : SidecarOptions = {};
+    private conf : LocalOptions = {tags: [], types: [], subscriptionMap: []};
 
-    constructor(opts: {filename?: string, options?: SidecarOptions, path?: string}){
+    constructor(opts: {filename?: string, options?: LocalOptions, path?: string}){
         if(opts.filename){
             this.path = path.join(this.appData, opts.filename);
         }else if(opts.path){
@@ -30,7 +30,8 @@ export class SidecarConf {
             this.conf = opts.options;
         }else{
             const existingData = this.rehydrate();
-            this.conf = existingData || {}
+            console.log({existingData})
+            this.conf = existingData || {};
         }
     }
 
@@ -38,7 +39,7 @@ export class SidecarConf {
         return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
     }
 
-    updateConf(conf: SidecarOptions){
+    updateConf(conf: LocalOptions){
         this.conf = conf;
         this.dehydrate()
     }
