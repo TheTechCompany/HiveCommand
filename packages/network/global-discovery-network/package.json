@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.4.15-alpha.206",
+  "version": "1.4.15-alpha.207",
   "description": "",
   "main": "index.js",
   "publishConfig": {
@@ -20,7 +20,7 @@
     "typescript": "^4.8.4"
   },
   "dependencies": {
-    "@hive-command/amqp-hub": "^1.4.15-alpha.206",
+    "@hive-command/amqp-hub": "^1.4.15-alpha.207",
     "@hive-command/data": "^1.4.15-alpha.199",
     "@hive-command/rabbitmq-auth": "^1.4.15-alpha.204",
     "amqplib": "^0.10.3",

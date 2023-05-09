@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/local-sidecar",
-  "version": "1.4.15-alpha.206",
+  "version": "1.4.15-alpha.207",
   "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
@@ -26,8 +26,8 @@
     "tsconfig-paths": "^4.1.1"
   },
   "dependencies": {
-    "@hive-command/amqp-client": "^1.4.15-alpha.206",
-    "@hive-command/opcua-amqp-bridge": "^1.4.15-alpha.206",
+    "@hive-command/amqp-client": "^1.4.15-alpha.207",
+    "@hive-command/opcua-amqp-bridge": "^1.4.15-alpha.207",
     "@hive-command/opcua-client": "^1.4.15-alpha.204",
     "@hive-command/scripting": "^1.4.15-alpha.199",
     "body-parser": "^1.20.1",
