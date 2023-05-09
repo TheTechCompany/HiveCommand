@@ -66,7 +66,9 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
     const socket = useRef<Socket>()
 
     const subscribe = (paths: { path: string, tag: string }[], devices: { path: string, tag: string }[]) => {
-        socket.current = io(`http://localhost:${8484}`)
+        socket.current = io(`http://localhost:${8484}`);
+
+        (window as any).socket = socket.current;
 
         socket.current.on('connected', () => {
             console.log("Connected");
@@ -74,6 +76,8 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         })
 
         socket.current.on('data-changed', (data) => {
+
+            console.log("data changed", data);
 
             setTimeout(() => {
                 setValueStore((store) => {
