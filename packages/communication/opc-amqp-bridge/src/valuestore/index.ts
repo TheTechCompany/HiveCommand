@@ -93,6 +93,9 @@ export class ValueStore extends EventEmitter {
         }).reduce((prev, curr) => merge(prev, curr), {})
     }
 
+    //TODO Options
+    //1) Make normalised values a standardised tick rate based update
+    //2) Figure out dependencies and only run on segments of the values that will be updated by it
     private normaliseValues(tags: any[], types: any[]) {
 
         // return new Promise<{workerData: any[]}>((resolve, reject) => {

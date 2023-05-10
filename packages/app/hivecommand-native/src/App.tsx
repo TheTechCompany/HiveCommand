@@ -63,8 +63,6 @@ function App() {
     }
   }, [])
 
-  
-
   //TODO add different 
   useEffect(() => {
     console.log({isReady, sidecarRunning});
