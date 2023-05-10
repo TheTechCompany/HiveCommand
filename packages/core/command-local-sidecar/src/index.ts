@@ -80,18 +80,19 @@ app.route('/setup')
         res.send(config ? { config } : { error: "No config" })
     })
     .post(async (req, res) => {
-        console.log("CONFIG");
-
         const mainConfig = req.body.config;
 
         sidecar.setConfig(mainConfig);
 
         const config = mainConfig.iot;
 
+        sidecar.stop()
+
         await sidecar.connect(mainConfig.opcuaServer)
 
         await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
 
+        await sidecar.start()
         res.send({ config: sidecar.getConfig() })
     })
 

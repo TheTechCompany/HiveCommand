@@ -59,11 +59,19 @@ import { API } from './api';
             if (typeof (messageContent.value) == "object") {
 
                 await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                    await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
+                    try{
+                        await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
+                    }catch(e){
+                        console.error("publish multi error", e, routingKey, messageContent);
+                    }
                 }))
                 
             } else {
-                await publishValue(device.id, routingKey, messageContent?.value, messageContent.timestamp)
+                try{
+                    await publishValue(device.id, routingKey, messageContent?.value, messageContent.timestamp)
+                }catch(e){
+                    console.error("publish single error", e, routingKey, messageContent);
+                }
             }
             if (!device || !routingKey || !messageContent) return;
 

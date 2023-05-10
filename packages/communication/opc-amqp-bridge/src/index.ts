@@ -44,6 +44,9 @@ export class OPCMQTTClient extends EventEmitter {
 
     private subscription?: { events: EventEmitter, paths: { tag: string, path: string }[], unsubscribe: () => void };
 
+    private monitors?: any;
+    private unwrap?: (index: number) => any;
+
     private mqttPublisher?: MQTTClient;
 
     private options?: SidecarOptions;
@@ -63,6 +66,8 @@ export class OPCMQTTClient extends EventEmitter {
         this.runner = new Runner(this);
 
         this.valueStore = new ValueStore(this, this.runner)
+
+        this.onMonitorChanged = this.onMonitorChanged.bind(this)
 
         this.valueStore.on('keys-changed', this.onKeyChanged.bind(this))
 
@@ -110,10 +115,12 @@ export class OPCMQTTClient extends EventEmitter {
         }
     }
 
-    shutdown(){
-    
-        this.client?.disconnect()
+    stop(){
+        this.unsubscribe()
 
+        this.mqttPublisher?.disconnect()
+
+        this.client?.disconnect()
     }
     
     async getDataType(path: string) {
@@ -155,37 +162,49 @@ export class OPCMQTTClient extends EventEmitter {
 
         const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 1000) || {}
 
-        monitors?.on('changed', (item, value, index) => {
-
-            //zeroed timeout or async await block (macrotask/microtask)
-            setTimeout(() => {
-
-                try {
-                    const key = unwrap?.(index)
-
-                    let curr_value = value.value.value;
-                    if(curr_value?.BYTES_PER_ELEMENT != undefined){
-                        curr_value = Array.from(curr_value);
-                    }
-
-                    // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
-
-                    this.valueStore.updateValue(key, curr_value)
-                    
-                } catch (e: any) {
-                    console.log("Error in monitors.changed", e.message)
-                }
-            })
-        })
+        this.monitors = monitors;
+        this.unwrap = unwrap;
+        
+        monitors?.on('changed', this.onMonitorChanged);
 
         return { unsubscribe };
+    }
+
+    unsubscribe(){
+        if(this.monitors){
+            this.monitors.off('changed', this.onMonitorChanged)
+        }
+
+        this.monitors = undefined;
+        this.unwrap = undefined;
+    }
+
+    onMonitorChanged(item: any, value: any, index: number){
+        //zeroed timeout or async await block (macrotask/microtask)
+        setTimeout(() => {
+
+            try {
+                const key = this.unwrap?.(index)
+
+                let curr_value = value.value.value;
+                if(curr_value?.BYTES_PER_ELEMENT != undefined){
+                    curr_value = Array.from(curr_value);
+                }
+
+                // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+
+                this.valueStore.updateValue(key, curr_value)
+                
+            } catch (e: any) {
+                console.log("Error in monitors.changed", e.message)
+            }
+        })
     }
 
 
     onKeyChanged(changed_keys: {key: string, value: any}[]){
         changed_keys.map((changed) => {
             this.publish(changed.key, changed.value);
-
             // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
             this.emit('data-changed', { key: changed.key, value: changed.value })
         })

@@ -14,6 +14,7 @@ import { Controller } from './views/controller';
 import { Command } from '@tauri-apps/api/shell';
 import axios from 'axios';
 import { NativeProvider } from './context';
+import { listen } from '@tauri-apps/api/event';
 
 const cmd = Command.sidecar('binaries/sidecar')
 
@@ -26,19 +27,21 @@ function App() {
   const [ configured,  setConfigured ] = useState(false);
 
   useEffect(() => {
+    //Start Sidecar
     cmd.execute()
 
-    // let unlisten: any;
+    //Setup configuration callback from rust core
+    let unlisten: any;
 
-    // (async () => {
-    //   unlisten = listen('configure', () => {
-    //     setAuthState?.('configProvided', false);
-    //   })
-    // })();
+    (async () => {
+      unlisten = listen('configure', () => {
+        setAuthState?.('configProvided', false);
+      })
+    })();
     
-    // return () => {
-    //   unlisten();
-    // }
+    return () => {
+      unlisten();
+    }
 
   }, [])
 

@@ -49,23 +49,26 @@ export class ValueStore extends EventEmitter {
         return this.options?.tags || []
     }
 
+
+    private cleanValue(value: any){
+        switch(typeof(value)){
+            case 'number':
+                return value % 1 !== 0 ? value.toFixed(2) : value;
+            default:
+                return value;
+        }
+    }
+
     updateValue(key: string, value: any) {
-        console.time('updatedValue: ' + key);
+        setTimeout(() => {
+            this.internalStore[key] = this.cleanValue(value);
 
-        this.internalStore[key] = value;
+            console.log("updateValue", {key, value: this.internalStore[key], type: typeof(value)})
 
-        //  {
-        //     ...this.internalStore,
-        //     [key]: value
-        // }
+            let nv = this.normaliseValues(this.tags, this.types)
 
-        // this.normaliseInternalValues();
-
-
-        let nv = this.normaliseValues(this.tags, this.types)
-        console.timeEnd('updatedValue: ' + key);
-
-        if (nv.length > 0) this.emit('keys-changed', nv);
+            if (nv.length > 0) this.emit('keys-changed', nv);
+        })
     }
 
     get internalValues() {
@@ -79,7 +82,6 @@ export class ValueStore extends EventEmitter {
                 return { [subscription.tag]: value };
             }
 
-            //  return obj
         }).reduce((prev, curr) => merge(prev, curr), {})
     }
 

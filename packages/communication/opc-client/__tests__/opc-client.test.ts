@@ -1,6 +1,5 @@
 import Client from '..';
 import { TestServer } from './server';
-import FakeTimers from "@sinonjs/fake-timers";
 
 jest.setTimeout(10 * 1000);
 

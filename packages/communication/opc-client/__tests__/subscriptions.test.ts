@@ -1,6 +1,5 @@
 import { TestServer } from './server';
 import Client from '..';
-import sinon from 'sinon'
 
 function flushPromises() {
     // Wait for promises running in the non-async timer callback to complete.

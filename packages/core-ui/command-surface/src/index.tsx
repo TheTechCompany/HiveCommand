@@ -543,20 +543,19 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             //     break;
             default:
                 let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
-                console.log({ nodes })
+
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node?.parent;
-
-                console.log({ page, nodeId })
 
                 if (!page) page = node.id;
 
                 if (nodeId != 'controls' && nodeId != 'analytics') {
                     setView(page);
+                }else{
+                    break;
                 }
 
                 if (page == 'controls' || page == 'analytics') {
-                    console.log("Control or analytics", nodeId)
                     setActivePage(nodeId)
                 }
                 break;
@@ -567,7 +566,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     //Translates id to bus-port value
 
     const alarms = activeProgram?.alarms || [];
-
 
     const templatePacks = activeProgram?.templatePacks || [];
 
