@@ -10,8 +10,8 @@ import { Runner } from "./runner";
 
 export interface SidecarOptions {
 
-    tags?: { name: string, type: string }[]
-    types?: { name: string, fields: { name: string, type: string }[] }[]
+    tags: { name: string, type: string }[]
+    types: { name: string, fields: { name: string, type: string }[] }[]
 
     iot?: {
         host?: string;
@@ -23,12 +23,15 @@ export interface SidecarOptions {
 
     opcuaServer?: string;
 
+    //Provided at boot to map subscription tags to deviceMap paths
     deviceMap?: {
         path: string,
         tag: string
     }[]
 
-    subscriptionMap?: {
+    //Provided at boot to kick-start subscriptions to the OPCUA-Server
+    // Important to be provided at oot for runner value mapping
+    subscriptionMap: {
         path: string,
         tag: string
     }[]
@@ -41,6 +44,9 @@ export class OPCMQTTClient extends EventEmitter {
 
     private subscription?: { events: EventEmitter, paths: { tag: string, path: string }[], unsubscribe: () => void };
 
+    private monitors?: any;
+    private unwrap?: (index: number) => any;
+
     private mqttPublisher?: MQTTClient;
 
     private options?: SidecarOptions;
@@ -50,7 +56,7 @@ export class OPCMQTTClient extends EventEmitter {
 
     private runner : Runner;
 
-    private tagUpdateFn: {[key: string]: DebouncedFunc<(value: any) => void>} = {};
+    private tagUpdateFn: {[key: string]: DebouncedFunc<(value: any) => void> | { [key: string]: DebouncedFunc<(value: any) => void> }} = {};
 
     constructor(config?: SidecarOptions) {
         super();
@@ -60,6 +66,22 @@ export class OPCMQTTClient extends EventEmitter {
         this.runner = new Runner(this);
 
         this.valueStore = new ValueStore(this, this.runner)
+
+        this.onMonitorChanged = this.onMonitorChanged.bind(this)
+
+        this.valueStore.on('keys-changed', this.onKeyChanged.bind(this))
+
+    }
+
+    updateConfig(config: SidecarOptions){
+
+        let lastConfig = Object.assign({}, this.options);
+
+        this.options = config;
+
+        this.runner = new Runner(this);
+        this.valueStore = new ValueStore(this, this.runner);
+        this.valueStore.on('keys-changed', this.onKeyChanged.bind(this))
 
     }
 
@@ -93,6 +115,13 @@ export class OPCMQTTClient extends EventEmitter {
         }
     }
 
+    stop(){
+        this.unsubscribe()
+
+        this.mqttPublisher?.disconnect()
+
+        this.client?.disconnect()
+    }
     
     async getDataType(path: string) {
         return await this.client?.getType(path, true)
@@ -127,41 +156,58 @@ export class OPCMQTTClient extends EventEmitter {
     }
 
 
+    //Must be starte
     async subscribe(paths: { tag: string, path: string }[]) {
+        if(!this.client) throw new Error("Client must be started before subscribing");
 
-        console.log("Subscribing to", paths);
+        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 1000) || {}
 
-        const { monitors, unsubscribe, unwrap } = await this.client?.subscribeMulti(paths, 200) || {}
+        this.monitors = monitors;
+        this.unwrap = unwrap;
+        
+        monitors?.on('changed', this.onMonitorChanged);
 
-        const emitter = new EventEmitter()
+        return { unsubscribe };
+    }
 
-        monitors?.on('changed',  (item, value, index) => {
-            (async () => {
-                try {
-                    const key = unwrap?.(index)
+    unsubscribe(){
+        if(this.monitors){
+            this.monitors.off('changed', this.onMonitorChanged)
+        }
 
-                    let curr_value = value.value.value;
-                    if(curr_value?.BYTES_PER_ELEMENT != undefined){
-                        curr_value = Array.from(curr_value);
-                    }
+        this.monitors = undefined;
+        this.unwrap = undefined;
+    }
 
-                    // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+    onMonitorChanged(item: any, value: any, index: number){
+        //zeroed timeout or async await block (macrotask/microtask)
+        setTimeout(() => {
 
-                    this.valueStore.updateValue(key, curr_value).then((changed_keys) => {
-                        changed_keys.map((changed) => {
-                            this.publish(changed.key, changed.value);
-                            // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
-                            emitter.emit('data-changed', { key: changed.key, value: changed.value })
-                        })
-                    })
-                    
-                } catch (e: any) {
-                    console.log("Error in monitors.changed", e.message)
+            try {
+                const key = this.unwrap?.(index)
+
+                let curr_value = value.value.value;
+                if(curr_value?.BYTES_PER_ELEMENT != undefined){
+                    curr_value = Array.from(curr_value);
                 }
-            })();
-        })
 
-        return { emitter, unsubscribe };
+                // console.log("Datachanged at the OPCUA level", { key, value: curr_value })
+
+                this.valueStore.updateValue(key, curr_value)
+                
+            } catch (e: any) {
+                console.log("Error in monitors.changed", e.message)
+            }
+        })
+    }
+
+
+    onKeyChanged(changed_keys: {key: string, value: any}[]){
+        changed_keys.map((changed) => {
+            this.publish(changed.key, changed.value);
+            // if (this.mqttPublisher) this.mqttPublisher?.publish(changed.key, 'Boolean', changed.value)
+            this.emit('data-changed', { key: changed.key, value: changed.value })
+        })
     }
 
     async browse(client: OPCUAClient, browsePath: string, recursive?: boolean, withTypes?: boolean) {
@@ -305,14 +351,9 @@ export class OPCMQTTClient extends EventEmitter {
         console.log("MQTT Publisher started");
     }
 
+    //
     publish(key: string, value: any){
-        if(!this.tagUpdateFn[key]){
-            this.tagUpdateFn[key] = debounce((value: any) => {
-                this.mqttPublisher?.publish(key, 'Boolean', value)
-            }, 1000);
-        }
-
-        this.tagUpdateFn[key]?.(value)
+        this.mqttPublisher?.publish(key, 'Boolean', value);
     }
 
     async publish_data(key: string, value: any) {

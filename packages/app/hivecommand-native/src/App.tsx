@@ -9,12 +9,12 @@ import { useEffect } from 'react';
 import { DataContext } from './data';
 import { BaseDirectory } from '@tauri-apps/api/fs';
 
-import { listen } from '@tauri-apps/api/event'
-
 import { Controller } from './views/controller';
 
 import { Command } from '@tauri-apps/api/shell';
 import axios from 'axios';
+import { NativeProvider } from './context';
+import { listen } from '@tauri-apps/api/event';
 
 const cmd = Command.sidecar('binaries/sidecar')
 
@@ -27,16 +27,10 @@ function App() {
   const [ configured,  setConfigured ] = useState(false);
 
   useEffect(() => {
-    cmd.execute().then((proc) => {
-      console.log("Sidecar running");
+    //Start Sidecar
+    cmd.execute()
 
-      setSidecarRunning(true);
-
-    }).catch((err) => {
-      console.error("Sidecar Error", err)
-      setSidecarRunning(false)
-    });
-
+    //Setup configuration callback from rust core
     let unlisten: any;
 
     (async () => {
@@ -51,9 +45,27 @@ function App() {
 
   }, [])
 
+  useEffect(() => {
+    const healthcheck = setInterval(() => {
+      try{
+        fetch(`http://localhost:${8484}/healthcheck`).then((r) => r.json()).then((data) => {
+          setSidecarRunning(data.running);
+        }).catch((err) => {
+          setSidecarRunning(false);
+        })
+      }catch(err){
+        setSidecarRunning(false);
+      }
+    }, 1 * 1000)
+
+    return () => {
+      clearInterval(healthcheck)
+    }
+  }, [])
 
   
 
+  //TODO add different 
   useEffect(() => {
     console.log({isReady, sidecarRunning});
 
@@ -87,15 +99,17 @@ function App() {
 
 
   return (
-    <LocalizationProvider
-      dateAdapter={AdapterMoment}>
-      <ThemeProvider theme={HexHiveTheme}>
-        <Box style={{ height: '100vh', width: '100vw', display: 'flex' }}>
+    <NativeProvider value={{isSidecarRunning: sidecarRunning}}>
+      <LocalizationProvider
+        dateAdapter={AdapterMoment}>
+        <ThemeProvider theme={HexHiveTheme}>
+          <Box style={{ height: '100vh', width: '100vw', display: 'flex' }}>
 
-          {renderView}
-        </Box>
-      </ThemeProvider>
-    </LocalizationProvider>
+            {renderView}
+          </Box>
+        </ThemeProvider>
+      </LocalizationProvider>
+    </NativeProvider>
   );
 }
 

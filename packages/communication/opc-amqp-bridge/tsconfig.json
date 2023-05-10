@@ -101,7 +101,7 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["__tests__/", "dist/"],
+  "exclude": ["__tests__/", "test-helpers/", "dist/"],
   "references": [
     {"path": "../../core/command-scripting"},
     {"path": "../amqp-client"},

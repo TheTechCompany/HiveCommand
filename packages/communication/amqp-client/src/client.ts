@@ -34,6 +34,10 @@ export class MQTTClient {
         this.DEVICE_DATA_PREFIX = this.options.exchange || `device_values`
     }
 
+    disconnect(){
+        this.client?.end()
+    }
+
     async connect(onMessage: (message: { routingKey?: string, userId?: string, messageContent: any }) => Promise<void>) {
 
         this.client = MQTT.connect(this.options.host, {

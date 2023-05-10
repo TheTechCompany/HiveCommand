@@ -21,7 +21,7 @@ import { getNodeId } from '@hive-command/opcua-utils'
 export interface SubscriptionParams {
     samplingInterval: number; // in milliseconds
     discardOldest: boolean, //If queueSize > 1 then this parameter is used to discard the oldest samples in the queue when the queue is full.
-    queueSize: number //Max number of notifications that can be in queue (default: 1)
+    queueSize: number //Max number of notifications that can be in queue (default: 1), counts per tag in subscribeMulti (1 * 5 tags = 5 in queue)
 }
 
 export interface OPCSubscription {
@@ -55,7 +55,7 @@ export default class Client {
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
-            requestedSessionTimeout: 60 * 1000, //10 minutes
+            requestedSessionTimeout: 60 * 1000, //1 minutes
             keepSessionAlive: true,
             connectionStrategy: {
                 // maxRetry: 2,
@@ -145,8 +145,6 @@ export default class Client {
             nodeId: x.path,
             attributeId: AttributeIds.Value
         }))
-
-
 
         if(this.subscription){
             let s = this.subscription
