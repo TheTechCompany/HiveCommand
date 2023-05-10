@@ -28,7 +28,6 @@ export class Runner {
     }
 
     private setupTransformers(){
-        console.log("Setup transformers", this.options?.deviceMap);
 
         this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
             let tagValue = deviceMap.tag;

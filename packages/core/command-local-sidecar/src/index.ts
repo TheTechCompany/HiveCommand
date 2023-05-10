@@ -51,8 +51,6 @@ let subscriptions: {
 
 const dataChanged = (data: any) => {
     io.emit('data-changed', data)
-    // console.log({data});
-    // sidecar.publish_data()
 }
 
 app.use(bodyParser.json());
@@ -88,11 +86,16 @@ app.route('/setup')
 
         sidecar.stop()
 
+        sidecar.off('data-changed', dataChanged)
+
         await sidecar.connect(mainConfig.opcuaServer)
 
         await sidecar.setup_data(config.host, config.user, config.pass, config.exchange);
 
         await sidecar.start()
+
+        sidecar.on('data-changed', dataChanged)
+
         res.send({ config: sidecar.getConfig() })
     })
 
@@ -170,7 +173,7 @@ app.post('/:host/unsubscribe', async (req, res) => {
         const { events: eventEmitter, unsubscribe } = subscriptions;
 
         eventEmitter.removeListener('data-changed', dataChanged);
-        unsubscribe?.()
+        // unsubscribe?.()
     } catch (e: any) {
         return res.send({ error: e.message })
     }

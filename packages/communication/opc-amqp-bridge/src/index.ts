@@ -120,7 +120,11 @@ export class OPCMQTTClient extends EventEmitter {
 
         this.mqttPublisher?.disconnect()
 
+        this.mqttPublisher = undefined;
+
         this.client?.disconnect()
+
+        this.client = undefined;
     }
     
     async getDataType(path: string) {
@@ -173,6 +177,8 @@ export class OPCMQTTClient extends EventEmitter {
     unsubscribe(){
         if(this.monitors){
             this.monitors.off('changed', this.onMonitorChanged)
+
+            this.monitors.terminate()
         }
 
         this.monitors = undefined;

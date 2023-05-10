@@ -63,6 +63,26 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
     }, [JSON.stringify(valueStore), subscriptionMap])
 
 
+    const onDataChanged = (data: any) => {
+        console.log("data changed", data);
+
+        setTimeout(() => {
+            setValueStore((store) => {
+
+                store[data.key] = (typeof (data.value) === 'object' && !Array.isArray(data.value)) ? {
+                    ...store[data.key],
+                    ...data.value,
+                } : data.value;
+
+                // ...store,
+                // [data.key]: 
+                return store;
+            });
+        })
+
+    }
+
+
     const socket = useRef<Socket>()
 
     const subscribe = (paths: { path: string, tag: string }[], devices: { path: string, tag: string }[]) => {
@@ -75,25 +95,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
             // alert("Connected to io socket")
         })
 
-        socket.current.on('data-changed', (data) => {
-
-            console.log("data changed", data);
-
-            setTimeout(() => {
-                setValueStore((store) => {
-
-                    store[data.key] = (typeof (data.value) === 'object' && !Array.isArray(data.value)) ? {
-                        ...store[data.key],
-                        ...data.value,
-                    } : data.value;
-
-                    // ...store,
-                    // [data.key]: 
-                    return store;
-                });
-            })
-
-        })
+        socket.current.on('data-changed', onDataChanged)
 
 
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
@@ -107,6 +109,8 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
 
     const unsubscribe = () => {
+        socket.current?.off('data-changed', onDataChanged);
+
         return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
     }
 
