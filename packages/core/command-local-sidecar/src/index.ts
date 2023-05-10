@@ -38,10 +38,6 @@ io.on('connection', (socket) => {
     })
 })
 
-// io.on('publish-change', (data) => {
-//     sidecar.publish_data(data.key, data.value);
-// });
-
 let subscriptions: {
     events: EventEmitter,
     paths: { tag: string, path: string }[],
@@ -107,32 +103,10 @@ app.route('/:host/set_data')
 
         const code = await sidecar.setTag(path, value);
 
-        // const client = await sidecar.connect(req.params.host)
-
-        // const { type: dt, isArray } = await sidecar.getDataType(client, path)
-
-        // if(!dt) return res.send({error: "No datatype"})
-
-        // // const client = await sidecar.connect(req.params.host)
-        // //TODO pickup dataType from somewhere dynamic
-        // const code = await sidecar.setData(client, path, (DataType as any)[dt as any], value);
-
         res.send({ code })
     })
 
 app.post('/:host/subscribe', async (req, res) => {
-    // if(subscriptions[req.params.host]) return res.send({error: "Already subscribed"});
-
-
-    // if(subscriptions && !isEqual(subscriptionMap, subscriptions?.paths)){
-    //     const {events: eventEmitter, unsubscribe} = subscriptions
-
-    //     eventEmitter.removeListener('data-changed', dataChanged);
-    //     unsubscribe() 
-
-    //     subscriptions = undefined
-    //     // delete subscriptions
-    // }
 
     if (subscriptions) {
         // current_data[]
@@ -170,10 +144,11 @@ app.post('/:host/unsubscribe', async (req, res) => {
     if (!subscriptions) return res.send({ error: "No subscription found" });
 
     try {
+        
         const { events: eventEmitter, unsubscribe } = subscriptions;
 
         eventEmitter.removeListener('data-changed', dataChanged);
-        // unsubscribe?.()
+
     } catch (e: any) {
         return res.send({ error: e.message })
     }

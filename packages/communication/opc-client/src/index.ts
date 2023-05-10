@@ -55,12 +55,12 @@ export default class Client {
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             discoveryUrl: discoveryServer,
-            requestedSessionTimeout: 60 * 1000, //1 minutes
+            requestedSessionTimeout: 5 * 60 * 1000, //1 minutes
             keepSessionAlive: true,
             connectionStrategy: {
                 // maxRetry: 2,
                 initialDelay: 1000,
-                maxDelay: 60 * 1000
+                maxDelay: 5 * 60 * 1000
             }
         })
 
