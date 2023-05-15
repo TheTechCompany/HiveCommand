@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/amqp-hub",
-  "version": "1.4.15-alpha.213",
+  "version": "1.4.15-alpha.214",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -21,7 +21,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@hive-command/amqp-client": "^1.4.15-alpha.213",
+    "@hive-command/amqp-client": "^1.4.15-alpha.214",
     "amqplib": "^0.10.3",
     "mqtt": "^4.3.7"
   },
