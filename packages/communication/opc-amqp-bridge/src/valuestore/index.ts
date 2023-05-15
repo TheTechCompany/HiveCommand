@@ -53,11 +53,12 @@ export class ValueStore extends EventEmitter {
         return this.options?.tags || []
     }
 
-
     private cleanValue(value: any){
         switch(typeof(value)){
             case 'number':
                 return value % 1 !== 0 ? value.toFixed(2) : value;
+            case 'string':
+                return value.replace(/\x00/g, '')
             default:
                 return value;
         }

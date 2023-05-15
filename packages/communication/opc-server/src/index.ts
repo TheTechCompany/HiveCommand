@@ -57,6 +57,8 @@ export default class Server {
 
     private options : ServerOpts;
 
+    private initialized : boolean = false;
+
     constructor(opts: ServerOpts){
         this.options = opts;
 
@@ -91,63 +93,6 @@ export default class Server {
         return `opc.tcp://${this.options.hostname || '127.0.0.1'}:8440`
     }
 
-    // async initializeController(){
-    //     this.plant = this.namespace?.addObjectType({
-    //         browseName: 'Plant',
-    //     })
-
-      
-    //     this.controller = this.namespace?.addObjectType({
-    //         browseName: 'ControllerHw'                
-    //     })
-
-    //     if(this.controller !== undefined) {
-
-    //         const controller = this.controller;
-
-    //         //Init state vars
-    //         Object.keys(this.options.controller?.state || {}).forEach((key) => {
-    //             this.namespace?.addVariable({
-    //                 browseName: key,
-    //                 dataType: this.options.controller?.state?.[key].type,
-    //                 componentOf: this.controller,
-    //                 minimumSamplingInterval: 500,
-    //                 modellingRule: "Mandatory"
-    //             })
-    //         })
-
-    //         //Init actions
-    //         Object.keys(this.options.controller?.actions || {}).forEach((key) => {
-    //             this.namespace?.addMethod(controller, {
-    //                 browseName: key,
-    //                 inputArguments: this.options.controller?.actions?.[key].inputs,
-    //                 outputArguments: this.options.controller?.actions?.[key].outputs,
-    //                 modellingRule: "Mandatory"
-    //             })
-    //         })
-    //     }
-       
-    // }
-
-    // async initializeFolders(){
-    //     const addressSpace = this.server.engine.addressSpace;
-    //     if(addressSpace){
-    //         this.namespace = addressSpace.getOwnNamespace()
-
-    //         const objectsFolder = addressSpace.rootFolder.objects;
-    //         this.controllerFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Controller'})
-
-    //         this.deviceFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Devices'})
-    //         this.variableFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Variables'});
-
-    //         this.plantFolder = this.namespace.addFolder(objectsFolder, {browseName: 'Plant'})
-    //         this.plantActions = this.namespace.addFolder(this.plantFolder, {browseName: 'Actions'})
-    //         // this.namespace.addMethod
-
-    //         await this.initializeController();
-            
-    //     }
-    // }
 
     getDeviceTypes(){
         return this.objectTypes;    
@@ -226,27 +171,6 @@ export default class Server {
             // componentOf: variable
         });
 
-
-        // (variableValue)?.bindVariable({
-        //     get: () => {
-                
-        //         let defaultValue = dataType == DataType.Boolean ? false : dataType == DataType.String ? '' : dataType == DataType.Float ? 0 : undefined;
-
-        //         const value = getter();
-        //         return new Variant({dataType: dataType, value: value || defaultValue})
-        //     },
-        //     set: (value: Variant) => {
-        //         if(!setter) return StatusCodes.BadNotWritable;
-                            
-        //         try{
-        //             setter?.(value.value)
-        //         }catch(e){
-        //             console.error("Error writing port value", e)
-        //         }
-
-        //         return StatusCodes.Good;
-        //     }
-        // })
 
         return variableValue;
     }
@@ -455,10 +379,18 @@ export default class Server {
         this.server.on(event, eventHandler)
     }
 
+    async init(){
+        await this.server.initialize();
+
+        this.initialized = true;
+    }
+
     async start(){
         console.log("Starting OPC-UA")
-        await this.server.initialize();
-        // await this.initializeFolders();
+
+        if(!this.initialized){
+            await this.init();
+        }
 
         await this.server.start()
 

@@ -26,7 +26,9 @@ type Options = {
 	const { host, slot, tags, configure } = argv;
 
 	
-    const bridge = EthernetIPBridge({host, slot, listenTags: tags, configure})
+    const bridge = new EthernetIPBridge({host, slot, listenTags: tags, configure})
+
+	bridge.start()
 
 	// if(!existsSync(path)){
 	// 	console.error("Specified key folder does not exist")
