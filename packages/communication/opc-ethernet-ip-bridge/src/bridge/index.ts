@@ -211,7 +211,7 @@ export class EthernetIPBridge {
                     }
                 }
 
-                this.tags.push({key: tag.name, isArray, tag: rootTag, children: childTags})
+                this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
             }
 
         }else{
@@ -229,7 +229,7 @@ export class EthernetIPBridge {
                     })
                 }
 
-                this.tags.push({key: tag.name, tag: enipTag, children: childTags});
+                this.tags.push({key: tag.name, tag: enipTag, children: childTags.length > 0 ? childTags : undefined});
 
             }
         }
