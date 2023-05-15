@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.213](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.212...v1.4.15-alpha.213) (2023-05-10)
+
+**Note:** Version bump only for package @hive-command/opcua-amqp-bridge
+
+
+
+
+
 ## [1.4.15-alpha.212](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.211...v1.4.15-alpha.212) (2023-05-10)
 
 **Note:** Version bump only for package @hive-command/opcua-amqp-bridge
