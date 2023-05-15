@@ -158,9 +158,28 @@ export class EthernetIPBridge {
         this.tags = [];
 
         if(this.options.listenTags){
-            for(var i = 0; i< this.listenTags.length; i++){
 
-                let tag = this.listenTags[i];
+            let tags = this.listenTags.slice();
+
+            for (var i = 0; i < this.listenTemplates.length; i++) {
+                let template = this.listenTemplates[i];
+
+                let templateKeys = template.children?.map((x) => x.name);
+
+                console.log(`Adding ${this.controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
+
+                tags = tags.concat((this.tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
+                    return {
+                        ...tag,
+                        children: template.children?.filter((a) => (templateKeys || []).indexOf(a.name) > -1)
+                    }
+                }));
+
+            }
+
+            for(var i = 0; i< tags.length; i++){
+
+                let tag = tags[i];
 
                 //Lookup tag in existing tagList to make dataTypes and sizes match
                 let fromTagList = this.tagList?.find((a) => a.name == tag.name);
@@ -260,21 +279,7 @@ export class EthernetIPBridge {
         if (this.options.listenTags) {
             //Tags have been specified in a tag json file
 
-            for (var i = 0; i < listenTemplates.length; i++) {
-                let template = listenTemplates[i];
 
-                let templateKeys = template.children?.map((x) => x.name);
-
-                console.log(`Adding ${this.controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
-
-                this.listenTags = this.listenTags.concat((tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
-                    return {
-                        ...tag,
-                        children: template.children?.filter((a) => (templateKeys || []).indexOf(a.name) > -1)
-                    }
-                }));
-
-            }
 
             for (var i = 0; i < this.listenTags.length; i++) {
 
