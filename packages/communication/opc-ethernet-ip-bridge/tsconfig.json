@@ -101,7 +101,7 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["src/configurator", "dist/", "*.test.ts"],
+  "exclude": ["src/configurator", "dist/", "example/", "__tests__", "*.test.ts"],
   "references": [
     {"path": "../opc-server"}
   ]
