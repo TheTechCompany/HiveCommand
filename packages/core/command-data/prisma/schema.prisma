@@ -491,6 +491,8 @@ model ProgramTag {
 
 
   reports DeviceReport[] @relation(name: "reportsOnTag")
+
+  @@unique([name, programId])
 }
 
 model ProgramTagType {
@@ -518,6 +520,8 @@ model ProgramType {
 
   usedByTagType ProgramTagType[] @relation(name: "tagUsesType")
   usedByType ProgramTypeField[] @relation(name: "typeUsesType")
+
+  @@unique([name, programId])
 }
 
 model ProgramTypeField {
@@ -535,6 +539,8 @@ model ProgramTypeField {
   parentId String
 
   reports DeviceReport[] @relation(name: "reportsOnTagField")
+
+  @@unique([name, parentId])
 }
 
 model CanvasPort {

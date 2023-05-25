@@ -151,6 +151,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			editor.current = monaco.editor.create(divEl.current, {
                 model: mainModel,
 
+                automaticLayout: true,
+
                 // wordWrap: 'on',
                 // automaticLayout: true,
                 // minimap: {
@@ -199,5 +201,5 @@ export const Editor: React.FC<EditorProps> = (props) => {
         
     }, [extraLib])
 
-	return <div className={props.className} style={{display: 'flex', height: '100%', width: '100%'}} ref={divEl}></div>;
+	return <div className={props.className} style={{display: 'flex', width: '100%'}} ref={divEl}></div>;
 };

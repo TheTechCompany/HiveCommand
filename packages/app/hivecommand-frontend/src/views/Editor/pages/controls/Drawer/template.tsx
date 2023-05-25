@@ -1,5 +1,5 @@
 import React, { useMemo, useEffect, useState, useContext } from 'react';
-import { Autocomplete, Box, Divider, FormGroup, IconButton, Select, TextField, Typography } from '@mui/material'
+import { Autocomplete, Box, Card, Divider, FormGroup, IconButton, Select, TextField, Typography } from '@mui/material'
 import { HMIContext } from '../context';
 import { useUpdateHMINode } from '@hive-command/api';
 import { Close, Delete, Javascript } from '@mui/icons-material'
@@ -352,8 +352,8 @@ export const TemplateMenu = () => {
     const templateInputs = useMemo(() => {
         
 
-        return (
-            <Box>
+        return  activeTemplate ? (
+            <Card elevation={5} sx={{padding: '6px'}}>
                 <Typography sx={{marginBottom: '6px'}} fontSize={'small'}>Template Options</Typography>
                 {activeTemplate?.inputs?.map((input) => (
                     <Box sx={{marginBottom: '6px'}}>
@@ -374,8 +374,8 @@ export const TemplateMenu = () => {
                         )}
                     </Box>
                 ))}
-            </Box>
-        )
+            </Card>
+        ) : null
     }, [activeTemplate, templateState])
 
 
@@ -439,7 +439,7 @@ export const TemplateMenu = () => {
             </Box>
             {templateInputs}
 
-            <Divider />
+            <Divider sx={{marginTop: '12px', marginBottom: '12px'}} />
             <Typography fontSize="small">Node Options</Typography>
             <FormGroup>
                     {Object.keys(options).map((optionKey) => {

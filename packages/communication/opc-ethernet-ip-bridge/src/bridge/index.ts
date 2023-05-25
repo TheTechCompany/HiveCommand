@@ -9,7 +9,7 @@ import { addTag, TAG_TYPE } from '../opc-server';
 export interface BridgeOptions {
     host: string,
     slot?: number,
-    listenTags?: string,
+    listenTags?: string | {tags?: ListenTag[], templates?: ListenTemplate[]},
     configure?: boolean
 }
 
@@ -59,9 +59,7 @@ export class EthernetIPBridge {
 
     private tagList: any[] = [];
 
-    private tags : EthernetTag[] = [];
-
-    private childTags : {key: string, tag: Tag | null}[] = [];
+    public tags : EthernetTag[] = [];
 
     constructor(options: BridgeOptions) {
         this.options = options;
@@ -77,10 +75,13 @@ export class EthernetIPBridge {
         this.controller.on('Disconnected', this.onControllerDisconnected.bind(this))
         this.controller.on('Error', this.onControllerError.bind(this));
 
-        if (this.options.listenTags) {
+        if (this.options.listenTags && typeof(this.options.listenTags) === 'string') {
             let tagBundle = JSON.parse(readFileSync(this.options.listenTags, 'utf-8')) || {};
             this.listenTags = tagBundle?.tags || [];
             this.listenTemplates = tagBundle?.templates || [];
+        }else if(this.options.listenTags && typeof(this.options.listenTags) === 'object'){
+            this.listenTags = this.options.listenTags.tags || []; 
+            this.listenTemplates = this.options.listenTags.templates || [];
         }
     }
 
@@ -177,7 +178,7 @@ export class EthernetIPBridge {
 
             }
 
-            for(var i = 0; i< tags.length; i++){
+            for(var i = 0; i < tags.length; i++){
 
                 let tag = tags[i];
 
@@ -263,10 +264,7 @@ export class EthernetIPBridge {
             configureServer(this.controller.PLC, this.options.listenTags);
         }
 
-
         this.tagList = this.controller.PLC?.tagList?.filter((a) => a.name.indexOf('__') !== 0) || []
-
-        const { listenTemplates, tagList } = this;
 
         const { properties } = this.controller.PLC || {};
 
@@ -279,13 +277,11 @@ export class EthernetIPBridge {
         if (this.options.listenTags) {
             //Tags have been specified in a tag json file
 
-
-
             for (var i = 0; i < this.listenTags.length; i++) {
 
                 let tag = this.listenTags[i];
 
-                let fromTagList = tagList?.find((a) => a.name == tag.name);
+                let fromTagList = this.tagList?.find((a) => a.name == tag.name);
                 let fromTagListChildren = (tag.children || []).length > 0 ?
                     tag.children?.map((x) => ({
                         type: (fromTagList?.type.structureObj as any)?.[x.name] || "STRING",
@@ -348,8 +344,8 @@ export class EthernetIPBridge {
         } else {
             //Tags have not been explicitly set, show all
 
-            for (var i = 0; i < (tagList || []).length; i++) {
-                let tag = (tagList || [])[i];
+            for (var i = 0; i < (this.tagList || []).length; i++) {
+                let tag = (this.tagList || [])[i];
 
                 let { tag: enipTag, children = [] } = this.tags.find((a) => a.key === tag.name) || {};
 

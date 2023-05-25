@@ -5,8 +5,8 @@ export enum DataTypes {
     Boolean = 'Boolean',
     String = 'String',
     Number = 'Number',
-    Date = 'Date'
-    // Structure = 'Structure'
+    Date = 'Date',
+    Structure = 'Structure'
 }
 
 function assertUnreachable (type: never) : never;
@@ -14,7 +14,7 @@ function assertUnreachable (type: DataTypes) {
     throw new Error(`Datatype: ${type} not found`)
 }
 
-export const toJSType = (type: DataTypes) => {
+export const toJSType = (type: DataTypes | string) => {
 
     switch(type){
         case DataTypes.Boolean:
@@ -25,6 +25,8 @@ export const toJSType = (type: DataTypes) => {
             return 'Date';
         case DataTypes.Number:
             return 'number';
+        case DataTypes.Structure:
+            return 'object';
         default:
             console.log(`Datatype: ${type || "unkown"} needs help`)
             return type || "unknown";

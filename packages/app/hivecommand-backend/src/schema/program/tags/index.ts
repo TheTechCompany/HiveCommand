@@ -1,13 +1,17 @@
 import { PrismaClient, ProgramTag, ProgramTagType } from "@hive-command/data";
 import { nanoid } from "nanoid";
 import { isStringType } from "../types/util";
+import { Document } from '@allenbradley/l5x'
+import { toJSType } from '@hive-command/scripting'
 
 export default (prisma: PrismaClient) => {
 
     const typeDefs = `
-     
+ 
         
         type Mutation {
+            importCommandProgramTags(program: ID, input: [CommandProgramTagInput]): [CommandProgramTag]
+
             createCommandProgramTag(program: ID, input: CommandProgramTagInput): CommandProgramTag
             updateCommandProgramTag(program: ID, id: ID!, input: CommandProgramTagInput): CommandProgramTag
             deleteCommandProgramTag(program: ID, id: ID!): CommandProgramTag
@@ -42,7 +46,46 @@ export default (prisma: PrismaClient) => {
                 }
             }
         },
+    
         Mutation: {
+            importCommandProgramTags: async (root: any, args: any, context: any) => {
+                // const doc = new Document(args.file);
+                // console.log({doc})
+                return await Promise.all(args.input.map(async (programTag) => {
+
+                    let isScalar = toJSType(programTag?.type) != 'unknown';
+
+                    let typeUpdate = {};
+                    if(!isScalar) {
+                        const programType = await prisma.programType.findFirst({where: {name: programTag.type, program: {id: args.program}}})
+                        typeUpdate['type'] = {
+                            connect: {id: programType?.id}
+                        }
+                    }else{
+                        typeUpdate['scalar'] = programTag.type
+                    }
+                
+                    // let typeUpdate = isType ? {type: {connect: {id: type}}} : {scalar: type};
+    
+                    return await prisma.programTag.create({
+                        data: {
+                            id: nanoid(),
+                            name: programTag.name,
+                            type: {
+                                create: {
+                                    id: nanoid(),
+                                    ...typeUpdate
+                                }
+                            },
+                            program: {
+                                connect: {
+                                    id: args.program
+                                }
+                            }
+                        }
+                    })
+                }))
+            },
             createCommandProgramTag: async (root: any, args: { program: string, input: any }, context: any) => {
 
                 const program = await prisma.program.findFirst({

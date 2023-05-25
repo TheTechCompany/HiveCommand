@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, Typography } from '@mui/material';
+import { Box, Divider, IconButton, List, ListItem, ListItemButton, ListItemText, Paper, Tab, Tabs, Typography } from '@mui/material';
 import { Add, Javascript, MoreVert } from '@mui/icons-material'
 import { TemplateModal } from './modal';
 import { useMutation, gql } from '@apollo/client'
@@ -260,8 +260,13 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                 }}
                 open={Boolean(direction)} />
 
-            <Box sx={{padding: '6px'}}>
+            <Box sx={{display: 'flex', padding: '6px'}}>
                 <Typography>{activeTemplate?.name}</Typography>
+
+                <Tabs>
+                    <Tab label="Parameters" />
+                    <Tab label="" />
+                </Tabs>
             </Box>
             <Divider />
             <Box sx={{flex: 1, display: 'flex'}}>

@@ -77,6 +77,7 @@ export class ValueStore extends EventEmitter {
     slowNormaliser(){
         let nv = this.normaliseValues(this.tags, this.types)
 
+        console.log({nv})
         if (nv.length > 0) this.emit('keys-changed', nv);
     }
 

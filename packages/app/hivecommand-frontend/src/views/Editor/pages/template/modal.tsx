@@ -9,6 +9,7 @@ import { Autocomplete, Box } from '@mui/material'
 import React, { useEffect, useState } from 'react';
 import { useCommandEditor } from '../../context';
 import { DataTypes } from '@hive-command/scripting';
+import { Editor } from '../../../../components/script-editor/editor';
 
 export const TemplateModal= (props) => {
 
@@ -79,6 +80,18 @@ export const TemplateModal= (props) => {
                             getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
                             renderInput={(params) => <TextField {...params} label="Tag Type" size="small" />}
                             options={types || []} />
+                    )}
+                    {(io.type?.indexOf('Structure') > -1) && (
+                        <Box sx={{minHeight: '200px', position: 'relative', display: 'flex'}}>
+                            <Editor
+                                extraLib={`
+                                    export type Number;
+                                    export type String;
+                                `}
+                                value={`{
+    
+}`} />
+                        </Box>
                     )}
                 </Box>
             </DialogContent>

@@ -36,6 +36,9 @@ const baseSubscriptionParams : SubscriptionParams = {
 }
 
 export default class Client {
+
+    public connected : boolean = false;
+
     private client: OPCUAClient;
     
     private session?: ClientSession;
@@ -99,6 +102,8 @@ export default class Client {
 
         await this.client.connect(endpoint)
 
+        this.connected = true;
+
         this.session = await this.client.createSession()
 
         this.session.on('session_closed', () => console.debug("Session closed"))
@@ -122,9 +127,13 @@ export default class Client {
     }
 
     async disconnect(){
-        await this.subscription?.terminate();
-        await this.session?.close()
-        await this.client.disconnect();
+        if(this.connected){
+            await this.subscription?.terminate();
+            await this.session?.close()
+            await this.client.disconnect();
+
+            this.connected = false;
+        }
     }
 
 
