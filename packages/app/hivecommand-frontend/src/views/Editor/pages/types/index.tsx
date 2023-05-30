@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Close } from '@mui/icons-material'
+import { Autocomplete, Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import { useCreateTypeField, useDeleteTypeField, useUpdateTypeField } from './api';
 import { useCommandEditor } from '../../context';
 import { debounce } from 'lodash'
@@ -57,6 +58,9 @@ export const TypeEditor = (props: any) => {
                             <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
                                 Datatype
                             </TableCell>
+                            <TableCell sx={{ bgcolor: 'secondary.main' }}>
+
+                            </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody  sx={{overflowY: 'auto'}}>
@@ -83,6 +87,18 @@ export const TypeEditor = (props: any) => {
                                         // value={field.type}
                                         />
                                     {/* {field.type} */}
+                                </TableCell>
+                                <TableCell sx={{width: '30px'}}>
+                                    <IconButton
+                                        onClick={() => {
+                                            deleteTypeField(field.id).then(() => {
+                                                refetch();
+                                            })
+                                        }}
+                                        size="small" 
+                                        color='error'>
+                                        <Close fontSize='inherit' />
+                                    </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}

@@ -238,7 +238,8 @@ export const TemplateMenu = () => {
                                 extraLib: `
                                 declare function showWindow(
                                     position: {x: number, y: number, width: number, height: number, anchor?: string},
-                                    data: () => any
+                                    data: (state: any) => any,
+                                    transformer?: (state: any) => any
                                 ){
 
                                 }

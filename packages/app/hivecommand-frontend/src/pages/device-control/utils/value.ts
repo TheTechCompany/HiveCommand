@@ -1,5 +1,5 @@
 import { gql, useApolloClient, useQuery, useLazyQuery } from "@apollo/client";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export const useDeviceValues = (id: string) : {
 	refetch: () => void;
@@ -128,5 +128,14 @@ export const useValues = (deviceId: string, program: {tags: any[], types: any[]}
     
     }, [program.tags, program.types, values])
 
-	return {values: normalisedValues};
+    const [ speed, setSpeed ] = useState(0);
+
+    useEffect(() => {
+        const int = setInterval(() => setSpeed(s => s + 1), 500)
+        return () => {
+            clearInterval(int);
+        }
+    }, [])
+
+	return {values: {PMP101_Speed: {Out: speed}} || normalisedValues};
 }

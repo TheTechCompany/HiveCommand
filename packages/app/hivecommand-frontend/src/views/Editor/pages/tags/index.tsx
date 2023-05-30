@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { IconButton, Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
-import { ImportExport } from '@mui/icons-material'
+import { ImportExport, Close } from '@mui/icons-material'
 
 import { DataTypes } from '@hive-command/scripting'
 
@@ -109,6 +109,8 @@ export const TagEditor = (props: any) => {
 
             <ImportModal 
                 open={importModalOpen}
+                tags={tags}
+                types={extraTypes}
                 onSubmit={(tags, types) => {
                     importTypes({
                         variables: {
@@ -152,6 +154,9 @@ export const TagEditor = (props: any) => {
                             </TableCell>
                             <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
                                 Datatype
+                            </TableCell>
+                            <TableCell sx={{bgcolor: 'secondary.main'}}>
+
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -202,6 +207,22 @@ export const TagEditor = (props: any) => {
                                             return filtered;
                                         }}
                                         />
+                                </TableCell>
+                                <TableCell sx={{width: '30px'}}>
+                                        <IconButton 
+                                            onClick={() => {
+                                                deleteTag({
+                                                    variables: {
+                                                        program,
+                                                        id: tag.id
+                                                    }
+                                                }).then(() => {
+                                                    refetch()
+                                                });
+                                            }}
+                                            size="small" color="error" >
+                                            <Close fontSize='inherit' />
+                                        </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}

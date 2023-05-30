@@ -169,6 +169,8 @@ export default (prisma: PrismaClient) => {
                 })
             },
             deleteCommandProgramTag: async (root: any, args: { program: string, id: string }, context: any) => {
+                console.log(args.id, args.program, context?.jwt)
+               
                 const program = await prisma.programTag.findFirst({
                     where: {
                         id: args.id,
@@ -178,6 +180,7 @@ export default (prisma: PrismaClient) => {
                         }
                     }
                 })
+
 
                 if (!program) throw new Error("Program tag access not allowed");
 

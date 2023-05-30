@@ -33,6 +33,8 @@
 
 		"@hive-command/data": ["./core/command-data/src"],
 
+		"@hive-command/drivers-base": ["./drivers/command-driver/src"],
+
 		"@hive-command/scripting": ["./core/command-scripting/src"],
 
 		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],

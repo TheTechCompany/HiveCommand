@@ -503,7 +503,7 @@ model ProgramTagType {
   type ProgramType? @relation(name: "tagUsesType", fields: [typeId], references: [id])
   typeId String?
 
-  tag ProgramTag @relation(name: "tagType", fields: [tagId], references: [id]) //, onDelete: Cascade)
+  tag ProgramTag @relation(name: "tagType", fields: [tagId], references: [id], onDelete: Cascade) //, onDelete: Cascade)
   tagId String @unique
 
 }

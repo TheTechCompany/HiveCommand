@@ -10,6 +10,19 @@ export const ImportView = (
     props: { 
         file: any, 
         importMap: any,
+        tags?: {
+            id: string;
+            name: string;
+        }[]
+        types?: {
+            id: string;
+            name: string;
+            fields?: {
+                id: string
+                name: string
+                type: string
+            }[]
+        }[];
         onChange: (importMap: any) => void 
     }) => {
 
@@ -21,6 +34,28 @@ export const ImportView = (
 
     const [importTags, setImportTags] = useState<{name: string}[]>([]); //tags to import
     const [importTypes, setImportTypes] = useState<{name: string}[]>([]); //fields of types to import
+
+    console.log({importTags})
+
+    // useEffect(() => {
+        
+    //     const importTypes = props.types?.map((type) => {
+    //         return type.fields.map((x) => ({name: `${type.name}.${x.name}`}) )
+    //     }).reduce((prev, curr) => prev.concat(curr), []);
+        
+    //     setImportTypes(importTypes);
+
+    // }, [props.types])
+
+    // useEffect(() => {
+    //     console.log(props.tags)
+    //     const importTags = (props.tags || []).map((tag) => {
+    //         return {name: tag.name}
+    //     })
+
+    //     setImportTags(importTags);
+
+    // }, [props.tags])
 
     useEffect(() => {
 
@@ -128,6 +163,8 @@ export const ImportView = (
             let parts = curr?.name?.split('.')
 
             let type = types.find((a) => a.name == parts?.[0])
+            if(!type) return prev;
+
             return {
                 ...prev,
                 [parts[0]]: {
@@ -138,7 +175,7 @@ export const ImportView = (
         }, {})
 
         props.onChange({
-            tags: importTags.map((importTag) => tags.find((a) => a.name === importTag.name)),
+            tags: importTags.map((importTag) => tags.find((a) => a.name === importTag.name)).filter((a) => a != undefined),
             types: Object.keys(imTypes).map((k) => ({name: k, fields: Object.keys(imTypes[k]).map((typeK) => ({name: typeK, type: imTypes[k][typeK] }) )}))
         })
     }, [tags, types, importTags, importTypes])
@@ -158,6 +195,8 @@ export const ImportView = (
                 <TagTable 
                     tags={tags} 
                     types={types}
+                    currentTags={props.tags}
+                    currentTypes={props.types}
                     importTags={importTags}
                     importTypes={importTypes}
                     onImportTagChanged={(tag) => {
@@ -176,6 +215,7 @@ export const ImportView = (
             ) : (
                 <TypeTable
                     types={types}
+                    currentTypes={props.types}
                     importTypes={importTypes}
                     onImportTypeChanged={(type, on) => {
                         setImportTypes((importTypes) => {

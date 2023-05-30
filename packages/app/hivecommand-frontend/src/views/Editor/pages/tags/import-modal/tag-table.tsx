@@ -11,6 +11,8 @@ import React, { useState } from 'react';
 export const TagTable = (props: {
     tags: { name: string, type: string }[],
     types: { name: string }[]
+    currentTags: {name: string}[],
+    currentTypes: {name: string}[],
     importTypes: { name: string }[]
     importTags: {name: string}[]
     onImportTagChanged: (tag: string) => void;
@@ -20,14 +22,14 @@ export const TagTable = (props: {
 
     // const [ tags ] = useState<any[]>(['PMP101', 'PMP102', 'PMP201', 'PMP301', 'PMP401']);
 
-    console.log(props.importTypes, props.types, props.tags)
+    console.log(props.importTypes, props.importTags)
 
     const filterTag = (tag: any) => {
         let isAllowed = false;
 
         let isType = props.types.findIndex((a) => a.name == tag.type) > -1;
         if (isType) {
-            isAllowed = props.importTypes.findIndex((a) => a.name?.split('.')?.[0] == tag.type) > -1;
+            isAllowed = props.importTypes.concat(props.currentTypes).findIndex((a) => a.name?.split('.')?.[0] == tag.type) > -1;
         }else{
             isAllowed = true;
         }
@@ -67,9 +69,14 @@ export const TagTable = (props: {
                     {props.tags.filter(filterTag).sort((a, b) => a.type?.localeCompare(b.type)).map((tag) => (
                         <TableRow>
                             <TableCell sx={{ width: '40px' }}>
-                                <Checkbox checked={props.importTags.find((a) => a.name == tag.name) != null} onChange={(e) => {
-                                    props.onImportTagChanged(tag.name)
-                                }} />
+                                <Checkbox 
+                                    disabled={props.currentTags.find((a) => a.name == tag.name) != null}
+                                    checked={
+                                        props.importTags.find((a) => a.name == tag.name) != null || 
+                                        props.currentTags.find((a) => a.name == tag.name) != null
+                                    } onChange={(e) => {
+                                        props.onImportTagChanged(tag.name)
+                                    }} />
                             </TableCell>
                             <TableCell>{tag.name}</TableCell>
                             <TableCell>{tag.type}</TableCell>

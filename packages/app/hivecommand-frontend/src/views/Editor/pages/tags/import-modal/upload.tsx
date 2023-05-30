@@ -1,10 +1,11 @@
-import {Box, Typography} from "@mui/material";
+import {Box, IconButton, Paper, Typography} from "@mui/material";
 import { useDropzone } from 'react-dropzone'
 import React, { useCallback } from "react";
 import Papa from 'papaparse'
 import { Document } from '@allenbradley/l5x';
+import { Close } from '@mui/icons-material'
 
-export const UploadView = (props: {file: any, onChange: (file: any) => void}) => {
+export const UploadView = (props: {file: {name: string, size?: number, content: string}, onChange: (file: any) => void}) => {
 
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -19,9 +20,7 @@ export const UploadView = (props: {file: any, onChange: (file: any) => void}) =>
         // Do whatever you want with the file contents
             const binaryStr = reader.result.toString()
 
-            props.onChange({name: file.name, content: binaryStr});
-
-
+            props.onChange({name: file.name, size: file.size, content: binaryStr});
             
         }
 
@@ -29,11 +28,27 @@ export const UploadView = (props: {file: any, onChange: (file: any) => void}) =>
 
       }, [])
 
-      const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, accept: ['.csv', '.l5x'] })
+      const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, accept: ['.l5x'] })
     
 
-    return (
-        <Box sx={{border: '1px dashed black', paddingLeft: '6px', paddingRight: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
+    return props.file ? (
+        <Box sx={{minHeight: '200px', padding: '6px'}}>
+            <Paper elevation={4} sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px', justifyContent: 'space-between', alignItems: 'center'}}>
+                <Box>
+                    <Typography>{props.file.name}</Typography>
+                    <Typography fontSize={'small'}>{(props.file?.size / 1024 / 1024).toFixed(2)}MB</Typography>
+                </Box>
+                <IconButton 
+                    onClick={() => {
+                        props.onChange(null)
+                    }}
+                    size="small">
+                    <Close fontSize="inherit" />
+                </IconButton>
+            </Paper>
+        </Box>
+    ) : (
+        <Box sx={{border: '1px dashed black', marginLeft: '6px', marginRight: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
             <input {...getInputProps()} />
             <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
         </Box>

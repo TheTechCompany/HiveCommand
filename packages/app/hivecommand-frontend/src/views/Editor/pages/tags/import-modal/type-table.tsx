@@ -11,7 +11,12 @@ import React, { useState } from 'react';
 import Collapse from '@mui/material/Collapse/Collapse';
 import Typography from '@mui/material/Typography/Typography';
 
-export const TypeTable = (props: { types: any[], importTypes: any[], onImportTypeChanged: (type: string, on?: boolean) => void }) => {
+export const TypeTable = (props: { 
+    types: any[], 
+    currentTypes: {name: string, fields?: {name: string}[]}[],
+    importTypes: any[], 
+    onImportTypeChanged: (type: string, on?: boolean) => void 
+}) => {
 
 
     const [ search, setSearch ] = useState('');
@@ -58,6 +63,8 @@ export const TypeTable = (props: { types: any[], importTypes: any[], onImportTyp
                     {props.types?.filter(filterType)?.map((tag) => {
                         const indeterminate = props.importTypes.filter((a) => a.name?.split('.')[0]?.indexOf(tag.name) > -1).length > 0;
                         const checked = props.importTypes.filter((a) => a.name?.split('.')[0]?.indexOf(tag.name) > -1).length === tag?.fields?.length
+
+                        const disabled = props.currentTypes.find((a) => a.name == tag.name) != null;
                         // console.log(
                         //     props.importTypes.filter((a) => a.name?.split('.')[0]?.indexOf(tag.name) > -1).length,
                         //     tag?.fields?.length
@@ -66,8 +73,9 @@ export const TypeTable = (props: { types: any[], importTypes: any[], onImportTyp
                             <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
                                 <TableCell sx={{ width: "100px", borderBottom: 'unset' }}>
                                     <Checkbox
+                                        disabled={disabled}
                                         indeterminate={!checked && indeterminate}
-                                        checked={checked}
+                                        checked={checked || disabled}
                                         onChange={(e) => toggleType(tag, e.target.checked)}
                                     />
                                     <IconButton onClick={() => setExpanded(expanded == tag ? undefined : tag)}>
@@ -88,7 +96,8 @@ export const TypeTable = (props: { types: any[], importTypes: any[], onImportTyp
                                             {tag?.fields?.map((field) => (
                                                 <Box sx={{ paddingLeft: '55px', display: 'flex', alignItems: 'center' }}>
                                                     <Checkbox
-                                                        checked={props.importTypes.findIndex((a) => a.name === `${tag.name}.${field.name}`) > -1}
+                                                        disabled={ props.currentTypes.find((a) => a.name == tag.name && a.fields.findIndex((b) => b.name == field.name) > -1) != null}
+                                                        checked={props.importTypes.findIndex((a) => a.name === `${tag.name}.${field.name}`) > -1 || props.currentTypes.find((a) => a.name == tag.name && a.fields.findIndex((b) => b.name == field.name) > -1) != null}
                                                         onChange={(e) => {
                                                             props.onImportTypeChanged(`${tag.name}.${field.name}`)
                                                         }} sx={{ marginRight: '50px' }} />

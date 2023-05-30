@@ -97,7 +97,7 @@ export default (prisma: PrismaClient) => {
                     }
                 })
             },
-            deleteCommandProgramTag: async (root: any, args: { program: string, id: string }, context: any) => {
+            deleteCommandProgramAlarm: async (root: any, args: { program: string, id: string }, context: any) => {
                 const program = await prisma.program.findFirst({
                     where: {
                         id: args.id,

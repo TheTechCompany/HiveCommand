@@ -139,10 +139,13 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                 
                     declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
 
-                    declare function showWindow (elem: any, data: Function){
+                    declare function showWindow(
+                        position: {x: number, y: number, width: number, height: number, anchor?: string},
+                        data: (state: any) => any,
+                        transformer?: (state: any) => any
+                    ){
 
                     }
-
 
                     declare function showTagWindow(
                         position: {x: number, y: number, width: number, height: number, anchor?: string},
