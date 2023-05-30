@@ -36,7 +36,7 @@ export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
             sx={{
                 overflow: 'auto',
                 height: '100%',
-                width: '200px'
+                width: '250px'
             }}
             onClick={(e) => {
                 e.stopPropagation()

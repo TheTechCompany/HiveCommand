@@ -13,7 +13,7 @@ const client = new OPCClient();
 
     await client.connect("opc.tcp://localhost:8440");
 
-    await client.setDetails(`/Objects/1:Devices/1:AV101/1:open`, DataType.Boolean, true);
+    await client.setDetails(`/Objects/1:A`, DataType.Boolean, true);
 
     //     console.log("Connected")
 //     let path_id = await client.browse('/Objects')

@@ -28,3 +28,17 @@ export const useUpdateProgramType = (programId: string) => {
         mutateFn({variables: {program: programId, name, id }})
     }
 }
+
+export const useDeleteProgramType = (programId: string) => {
+    const [ mutateFn ] = useMutation(gql`
+        mutation DeleteProgramType ($program: ID, $id: ID){
+            deleteCommandProgramType (program: $program, id: $id){
+                id
+            }
+        }
+    `)
+
+    return (id: string) => {
+        mutateFn({variables: {program: programId, id }})
+    }
+}

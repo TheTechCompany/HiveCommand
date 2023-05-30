@@ -1,11 +1,14 @@
 import { PrismaClient, ProgramTypeField } from "@hive-command/data";
 import { nanoid } from "nanoid";
 import { isStringType } from "./util";
+import { toJSType } from "@hive-command/scripting";
 
 export default (prisma: PrismaClient) => {
 
     const typeDefs = `
         type Mutation {
+            importCommandProgramTypes(program: ID, input: [CommandProgramTypeInput]): [CommandProgramType]
+
             createCommandProgramType(program: ID, input: CommandProgramTypeInput): CommandProgramType
             updateCommandProgramType(program: ID, id: ID, input: CommandProgramTypeInput): CommandProgramType
             deleteCommandProgramType(program: ID, id: ID): CommandProgramType
@@ -17,6 +20,8 @@ export default (prisma: PrismaClient) => {
 
         input CommandProgramTypeInput {
             name: String
+
+            fields: [CommandProgramTypeFieldInput]
         }
 
         type CommandProgramType {
@@ -54,6 +59,53 @@ export default (prisma: PrismaClient) => {
             }
         },
         Mutation : {
+            importCommandProgramTypes: async (root: any, args: any, context: any) => {
+                // await prisma.$transaction(async (prisma) => {
+                //     prisma
+                // })
+      
+                
+                return await Promise.all(args.input.map(async (programType) => {
+
+
+                    const fields = await Promise.all(programType.fields.map( async (field) => {
+                        return await prisma.programType.findFirst({ where: {name: field.type, program: {id: args.program } } })
+                    }))
+
+                    return await prisma.programType.create({
+                        data: {
+                            id: nanoid(),
+                            name: programType.name,
+                            fields: {
+                                createMany: {
+                                    data: programType.fields.map((field, ix) =>  {
+
+                                        let isScalar = toJSType(field?.type) != 'unknown';
+                                        let typeUpdate = {};
+                                        if(!isScalar) {
+                                            typeUpdate['typeId'] = fields[ix].id
+                                        }else{
+                                            typeUpdate['scalar'] = field.type
+                                        }
+
+                                        return {
+                                            id: nanoid(),
+                                            name: field.name,
+                                            ...typeUpdate
+                                        }
+                                    }) 
+                                
+                                }
+                            },
+                            program: {
+                                connect: {
+                                    id: args.program
+                                }
+                            }
+                        }
+                    })
+                }))
+            },
             createCommandProgramType: async (root: any, args: {program: string, input: any}, context: any) => {
                 //TODO add auth opt
         

@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material'
+import { IconButton, Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
+import { ImportExport, Close } from '@mui/icons-material'
 
 import { DataTypes } from '@hive-command/scripting'
 
@@ -9,6 +10,9 @@ import { useCreateTag, useDeleteTag, useUpdateTag } from './api';
 import { useCommandEditor } from '../../context';
 
 import { debounce } from 'lodash';
+import { ExportModal } from './importexport';
+import { ImportModal } from './import-modal'
+import { gql, useMutation } from '@apollo/client';
 // interface AV101 {
 //     name: string[];
 // }
@@ -18,6 +22,8 @@ const filter = createFilterOptions();
 export const TagEditor = (props: any) => {
 
     const [ search, setSearch ] = useState('');
+
+    const [ importModalOpen, openImportModal ] = useState(false);
 
     const { program, tags, types: extraTypes } = props;
 
@@ -78,14 +84,67 @@ export const TagEditor = (props: any) => {
         //.then(() => refetch())
     }
 
+
+    const [ importTypes ] = useMutation(gql`
+        mutation ImportTypes($program: ID, $input: [CommandProgramTypeInput]){
+            importCommandProgramTypes(program: $program, input: $input){
+                id
+                name
+            }
+        }
+    `)
+
+    const [ importTags ] = useMutation(gql`
+        mutation ImportTags($program: ID, $input: [CommandProgramTagInput]){
+            importCommandProgramTags(program: $program, input: $input){
+                id
+                name
+            }
+        }
+    `)
+
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            <TextField 
-                label="Search" 
-                size="small" 
-                value={search} 
-                fullWidth
-                onChange={(e) => setSearch(e.target.value)} />
+
+            <ImportModal 
+                open={importModalOpen}
+                tags={tags}
+                types={extraTypes}
+                onSubmit={(tags, types) => {
+                    importTypes({
+                        variables: {
+                            program: program,
+                            input: types
+                        }
+                    }).then(() => {
+                        importTags({
+                            variables: {
+                                program,
+                                input: tags
+                            }
+                        }).then(() => {
+                            openImportModal(false);
+                            refetch()
+                        })
+                    })
+                }}
+                onClose={() => {
+                    openImportModal(false)
+                }} />
+            <ExportModal />
+
+            <Box sx={{display: 'flex', padding: '6px'}}>
+                <TextField 
+                    label="Search" 
+                    size="small" 
+                    value={search} 
+                    fullWidth
+                    onChange={(e) => setSearch(e.target.value)} />
+                <IconButton onClick={() => openImportModal(true)}>
+                    <ImportExport />
+                </IconButton>
+            </Box>
             <TableContainer>
                 <Table stickyHeader>
                     <TableHead sx={{bgcolor: 'secondary.main'}}>
@@ -95,6 +154,9 @@ export const TagEditor = (props: any) => {
                             </TableCell>
                             <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
                                 Datatype
+                            </TableCell>
+                            <TableCell sx={{bgcolor: 'secondary.main'}}>
+
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -145,6 +207,22 @@ export const TagEditor = (props: any) => {
                                             return filtered;
                                         }}
                                         />
+                                </TableCell>
+                                <TableCell sx={{width: '30px'}}>
+                                        <IconButton 
+                                            onClick={() => {
+                                                deleteTag({
+                                                    variables: {
+                                                        program,
+                                                        id: tag.id
+                                                    }
+                                                }).then(() => {
+                                                    refetch()
+                                                });
+                                            }}
+                                            size="small" color="error" >
+                                            <Close fontSize='inherit' />
+                                        </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}

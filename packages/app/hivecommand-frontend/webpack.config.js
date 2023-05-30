@@ -60,8 +60,11 @@ module.exports = (webpackConfigEnv, argv) => {
         new TsconfigPathsPlugin(),
       ],
       fallback: {
-        https: false,
-        http: false,
+        // https: false,
+        // http: false,
+        "buffer": require.resolve('buffer/'),
+        "stream": require.resolve('stream'),
+        "crypto": require.resolve('crypto-browserify')
       }
     },
     module: {

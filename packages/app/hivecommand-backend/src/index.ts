@@ -26,19 +26,20 @@ cache.connect_to(process.env.MONGO_URL || '');
 
 	await redis.connect()
 
-	const deviceMQ = new MQTTPublisher({
-		host: process.env.DEVICE_MQ_HOST || '',
-		user: process.env.DEVICE_MQ_USER,
-		pass: process.env.DEVICE_MQ_PASS
-	})
-
-	await deviceMQ.connect();
+	let deviceMQ : MQTTPublisher | undefined;
+	
+	if(process.env.DEVICE_MQ_HOST){
+		deviceMQ = new MQTTPublisher({
+			host: process.env.DEVICE_MQ_HOST || '',
+			user: process.env.DEVICE_MQ_USER,
+			pass: process.env.DEVICE_MQ_PASS
+		})
+		await deviceMQ.connect();
+	}
 
 	// const deviceMQ = await amqp.connect(
 	// 	process.env.DEVICE_MQ || ''
 	// )
-
-	console.log("RabbitMQ")
 
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 

@@ -1,9 +1,10 @@
-import { isEqual, merge } from 'lodash';
+import { isEqual, merge, debounce, reject } from 'lodash';
 import { OPCMQTTClient } from '..';
 import { Runner } from '../runner';
 import { diffKeys } from './utils';
 import { EventEmitter } from 'events'
 import crypto from 'crypto'
+import { Worker } from 'worker_threads'
 
 export interface ValueStoreOptions {
     subscriptionMap?: any[];
@@ -26,6 +27,9 @@ export class ValueStore extends EventEmitter {
 
         this.runner = runner;
         this.mqttClient = mqttClient;
+
+        this.slowNormaliser = debounce(this.slowNormaliser.bind(this), 500, {maxWait: 1000})
+
     }
 
     get options() {
@@ -49,26 +53,32 @@ export class ValueStore extends EventEmitter {
         return this.options?.tags || []
     }
 
-
     private cleanValue(value: any){
         switch(typeof(value)){
             case 'number':
                 return value % 1 !== 0 ? value.toFixed(2) : value;
+            case 'string':
+                return value.replace(/\x00/g, '')
             default:
                 return value;
         }
     }
 
     updateValue(key: string, value: any) {
-        setTimeout(() => {
+        setTimeout(async () => {
             this.internalStore[key] = this.cleanValue(value);
 
             console.log("updateValue", {key, value: this.internalStore[key], type: typeof(value)})
 
-            let nv = this.normaliseValues(this.tags, this.types)
-
-            if (nv.length > 0) this.emit('keys-changed', nv);
+            this.slowNormaliser();
         })
+    }
+
+    slowNormaliser(){
+        let nv = this.normaliseValues(this.tags, this.types)
+
+        console.log({nv})
+        if (nv.length > 0) this.emit('keys-changed', nv);
     }
 
     get internalValues() {
@@ -85,7 +95,30 @@ export class ValueStore extends EventEmitter {
         }).reduce((prev, curr) => merge(prev, curr), {})
     }
 
+    //TODO Options
+    //1) Make normalised values a standardised tick rate based update
+    //2) Figure out dependencies and only run on segments of the values that will be updated by it
     private normaliseValues(tags: any[], types: any[]) {
+
+        // return new Promise<{workerData: any[]}>((resolve, reject) => {
+        //     const worker = new Worker('./normalise.js', {
+        //         workerData: {
+        //             tags, 
+        //             types, 
+        //             values: this.values, 
+        //             internalValues: this.internalValues, 
+        //             runner: this.runner
+        //         }
+        //     })
+
+        //     worker.on('message', resolve);
+        //     worker.on('error', reject);
+        //     worker.on('exit', (code) => {
+        //     if (code !== 0)
+        //         reject(new Error(`Worker stopped with exit code ${code}`));
+        //     })
+            
+        // })
 
         let old_values = Object.assign({}, this.values);
 

@@ -1,5 +1,5 @@
 
-import { CIP, ControllerManager, ManagedController, Tag } from '@hive-command/ethernet-ip';
+import { CIP, Controller, ControllerManager, ManagedController, Tag } from '@hive-command/ethernet-ip';
 import OPCUAServer from '@hive-command/opcua-server'
 import { configureServer } from './configure-server';
 import { EventEmitter } from 'events'
@@ -9,7 +9,7 @@ import { addTag, TAG_TYPE } from '../opc-server';
 export interface BridgeOptions {
     host: string,
     slot?: number,
-    listenTags?: string,
+    listenTags?: string | {tags?: ListenTag[], templates?: ListenTemplate[]},
     configure?: boolean
 }
 
@@ -36,260 +36,355 @@ export interface ListenTemplate {
     children?: ListenTemplate[]
 }
 
-export const EthernetIPBridge = async (options: BridgeOptions) => {
+export interface EthernetTag {
+    key: string,
+    tag: Tag | null,
+    isArray?: boolean,
+    children?: EthernetTag[]
+}
 
-    const { host, slot, listenTags, configure } = options;
+export class EthernetIPBridge {
 
-    const server = new OPCUAServer({
-        productName: 'Ethernet IP - OPCUA Bridge'
-    });
 
-    const manager = new ControllerManager();
+    private options: BridgeOptions;
 
-    const controller : ManagedController = manager.addController(host, slot, 500, false)
+    private server: OPCUAServer;
 
-    controller.on('Error', (e) => {
-        console.log("Controller level error: ", e)
-    })
+    private controllerManager: ControllerManager = new ControllerManager();
 
-    await server.start();
+    private controller: ManagedController;
 
-  
-    let tags : ListenTag[] = [];
-    let templates : ListenTemplate[] = [];
+    private listenTags: ListenTag[] = [];
+    private listenTemplates: ListenTemplate[] = [];
 
-    if(listenTags){
-        let tagBundle = JSON.parse(readFileSync(listenTags, 'utf-8')) || {};
-        tags = tagBundle?.tags || [];
-        templates = tagBundle?.templates || [];
+    private tagList: any[] = [];
+
+    public tags : EthernetTag[] = [];
+
+    constructor(options: BridgeOptions) {
+        this.options = options;
+
+        this.server = new OPCUAServer({
+            productName: 'Ethernet IP - OPCUA Bridge'
+        })
+
+        this.writeTag = this.writeTag.bind(this);
+
+        this.controller = this.controllerManager.addController(this.options.host, this.options.slot, 500, false);
+
+        this.controller.on('Disconnected', this.onControllerDisconnected.bind(this))
+        this.controller.on('Error', this.onControllerError.bind(this));
+
+        if (this.options.listenTags && typeof(this.options.listenTags) === 'string') {
+            let tagBundle = JSON.parse(readFileSync(this.options.listenTags, 'utf-8')) || {};
+            this.listenTags = tagBundle?.tags || [];
+            this.listenTemplates = tagBundle?.templates || [];
+        }else if(this.options.listenTags && typeof(this.options.listenTags) === 'object'){
+            this.listenTags = this.options.listenTags.tags || []; 
+            this.listenTemplates = this.options.listenTags.templates || [];
+        }
     }
 
+    private onControllerDisconnected(){
+        console.error('ENIP Controller disconnected');
+    }
 
-    await controller.connect();
+    private onControllerError(e: any) {
+        console.error("Controller level error: ", e)
+    }
 
-    if(configure && controller.PLC){
-        configureServer(controller.PLC, listenTags)
-    }  
-    
-    const tagList = controller.PLC?.tagList?.filter((a) => a.name.indexOf('__') !== 0) || []
+    private async connectController() {
+        try {
+            await this.controller.connect();
+        } catch (e) {
+            console.error(e);
+            console.debug('Retrying ENIP connection in 60 seconds...');
+            await new Promise((resolve) => setTimeout(() => resolve(true), 60 * 1000));
+            await this.connectController();
+        }
+    }
 
-        // PLC.scan_rate = 500;
-        // PLC.scan();
+    private async disconnectController(){
+        try{
 
-        // controller.PLC?.newTag(tag, null, true, )
+            await this.controller.disconnect()
 
-        const { properties } = controller.PLC || {};
+        }catch(e){
+            console.error(e);
+        }
+    }
 
-        console.log(`Connected to ${properties?.name} @ ${host}:${slot || 0}`);
+    private async writeTag(tag: Tag, attempt: number = 0){
+        console.log("Writing tag", tag.name)
+        try{
+            if(attempt < 5){
+                await this.controller.PLC?.writeTag(tag)
+                console.log("Wrote tag", tag.name)
+            }else{
+                console.error("Tried 5 times to write", tag.name)
+            }
+            //Fake a failure here to test
+        }catch(e){
+            console.error(e)
+            console.debug('Retrying in 1 second...');
 
-        console.log(`Found ${tagList?.length} tags`);
+            await new Promise((resolve) => setTimeout(() => resolve(true), 1 * 1000));
 
-    //Get Array sizing for tagList
-    // await Promise.all(tagList.map(async (tag) => {
-    //     if(tag.type.arrayDims > 0){
-    //         const t = new Tag(tag.name)
-    //         const arraySize = await controller.PLC?.getTagArraySize(t)
-    //         return {
-    //             ...tag,
-    //             type: {
-    //                 ...tag.type,
-    //                 arraySize
-    //             }
-    //         }
-    //     }
-    //     return tag;
-    // }))
-    
-        if(listenTags){
-            //Tags have been specified in a tag json file
+            //Reconnection POC
+            // await this.disconnectController();
+            // console.log("Disconnected...")
 
-            for(var i = 0; i < templates.length; i++){
-                let template = templates[i];
+            // await new Promise((resolve) => setTimeout(() => resolve(true), 1 * 1000));
+
+            // this.controllerManager = new ControllerManager();
+
+            // this.controller = this.controllerManager.addController(this.options.host, this.options.slot, 500, false);
+
+            // await new Promise((resolve) => setTimeout(() => resolve(true), 1 * 1000));
+
+            // await this.connectController();
+            // console.log("Connected...")
+
+            // await new Promise((resolve) => setTimeout(() => resolve(true), 1 * 1000));
+
+            // await this.initTags();
+            // console.log("Tags init...")
+
+
+            await this.writeTag(tag, attempt + 1);
+        }
+    }
+
+    async initTags(){
+        this.tags = [];
+
+        if(this.options.listenTags){
+
+            let tags = this.listenTags.slice();
+
+            for (var i = 0; i < this.listenTemplates.length; i++) {
+                let template = this.listenTemplates[i];
 
                 let templateKeys = template.children?.map((x) => x.name);
 
-                console.log(`Adding ${controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
+                console.log(`Adding ${this.controller.PLC?.tagList?.filter((a) => a.type.typeName == template.name).length} tags for ${template.name}`)
 
-                tags = tags.concat( (tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
+                tags = tags.concat((this.tagList || []).filter((a) => a.type.typeName == template.name).map((tag) => {
                     return {
                         ...tag,
                         children: template.children?.filter((a) => (templateKeys || []).indexOf(a.name) > -1)
                     }
-                }) );
-
+                }));
 
             }
-            
+
             for(var i = 0; i < tags.length; i++){
 
                 let tag = tags[i];
 
-                let fromTagList = tagList?.find((a) => a.name == tag.name);
-                let fromTagListChildren = (tag.children || []).length > 0 ? 
+                //Lookup tag in existing tagList to make dataTypes and sizes match
+                let fromTagList = this.tagList?.find((a) => a.name == tag.name);
+                let fromTagListChildren = (tag.children || []).length > 0 ?
                     tag.children?.map((x) => ({
-                        type: (fromTagList?.type.structureObj as any)?.[x.name] || "STRING", 
-                        name: x.name 
+                        type: (fromTagList?.type.structureObj as any)?.[x.name] || "STRING",
+                        name: x.name
                     })).reduce((prev, curr) => ({
-                            ...prev,
-                            [curr.name]: curr.type
+                        ...prev,
+                        [curr.name]: curr.type
                     }), {}) :
                     undefined;
-
-                if(!fromTagList?.type.typeName) continue;
-                const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
-    
-                let isArray = fromTagList.type.arrayDims > 0 && fromTagList.type.typeName !== "BIT_STRING";
-                let arraySize = 0;
                 
+                let isArray = fromTagList.type.arrayDims > 0 && fromTagList.type.typeName !== "BIT_STRING";    
+                let arraySize = 0;
 
-                let rootTag : Tag | null = null;
-                let childTags: {key: string, tag: Tag | null}[];
+                let rootTag: Tag | null = null;
 
-                if(fromTagListChildren){
+                let childTags = [];
+
+                if (fromTagListChildren) {
 
                     //Create child tag list from children object
 
                     childTags = [];
-                    
-                    if(fromTagListChildren){
+
+                    if (fromTagListChildren) {
                         Object.keys(fromTagListChildren).forEach((key) => {
-    
-                            let type : CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
-    
-                            console.log(`Adding child tag ${tag.name}.${key}`, key, tag.name, type);
-    
-                            childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`, null, type ) }) //, null, false, type, 10) })
+
+                            let type: CIP.DataTypes.Types = CIP.DataTypes.Types[(((fromTagListChildren || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+
+                            childTags.push({ key: key, tag: this.controller.addTag(`${tag.name}.${key}`, null, type) }) //, null, false, type, 10) })
                         })
                     }
-                }else{
+                } else {
                     //Create read value from rootTag if array get more specific
-                   rootTag = controller.addTag(tag.name)
+                    rootTag = this.controller.addTag(tag.name)
 
-                   if(isArray){
-                    console.log("isArray")
-                    arraySize = await controller.PLC?.getTagArraySize(rootTag)
+                    if (isArray) {
+                        arraySize = await this.controller.PLC?.getTagArraySize(rootTag)
 
-                    childTags = [];
-                    for(var idx = 0; idx < arraySize; idx++){
-                        childTags.push({key: `${idx}`, tag: controller.addTag(`${tag.name}[${idx}]`) })
+                        childTags = [];
+                        for (var idx = 0; idx < arraySize; idx++) {
+                            childTags.push({ key: `${idx}`, tag: this.controller.addTag(`${tag.name}[${idx}]`) })
+                        }
+
+                        rootTag = null;
                     }
-
-                    rootTag = null;
-                   }
                 }
 
-                // try{
-                //     if(!enipTag) continue;
-                //     await controller.PLC?.readTag(enipTag);
-                // }catch(e){
-                //     console.error({msg: (e as any).message})
-                // }
+                this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
+            }
 
+        }else{
+            for (var i = 0; i < (this.tagList || []).length; i++) {
+                let tag = this.tagList[i]
                 
-               
-                // PLC.subscribe(enipTag);
+                let enipTag = this.controller.addTag(tag.name);
+                let childTags : EthernetTag[] = [];
 
-                addTag(server, fromTagList?.name || '', TAG_TYPE[typeKey], (key) => {
+                if (tag.type.structureObj) {
+                    Object.keys(tag.type.structureObj).forEach((key) => {
+                        
+
+                        childTags.push({ key: key, tag: this.controller.addTag(`${tag.name}.${key}`) })
+                    })
+                }
+
+                this.tags.push({key: tag.name, tag: enipTag, children: childTags.length > 0 ? childTags : undefined});
+
+            }
+        }
+    }
+
+    async start() {
+        await this.server.start();
+
+        await this.connectController();
+
+        if (this.options.configure && this.controller.PLC) {
+            configureServer(this.controller.PLC, this.options.listenTags);
+        }
+
+        this.tagList = this.controller.PLC?.tagList?.filter((a) => a.name.indexOf('__') !== 0) || []
+
+        const { properties } = this.controller.PLC || {};
+
+        console.log(`Connected to ${properties?.name} @ ${this.options.host}:${this.options.slot || 0}`);
+
+        console.log(`Found ${this.tagList?.length} tags`);
+
+        await this.initTags();
+
+        if (this.options.listenTags) {
+            //Tags have been specified in a tag json file
+
+            for (var i = 0; i < this.listenTags.length; i++) {
+
+                let tag = this.listenTags[i];
+
+                let fromTagList = this.tagList?.find((a) => a.name == tag.name);
+                let fromTagListChildren = (tag.children || []).length > 0 ?
+                    tag.children?.map((x) => ({
+                        type: (fromTagList?.type.structureObj as any)?.[x.name] || "STRING",
+                        name: x.name
+                    })).reduce((prev, curr) => ({
+                        ...prev,
+                        [curr.name]: curr.type
+                    }), {}) :
+                    undefined;
+
+                if (!fromTagList?.type.typeName) continue;
+
+                const typeKey = fromTagList.type.typeName as keyof typeof TAG_TYPE;
+
+                const { tag: rootTag, isArray, children } = this.tags.find((a) => a.key === tag.name) || {};
+
+                addTag(this.server, fromTagList?.name || '', TAG_TYPE[typeKey], (key) => {
                     // console.log("Reading ENIP value @ ", Date.now(), enipTag?.value);
-                    if(key){
-                        return childTags.find((a) => a.key === key)?.tag?.value
-                    }else if(!key && childTags){
-                        return childTags.sort((a: any, b: any) => a.key - b.key).map((x) => x.tag?.value)
+                    if (key) {
+                        return children?.find((a) => a.key === key)?.tag?.value
+                    } else if (!key && children) {
+                        return children?.sort((a: any, b: any) => a.key - b.key).map((x) => x.tag?.value)
                     }
                     return rootTag?.value
                 }, (value, key) => {
-                    if(Array.isArray(value)){
+                    if (Array.isArray(value)) {
                         value.map((idx_value, ix) => {
                             // let type = fromTagList?.type. ? Types[fromTagList?.type.typeName] : undefined
                             let t = new Tag(`${tag.name}[${ix}]`, null, fromTagList?.type.code)
                             t.value = idx_value;
-                            controller.PLC?.writeTag(t).catch((err) => console.error({err, type: fromTagList?.type.typeName, value, idx_value}))
+
+                            this.writeTag(t);
+
+                            // this.controller.PLC?.writeTag(t).catch((err) => console.error({ err, type: fromTagList?.type.typeName, value, idx_value }))
                         })
-                    }else{
-                        if(key){
+                    } else {
+                        if (key) {
                             // if(!enipTag?.value) enipTag.value = {};
-                            let tag = childTags.find((a) => a.key === key)?.tag
-                            if(!tag) return;
+                            let tag = children?.find((a) => a.key === key)?.tag
+                            if (!tag) return;
                             tag.value = value;
 
-                            controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+                            this.writeTag(tag);
+                            // this.controller.PLC?.writeTag(tag).catch((err) => console.error({ err }));
 
-                            // (enipTag.value as any)[key] = value;
-                        }else if(rootTag){
+                        } else if (rootTag) {
                             rootTag.value = value;
-        
-                            controller.PLC?.writeTag(rootTag).catch((err) => console.error({err}));
+                            
+                            this.writeTag(rootTag);
+
+                            // this.controller.PLC?.writeTag(rootTag).catch((err) => console.error({ err }));
 
                         }
                     }
 
-                    console.log("Set it")
                 }, fromTagListChildren, undefined, isArray)
-                
-                // await new Promise((resolve) => setTimeout(() => resolve(true), 200))
+
             }
 
-        }else{
+        } else {
             //Tags have not been explicitly set, show all
 
-            for(var i = 0; i < (tagList || []).length; i++){
-                let tag = (tagList || [])[i];
-                let enipTag = controller.addTag(tag.name);
-               
-                if(!tag.type.typeName) continue;
+            for (var i = 0; i < (this.tagList || []).length; i++) {
+                let tag = (this.tagList || [])[i];
+
+                let { tag: enipTag, children = [] } = this.tags.find((a) => a.key === tag.name) || {};
+
+                if (!tag.type.typeName) continue;
+
                 const typeKey = tag.type.typeName as keyof typeof TAG_TYPE;
+      
 
-                // try{
-                //     await PLC.readTag(enipTag);
-                // }catch(e){
-                //     console.error({msg: (e as any).message})
-                // }
-
-                let childTags : {key: string, tag: Tag | null }[] = [];
-                
-                if(tag.type.structureObj){
-                    Object.keys(tag.type.structureObj).forEach((key) => {
-
-                        console.log(`Adding child tag 2: ${tag.name}.${key}`, key, tag.name);
-
-                        childTags.push({ key: key, tag: controller.addTag(`${tag.name}.${key}`) })
-                    })
-                }
-
-                addTag(server, tag.name, TAG_TYPE[typeKey], () => {
+                addTag(this.server, tag.name, TAG_TYPE[typeKey], () => {
                     return enipTag?.value
                 }, (value, key) => {
-                    if(enipTag && key){
+                    if (enipTag && key) {
                         // if(!enipTag?.value) enipTag.value = {};
                         // (enipTag.value as any)[key] = value.value;
 
-                        let tag = childTags.find((a) => a.key === key)?.tag
-                        if(!tag) return;
+                        let tag = children.find((a) => a.key === key)?.tag
+                        if (!tag) return;
                         tag.value = value;
 
-                        controller.PLC?.writeTag(tag).catch((err) => console.error({err}));
+                        this.writeTag(tag);
+                        // this.controller.PLC?.writeTag(tag).catch((err) => console.error({ err }));
 
-                    }else if(enipTag){
-                        enipTag.value = value.value;
+                    } else if (enipTag) {
+                        enipTag.value = value;
 
-                        controller.PLC?.writeTag(enipTag).catch((err) => console.error({err}));
-
+                        this.writeTag(enipTag);
+                        // this.controller.PLC?.writeTag(enipTag).catch((err) => console.error({ err }));
                     }
 
-                    console.log("Set it")
-                    
                 }, tag.type.structureObj);
 
-                // await new Promise((resolve) => setTimeout(() => resolve(true), 200))
-
-                // tags.push({tag: PLC.newTag(tag.name), type: tag.type, name: tag.name})
+         
             }
         }
-       
-        // PLC.scan_rate = 500;
-        // await PLC.scan();
-
-
 
         console.log("OPCUA Server started");
+    }
+
+
+
+
 }

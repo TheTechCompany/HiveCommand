@@ -20,7 +20,6 @@ export const OPCUAServerStage = () => {
 
     const { state, setState, globalState, setGlobalState } = useContext(SetupContext);
 
-    const controlLayout = globalState?.controlLayout;
 
     const [ mapping, setMapping ] = useState<{path: string, tag: string}[]>([]);
 
@@ -54,7 +53,6 @@ export const OPCUAServerStage = () => {
         }
     ]);
 
-    const [deviceExpanded, setDeviceExpanded] = useState<any[]>([]);
 
     const [ editItem, setEditItem ] = useState<any | null>();
 
@@ -259,27 +257,6 @@ export const OPCUAServerStage = () => {
 
 
 
-    const tags = useMemo(() => (controlLayout?.tags || []).map((x: any) => {
-        let type = controlLayout?.types.find((a) => a.name === x.type);
-        let hasChildren = (type?.fields || []).length > 0;
-
-            return {
-                id: x.id,
-                name: x.name,
-                type: !type && x.type,
-                children: hasChildren ? type?.fields.map((typeField) => ({
-                    id: `${x.id}.${typeField.name}`, 
-                    name: typeField.name, type: typeField.type
-                })) : []
-                // (x.type?.state)?.map((y: any) => ({
-                //     id: `${x.id}.${y.key}`,
-                //     name: y.key,
-                //     type: y.type
-                // }))
-            }
-        })
-    , [controlLayout?.tags || []])
-
 
 
     // const deviceTree = useMemo(() => {
@@ -347,9 +324,7 @@ export const OPCUAServerStage = () => {
             </Box>
             
             <Divider />
-            <Box sx={{flex: 1, position: 'relative'}}>
-                <Box sx={{flex: 1, display: 'flex', position: 'absolute', top: 0, left: 0, right: 0, bottom: 0}}>
-                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
+            <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
                         <TreeView
                             sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
                             defaultCollapseIcon={<ExpandMore />}
@@ -359,106 +334,6 @@ export const OPCUAServerStage = () => {
 
                         </TreeView>
                     </Box>
-                    <Divider sx={{marginLeft: '6px', marginRight: '6px'}} orientation='vertical' />
-                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto'}}>
-                        <Box>
-                            {tags.slice()?.sort((a,b) => a.name?.localeCompare(b.name)).map((tag: any) => (
-                                <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                    <Box sx={{display: 'flex', alignItems: 'center'}}>
-                                      
-                                        {tag.children?.length > 0 ? (
-                                            <IconButton sx={{marginRight: '6px'}} size="small" onClick={() => {
-                                                let exists = deviceExpanded.indexOf(tag.id) > -1
-                                                setDeviceExpanded(exists ? deviceExpanded.filter((a) => a != tag.id) : deviceExpanded.concat([tag.id]))
-                                            }}>
-                                                {deviceExpanded.indexOf(tag.id) > -1 ? <ExpandMore /> : <ChevronRight />}
-                                            </IconButton> 
-                                        ) : (
-                                            <Box sx={{width: 40, height: 40}} />
-                                        )}
-                                        <Box sx={{flex: 1}}>
-                                            <Checkbox 
-                                                sx={{padding: 0, paddingRight: '6px'}}
-                                                disabled
-                                                indeterminate={!(globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == tag.children?.length) && (globalState?.deviceMap || []).filter((a: any) => a.path.indexOf(tag.name) > -1).length > 0}
-                                                checked={globalState?.deviceMap?.filter((a: any) => a.path.indexOf(tag.name) > -1).length == (tag.children?.length > 0 ? tag.children?.length : 1)}
-                                                size="small" />
-                                            {tag.name}
-                                        </Box>
-
-                                        {!(tag.children.length > 0) && (
-                                            <TextField 
-                                                disabled={Boolean(deviceMap?.[tag.name]?.match(/script:\/\/([.\s\S]+)/))}
-                                                sx={{flex: 1, paddingRight: '0'}}
-                                                value={deviceMap?.[tag.name]?.match(/script:\/\/([.\s\S]+)/) ? "script" : deviceMap?.[tag.name]} 
-                                                onChange={(e) => {
-                                                    updateMap(tag.name, e.target.value)
-                                                }}
-                                                size="small"
-                                                InputProps={{
-                                                    endAdornment: (<InputAdornment position="end">
-                                                        <IconButton
-                                                            onClick={() => {
-                                                                setEditItem({
-                                                                    ...tag,
-                                                                    path: tag.name
-                                                                })
-                                                            }}
-                                                            size="small">
-                                                            <Javascript />
-                                                        </IconButton>
-                                                    </InputAdornment>)
-                                                }}     />
-                                        )}
-                                    </Box>
-                                    <Collapse in={deviceExpanded.indexOf(tag.id) > -1}>
-                                        <Box sx={{display: 'flex', flexDirection: 'column'}}>
-                                            {tag.children?.map((child: any) => {
-                                                const path =  `${tag.name ? tag.name + '.' : ''}${child.name}`
-
-                                                return <Box sx={{display: 'flex', paddingLeft: '40px', alignItems: 'center'}}>
-                                                    <Typography sx={{flex: 1}}>{child.name}</Typography>
-                                                    <TextField 
-                                                        disabled={Boolean(deviceMap?.[path]?.match(/script:\/\/([.\s\S]+)/))}
-                                                        sx={{flex: 1, paddingRight: '0'}}
-                                                        value={deviceMap?.[path]?.match(/script:\/\/([.\s\S]+)/) ? "script" : deviceMap?.[path]} 
-                                                        onChange={(e) => {
-                                                            updateMap(path, e.target.value)
-                                                        }}
-                                                        size="small"
-                                                        InputProps={{
-                                                            endAdornment: (<InputAdornment position="end">
-                                                                <IconButton
-                                                                    onClick={() => {
-                                                                        console.log({child})
-                                                                        setEditItem({
-                                                                            ...child,
-                                                                            path
-                                                                        })
-                                                                    }}
-                                                                    size="small">
-                                                                    <Javascript />
-                                                                </IconButton>
-                                                            </InputAdornment>)
-                                                        }}     />
-                                                  
-                                                </Box>
-                                        })}
-                                        </Box>
-                                    </Collapse>
-                                </Box>
-                            ))}
-                        </Box>
-                        {/* <TreeView
-                            sx={{flex: 1, '.MuiTreeItem-content': {padding: 0}}}
-                            defaultCollapseIcon={<ExpandMore />}
-                            defaultExpandIcon={<ChevronRight />}
-                            >
-                            {renderTree(tags, true)}
-                        </TreeView> */}
-                    </Box>
-                </Box>
-            </Box>
 
         </Box>
     )

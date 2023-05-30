@@ -28,7 +28,6 @@ export class Runner {
     }
 
     private setupTransformers(){
-        console.log("Setup transformers", this.options?.deviceMap);
 
         this.transformers = (this.options?.deviceMap || []).map((deviceMap) => {
             let tagValue = deviceMap.tag;
@@ -45,9 +44,6 @@ export class Runner {
 
                 return {path: deviceMap.path, fn: (valueStructure: any) => rawTag?.split('.').reduce((prev, curr) => prev[curr], valueStructure)}
             }
-
-            // return null;
-
         })
     }
 
@@ -57,26 +53,12 @@ export class Runner {
 
         return parseValue(tagType, fn?.(valueStructure));
 
-        // if (tagValue?.indexOf('script://') == 0) {
-        //     const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
-        //     const { getter, setter } = load_exports(jsCode)
-
-        //     return parseValue(tagType, getter(valueStructure));
-        // } else {
-        //     let rawTag = subscriptionMap?.find((a) => a.path == tagValue)?.tag
-
-        //     if (!rawTag) return null;
-
-        //     return parseValue(tagType, )
-        // }
-
     }
 
     /*
         tagPath: AV101.open
     */
     async setTag(allValues: any, tagPath: string, value: any) : Promise<{tag: string, dataType: DataType, value: any}[] | null> {
-        // if (!this.client) return;
 
         let setValues : {tag: string, dataType: DataType, value: any}[] = [];
 
@@ -95,7 +77,6 @@ export class Runner {
             }
         };
 
-        // const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
         let tag = deviceMap?.find((a) => a.path == tagPath)?.tag;
 
         if (tag?.indexOf('script://') == 0) {
@@ -127,7 +108,6 @@ export class Runner {
                     console.log({newValues})
     
                     for (value of newValues) {
-                        // if (this.client) {
                             const { type: dt, isArray } = await this.client.getDataType(value.path) || {}
     
                             setValues.push({
@@ -135,9 +115,6 @@ export class Runner {
                                 dataType: (DataType as any)[dt as any],
                                 value: value.value
                             })
-                            // await this.setData(this.client, value.path, (DataType as any)[dt as any], value.value)
-                        // }
-    
                     }
                     resolve(true)
     
@@ -148,13 +125,11 @@ export class Runner {
 
             const { type: dt, isArray } = await this.client.getDataType(tag) || {}
 
-
             setValues.push({
                 tag,
                 dataType: (DataType as any)[dt as any],
                 value
             })
-            // await this.setData(this.client, tag, (DataType as any)[dt as any], value)
 
         }
         // }

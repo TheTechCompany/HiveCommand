@@ -21,7 +21,7 @@ import { Home as HomeIcon  } from '@mui/icons-material'
 import { TemplateEditor } from './pages/template';
 import { TagEditor } from './pages/tags';
 import { TypeEditor } from './pages/types';
-import { useCreateProgramType, useUpdateProgramType } from './api';
+import { useCreateProgramType, useDeleteProgramType, useUpdateProgramType } from './api';
 import { AlarmEditor } from './pages/alarms';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
@@ -147,6 +147,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     
     const deleteProgramHMI = useDeleteProgramHMI(id);
+    const deleteProgramType = useDeleteProgramType(id);
 
     const handleMenuDelete = async (type: string, data: any) => {
         let promise : any = null;
@@ -156,6 +157,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         switch(type){
             case 'hmi':
                 promise = deleteProgramHMI(data.id)
+                break;
+            case 'types':
+                promise= deleteProgramType(data.id)
                 break;
             default: 
                 promise = Promise.resolve(true)
@@ -328,6 +332,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         return root?.editor
     }
 
+
+    console.log({editItem})
+
     return (
         <CommandEditorProvider value={{
             program,
@@ -438,6 +445,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 switch(type){
                                     case 'hmi':
                                         setEditItem(program.interface?.find((a) => a.id == nodeId));
+                                        break;
+                                    case 'types':
+                                        setEditItem(program.types?.find((a) => a.id == nodeId));
                                         break;
                                 }
 

@@ -103,5 +103,6 @@
   "references": [
     {"path": "../../core/command-data"},
     {"path": "../../communication/amqp-client"},
+    {"path": "../../core/command-scripting"}
   ]
 }

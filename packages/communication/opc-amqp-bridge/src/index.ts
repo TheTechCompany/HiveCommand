@@ -42,6 +42,8 @@ export class OPCMQTTClient extends EventEmitter {
     private client?: OPCUAClient;
     private clientEndpoint?: string;
 
+    private connecting?: boolean = false;
+
     private subscription?: { events: EventEmitter, paths: { tag: string, path: string }[], unsubscribe: () => void };
 
     private monitors?: any;
@@ -120,7 +122,11 @@ export class OPCMQTTClient extends EventEmitter {
 
         this.mqttPublisher?.disconnect()
 
+        this.mqttPublisher = undefined;
+
         this.client?.disconnect()
+
+        this.client = undefined;
     }
     
     async getDataType(path: string) {
@@ -173,6 +179,8 @@ export class OPCMQTTClient extends EventEmitter {
     unsubscribe(){
         if(this.monitors){
             this.monitors.off('changed', this.onMonitorChanged)
+
+            this.monitors.terminate()
         }
 
         this.monitors = undefined;
@@ -263,28 +271,29 @@ export class OPCMQTTClient extends EventEmitter {
     async connect(host: string, port?: number) {
         const endpointUrl = host.indexOf('opc.tcp://') > -1 ? host : `opc.tcp://${host}${port ? `:${port}` : ''}`;
 
-        console.log(`Getting connection instance for ${endpointUrl}`);
-
         //Check for host match if not reset
-        if (this.clientEndpoint !== endpointUrl) {
-            console.debug(`Disconnecting client`);
+        if (this.client && this.clientEndpoint !== endpointUrl) {
             await this.client?.disconnect()
             this.clientEndpoint = undefined;
             this.client = undefined;
         }
 
         if (this.client) {
-            console.debug("Returning client");
             return this.client;
         }
 
         this.client = new OPCUAClient();
 
-
         this.client.on('close', this.onClientLost.bind(this, endpointUrl))
         this.client.on('connection_lost', this.onClientLost.bind(this, endpointUrl))
 
+        console.log(`Connecting to ${endpointUrl}`);
+
+        this.connecting = true;
+
         await this.client.connect(endpointUrl)
+
+        this.connecting = false;
 
         this.clientEndpoint = endpointUrl
 

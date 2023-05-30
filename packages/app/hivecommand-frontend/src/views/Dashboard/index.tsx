@@ -36,8 +36,8 @@ const pages = [
     },
     {
         icon: <Extension />,
-        label: "Elements",
-        path: "elements",
+        label: "Add-ons",
+        path: "add-ons",
         component: <Outlet />,
         children: [
             {

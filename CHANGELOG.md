@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.217](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.216...v1.4.15-alpha.217) (2023-05-15)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.216](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.215...v1.4.15-alpha.216) (2023-05-15)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.215](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.214...v1.4.15-alpha.215) (2023-05-15)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.214](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.213...v1.4.15-alpha.214) (2023-05-15)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.213](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.212...v1.4.15-alpha.213) (2023-05-10)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.212](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.211...v1.4.15-alpha.212) (2023-05-10)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.211](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.210...v1.4.15-alpha.211) (2023-05-10)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.210](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.209...v1.4.15-alpha.210) (2023-05-10)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.209](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.208...v1.4.15-alpha.209) (2023-05-10)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
 ## [1.4.15-alpha.208](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.207...v1.4.15-alpha.208) (2023-05-09)
 
 **Note:** Version bump only for package @hivecomand-clients/root
