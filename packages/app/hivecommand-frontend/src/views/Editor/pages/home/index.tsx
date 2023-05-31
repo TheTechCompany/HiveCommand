@@ -32,9 +32,23 @@ export const Home = () => {
     const [ packModalOpen, openPackModal ] = useState(false);
 
     return (
-        <Box sx={{flex: 1, display: 'flex', padding: '3px'}}>
-            <Box sx={{flex: 1}}>
+        <Box sx={{flex: 1, display: 'flex', padding: '12px'}}>
+            <Box sx={{flex: 1, display: 'flex',}}>
+                <Paper sx={{flex: 1, marginRight: '12px'}}>
+                    <Box sx={{display: 'flex', padding: '3px', bgcolor: 'secondary.main', color: 'white',  alignItems: 'center', justifyContent: 'space-between'}}>
+                        <Typography>Data scopes</Typography>
+                        <IconButton 
+                            onClick={() => {
+                                openPackModal(true);
+                            }}
+                            sx={{color: "white"}} size="small">
+                            <Add fontSize="inherit"/>
+                        </IconButton>
+                    </Box>
+                    <Box sx={{flex: 1}}>
 
+                    </Box>
+                </Paper>
             </Box>
 
             <ElementPackListModal 
@@ -57,7 +71,7 @@ export const Home = () => {
 
                 }}
                 />
-            <Paper>
+            <Paper sx={{minWidth: '200px'}}>
                 <Box sx={{display: 'flex', padding: '3px', bgcolor: 'secondary.main', color: 'white',  alignItems: 'center', justifyContent: 'space-between'}}>
                     <Typography>Element Packs</Typography>
                     <IconButton 
