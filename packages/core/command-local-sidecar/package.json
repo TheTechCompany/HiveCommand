@@ -10,6 +10,10 @@
 	"files": [
 		"dist/"
 	],
+  "scripts": {
+    "build": "tsc -b",
+    "package": "pkg ."
+  },
 	"devDependencies": {
 		"@types/express": "^4.17.14",
 		"@types/pg": "^8.6.5",

@@ -16,10 +16,11 @@ import {
 
 import path from 'path';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
+import PluginPnp from '@yarnpkg/plugin-pnp';
+import PluginNm from '@yarnpkg/plugin-nm';
+import PluginNpm from '@yarnpkg/plugin-npm';
 
-import { FakeFS, PortablePath } from '@yarnpkg/fslib';
-
-import { NpmHttpFetcher, NpmSemverFetcher, NpmSemverResolver } from '@yarnpkg/plugin-npm'
+import { PortablePath } from '@yarnpkg/fslib';
 
 const { 
     makeDescriptor, 
@@ -30,6 +31,12 @@ const yarn_plugins : any[] = [
     '@yarnpkg/plugin-pnp',
     '@yarnpkg/plugin-npm',
     '@yarnpkg/plugin-nm',
+]
+
+const imported_plugins = [
+    ['@yarnpkg/plugin-pnp', PluginPnp],
+    ['@yarnpkg/plugin-npm', PluginNpm],
+    ['@yarnpkg/plugin-nm', PluginNm]
 ]
 
 export interface DriverRegistryOptions {
@@ -73,7 +80,7 @@ export class DriverRegistry {
         console.log("Setup manifest");
 
         this.yarnConfiguration = await Configuration.find(this.yarnPath, {
-            modules: new Map(yarn_plugins.map((plugin) => [plugin, require(plugin)])),
+            modules: new Map(imported_plugins.map((plugin) => plugin) as any),
             plugins: new Set(yarn_plugins)
         });
 
