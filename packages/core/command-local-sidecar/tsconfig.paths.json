@@ -3,15 +3,13 @@
     "baseUrl": ".",
     "paths": {
       "@hive-command/amqp-client": ["../../communication/amqp-client/src"],
-      "@hive-command/opcua-amqp-bridge": ["../../communication/opc-amqp-bridge/src"],
-      "@hive-command/opcua-client": ["../../communication/opc-client/src"],
+      "@hive-command/drivers-base": ["../../drivers/command-driver/src"],
       "@hive-command/scripting": ["../../core/command-scripting/src"]
     }
   },
   "references": [
     {"path": "../../communication/amqp-client"},
-    {"path": "../../communication/opc-amqp-bridge"},
-    {"path": "../../communication/opc-client"},
+    {"path": "../../drivers/command-driver"},
     {"path": "../../core/command-scripting"}
   ]
 }

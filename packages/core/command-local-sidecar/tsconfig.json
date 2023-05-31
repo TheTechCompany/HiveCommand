@@ -101,8 +101,6 @@
   "exclude": ["dist/", "example/", "__tests__"],
   "references": [
     {"path": "../../communication/amqp-client"},
-    {"path": "../../communication/opc-amqp-bridge"},
-    {"path": "../../communication/opc-client"},
     {"path": "../../drivers/command-driver"},
     {"path": "../command-scripting"}
   ]
