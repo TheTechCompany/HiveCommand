@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/local-sidecar",
-	"version": "1.4.15-alpha.218",
+	"version": "1.4.15-alpha.219",
 	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
@@ -10,10 +10,10 @@
 	"files": [
 		"dist/"
 	],
-  "scripts": {
-    "build": "tsc -b",
-    "package": "pkg ."
-  },
+	"scripts": {
+		"build": "tsc -b",
+		"package": "pkg ."
+	},
 	"devDependencies": {
 		"@types/express": "^4.17.14",
 		"@types/pg": "^8.6.5",
