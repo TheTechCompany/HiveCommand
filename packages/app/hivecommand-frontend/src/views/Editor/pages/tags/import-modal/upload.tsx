@@ -52,43 +52,48 @@ export const UploadView = (props: {
       const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop, accept: ['.l5x'] })
     
 
-    return props.file ? (
-        <Box sx={{minHeight: '200px', padding: '6px'}}>
-            <Paper elevation={4} sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px', justifyContent: 'space-between', alignItems: 'center'}}>
-                <Box>
-                    <Typography>{props.file.name}</Typography>
-                    <Typography fontSize={'small'}>{(props.file?.size / 1024 / 1024).toFixed(2)}MB</Typography>
-                </Box>
-                <IconButton 
-                    onClick={() => {
-                        props.onChange(null)
-                    }}
-                    size="small">
-                    <Close fontSize="inherit" />
-                </IconButton>
-            </Paper>
-        </Box>
-    ) : (
-        <Box>
-        
-            <Box sx={{border: '1px dashed black', margin: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
-                <input {...getInputProps()} />
-                <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
+    return (
+        <Box sx={{display: 'flex', flexDirection: 'column'}}>
+        {props.file ? (
+            <Box sx={{minHeight: '200px', padding: '6px'}}>
+                <Paper elevation={4} sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Box>
+                        <Typography>{props.file.name}</Typography>
+                        <Typography fontSize={'small'}>{(props.file?.size / 1024 / 1024).toFixed(2)}MB</Typography>
+                    </Box>
+                    <IconButton 
+                        onClick={() => {
+                            props.onChange(null)
+                        }}
+                        size="small">
+                        <Close fontSize="inherit" />
+                    </IconButton>
+                </Paper>
             </Box>
-            <Autocomplete
-                sx={{
-                    margin: '6px',
-                    marginTop: '12px'
-                }}
-                value={props.dataScopes.find((a) => a.id == props.scope) || null}
-                onChange={(e, value) => {
-                    props.onChange({scope: typeof(value) == 'string' ? value : value.id})
-                }}
-                options={props.dataScopes || []}
-                getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
-                renderInput={(params) => <TextField {...params} label="Scope (optional)" size="small" />}
-                />
-        </Box>
+        ) : (
+            <Box>
+            
+                <Box sx={{border: '1px dashed black', margin: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
+                    <input {...getInputProps()} />
+                    <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
+                </Box>
+            </Box>
 
+        )}
+
+        <Autocomplete
+            sx={{
+                margin: '6px',
+                marginTop: '12px'
+            }}
+            value={props.dataScopes.find((a) => a.id == props.scope) || null}
+            onChange={(e, value) => {
+                props.onChange({scope: typeof(value) == 'string' ? value : value.id})
+            }}
+            options={props.dataScopes || []}
+            getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
+            renderInput={(params) => <TextField {...params} label="Scope (optional)" size="small" />}
+            />
+    </Box>
     )
 }

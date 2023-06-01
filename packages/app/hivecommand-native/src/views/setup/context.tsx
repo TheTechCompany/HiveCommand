@@ -5,42 +5,15 @@ export type StateUpdateFn = (stateUpdate: (state: GlobalState) => any) => void;
 
 // export type StateUpdate = (key: string, value: any) => void;
 
-export interface GlobalState {
-    subscriptionMap?: {
-        path: string,
-        tag: string
-    }[],
-    controlLayout?: HMIProgram,
-    // {
-    //     interface: {
-    //         id: string,
-    //         nodes: any[],
-    //         edges: any[]
-    //     }
-    //     devices: {
-    //         id: string;
-    //         tag: string;
-    //         type: {
-    //             tagPrefix?: string;
-    //             state: {
-    //                 type: string;
-    //                 key: string
-    //             }[];
-    //         }
-    //     }[]
-    // },
-    networkLayout?: {
-        iotEndpoint: string,
-        iotSubject: string,
-        iotUser: string,
-        iotToken: string,
+export interface GlobalState extends HMIProgram {
 
-        dataScopes?: { id: string, name: string, plugin: {id: string, name: string, module: string} }[]
-    },
-    deviceMap?: {
-        path: string,
-        tag: string
-    }[]
+    iotEndpoint: string,
+    iotSubject: string,
+    iotUser: string,
+    iotToken: string,
+
+    dataScopes?: { id: string, name: string, plugin: { id: string, name: string, module: string } }[]
+
 }
 export const SetupContext = React.createContext<{
     state?: any;

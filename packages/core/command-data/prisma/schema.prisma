@@ -568,7 +568,7 @@ model ProgramTypeField {
   typeId String?
 
 
-  parent ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id])
+  parent ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String
 
   reports DeviceReport[] @relation(name: "reportsOnTagField")

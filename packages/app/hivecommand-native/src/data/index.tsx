@@ -43,35 +43,35 @@ export const DataProvider = (props: any) => {
     const STORAGE = props.storagePath;
 
 
-    const readBlob = async ()  : Promise<{globalState: any, authState: AuthState}> => {
-        try{
-            const stringBlob = await readTextFile(STORAGE,  {dir: BaseDirectory.App})
-            console.log({stringBlob})
-            return JSON.parse(stringBlob)
-        }catch(e){
-            return {globalState: {}, authState: {...authState}}
-        }
-    }
+    // const readBlob = async ()  : Promise<{globalState: any, authState: AuthState}> => {
+    //     try{
+    //         const stringBlob = await readTextFile(STORAGE,  {dir: BaseDirectory.App})
+    //         console.log({stringBlob})
+    //         return JSON.parse(stringBlob)
+    //     }catch(e){
+    //         return {globalState: {}, authState: {...authState}}
+    //     }
+    // }
 
-    const writeBlob = async () => {
-        let blob = {
-            globalState,
-            authState
-        }
-        await writeTextFile(STORAGE, JSON.stringify(blob), {dir: BaseDirectory.App})
-    }
+    // const writeBlob = async () => {
+    //     let blob = {
+    //         globalState,
+    //         authState
+    //     }
+    //     await writeTextFile(STORAGE, JSON.stringify(blob), {dir: BaseDirectory.App})
+    // }
 
-    useEffect(() => {
-        // removeFile(props.storagePath, {dir: BaseDirectory.App})
+    // useEffect(() => {
+    //     // removeFile(props.storagePath, {dir: BaseDirectory.App})
 
-        readBlob().then(({globalState, authState}) => {
-            setGlobalState(globalState)
-            setAuthState(authState)
+    //     readBlob().then(({globalState, authState}) => {
+    //         setGlobalState(globalState)
+    //         setAuthState(authState)
 
-            setIsReady(true);
-        });
+    //         setIsReady(true);
+    //     });
 
-    }, [])
+    // }, [])
 
     const updateGlobalState : StateUpdateFn = async (stateUpdate) => {
         // console.log(key)
@@ -79,12 +79,12 @@ export const DataProvider = (props: any) => {
         
         setGlobalState(stateUpdate);
 
-        writeBlob()
+        // writeBlob()
     }
 
     const updateAuthState = (key: any, value: any) => {
         setAuthState((authState) => ({...authState, [key]: value}))
-        writeBlob();
+        // writeBlob();
     }
 
 

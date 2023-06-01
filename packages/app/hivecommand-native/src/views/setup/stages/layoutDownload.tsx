@@ -14,7 +14,7 @@ export const LayoutDownload = () => {
         
         axios.get(`${state.discoveryServer}/control-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("controlLayout", {res})
-            await setGlobalState?.((state) => ({...state, controlLayout: res.data.results}))
+            await setGlobalState?.((state) => ({...state, ...res.data.results}))
             setLogs((logs) => {
                 let l = logs.slice();
                 let ix = l.findIndex((a) => a.id == 'hmi-download');
@@ -26,8 +26,9 @@ export const LayoutDownload = () => {
 
         axios.get(`${state.discoveryServer}/network-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("networkLayout", {res})
-            await setGlobalState?.((state) => ({...state, networkLayout: res.data.results}))
+            await setGlobalState?.((state) => ({...state, ...res.data.results}))
 
+        
             setLogs((logs) => {
                 let l = logs.slice();
                 let ix = l.findIndex((a) => a.id == 'network-download');
@@ -41,9 +42,10 @@ export const LayoutDownload = () => {
                 })
                 return l;
             })
+            console.log({globalState})
 
             axios.post(`http://localhost:8484/setup/drivers`, { 
-                drivers: [...new Set(globalState?.networkLayout?.dataScopes?.map((x) => x.plugin.module) )].map((x) => ({pkg: x}) ) || [{pkg: '@hive-command/ethernet-ip'}] 
+                drivers: [...new Set(globalState?.dataScopes?.map((x) => x.plugin.module) )].map((x) => ({pkg: x}) ) || [{pkg: '@hive-command/ethernet-ip'}] 
             }).then(() => {
                 setLogs((logs) => {
                     let l = logs.slice();

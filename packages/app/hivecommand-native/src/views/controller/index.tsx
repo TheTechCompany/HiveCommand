@@ -31,7 +31,7 @@ export const Controller = (props: {sidecar: boolean}) => {
 
     const { authState, globalState } = useContext(DataContext);
 
-    const { controlLayout, deviceMap, subscriptionMap, networkLayout } = globalState || {};
+    const { interface: programInterface, tags, types } = globalState || {};
 
     const [packs, setPacks] = useRemoteCache('remote-components.json');
 
@@ -89,7 +89,11 @@ export const Controller = (props: {sidecar: boolean}) => {
             <CommandSurface 
                 client={LocalClient}
                 cache={[packs, setPacks] as any}
-                program={controlLayout} />
+                program={{
+                    interface: programInterface,
+                    tags,
+                    types
+                } as any} />
 
         </Box>
     )

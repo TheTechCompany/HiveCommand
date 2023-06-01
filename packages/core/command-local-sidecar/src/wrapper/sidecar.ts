@@ -3,6 +3,7 @@ import { SidecarConf } from "./conf";
 import { MQTTClient } from '@hive-command/amqp-client';
 import { EventedValueStore } from '@hive-command/evented-values'
 import path from 'path';
+import { mkdirSync, existsSync } from 'fs';
 
 export interface LocalOptions {
 
@@ -24,6 +25,8 @@ export interface LocalOptions {
         exchange: string
     }
 
+    interface?: any[];
+    
     tags?: {
         name: string,
         type: string,
@@ -61,18 +64,26 @@ export class Sidecar {
 
     private eventedValues : EventedValueStore;
 
+    private cwd : string;
+
     constructor(config?: LocalOptions) {
         // super(config);
 
+        this.cwd = path.join(appData(), 'hive-command');
+
+        if(!existsSync(this.cwd)){
+            mkdirSync(this.cwd)
+        }
+
         this.conf = new SidecarConf({ 
-            filename: 'hive-command.json',
+            path: path.join(this.cwd, 'hive-command.json'),
             options: config 
         });
 
         this.eventedValues = new EventedValueStore();
 
         this.driverRegistry = new DriverRegistry({
-            pluginDir: path.join(appData(), 'hivecommand-plugins'),
+            pluginDir: path.join(this.cwd, 'hivecommand-plugins'),
             valueStore: this.eventedValues
         })
 

@@ -20,7 +20,7 @@ const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
 
-  const { isReady, authState, setAuthState, updateAuthState } = useContext(DataContext)
+  const { isReady, authState, setAuthState, updateGlobalState, updateAuthState } = useContext(DataContext)
 
   const [ sidecarRunning, setSidecarRunning ] = useState(false);
 
@@ -67,11 +67,16 @@ function App() {
   useEffect(() => {
     console.log({isReady, sidecarRunning});
 
-    if(!configured && isReady && sidecarRunning){
+    if(!configured && sidecarRunning){
       console.log("Getting config");
 
       axios.get(`http://localhost:${8484}/setup`).then((data) => {
-        if(data.config){
+        if(data.data.config){
+
+          updateGlobalState?.({
+            ...data.data.config
+          });
+
           setAuthState?.('configProvided', true)
           setConfigured(true)
         }
