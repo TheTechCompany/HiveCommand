@@ -37,6 +37,7 @@ export abstract class BaseCommandDriver extends (EventEmitter as new () => Typed
     }
 
     abstract start(): Promise<void>;
+    stop?(): Promise<void>;
 
     describe?(): any;
 

@@ -7,7 +7,7 @@ export default (prisma: PrismaClient) => {
 
     const typeDefs = `
         type Mutation {
-            importCommandProgramTypes(program: ID, input: [CommandProgramTypeInput]): [CommandProgramType]
+            importCommandProgramTypes(program: ID, input: [CommandProgramTypeInput], scope: String): [CommandProgramType]
 
             createCommandProgramType(program: ID, input: CommandProgramTypeInput): CommandProgramType
             updateCommandProgramType(program: ID, id: ID, input: CommandProgramTypeInput): CommandProgramType

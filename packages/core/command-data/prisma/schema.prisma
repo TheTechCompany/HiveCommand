@@ -216,6 +216,7 @@ model Program {
 
   name String
 
+  dataScopes ProgramDataScope[] @relation(name: "hasDataScopes")
   templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
   interface ProgramHMI[] @relation(name: "hasInterface")
@@ -240,6 +241,24 @@ model Program {
   createdAt DateTime @default(now())
 
   organisation String
+}
+
+model ProgramDataScope {
+  id String @id
+  name String
+  description String?
+
+  plugin DataScopePlugin @relation(name: "usesDataScopePlugin", references: [id], fields: [pluginId])
+  pluginId String
+
+  configuration Json?
+
+  createdAt DateTime @default(now())
+
+  program Program @relation(name: "hasDataScopes", references: [id], fields: [programId])
+  programId String
+
+  usedByTag ProgramTag[] @relation(name: "tagScope")
 }
 
 model ProgramAlarm {
@@ -313,6 +332,17 @@ model CanvasEdge {
 
   hmi ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
   hmiId String
+}
+
+model DataScopePlugin {
+  id String @id
+
+  name String
+  module String
+
+  configuration Json?
+
+  usedBy ProgramDataScope[] @relation(name: "usesDataScopePlugin")
 }
 
 model CanvasNodeTemplatePack {
@@ -482,6 +512,9 @@ model ProgramTag {
   id String @id
 
   name String
+
+  scope ProgramDataScope? @relation(name: "tagScope", references: [id], fields: [scopeId])
+  scopeId String?
 
   type ProgramTagType? @relation(name: "tagType") //String | Valve | String[]
   // typeId String @unique

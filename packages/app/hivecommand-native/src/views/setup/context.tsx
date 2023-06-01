@@ -34,6 +34,8 @@ export interface GlobalState {
         iotSubject: string,
         iotUser: string,
         iotToken: string,
+
+        dataScopes?: { id: string, name: string, plugin: {id: string, name: string, module: string} }[]
     },
     deviceMap?: {
         path: string,

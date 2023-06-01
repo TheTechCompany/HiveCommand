@@ -16,9 +16,11 @@ export interface ImportModalProps {
             type: string
         }[]
     }[];
+    dataScopes?: {id: string, name: string, plugin: {id: string, name: string}}[];
     onSubmit?: (
         tags: {name: string, type: string}[],
-        types: {name: string, fields: {name: string, type: string}[]}[]
+        types: {name: string, fields: {name: string, type: string}[]}[],
+        scope?: string
     ) => void;
     onClose?: () => void;
 }
@@ -28,6 +30,8 @@ export const ImportModal : React.FC<ImportModalProps> = (props) => {
     const [ view, setView ] = useState<'import' | 'upload'>('upload');
 
     const [ file, setFile ] = useState<{name: string, size?: number, content: string} | null>(null)
+
+    const [ scope, setScope ] = useState<string | null>(null);
 
     const [ importMap, setImportMap ] = useState<{
         tags: {name: string, type: string}[],
@@ -48,7 +52,11 @@ export const ImportModal : React.FC<ImportModalProps> = (props) => {
 
         console.log({newTags, removedTags, newTypes, removedTypes})
         //Send new additions and to be removed/updated 
-        props.onSubmit?.(importMap.tags, importMap.types)
+        props.onSubmit?.(importMap.tags, importMap.types, scope)
+        
+        setImportMap({tags: [], types: []})
+
+        setScope(null);
     }
 
     return (
@@ -61,8 +69,13 @@ export const ImportModal : React.FC<ImportModalProps> = (props) => {
             <DialogContent sx={{padding: 0}}>
                 {view === 'upload' ? (
                     <UploadView 
-                        file={file} 
-                        onChange={(file) => setFile(file)} />
+                        file={file}
+                        scope={scope} 
+                        dataScopes={props.dataScopes}
+                        onChange={(uploadInfo) => {
+                            setFile(uploadInfo.file)
+                            setScope(uploadInfo.scope)
+                        }} />
                 ) : (
                    <ImportView 
                         file={file} 

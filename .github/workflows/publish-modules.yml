@@ -5,7 +5,7 @@ on:
     branches:
       # - master
       - staging
-    paths: ["packages/core/**", "packages/clients/**", "packages/communication/**", ]
+    paths: ["packages/core/**", "packages/drivers/**", "packages/clients/**", "packages/communication/**", ]
 
 jobs:
   publish:

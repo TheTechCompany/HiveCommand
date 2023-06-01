@@ -1,12 +1,27 @@
-import {Box, IconButton, Paper, Typography} from "@mui/material";
+import {Autocomplete, Box, Divider, IconButton, Paper, TextField, Typography} from "@mui/material";
 import { useDropzone } from 'react-dropzone'
 import React, { useCallback } from "react";
 import Papa from 'papaparse'
 import { Document } from '@allenbradley/l5x';
 import { Close } from '@mui/icons-material'
 
-export const UploadView = (props: {file: {name: string, size?: number, content: string}, onChange: (file: any) => void}) => {
-
+export const UploadView = (props: {
+    file: {
+        name: string, 
+        size?: number, 
+        content: string
+    }, 
+    scope: string,
+    dataScopes: {
+        id: string,
+        name: string,
+        plugin: {
+            id: string,
+            name: string
+        }
+    }[]
+    onChange: (patch: {file?: any, scope?: string}) => void
+}) => {
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
         // Do something with the files
@@ -20,7 +35,13 @@ export const UploadView = (props: {file: {name: string, size?: number, content: 
         // Do whatever you want with the file contents
             const binaryStr = reader.result.toString()
 
-            props.onChange({name: file.name, size: file.size, content: binaryStr});
+            props.onChange({
+                file: {
+                    name: file.name, 
+                    size: file.size, 
+                    content: binaryStr
+                }
+            });
             
         }
 
@@ -48,9 +69,26 @@ export const UploadView = (props: {file: {name: string, size?: number, content: 
             </Paper>
         </Box>
     ) : (
-        <Box sx={{border: '1px dashed black', marginLeft: '6px', marginRight: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
+        <Box>
+        
+            <Box sx={{border: '1px dashed black', margin: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
+            </Box>
+            <Autocomplete
+                sx={{
+                    margin: '6px',
+                    marginTop: '12px'
+                }}
+                value={props.dataScopes.find((a) => a.id == props.scope) || null}
+                onChange={(e, value) => {
+                    props.onChange({scope: typeof(value) == 'string' ? value : value.id})
+                }}
+                options={props.dataScopes || []}
+                getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
+                renderInput={(params) => <TextField {...params} label="Scope (optional)" size="small" />}
+                />
         </Box>
+
     )
 }

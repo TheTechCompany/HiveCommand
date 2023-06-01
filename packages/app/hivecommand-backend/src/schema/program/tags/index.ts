@@ -10,7 +10,7 @@ export default (prisma: PrismaClient) => {
  
         
         type Mutation {
-            importCommandProgramTags(program: ID, input: [CommandProgramTagInput]): [CommandProgramTag]
+            importCommandProgramTags(program: ID, input: [CommandProgramTagInput], scope: String): [CommandProgramTag]
 
             createCommandProgramTag(program: ID, input: CommandProgramTagInput): CommandProgramTag
             updateCommandProgramTag(program: ID, id: ID!, input: CommandProgramTagInput): CommandProgramTag
@@ -22,6 +22,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             type: String
+
+            scope: String
         }
 
         type CommandProgramTag {
@@ -30,6 +32,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             type: String
+
+            scope: CommandProgramDataScope
         }
        
 
@@ -77,6 +81,7 @@ export default (prisma: PrismaClient) => {
                                     ...typeUpdate
                                 }
                             },
+                            scopeId: args.scope,
                             program: {
                                 connect: {
                                     id: args.program
@@ -117,6 +122,7 @@ export default (prisma: PrismaClient) => {
                                 // }
                             }
                         },
+                        scopeId: args.input.scope,
                         program: { 
                             connect: { 
                                 id: args.program 
@@ -148,6 +154,7 @@ export default (prisma: PrismaClient) => {
                     },
                     data: {
                         name: args.input.name,
+                        scopeId: args.input.scope,
                         ...(
                             args.input.type ? { 
                                 type: {

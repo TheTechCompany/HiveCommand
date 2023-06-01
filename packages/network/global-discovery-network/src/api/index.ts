@@ -72,6 +72,15 @@ export const API = (prisma: PrismaClient) => {
                         // device: true,
                         deviceState: true
                     }
+                },
+                activeProgram: {
+                    include: {
+                        dataScopes: {
+                            include: {
+                                plugin: true
+                            }
+                        }
+                    }
                 }
             }
         });
@@ -89,6 +98,8 @@ export const API = (prisma: PrismaClient) => {
             results: {
                 deviceMapping: device?.deviceMapping || [],
                 deviceId: device?.id,
+
+                dataScopes: device.activeProgram?.dataScopes || [],
 
                 iotEndpoint: IOT_ENDPOINT,
                 iotSubject: process.env.IOT_EXCHANGE,

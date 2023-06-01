@@ -4,6 +4,7 @@ import { mergeResolvers } from '@graphql-tools/merge'
 import alarms from "./alarms";
 import tags from './tags';
 import types from './types';
+import dataScopes from './scopes';
 
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
@@ -14,6 +15,7 @@ export default (prisma: PrismaClient) => {
 	const { typeDefs: tagTypeDefs, resolvers: tagResolvers } = tags(prisma);
 	const { typeDefs: typeTypeDefs, resolvers: typeResolvers } = types(prisma);
 	const { typeDefs: alarmTypeDefs, resolvers: alarmResolvers } = alarms(prisma);
+	const { typeDefs: dataScopeTypeDefs, resolvers: dataScopeResolver } = dataScopes(prisma)
 
 	const resolvers = mergeResolvers([
 		{
@@ -48,13 +50,19 @@ export default (prisma: PrismaClient) => {
 								elements: true
 							}
 						},
+						dataScopes: {
+							include: {
+								plugin: true
+							}
+						},
 						tags: {
 							include: {
 								type: {
 									include: {
 										type: true
 									}
-								}
+								},
+								scope: true
 							}
 						},
 						types: {
@@ -180,7 +188,8 @@ export default (prisma: PrismaClient) => {
 		},
 		tagResolvers,
 		typeResolvers,
-		alarmResolvers
+		alarmResolvers,
+		dataScopeResolver
 	])
 	
 	const typeDefs = `
@@ -188,6 +197,7 @@ export default (prisma: PrismaClient) => {
 	${tagTypeDefs}
 	${typeTypeDefs}
 	${alarmTypeDefs}
+	${dataScopeTypeDefs}
 
 	type Query {
 		commandPrograms(where: CommandProgramWhere): [CommandProgram]!
@@ -219,6 +229,7 @@ export default (prisma: PrismaClient) => {
 		id: ID! 
 		name: String
 
+		dataScopes: [CommandProgramDataScope]
 		templatePacks: [CommandHMIDevicePack]
 
 		interface: [CommandProgramHMI]

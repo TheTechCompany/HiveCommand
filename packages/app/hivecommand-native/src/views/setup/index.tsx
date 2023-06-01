@@ -2,11 +2,10 @@ import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/m
 import { writeTextFile } from "@tauri-apps/api/fs";
 import React, { useContext, useState } from "react";
 import { SetupProvider } from "./context";
-import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage, ProvisionCodeStage } from "./stages";
+import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage } from "./stages";
 import axios from 'axios';
 import { DataContext } from "../../data";
 import { LocalPersistenceStage } from "./stages/localPersistence";
-import { DataMappingStage } from "./stages/dataMapping";
 
 export const SetupView = (props: any) => {
 
@@ -25,10 +24,7 @@ export const SetupView = (props: any) => {
             label: "Persistence",
         },
         {
-            label: "Discovery server"
-        },
-        {
-            label: "Provision code",
+            label: "Discovery server",
             onNext: async (state: any, setState: any) => {
                 // if (!state.authToken) {
                 //Test provisionCode against discovery server
@@ -51,55 +47,58 @@ export const SetupView = (props: any) => {
             }
         },
         {
-            label: "Downloading assets"
-        },
-        {
-            label: "Subscription items",
-            onNext: async (state: any, setState: any) => {
-
-                console.log({ networkLayout: globalState?.networkLayout })
-                try {
-           
-
-                    setState('opcuaProvisioned', true)
-                    return true;
-                } catch (err) {
-                    console.error("configProvided failed", err);
-                    return true;
-
-                }
-
-            }
-        },
-        {
-            label: "Data mapping",
-            onNext: async () => {
-                try{
-                    const data = await axios.post(`http://localhost:${8484}/setup`, {
-                        config: {
-                            tags: globalState?.controlLayout?.tags,
-                            types: globalState?.controlLayout?.types,
-                            opcuaServer: authState?.opcuaServer,
-                            iot: {
-                                host: globalState?.networkLayout?.iotEndpoint,
-                                user: globalState?.networkLayout?.iotUser,
-                                pass: globalState?.networkLayout?.iotToken,
-                                exchange: globalState?.networkLayout?.iotSubject
-                            },
-                            subscriptionMap: globalState?.subscriptionMap,
-                            deviceMap: globalState?.deviceMap
-                        }
-                    })
-                    
-                    setAuthState?.('configProvided', true)
-
-                }catch(e){
-
-                }
-                // setAuthState?.('configProvided', true)
-
+            label: "Downloading assets",
+            onNext: () => {
+                setAuthState?.('configProvided', true)
             }
         }
+        // {
+        //     label: "Subscription items",
+        //     onNext: async (state: any, setState: any) => {
+
+        //         console.log({ networkLayout: globalState?.networkLayout })
+        //         try {
+           
+
+        //             setState('opcuaProvisioned', true)
+        //             return true;
+        //         } catch (err) {
+        //             console.error("configProvided failed", err);
+        //             return true;
+
+        //         }
+
+        //     }
+        // },
+        // {
+        //     label: "Data mapping",
+        //     onNext: async () => {
+        //         try{
+        //             const data = await axios.post(`http://localhost:${8484}/setup`, {
+        //                 config: {
+        //                     tags: globalState?.controlLayout?.tags,
+        //                     types: globalState?.controlLayout?.types,
+        //                     opcuaServer: authState?.opcuaServer,
+        //                     iot: {
+        //                         host: globalState?.networkLayout?.iotEndpoint,
+        //                         user: globalState?.networkLayout?.iotUser,
+        //                         pass: globalState?.networkLayout?.iotToken,
+        //                         exchange: globalState?.networkLayout?.iotSubject
+        //                     },
+        //                     subscriptionMap: globalState?.subscriptionMap,
+        //                     deviceMap: globalState?.deviceMap
+        //                 }
+        //             })
+                    
+        //             setAuthState?.('configProvided', true)
+
+        //         }catch(e){
+
+        //         }
+        //         // setAuthState?.('configProvided', true)
+
+        //     }
+        // }
     ]
 
     const finish = () => {
@@ -145,19 +144,7 @@ export const SetupView = (props: any) => {
                 );
             case 2:
                 return (
-                    <ProvisionCodeStage />
-                )
-            case 3:
-                return (
                     <LayoutDownload />
-                )
-            case 4:
-                return (
-                    <OPCUAServerStage />
-                )
-            case 5:
-                return (
-                    <DataMappingStage />
                 )
 
         }

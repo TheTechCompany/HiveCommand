@@ -7,12 +7,16 @@ export interface ICommandEditorContext {
 	refetch?: () => void;
 	program?: {
 		id?: string;
+		dataScopes?: {id: string, name: string, plugin: {id: string, name: string}, configuration: any}[]
 		templatePacks?: any[];
 		templates?: HMITemplate[];
 		tags?: HMITag[];
 		types?: HMIType[]
 		program?: any[];
 		hmi?: any[]
+	}
+	plugins?: {
+		dataScope?: {id: string, name: string, module: string, configuration: any}[]
 	}
 }
 

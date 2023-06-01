@@ -50,6 +50,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const { data } = useQuery(gql`
         query EditorCommandProgram ($id: ID){
 
+            commandDataScopePlugins{
+                id
+                name
+                module
+                configuration
+            }
+
             commandPrograms(where: {id: $id}){
                 id
                 name
@@ -58,6 +65,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     id
                     name
                     type
+
+                    scope {
+                        id
+                        name
+                    }
                 }
 
                 alarms {
@@ -105,6 +117,17 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     }
                 }
 
+                dataScopes {
+                    id
+                    name
+                    description
+
+                    plugin {
+                        id
+                        name
+                    }
+                    configuration
+                }
                 templatePacks {
                     id
                     url
@@ -338,6 +361,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     return (
         <CommandEditorProvider value={{
             program,
+            plugins: {
+                dataScope: data?.commandDataScopePlugins || []
+            },
             refetch: refetch
         }}>
             <EditorMenuDialog 

@@ -10,11 +10,21 @@ expose({
         await instance.start()
         // process.exit()
     },
+    stop: async () => await instance.stop?.(),
     read: async (tag: {name: string, alias: string}) => {
         return await instance.read(tag)
     },
+    readyMany: async (tags: {name: string, alias: string}[]) => {
+        return await instance.readMany?.(tags)
+    },
     write: async (tag: string, value: any) => {
         return await instance.write(tag, value);
+    },
+    writeMany: async (tags: {name: string, value: any}[]) => {
+        return await instance.writeMany?.(tags)
+    },
+    subscribe: async (tags: {name: string, alias: string}[], onChange?: (values: any[]) => void) => {
+        await instance.subscribe?.(tags, onChange)
     },
     load_driver: (driver: string, configuration: any) => {
         try {
