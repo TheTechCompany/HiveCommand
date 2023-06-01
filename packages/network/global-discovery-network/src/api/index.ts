@@ -180,6 +180,11 @@ export const API = (prisma: PrismaClient) => {
                                     include: {
                                         type: true,
                                     }
+                                },
+                                scope: {
+                                    include: {
+                                        plugin: true
+                                    }
                                 }
                             }
                         },

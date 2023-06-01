@@ -14,7 +14,7 @@ export interface DriverSubscription {
 }
 
 export type DriverEvents = {
-    message: (data: any) => void
+    dataChanged: (data: any) => void
 }
 
 export interface DriverOptions {
@@ -42,12 +42,12 @@ export abstract class BaseCommandDriver extends (EventEmitter as new () => Typed
     describe?(): any;
 
     subscribe?(
-        tags: {name: string, alias: string}[],
-        onChange?: (value: any[]) => void
+        tags: {name: string, alias?: string}[],
+        // onChange?: (value: any[]) => void
     ) : Promise<DriverSubscription>;
 
-    abstract read(tag: {name: string, alias: string}): Promise<any>;
-    readMany?(tags: {name: string, alias: string}[]): Promise<any>;
+    abstract read(tag: {name: string, alias?: string}): Promise<any>;
+    readMany?(tags: {name: string, alias?: string}[]): Promise<any>;
    
     abstract write(
         tag: string,

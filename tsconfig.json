@@ -33,6 +33,7 @@
 
 		"@hive-command/data": ["./core/command-data/src"],
 
+		"@hive-command/evented-values": ["./core/evented-values/src"],
 		"@hive-command/drivers-base": ["./drivers/command-driver/src"],
 
 		"@hive-command/scripting": ["./core/command-scripting/src"],

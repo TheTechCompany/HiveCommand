@@ -17,18 +17,12 @@ import { DriverRegistry } from './driver';
 
 const OPC_PROXY_PORT = 8484;
 
-const appData = () => {
-    return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
-}
 
 (async () => {
-    const driverRegistry = new DriverRegistry({
-        pluginDir: path.join(appData(), 'hivecommand-plugins'),  
-    })
-
-    await driverRegistry.setup()
 
     const sidecar = new Sidecar();
+
+    await sidecar.setup()
 
     const app = express();
 
@@ -72,7 +66,7 @@ const appData = () => {
 
     app.route('/setup/drivers')
         .post(async (req, res) => {
-            await driverRegistry.ensureDrivers(req.body.drivers)
+            await sidecar.ensureDrivers(req.body.drivers)
 
             res.send({success: true});
         })

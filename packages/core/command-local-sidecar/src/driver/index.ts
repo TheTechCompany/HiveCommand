@@ -21,6 +21,7 @@ import PluginNm from '@yarnpkg/plugin-nm';
 import PluginNpm from '@yarnpkg/plugin-npm';
 
 import { PortablePath } from '@yarnpkg/fslib';
+import { EventedValueStore } from '@hive-command/evented-values';
 
 const { 
     makeDescriptor, 
@@ -41,6 +42,7 @@ const imported_plugins = [
 
 export interface DriverRegistryOptions {
     pluginDir: string;
+    valueStore: EventedValueStore
 }
 
 export class DriverRegistry {
@@ -247,7 +249,13 @@ export class DriverRegistry {
         }
     }
 
+    getDriver(pkg: string){
+        return this.drivers[pkg];
+    }
+
     async loadDriver(pkg: string, configuration: any){
+
+        if(this.drivers[pkg]) throw new Error("Driver already loaded");
 
         const driver = await Driver({
             driver: pkg,
@@ -256,7 +264,15 @@ export class DriverRegistry {
 
         this.drivers[pkg] = driver as unknown as BaseCommandDriver
 
+        this.drivers[pkg].on('dataChanged', (data) => {
+            Object.keys(data).map((dataKey) => {
+                this.options.valueStore.updateValue(dataKey, data[dataKey]);
+            })
+        })
+
         await this.drivers[pkg].start()
+
+        return this.drivers[pkg]
     }
 
     async unloadDriver(pkg: string){
