@@ -254,7 +254,7 @@ export class DriverRegistry {
         if(this.drivers[pkg]) throw new Error("Driver already loaded");
 
         const driver = await Driver({
-            driver: pkg,
+            driver: path.join(this.options.pluginDir, pkg),
             configuration
         });
 
