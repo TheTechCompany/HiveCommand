@@ -6,11 +6,8 @@ import {
     Descriptor,
     LightReport,
     Manifest,
-    MessageName,
     Project,
-    ProjectLookup,
     Workspace,
-    stringifyMessageName,
     structUtils 
 } from '@yarnpkg/core';
 
@@ -20,7 +17,7 @@ import PluginPnp from '@yarnpkg/plugin-pnp';
 import PluginNm from '@yarnpkg/plugin-nm';
 import PluginNpm from '@yarnpkg/plugin-npm';
 
-import { PortablePath } from '@yarnpkg/fslib';
+import { PortablePath, npath } from '@yarnpkg/fslib';
 import { EventedValueStore } from '@hive-command/evented-values';
 
 const { 
@@ -61,7 +58,7 @@ export class DriverRegistry {
     constructor(options: DriverRegistryOptions){
         this.options = options;
 
-        this.yarnPath = this.options.pluginDir as PortablePath
+        this.yarnPath = npath.toPortablePath(this.options.pluginDir)
 
         if(!existsSync(this.yarnPath)){
             mkdirSync(this.yarnPath)
