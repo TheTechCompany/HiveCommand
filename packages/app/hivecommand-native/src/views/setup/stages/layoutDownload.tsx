@@ -43,7 +43,7 @@ export const LayoutDownload = () => {
             })
 
             axios.post(`http://localhost:8484/setup/drivers`, { 
-                drivers: [{pkg: '@hive-command/ethernet-ip'}] 
+                drivers: [...new Set(globalState?.networkLayout?.dataScopes?.map((x) => x.plugin.module) )].map((x) => ({pkg: x}) ) || [{pkg: '@hive-command/ethernet-ip'}] 
             }).then(() => {
                 setLogs((logs) => {
                     let l = logs.slice();

@@ -61,7 +61,8 @@ export default (prisma: PrismaClient) => {
 									include: {
 										type: true
 									}
-								}
+								},
+								scope: true
 							}
 						},
 						types: {

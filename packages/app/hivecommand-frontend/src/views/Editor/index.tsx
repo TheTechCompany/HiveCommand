@@ -65,6 +65,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     id
                     name
                     type
+
+                    scope {
+                        id
+                        name
+                    }
                 }
 
                 alarms {

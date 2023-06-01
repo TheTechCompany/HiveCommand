@@ -86,8 +86,8 @@ export const TagEditor = (props: any) => {
 
 
     const [ importTypes ] = useMutation(gql`
-        mutation ImportTypes($program: ID, $input: [CommandProgramTypeInput]){
-            importCommandProgramTypes(program: $program, input: $input){
+        mutation ImportTypes($program: ID, $input: [CommandProgramTypeInput], $scope: String){
+            importCommandProgramTypes(program: $program, input: $input, scope: $scope){
                 id
                 name
             }
@@ -95,8 +95,8 @@ export const TagEditor = (props: any) => {
     `)
 
     const [ importTags ] = useMutation(gql`
-        mutation ImportTags($program: ID, $input: [CommandProgramTagInput]){
-            importCommandProgramTags(program: $program, input: $input){
+        mutation ImportTags($program: ID, $input: [CommandProgramTagInput], $scope: String){
+            importCommandProgramTags(program: $program, input: $input, scope: $scope){
                 id
                 name
             }
@@ -111,17 +111,20 @@ export const TagEditor = (props: any) => {
                 open={importModalOpen}
                 tags={tags}
                 types={extraTypes}
-                onSubmit={(tags, types) => {
+                dataScopes={dataScopes || []}
+                onSubmit={(tags, types, scope) => {
                     importTypes({
                         variables: {
                             program: program,
-                            input: types
+                            input: types,
+                            scope
                         }
                     }).then(() => {
                         importTags({
                             variables: {
                                 program,
-                                input: tags
+                                input: tags,
+                                scope
                             }
                         }).then(() => {
                             openImportModal(false);
@@ -219,7 +222,7 @@ export const TagEditor = (props: any) => {
                                             console.log(value)
                                             updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value.id})
                                         }}
-                                        value={dataScopes.find((a) => a.id === tag.scope)}
+                                        value={dataScopes.find((a) => a.id === tag.scope?.id)}
                                         renderInput={(params) => <TextField {...params} />}
                                         options={dataScopes || []}
                                         getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
