@@ -23,8 +23,8 @@ expose({
     writeMany: async (tags: {name: string, value: any}[]) => {
         return await instance.writeMany?.(tags)
     },
-    subscribe: async (tags: {name: string, alias: string}[], onChange?: (values: any[]) => void) => {
-        await instance.subscribe?.(tags, onChange)
+    subscribe: async (tags: {name: string, alias: string}[]) => {
+        await instance.subscribe?.(tags)
     },
     load_driver: (driver: string, configuration: any) => {
         try {
