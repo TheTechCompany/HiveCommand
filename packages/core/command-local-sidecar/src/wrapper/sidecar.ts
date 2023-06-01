@@ -26,7 +26,7 @@ export interface LocalOptions {
     }
 
     interface?: any[];
-    
+
     tags?: {
         name: string,
         type: string,
@@ -58,26 +58,26 @@ export class Sidecar {
 
     private conf?: SidecarConf;
 
-    private client? : MQTTClient;
+    private client?: MQTTClient;
 
-    private driverRegistry? : DriverRegistry;
+    private driverRegistry?: DriverRegistry;
 
-    private eventedValues : EventedValueStore;
+    private eventedValues: EventedValueStore;
 
-    private cwd : string;
+    private cwd: string;
 
     constructor(config?: LocalOptions) {
         // super(config);
 
         this.cwd = path.join(appData(), 'hive-command');
 
-        if(!existsSync(this.cwd)){
+        if (!existsSync(this.cwd)) {
             mkdirSync(this.cwd)
         }
 
-        this.conf = new SidecarConf({ 
+        this.conf = new SidecarConf({
             path: path.join(this.cwd, 'hive-command.json'),
-            options: config 
+            options: config
         });
 
         this.eventedValues = new EventedValueStore();
@@ -91,7 +91,7 @@ export class Sidecar {
 
         this.getConfig = this.getConfig.bind(this);
 
-        if(this.options?.iot?.host){
+        if (this.options?.iot?.host) {
             this.client = new MQTTClient({
                 host: this.options?.iot?.host,
                 user: this.options?.iot?.user,
@@ -100,36 +100,35 @@ export class Sidecar {
             })
         }
 
-        if(this.options?.dataScopes){
-            let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({pkg: x}))
-            this.ensureDrivers(drivers).then(() => {
-
-                Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
-                    const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
-                    
-                    let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
-        
-                    await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({name: tag.name})))
-                }))
-                
-            })
-        }
-
     }
 
-    get options(){
+    get options() {
         return this.conf?.getConf()
     }
 
-    async setup(){
+    async setup() {
         await this.driverRegistry?.setup()
+
+        if (this.options?.dataScopes) {
+            let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({ pkg: x }))
+            await this.ensureDrivers(drivers)
+
+            await Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
+                const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
+
+                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
+
+                await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            }))
+
+        }
     }
 
     async ensureDrivers(drivers: any[]) {
         await this.driverRegistry?.ensureDrivers(drivers)
     }
 
-    private async onValueStoreChange(changed: {key: string, value: any}[]){
+    private async onValueStoreChange(changed: { key: string, value: any }[]) {
         await Promise.all(changed.map(async (changed_item) => {
             await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
         }))
@@ -147,17 +146,17 @@ export class Sidecar {
     setConfig(options: LocalOptions) {
         this.conf?.updateConf(options)
 
-        console.log("Options", {options});
-        
+        console.log("Options", { options });
+
         // this.updateConfig(options);
         this.eventedValues.updateFields(
             (options.tags || []).map((tag) => {
                 let type = options.types?.find((a) => a.name == tag.type)
                 return type ? {
-                    name: tag.name, 
+                    name: tag.name,
                     fields: type.fields,
                 } : {
-                    name: tag.name, 
+                    name: tag.name,
                     type: tag.type
                 }
             })
@@ -165,10 +164,10 @@ export class Sidecar {
 
         Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
             const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
-            
+
             let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
 
-            await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({name: tag.name})))
+            await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
         }))
 
     }
