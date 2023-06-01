@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.222](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.221...v1.4.15-alpha.222) (2023-06-01)
+
+**Note:** Version bump only for package @hive-command/drivers-opcua
+
+
+
+
+
 ## [1.4.15-alpha.221](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.220...v1.4.15-alpha.221) (2023-06-01)
 
 **Note:** Version bump only for package @hive-command/drivers-opcua
