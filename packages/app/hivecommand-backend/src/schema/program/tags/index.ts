@@ -22,6 +22,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             type: String
+
+            scope: String
         }
 
         type CommandProgramTag {
@@ -30,6 +32,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             type: String
+
+            scope: CommandProgramDataScope
         }
        
 
@@ -117,6 +121,7 @@ export default (prisma: PrismaClient) => {
                                 // }
                             }
                         },
+                        scopeId: args.input.scope,
                         program: { 
                             connect: { 
                                 id: args.program 
@@ -148,6 +153,7 @@ export default (prisma: PrismaClient) => {
                     },
                     data: {
                         name: args.input.name,
+                        scopeId: args.input.scope,
                         ...(
                             args.input.type ? { 
                                 type: {

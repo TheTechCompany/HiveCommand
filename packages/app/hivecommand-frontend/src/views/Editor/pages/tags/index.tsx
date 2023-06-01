@@ -45,7 +45,7 @@ export const TagEditor = (props: any) => {
 
     // const av101 = Object.entries(AV101['name'])
 
-    const { refetch } = useCommandEditor()
+    const { program: {dataScopes}, refetch } = useCommandEditor()
 
     const dataTypes = useMemo(() => {
         let entries = Object.entries(DataTypes);
@@ -146,14 +146,17 @@ export const TagEditor = (props: any) => {
                 </IconButton>
             </Box>
             <TableContainer>
-                <Table stickyHeader>
+                <Table size='small' stickyHeader>
                     <TableHead sx={{bgcolor: 'secondary.main'}}>
                         <TableRow>
-                            <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
+                            <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}}>
                                 Tag name
                             </TableCell>
-                            <TableCell sx={{padding: '6px', bgcolor: 'secondary.main'}}>
+                            <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}}>
                                 Datatype
+                            </TableCell>
+                            <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}}>
+                                Scope
                             </TableCell>
                             <TableCell sx={{bgcolor: 'secondary.main'}}>
 
@@ -168,7 +171,7 @@ export const TagEditor = (props: any) => {
                             return true;
                         })?.sort((a, b) => a.name?.localeCompare(b.name)).map((tag) => (
                             <TableRow key={tag.id || tag.name}>
-                                <TableCell sx={{padding: '6px'}}>
+                                <TableCell sx={{padding: '3px', paddingRight: 0,}}>
                                     <TextField 
                                         // sx={{lineHeight: '1em', fontSize: '0.8rem'}}
                                         fullWidth
@@ -178,7 +181,7 @@ export const TagEditor = (props: any) => {
                                         }}
                                         value={tag.name} />
                                 </TableCell>
-                                <TableCell sx={{padding: '6px'}}>
+                                <TableCell sx={{padding: '3px', paddingRight: 0,}}>
                                     <Autocomplete 
                                         // sx={{height: '1em', fontSize: '0.8rem'}}
                                         fullWidth
@@ -206,6 +209,35 @@ export const TagEditor = (props: any) => {
                                     
                                             return filtered;
                                         }}
+                                        />
+                                </TableCell>
+                                <TableCell sx={{ minWidth: '200px', padding: '3px', paddingRight: 0,}}>
+                                    <Autocomplete 
+                                        fullWidth
+                                        size="small"
+                                        onChange={(evt, value) => {
+                                            console.log(value)
+                                            updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value.id})
+                                        }}
+                                        value={dataScopes.find((a) => a.id === tag.scope)}
+                                        renderInput={(params) => <TextField {...params} />}
+                                        options={dataScopes || []}
+                                        getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
+                                        // filterOptions={(options, params) => {
+                                        //     const filtered = filter(options, params);
+                                    
+                                        //     const { inputValue } = params;
+                                        //     // Suggest the creation of a new value
+                                        //     const isExisting = options.some((option) => inputValue === option.id);
+                                        //     if (inputValue !== '' && !isExisting) {
+                                        //     filtered.push({
+                                        //         inputValue,
+                                        //         title: `Add "${inputValue}"`,
+                                        //     });
+                                        //     }
+                                    
+                                        //     return filtered;
+                                        // }}
                                         />
                                 </TableCell>
                                 <TableCell sx={{width: '30px'}}>

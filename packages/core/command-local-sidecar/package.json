@@ -11,8 +11,9 @@
 		"dist/"
 	],
 	"scripts": {
+    "start": "ts-node -r tsconfig-paths/register src/index.ts",
 		"build": "tsc -b",
-		"package": "pkg ."
+		"package": "pkg package.json --output dist/sidecar"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.14",
