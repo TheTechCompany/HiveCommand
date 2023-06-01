@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-ethernet-ip",
-  "version": "1.4.15-alpha.222",
+  "version": "1.4.15-alpha.223",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -19,7 +19,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
-    "@hive-command/drivers-base": "^1.4.15-alpha.222",
+    "@hive-command/drivers-base": "^1.4.15-alpha.223",
     "@hive-command/ethernet-ip": "^2.5.6-alpha.31"
   }
 }
