@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { 
     Autocomplete,
@@ -15,29 +15,31 @@ import {
 
 export const DataScopeModal = (props) => {
 
-    const pluginOptions = [
-        {
-            id: 'ethernet-ip',
-            name: 'Ethernet/IP',
-            module: '@hive-command/drivers-ethernet-ip',
-            configuration: {
-                host: 'String',
-                slot: 'Number',
-                rpi: 'Number'
-            }
-        },
-        {
-            id: 'opcua',
-            name: 'OPCUA',
-            module: '@hive-command/drivers-opcua',
-            configuration: {
-                host: 'String',
-                port: 'Number'
-            }
-        }
-    ]
+    const pluginOptions = props.plugins || []
+    //  [
+    //     {
+    //         id: 'ethernet-ip',
+    //         name: 'Ethernet/IP',
+    //         module: '@hive-command/drivers-ethernet-ip',
+    //         configuration: {
+    //             host: 'String',
+    //             slot: 'Number',
+    //             rpi: 'Number'
+    //         }
+    //     },
+    //     {
+    //         id: 'opcua',
+    //         name: 'OPCUA',
+    //         module: '@hive-command/drivers-opcua',
+    //         configuration: {
+    //             host: 'String',
+    //             port: 'Number'
+    //         }
+    //     }
+    // ]
 
     const [ item, setItem ] = useState<{
+        id?: string,
         name?: string,
         description?: string,
         plugin?: string,
@@ -45,6 +47,21 @@ export const DataScopeModal = (props) => {
     }>({
 
     })
+
+
+    useEffect(() => {
+        setItem({
+            id: props.selected?.id,
+            name: props.selected?.name,
+            description: props.selected?.description,
+            plugin: props.selected?.plugin?.id,
+            configuration: props.selected?.configuration
+        })
+    }, [props.selected]);
+
+    const onSubmit = () => {
+        props.onSubmit(item)
+    }
 
     const renderConfiguration = () => {
         let conf = pluginOptions.find((a) => a.id === item.plugin)?.configuration || {}
@@ -56,7 +73,16 @@ export const DataScopeModal = (props) => {
                             fullWidth
                             size="small" 
                             label={confKey} 
-                            value={item.configuration?.[confKey]}/>
+                            value={item.configuration?.[confKey]}
+                            onChange={(e) => {
+                                setItem({
+                                    ...item,
+                                    configuration: {
+                                        ...item.configuration,
+                                        [confKey]: e.target.value
+                                    }
+                                })
+                            }}/>
                     );
                 case 'Number':
                     return (
@@ -65,7 +91,16 @@ export const DataScopeModal = (props) => {
                             size="small" 
                             type="number" 
                             label={confKey} 
-                            value={item.configuration?.[confKey]} />
+                            value={item.configuration?.[confKey]} 
+                            onChange={(e) => {
+                                setItem({
+                                    ...item,
+                                    configuration: {
+                                        ...item.configuration,
+                                        [confKey]: e.target.value
+                                    }
+                                })
+                            }}/>
                     );
                 default:
                     return;
@@ -82,11 +117,34 @@ export const DataScopeModal = (props) => {
     }
 
     return (
-        <Dialog fullWidth open={props.open}>
+        <Dialog 
+            onClose={props.onClose}
+            fullWidth 
+            open={props.open}>
             <DialogTitle>Create data scope</DialogTitle>
             <DialogContent sx={{display: 'flex', flexDirection: 'column'}}>
-                <TextField sx={{marginBottom: '12px', marginTop: '12px'}} size="small" label="Name" />
-                <TextField sx={{marginBottom: '12px'}} size="small" label="Description" />
+                <TextField 
+                    sx={{marginBottom: '12px', marginTop: '12px'}} 
+                    size="small" 
+                    label="Name"
+                    value={item.name}
+                    onChange={(e) => {
+                        setItem({
+                            ...item,
+                            name: e.target.value
+                        })
+                    }}/>
+                <TextField 
+                    sx={{marginBottom: '12px'}} 
+                    size="small" 
+                    label="Description"
+                    value={item.description}
+                    onChange={(e) => {
+                        setItem({
+                            ...item,
+                            description: e.target.value
+                        })
+                    }} />
 
                 <Autocomplete
                      sx={{marginBottom: '12px'}}
@@ -122,9 +180,12 @@ export const DataScopeModal = (props) => {
                 />
                 {renderConfiguration()}
             </DialogContent>
-            <DialogActions>
-                <Button>Cancel</Button>
-                <Button variant="contained" color="primary">Save</Button>
+            <DialogActions sx={{display: 'flex', justifyContent: props.selected ? 'space-between' : 'flex-end'}}>
+                {props.selected && <Button onClick={props.onDelete} color="error" >Delete</Button>}
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Button onClick={props.onClose}>Cancel</Button>
+                    <Button onClick={onSubmit} variant="contained" color="primary">Save</Button>
+                </Box>
             </DialogActions>
         </Dialog>
     )

@@ -4,7 +4,7 @@ import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import devices from './devices';
 import hmi from './hmi';
 import program from './program';
-
+import plugins from './plugins'
 import operations from './operations'
 import { MQTTPublisher } from '@hive-command/amqp-client';
 import { Pool } from 'pg';
@@ -13,6 +13,7 @@ import templates from "./program/templates";
 export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 
 	
+	const { typeDefs: pluginTypeDefs, resolvers: pluginResolvers } = plugins(prisma)
 	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
@@ -22,6 +23,7 @@ export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, deviceChannel)
 
 	const resolvers = mergeResolvers([
+		pluginResolvers,
 		deviceResolvers,
 		programResolvers,
 		hmiResolvers,
@@ -57,6 +59,7 @@ export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 			value: String
 		}
 		`,
+		pluginTypeDefs,
 		templateTypeDefs,
 		operationTypeDefs,
 		deviceTypeDefs,

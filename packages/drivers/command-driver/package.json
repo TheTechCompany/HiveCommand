@@ -15,10 +15,8 @@
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "typed-emitter": "^2.1.0"
-  },
   "devDependencies": {
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "typed-emitter": "^2.1.0"
   }
 }
