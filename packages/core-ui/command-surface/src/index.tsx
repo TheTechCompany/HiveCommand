@@ -293,7 +293,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const [view, setView] = useState<'info' | 'settings'>('info')
 
                 // let values = workingState[deviceTag] || workingState || {};
-                const values = state[deviceTag];
+                let values = state[deviceTag];
+
+                if(values == undefined || values == null) values = {};
 
                 let tag = tags?.find((a) => a.name === deviceTag);
 
