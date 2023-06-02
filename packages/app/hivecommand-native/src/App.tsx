@@ -71,10 +71,10 @@ function App() {
       console.log("Getting config");
 
       axios.get(`http://localhost:${8484}/setup`).then((data) => {
-        if(data.data.config){
+        if(data.data){
 
           updateGlobalState?.({
-            ...data.data.config
+            ...data.data
           });
 
           setAuthState?.('configProvided', true)

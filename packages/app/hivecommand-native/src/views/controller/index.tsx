@@ -31,7 +31,7 @@ export const Controller = (props: {sidecar: boolean}) => {
 
     const { authState, globalState } = useContext(DataContext);
 
-    const { interface: programInterface, tags, types } = globalState || {};
+    const { interface: programInterface, templatePacks, tags, types } = globalState || {};
 
     const [packs, setPacks] = useRemoteCache('remote-components.json');
 
@@ -91,6 +91,7 @@ export const Controller = (props: {sidecar: boolean}) => {
                 cache={[packs, setPacks] as any}
                 program={{
                     interface: programInterface,
+                    templatePacks: templatePacks,
                     tags,
                     types
                 } as any} />

@@ -87,7 +87,7 @@ const OPC_PROXY_PORT = 8484;
             //     await sidecar.setup_data(config.host, config.user, config.pass, config.exchange)
             // }
 
-            res.send(config ? { config } : { error: "No config" })
+            res.send(config ? { ...mainConfig } : { error: "No config" })
         })
         .post(async (req, res) => {
             const mainConfig = req.body.config;
