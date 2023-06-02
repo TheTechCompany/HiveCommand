@@ -13,7 +13,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         super(options);
 
         this.controller = this.controllerManager.addController(
-            this.options.configuration?.ip, 
+            this.options.configuration?.host, 
             this.options.configuration?.slot, 
             this.options.configuration?.rpi, 
             this.options.configuration?.connected
