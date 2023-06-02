@@ -88,7 +88,7 @@ export const Controller = (props: {sidecar: boolean}) => {
             </Box>
             <CommandSurface 
                 client={LocalClient}
-                cache={[packs, setPacks] as any}
+                // cache={[packs, setPacks] as any}
                 program={{
                     interface: programInterface,
                     templatePacks: templatePacks,

@@ -34,7 +34,7 @@ function App() {
     let unlisten: any;
 
     (async () => {
-      unlisten = listen('configure', () => {
+      unlisten = await listen('configure', () => {
         setAuthState?.('configProvided', false);
       })
     })();
@@ -76,6 +76,9 @@ function App() {
           updateGlobalState?.({
             ...data.data
           });
+
+          setAuthState?.('provisionCode', data.data.provisionCode)
+          setAuthState?.('authTOken', data.data.authToken)
 
           setAuthState?.('configProvided', true)
           setConfigured(true)

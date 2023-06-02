@@ -11,6 +11,7 @@ import {
     structUtils 
 } from '@yarnpkg/core';
 
+import { isEqual } from 'lodash'
 import { Observable } from 'observable-fns'
 
 import path from 'path';
@@ -47,6 +48,7 @@ export interface DriverRegistryOptions {
 export class DriverRegistry {
 
     private drivers : {[key: string]: BaseCommandDriver} = {};
+    private driverConfigurations: {[key: string]: any} = {};
 
     private options : DriverRegistryOptions;
 
@@ -253,13 +255,16 @@ export class DriverRegistry {
 
     async loadDriver(pkg: string, configuration: any){
 
-        if(this.drivers[pkg]) throw new Error("Driver already loaded");
-
+        if(this.drivers[pkg] && isEqual(this.driverConfigurations[pkg], configuration)) {
+            return this.drivers[pkg];
+        }
+        
         const driver = await Driver({
             driver: path.join(this.options.pluginDir, 'node_modules/', pkg),
             configuration
         });
 
+        this.driverConfigurations[pkg] = configuration;
         this.drivers[pkg] = driver as unknown as BaseCommandDriver
 
         await this.drivers[pkg].start()

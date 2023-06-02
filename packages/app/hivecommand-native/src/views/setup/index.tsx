@@ -55,6 +55,9 @@ export const SetupView = (props: any) => {
                         tags: globalState?.tags,
                         types: globalState?.types,
                         dataScopes: globalState?.dataScopes,
+                        templatePacks: globalState?.templatePacks,
+                        provisionCode: authState?.provisionCode,
+                        authToken: authState?.authToken,
                         iot: {
                             host: globalState?.iotEndpoint,
                             user: globalState?.iotUser,
