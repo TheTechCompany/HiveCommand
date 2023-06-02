@@ -1,7 +1,7 @@
 
 import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
 import { ControllerManager, ManagedController } from '@hive-command/ethernet-ip'
-import { Observable } from 'observable-fns';
+import { Observable } from 'threads/observable';
 
 export default class EthernetIPDriver extends BaseCommandDriver {
 
@@ -23,7 +23,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     }
 
     async start() {
-        await this.controller.connect()
+        try{
+            await this.controller.connect()
+        }catch(e){
+            console.error("Error starting driver", e);
+        }
     }
 
     async subscribe(tags: { name: string; alias: string; }[]): Promise<Observable<{[key: string]: any}>> {
