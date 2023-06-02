@@ -22,6 +22,10 @@ const OPC_PROXY_PORT = 8484;
 
     const sidecar = new Sidecar();
 
+    sidecar.on('values-changed', (changed) => {
+        io.emit('data-changed', changed)
+    })
+
     await sidecar.setup()
 
     const app = express();
@@ -53,7 +57,6 @@ const OPC_PROXY_PORT = 8484;
 
 
     const dataChanged = (data: any) => {
-        io.emit('data-changed', data)
     }
 
     app.use(bodyParser.json());

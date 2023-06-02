@@ -1,6 +1,7 @@
 import { DriverRegistry } from "../driver";
 import { SidecarConf } from "./conf";
 import { MQTTClient } from '@hive-command/amqp-client';
+import { EventEmitter } from 'events'
 import { EventedValueStore } from '@hive-command/evented-values'
 import path from 'path';
 import { mkdirSync, existsSync } from 'fs';
@@ -67,7 +68,7 @@ const appData = () => {
     return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
 }
 
-export class Sidecar {
+export class Sidecar extends EventEmitter {
 
     private conf?: SidecarConf;
 
@@ -80,7 +81,7 @@ export class Sidecar {
     private cwd: string;
 
     constructor(config?: LocalOptions) {
-        // super(config);
+        super();
 
         this.cwd = path.join(appData(), 'hive-command');
 
@@ -156,6 +157,7 @@ export class Sidecar {
 
     private async onValueStoreChange(changed: { key: string, value: any }[]) {
         await Promise.all(changed.map(async (changed_item) => {
+            this.emit('values-changed', changed_item)
             await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
         }))
     }

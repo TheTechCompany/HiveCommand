@@ -85,7 +85,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
     const socket = useRef<Socket>()
 
-    const subscribe = (paths: { path: string, tag: string }[], devices: { path: string, tag: string }[]) => {
+    const subscribe = () => {
         socket.current = io(`http://localhost:${8484}`);
 
         (window as any).socket = socket.current;
@@ -98,33 +98,33 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         socket.current.on('data-changed', onDataChanged)
 
 
-        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
-            if (data.data) {
-                console.log("Initial state store", data.data)
-                setValueStore(data.data)
-            }
+        // return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
+        //     if (data.data) {
+        //         console.log("Initial state store", data.data)
+        //         setValueStore(data.data)
+        //     }
 
-        })
+        // })
     }
 
 
     const unsubscribe = () => {
         socket.current?.off('data-changed', onDataChanged);
 
-        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
+        // return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
     }
 
 
-    // //Subscribe to datapoints
-    // useEffect(() => {
-    //     if (globalState?.subscriptionMap)
-    //         subscribe(globalState?.subscriptionMap, globalState.deviceMap || [])
+    //Subscribe to datapoints
+    useEffect(() => {
+        // if (globalState?.subscriptionMap)
+            subscribe()
 
-    //     //Cleanup subscription
-    //     return () => {
-    //         unsubscribe()
-    //     }
-    // }, [globalState?.subscriptionMap])
+        //Cleanup subscription
+        return () => {
+            unsubscribe()
+        }
+    }, [])
 
 
 

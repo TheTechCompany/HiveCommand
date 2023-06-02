@@ -1,6 +1,6 @@
 
 import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
-import { ControllerManager, ManagedController } from '@hive-command/ethernet-ip'
+import { ControllerManager, ManagedController, Structure, Tag } from '@hive-command/ethernet-ip'
 import { Observable } from 'threads/observable';
 
 export default class EthernetIPDriver extends BaseCommandDriver {
@@ -34,14 +34,14 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
         return new Observable((observer) => {
     
-            Promise.all(tags.map(async (tag) => {
+            Promise.all(tags.map(async (tag ) => {
 
                 const plcTag = this.controller.addTag(tag.name)
 
-                plcTag?.on('Initialized', (data) => {
+                plcTag?.on('Initialized', (data: {value: Structure | Tag}) => {
                     observer.next({[tag.name]: data.value});
                 })
-                plcTag?.on('Changed', (data) => {
+                plcTag?.on('Changed', (data: {value: Tag | Structure}) => {
                     observer.next({[tag.name]: data.value});
                 })
                 
