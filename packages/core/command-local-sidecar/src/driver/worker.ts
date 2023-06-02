@@ -37,7 +37,6 @@ expose({
         
         try {
             instance = new Driver({configuration});
-            return instance;
         } catch (e) {
             console.error(e)
             throw new Error('Failed to instantiate driver');

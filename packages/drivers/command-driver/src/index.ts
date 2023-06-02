@@ -7,6 +7,7 @@
 */
 import { EventEmitter } from 'events'
 import TypedEmitter from 'typed-emitter'
+import { Observable } from 'observable-fns'
 
 export interface DriverSubscription {
     success: boolean,
@@ -22,12 +23,11 @@ export interface DriverOptions {
 }
 
 
-export abstract class BaseCommandDriver extends (EventEmitter as new () => TypedEmitter<DriverEvents>) { 
+export abstract class BaseCommandDriver { 
     
     options : DriverOptions;
 
     constructor(options: DriverOptions){
-        super();
 
         this.options = options;
     }
@@ -41,10 +41,9 @@ export abstract class BaseCommandDriver extends (EventEmitter as new () => Typed
 
     describe?(): any;
 
-    subscribe?(
+    async subscribe?(
         tags: {name: string, alias?: string}[],
-        // onChange?: (value: any[]) => void
-    ) : Promise<DriverSubscription>;
+    ) : Promise<Observable<{[key: string]: any}>>;
 
     abstract read(tag: {name: string, alias?: string}): Promise<any>;
     readMany?(tags: {name: string, alias?: string}[]): Promise<any>;
@@ -74,9 +73,8 @@ export class AbstractDriver extends BaseCommandDriver {
     };
 
     async subscribe(
-        tags: {name: string, alias: string}[],
-        onChange?: (value: any[]) => void
-    ): Promise<DriverSubscription> {
+        tags: {name: string, alias: string}[]
+    ): Promise<Observable<{[key: string]: any}>> {
         throw new Error("Subscribe not implemented yet")
     }
 

@@ -1,6 +1,7 @@
 
 import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
 import { ControllerManager, ManagedController } from '@hive-command/ethernet-ip'
+import { Observable } from 'observable-fns';
 
 export default class EthernetIPDriver extends BaseCommandDriver {
 
@@ -25,22 +26,21 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         await this.controller.connect()
     }
 
-    async subscribe(tags: { name: string; alias: string; }[], onChange?: ((value: any[]) => void) | undefined): Promise<DriverSubscription> {
+    async subscribe(tags: { name: string; alias: string; }[]): Promise<Observable<{[key: string]: any}>> {
 
-        await Promise.all(tags.map(async (tag) => {
+        return new Observable((observer) => {
+    
+            Promise.all(tags.map(async (tag) => {
 
-            const plcTag = this.controller.addTag(tag.name)
+                const plcTag = this.controller.addTag(tag.name)
 
-            plcTag?.on('Changed', (data) => {
-                this.emit('dataChanged', {[tag.name]: data.value} );
-            })
-            
-        }))
+                plcTag?.on('Changed', (data) => {
+                    observer.next({[tag.name]: data.value});
+                })
+                
+            }))
 
-        return {
-            success: true,
-            unsubscribe: () => {}
-        }
+        })
     }
 
     async read(tag: { name: string; alias: string; }){

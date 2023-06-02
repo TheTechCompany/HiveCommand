@@ -118,7 +118,15 @@ export class Sidecar {
 
                 let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
 
-                await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+                const observable = await driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) )
+
+                observable?.subscribe((dataPatch) => {
+                    Object.keys(dataPatch).map((dataKey) => {
+                        this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
+                    })
+                })
+                
+        
             }))
 
         }
@@ -167,7 +175,14 @@ export class Sidecar {
 
             let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
 
-            await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            const observable = await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            
+            observable?.subscribe((dataPatch) => {
+                Object.keys(dataPatch).map((dataKey) => {
+                    this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
+                })
+            })
+            
         }))
 
     }

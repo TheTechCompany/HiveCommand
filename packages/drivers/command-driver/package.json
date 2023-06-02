@@ -18,5 +18,8 @@
   "devDependencies": {
     "typed-emitter": "^2.1.0",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "observable-fns": "^0.6.1"
   }
 }

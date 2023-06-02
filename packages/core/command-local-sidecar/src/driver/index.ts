@@ -11,6 +11,8 @@ import {
     structUtils 
 } from '@yarnpkg/core';
 
+import { Observable } from 'observable-fns'
+
 import path from 'path';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
 import PluginPnp from '@yarnpkg/plugin-pnp';
@@ -260,12 +262,6 @@ export class DriverRegistry {
 
         this.drivers[pkg] = driver as unknown as BaseCommandDriver
 
-        this.drivers[pkg].on('dataChanged', (data) => {
-            Object.keys(data).map((dataKey) => {
-                this.options.valueStore.updateValue(dataKey, data[dataKey]);
-            })
-        })
-
         await this.drivers[pkg].start()
 
         return this.drivers[pkg]
@@ -291,7 +287,7 @@ export const Driver = async (options: {driver: string, configuration: any}) => {
         readMany: (tags: {name: string, alias: string}[]) => any,
         write: (tag: {name: string, value: string}) => any,
         writeMany: (tags: {name: string, value: string}[]) => any,
-        subscribe: (tags: {name: string, alias: string}[], onChange: (values: any) => void) => void,
+        subscribe: (tags: {name: string, alias: string}[]) => Observable<{[key: string]: any}>,
         load_driver: (driver: string, configuration: any) => BaseCommandDriver
     }>(worker);
 
