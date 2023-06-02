@@ -38,6 +38,9 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
                 const plcTag = this.controller.addTag(tag.name)
 
+                plcTag?.on('Initialized', (data) => {
+                    observer.next({[tag.name]: data.value});
+                })
                 plcTag?.on('Changed', (data) => {
                     observer.next({[tag.name]: data.value});
                 })
