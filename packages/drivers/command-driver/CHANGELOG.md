@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.232](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.231...v1.4.15-alpha.232) (2023-06-02)
+
+**Note:** Version bump only for package @hive-command/drivers-base
+
+
+
+
+
 ## [1.4.15-alpha.231](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.230...v1.4.15-alpha.231) (2023-06-02)
 
 **Note:** Version bump only for package @hive-command/drivers-base
