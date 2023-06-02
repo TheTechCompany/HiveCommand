@@ -15,6 +15,7 @@ export interface LocalOptions {
         plugin: {
             id: string,
             module: string,
+            configuration: any,
         }
     }[]
 
@@ -49,6 +50,18 @@ export interface LocalOptions {
     subscriptionMap?: {}[]
 
 }
+
+const formatValue = (value: any, type: string) => {
+    switch(type){
+        case 'String':
+            return value.toString()
+        case 'Number':
+            return parseFloat(value);
+        default:
+            return value;
+    }
+}
+
 
 const appData = () => {
     return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
@@ -114,7 +127,11 @@ export class Sidecar {
             await this.ensureDrivers(drivers)
 
             await Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
-                const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
+                const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
+                    [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
+                })).reduce((prev, curr) => ({...prev, ...curr}), {})
+                
+                const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
 
                 let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
 
@@ -171,7 +188,11 @@ export class Sidecar {
         )
 
         Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
-            const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
+            const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
+                [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
+            })).reduce((prev, curr) => ({...prev, ...curr}), {})
+
+            const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
 
             let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
 
@@ -182,7 +203,7 @@ export class Sidecar {
                     this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
                 })
             })
-            
+
         }))
 
     }
