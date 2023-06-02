@@ -133,15 +133,16 @@ export class Sidecar {
                 
                 const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
 
-                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
+                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id);
 
-                const observable = await driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) )
+                // (driver as any).sub()
+                const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
-                observable?.subscribe((dataPatch) => {
+                (observable as any)?.subscribe((dataPatch: any) => {
                     Object.keys(dataPatch).map((dataKey) => {
                         this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
                     })
-                })
+                });
                 
         
             }))

@@ -41,9 +41,9 @@ export abstract class BaseCommandDriver {
 
     describe?(): any;
 
-    async subscribe?(
+    subscribe?(
         tags: {name: string, alias?: string}[],
-    ) : Promise<Observable<{[key: string]: any}>>;
+    ) : Observable<{[key: string]: any}>;
 
     abstract read(tag: {name: string, alias?: string}): Promise<any>;
     readMany?(tags: {name: string, alias?: string}[]): Promise<any>;
@@ -72,9 +72,9 @@ export class AbstractDriver extends BaseCommandDriver {
         throw new Error("Describe not implemented yet")
     };
 
-    async subscribe(
+    subscribe(
         tags: {name: string, alias: string}[]
-    ): Promise<Observable<{[key: string]: any}>> {
+    ): Observable<{[key: string]: any}> {
         throw new Error("Subscribe not implemented yet")
     }
 

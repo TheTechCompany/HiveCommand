@@ -30,7 +30,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         }
     }
 
-    async subscribe(tags: { name: string; alias: string; }[]): Promise<Observable<{[key: string]: any}>> {
+    subscribe(tags: { name: string; alias: string; }[]): Observable<{[key: string]: any}> {
 
         return new Observable((observer) => {
     
