@@ -47,6 +47,7 @@ export class EventedValueStore extends (EventEmitter as new () => TypedEmitter<V
         }
     }
 
+    //Key is either $ROOT or $ROOT.$SUBKEY
     updateValue(key: string, value: any) {
         setTimeout(async () => {
             this.internalValues[key] = this.cleanValue(value);
@@ -73,7 +74,7 @@ export class EventedValueStore extends (EventEmitter as new () => TypedEmitter<V
         if(this.fields.length > 0){
             this.values = this.fields.map((field) => {
                 return (field?.fields || []).length > 0 ? 
-                    (field.fields || []).map((subField) => this.internalValues[field.name][subField.name]).reduce((prev, curr) => ({...prev, ...curr}), {}) : 
+                    (field.fields || []).map((subField) => this.internalValues[`${field.name}.${subField.name}`]).reduce((prev, curr) => ({...prev, ...curr}), {}) : 
                     this.internalValues[field.name]
             }).reduce((prev, curr) => ({
                 ...prev,

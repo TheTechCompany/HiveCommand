@@ -143,7 +143,7 @@ export class Sidecar extends EventEmitter {
                         return [tag];
                     }
                 }).reduce((prev, curr) => prev.concat(curr), []);
-                
+
                 // (driver as any).sub()
                 const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
@@ -163,7 +163,7 @@ export class Sidecar extends EventEmitter {
         await this.driverRegistry?.ensureDrivers(drivers)
     }
 
-    async setTag(tagPath: string, value: any){
+    async setTag(tagPath: string, value: any, retryCount?: number){
         let tagRoot = tagPath.split('.')?.[0];
         let tagSubkey = tagPath.split('.')?.[1];
 
@@ -171,7 +171,16 @@ export class Sidecar extends EventEmitter {
 
         if(tagOption?.scope){
             const plugin = this.driverRegistry?.getDriver(tagOption.scope.plugin.module)
-            await plugin?.write(tagPath, value);
+            try{
+                await plugin?.write(tagPath, value);
+                this.eventedValues.updateValue(tagPath, value)
+            }catch(e){
+                if(retryCount && retryCount < 3){
+                    setTimeout(() => this.setTag(tagPath, value, (retryCount || 0) + 1), 1000)
+                }else{
+                    console.log("setTag Failed", e);
+                }
+            }
         }
     }
 
