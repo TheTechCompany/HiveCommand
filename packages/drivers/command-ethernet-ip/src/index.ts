@@ -59,10 +59,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
     async write(tag: string, value: any) {
         const plcTag = this.controller.addTag(tag);
+        // this.controller.PLC?.readTag()
         if(!plcTag) throw new Error(`Couldn't add tag ${tag}`)
         plcTag.value = value;
         console.log("Writing tag", tag, value);
-        await this.controller.PLC?.writeTag(tag)
+        await this.controller.PLC?.writeTag(plcTag)
     }
 
 

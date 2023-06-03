@@ -134,8 +134,16 @@ export class Sidecar extends EventEmitter {
                 
                 const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
 
-                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id);
-
+                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
+                    let type = this.options?.types?.find((a) => a.name === tag.type)
+    
+                    if(type){
+                        return type.fields.map((x) => ({name: `${tag.name}.${x.name}`}) )
+                    }else{
+                        return [tag];
+                    }
+                }).reduce((prev, curr) => prev.concat(curr), []);
+                
                 // (driver as any).sub()
                 const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
@@ -211,7 +219,15 @@ export class Sidecar extends EventEmitter {
 
             const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
 
-            let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
+            let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
+                let type = this.options?.types?.find((a) => a.name === tag.type)
+
+                if(type){
+                    return type.fields.map((x) => ({name: `${tag.name}.${x.name}`}) )
+                }else{
+                    return [tag];
+                }
+            }).reduce((prev, curr) => prev.concat(curr), []);
 
             const observable = await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
             
