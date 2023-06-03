@@ -61,6 +61,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         const plcTag = this.controller.addTag(tag);
         if(!plcTag) throw new Error(`Couldn't add tag ${tag}`)
         plcTag.value = value;
+        console.log("Writing tag", tag, value);
         await this.controller.PLC?.writeTag(tag)
     }
 
