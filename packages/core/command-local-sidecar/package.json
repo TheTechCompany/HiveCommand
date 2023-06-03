@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/local-sidecar",
-	"version": "1.4.15-alpha.237",
+	"version": "1.4.15-alpha.238",
 	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
