@@ -114,15 +114,15 @@ const OPC_PROXY_PORT = 8484;
             res.send({ config: sidecar.getConfig() })
         })
 
-    app.route('/:host/set_data')
+    app.route('/controller/set_data')
         .post(async (req, res) => {
             // if(subscriptions[req.params.host]) return res.send({error:})
 
             let { path, value } = req.body;
 
-            // const code = await sidecar.setTag(path, value);
+            const code = await sidecar.setTag(path, value);
 
-            // res.send({ code })
+            res.send({ code })
         })
 
     app.post('/:host/subscribe', async (req, res) => {

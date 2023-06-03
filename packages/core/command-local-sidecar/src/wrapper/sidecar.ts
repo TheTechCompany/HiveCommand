@@ -155,12 +155,26 @@ export class Sidecar extends EventEmitter {
         await this.driverRegistry?.ensureDrivers(drivers)
     }
 
+    async setTag(tagPath: string, value: any){
+        let tagRoot = tagPath.split('.')?.[0];
+        let tagSubkey = tagPath.split('.')?.[1];
+
+        let tagOption = this.options?.tags?.find((a) => a.name == tagRoot);
+
+        if(tagOption?.scope){
+            const plugin = this.driverRegistry?.getDriver(tagOption.scope.plugin.module)
+            await plugin?.write(tagPath, value);
+        }
+    }
+
     private async onValueStoreChange(changed: { key: string, value: any }[]) {
         await Promise.all(changed.map(async (changed_item) => {
             this.emit('values-changed', changed_item)
             await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
         }))
     }
+
+
 
     getTagPaths(object: any, parent?: string): any {
         if (typeof (object) == 'object' && !Array.isArray(object)) {

@@ -193,7 +193,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
         console.log({ deviceName, stateKey, value });
 
-        await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
+        await fetch(`http://localhost:8484/controller/set_data`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
