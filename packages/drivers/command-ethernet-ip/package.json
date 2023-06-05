@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-ethernet-ip",
-  "version": "1.4.15-alpha.240",
+  "version": "1.4.15-alpha.244",
   "description": "",
   "main": "dist/index.js",
   "files": [
