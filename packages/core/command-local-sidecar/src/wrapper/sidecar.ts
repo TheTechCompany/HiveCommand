@@ -8,6 +8,7 @@ import { mkdirSync, existsSync } from 'fs';
 
 export interface LocalOptions {
 
+
     dataScopes?: {
         id: string,
         name: string,
@@ -159,6 +160,10 @@ export class Sidecar extends EventEmitter {
         }
     }
 
+    getSnapshot(){
+        return this.eventedValues.values
+    }
+
     async ensureDrivers(drivers: any[]) {
         await this.driverRegistry?.ensureDrivers(drivers)
     }
@@ -176,7 +181,8 @@ export class Sidecar extends EventEmitter {
                 this.eventedValues.updateValue(tagPath, value)
             }catch(e){
                 if(retryCount && retryCount < 3){
-                    setTimeout(() => this.setTag(tagPath, value, (retryCount || 0) + 1), 1000)
+                    await new Promise((resolve) => setTimeout(() => { resolve(true) }, 1000));
+                    await this.setTag(tagPath, value, (retryCount || 0) + 1)
                 }else{
                     console.log("setTag Failed", e);
                 }
