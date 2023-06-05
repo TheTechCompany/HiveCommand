@@ -1,6 +1,7 @@
 
 import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
-import { ControllerManager, ManagedController } from '@hive-command/ethernet-ip'
+import { ControllerManager, ManagedController, Structure, Tag } from '@hive-command/ethernet-ip'
+import { Observable } from 'threads/observable';
 
 export default class EthernetIPDriver extends BaseCommandDriver {
 
@@ -12,7 +13,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         super(options);
 
         this.controller = this.controllerManager.addController(
-            this.options.configuration?.ip, 
+            this.options.configuration?.host, 
             this.options.configuration?.slot, 
             this.options.configuration?.rpi, 
             this.options.configuration?.connected
@@ -22,25 +23,31 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     }
 
     async start() {
-        await this.controller.connect()
+        try{
+            await this.controller.connect()
+        }catch(e){
+            console.error("Error starting driver", e);
+        }
     }
 
-    async subscribe(tags: { name: string; alias: string; }[], onChange?: ((value: any[]) => void) | undefined): Promise<DriverSubscription> {
+    subscribe(tags: { name: string; alias: string; }[]): Observable<{[key: string]: any}> {
 
-        await Promise.all(tags.map(async (tag) => {
+        return new Observable((observer) => {
+    
+            Promise.all(tags.map(async (tag ) => {
 
-            const plcTag = this.controller.addTag(tag.name)
+                const plcTag = this.controller.addTag(tag.name)
 
-            plcTag?.on('Changed', (data) => {
-                this.emit('dataChanged', {[tag.name]: data.value} );
-            })
-            
-        }))
+                plcTag?.on('Initialized', (data: {value: Structure | Tag}) => {
+                    observer.next({[tag.name]: data.value});
+                })
+                plcTag?.on('Changed', (data: {value: Tag | Structure}) => {
+                    observer.next({[tag.name]: data.value});
+                })
+                
+            }))
 
-        return {
-            success: true,
-            unsubscribe: () => {}
-        }
+        })
     }
 
     async read(tag: { name: string; alias: string; }){
@@ -52,9 +59,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
     async write(tag: string, value: any) {
         const plcTag = this.controller.addTag(tag);
+        // this.controller.PLC?.readTag()
         if(!plcTag) throw new Error(`Couldn't add tag ${tag}`)
         plcTag.value = value;
-        await this.controller.PLC?.writeTag(tag)
+        console.log("Writing tag", tag, value);
+        await this.controller.PLC?.writeTag(plcTag)
     }
 
 

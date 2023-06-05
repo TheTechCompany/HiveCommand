@@ -62,6 +62,7 @@ module.exports = (webpackConfigEnv, argv) => {
       fallback: {
         // https: false,
         // http: false,
+        "path": require.resolve('path-browserify'),
         "buffer": require.resolve('buffer/'),
         "stream": require.resolve('stream'),
         "crypto": require.resolve('crypto-browserify')

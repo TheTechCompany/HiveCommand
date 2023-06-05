@@ -22,6 +22,10 @@ const OPC_PROXY_PORT = 8484;
 
     const sidecar = new Sidecar();
 
+    sidecar.on('values-changed', (changed) => {
+        io.emit('data-changed', changed)
+    })
+
     await sidecar.setup()
 
     const app = express();
@@ -53,7 +57,6 @@ const OPC_PROXY_PORT = 8484;
 
 
     const dataChanged = (data: any) => {
-        io.emit('data-changed', data)
     }
 
     app.use(bodyParser.json());
@@ -87,7 +90,7 @@ const OPC_PROXY_PORT = 8484;
             //     await sidecar.setup_data(config.host, config.user, config.pass, config.exchange)
             // }
 
-            res.send(config ? { config } : { error: "No config" })
+            res.send(config ? { ...mainConfig } : { error: "No config" })
         })
         .post(async (req, res) => {
             const mainConfig = req.body.config;
@@ -111,15 +114,15 @@ const OPC_PROXY_PORT = 8484;
             res.send({ config: sidecar.getConfig() })
         })
 
-    app.route('/:host/set_data')
+    app.route('/controller/set_data')
         .post(async (req, res) => {
             // if(subscriptions[req.params.host]) return res.send({error:})
 
             let { path, value } = req.body;
 
-            // const code = await sidecar.setTag(path, value);
+            const code = await sidecar.setTag(path, value);
 
-            // res.send({ code })
+            res.send({ code })
         })
 
     app.post('/:host/subscribe', async (req, res) => {

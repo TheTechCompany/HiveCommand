@@ -74,7 +74,7 @@ export const ControlView = () => {
 		activeProgram,
 	} = useContext(DeviceControlContext)
 
-	const { tags = [], types = [] } = activeProgram || {};
+	const { tags = [], types = [], components = [] } = activeProgram || {};
 
 	const { values } = client?.useValues?.({tags: tags, types: types }) || {}
 
@@ -90,7 +90,7 @@ export const ControlView = () => {
     }, [activeProgram, activePage, defaultPage])
 
 
-	const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], functions, stateValues || {}, (newState) => {
+	const fullHMIElements = useNodesWithValues(hmiWithElems, tags || [], components || [], functions, stateValues || {}, (newState) => {
         Object.keys(newState).map((tag) => {
 
             if (!Array.isArray(newState[tag]) && typeof(newState[tag]) === 'object' && Object.keys(newState[tag] || {}).length > 0) {
@@ -158,7 +158,7 @@ export const ControlView = () => {
                 }
 
             }));
-			console.log("SET HMI WItH ELEMS")
+			console.log("SET HMI WItH ELEMS", activeNodes)
 
             setHMIWithElems(nodesWithElems)
         })();

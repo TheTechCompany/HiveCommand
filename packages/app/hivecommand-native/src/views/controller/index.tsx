@@ -31,12 +31,11 @@ export const Controller = (props: {sidecar: boolean}) => {
 
     const { authState, globalState } = useContext(DataContext);
 
-    const { controlLayout, deviceMap, subscriptionMap, networkLayout } = globalState || {};
+    const { interface: programInterface, templatePacks, tags, types, components } = globalState || {};
 
     const [packs, setPacks] = useRemoteCache('remote-components.json');
 
     const LocalClient = useLocalClient( [] )
-
 
 
     const [ prevValues, setPrevValues ] = useState<any>({});
@@ -89,7 +88,13 @@ export const Controller = (props: {sidecar: boolean}) => {
             <CommandSurface 
                 client={LocalClient}
                 cache={[packs, setPacks] as any}
-                program={controlLayout} />
+                program={{
+                    interface: programInterface,
+                    templatePacks: templatePacks,
+                    components: components,
+                    tags,
+                    types
+                } as any} />
 
         </Box>
     )

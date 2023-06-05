@@ -1,14 +1,13 @@
 import { expose } from 'threads/worker';
+import { Observable } from 'threads/observable'
 import { BaseCommandDriver } from '@hive-command/drivers-base';
 
 let Driver: any;
 let instance: BaseCommandDriver;
 
-
 expose({
     start: async () => {
         await instance.start()
-        // process.exit()
     },
     stop: async () => await instance.stop?.(),
     read: async (tag: {name: string, alias: string}) => {
@@ -23,8 +22,8 @@ expose({
     writeMany: async (tags: {name: string, value: any}[]) => {
         return await instance.writeMany?.(tags)
     },
-    subscribe: async (tags: {name: string, alias: string}[], onChange?: (values: any[]) => void) => {
-        await instance.subscribe?.(tags, onChange)
+    subscribe: (tags: {name: string, alias: string}[]) => {
+        return instance.subscribe?.(tags)
     },
     load_driver: (driver: string, configuration: any) => {
         try {
@@ -37,7 +36,6 @@ expose({
         
         try {
             instance = new Driver({configuration});
-            return instance;
         } catch (e) {
             console.error(e)
             throw new Error('Failed to instantiate driver');

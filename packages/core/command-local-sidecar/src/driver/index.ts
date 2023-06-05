@@ -6,13 +6,13 @@ import {
     Descriptor,
     LightReport,
     Manifest,
-    MessageName,
     Project,
-    ProjectLookup,
     Workspace,
-    stringifyMessageName,
     structUtils 
 } from '@yarnpkg/core';
+
+import { isEqual } from 'lodash'
+import { Observable } from 'observable-fns'
 
 import path from 'path';
 import { writeFileSync, readFileSync, mkdirSync, existsSync } from 'fs';
@@ -20,7 +20,7 @@ import PluginPnp from '@yarnpkg/plugin-pnp';
 import PluginNm from '@yarnpkg/plugin-nm';
 import PluginNpm from '@yarnpkg/plugin-npm';
 
-import { PortablePath } from '@yarnpkg/fslib';
+import { PortablePath, npath } from '@yarnpkg/fslib';
 import { EventedValueStore } from '@hive-command/evented-values';
 
 const { 
@@ -48,6 +48,7 @@ export interface DriverRegistryOptions {
 export class DriverRegistry {
 
     private drivers : {[key: string]: BaseCommandDriver} = {};
+    private driverConfigurations: {[key: string]: any} = {};
 
     private options : DriverRegistryOptions;
 
@@ -61,12 +62,12 @@ export class DriverRegistry {
     constructor(options: DriverRegistryOptions){
         this.options = options;
 
-        this.yarnPath = this.options.pluginDir as PortablePath
+        this.yarnPath = npath.toPortablePath(this.options.pluginDir)
 
-        if(!existsSync(this.yarnPath)){
-            mkdirSync(this.yarnPath)
+        if(!existsSync(this.options.pluginDir)){
+            mkdirSync(this.options.pluginDir)
         }else{
-            if(!existsSync(path.join(this.yarnPath, 'package.json'))){
+            if(!existsSync(path.join(this.options.pluginDir, 'package.json'))){
                 throw new Error("Plugin directory not empty or setup properly")
             }
         }
@@ -113,8 +114,8 @@ export class DriverRegistry {
 
                 const pkg = m.exportTo({})
                 
-                if(!existsSync(path.join(this.yarnPath, 'yarn.lock'))){
-                    writeFileSync(path.join(this.yarnPath, 'yarn.lock'), '', 'utf8');
+                if(!existsSync(path.join(this.options.pluginDir, 'yarn.lock'))){
+                    writeFileSync(path.join(this.options.pluginDir, 'yarn.lock'), '', 'utf8');
                 }
 
                 writeFileSync(path.join(this.options.pluginDir, 'package.json'), JSON.stringify(pkg, null, 2), 'utf8')
@@ -127,7 +128,6 @@ export class DriverRegistry {
     private async setupProject(configuration: Configuration){
 
         try{
-            console.log(existsSync(path.join(this.yarnPath, 'yarn.lock')))
             const {project, workspace} = await Project.find(configuration, this.yarnPath)
 
             this.yarnWorkspace = workspace;
@@ -139,7 +139,7 @@ export class DriverRegistry {
         }catch(err: any){
             console.log(err.message)
             if(err.message.indexOf('The nearest package directory') > -1){
-                writeFileSync(path.join(this.yarnPath, 'yarn.lock'), '', 'utf8');
+                writeFileSync(path.join(this.options.pluginDir, 'yarn.lock'), '', 'utf8');
 
                 await new Promise((resolve) => setTimeout(async () => {
                     await this.setupProject(configuration)
@@ -187,7 +187,7 @@ export class DriverRegistry {
 
             let manifest = this.yarnManifest?.exportTo({});
 
-            writeFileSync(path.join(this.yarnPath, 'package.json'), JSON.stringify(manifest, null, 2), 'utf8')
+            writeFileSync(path.join(this.options.pluginDir, 'package.json'), JSON.stringify(manifest, null, 2), 'utf8')
 
             await this.yarnProject?.restoreInstallState({ restoreResolutions: false })
 
@@ -204,7 +204,7 @@ export class DriverRegistry {
 
             this.yarnManifest?.dependencies.delete(ident.identHash);
             let manifest = this.yarnManifest?.exportTo({});
-            writeFileSync(path.join(this.yarnPath, 'package.json'), JSON.stringify(manifest, null, 2), 'utf8')
+            writeFileSync(path.join(this.options.pluginDir, 'package.json'), JSON.stringify(manifest, null, 2), 'utf8')
 
             throw new Error(`Yarn failed`)
         }
@@ -229,7 +229,7 @@ export class DriverRegistry {
 
             this.yarnManifest?.dependencies.delete(ident.identHash);
 
-            writeFileSync(path.join(this.yarnPath, 'package.json'), JSON.stringify(this.yarnManifest?.exportTo({}), null, 2), 'utf8')
+            writeFileSync(path.join(this.options.pluginDir, 'package.json'), JSON.stringify(this.yarnManifest?.exportTo({}), null, 2), 'utf8')
 
             await this.yarnProject?.install({
                 cache: this.yarnCache,
@@ -244,7 +244,7 @@ export class DriverRegistry {
             const ident = makeIdent(pkg_parts.length > 1 ? pkg_parts[0].replace('@', '') : null, pkg_parts.length > 1 ? pkg_parts[1] : pkg_parts[0]);
 
             this.yarnManifest?.dependencies.set(ident.identHash, backupValue);
-            writeFileSync(path.join(this.yarnPath, 'package.json'), JSON.stringify(this.yarnManifest?.exportTo({}), null, 2), 'utf8')
+            writeFileSync(path.join(this.options.pluginDir, 'package.json'), JSON.stringify(this.yarnManifest?.exportTo({}), null, 2), 'utf8')
 
         }
     }
@@ -255,23 +255,23 @@ export class DriverRegistry {
 
     async loadDriver(pkg: string, configuration: any){
 
-        if(this.drivers[pkg]) throw new Error("Driver already loaded");
-
+        if(this.drivers[pkg] && isEqual(this.driverConfigurations[pkg], configuration)) {
+            return this.drivers[pkg];
+        }
+        
         const driver = await Driver({
-            driver: pkg,
+            driver: path.join(this.options.pluginDir, 'node_modules/', pkg),
             configuration
         });
 
+        this.driverConfigurations[pkg] = configuration;
         this.drivers[pkg] = driver as unknown as BaseCommandDriver
 
-        this.drivers[pkg].on('dataChanged', (data) => {
-            Object.keys(data).map((dataKey) => {
-                this.options.valueStore.updateValue(dataKey, data[dataKey]);
-            })
-        })
-
-        await this.drivers[pkg].start()
-
+        try{
+            await this.drivers[pkg].start()
+        }catch(e){
+            console.log("Error starting driver", pkg, e);
+        }
         return this.drivers[pkg]
     }
 
@@ -295,7 +295,7 @@ export const Driver = async (options: {driver: string, configuration: any}) => {
         readMany: (tags: {name: string, alias: string}[]) => any,
         write: (tag: {name: string, value: string}) => any,
         writeMany: (tags: {name: string, value: string}[]) => any,
-        subscribe: (tags: {name: string, alias: string}[], onChange: (values: any) => void) => void,
+        subscribe: (tags: {name: string, alias: string}[]) => Observable<{[key: string]: any}>,
         load_driver: (driver: string, configuration: any) => BaseCommandDriver
     }>(worker);
 

@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-base",
-  "version": "1.4.15-alpha.221",
+  "version": "1.4.15-alpha.234",
   "description": "",
   "publishConfig": {
     "access": "public"
@@ -18,5 +18,8 @@
   "devDependencies": {
     "typed-emitter": "^2.1.0",
     "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "observable-fns": "^0.6.1"
   }
 }

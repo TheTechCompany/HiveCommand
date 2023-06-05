@@ -2,7 +2,7 @@ import { Box, Button, Paper, Step, StepLabel, Stepper, Typography } from "@mui/m
 import { writeTextFile } from "@tauri-apps/api/fs";
 import React, { useContext, useState } from "react";
 import { SetupProvider } from "./context";
-import { DiscoveryServerStage, LayoutDownload, OPCUAServerStage } from "./stages";
+import { DiscoveryServerStage, LayoutDownload } from "./stages";
 import axios from 'axios';
 import { DataContext } from "../../data";
 import { LocalPersistenceStage } from "./stages/localPersistence";
@@ -48,7 +48,25 @@ export const SetupView = (props: any) => {
         },
         {
             label: "Downloading assets",
-            onNext: () => {
+            onNext: async () => {
+                const data = await axios.post(`http://localhost:${8484}/setup`, {
+                    config: {
+                        interface: globalState?.interface,
+                        tags: globalState?.tags,
+                        types: globalState?.types,
+                        dataScopes: globalState?.dataScopes,
+                        templatePacks: globalState?.templatePacks,
+                        provisionCode: authState?.provisionCode,
+                        authToken: authState?.authToken,
+                        iot: {
+                            host: globalState?.iotEndpoint,
+                            user: globalState?.iotUser,
+                            pass: globalState?.iotToken,
+                            exchange: globalState?.iotSubject
+                        }
+                    }
+                })
+
                 setAuthState?.('configProvided', true)
             }
         }
@@ -58,7 +76,7 @@ export const SetupView = (props: any) => {
 
         //         console.log({ networkLayout: globalState?.networkLayout })
         //         try {
-           
+
 
         //             setState('opcuaProvisioned', true)
         //             return true;
@@ -89,7 +107,7 @@ export const SetupView = (props: any) => {
         //                     deviceMap: globalState?.deviceMap
         //                 }
         //             })
-                    
+
         //             setAuthState?.('configProvided', true)
 
         //         }catch(e){

@@ -31,6 +31,20 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                     id
                     name
 
+                    components {
+                        id
+                        name
+                        main {
+                            id
+                            path
+                        }
+                        files {
+                            id
+                            path
+                            content
+                        }
+                    }
+
                     types {
                         id
                         name

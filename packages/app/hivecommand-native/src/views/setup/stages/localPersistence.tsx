@@ -18,7 +18,6 @@ export const LocalPersistenceStage = () => {
 
     const { state, setState, globalState } = useContext(SetupContext);
 
-    const controlLayout = globalState?.controlLayout;
 
     const persistenceOptions = [
         {

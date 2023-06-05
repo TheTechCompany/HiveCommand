@@ -6,11 +6,9 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { DataProvider } from './data';
 
-const CONF_FILE = 'app.conf.json';
-
 ReactDOM.render(
   <Router>
-    <DataProvider storagePath={CONF_FILE}>
+    <DataProvider>
       <App />
     </DataProvider>
   </Router>,

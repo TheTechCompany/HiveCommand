@@ -164,6 +164,17 @@ export default (prisma: PrismaClient) => {
 										actions: true
 									}
 								},
+								components: {
+									include: {
+										main: true,
+										properties: {
+											include: {
+												type: true
+											}
+										},
+										files: true
+									}
+								},
 								tags: {
 									include: {
 										type: true

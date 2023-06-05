@@ -1,6 +1,6 @@
 {
   "name": "hivecommand-native-designer",
-  "version": "1.4.15-alpha.221",
+  "version": "1.4.15-alpha.234",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",

@@ -157,6 +157,9 @@ export interface HMIProgram {
     tags: HMITag[],
     types: HMIType[],
 
+    dataScopes?: { id: string, name: string, plugin: { id: string, name: string, module: string } }[]
+    components?: {id: string, name: string, main?: {id: string, path: string, content: string}, files: {path: string, content: string}[]}[]
+
     interface: HMIView[]
     // {
     //     id: string;
@@ -293,7 +296,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 const [view, setView] = useState<'info' | 'settings'>('info')
 
                 // let values = workingState[deviceTag] || workingState || {};
-                const values = state[deviceTag];
+                let values = state[deviceTag];
+
+                if(values == undefined || values == null) values = {};
 
                 let tag = tags?.find((a) => a.name === deviceTag);
 

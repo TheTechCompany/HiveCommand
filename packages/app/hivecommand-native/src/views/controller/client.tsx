@@ -14,7 +14,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
     const { authState, globalState } = useContext(DataContext)
 
-    const { controlLayout, deviceMap, subscriptionMap, networkLayout } = globalState || {};
+    const { tags, types } = globalState || {};
 
     /*
         {
@@ -60,7 +60,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
         //     //  return obj
         //  }).reduce((prev, curr) => merge(prev, curr), {})
-    }, [JSON.stringify(valueStore), subscriptionMap])
+    }, [JSON.stringify(valueStore)])
 
 
     const onDataChanged = (data: any) => {
@@ -85,7 +85,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
     const socket = useRef<Socket>()
 
-    const subscribe = (paths: { path: string, tag: string }[], devices: { path: string, tag: string }[]) => {
+    const subscribe = () => {
         socket.current = io(`http://localhost:${8484}`);
 
         (window as any).socket = socket.current;
@@ -98,40 +98,40 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         socket.current.on('data-changed', onDataChanged)
 
 
-        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
-            if (data.data) {
-                console.log("Initial state store", data.data)
-                setValueStore(data.data)
-            }
+        // return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
+        //     if (data.data) {
+        //         console.log("Initial state store", data.data)
+        //         setValueStore(data.data)
+        //     }
 
-        })
+        // })
     }
 
 
     const unsubscribe = () => {
         socket.current?.off('data-changed', onDataChanged);
 
-        return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
+        // return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/unsubscribe`)
     }
 
 
     //Subscribe to datapoints
     useEffect(() => {
-        if (globalState?.subscriptionMap)
-            subscribe(globalState?.subscriptionMap, globalState.deviceMap || [])
+        // if (globalState?.subscriptionMap)
+            subscribe()
 
         //Cleanup subscription
         return () => {
             unsubscribe()
         }
-    }, [globalState?.subscriptionMap])
+    }, [])
 
 
 
     const values = useMemo(() => {
-        return controlLayout?.tags.map((tag) => {
+        return tags?.map((tag) => {
 
-            let type = controlLayout.types?.find((a) => a.name === tag.type);
+            let type = types?.find((a) => a.name === tag.type);
 
             let hasFields = (type?.fields || []).length > 0;
 
@@ -145,7 +145,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
             [curr.key]: curr.value
         }), {})
 
-    }, [valueStructure, controlLayout?.tags, controlLayout?.types])
+    }, [valueStructure, tags, types])
 
 
     // const setTag = (path: string, value: any, valueFn: (values: {path: string, value: any}[] ) => void ) => {
@@ -193,7 +193,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
         console.log({ deviceName, stateKey, value });
 
-        await fetch(`http://localhost:8484/${authState?.opcuaServer}/set_data`, {
+        await fetch(`http://localhost:8484/controller/set_data`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

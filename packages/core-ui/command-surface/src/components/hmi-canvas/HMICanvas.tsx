@@ -94,6 +94,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     // const getDeviceOptions = useCon
     
     const dataNodes = useMemo(() => {
+        console.log("DataNodes", props.deviceValues)
         return nodes.map((node) => {
             
 

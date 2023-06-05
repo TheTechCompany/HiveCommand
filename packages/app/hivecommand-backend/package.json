@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/backend",
-  "version": "1.4.15-alpha.221",
+  "version": "1.4.15-alpha.234",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -30,8 +30,8 @@
     "@allenbradley/l5x": "^1.0.0-beta.5",
     "@hexhive/graphql-server": "1.0.2-beta.58",
     "@hive-command/amqp-client": "^1.4.15-alpha.215",
-    "@hive-command/data": "^1.4.15-alpha.221",
-    "@hive-command/scripting": "^1.4.15-alpha.221",
+    "@hive-command/data": "^1.4.15-alpha.234",
+    "@hive-command/scripting": "^1.4.15-alpha.234",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
     "axios": "^0.27.2",

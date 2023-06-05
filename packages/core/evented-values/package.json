@@ -1,15 +1,17 @@
 {
   "name": "@hive-command/evented-values",
-  "version": "1.0.0",
+  "version": "1.4.15-alpha.239",
   "main": "dist/index.js",
   "license": "MIT",
-  "publishConfig": {"access": "public"},
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsc -b"
   },
   "devDependencies": {
-    "typescript": "^5.0.4",
-    "typed-emitter": "^2.1.0"
+    "typed-emitter": "^2.1.0",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "lodash": "^4.17.21"

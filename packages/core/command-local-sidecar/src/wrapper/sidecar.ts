@@ -1,8 +1,10 @@
 import { DriverRegistry } from "../driver";
 import { SidecarConf } from "./conf";
 import { MQTTClient } from '@hive-command/amqp-client';
+import { EventEmitter } from 'events'
 import { EventedValueStore } from '@hive-command/evented-values'
 import path from 'path';
+import { mkdirSync, existsSync } from 'fs';
 
 export interface LocalOptions {
 
@@ -14,6 +16,7 @@ export interface LocalOptions {
         plugin: {
             id: string,
             module: string,
+            configuration: any,
         }
     }[]
 
@@ -23,6 +26,8 @@ export interface LocalOptions {
         pass: string,
         exchange: string
     }
+
+    interface?: any[];
 
     tags?: {
         name: string,
@@ -47,32 +52,52 @@ export interface LocalOptions {
 
 }
 
+const formatValue = (value: any, type: string) => {
+    switch(type){
+        case 'String':
+            return value.toString()
+        case 'Number':
+            return parseFloat(value);
+        default:
+            return value;
+    }
+}
+
+
 const appData = () => {
     return process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Preferences' : process.env.HOME + "/.local/share")
 }
 
-export class Sidecar {
+export class Sidecar extends EventEmitter {
 
     private conf?: SidecarConf;
 
-    private client? : MQTTClient;
+    private client?: MQTTClient;
 
-    private driverRegistry? : DriverRegistry;
+    private driverRegistry?: DriverRegistry;
 
-    private eventedValues : EventedValueStore;
+    private eventedValues: EventedValueStore;
+
+    private cwd: string;
 
     constructor(config?: LocalOptions) {
-        // super(config);
+        super();
 
-        this.conf = new SidecarConf({ 
-            filename: 'hive-command.json',
-            options: config 
+        this.cwd = path.join(appData(), 'hive-command');
+
+        if (!existsSync(this.cwd)) {
+            mkdirSync(this.cwd)
+        }
+
+        this.conf = new SidecarConf({
+            path: path.join(this.cwd, 'hive-command.json'),
+            options: config
         });
 
         this.eventedValues = new EventedValueStore();
 
         this.driverRegistry = new DriverRegistry({
-            pluginDir: path.join(appData(), 'hivecommand-plugins'),
+            pluginDir: path.join(this.cwd, 'hivecommand-plugins'),
             valueStore: this.eventedValues
         })
 
@@ -80,7 +105,7 @@ export class Sidecar {
 
         this.getConfig = this.getConfig.bind(this);
 
-        if(this.options?.iot?.host){
+        if (this.options?.iot?.host) {
             this.client = new MQTTClient({
                 host: this.options?.iot?.host,
                 user: this.options?.iot?.user,
@@ -89,40 +114,83 @@ export class Sidecar {
             })
         }
 
-        if(this.options?.dataScopes){
-            let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({pkg: x}))
-            this.ensureDrivers(drivers).then(() => {
-
-                Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
-                    const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
-                    
-                    let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
-        
-                    await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({name: tag.name})))
-                }))
-                
-            })
-        }
-
     }
 
-    get options(){
+    get options() {
         return this.conf?.getConf()
     }
 
-    async setup(){
+    async setup() {
         await this.driverRegistry?.setup()
+
+        if (this.options?.dataScopes) {
+            let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({ pkg: x }))
+            await this.ensureDrivers(drivers)
+
+            await Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
+                const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
+                    [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
+                })).reduce((prev, curr) => ({...prev, ...curr}), {})
+                
+                const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
+
+                let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
+                    let type = this.options?.types?.find((a) => a.name === tag.type)
+    
+                    if(type){
+                        return type.fields.map((x) => ({name: `${tag.name}.${x.name}`}) )
+                    }else{
+                        return [tag];
+                    }
+                }).reduce((prev, curr) => prev.concat(curr), []);
+
+                // (driver as any).sub()
+                const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
+
+                (observable as any)?.subscribe((dataPatch: any) => {
+                    Object.keys(dataPatch).map((dataKey) => {
+                        this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
+                    })
+                });
+                
+        
+            }))
+
+        }
     }
 
     async ensureDrivers(drivers: any[]) {
         await this.driverRegistry?.ensureDrivers(drivers)
     }
 
-    private async onValueStoreChange(changed: {key: string, value: any}[]){
+    async setTag(tagPath: string, value: any, retryCount?: number){
+        let tagRoot = tagPath.split('.')?.[0];
+        let tagSubkey = tagPath.split('.')?.[1];
+
+        let tagOption = this.options?.tags?.find((a) => a.name == tagRoot);
+
+        if(tagOption?.scope){
+            const plugin = this.driverRegistry?.getDriver(tagOption.scope.plugin.module)
+            try{
+                await plugin?.write(tagPath, value);
+                this.eventedValues.updateValue(tagPath, value)
+            }catch(e){
+                if(retryCount && retryCount < 3){
+                    setTimeout(() => this.setTag(tagPath, value, (retryCount || 0) + 1), 1000)
+                }else{
+                    console.log("setTag Failed", e);
+                }
+            }
+        }
+    }
+
+    private async onValueStoreChange(changed: { key: string, value: any }[]) {
         await Promise.all(changed.map(async (changed_item) => {
+            this.emit('values-changed', changed_item)
             await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
         }))
     }
+
 
     getTagPaths(object: any, parent?: string): any {
         if (typeof (object) == 'object' && !Array.isArray(object)) {
@@ -136,28 +204,47 @@ export class Sidecar {
     setConfig(options: LocalOptions) {
         this.conf?.updateConf(options)
 
-        console.log("Options", {options});
-        
+        console.log("Options", { options });
+
         // this.updateConfig(options);
         this.eventedValues.updateFields(
             (options.tags || []).map((tag) => {
                 let type = options.types?.find((a) => a.name == tag.type)
                 return type ? {
-                    name: tag.name, 
+                    name: tag.name,
                     fields: type.fields,
                 } : {
-                    name: tag.name, 
+                    name: tag.name,
                     type: tag.type
                 }
             })
         )
 
         Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
-            const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, dataScope.configuration)
-            
-            let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id)
+            const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
+                [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
+            })).reduce((prev, curr) => ({...prev, ...curr}), {})
 
-            await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({name: tag.name})))
+            const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
+
+            let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
+                let type = this.options?.types?.find((a) => a.name === tag.type)
+
+                if(type){
+                    return type.fields.map((x) => ({name: `${tag.name}.${x.name}`}) )
+                }else{
+                    return [tag];
+                }
+            }).reduce((prev, curr) => prev.concat(curr), []);
+
+            const observable = await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            
+            observable?.subscribe((dataPatch) => {
+                Object.keys(dataPatch).map((dataKey) => {
+                    this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
+                })
+            })
+
         }))
 
     }

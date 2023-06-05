@@ -17,7 +17,7 @@ export const TemplateEditor = (props: any) => {
 
     const [ selected, setSelected ] = useState<any>();
 
-    const { refetch, program: {templates, types} } = useCommandEditor()
+    const { refetch, program: {templates, components, types} } = useCommandEditor()
 
     const [ defaultSrc, setDefaultSrc ] = useState<{src: string, srcId?: string, id: string} | null>()
 
@@ -133,8 +133,30 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
 
         */
 
+        const componentsInterface = components.map((x) => {
+            console.log("PATH", x.main.path)
+            return x.files.map((file) => {
+                return {
+                    path: `file:///node_modules/@module/components/${x.name}/${file.path}`,
+                    content: file.content
+                }
+            })
+        }).reduce((prev, curr) => prev.concat(curr), []).concat([
+            {
+                path: `file:///node_modules/@module/components/index.tsx`,
+                content: components.map((x) => `
+                    export * from './${x.name}'
+                `).join('\n')
+            }
+        ])
+
+        console.log({componentsInterface})
+
                     console.log({inputInterface})
-        return `
+        return [
+            {
+                path: 'ts:facts.d.ts',
+                content: `
                 ${inputInterface}
                 
                     declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
@@ -160,7 +182,10 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     }
 
                 `
-    }, [activeTemplate])
+            }].concat(componentsInterface)
+    }, [activeTemplate, components])
+
+    console.log({extraLib})
 
     
     return (
@@ -266,10 +291,6 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
             <Box sx={{display: 'flex', padding: '6px'}}>
                 <Typography>{activeTemplate?.name}</Typography>
 
-                <Tabs>
-                    <Tab label="Parameters" />
-                    <Tab label="" />
-                </Tabs>
             </Box>
             <Divider />
             <Box sx={{flex: 1, display: 'flex'}}>
