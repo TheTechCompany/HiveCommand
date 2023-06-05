@@ -24,7 +24,7 @@ export const Controls = (props) => {
 
     const { getPack } = useRemoteComponents()
 
-    const { program: { templatePacks, tags, types } } = useCommandEditor()
+    const { program: { templatePacks, tags, types, components } } = useCommandEditor()
 
     const [selected, _setSelected] = useState<{ key?: "node" | "path", id?: string }>({})
 
@@ -332,7 +332,7 @@ export const Controls = (props) => {
 
                         try{
                             // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            parsedValue = getOptionValues(node, tags, {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
+                            parsedValue = getOptionValues(node, tags, components, {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
                         }catch(e){
                             console.log({e, node, optionKey});
                         }

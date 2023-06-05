@@ -48,5 +48,10 @@ module.exports = function override(config, env) {
         '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
     }
 
+    config.resolve.fallback = {
+        ...config.resolve.fallback,
+        'path': require('path-browserify')
+    }
+
     return config;
 }
