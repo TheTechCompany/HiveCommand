@@ -124,6 +124,43 @@ export class Sidecar extends EventEmitter {
     async setup() {
         await this.driverRegistry?.setup()
 
+
+        await this.client?.connect(async (message) => {
+            try {
+                const { routingKey: key, messageContent: {value} } = message;
+
+                if (!this.client) {
+                    return console.error("No client currently connected");
+                }
+
+                console.log("SET TAG", key, value)
+
+                if(!key) return console.error("Set Tag Failed: " + value)
+
+                await this.setTag(key.replace(/\//, '.'), value)
+
+                // await Promise.all((setTags || []).map(async (tags) => {
+                //     await this.setData(tags.tag, tags.dataType, tags.value)
+                // }))
+
+
+                // //Get OPCUA path from state
+                // let path = this.subscription?.paths.find((a) => a.tag === key)?.path
+
+                // if(!path) return console.error("Couldn't find ", key)
+
+                // //Get OPCUA Datatype
+                // const dataType = await this.getDataType(this.client, path)
+
+                // //Update current state
+                // this.setData(this.client, path, (DataType as any)[dataType.type as any], value)
+
+                //Send update to frontend
+            } catch (e) {
+                console.error("Error receiving MQTT Publish", message)
+            }
+        })
+
         if (this.options?.dataScopes) {
             let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({ pkg: x }))
             await this.ensureDrivers(drivers)
