@@ -236,8 +236,8 @@ export class Sidecar extends EventEmitter {
                 value = {[key?.split('.')?.[1]]: value}
                 key = key?.split('.')?.[0]
             }
-            
-            await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
+
+            await this.client?.publish(key, 'Boolean', value, Date.now())
         }))
     }
 
