@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/backend",
-  "version": "1.4.15-alpha.242",
+  "version": "1.4.15-alpha.243",
   "description": "",
   "main": "index.js",
   "private": true,
