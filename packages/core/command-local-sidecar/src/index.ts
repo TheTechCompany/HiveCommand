@@ -59,7 +59,7 @@ const OPC_PROXY_PORT = 8484;
     const dataChanged = (data: any) => {
     }
 
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: '100mb'}));
     app.use(cors());
 
     app.route('/healthcheck')
@@ -72,6 +72,12 @@ const OPC_PROXY_PORT = 8484;
             await sidecar.ensureDrivers(req.body.drivers)
 
             res.send({success: true});
+        })
+
+    app.route('/snapshot')
+        .get(async (req, res) => {
+            const snapshot = sidecar.getSnapshot()
+            res.send({snapshot})
         })
 
     app.route('/setup')

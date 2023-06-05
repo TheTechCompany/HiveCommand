@@ -54,6 +54,7 @@ export const SetupView = (props: any) => {
                         interface: globalState?.interface,
                         tags: globalState?.tags,
                         types: globalState?.types,
+                        components: globalState?.components,
                         dataScopes: globalState?.dataScopes,
                         templatePacks: globalState?.templatePacks,
                         provisionCode: authState?.provisionCode,

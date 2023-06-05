@@ -98,13 +98,13 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         socket.current.on('data-changed', onDataChanged)
 
 
-        // return axios.post(`http://localhost:${8484}/${authState?.opcuaServer}/subscribe`).then((r) => r.data).then((data) => {
-        //     if (data.data) {
-        //         console.log("Initial state store", data.data)
-        //         setValueStore(data.data)
-        //     }
+        return axios.get(`http://localhost:${8484}/${authState?.opcuaServer}/snapshot`).then((r) => r.data).then((data) => {
+            if (data.data) {
+                console.log("Initial state store", data.data.snapshot)
+                setValueStore(data.data.snapshot)
+            }
 
-        // })
+        })
     }
 
 

@@ -68,7 +68,10 @@ import { API } from './api';
                 
             } else {
                 try{
-                    await publishValue(device.id, routingKey, messageContent?.value, messageContent.timestamp)
+                    let mainKey = routingKey?.split('/')?.[0]
+                    let subKey = routingKey?.split('/')?.[1]
+
+                    await publishValue(device.id, mainKey, messageContent?.value, messageContent.timestamp, subKey)
                 }catch(e){
                     console.error("publish single error", e, routingKey, messageContent);
                 }
