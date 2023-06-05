@@ -9,6 +9,8 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
     private controller: ManagedController;
 
+    private tags : {[key: string]: Tag | null} = {};
+
     constructor(options: DriverOptions){
         super(options);
 
@@ -38,6 +40,8 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
                 const plcTag = this.controller.addTag(tag.name)
 
+                this.tags[tag.name] = plcTag;
+
                 plcTag?.on('Initialized', (data: {value: Structure | Tag}) => {
                     observer.next({[tag.name]: data.value});
                 })
@@ -51,14 +55,21 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     }
 
     async read(tag: { name: string; alias: string; }){
-        const plcTag = this.controller.addTag(tag.name)
+        let plcTag : Tag | null = this.tags[tag.name];
+        if(!plcTag){
+            plcTag = this.controller.addTag(tag);
+        }
+
         if(!plcTag) throw new Error(`Couldn't add tag ${tag.name}`)
         await this.controller.PLC?.readTag(plcTag);
         return plcTag?.value;
     }
 
     async write(tag: string, value: any) {
-        const plcTag = this.controller.addTag(tag);
+        let plcTag : Tag | null = this.tags[tag];
+        if(!plcTag){
+            plcTag = this.controller.addTag(tag);
+        }
         // this.controller.PLC?.readTag()
         if(!plcTag) throw new Error(`Couldn't add tag ${tag}`)
         plcTag.value = value;
