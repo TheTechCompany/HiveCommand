@@ -59,6 +59,8 @@ export const ImportModal : React.FC<ImportModalProps> = (props) => {
         setScope(null);
     }
 
+    console.log(scope)
+
     return (
         <Dialog 
             fullWidth
@@ -73,8 +75,8 @@ export const ImportModal : React.FC<ImportModalProps> = (props) => {
                         scope={scope} 
                         dataScopes={props.dataScopes}
                         onChange={(uploadInfo) => {
-                            setFile(uploadInfo.file)
-                            setScope(uploadInfo.scope)
+                            if(uploadInfo.file) setFile(uploadInfo.file)
+                            if(uploadInfo.scope) setScope(uploadInfo.scope)
                         }} />
                 ) : (
                    <ImportView 

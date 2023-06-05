@@ -81,7 +81,11 @@ export default (prisma: PrismaClient) => {
                                     ...typeUpdate
                                 }
                             },
-                            scopeId: args.scope,
+                            scope: {
+                                connect: {
+                                    id: args.scope
+                                }
+                            },
                             program: {
                                 connect: {
                                     id: args.program

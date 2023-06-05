@@ -59,7 +59,7 @@ const OPC_PROXY_PORT = 8484;
     const dataChanged = (data: any) => {
     }
 
-    app.use(bodyParser.json());
+    app.use(bodyParser.json({limit: '100mb'}));
     app.use(cors());
 
     app.route('/healthcheck')
