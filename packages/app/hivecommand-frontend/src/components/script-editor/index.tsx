@@ -28,7 +28,7 @@ export interface ScriptEditorProps {
     onSubmit?: (code: string) => void;
 
     defaultValue?: string;
-    extraLib?: string;
+    extraLib?: string | {path: string, content: string}[];
 
 }
 

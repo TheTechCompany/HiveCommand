@@ -138,6 +138,17 @@ export const API = (prisma: PrismaClient) => {
                                 elements: true
                             }
                         },
+                        components: {
+							include: {
+								main: true,
+								properties: {
+									include: {
+										type: true
+									}
+								},
+								files: true
+							}
+						},
                         interface: {
                             include: {
                                 nodes: {

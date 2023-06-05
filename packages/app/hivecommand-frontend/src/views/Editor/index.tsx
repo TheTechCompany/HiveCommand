@@ -21,8 +21,9 @@ import { Home as HomeIcon  } from '@mui/icons-material'
 import { TemplateEditor } from './pages/template';
 import { TagEditor } from './pages/tags';
 import { TypeEditor } from './pages/types';
-import { useCreateProgramType, useDeleteProgramType, useUpdateProgramType } from './api';
+import { useCreateProgramType, useDeleteProgramType, useUpdateProgramType, useCreateProgramComponent, useUpdateProgramComponent, useDeleteProgramComponent } from './api';
 import { AlarmEditor } from './pages/alarms';
+import { ComponentList, Components } from './pages/components';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
@@ -43,7 +44,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         id: string,
         parent?: string,
         type: 'root' | 'editor'
-    }>()
+    } | null>()
 
     const client = useApolloClient()
 
@@ -61,6 +62,25 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 id
                 name
 
+                components {
+                    id
+                    name
+                    
+                    main {
+                        id
+                        path
+                    }
+
+                    properties {
+                        id
+                        key
+                    }
+
+                    files {
+                        path
+                        content
+                    }
+                }
                 tags {
                     id
                     name
@@ -162,15 +182,18 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const createProgramHMI = useCreateProgramHMI(id)
     const createProgramTemplate = useCreateProgramTemplate(id);
     const createProgramType = useCreateProgramType(id);
+    const createProgramComponent = useCreateProgramComponent(id);
 
     const updateProgramAlarm = useUpdateProgramAlarm(id)
     const updateProgramHMI = useUpdateProgramHMI(id)
     const updateProgramTemplate = useUpdateProgramTemplate(id);
     const updateProgramType = useUpdateProgramType(id);
+    const updateProgramComponent = useUpdateProgramComponent(id);
 
     
     const deleteProgramHMI = useDeleteProgramHMI(id);
     const deleteProgramType = useDeleteProgramType(id);
+    const deleteProgramComponent = useDeleteProgramComponent(id);
 
     const handleMenuDelete = async (type: string, data: any) => {
         let promise : any = null;
@@ -178,6 +201,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         console.log({type});
 
         switch(type){
+            case 'components':
+                    promise = deleteProgramComponent(editItem.id)
+                    break;
             case 'hmi':
                 promise = deleteProgramHMI(data.id)
                 break;
@@ -200,6 +226,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         if(editItem){
             switch(type){
+                case 'components':
+                    promise = updateProgramComponent(editItem.id, data.name, data.description, data.mainId)
+                    break;
                 case 'alarms':
                     promise = updateProgramAlarm(editItem.id, data.name, data.description)
                     break;
@@ -216,6 +245,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             }
         }else{
             switch(type){
+                case 'components':
+                    promise = createProgramComponent(data.name, data.description)
+                    break;
                 case 'alarms':
                     promise = createProgramAlarm(data.name, data.description)
                     break;
@@ -284,6 +316,16 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         //     element: <div>Program</div>,
         //     editor: <Program activeProgram={selected?.id} />
         // },
+        {
+            id: 'components-root',
+            name: 'Components',
+            editor: <Components activeProgram={id} component={selected?.id} />,
+            element: <ComponentList />,
+            children: program?.components?.map((x) => ({
+                id: x.id,
+                name: x.name
+            }))
+        },
         {
             id: 'hmi-root',
             name: 'Views',
@@ -355,8 +397,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         return root?.editor
     }
 
-
-    console.log({editItem})
 
     return (
         <CommandEditorProvider value={{

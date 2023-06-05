@@ -4,6 +4,7 @@ import { transpile, ModuleKind, JsxEmit } from 'typescript'
 import { template } from 'dot';
 import { baseRequirements } from '@hive-command/remote-components';
 import { isEqual } from 'lodash';
+import path from 'path';
 
 export interface DevicePlaceholder {
 	tag: string,
@@ -34,13 +35,85 @@ export const getDevicesForNode = (node: any): DevicePlaceholder[] => {
 	}
 }
 
-const _require = (name: string) => {
+const _require = (components: any[], parent?: string) => (name: string) => {
+	console.log(name)
+
+	if(!(name in baseRequirements)){
+	
+		if(name.indexOf('@module/components') > -1){
+
+			const component = name.split('@module/components/')?.[1]?.split('/')?.[0];
+
+			const file = name.split(`@module/components/${component}/`)?.[1]
+
+			const microRequire = (parent?: string) => (name: string) => {
+				if(name in baseRequirements){
+					return baseRequirements[name];
+				}
+
+				let files = components.find((a) => a.name == component)?.files || [];
+
+				
+				const content = files.find((file) => {
+					console.log(path.join(parent || '', '../', path.normalize(name), path.extname(file.path)))
+					return path.normalize(file.path) == path.normalize(name) || 
+					path.normalize(file.path) == (path.normalize(name) + path.extname(file.path)) ||
+					path.normalize(file.path) == path.join(parent || '', '../', path.normalize(name)) ||
+					path.normalize(file.path) == path.join(parent || '', '../', path.normalize(name) + path.extname(file.path)) ||
+					path.normalize(file.path) == path.join(parent || '', '../', path.normalize(name), './index.js')
+					}
+				)?.content;
+
+				console.log({content, files, name, components, component})
+
+				const exports : {} = {};
+
+				const module = { exports };
+
+				const func = new Function(
+					"module", 
+					"exports", 
+					"require",
+					transpile(content, { module: ModuleKind.CommonJS, jsx: JsxEmit.React }) );
+				
+
+				func(module, exports, microRequire(`${parent ? parent : ''}${name}`))
+
+				return module.exports
+			}
+
+
+			console.log({component, file, components, name})
+			
+			const fileObj = components.find((a) => a.name == component)?.files?.find((a) => a.path == ( file || components.find((a) => a.name == component).main?.path ));
+
+			const exports : {} = {};
+
+			const module = { exports };
+
+			const func = new Function(
+				"module", 
+				"exports", 
+				"require",
+				transpile(fileObj.content, { module: ModuleKind.CommonJS, jsx: JsxEmit.React }) );
+			
+			func(module, exports, microRequire())
+
+			console.log(name, module.exports)
+			return module.exports;
+		}
+	}
 	return baseRequirements[name];
 }
 
 export const useNodesWithValues = (
 	nodes: any[], 
 	tags: HMITag[],
+	components: {
+		id: string,
+		name: string,
+		files: {path: string, content: string}[]
+	}[],
 	functions: {showTagWindow: any, showWindow: any}, 
 	values: any,
 	updateValues: (values: any) => void
@@ -208,7 +281,7 @@ export const useNodesWithValues = (
 
 			try{
 				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
-				parsedValue = getOptionValues(node, tags, functions, valueRef.current.values || {}, nodeInputValues.current, nodeTransformers.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
+				parsedValue = getOptionValues(node, tags, components, functions, valueRef.current.values || {}, nodeInputValues.current, nodeTransformers.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
 			}catch(e){
 				console.error("error parsing value", {e, node, optionKey});
 			}
@@ -231,11 +304,27 @@ export const useNodesWithValues = (
 			}
 		}
 
-	}), [JSON.stringify(valueRef.current.values), nodes, JSON.stringify(nodeInputValues.current.values)])
+	}), [JSON.stringify(valueRef.current.values), nodes, JSON.stringify(nodeInputValues.current.values), components])
 }
 
 
-export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showTagWindow: any, showWindow: any}, normalisedValues: any, templateValues: {values: {[key: string]: any}}, templateTransformers: {values: {[key: string]: (state: any) => any }}, templateOutputs: {values: {[key: string]: any}}, setValues: (values: any) => void, optionKey: string, optionValue: any) => {
+export const getOptionValues = (
+	node: HMINode, 
+	tags: HMITag[], 
+	components: {
+		id: string,
+		name: string,
+		files: {path: string, content: string}[]
+	}[],
+	functions: {showTagWindow: any, showWindow: any}, 
+	normalisedValues: any, 
+	templateValues: {values: {[key: string]: any}}, 
+	templateTransformers: {values: {[key: string]: (state: any) => any }}, 
+	templateOutputs: {values: {[key: string]: any}}, 
+	setValues: (values: any) => void, 
+	optionKey: string, 
+	optionValue: any
+) => {
     
 
     const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
@@ -326,7 +415,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 	
 				return  data(templateInputs)
 			})
-		}, functions.showTagWindow, React, _require);
+		}, functions.showTagWindow, React, _require(components));
 
 		// console.log({templateInputs})
 
@@ -385,7 +474,7 @@ export const getOptionValues = (node: HMINode, tags: HMITag[], functions: {showT
 			
 
 
-			func(module, exports, functions.showWindow, functions.showTagWindow, React, _require);
+			func(module, exports, functions.showWindow, functions.showTagWindow, React, _require(components));
 		
 			if('getter' in exports){
 				const val =  exports?.getter?.( normalisedValues );

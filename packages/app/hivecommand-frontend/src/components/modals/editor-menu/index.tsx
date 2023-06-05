@@ -6,6 +6,7 @@ import { AlarmView } from "./views/alarm";
 import { TemplateView } from "./views/templates";
 import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
+import { ComponentsView } from "./views/components";
 
 export interface EditorMenuDialogProps {
     open: boolean;
@@ -30,6 +31,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getTitle = () => {
         switch(type){
+            case 'components':
+                return `${selected ? 'Edit' : 'Create'} Component`;
             case 'types':
                 return `${selected ? 'Edit' : 'Create'} Type`;
             case 'templates':
@@ -49,6 +52,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getContent = () => {
         switch(type){
+            case 'components':
+                return <ComponentsView />;
             case 'types':
                 return <TypeView />;
             case 'templates':
@@ -65,6 +70,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getActions = () => {
         switch(type){
+            default:
             case 'types':
             case 'templates':
             case 'program':

@@ -267,8 +267,11 @@ export class DriverRegistry {
         this.driverConfigurations[pkg] = configuration;
         this.drivers[pkg] = driver as unknown as BaseCommandDriver
 
-        await this.drivers[pkg].start()
-
+        try{
+            await this.drivers[pkg].start()
+        }catch(e){
+            console.log("Error starting driver", pkg, e);
+        }
         return this.drivers[pkg]
     }
 

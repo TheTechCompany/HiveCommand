@@ -8,6 +8,7 @@ import dataScopes from './scopes';
 
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
+import components from "./components";
 
 export default (prisma: PrismaClient) => {
 	
@@ -16,9 +17,23 @@ export default (prisma: PrismaClient) => {
 	const { typeDefs: typeTypeDefs, resolvers: typeResolvers } = types(prisma);
 	const { typeDefs: alarmTypeDefs, resolvers: alarmResolvers } = alarms(prisma);
 	const { typeDefs: dataScopeTypeDefs, resolvers: dataScopeResolver } = dataScopes(prisma)
+	const { typeDefs: componentTypeDefs, resolvers: componentResolvers } = components(prisma);
 
 	const resolvers = mergeResolvers([
 		{
+			CommandProgram: {
+				components: (root: any, args: any) => {
+					let c = [];
+					if(args.where){
+						c = root.components?.filter((a) => a.id == args.where?.id)
+					}else{
+						c=  root.components;
+					}
+					console.log("COMPONENTS", args, c, root.components)
+
+					return c;
+				}
+			},
 			Query: {
 				commandPrograms: async (root: any, args: any, context: any) => {
 					let filter = args.where || {}
@@ -31,6 +46,17 @@ export default (prisma: PrismaClient) => {
 							include: {
 								conditions: true,
 								actions: true
+							}
+						},
+						components: {
+							include: {
+								main: true,
+								properties: {
+									include: {
+										type: true
+									}
+								},
+								files: true
 							}
 						},
 						templates: {
@@ -189,7 +215,8 @@ export default (prisma: PrismaClient) => {
 		tagResolvers,
 		typeResolvers,
 		alarmResolvers,
-		dataScopeResolver
+		dataScopeResolver,
+		componentResolvers
 	])
 	
 	const typeDefs = `
@@ -198,6 +225,7 @@ export default (prisma: PrismaClient) => {
 	${typeTypeDefs}
 	${alarmTypeDefs}
 	${dataScopeTypeDefs}
+	${componentTypeDefs}
 
 	type Query {
 		commandPrograms(where: CommandProgramWhere): [CommandProgram]!
@@ -225,12 +253,18 @@ export default (prisma: PrismaClient) => {
 		id: ID
 	}
 
+	input CommandProgramComponentWhere {
+		id: ID
+	}
+	
 	type CommandProgram {
 		id: ID! 
 		name: String
 
 		dataScopes: [CommandProgramDataScope]
 		templatePacks: [CommandHMIDevicePack]
+
+		components(where: CommandProgramComponentWhere): [CommandProgramComponent]
 
 		interface: [CommandProgramHMI]
 

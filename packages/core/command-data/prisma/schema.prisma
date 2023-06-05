@@ -219,6 +219,8 @@ model Program {
   dataScopes ProgramDataScope[] @relation(name: "hasDataScopes")
   templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
+  components ProgramComponent[] @relation(name: "hasProgramComponents")
+  
   interface ProgramHMI[] @relation(name: "hasInterface")
 
   localHomepage ProgramHMI? @relation(name: "localHomepage", fields: [localHomepageId], references: [id])
@@ -241,6 +243,50 @@ model Program {
   createdAt DateTime @default(now())
 
   organisation String
+}
+
+model ProgramComponent {
+  id String @id
+  name String
+  description String?
+
+  properties ProgramComponentProperty[] @relation(name: "hasProgramComponentProperty")
+  files ProgramComponentFile[] @relation(name: "hasProgramComponentFile")
+
+  main ProgramComponentFile? @relation(name: "hasMainComponentFile", references: [id], fields: [mainId])
+  mainId String?
+
+  program Program @relation(name: "hasProgramComponents", references: [id], fields: [programId])
+  programId String
+}
+
+model ProgramComponentProperty {
+  id String @id
+  key String
+
+  scalar String?
+
+  type ProgramType? @relation(name: "hasProgramComponentPropertyType", fields: [typeId], references: [id])
+  typeId String?
+
+  component ProgramComponent @relation(name: "hasProgramComponentProperty", fields: [componentId], references: [id], onDelete: Cascade)
+  componentId String
+
+  @@unique([key, componentId])
+}
+
+model ProgramComponentFile {
+  id String @id
+
+  path String
+  content String?
+
+  component ProgramComponent @relation(name: "hasProgramComponentFile", fields: [componentId], references: [id], onDelete: Cascade)
+  componentId String
+
+  mainFor ProgramComponent[] @relation(name: "hasMainComponentFile")
+
+  @@unique([componentId, path])
 }
 
 model ProgramDataScope {
@@ -553,6 +599,7 @@ model ProgramType {
 
   usedByTagType ProgramTagType[] @relation(name: "tagUsesType")
   usedByType ProgramTypeField[] @relation(name: "typeUsesType")
+  usedByComponentProperty ProgramComponentProperty[] @relation(name: "hasProgramComponentPropertyType")
 
   @@unique([name, programId])
 }

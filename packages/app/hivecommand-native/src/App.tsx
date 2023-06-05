@@ -15,6 +15,7 @@ import { Command } from '@tauri-apps/api/shell';
 import axios from 'axios';
 import { NativeProvider } from './context';
 import { listen } from '@tauri-apps/api/event';
+import { LoadingView } from './views/loading';
 
 const cmd = Command.sidecar('binaries/sidecar')
 
@@ -25,6 +26,8 @@ function App() {
   const [ sidecarRunning, setSidecarRunning ] = useState(false);
 
   const [ configured,  setConfigured ] = useState(false);
+  
+  const [hydrating, setHydrating] = useState(true);
 
   useEffect(() => {
     //Start Sidecar
@@ -71,6 +74,8 @@ function App() {
       console.log("Getting config");
 
       axios.get(`http://localhost:${8484}/setup`).then((data) => {
+        setHydrating(false);
+
         if(data.data){
 
           updateGlobalState?.({
@@ -78,7 +83,7 @@ function App() {
           });
 
           setAuthState?.('provisionCode', data.data.provisionCode)
-          setAuthState?.('authTOken', data.data.authToken)
+          setAuthState?.('authToken', data.data.authToken)
 
           setAuthState?.('configProvided', true)
           setConfigured(true)
@@ -90,18 +95,21 @@ function App() {
   console.log({isAuthed: authState?.isAuthed(), authState})
 
 
-  const renderView = useMemo(() => {
-
-    if (!authState?.isAuthed()) {
-      return (
-        <SetupView />
-      )
-    } else {
-      return (
-        <Controller sidecar={sidecarRunning} />
-      )
+  const renderView = () => {
+    if(hydrating){
+      return (<LoadingView />)
+    }else{
+      if (!authState?.isAuthed()) {
+        return (
+          <SetupView />
+        )
+      } else {
+        return (
+          <Controller sidecar={sidecarRunning} />
+        )
+      }
     }
-  }, [authState, authState?.isAuthed()])
+  }
 
 
   return (
@@ -111,7 +119,7 @@ function App() {
         <ThemeProvider theme={HexHiveTheme}>
           <Box style={{ height: '100vh', width: '100vw', display: 'flex' }}>
 
-            {renderView}
+            {renderView()}
           </Box>
         </ThemeProvider>
       </LocalizationProvider>

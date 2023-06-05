@@ -37,7 +37,7 @@ export interface EditorProps {
 
     className?: string;
 
-    extraLib?: string;
+    extraLib?: string | {path: string, content: string}[];
     defaultValue?: string;
 }
 
@@ -80,12 +80,45 @@ export const Editor: React.FC<EditorProps> = (props) => {
     //     return inf;
     // }, [props.variables])
     
-    const extraLib = `
+    const extraLib = typeof(props.extraLib) == 'string' ? `
         type DeepPartial<T> = {
             [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
         };
         ${props.extraLib}
-    `
+    ` : props.extraLib.concat([{path: 'ts:base.d.ts', content: ` type DeepPartial<T> = {
+        [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+    };` }])
+
+    const loadLibs = () => {
+        if(typeof(extraLib) == 'string'){
+            var libUri = "ts:filename/facts.d.ts";
+
+            let model = monaco.editor.getModel(monaco.Uri.parse(libUri));
+
+            if(model){
+                model.setValue(extraLib)
+            }else{
+                monaco.editor.createModel(extraLib, "typescript", monaco.Uri.parse(libUri));
+            }
+        
+        }else{
+
+
+            extraLib.map((lib) => {
+
+                let model = monaco.editor.getModel(monaco.Uri.parse(`${lib.path}`));
+
+                if(model){
+                model.setValue(lib.content || '')
+                }else{
+                monaco.editor.createModel(lib.content, "typescript", monaco.Uri.parse(`${lib.path}`));
+                }
+                
+
+            })
+        }
+    }
+
 	useEffect(() => {
 		if (divEl.current) {
 
@@ -106,17 +139,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 noSyntaxValidation: false
             })
 
-            var libUri = "ts:filename/facts.d.ts";
-            monaco.languages.typescript.javascriptDefaults.addExtraLib(extraLib, libUri);
-            // When resolving definitions and references, the editor will try to use created models.
-            // Creating a model for the library allows "peek definition/references" commands to work with the library.
-            let model = monaco.editor.getModel(monaco.Uri.parse(libUri));
-
-            if(model){
-              model.setValue(extraLib)
-            }else{
-              monaco.editor.createModel(extraLib, "typescript", monaco.Uri.parse(libUri));
-            }
+            loadLibs()
 
             //LIBS
 
@@ -189,16 +212,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
     }, [props.value]);
 
     useEffect(() => {
-        var libUri = "ts:filename/facts.d.ts";
-
-        let model = monaco.editor.getModel(monaco.Uri.parse(libUri));
-
-        if(model){
-          model.setValue(extraLib)
-        }else{
-          monaco.editor.createModel(extraLib, "typescript", monaco.Uri.parse(libUri));
-        }
-        
+        loadLibs()
     }, [extraLib])
 
 	return <div className={props.className} style={{display: 'flex', width: '100%'}} ref={divEl}></div>;

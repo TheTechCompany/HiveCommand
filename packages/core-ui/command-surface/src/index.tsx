@@ -157,6 +157,9 @@ export interface HMIProgram {
     tags: HMITag[],
     types: HMIType[],
 
+    dataScopes?: { id: string, name: string, plugin: { id: string, name: string, module: string } }[]
+    components?: {id: string, name: string, main?: {id: string, path: string, content: string}, files: {path: string, content: string}[]}[]
+
     interface: HMIView[]
     // {
     //     id: string;

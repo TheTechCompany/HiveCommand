@@ -192,7 +192,6 @@ export class Sidecar extends EventEmitter {
     }
 
 
-
     getTagPaths(object: any, parent?: string): any {
         if (typeof (object) == 'object' && !Array.isArray(object)) {
             return Object.keys(object).map((key) => this.getTagPaths(object[key], parent ? `${parent}.${key}` : key)).reduce((prev, curr) => prev.concat((Array.isArray(curr) ? curr : [curr])), [])

@@ -7,6 +7,17 @@ export interface ICommandEditorContext {
 	refetch?: () => void;
 	program?: {
 		id?: string;
+		components?: {
+			id: string,
+			name: string,
+			main?: {
+				path: string
+			},
+			files: {
+				path: string,
+				content: string
+			}[]
+		}[]
 		dataScopes?: {id: string, name: string, plugin: {id: string, name: string}, configuration: any}[]
 		templatePacks?: any[];
 		templates?: HMITemplate[];
