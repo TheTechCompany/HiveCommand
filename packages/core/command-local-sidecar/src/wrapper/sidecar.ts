@@ -230,6 +230,13 @@ export class Sidecar extends EventEmitter {
     private async onValueStoreChange(changed: { key: string, value: any }[]) {
         await Promise.all(changed.map(async (changed_item) => {
             this.emit('values-changed', changed_item)
+
+            let { key, value } = changed_item;
+            if(key.indexOf('.') > -1){
+                value = {[key?.split('.')?.[1]]: value}
+                key = key?.split('.')?.[0]
+            }
+            
             await this.client?.publish(changed_item.key, 'Boolean', changed_item.value, Date.now())
         }))
     }
