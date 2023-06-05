@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@hive-command/ethernet-ip@^2.5.6-alpha.31":
-  version "2.5.6-alpha.31"
-  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.31.tgz#1bef2fbaf3242da478600648121cc9d9e819ba96"
-  integrity sha512-2Vp1FrDGKKpQYuxCjfV/3+Jb8mupvlxk8Cv5sDUC7YLHxj0eCghqPgZW9glI6NwzVQOe5TWJgw4zeFlJtqbYig==
+"@hive-command/ethernet-ip@^2.5.6-alpha.33":
+  version "2.5.6-alpha.33"
+  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.33.tgz#95fd3da4b87d3a25b271e81240b89c80a44e2e1b"
+  integrity sha512-V5pKhBwYY3CAdC+pCAPUOFS0wU4sOSI1UxqO0rbGUcEVMym1P9uGJjI4HZmxWy8tHxND8gS9anmrQwA+QRsGHg==
   dependencies:
     dateformat "^3.0.3"
     deep-equal "^1.1.1"
@@ -157,6 +157,6 @@ task-easy@^1.0.1:
   integrity sha512-3WIgb6s9fR1zGgdxOnfLwT3bARk5HlKQDAAtow8igg+r08oa6EIZM+Ovof8ZNjkK/E6T5kA3rDcqApz9DdSJDQ==
 
 typescript@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.4.tgz#b217fd20119bd61a94d4011274e0ab369058da3b"
-  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.3.tgz#8d84219244a6b40b6fb2b33cc1c062f715b9e826"
+  integrity sha512-XH627E9vkeqhlZFQuL+UsyAXEnibT0kWR2FWONlr4sTjvxyJYnyefgrkyECLzM5NenmKzRAy2rR/OlYLA1HkZw==

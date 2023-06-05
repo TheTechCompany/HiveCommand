@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@hive-command/drivers-base": "^1.4.15-alpha.234",
-    "@hive-command/ethernet-ip": "^2.5.6-alpha.31",
+    "@hive-command/ethernet-ip": "^2.5.6-alpha.33",
     "observable-fns": "^0.6.1"
   }
 }

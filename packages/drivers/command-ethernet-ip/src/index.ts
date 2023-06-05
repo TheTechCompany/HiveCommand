@@ -21,6 +21,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
             this.options.configuration?.connected
         )
 
+        this.controllerManager.on('Error', (e) => {
+            console.error(e);
+        })
+
+        // this.controller.PLC.ta
         console.log(this.options)
     }
 
@@ -38,7 +43,9 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     
             Promise.all(tags.map(async (tag ) => {
 
-                const plcTag = this.controller.addTag(tag.name)
+                let discoveredTag = this.controller.PLC?.tagList?.find((a) => a.name == tag.name?.split('.')?.[0])
+
+                const plcTag = this.controller.addTag(tag.name, discoveredTag?.program)
 
                 this.tags[tag.name] = plcTag;
 
