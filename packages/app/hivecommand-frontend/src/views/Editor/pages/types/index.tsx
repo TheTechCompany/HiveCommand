@@ -44,7 +44,7 @@ export const TypeEditor = (props: any) => {
     }
 
     return (
-        <Box sx={{flex: 1}}>
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <Box sx={{padding: '6px'}}>
                 <Typography>{activeType.name}</Typography>
             </Box>
