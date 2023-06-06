@@ -137,5 +137,5 @@ export const useValues = (deviceId: string, program: {tags: any[], types: any[]}
         }
     }, [])
 
-	return {values: {PMP101_Speed: {Out: speed}} || normalisedValues};
+	return {values: normalisedValues};
 }
