@@ -28,8 +28,6 @@ export interface LocalOptions {
         exchange: string
     }
 
-    interface?: any[];
-
     tags?: {
         name: string,
         type: string,
@@ -48,8 +46,6 @@ export interface LocalOptions {
         }[]
     }[]
 
-
-    subscriptionMap?: {}[]
 
 }
 

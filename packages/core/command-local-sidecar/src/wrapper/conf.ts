@@ -2,22 +2,12 @@ import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { LocalOptions } from '.';
 import path from 'path';
 
-export interface Configuration {
-    deviceMap?: {
-        path: string,
-        tag: string
-    }[]
-    subscriptionMap?: {
-        path: string,
-        tag: string
-    }[]
-}
 
 export class SidecarConf {
 
     private path?: string;
 
-    private conf: LocalOptions = { tags: [], types: [], subscriptionMap: [] };
+    private conf: LocalOptions = { tags: [], types: [] };
 
     constructor(opts: { options?: LocalOptions, path?: string }) {
         // if(opts.filename){
