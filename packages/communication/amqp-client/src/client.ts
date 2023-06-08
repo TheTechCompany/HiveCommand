@@ -10,6 +10,9 @@ export interface MQTTClientOptions {
 
     exchange?: string;
 
+    lwt?: {
+
+    },
     reconnectOptions?: {
         maxAttempts?: number,
         maxDelay?: number,
@@ -26,12 +29,14 @@ export class MQTTClient {
 
     private DEVICE_CONTROL_PREFIX: string;
     private DEVICE_DATA_PREFIX: string;
+    private DEVICE_ONLINE_PREFIX: string ;
 
     constructor(options: MQTTClientOptions) {
         this.options = options;
 
         this.DEVICE_CONTROL_PREFIX = `device_control/${this.options.user}`;
         this.DEVICE_DATA_PREFIX = this.options.exchange || `device_values`
+        this.DEVICE_ONLINE_PREFIX = `device_online/${this.options.user}`;
     }
 
     disconnect(){
@@ -42,7 +47,13 @@ export class MQTTClient {
 
         this.client = MQTT.connect(this.options.host, {
             username: this.options.user,
-            password: this.options.pass
+            password: this.options.pass,
+            will: {
+                topic: this.DEVICE_ONLINE_PREFIX,
+                payload: Buffer.from(JSON.stringify({offline: true})),
+                qos: 1, 
+                retain: false
+            }
         })
 
 

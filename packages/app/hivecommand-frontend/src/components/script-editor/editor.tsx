@@ -207,7 +207,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
         let model = monaco.editor.getModel(monaco.Uri.parse('file:///main.tsx'));
 
         if(model && model.getValue() !== props.value){
-            model.setValue(props.value);
+            model.setValue(props.value || '');
         }
     }, [props.value]);
 

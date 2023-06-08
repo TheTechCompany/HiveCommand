@@ -4,7 +4,7 @@ import { useQuery, gql} from '@apollo/client';
 import { Editor } from '../../../../components/script-editor/editor'
 import { TreeItem, TreeView, useTreeItem } from '@mui/lab';
 import { resolveTree } from './utils';
-import { ChevronRight, ExpandMore, MenuOpen } from '@mui/icons-material'
+import { ChevronRight, ExpandMore, MenuOpen, MoreVert } from '@mui/icons-material'
 import { ComponentProperties } from './views/properties';
 import { Code } from './views/code';
 import clsx from 'clsx';
@@ -13,12 +13,14 @@ import { ComponentFileModal } from 'app/hivecommand-frontend/src/components/moda
 import { useMutation } from '@apollo/client';
 import { debounce } from 'lodash';
 import { Preview } from './views/preview';
-
+import path from 'path';
 export * from './list';
 
 export const Components = (props: any) => {
 
     const [ modalOpen, openModal ] = useState(false);
+
+    const [ selectedFile, setSelectedFile ] = useState<any | null>(null);
 
     const [ previewOpen, openPreview ] = useState(false);
 
@@ -70,7 +72,7 @@ export const Components = (props: any) => {
     })
 
     const [ createComponentFile ] = useMutation(gql`
-        mutation CreateComponentFile($program: ID, $component: ID, $path: String){
+        mutation CreateComponentFile($program: ID!, $component: ID!, $path: String){
             createCommandProgramComponentFile(program: $program, component: $component, path: $path){
                 id
             }
@@ -81,8 +83,28 @@ export const Components = (props: any) => {
 
 
     const [ updateComponentFile ] = useMutation(gql`
-        mutation UpdateComponentFile ($program: ID, $component: ID, $id: ID, $content: String){
+        mutation UpdateComponentFile ($program: ID!, $component: ID!, $id: ID!, $content: String){
             updateCommandProgramComponentFile(program: $program, component: $component, id: $id, content: $content){
+                id
+            }
+        }
+    `, {
+        refetchQueries: ['GetComponentInfo']
+    })
+
+    const [ updateComponentFilePath ] = useMutation(gql`
+        mutation UpdateComponentFile ($program: ID!, $component: ID!, $id: ID!, $path: String){
+            updateCommandProgramComponentFile(program: $program, component: $component, id: $id, path: $path){
+                id
+            }
+        }
+    `, {
+        refetchQueries: ['GetComponentInfo']
+    })
+
+    const [ deleteComponentFile ] = useMutation(gql`
+        mutation DeleteComponentFile ($program: ID!, $component: ID!, $id: ID!){
+            deleteCommandProgramComponentFile(program: $program, component: $component, id: $id){
                 id
             }
         }
@@ -94,7 +116,6 @@ export const Components = (props: any) => {
 
     // const [part_files, setPartFiles] = useState([{path: 'src/index.ts', content: 'export const file = () => {}'}, {path: 'src/folder/index.ts', content: 'export const folder = () => {}'}]);
 
-    console.log({component})
 
     const files = useMemo(() => {
 
@@ -107,15 +128,25 @@ export const Components = (props: any) => {
     useEffect(() => {
         // console.log({codePath})
         console.log({code, component: component?.files})
-        if(code?.path && code?.content && component?.files?.find((a) => a.path === code?.path)?.content !== code?.content){
+        let file = component?.files?.find((a) => a.path === code?.path);
+
+        if(
+            code?.path && 
+            code?.content && 
+            file && 
+            file?.content !== code?.content
+        
+        ){
+
             slowUpdate({
                 variables: {
                     program: props.activeProgram,
                     component: props.component,
                     content: code.content,
-                    id: component?.files?.find((a) => a.path == code?.path)?.id
+                    id: file?.id
                 }
             })
+
         }
 
         // setPartFiles((partFile) => {
@@ -134,9 +165,21 @@ export const Components = (props: any) => {
     const renderTree = (files: any, parent?: string) => {
         
         const items = Object.keys(files)?.sort((a, b) => a.localeCompare(b)).map((fileKey) => {
+
             return (
                 <TreeItem 
-                    label={fileKey} 
+                    label={(
+                        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '12px'}}>
+                            <Typography>{fileKey}</Typography>
+                            <IconButton onClick={() => {
+                                setSelectedFile(`${parent ? parent : ''}/${fileKey}`)
+                                
+                                openModal(true);
+                            
+
+                            }} size="small"><MoreVert fontSize='inherit' /></IconButton>
+                        </Box>
+                        )} 
                     nodeId={`${parent? parent : ''}/${fileKey}`}>
                     {files?.[fileKey] && renderTree(files?.[fileKey], `${parent ? parent : ''}/${fileKey}`)}
                 </TreeItem>
@@ -204,17 +247,49 @@ export const Components = (props: any) => {
 
             <ComponentFileModal 
                 open={modalOpen}
+                selected={selectedFile && component?.files?.find((a) => path.normalize((a.path?.[0] == '/' ? '' : '/') + a.path) == path.normalize(selectedFile) )}
                 onClose={() => {
                     openModal(false);
+                    setSelectedFile(null)
                 }}
-                onSubmit={(file) => {
-                    createComponentFile({
+                onDelete={(file) => {
+                    deleteComponentFile({
                         variables: {
-                            path: file.path,
+                            id: file.id,
                             program: props.activeProgram,
                             component: props.component
                         }
-                    }).then(() => openModal(false));
+                    }).then(() => {
+                        openModal(false);
+                        setSelectedFile(null)
+
+                        setCode({})
+                    })
+                }}
+                onSubmit={(file) => {
+                    if(file.id){
+                        updateComponentFilePath({
+                            variables: {
+                                id: file.id,
+                                path: file.path,
+                                program: props.activeProgram,
+                                component: props.component,
+                                
+                            }
+                        }).then(() =>{ setSelectedFile(null); openModal(false)});
+                    }else{
+                        createComponentFile({
+                            variables: {
+                                path: file.path,
+                                program: props.activeProgram,
+                                component: props.component
+                            }
+                        }).then(() => {
+                            setSelectedFile(null)
+                            openModal(false)
+                        });
+                    }
+                    
                 }}
                 />
             <Box sx={{bgcolor: 'secondary.main', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '6px'}}>

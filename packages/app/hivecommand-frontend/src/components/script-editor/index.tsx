@@ -72,8 +72,10 @@ export const handler = () => {
 
 
     useEffect(() => {
-        if(props.defaultValue) setValue(props.defaultValue)
+        setValue(props.defaultValue)
     }, [props.defaultValue])
+
+    
     // useEffect(() => {
     //     setValue(defaultValue)
     // }, [props.dataType])
@@ -86,7 +88,7 @@ export const handler = () => {
 
     const onSubmit = () => {
         if(value) props.onSubmit?.(value)
-        setValue(defaultValue)
+        setValue(props.defaultValue || defaultValue)
     }
 
 

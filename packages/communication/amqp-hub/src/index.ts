@@ -15,6 +15,7 @@ export interface MQTTHubOptions {
     exchange: string;
 
     onMessage?: (message: MQTTHubMessage) => Promise<void>;
+    onStatus?: (id: string, status: string) => Promise<void>;
 }
 
 export class MQTTHub {
@@ -24,11 +25,13 @@ export class MQTTHub {
     private options : MQTTHubOptions;
 
     private DEVICE_DATA_PREFIX: string;
+    private DEVICE_ONLINE_PREFIX: string;
 
     constructor(options: MQTTHubOptions){
         this.options = options;
 
         this.DEVICE_DATA_PREFIX = this.options.exchange || `device_values`
+        this.DEVICE_ONLINE_PREFIX = `device_online`;
 
     }
 
@@ -66,6 +69,19 @@ export class MQTTHub {
                     userId: topic.match(regex)?.[1]
                 });
             }
+
+            if(topic.indexOf(this.DEVICE_ONLINE_PREFIX) > -1){
+                const regex = new RegExp(`${this.DEVICE_ONLINE_PREFIX}/(.+?)/`);
+
+                let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
+
+
+                const online_id = topic.match(regex)?.[1];
+                if(online_id && messageContent.offline != null){
+                    this.options.onStatus?.(online_id, messageContent.offline ? 'OFFLINE' : 'ONLINE')
+                }
+            }
+
         })
 
         this.client.on('reconnect', () => {

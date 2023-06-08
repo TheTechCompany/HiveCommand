@@ -11,13 +11,13 @@ export default (prisma: PrismaClient) => {
         updateCommandProgramComponent(program: ID, id: ID!, input: CommandProgramComponentInput): CommandProgramComponent
         deleteCommandProgramComponent(program: ID, id: ID!): CommandProgramComponent
 
-        createCommandProgramComponentFile(program: ID, component: ID, path: String, content: String): CommandProgramComponentFile
-        updateCommandProgramComponentFile(program: ID, component: ID, id: ID, path: String, content: String): CommandProgramComponentFile
-        deleteCommandProgramComponentFile(program: ID, component: ID, id: ID): CommandProgramComponentFile
+        createCommandProgramComponentFile(program: ID!, component: ID!, path: String, content: String): CommandProgramComponentFile
+        updateCommandProgramComponentFile(program: ID!, component: ID!, id: ID!, path: String, content: String): CommandProgramComponentFile
+        deleteCommandProgramComponentFile(program: ID!, component: ID!, id: ID!): CommandProgramComponentFile
        
-        createCommandProgramComponentProperty(program: ID, component: ID, key: String, scalar: String, typeId: String): CommandProgramComponentFile
-        updateCommandProgramComponentProperty(program: ID, component: ID, id: ID, key: String, scalar: String, typeId: String): CommandProgramComponentFile
-        deleteCommandProgramComponentProperty(program: ID, component: ID, id: ID): CommandProgramComponentFile
+        createCommandProgramComponentProperty(program: ID!, component: ID!, key: String, scalar: String, typeId: String): CommandProgramComponentFile
+        updateCommandProgramComponentProperty(program: ID!, component: ID!, id: ID!, key: String, scalar: String, typeId: String): CommandProgramComponentFile
+        deleteCommandProgramComponentProperty(program: ID!, component: ID!, id: ID!): CommandProgramComponentFile
 
     }
 
