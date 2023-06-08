@@ -291,12 +291,17 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 y: position?.y,
                 width: position?.width,
                 height: position?.height,
-            }, (state: any) => {
+            }, (_state: any) => {
 
                 const [view, setView] = useState<'info' | 'settings'>('info')
 
                 // let values = workingState[deviceTag] || workingState || {};
-                let values = state[deviceTag];
+
+                const state = transformer ? transformer(_state) : _state[deviceTag];
+                
+                let values = _state[deviceTag]
+
+                console.log("SHOW WINDOW", values, state, deviceTag)
 
                 if(values == undefined || values == null) values = {};
 
@@ -443,7 +448,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         </Box>
                     )}
                 </Box>
-            }, transformer)
+            })
         },
         showWindow: (
             position: { x: number, y: number, width: number, height: number, anchor?: string },

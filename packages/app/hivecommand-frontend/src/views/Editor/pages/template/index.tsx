@@ -150,9 +150,6 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
             }
         ])
 
-        console.log({componentsInterface})
-
-                    console.log({inputInterface})
         return [
             {
                 path: 'ts:facts.d.ts',
@@ -185,7 +182,6 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
             }].concat(componentsInterface)
     }, [activeTemplate, components])
 
-    console.log({extraLib})
 
     
     return (

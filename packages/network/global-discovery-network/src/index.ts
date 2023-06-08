@@ -35,6 +35,15 @@ import { API } from './api';
                     value: `${value}`
                 }
             }),
+            prisma.device.update({
+                where: {
+                    id: deviceId
+                },
+                data: {
+                    online: true,
+                    lastSeen: new Date(timestamp)
+                }
+            }),
             redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}`: ''}`, `${value}`)
         ]);
     };
@@ -82,13 +91,30 @@ import { API } from './api';
             alarmCenter.hook({ routingKey, messageContent, userId })
         } 
 
+        const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
+            const device = await prisma.device.findFirst({ where: { network_name: id } })
+
+            if(!device) return;
+
+            await prisma.device.update({
+                where: {
+                    id: device.id
+                },
+                data: {
+                    online: status == "ONLINE",
+                    lastSeen: new Date()
+                }
+            })
+        }
+
         const mqttHub = new MQTTHub({
             user: process.env.IOT_USER,
             pass: process.env.IOT_PASS,
             host: process.env.IOT_ENDPOINT || '',
             exchange: process.env.IOT_EXCHANGE || 'device_values',
 
-            onMessage: onMessage as any
+            onMessage: onMessage as any,
+            onStatus: onStatus as any
         });
 
         await mqttHub.setup();

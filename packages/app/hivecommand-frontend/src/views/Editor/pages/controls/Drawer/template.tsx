@@ -60,7 +60,6 @@ export const TemplateMenu = () => {
     }, [types])
 
     const tagSchema = useMemo(() => {
-        console.log({tags}, scalarTypes)
 
         let tagSchema = tags?.reduce((prev, curr) => {
             // console.log({inScalar: curr.type in scalarTypes, index: curr.type.indexOf('[]') > -1, replace: curr.type.replace(/[]/, '')})
@@ -100,7 +99,6 @@ export const TemplateMenu = () => {
     }, [templateOptions])
 
 
-    console.log({templateState});
 
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
@@ -127,7 +125,6 @@ export const TemplateMenu = () => {
 
     
     const renderConfigInput = ({type, value, label, id}: {type: ConfigInputType, value: any, label: string, id?: string}, updateState: ((key: string, value: any) => void) = _updateState) => {
-        console.log({label, value})
 
         // label = id || label;
 
@@ -153,7 +150,6 @@ export const TemplateMenu = () => {
                     options = options.filter((a) => a?.type == types.find((a) => a.id === type_parts[1]).name );
                 }
 
-                console.log({options, value})
 
                 return (
                 // <Box>
@@ -318,7 +314,6 @@ export const TemplateMenu = () => {
                             return [{label: device.tag, type: 'keyword'}].concat(device.type?.state?.map((stateItem) => ({label: `${device.tag}.${stateItem.key}`, type: 'keyword' })))
                         }).reduce((prev, curr) => prev.concat(curr), []) */}
                         onChange={(e) => {
-                            console.log(e)
                             updateState(id || label, e)
                         }}
                         />
@@ -361,7 +356,6 @@ export const TemplateMenu = () => {
                         {renderConfigInput(
                             { id: input.id, type: input.type, value: templateState?.find((a) => input.id === a.field?.id)?.value || null, label: input.name },
                             (key, value) => {
-                                console.log({key, value})
                                 updateNodeTemplateConfig({
                                     variables: {
                                         nodeId: selected?.id,

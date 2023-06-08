@@ -6,7 +6,7 @@ import { Add } from '@mui/icons-material'
 
 export const TreeItems = (props: any) => {
     return <TreeItem {...props} label={(
-        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: '12px'}}>
             <Typography>{props.label}</Typography>
 
             <IconButton size="small" onClick={props.onAdd}>
