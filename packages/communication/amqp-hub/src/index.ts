@@ -53,6 +53,14 @@ export class MQTTHub {
                     console.log(`Subscribed to ${this.DEVICE_DATA_PREFIX}`)
                 }
             })
+
+            this.client?.subscribe(`${this.DEVICE_ONLINE_PREFIX}/+`, (err) => {
+                if(err){
+                    console.error(`Failed to subscribe to ${this.DEVICE_ONLINE_PREFIX}`)
+                }else{
+                    console.log(`Subscribed to ${this.DEVICE_ONLINE_PREFIX}`)
+                }
+            })
     
         })
 
@@ -74,7 +82,6 @@ export class MQTTHub {
                 const regex = new RegExp(`${this.DEVICE_ONLINE_PREFIX}/(.+?)/`);
 
                 let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
-
 
                 const online_id = topic.match(regex)?.[1];
                 if(online_id && messageContent.offline != null){
