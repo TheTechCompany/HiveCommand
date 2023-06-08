@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.243",
+	"version": "1.4.15-alpha.247",
 	"description": "",
 	"private": true,
 	"publishConfig": {
