@@ -162,7 +162,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         }
 
         //Get tag from PLC
-        let tag = this.controller.PLC?.tagList?.find((a) => a.name == tagName)
+        let tag = this.controller.PLC?.tagList?.find((a) => a.name == tagName?.split('.')?.[0])
 
         if (!tag) throw new Error("Couldn't add tag" + tagName)
 
