@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/local-sidecar",
-	"version": "1.4.15-alpha.251",
+	"version": "1.4.15-alpha.252",
 	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
@@ -25,7 +25,7 @@
 		"tsconfig-paths": "^4.1.1"
 	},
 	"dependencies": {
-		"@hive-command/amqp-client": "^1.4.15-alpha.251",
+		"@hive-command/amqp-client": "^1.4.15-alpha.252",
 		"@hive-command/drivers-base": "^1.4.15-alpha.234",
 		"@hive-command/evented-values": "^1.4.15-alpha.240",
 		"@yarnpkg/cli": "^4.0.0-rc.44",
