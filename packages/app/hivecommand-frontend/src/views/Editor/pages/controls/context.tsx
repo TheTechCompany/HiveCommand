@@ -15,7 +15,7 @@ export interface HMITag {
 export interface HMIType {
     id: string;
     name: string;
-    fields: {name: string, type: string}[];
+    fields: {id: string, name: string, type: string}[];
 }
 
 export interface HMITemplate {

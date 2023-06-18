@@ -24,7 +24,8 @@ export interface ICommandEditorContext {
 		tags?: HMITag[];
 		types?: HMIType[]
 		program?: any[];
-		hmi?: any[]
+		hmi?: any[];
+		alarms?: any[];
 	}
 	plugins?: {
 		dataScope?: {id: string, name: string, module: string, configuration: any}[]

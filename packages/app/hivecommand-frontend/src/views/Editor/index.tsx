@@ -95,6 +95,22 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 alarms {
                     id
                     name
+
+                    nodes {
+                        id
+                        type {
+                            id
+                            name
+                        }
+
+                        targetedBy {
+                            source {
+                                id
+                            }
+                        }
+
+                    
+                    }
                 }
 
                 types {
@@ -379,7 +395,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             id: 'alarms-root',
             name: 'Alarms',
             children: program?.alarms?.slice(),
-            editor: <AlarmEditor />
+            editor: <AlarmEditor active={selected?.id} />
             // element: <Alarms />
 
         }

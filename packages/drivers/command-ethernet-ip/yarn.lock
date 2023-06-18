@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@hive-command/ethernet-ip@^2.5.6-alpha.33":
-  version "2.5.6-alpha.33"
-  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.33.tgz#95fd3da4b87d3a25b271e81240b89c80a44e2e1b"
-  integrity sha512-V5pKhBwYY3CAdC+pCAPUOFS0wU4sOSI1UxqO0rbGUcEVMym1P9uGJjI4HZmxWy8tHxND8gS9anmrQwA+QRsGHg==
+"@hive-command/ethernet-ip@^2.5.6-alpha.34":
+  version "2.5.6-alpha.34"
+  resolved "https://registry.yarnpkg.com/@hive-command/ethernet-ip/-/ethernet-ip-2.5.6-alpha.34.tgz#777169adb112509b1299c52b1392657f693391bd"
+  integrity sha512-qHcFk/jTXW4RuPkt4ZLKoJIVQ1wLozBJBeFIUO26OytHemLbIv5FNXLLzSMaoVlhi2MHNgfgVYf29UsxWhw9cg==
   dependencies:
     dateformat "^3.0.3"
     deep-equal "^1.1.1"

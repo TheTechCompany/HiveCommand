@@ -11,6 +11,10 @@ export default (prisma: PrismaClient) => {
             createCommandProgramAlarm(program: ID, input: CommandProgramAlarmInput): CommandProgramAlarm
             updateCommandProgramAlarm(program: ID, id: ID!, input: CommandProgramAlarmInput): CommandProgramAlarm
             deleteCommandProgramAlarm(program: ID, id: ID!): CommandProgramAlarm
+
+            createCommandProgramAlarmAction(program: ID, alarm: ID, input: CommandProgramAlarmActionInput): CommandProgramAlarmAction
+            updateCommandProgramAlarmAction(program: ID, alarm: ID, id: ID!, input: CommandProgramAlarmActionInput): CommandProgramAlarmAction
+            deleteCommandProgramAlarmAction(program: ID, alarm: ID, id: ID!): CommandProgramAlarmAction
         }
 
         input CommandProgramAlarmInput {
@@ -25,8 +29,8 @@ export default (prisma: PrismaClient) => {
             name: String
             description: String
 
-            conditions: [CommandProgramAlarmCondition]
-            actions: [CommandProgramAlarmAction]
+            edges: [CommandProgramAlarmEdge]
+            nodes: [CommandProgramAlarmAction]
         }
 
         type CommandProgramAlarmCondition {
@@ -37,11 +41,41 @@ export default (prisma: PrismaClient) => {
             value: String
         }
 
+        type CommandProgramAlarmType {
+            id: ID
+            name: String
+        }
+
+
         type CommandProgramAlarmAction {
             id: ID
             name: String
 
-            func: String
+            type: CommandProgramAlarmType
+
+            sourcedBy: [CommandProgramAlarmEdge]
+            targetedBy: [CommandProgramAlarmEdge]
+        }
+
+        type CommandProgramAlarmEdge {
+            id: ID
+
+            source: CommandProgramAlarmAction
+            target: CommandProgramAlarmAction
+            
+        }
+
+        input CommandProgramAlarmActionInput {
+            type: String
+
+            targetedBy: String
+        }
+
+        type CommandProgramAlarmAction {
+            id: ID
+
+            type: CommandProgramAlarmType
+
         }
        
 
@@ -109,6 +143,83 @@ export default (prisma: PrismaClient) => {
 
                 return await prisma.programAlarm.delete({
                     where: { id: args.id }
+                })
+            },
+            createCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
+                let parentUpdate = {};
+                if(args.input.targetedBy){
+                    parentUpdate['targetedBy'] = {
+                        create: {
+                            id: nanoid(),
+                            alarm: {
+                                connect: {
+                                    id: args.alarm
+                                }
+                            },
+                            source: {
+                                connect: {
+                                    id: args.input.parent
+                                }
+                            }
+                        }
+                    }
+                }
+
+                await prisma.programAlarm.update({
+                    where: {
+                        id: args.alarm,
+                    },
+                    data: {
+                        nodes: {
+                            create: {
+                                id: nanoid(),
+                                name: '',
+                                type: {
+                                    connect: {
+                                        id: args.input.type
+                                    }
+                                },
+                                ...parentUpdate
+                            }
+                        }
+                    }
+                })
+            },
+            updateCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
+                await prisma.programAlarm.update({
+                    where: {
+                        id: args.alarm
+                    },
+                    data: {
+                        nodes: {
+                            update: {
+                                where: {
+                                    id: args.id,
+                                },
+                                data: {
+                                    type: {
+                                        connect: {
+                                            id: args.input.type
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+            },
+            deleteCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
+                await prisma.programAlarm.update({
+                    where: {
+                        id: args.alarm
+                    },
+                    data: {
+                        nodes: {
+                            delete: {
+                                id: args.id
+                            }
+                        }
+                    }
                 })
             }
 

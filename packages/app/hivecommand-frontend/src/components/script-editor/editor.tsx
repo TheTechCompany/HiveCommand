@@ -80,14 +80,15 @@ export const Editor: React.FC<EditorProps> = (props) => {
     //     return inf;
     // }, [props.variables])
     
-    const extraLib = typeof(props.extraLib) == 'string' ? `
-        type DeepPartial<T> = {
+    const extraLib = props.extraLib ? 
+        typeof(props.extraLib) == 'string' ? `
+            type DeepPartial<T> = {
+                [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
+            };
+            ${props.extraLib}
+        ` : props.extraLib.concat([{path: 'ts:base.d.ts', content: ` type DeepPartial<T> = {
             [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-        };
-        ${props.extraLib}
-    ` : props.extraLib.concat([{path: 'ts:base.d.ts', content: ` type DeepPartial<T> = {
-        [P in keyof T]?: T[P] extends object ? DeepPartial<T[P]> : T[P];
-    };` }])
+        };` }]) : ''
 
     const loadLibs = () => {
         if(typeof(extraLib) == 'string'){
