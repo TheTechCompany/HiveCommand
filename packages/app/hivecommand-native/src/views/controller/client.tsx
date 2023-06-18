@@ -62,7 +62,6 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         //  }).reduce((prev, curr) => merge(prev, curr), {})
     }, [JSON.stringify(valueStore)])
 
-
     const onDataChanged = (data: any) => {
         console.log("data changed", data);
 
@@ -99,11 +98,9 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
 
         return axios.get(`http://localhost:${8484}/snapshot`).then((r) => r.data).then((data) => {
-            if (data.data) {
-                console.log("Initial state store", data.data.snapshot)
-                setValueStore(data.data.snapshot)
+            if (data) {
+                setValueStore(data.snapshot)
             }
-
         })
     }
 
