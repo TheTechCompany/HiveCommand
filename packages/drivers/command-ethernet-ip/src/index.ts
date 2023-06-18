@@ -67,14 +67,25 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
                 if(!plcTag) return;
 
-                //Observe for array changes here too
-                plcTag?.tag?.on('Initialized', (data: { value: Structure | Tag }) => {
-                    observer.next({ [tag.name]: data.value });
-                })
+                let parts = tag.name.split('.');
 
-                plcTag?.tag?.on('Changed', (data: { value: Tag | Structure }) => {
-                    observer.next({ [tag.name]: data.value });
-                })
+                if(parts.length > 1){
+                    plcTag.children?.find((a) => a.name == parts[1])?.tag?.on('Initialized', (data) => {
+                        observer.next({[tag.name]: data.value})
+                    })
+                    plcTag.children?.find((a) => a.name == parts[1])?.tag?.on('Changed', (data) => {
+                        observer.next({[tag.name]: data.value})
+                    })
+                }else{
+                    //Observe for array changes here too
+                    plcTag?.tag?.on('Initialized', (data: { value: Structure | Tag }) => {
+                        observer.next({ [tag.name]: data.value });
+                    })
+
+                    plcTag?.tag?.on('Changed', (data: { value: Tag | Structure }) => {
+                        observer.next({ [tag.name]: data.value });
+                    })
+                }
 
             }))
 
@@ -112,21 +123,20 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         if (!plcTag) throw new Error(`Couldn't add tag ${tag}`)
 
         if (Array.isArray(value)) {
+            //Value is array, write to all subindexes
             await Promise.all(value.map(async (idx_value, ix) => {
-                // let type = fromTagList?.type. ? Types[fromTagList?.type.typeName] : undefined
 
                 let t =  plcTag.children?.find((a) => a.name == `${ix}`)?.tag 
-//                new Tag(`${tag}[${ix}]`, null, plcTag.tag?.type as any)
+
                 if(t){
                     t.value = idx_value;
                     await this.writeTag(t);
                 }
 
-                // this.controller.PLC?.writeTag(t).catch((err) => console.error({ err, type: fromTagList?.type.typeName, value, idx_value }))
             }))
         } else {
             if (typeof(value) == 'object') {
-
+                //Write all keys of object as subkeys to tag
                 await Promise.all(Object.keys(value).map(async (valueKey) => {
                     let tag = plcTag.children?.find((a) => a.name == valueKey)?.tag
                     if(!tag) return;
@@ -135,15 +145,24 @@ export default class EthernetIPDriver extends BaseCommandDriver {
                     await this.writeTag(tag)
                 }))
               
-                // this.controller.PLC?.writeTag(tag).catch((err) => console.error({ err }));
 
             } else if (plcTag.tag) {
+                //Root tag exists just write to it
                 plcTag.tag.value = value;
                 
                 await this.writeTag(plcTag.tag);
 
-                // this.controller.PLC?.writeTag(rootTag).catch((err) => console.error({ err }));
 
+            }else{
+                //Children tags might exist, check length of tag path
+                let parts = tag.split('.');
+                if(parts.length > 1){
+                    let t = plcTag.children?.find((a) => a.name == parts[1])?.tag;
+                    if(t){
+                        t.value = value;
+                        await this.writeTag(t);
+                    }
+                }
             }
         }
 
