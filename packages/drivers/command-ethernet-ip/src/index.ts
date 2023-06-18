@@ -156,7 +156,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     private async addTag(tagName: string) : Promise<ENIPTag> {
 
         //Check for tag in internal store before recreating
-        let existingTag = this.commandTags.find((a) => a.name == tagName)
+        let existingTag = this.commandTags.find((a) => a.name == tagName?.split('.')?.[0])
         if(existingTag){
             return existingTag
         }
@@ -214,7 +214,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
         }
 
-        return {
+        let newTag = {
             name: tag.name,
             isArray,
             tag: rootTag,
@@ -225,7 +225,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
                 }
                 return rootTag?.value
             }
-        }
+        };
+
+        this.commandTags.push(newTag)
+
+        return newTag
         // this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
 
         //Add tag to PLC
