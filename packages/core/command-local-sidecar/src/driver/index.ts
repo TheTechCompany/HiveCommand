@@ -1,5 +1,5 @@
 import { BaseCommandDriver } from '@hive-command/drivers-base';
-import { Worker, spawn } from 'threads'
+import { Worker, spawn } from '@hive-command/threads'
 import {
     Cache,
     Configuration,
@@ -295,7 +295,7 @@ export const Driver = async (options: {driver: string, configuration: any}) => {
         readMany: (tags: {name: string, alias: string}[]) => any,
         write: (tag: {name: string, value: string}) => any,
         writeMany: (tags: {name: string, value: string}[]) => any,
-        subscribe: (tags: {name: string, alias: string}[]) => Observable<{[key: string]: any}>,
+        subscribe: (tags: {name: string, alias: string}[]) => Promise<Observable<{[key: string]: any}>>,
         load_driver: (driver: string, configuration: any) => BaseCommandDriver
     }>(worker);
 

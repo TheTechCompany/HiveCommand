@@ -179,7 +179,7 @@ export class Sidecar extends EventEmitter {
                 }).reduce((prev, curr) => prev.concat(curr), []);
 
                 // (driver as any).sub()
-                const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
+                const observable = await driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
                 (observable as any)?.subscribe((dataPatch: any) => {
                     Object.keys(dataPatch).map((dataKey) => {

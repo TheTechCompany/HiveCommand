@@ -1,5 +1,4 @@
-import { expose } from 'threads/worker';
-import { Observable } from 'threads/observable'
+import { expose } from '@hive-command/threads/worker';
 import { BaseCommandDriver } from '@hive-command/drivers-base';
 
 let Driver: any;
@@ -22,8 +21,8 @@ expose({
     writeMany: async (tags: {name: string, value: any}[]) => {
         return await instance.writeMany?.(tags)
     },
-    subscribe: (tags: {name: string, alias: string}[]) => {
-        return instance.subscribe?.(tags)
+    subscribe: async (tags: {name: string, alias: string}[]) => {
+        return await instance.subscribe?.(tags)
     },
     load_driver: (driver: string, configuration: any) => {
         try {

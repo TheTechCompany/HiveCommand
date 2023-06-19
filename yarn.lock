@@ -607,6 +607,18 @@
   resolved "https://registry.yarnpkg.com/@hexhive/utils/-/utils-0.0.6-alpha.13.tgz#bb2a5415a5fa39870dd40397f1e41a9c1dc89a92"
   integrity sha512-jB7lgqBbWjymdV4ZReW8zmgVOs2QCcei+8sGhqHQkZDt48IbvfrTaklKxIKnQJpX/p1JgqiO8fjoxr802sXZQw==
 
+"@hive-command/threads@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@hive-command/threads/-/threads-1.7.0.tgz#92dec4b5f86abbc23b2ef34d7943986d034258f3"
+  integrity sha512-zROr1JUDwIT5QYE5VwBiyz6qr46nDkeI6Y31ku7LEeYWzckcQ6cc9UJVnuUDGw7XjDwx6dh4A1QH5qTo4ULA1g==
+  dependencies:
+    callsites "^3.1.0"
+    debug "^4.2.0"
+    is-observable "^2.1.0"
+    observable-fns "^0.6.1"
+  optionalDependencies:
+    tiny-worker ">= 2"
+
 "@hutson/parse-repository-url@^3.0.0":
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/@hutson/parse-repository-url/-/parse-repository-url-3.0.2.tgz#98c23c950a3d9b6c8f0daed06da6c3af06981340"
@@ -8513,18 +8525,6 @@ thenify@^3.3.1:
   integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
   dependencies:
     any-promise "^1.0.0"
-
-threads@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/threads/-/threads-1.7.0.tgz#d9e9627bfc1ef22ada3b733c2e7558bbe78e589c"
-  integrity sha512-Mx5NBSHX3sQYR6iI9VYbgHKBLisyB+xROCBGjjWm1O9wb9vfLxdaGtmT/KCjUqMsSNW6nERzCW3T6H43LqjDZQ==
-  dependencies:
-    callsites "^3.1.0"
-    debug "^4.2.0"
-    is-observable "^2.1.0"
-    observable-fns "^0.6.1"
-  optionalDependencies:
-    tiny-worker ">= 2"
 
 throat@^6.0.1:
   version "6.0.2"

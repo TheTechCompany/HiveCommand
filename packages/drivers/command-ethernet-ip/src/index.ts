@@ -1,10 +1,7 @@
 
-import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
-import { CIP, ControllerManager, ManagedController, Structure, Tag, Types } from '@hive-command/ethernet-ip'
-import { TagType } from '@hive-command/ethernet-ip/dist/tag-list';
-import { Observable } from 'threads/observable';
-import { EventEmitter } from 'events';
-import { get } from 'lodash'
+import { BaseCommandDriver, DriverOptions } from '@hive-command/drivers-base';
+import { CIP, ControllerManager, ManagedController, Tag, Types } from '@hive-command/ethernet-ip'
+import { Observable  } from '@hive-command/threads/observable';
 
 interface ENIPTag {
     name: string, 
