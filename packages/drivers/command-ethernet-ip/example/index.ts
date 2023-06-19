@@ -11,9 +11,9 @@ import EthernetIPDriver from '../src'
     await driver.start()
 
     
-    const observable = await driver.subscribe([
-        {name: 'Test'},
-        {name: 'CEB_Date.Month_Set'},
+    const observable = driver.subscribe([
+        {name: 'AV_411.HMI_Extended'},
+        // {name: 'CEB_Date.Month_Set'},
         // {name: 'CEB_Date.Month_Set[2]'},
         // {name: 'CEB_Date.Month_Set[3]'},
         // {name: 'CEB_Date.Month_Set[4]'},
@@ -23,11 +23,11 @@ import EthernetIPDriver from '../src'
 
     ]);
     
-    observable.subscribe((a) => {
-        console.log(Date.now(), a);
-    })
+    // observable.subscribe((a) => {
+    //     console.log(Date.now(), a);
+    // })
 
-    driver.write('Test.tester.HMI_Extend', true)
+    driver.write('AV_411.HMI_Extend', true)
     
 
     // const res = await driver.read({name: 'ARR'})

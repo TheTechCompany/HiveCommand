@@ -1,7 +1,7 @@
 
 import { BaseCommandDriver, DriverOptions } from '@hive-command/drivers-base';
 import { CIP, ControllerManager, ManagedController, Tag, Types } from '@hive-command/ethernet-ip'
-import { Observable  } from '@hive-command/threads/observable';
+import { Observable, Subject  } from '@hive-command/threads/observable';
 
 interface ENIPTag {
     name: string, 
@@ -67,28 +67,41 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     async subscribe(tags: { name: string; alias?: string; }[]): Promise<Observable<{ [key: string]: any }>> {
         return await new Promise(async (resolve) => {
 
-            let plcTags: any[]  = [];
+            const subject = new Subject<{[key: string]: any}>();
 
-            for(var i = 0; i < tags.length; i++){
-                let tag = tags[i]
+            // let plcTags = [];
 
-                const plcTag = await this.addTag(tag.name) 
+            //for(var i = 0; i < tags.length; i++){
+              //  let tag = tags[i]
+            let plcTags = await Promise.all(tags.map(async (tag) => { 
+                const plcTag = await this.addTag(tag.name);
 
-                plcTags.push(plcTag)
-            }
-
-            const observer = new Observable<{[key: string]: any}>((observer) => {
-
-                plcTags.map((plcTag) => {
-                    plcTag.subscribe((data: any) => {
-                        observer.next({[plcTag.name]: data})
-                    })
+                plcTag.subscribe((data: any) => {
+                    subject.next({[tag.name]: data})
                 })
+
+                // plcTags.push(plcTag)
+                return plcTag;
+            }));
+
+            resolve(Observable.from(subject))
+
+            plcTags.map((x) => {
+                subject.next({[x.name]: x.value()})
+            })
+            
+
+            // const observer = new Observable<{[key: string]: any}>((observer) => {
+
+            //     plcTags.map((plcTag) => {
+            //         plcTag.subscribe((data: any) => {
+            //             observer.next({[plcTag.name]: data})
+            //         })
+            //     })
                 
     
-            })
+            // })
 
-            resolve(observer)
         })
         
     }
@@ -280,15 +293,21 @@ export default class EthernetIPDriver extends BaseCommandDriver {
             }
 
             subscribe = (fn: any) => {
-                createdTags[0].tag.on('Initialized', (data: any) => { 
-                    // console.log("RAW", tagPath, data.value)
-                    fn(data.value) 
-                }) 
+                // createdTags[0].tag.on('Initialized', (data: any) => { 
+                //     // console.log("RAW", tagPath, data.value)
+                //     fn(data.value) 
+                // }) 
                 createdTags[0].tag.on('Changed', (data: any) => { 
                     // console.log("RAW", tagPath, data.value)
                     fn(data.value)
                 }) 
             }
+
+            await new Promise((resolve) => {
+                createdTags[0].tag.on('Initialized', (data: any) => {
+                    resolve(true)
+                })
+            })
             // this.tags[tagPath]?.on('Initialized', (d) => console.log(tagPath, d.value));
             // this.tags[tagPath]?.on('Changed', (d) => console.log(tagPath, d.value));
         }
