@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.253](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.252...v1.4.15-alpha.253) (2023-06-19)
+
+**Note:** Version bump only for package @hive-command/iot-cli
+
+
+
+
+
 ## [1.4.15-alpha.252](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.251...v1.4.15-alpha.252) (2023-06-18)
 
 **Note:** Version bump only for package @hive-command/iot-cli
