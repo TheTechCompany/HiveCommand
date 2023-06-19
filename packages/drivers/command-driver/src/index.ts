@@ -43,7 +43,7 @@ export abstract class BaseCommandDriver {
 
     subscribe?(
         tags: {name: string, alias?: string}[],
-    ) : Observable<{[key: string]: any}>;
+    ) : Promise<Observable<{[key: string]: any}>>;
 
     abstract read(tag: {name: string, alias?: string}): Promise<any>;
     readMany?(tags: {name: string, alias?: string}[]): Promise<any>;
@@ -74,7 +74,7 @@ export class AbstractDriver extends BaseCommandDriver {
 
     subscribe(
         tags: {name: string, alias: string}[]
-    ): Observable<{[key: string]: any}> {
+    ): Promise<Observable<{[key: string]: any}>> {
         throw new Error("Subscribe not implemented yet")
     }
 

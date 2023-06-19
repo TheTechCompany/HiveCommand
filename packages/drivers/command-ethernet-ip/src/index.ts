@@ -1,7 +1,10 @@
 
 import { BaseCommandDriver, DriverOptions, DriverSubscription } from '@hive-command/drivers-base';
 import { CIP, ControllerManager, ManagedController, Structure, Tag, Types } from '@hive-command/ethernet-ip'
+import { TagType } from '@hive-command/ethernet-ip/dist/tag-list';
 import { Observable } from 'threads/observable';
+import { EventEmitter } from 'events';
+import { get } from 'lodash'
 
 interface ENIPTag {
     name: string, 
@@ -9,9 +12,10 @@ interface ENIPTag {
     children?: ENIPTag[]
     isArray?: boolean
 
+    onChanged?: (value: any) => void,
     type?: any,
     getter?: () => any,
-    setter?: (value: any) => void
+    setter?: (fn: (value: any) => void) => void
 }
 export default class EthernetIPDriver extends BaseCommandDriver {
 
@@ -19,7 +23,14 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
     private controller: ManagedController;
 
-    private _tags: { [key: string]: Tag | null } = {};
+    private tags: {
+        [key: string]: {
+            name: string,
+            subscribe: (fn: (value: any) => void) => void,
+            value: () => any,
+            write: (value: any) => void
+        }
+    } = {};
 
     private commandTags : ENIPTag[] = [];
 
@@ -46,7 +57,6 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         })
 
         // this.controller.PLC.ta
-        console.log(this.options)
     }
 
     async start() {
@@ -57,39 +67,33 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         }
     }
 
-    subscribe(tags: { name: string; alias?: string; }[]): Observable<{ [key: string]: any }> {
+    async subscribe(tags: { name: string; alias?: string; }[]): Promise<Observable<{ [key: string]: any }>> {
+        return await new Promise(async (resolve) => {
 
-        return new Observable((observer) => {
+            let plcTags: any[]  = [];
 
-            Promise.all(tags.map(async (tag) => {
+            for(var i = 0; i < tags.length; i++){
+                let tag = tags[i]
 
                 const plcTag = await this.addTag(tag.name) 
 
-                if(!plcTag) return;
+                plcTags.push(plcTag)
+            }
 
-                let parts = tag.name.split('.');
+            const observer = new Observable<{[key: string]: any}>((observer) => {
 
-                if(parts.length > 1){
-                    plcTag.children?.find((a) => a.name == parts[1])?.tag?.on('Initialized', (data) => {
-                        observer.next({[tag.name]: data.value})
+                plcTags.map((plcTag) => {
+                    plcTag.subscribe((data: any) => {
+                        observer.next({[plcTag.name]: data})
                     })
-                    plcTag.children?.find((a) => a.name == parts[1])?.tag?.on('Changed', (data) => {
-                        observer.next({[tag.name]: data.value})
-                    })
-                }else{
-                    //Observe for array changes here too
-                    plcTag?.tag?.on('Initialized', (data: { value: Structure | Tag }) => {
-                        observer.next({ [tag.name]: data.value });
-                    })
+                })
+                
+    
+            })
 
-                    plcTag?.tag?.on('Changed', (data: { value: Tag | Structure }) => {
-                        observer.next({ [tag.name]: data.value });
-                    })
-                }
-
-            }))
-
+            resolve(observer)
         })
+        
     }
 
     async read(tag: { name: string; alias?: string; }) {
@@ -97,15 +101,15 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         
         if (!plcTag) throw new Error(`Couldn't add tag ${tag.name}`)
 
-        if(plcTag.tag){
-            await this.controller.PLC?.readTag(plcTag.tag);
-        }else if((plcTag.children || []).length > 0){
-            await Promise.all((plcTag.children || []).map(async (x: any) => {
-                await this.controller.PLC?.readTag(x.tag)
-            }))
-        }
+        // if(plcTag.tag){
+        //     await this.controller.PLC?.readTag(plcTag.tag);
+        // }else if((plcTag.children || []).length > 0){
+        //     await Promise.all((plcTag.children || []).map(async (x: any) => {
+        //         await this.controller.PLC?.readTag(x.tag)
+        //     }))
+        // }
 
-        return plcTag?.getter?.() //tag.value;
+        // return plcTag?.getter?.() //tag.value;
     }
 
     private async writeTag(tag: Tag){
@@ -122,137 +126,363 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         // this.controller.PLC?.readTag()
         if (!plcTag) throw new Error(`Couldn't add tag ${tag}`)
 
-        if (Array.isArray(value)) {
-            //Value is array, write to all subindexes
-            await Promise.all(value.map(async (idx_value, ix) => {
+        // if (Array.isArray(value)) {
+        //     //Value is array, write to all subindexes
+        //     await Promise.all(value.map(async (idx_value, ix) => {
 
-                let t =  plcTag.children?.find((a) => a.name == `${ix}`)?.tag 
+        //         let t =  plcTag.children?.find((a) => a.name == `${ix}`)?.tag 
 
-                if(t){
-                    t.value = idx_value;
-                    await this.writeTag(t);
-                }
+        //         if(t){
+        //             t.value = idx_value;
+        //             await this.writeTag(t);
+        //         }
 
-            }))
-        } else {
-            if (typeof(value) == 'object') {
-                //Write all keys of object as subkeys to tag
-                await Promise.all(Object.keys(value).map(async (valueKey) => {
-                    let tag = plcTag.children?.find((a) => a.name == valueKey)?.tag
-                    if(!tag) return;
-                    tag.value = value[valueKey]
+        //     }))
+        // } else {
+        //     if (typeof(value) == 'object') {
+        //         //Write all keys of object as subkeys to tag
+        //         await Promise.all(Object.keys(value).map(async (valueKey) => {
+        //             let tag = plcTag.children?.find((a) => a.name == valueKey)?.tag
+        //             if(!tag) return;
+        //             tag.value = value[valueKey]
                     
-                    await this.writeTag(tag)
-                }))
+        //             await this.writeTag(tag)
+        //         }))
               
 
-            } else if (plcTag.tag) {
-                //Root tag exists just write to it
-                plcTag.tag.value = value;
+        //     } else if (plcTag.tag) {
+        //         //Root tag exists just write to it
+        //         plcTag.tag.value = value;
                 
-                await this.writeTag(plcTag.tag);
+        //         await this.writeTag(plcTag.tag);
 
 
-            }else{
-                //Children tags might exist, check length of tag path
-                let parts = tag.split('.');
-                if(parts.length > 1){
-                    let t = plcTag.children?.find((a) => a.name == parts[1])?.tag;
-                    if(t){
-                        t.value = value;
-                        await this.writeTag(t);
-                    }
-                }
-            }
-        }
+        //     }else{
+        //         //Children tags might exist, check length of tag path
+        //         let parts = tag.split('.');
+        //         if(parts.length > 1){
+        //             let t = plcTag.children?.find((a) => a.name == parts[1])?.tag;
+        //             if(t){
+        //                 t.value = value;
+        //                 await this.writeTag(t);
+        //             }
+        //         }
+        //     }
+        // }
 
         // plcTag.tag.value = value;
+        plcTag.write(value);
+
         console.log("Writing tag", tag, value);
         // await this.controller.PLC?.writeTag(plcTag)
     }
 
 
-    private async addTag(tagName: string) : Promise<ENIPTag> {
+    /*
+        Returns tag if already in system
 
-        //Check for tag in internal store before recreating
-        let existingTag = this.commandTags.find((a) => a.name == tagName?.split('.')?.[0])
-        if(existingTag){
-            return existingTag
+        Creates tag and all subtags as keyed items on this.tags otherwise
+
+        this.tags = {
+            TAG1.SUBKEY
         }
 
-        //Get tag from PLC
-        let tag = this.controller.PLC?.tagList?.find((a) => a.name == tagName?.split('.')?.[0])
+        !Not
+        this.tags = {
+            TAG1: {
+                SUBKEY: value
+            }
+        }
 
-        if (!tag) throw new Error("Couldn't add tag" + tagName)
+        addTag(AV101.Open) -> AV101.Open | (changed: (Open))
+        addTag(AV101) -> Open, Closed, Extend, Retract | (changed: {Open, Closed, Extend})
+    */
+    private async addTag(tagPath: string, tagType?: string){ 
 
-        //Unwrap and rewrap potential structureObj so we can default the type to "STRING"
-        //May be unecessary keeping for posterity as at 12-06-23
-        let tagKeys = Object.keys(tag?.type.structureObj || {}).length > 0 ?
-            Object.keys(tag.type?.structureObj || {}).map((key) => ({
-                name: key,
-                type: (tag?.type?.structureObj as any)?.[key] || "STRING"
-            })).reduce((prev, curr) => ({ ...prev, [curr.name]: curr.type }), {}) :
-            undefined;
+        if(this.tags[tagPath]){
+            return this.tags[tagPath]
+        }
 
-        //Get correct tag type from PLC
-        const isArray = tag.type.arrayDims > 0 && tag.type.typeName !== "BIT_STRING";
-        let arraySize = 0; //await this.controller.PLC?.getTagArraySize(tagName)
-                // let arraySize = 0;
+        let createdTags : any[] = [];
 
-        let rootTag: Tag | null = null;
+        let tagList = this.controller.PLC?.tagList.reduce((prev, curr) => {
+            return {
+                ...prev,
+                [curr.name]: curr.type
+            }
+        }, {} as any)
+   
+        let tagObject : {typeName: string, arrayDims: number, structureObj?: { [key: string]: {typeName: string, arrayDims?: number} } } = tagPath.split('.').reduce((orig, index) => (orig.structureObj || orig)[index], tagList);
 
-        let childTags : ENIPTag[] = [];
+        // if(tagPath.indexOf('Count') > -1) return;
 
-        if (tagKeys) {
-            //Tag is likely a struct
-            childTags = [];
+        let isArray = tagObject?.arrayDims > 0 && tagObject?.typeName !== "BIT_STRING"
 
-            Object.keys(tagKeys).forEach((key) => {
+        let subscribe;
+        let write; 
 
-                let type: CIP.DataTypes.Types = CIP.DataTypes.Types[(((tagKeys || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+        if(tagObject?.structureObj){
+            createdTags = await this.addTagObject(tagPath, tagObject.structureObj)
 
-                childTags.push({ name: key, tag: this.controller.addTag(`${tag?.name}.${key}`, tag?.program, type) }) //, null, false, type, 10) })
-            })
-        } else {
-            //Tag is either a scalar or array
-            rootTag = this.controller.addTag(tagName, tag.program)
-
-            if (isArray) {
-                //Tag is an array
-                arraySize = await this.controller.PLC?.getTagArraySize(rootTag)
-
-                childTags = [];
-
-                for (var idx = 0; idx < arraySize; idx++) {
-                    childTags.push({ name: `${idx}`, type: rootTag?.type, tag: this.controller.addTag(`${tag.name}[${idx}]`, tag.program, Types[rootTag?.type as any] as any ) })
-                }
-
-                rootTag = null;
-
+            write = (value: any) => {
+                Object.keys(value).map((valueKey) => {
+                    createdTags.find((a) => a.name == valueKey).tag.write(value[valueKey])
+                })
             }
 
+            subscribe = (fn: any) => {
+                createdTags.map((x) => {
+                    x.tag.subscribe(() => {
+                        fn(
+                            createdTags.map((y) => ({name: y.name, value: y.tag.value()}) ).reduce((prev, curr) => ({...prev, [curr.name]: curr.value}), {})
+                        )
+                    }) 
+                })
+            }
+        }else if(isArray){
+            createdTags = (await this.addTagArray(tagPath, tagObject.typeName)).sort((a, b) => a.name.localeCompare(b.name))
+
+            write = (value: any) => {
+                for(var i = 0; i < createdTags.length; i++){
+                    if(value[i] !== undefined && value.length > i){
+                        createdTags[i].tag.write(value[i]);
+                    }
+                }
+
+                // Object.keys(value).map((valueKey) => {
+                //     createdTags.find((a) => a.name == valueKey).tag.write(value[valueKey])
+                // })
+            }
+
+            subscribe = (fn: any) => {
+                
+                createdTags.map((x) => {
+                    // console.log()
+
+                    x.tag.subscribe(() => {
+                        fn(createdTags.map((y) => y.tag.value()));
+                    })
+                    // return x.tag.value()
+
+                    // x.tag((data) => {
+                    //     // fn(createdTags.map(()))
+                    // })) 
+                })
+                // fn(val);
+            }
+        }else{
+            let tag = this.controller.addTag(tagPath, null, Types[tagType as any] as any)
+            
+            createdTags = [{ name: tagPath, tag: tag }];
+
+            write = (value: any) => {
+                if(tag){
+                    tag.value = value;
+                    this.writeTag(tag);
+                }
+            }
+
+            subscribe = (fn: any) => {
+                createdTags[0].tag.on('Initialized', (data: any) => { 
+                    // console.log("RAW", tagPath, data.value)
+                    fn(data.value) 
+                }) 
+                createdTags[0].tag.on('Changed', (data: any) => { 
+                    // console.log("RAW", tagPath, data.value)
+                    fn(data.value)
+                }) 
+            }
+            // this.tags[tagPath]?.on('Initialized', (d) => console.log(tagPath, d.value));
+            // this.tags[tagPath]?.on('Changed', (d) => console.log(tagPath, d.value));
         }
 
-        let newTag = {
-            name: tag.name,
-            isArray,
-            tag: rootTag,
-            children: childTags.length > 0 ? childTags : undefined,
-            getter: () => {
-                if(childTags.length > 0){
-                    return isArray ? childTags.sort((a,b) => a.name.localeCompare(b.name)).map((x) => x.tag?.value) : childTags.reduce((prev, curr) => ({...prev, [curr.name]: curr.tag?.value}), {})
+
+        // console.log({createdTags})
+
+
+
+        // const get = () => {
+        //     return createdTags.length > 1 ? createdTags.sort((a, b) => a.name.localeCompare(b.name)).map((x) => x.tag.value) : createdTags[0].tag.value;
+        // }
+
+        // const set = () => {
+
+        // }
+
+        this.tags[tagPath] = {
+            name: tagPath,
+            subscribe,
+            write,
+            value: () => {
+                if(tagObject?.structureObj){
+                    return createdTags.map((x) => ({name: x.name, value: x.tag.value()}) ).reduce((prev, curr) => ({...prev, [curr.name]: curr.value}), {})
+                }else if(isArray){
+                    return createdTags.map((x) => x.tag.value())
+                }else{
+                    return createdTags[0].tag.value;
                 }
-                return rootTag?.value
             }
         };
 
-        this.commandTags.push(newTag)
+        return this.tags[tagPath] //createdTags.length > 1 ? createdTags : createdTags[0]
 
-        return newTag
-        // this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
 
-        //Add tag to PLC
+    }
 
+    /*
+        Construct tag from ENIP
+
+        - TAG : BOOL | STRING | DINT[]
+        - TAG : TYPE
+        - TYPE: {key: BOOL, type: STRING, sub: TYPE, subArr: DINT[]}
+
+        Unless scalar pass to addTag again to find next values
+
+        tagName: {string} - path to tag dot sperated
+    */  
+    // private async addTag(tagName: string, program?: string, type?: TagType ) : Promise<ENIPTag> {
+    //     console.log(tagName)
+
+    //     const emitter = new EventEmitter()
+
+    //     //Check for tag in internal store before recreating
+    //     // let existingTag = this.commandTags.find((a) => a.name == tagName?.split('.')?.[0])
+    //     // if(existingTag){
+    //     //     return existingTag
+    //     // }
+
+
+    //     //Get tag from PLC
+    //     let {arrayDims, typeName, structureObj} = this.controller.PLC?.tagList?.find((a) => a.name == tagName)?.type || type as any || {arrayDims: 0, structureObj: undefined};
+
+    //     // if (!tag) throw new Error("Couldn't add tag" + tagName)
+
+
+    //     //Get correct tag type from PLC
+    //     const isArray = arrayDims > 0 && typeName !== "BIT_STRING";
+    //     let arraySize = 0; //await this.controller.PLC?.getTagArraySize(tagName)
+    //             // let arraySize = 0;
+
+    //     let rootTag: Tag | null = null;
+
+    //     let childTags : ENIPTag[] = [];
+
+    //     if (structureObj) {
+    //         console.log("Add", tagName, "OBJ", structureObj)
+    //         //Tag is likely a struct
+    //         childTags = await this.addTagObject(tagName, structureObj)
+
+    //         // childTags = [];
+
+    //         // Object.keys(tagKeys).forEach((key) => {
+
+    //         //     let type: CIP.DataTypes.Types = CIP.DataTypes.Types[(((tagKeys || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
+
+    //         //     childTags.push({ name: key, tag: this.controller.addTag(`${tag?.name}.${key}`, tag?.program, type) }) //, null, false, type, 10) })
+    //         // })
+    //     } else {
+    //         //Tag is either a scalar or array
+    //         rootTag = this.controller.addTag(tagName, program)
+
+    //         if (isArray) {
+    //             console.log("Add", tagName, "ARR")
+
+    //             //Tag is an array
+
+    //             childTags = await this.addTagArray(tagName, program || program)
+
+    //             childTags.map((childTag) => {
+    //                 childTag.onChanged?.(() => {
+    //                     emitter.emit('Data', childTags.map((x) => x.tag?.value))
+    //                 })
+    //             })
+    //             // arraySize = await this.controller.PLC?.getTagArraySize(rootTag)
+
+    //             // childTags = [];
+
+    //             // for (var idx = 0; idx < arraySize; idx++) {
+    //             //     childTags.push({ name: `${idx}`, type: rootTag?.type, tag: this.controller.addTag(`${tag.name}[${idx}]`, tag.program, Types[rootTag?.type as any] as any ) })
+    //             // }
+
+    //             rootTag = null;
+
+    //         }
+
+    //         if(rootTag){
+    //             rootTag.on('Initialized', (d) => {
+    //                 emitter.emit('Data', d.value);
+    //             })
+
+    //             rootTag.on('Changed', (d) => {
+    //                 emitter.emit('Data', d.value);
+    //             })
+    //         }
+
+    //     }
+
+    //     let newTag = {
+    //         name: tagName,
+    //         isArray,
+    //         tag: rootTag,
+    //         children: childTags.length > 0 ? childTags : undefined,
+    //         onChanged: (fn: any) => {
+    //             emitter.on('Data', (value) => fn(value));
+    //         },
+    //         getter: () => {
+    //             if(childTags.length > 0){
+    //                 return isArray ? childTags.sort((a,b) => a.name.localeCompare(b.name)).map((x) => x.tag?.value) : childTags.reduce((prev, curr) => ({...prev, [curr.name]: curr.tag?.value}), {})
+    //             }
+    //             return rootTag?.value
+    //         }
+    //     };
+
+    //     this.commandTags.push(newTag)
+
+    //     return newTag
+    //     // this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
+
+    //     //Add tag to PLC
+
+    // }
+
+    /*
+        Add tag with array
+    */
+    private async addTagArray (tagPath: string, type?: string, program?: string, arraySize?: number) {
+        const tag = this.controller.addTag(tagPath, program)
+
+        let size : number = arraySize || await this.controller.PLC?.getTagArraySize(tag)
+
+        let tags :any[] = [];
+
+        for(var i = 0; i < size; i++){
+            tags.push({
+                name: `${i}`, 
+                tag: await this.addTag( `${tagPath}[${i}]` ) //, program, Types[tag?.type as any] as any ) 
+            })
+        }
+
+        return tags;
+    }   
+
+    /*
+        Add tag with structure
+    */
+    private async addTagObject (tagPath: string, tagStructure: any, program?: string){
+        let tags : any[] = [];
+
+        let tagKeys = Object.keys(tagStructure);
+        
+        for(var i = 0; i < tagKeys.length; i++){
+            const key = tagKeys[i];
+        //  await Promise.all(Object.keys(tagStructure).map(async (key) => {
+
+            // let type: CIP.DataTypes.Types = CIP.DataTypes.Types[((tagStructure || {})[key].typeName || 'DINT') as keyof typeof CIP.DataTypes.Types];
+
+            tags.push({ name: key, tag: await this.addTag(`${tagPath}.${key}`) }) //, program, tagStructure[key] ) }) //, null, false, type, 10) })
+        }
+
+        return tags;
     }
 
 }
