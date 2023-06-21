@@ -20,6 +20,8 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
     private controller: ManagedController;
 
+    private tagList : any = {};
+
     private tags: {
         [key: string]: {
             name: string,
@@ -59,6 +61,14 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     async start() {
         try {
             await this.controller.connect()
+
+            this.tagList = this.controller.PLC?.tagList.reduce((prev, curr) => {
+                return {
+                    ...prev,
+                    [curr.name]: curr.type
+                }
+            }, {} as any)
+
         } catch (e) {
             console.error("Error starting driver", e);
         }
@@ -67,40 +77,29 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     async subscribe(tags: { name: string; alias?: string; }[]): Promise<Observable<{ [key: string]: any }>> {
         return await new Promise(async (resolve) => {
 
+            this.controller.PLC?.pauseScan();
+
             const subject = new Subject<{[key: string]: any}>();
 
-            // let plcTags = [];
+            let plcTags : any[] = [];
 
-            //for(var i = 0; i < tags.length; i++){
-              //  let tag = tags[i]
-            let plcTags = await Promise.all(tags.map(async (tag) => { 
+            for(var i = 0; i < tags.length; i++){
+               let tag = tags[i]
+            // let plcTags = await Promise.all(tags.map(async (tag) => { 
                 const plcTag = await this.addTag(tag.name);
 
                 plcTag.subscribe((data: any) => {
                     subject.next({[tag.name]: data})
                 })
 
-                // plcTags.push(plcTag)
-                return plcTag;
-            }));
-
-            resolve(Observable.from(subject))
-
-            plcTags.map((x) => {
-                subject.next({[x.name]: x.value()})
-            })
+                plcTags.push(plcTag)
+                //return plcTag;
+            } //));
             
+            resolve(Observable.from(subject))
+            
+            this.controller.PLC?.scan();
 
-            // const observer = new Observable<{[key: string]: any}>((observer) => {
-
-            //     plcTags.map((plcTag) => {
-            //         plcTag.subscribe((data: any) => {
-            //             observer.next({[plcTag.name]: data})
-            //         })
-            //     })
-                
-    
-            // })
 
         })
         
@@ -136,50 +135,6 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         // this.controller.PLC?.readTag()
         if (!plcTag) throw new Error(`Couldn't add tag ${tag}`)
 
-        // if (Array.isArray(value)) {
-        //     //Value is array, write to all subindexes
-        //     await Promise.all(value.map(async (idx_value, ix) => {
-
-        //         let t =  plcTag.children?.find((a) => a.name == `${ix}`)?.tag 
-
-        //         if(t){
-        //             t.value = idx_value;
-        //             await this.writeTag(t);
-        //         }
-
-        //     }))
-        // } else {
-        //     if (typeof(value) == 'object') {
-        //         //Write all keys of object as subkeys to tag
-        //         await Promise.all(Object.keys(value).map(async (valueKey) => {
-        //             let tag = plcTag.children?.find((a) => a.name == valueKey)?.tag
-        //             if(!tag) return;
-        //             tag.value = value[valueKey]
-                    
-        //             await this.writeTag(tag)
-        //         }))
-              
-
-        //     } else if (plcTag.tag) {
-        //         //Root tag exists just write to it
-        //         plcTag.tag.value = value;
-                
-        //         await this.writeTag(plcTag.tag);
-
-
-        //     }else{
-        //         //Children tags might exist, check length of tag path
-        //         let parts = tag.split('.');
-        //         if(parts.length > 1){
-        //             let t = plcTag.children?.find((a) => a.name == parts[1])?.tag;
-        //             if(t){
-        //                 t.value = value;
-        //                 await this.writeTag(t);
-        //             }
-        //         }
-        //     }
-        // }
-
         // plcTag.tag.value = value;
         plcTag.write(value);
 
@@ -188,25 +143,6 @@ export default class EthernetIPDriver extends BaseCommandDriver {
     }
 
 
-    /*
-        Returns tag if already in system
-
-        Creates tag and all subtags as keyed items on this.tags otherwise
-
-        this.tags = {
-            TAG1.SUBKEY
-        }
-
-        !Not
-        this.tags = {
-            TAG1: {
-                SUBKEY: value
-            }
-        }
-
-        addTag(AV101.Open) -> AV101.Open | (changed: (Open))
-        addTag(AV101) -> Open, Closed, Extend, Retract | (changed: {Open, Closed, Extend})
-    */
     private async addTag(tagPath: string, tagType?: string){ 
 
         if(this.tags[tagPath]){
@@ -215,14 +151,14 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
         let createdTags : any[] = [];
 
-        let tagList = this.controller.PLC?.tagList.reduce((prev, curr) => {
-            return {
-                ...prev,
-                [curr.name]: curr.type
-            }
-        }, {} as any)
+        // let tagList = this.controller.PLC?.tagList.reduce((prev, curr) => {
+        //     return {
+        //         ...prev,
+        //         [curr.name]: curr.type
+        //     }
+        // }, {} as any)
    
-        let tagObject : {typeName: string, arrayDims: number, structureObj?: { [key: string]: {typeName: string, arrayDims?: number} } } = tagPath.split('.').reduce((orig, index) => (orig.structureObj || orig)[index], tagList);
+        let tagObject : {typeName: string, arrayDims: number, structureObj?: { [key: string]: {typeName: string, arrayDims?: number} } } = tagPath.split('.').reduce((orig, index) => (orig.structureObj || orig)[index], this.tagList);
 
         // if(tagPath.indexOf('Count') > -1) return;
 
@@ -293,21 +229,21 @@ export default class EthernetIPDriver extends BaseCommandDriver {
             }
 
             subscribe = (fn: any) => {
-                // createdTags[0].tag.on('Initialized', (data: any) => { 
-                //     // console.log("RAW", tagPath, data.value)
-                //     fn(data.value) 
-                // }) 
+                createdTags[0].tag.on('Initialized', (data: any) => { 
+                    // console.log("RAW", tagPath, data.value)
+                    fn(data.value) 
+                }) 
                 createdTags[0].tag.on('Changed', (data: any) => { 
                     // console.log("RAW", tagPath, data.value)
                     fn(data.value)
                 }) 
             }
 
-            await new Promise((resolve) => {
-                createdTags[0].tag.on('Initialized', (data: any) => {
-                    resolve(true)
-                })
-            })
+            // await new Promise((resolve) => {
+            //     createdTags[0].tag.on('Initialized', (data: any) => {
+            //         resolve(true)
+            //     })
+            // })
             // this.tags[tagPath]?.on('Initialized', (d) => console.log(tagPath, d.value));
             // this.tags[tagPath]?.on('Changed', (d) => console.log(tagPath, d.value));
         }
@@ -344,122 +280,6 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
 
     }
-
-    /*
-        Construct tag from ENIP
-
-        - TAG : BOOL | STRING | DINT[]
-        - TAG : TYPE
-        - TYPE: {key: BOOL, type: STRING, sub: TYPE, subArr: DINT[]}
-
-        Unless scalar pass to addTag again to find next values
-
-        tagName: {string} - path to tag dot sperated
-    */  
-    // private async addTag(tagName: string, program?: string, type?: TagType ) : Promise<ENIPTag> {
-    //     console.log(tagName)
-
-    //     const emitter = new EventEmitter()
-
-    //     //Check for tag in internal store before recreating
-    //     // let existingTag = this.commandTags.find((a) => a.name == tagName?.split('.')?.[0])
-    //     // if(existingTag){
-    //     //     return existingTag
-    //     // }
-
-
-    //     //Get tag from PLC
-    //     let {arrayDims, typeName, structureObj} = this.controller.PLC?.tagList?.find((a) => a.name == tagName)?.type || type as any || {arrayDims: 0, structureObj: undefined};
-
-    //     // if (!tag) throw new Error("Couldn't add tag" + tagName)
-
-
-    //     //Get correct tag type from PLC
-    //     const isArray = arrayDims > 0 && typeName !== "BIT_STRING";
-    //     let arraySize = 0; //await this.controller.PLC?.getTagArraySize(tagName)
-    //             // let arraySize = 0;
-
-    //     let rootTag: Tag | null = null;
-
-    //     let childTags : ENIPTag[] = [];
-
-    //     if (structureObj) {
-    //         console.log("Add", tagName, "OBJ", structureObj)
-    //         //Tag is likely a struct
-    //         childTags = await this.addTagObject(tagName, structureObj)
-
-    //         // childTags = [];
-
-    //         // Object.keys(tagKeys).forEach((key) => {
-
-    //         //     let type: CIP.DataTypes.Types = CIP.DataTypes.Types[(((tagKeys || {}) as any)[key] || 'DINT') as keyof typeof CIP.DataTypes.Types];
-
-    //         //     childTags.push({ name: key, tag: this.controller.addTag(`${tag?.name}.${key}`, tag?.program, type) }) //, null, false, type, 10) })
-    //         // })
-    //     } else {
-    //         //Tag is either a scalar or array
-    //         rootTag = this.controller.addTag(tagName, program)
-
-    //         if (isArray) {
-    //             console.log("Add", tagName, "ARR")
-
-    //             //Tag is an array
-
-    //             childTags = await this.addTagArray(tagName, program || program)
-
-    //             childTags.map((childTag) => {
-    //                 childTag.onChanged?.(() => {
-    //                     emitter.emit('Data', childTags.map((x) => x.tag?.value))
-    //                 })
-    //             })
-    //             // arraySize = await this.controller.PLC?.getTagArraySize(rootTag)
-
-    //             // childTags = [];
-
-    //             // for (var idx = 0; idx < arraySize; idx++) {
-    //             //     childTags.push({ name: `${idx}`, type: rootTag?.type, tag: this.controller.addTag(`${tag.name}[${idx}]`, tag.program, Types[rootTag?.type as any] as any ) })
-    //             // }
-
-    //             rootTag = null;
-
-    //         }
-
-    //         if(rootTag){
-    //             rootTag.on('Initialized', (d) => {
-    //                 emitter.emit('Data', d.value);
-    //             })
-
-    //             rootTag.on('Changed', (d) => {
-    //                 emitter.emit('Data', d.value);
-    //             })
-    //         }
-
-    //     }
-
-    //     let newTag = {
-    //         name: tagName,
-    //         isArray,
-    //         tag: rootTag,
-    //         children: childTags.length > 0 ? childTags : undefined,
-    //         onChanged: (fn: any) => {
-    //             emitter.on('Data', (value) => fn(value));
-    //         },
-    //         getter: () => {
-    //             if(childTags.length > 0){
-    //                 return isArray ? childTags.sort((a,b) => a.name.localeCompare(b.name)).map((x) => x.tag?.value) : childTags.reduce((prev, curr) => ({...prev, [curr.name]: curr.tag?.value}), {})
-    //             }
-    //             return rootTag?.value
-    //         }
-    //     };
-
-    //     this.commandTags.push(newTag)
-
-    //     return newTag
-    //     // this.tags.push({ key: tag.name, isArray, tag: rootTag, children: childTags.length > 0 ? childTags : undefined })
-
-    //     //Add tag to PLC
-
-    // }
 
     /*
         Add tag with array
