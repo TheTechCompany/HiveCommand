@@ -179,9 +179,9 @@ export class Sidecar extends EventEmitter {
                 }).reduce((prev, curr) => prev.concat(curr), []);
 
                 // (driver as any).sub()
-                const observable = await driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
+                const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
-                (observable as any)?.subscribe((dataPatch: any) => {
+                observable?.subscribe((dataPatch: any) => {
                     Object.keys(dataPatch).map((dataKey) => {
                         this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
                     })
@@ -283,7 +283,7 @@ export class Sidecar extends EventEmitter {
                 }
             }).reduce((prev, curr) => prev.concat(curr), []);
 
-            const observable = await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            const observable = driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
             
             observable?.subscribe((dataPatch) => {
                 Object.keys(dataPatch).map((dataKey) => {

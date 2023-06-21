@@ -1,5 +1,5 @@
 import { BaseCommandDriver } from '@hive-command/drivers-base';
-import { Worker, spawn } from '@hive-command/threads'
+import { ModuleThread, Worker, spawn } from '@hive-command/threads'
 import {
     Cache,
     Configuration,
@@ -47,7 +47,7 @@ export interface DriverRegistryOptions {
 
 export class DriverRegistry {
 
-    private drivers : {[key: string]: BaseCommandDriver} = {};
+    private drivers : {[key: string]: ModuleThread} = {};
     private driverConfigurations: {[key: string]: any} = {};
 
     private options : DriverRegistryOptions;
@@ -265,7 +265,7 @@ export class DriverRegistry {
         });
 
         this.driverConfigurations[pkg] = configuration;
-        this.drivers[pkg] = driver as unknown as BaseCommandDriver
+        this.drivers[pkg] = driver //as unknown as BaseCommandDriver
 
         try{
             await this.drivers[pkg].start()
@@ -295,11 +295,11 @@ export const Driver = async (options: {driver: string, configuration: any}) => {
         readMany: (tags: {name: string, alias: string}[]) => any,
         write: (tag: {name: string, value: string}) => any,
         writeMany: (tags: {name: string, value: string}[]) => any,
-        subscribe: (tags: {name: string, alias: string}[]) => Promise<Observable<{[key: string]: any}>>,
+        subscribe: (tags: {name: string, alias: string}[]) => Observable<{[key: string]: any}>,
         load_driver: (driver: string, configuration: any) => BaseCommandDriver
     }>(worker);
 
-    let instance : BaseCommandDriver = await driver.load_driver(options.driver, options.configuration)
+    let instance = await driver.load_driver(options.driver, options.configuration)
 
     return driver
 }
