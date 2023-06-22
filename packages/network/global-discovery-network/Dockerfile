@@ -8,7 +8,7 @@ COPY . .
 
 RUN yarn
 
-RUN npx lerna bootstrap --scope @hive-command/gds --include-dependencies
+# RUN npx lerna bootstrap --scope @hive-command/gds --include-dependencies
 
 RUN npx lerna run build --scope @hive-command/gds --include-dependencies
 

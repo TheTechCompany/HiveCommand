@@ -3,7 +3,7 @@ name: HiveCommand WebApp
 on:
   push:
     branches:
-      # - staging
+      - staging
       - master
     paths: [ ".github/workflows/webapp.yml", "packages/core-ui/**", "packages/app/hivecommand-api/**", "packages/app/hivecommand-frontend/**" ]
 

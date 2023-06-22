@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/data",
-  "version": "1.4.15-alpha.252",
+  "version": "1.4.15-alpha.258",
   "description": "",
   "main": "dist/index.js",
   "private": true,
@@ -20,8 +20,6 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@prisma/client": "^3.14.0",
-    "mongodb": "^4.7.0",
-    "mongoose": "^6.3.8"
+    "@prisma/client": "^3.14.0"
   }
 }

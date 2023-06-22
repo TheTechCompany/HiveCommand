@@ -17,7 +17,7 @@ async function main() {
   }
   
   fs.renameSync(
-    `node_modules/@hive-command/local-sidecar/dist/sidecar${extension}`,
+    `../../core/command-local-sidecar/dist/sidecar${extension}`,
     `src-tauri/binaries/sidecar-${targetTriple}${extension}`
   )
 }
