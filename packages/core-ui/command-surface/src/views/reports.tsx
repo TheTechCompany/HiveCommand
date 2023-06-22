@@ -12,9 +12,9 @@ import { Graph, GraphContainer } from "../components/graph";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
 import { ButtonGroup, Menu, Paper } from "@mui/material";
 
-import { Box, Typography, IconButton, Button} from '@mui/material'
+import { Box, Typography, IconButton, Button } from '@mui/material'
 
-export type ReportHorizon = {start: Date, end: Date};
+export type ReportHorizon = { start: Date, end: Date };
 
 export interface ReportChart {
   id: string;
@@ -24,8 +24,8 @@ export interface ReportChart {
   y: number;
   width: number;
   height: number;
-  totalValue: {total: any};
-  values: {timestamp: any, value: any}[];
+  totalValue: { total: any };
+  values: { timestamp: any, value: any }[];
 }
 
 export interface ReportViewProps {
@@ -35,7 +35,7 @@ export interface ReportViewProps {
   horizon?: ReportHorizon; // {start: Date, end: Date}
   onHorizonChange?: (horizon: ReportHorizon) => void;
 
-  
+
   date?: Date;
 
   editable?: boolean;
@@ -45,15 +45,15 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
   const { reports, client, activePage, refresh, activeProgram } = useContext(DeviceControlContext);
 
-  const [ selected, setSelected ] = useState();
+  const [selected, setSelected] = useState();
 
   const report_periods = ['7d', '1d', '12hr', '1hr', '30min']
 
-  const [ period, setPeriod ] = useState<'7d' | '1d' | '12hr' | '1hr' | '30min'>('30min');
-  const [ datum, setDatum ] = useState(props.date || new Date())
+  const [period, setPeriod] = useState<'7d' | '1d' | '12hr' | '1hr' | '30min'>('30min');
+  const [datum, setDatum] = useState(props.date || new Date())
 
   const period_format = useMemo(() => {
-    switch(period){
+    switch (period) {
       case '7d':
         return 'DD/MM/yy';
       case '1d':
@@ -66,7 +66,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   }, [period])
 
   const startOfPeriod = useMemo(() => {
-    switch(period){
+    switch (period) {
       case '7d':
         return moment(datum).startOf('isoWeek');
       case '1d':
@@ -82,7 +82,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   }, [datum, period]);
 
   const endOfPeriod = useMemo(() => {
-    switch(period){
+    switch (period) {
       case '7d':
         return moment(datum).endOf('isoWeek');
       case '1d':
@@ -110,10 +110,10 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   console.log("Report values", results)
 
   const prevPeriod = () => {
-    
+
     let newDatum = new Date(datum);
 
-    switch(period){
+    switch (period) {
       case '7d':
         newDatum = moment(datum).subtract(1, 'week').toDate();
         break;
@@ -145,7 +145,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
     let newDatum = new Date(datum);
 
-    switch(period){
+    switch (period) {
       case '7d':
         newDatum = moment(datum).add(1, 'week').toDate();
         break;
@@ -235,15 +235,15 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         w: chart.width,
         h: chart.height,
         totalValue: chartValue?.totalValue,
-        values: chartValue?.values?.map((value) => ({...value, timestamp: moment(value.timestamp).format('DD/MM hh:mma') }))
+        values: chartValue?.values?.map((value) => ({ ...value, timestamp: moment(value.timestamp).format('DD/MM hh:mma') }))
       }
     })
-  
+
   }, [activePage, reports, results]);
 
   return (
     <Box
-      style={{position: 'relative', flex: 1, display: 'flex', flexDirection: 'column'}}
+      style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}
     >
       <ControlGraphModal
         open={modalOpen}
@@ -256,9 +256,9 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         }}
         onSubmit={(graph) => {
 
-          if(!activePage) return;
+          if (!activePage) return;
 
-          if(!graph.id){
+          if (!graph.id) {
             console.log("Add chart")
             client?.addChart?.(activePage, 'line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
               openModal(false);
@@ -267,7 +267,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
               // refetchValues?.()
               setSelected(undefined)
             })
-          }else{
+          } else {
             client?.updateChart?.(activePage, graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
               openModal(false);
               // refetchStructure?.()
@@ -275,28 +275,28 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
               setSelected(undefined)
             })
           }
-        
+
         }}
       />
-      <Box sx={{display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
-        <Box sx={{display: 'flex', alignItems: 'center'}}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
+        <Box sx={{ display: 'flex', marginLeft: '6px', alignItems: 'center' }}>
           <ButtonGroup size="small">
             {report_periods.map((period_i) => (
-              <Button 
+              <Button
                 onClick={() => setPeriod(period_i as any)}
                 variant={period === period_i ? 'contained' : undefined}>
-                  {period_i}
+                {period_i}
               </Button>
             ))}
           </ButtonGroup>
         </Box>
-        <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1}}>
-          <IconButton 
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          <IconButton
             onClick={prevPeriod}>
             <Previous />
           </IconButton>
           <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
-          <IconButton 
+          <IconButton
             onClick={nextPeriod}
           >
             <Next />
@@ -309,45 +309,47 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
           <Add />
         </IconButton>
       </Box>
-      <Box 
+      <Box
         sx={{
           flex: 1,
           display: 'flex',
           overflow: 'auto'
         }}>
-        <GraphGrid 
-        
-          onLayoutChange={(layout: any) => {
-            if(!activePage) return;
-            client?.updateChartGrid?.(activePage, layout.map((x: any) => ({
-              ...x,
-              id: x.i
-            }))).then(() => {
-              // refetchStructure?.()
-            });
-        }}
-          noWrap
-          layout={charts}
-          >
-        {(item: any) => (
-        <GraphContainer
-            onDelete={() => {
-              if(!activePage) return;
-              client?.removeChart?.(activePage, item.id).then(() => {
+        <Box sx={{ flex: 1, maxHeight: 0 }}>
+          <GraphGrid
+
+            onLayoutChange={(layout: any) => {
+              if (!activePage) return;
+              client?.updateChartGrid?.(activePage, layout.map((x: any) => ({
+                ...x,
+                id: x.i
+              }))).then(() => {
                 // refetchStructure?.()
-              })
+              });
             }}
-            onEdit={() => {
-              openModal(true);
-              setSelected(item)
-            }}
-            dataKey={item.subkey?.name}
-            label={`${item.tag?.name} - ${item.subkey?.name}`}
-            total={item?.totalValue?.total}>
-              <Graph data={item.values} xKey={"timestamp"} yKey={"value"}  />
-        </GraphContainer>
-        )}
-        </GraphGrid>
+            noWrap
+            layout={charts}
+          >
+            {(item: any) => (
+              <GraphContainer
+                onDelete={() => {
+                  if (!activePage) return;
+                  client?.removeChart?.(activePage, item.id).then(() => {
+                    // refetchStructure?.()
+                  })
+                }}
+                onEdit={() => {
+                  openModal(true);
+                  setSelected(item)
+                }}
+                dataKey={item.subkey?.name}
+                label={`${item.tag?.name} - ${item.subkey?.name}`}
+                total={item?.totalValue?.total}>
+                <Graph data={item.values} xKey={"timestamp"} yKey={"value"} />
+              </GraphContainer>
+            )}
+          </GraphGrid>
+        </Box>
       </Box>
 
     </Box>
