@@ -61,9 +61,6 @@ jobs:
       - name: Install
         run: yarn install --network-timeout 100000
 
-      - name: Bootstrap
-        run: npx lerna bootstrap --scope @hive-command/native --include-dependencies
-
       - name: Build
         env:
           CI: false

@@ -15,7 +15,6 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
-  console.log(defaultConfig.optimization);
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
@@ -37,31 +36,36 @@ module.exports = (webpackConfigEnv, argv) => {
 
     resolve: {
       alias: {
-        'react-resize-aware': path.resolve(__dirname, 'node_modules/react-resize-aware'),
-        '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
-        "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
-        '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
-
-        'react': path.resolve(__dirname, 'node_modules/react'),
-        'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
-        // "react/jsx-runtime.js": "react/jsx-runtime",
-        // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
-        'lodash': path.resolve(__dirname, 'node_modules/lodash'),
-        'moment': path.resolve(__dirname, 'node_modules/moment'),
-        'typescript': path.resolve(__dirname, 'node_modules/typescript'),
-        '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
-        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
-        'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
-        'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
-        '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
-        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+        typescript: path.resolve(__dirname, 'node_modules/typescript')
       },
+      // alias: {
+      //   'react-resize-aware': path.resolve(__dirname, 'node_modules/react-resize-aware'),
+      //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+      //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
+      //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+
+      //   'react': path.resolve(__dirname, 'node_modules/react'),
+      //   'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+      //   // "react/jsx-runtime.js": "react/jsx-runtime",
+      //   // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
+      //   'lodash': path.resolve(__dirname, 'node_modules/lodash'),
+      //   'moment': path.resolve(__dirname, 'node_modules/moment'),
+      //   'typescript': path.resolve(__dirname, 'node_modules/typescript'),
+      //   '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
+      //   '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+      //   'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+      //   'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
+      //   '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
+      //   '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+      // },
       plugins: [
         new TsconfigPathsPlugin(),
       ],
       fallback: {
         // https: false,
         // http: false,
+        // "module": false,
+        // "pnpapi": false,
         "path": require.resolve('path-browserify'),
         "buffer": require.resolve('buffer/'),
         "stream": require.resolve('stream'),

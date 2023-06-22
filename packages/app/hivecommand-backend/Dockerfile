@@ -20,7 +20,7 @@ COPY packages/core/command-scripting/ packages/core/command-scripting/
 COPY packages/core/command-data/ packages/core/command-data/
 # COPY . . 
 
-RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
+# RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
 
 ENV NODE_ENV="production"
 
