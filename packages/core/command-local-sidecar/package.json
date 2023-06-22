@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/local-sidecar",
-	"version": "1.4.15-alpha.247",
+	"version": "1.4.15-alpha.256",
 	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
@@ -25,9 +25,10 @@
 		"tsconfig-paths": "^4.1.1"
 	},
 	"dependencies": {
-		"@hive-command/amqp-client": "^1.4.15-alpha.247",
-		"@hive-command/drivers-base": "^1.4.15-alpha.234",
+		"@hive-command/amqp-client": "^1.4.15-alpha.252",
+		"@hive-command/drivers-base": "^1.4.15-alpha.256",
 		"@hive-command/evented-values": "^1.4.15-alpha.240",
+		"@hive-command/threads": "^1.7.0",
 		"@yarnpkg/cli": "^4.0.0-rc.44",
 		"@yarnpkg/core": "^4.0.0-rc.44",
 		"@yarnpkg/fslib": "^3.0.0-rc.44",
@@ -40,7 +41,6 @@
 		"lodash": "^4.17.21",
 		"observable-fns": "^0.6.1",
 		"socket.io": "^4.5.3",
-		"threads": "^1.7.0",
 		"typescript": "^4.8.4"
 	}
 }

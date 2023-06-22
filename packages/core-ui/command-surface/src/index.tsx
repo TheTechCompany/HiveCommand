@@ -258,6 +258,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const [maintenanceWindow, setMaintenanceWindow] = useState(false);
 
+    const [selectedReport, setSelectedReport] = useState<any>(null);
     const [editReportPage, setEditReportPage] = useState<any>(null)
 
     const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
@@ -542,6 +543,22 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         }
     }
 
+    const onTreeEdit = (nodeId?: string) => {
+        console.log({nodeId})
+
+        let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
+
+        let node = nodes.find((a) => a.id == nodeId)
+        let page = node?.parent;
+
+        switch(page){
+            case 'analytics':
+                setSelectedReport(node)
+                setEditReportPage(true)
+                break;
+        }
+    }
+
     const onTreeSelect = (nodeId: string) => {
         console.log({ nodeId });
 
@@ -742,16 +759,34 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         setMaintenanceWindow(false)
                     }} />
                 <DeviceReportModal
+                    selected={selectedReport}
                     onSubmit={(page) => {
-                        client?.createReportPage?.(page.name).then(() => {
-                            setEditReportPage(null);
-                        });
-                        // createReportPage(page.name).then(() => {
-                        //     setEditReportPage(null);
-                        //     // refetch();
-                        // })
+
+                        if(page.id){
+                            client?.updateReportPage?.(page.id, page.name).then(() => {
+                                setEditReportPage(null);
+                                setSelectedReport(null)
+                            })
+                            
+                        }else{
+                            client?.createReportPage?.(page.name).then(() => {
+                                setEditReportPage(null);
+                                setSelectedReport(null)
+                            });
+                        }
+                    
+                
                     }}
-                    onClose={() => setEditReportPage(null)}
+                    onDelete={() => {
+                        client?.removeReportPage?.(selectedReport.id).then(() => {
+                            setEditReportPage(null);
+                            setSelectedReport(null)
+                        })
+                    }}
+                    onClose={() => {
+                        setEditReportPage(null)
+                        setSelectedReport(null)
+                    }}
                     open={Boolean(editReportPage)} />
                 <Paper
                     ref={surfaceRef}
@@ -782,6 +817,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                     <TreeMenu
                                         items={drawerMenu}
                                         onAdd={onTreeAdd}
+                                        onEdit={onTreeEdit}
                                         onNodeSelect={onTreeSelect}
                                     />
                                 </Paper>

@@ -1,37 +1,33 @@
 import { exchangeShortcode, getProgramLayout } from "./auth";
-import { OPCMQTTClient } from '@hive-command/opcua-amqp-bridge'
+import { Sidecar } from '@hive-command/local-sidecar/dist/wrapper/sidecar'
 
 export interface IOTCLIOptions {
     discoveryServer: string;
 
-    opcuaServer: string;
-
     provisionCode: string;
 
-    subscriptionMap: any[];
-    deviceMap: any[];
+    // subscriptionMap: any[];
+    // deviceMap: any[];
 }
 
 export class IOTCLI {
 
     private discoveryServer: string;
-    private opcuaServer: string;
 
     private provisionCode: string;
 
-    private opcMQTTClient? : OPCMQTTClient;
+    private sidecar? : Sidecar;
 
-    private deviceMap: any[];
-    private subscriptionMap: any[];
+    // private deviceMap: any[];
+    // private subscriptionMap: any[];
 
     constructor(options: IOTCLIOptions){
         this.discoveryServer = options.discoveryServer
-        this.opcuaServer = options.opcuaServer
 
         this.provisionCode = options.provisionCode;
 
-        this.subscriptionMap = options.subscriptionMap;
-        this.deviceMap = options.deviceMap;
+        // this.subscriptionMap = options.subscriptionMap;
+        // this.deviceMap = options.deviceMap;
     }
 
     async start(){
@@ -40,21 +36,22 @@ export class IOTCLI {
 
         const [ controlLayout, networkLayout ] = await getProgramLayout(this.discoveryServer, token)
 
-        this.opcMQTTClient = new OPCMQTTClient({
+        this.sidecar = new Sidecar({
             tags: controlLayout?.tags,
             types: controlLayout?.types,
-            opcuaServer: this.opcuaServer,
+            dataScopes: controlLayout?.dataScopes,
+            // opcuaServer: this.opcuaServer,
             iot: {
                 host: networkLayout?.iotEndpoint,
                 user: networkLayout?.iotUser,
                 pass: networkLayout?.iotToken,
                 exchange: networkLayout?.iotSubject
             },
-            subscriptionMap: this.subscriptionMap,
-            deviceMap: this.deviceMap
+            // subscriptionMap: this.subscriptionMap,
+            // deviceMap: this.deviceMap
         })
 
-        await this.opcMQTTClient.start()
+        await this.sidecar.setup()
 
     }
 

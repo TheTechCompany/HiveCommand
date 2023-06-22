@@ -440,6 +440,18 @@
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
 
+"@hive-command/threads@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@hive-command/threads/-/threads-1.7.0.tgz#92dec4b5f86abbc23b2ef34d7943986d034258f3"
+  integrity sha512-zROr1JUDwIT5QYE5VwBiyz6qr46nDkeI6Y31ku7LEeYWzckcQ6cc9UJVnuUDGw7XjDwx6dh4A1QH5qTo4ULA1g==
+  dependencies:
+    callsites "^3.1.0"
+    debug "^4.2.0"
+    is-observable "^2.1.0"
+    observable-fns "^0.6.1"
+  optionalDependencies:
+    tiny-worker ">= 2"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -4331,18 +4343,6 @@ test-exclude@^6.0.0:
     "@istanbuljs/schema" "^0.1.2"
     glob "^7.1.4"
     minimatch "^3.0.4"
-
-threads@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/threads/-/threads-1.7.0.tgz#d9e9627bfc1ef22ada3b733c2e7558bbe78e589c"
-  integrity sha512-Mx5NBSHX3sQYR6iI9VYbgHKBLisyB+xROCBGjjWm1O9wb9vfLxdaGtmT/KCjUqMsSNW6nERzCW3T6H43LqjDZQ==
-  dependencies:
-    callsites "^3.1.0"
-    debug "^4.2.0"
-    is-observable "^2.1.0"
-    observable-fns "^0.6.1"
-  optionalDependencies:
-    tiny-worker ">= 2"
 
 tiny-glob@0.2.9:
   version "0.2.9"

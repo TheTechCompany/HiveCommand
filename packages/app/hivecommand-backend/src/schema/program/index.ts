@@ -44,8 +44,21 @@ export default (prisma: PrismaClient) => {
 						localHomepage: true,
 						alarms: {
 							include: {
-								conditions: true,
-								actions: true
+								edges: {
+									include: {
+										conditions: true
+									}
+								},
+								nodes: {
+									include: {
+										type: true,
+										targetedBy: {
+											include: {
+												source: true
+											}
+										}
+									}
+								}
 							}
 						},
 						components: {

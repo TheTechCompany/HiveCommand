@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-amqp-bridge",
-  "version": "1.4.15-alpha.247",
+  "version": "1.4.15-alpha.252",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -20,7 +20,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@hive-command/amqp-client": "^1.4.15-alpha.247",
+    "@hive-command/amqp-client": "^1.4.15-alpha.252",
     "@hive-command/opcua-client": "^1.4.15-alpha.234",
     "@hive-command/scripting": "^1.4.15-alpha.234",
     "lodash": "^4.17.21",

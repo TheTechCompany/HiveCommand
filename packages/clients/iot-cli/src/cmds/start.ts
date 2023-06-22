@@ -7,7 +7,6 @@ const pkg = require('../../package.json')
 
 type Options = {
     discoveryServer: string;
-    opcuaServer: string;
 
     deviceMap?: string;
     subscriptionMap?: string;
@@ -28,8 +27,8 @@ type Options = {
        
         mapFile: {type: 'string', description: 'Map File unified'},
 
-        deviceMap: {type: 'string', description: 'Device Map File'},
-        subscriptionMap: {type: 'string', description: 'Device Map File'},
+        // deviceMap: {type: 'string', description: 'Device Map File'},
+        // subscriptionMap: {type: 'string', description: 'Device Map File'},
 
         provisionCode: {type: 'string', required: true, description: 'Provision Code'}
 
@@ -48,25 +47,20 @@ type Options = {
 
 	console.info(`Starting IOT-Cli v${pkg.version}`);
 	
-    let deviceList = [];
-    let subscriptionList = [];
+    // let deviceList = [];
+    // let subscriptionList = [];
 
 
-    if(deviceMap){
-        deviceList = JSON.parse(readFileSync(deviceMap, 'utf8') || '[]')
-    }
+    // if(deviceMap){
+    //     deviceList = JSON.parse(readFileSync(deviceMap, 'utf8') || '[]')
+    // }
 
-    if(subscriptionMap){
-        subscriptionList =  JSON.parse(readFileSync(subscriptionMap, 'utf8') || '[]')
-    }
+    // if(subscriptionMap){
+    //     subscriptionList =  JSON.parse(readFileSync(subscriptionMap, 'utf8') || '[]')
+    // }
 
 	const iotCli = new IOTCLI({
-        opcuaServer,
         discoveryServer,
-    
-        deviceMap: deviceList,
-
-        subscriptionMap: subscriptionList,
         provisionCode
 	})
 

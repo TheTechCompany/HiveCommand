@@ -12,7 +12,6 @@ export interface GlobalState extends HMIProgram {
     iotUser: string,
     iotToken: string,
 
-    dataScopes?: { id: string, name: string, plugin: { id: string, name: string, module: string } }[]
 
 }
 export const SetupContext = React.createContext<{

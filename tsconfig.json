@@ -16,7 +16,7 @@
 		"@types/react-dom": ["../node_modules/@types/react-dom"],
 		"@types/react": ["../node_modules/@types/react"],
 
-		"threads": ["../node_modules/threads"],
+		"@hive-command/threads": ["../node_modules/@hive-command/threads"],
 		"node-opcua": ["../node_modules/node-opcua"],
 
 		"@hive-command/remote-components": ["../core-ui/command-remote-components/src"],

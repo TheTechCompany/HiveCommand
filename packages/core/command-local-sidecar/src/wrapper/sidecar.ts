@@ -28,8 +28,6 @@ export interface LocalOptions {
         exchange: string
     }
 
-    interface?: any[];
-
     tags?: {
         name: string,
         type: string,
@@ -48,8 +46,6 @@ export interface LocalOptions {
         }[]
     }[]
 
-
-    subscriptionMap?: {}[]
 
 }
 
@@ -185,7 +181,7 @@ export class Sidecar extends EventEmitter {
                 // (driver as any).sub()
                 const observable = driver?.subscribe?.( (subscriptionTags || []).map((tag) => ({ name: tag.name })) );
 
-                (observable as any)?.subscribe((dataPatch: any) => {
+                observable?.subscribe((dataPatch: any) => {
                     Object.keys(dataPatch).map((dataKey) => {
                         this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
                     })
@@ -287,7 +283,7 @@ export class Sidecar extends EventEmitter {
                 }
             }).reduce((prev, curr) => prev.concat(curr), []);
 
-            const observable = await driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
+            const observable = driver?.subscribe?.((subscriptionTags || []).map((tag) => ({ name: tag.name })))
             
             observable?.subscribe((dataPatch) => {
                 Object.keys(dataPatch).map((dataKey) => {

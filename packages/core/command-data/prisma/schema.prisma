@@ -313,11 +313,26 @@ model ProgramAlarm {
 
   description String?
 
-  conditions ProgramAlarmCondition[] @relation(name: "useCondition")
-  actions ProgramAlarmAction[] @relation(name: "useAlarmAction")
+  nodes ProgramAlarmAction[] @relation(name: "useAlarmAction")
+  edges ProgramAlarmEdge[] @relation(name: "useAlarmEdge")
 
   program Program @relation(name: "useAlarm", fields: [programId], references: [id])
   programId String
+}
+
+model ProgramAlarmEdge {
+  id String @id
+  
+  source ProgramAlarmAction @relation(name: "sourceAlarmAction", references: [id], fields: [sourceId])
+  sourceId String
+
+  target ProgramAlarmAction @relation(name: "targetAlarmAction", references: [id], fields: [targetId])
+  targetId String
+
+  conditions ProgramAlarmCondition[] @relation(name: "useCondition")
+
+  alarm ProgramAlarm @relation(name: "useAlarmEdge", references: [id], fields: [alarmId])
+  alarmId String
 }
 
 model ProgramAlarmCondition {
@@ -328,18 +343,31 @@ model ProgramAlarmCondition {
 
   value String
 
-  alarm ProgramAlarm @relation(name: "useCondition", fields: [alarmId], references: [id])
-  alarmId String
+  edge ProgramAlarmEdge @relation(name: "useCondition", fields: [edgeId], references: [id])
+  edgeId String
 }
 
 model ProgramAlarmAction {
   id String @id
   name String?
 
-  func String
+  type ProgramAlarmActionType @relation(name: "useAlarmActionType", fields: [typeId], references: [id])
+  typeId String
+
+  sourcedBy ProgramAlarmEdge[] @relation(name: "sourceAlarmAction")
+  targetedBy ProgramAlarmEdge[] @relation(name: "targetAlarmAction")
 
   alarm ProgramAlarm @relation(name: "useAlarmAction", fields: [alarmId], references: [id])
   alarmId String
+}
+
+model ProgramAlarmActionType {
+  id String @id
+
+  name String
+  func String
+
+  usedByAction ProgramAlarmAction[] @relation(name: "useAlarmActionType")
 }
 
 model ProgramHMI {
