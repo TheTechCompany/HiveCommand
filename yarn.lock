@@ -3739,7 +3739,7 @@ __metadata:
     "@mui/system": ^5.13.5
     "@mui/x-date-pickers": ^5.0.3
     "@types/jest": ^27.0.3
-    "@types/react": 17.0.39
+    "@types/react": 17
     "@types/react-dom": ^17.0.11
     graphql: 15.x
     jest: ^27.3.1
@@ -8017,6 +8017,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react@npm:17, @types/react@npm:17.x, @types/react@npm:^17, @types/react@npm:^17.0.11":
+  version: 17.0.62
+  resolution: "@types/react@npm:17.0.62"
+  dependencies:
+    "@types/prop-types": "*"
+    "@types/scheduler": "*"
+    csstype: ^3.0.2
+  checksum: 428a5aff44824ef504e9a9259b5894fe44a5db1c344b536990f07e132900ff5b34cbef0be77a84f30f37be1f88fc8b56dce328f568de8d65de3bfe414c05b2e1
+  languageName: node
+  linkType: hard
+
 "@types/react@npm:17.0.39":
   version: 17.0.39
   resolution: "@types/react@npm:17.0.39"
@@ -8025,17 +8036,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: bf04d3c2894559012710d595553e12b422d3b91cd8f4f7e122d8cb044ba9c2ba17f6e8a4e09581359cc5509ddc59cd8c8fabd6774f3505a40a45393f074d6e6e
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17.x, @types/react@npm:^17, @types/react@npm:^17.0.11":
-  version: 17.0.62
-  resolution: "@types/react@npm:17.0.62"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 428a5aff44824ef504e9a9259b5894fe44a5db1c344b536990f07e132900ff5b34cbef0be77a84f30f37be1f88fc8b56dce328f568de8d65de3bfe414c05b2e1
   languageName: node
   linkType: hard
 
