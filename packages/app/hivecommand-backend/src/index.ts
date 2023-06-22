@@ -10,7 +10,7 @@ import schema from './schema'
 
 import { Pool, types } from 'pg';
 
-import { cache, PrismaClient } from "@hive-command/data";
+import { PrismaClient } from "@hive-command/data";
 import { contextFactory } from './context';
 import { redis } from './context/pubsub'
 
@@ -19,8 +19,6 @@ types.setTypeParser(1114, (value) => {
 });
 
 const prisma = new PrismaClient();
-
-cache.connect_to(process.env.MONGO_URL || '');
 
 (async () => {
 
