@@ -1,6 +1,5 @@
 // import { connect, ConsumeMessage, Connection, Channel } from 'amqplib'
 import MQTT from 'mqtt';
-import { DataType } from 'node-opcua';
 
 export interface MQTTClientOptions {
     user?: string;
