@@ -74,7 +74,7 @@ export const UploadView = (props: {
             <Box>
             
                 <Box sx={{border: '1px dashed black', margin: '6px', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100px'}} {...getRootProps()}>
-                    <input {...getInputProps()} />
+                    <input {...getInputProps() as any} />
                     <Typography>{isDragActive ? 'Drop' : 'Drag'} tag file here...</Typography>
                 </Box>
             </Box>

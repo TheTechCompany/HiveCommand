@@ -4,3 +4,12 @@ dist/
 .env
 .DS_Store
 **/src-tauri/binaries/*
+
+.yarn/*
+.yarn/cache/
+# !.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

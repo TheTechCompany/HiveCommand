@@ -2,8 +2,6 @@ import { Button, Dialog, DialogActions, TextareaAutosize, DialogContent, DialogT
 import React, { useEffect, useMemo, useState } from 'react';
 import {Editor} from "./editor";
 
-const systemJsDefine = window.define;
-
 
 export interface DeviceValue {
     // id: string,

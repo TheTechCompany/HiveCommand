@@ -276,7 +276,7 @@ export const Controls = (props) => {
                 // console.log("ASD", {nodes})
 
 
-                setNodes(nodes.map((x) => {
+                setNodes(nodes.map((x: any) => {
                     let width =  x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
                     let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
     //x.width ||
@@ -464,7 +464,7 @@ export const Controls = (props) => {
                     showGuides
                     grid={{divisions: 20, width: 100, height: 100}}
                     onDelete={watchEditorKeys}
-                    selected={selected ? [selected] : undefined}
+                    selected={(selected ? [selected] : undefined) as any}
                     onSelect={(key, id) => {
                         setSelected({
                             key,
@@ -488,7 +488,7 @@ export const Controls = (props) => {
                     nodes={nodes}
                     paths={paths}
                     factories={[HMINodeFactory(true), LinePathFactory(false)]}
-                    onPathCreate={(path) => {
+                    onPathCreate={(path: any) => {
 
                         setPaths((paths) => {
                             let p = paths.slice();
@@ -499,7 +499,7 @@ export const Controls = (props) => {
                         })
                         // updateRef.current?.addPath(path);
                     }}
-                    onPathUpdate={(path) => {
+                    onPathUpdate={(path: any) => {
 
                         console.log("Path Update", {path})
 

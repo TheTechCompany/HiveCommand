@@ -27,7 +27,6 @@ jobs:
     - name: Install dependencies
       run: |
         yarn
-        npx lerna bootstrap --no-ci
 
     - name: Build # Build all packages
       run: npx lerna run build --no-private

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "composite": true, 
     "target": "ESNext", 
-    "jsx": "react", 
+    "jsx": "react-jsx", 
     "module": "ESNext", 
     "rootDir": "./src", 
     "moduleResolution": "node", 

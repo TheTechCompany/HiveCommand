@@ -37,7 +37,7 @@ export const PreviewView = () => {
                     icon: editDevice.Component //HMIIcons[editDevice?.name],
                 },
             }
-        ]}
+        ] as any}
         style={CanvasStyle} />
     )
 }
