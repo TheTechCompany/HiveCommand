@@ -19,7 +19,7 @@
   "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
   "devDependencies": {
     "@types/jest": "^27.0.3",
-    "@types/react": "17.0.39",
+    "@types/react": "17",
     "@types/react-dom": "^17.0.11",
     "jest": "^27.3.1",
     "lerna": "7.0.2",
