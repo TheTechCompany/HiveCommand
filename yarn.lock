@@ -3441,7 +3441,7 @@ __metadata:
     react-error-boundary: ^4.0.9
     react-grid-layout: ^1.3.3
     react-querybuilder: ^3.12.1
-    react-resize-aware: 3.1.0
+    react-resize-aware: ^3.1.2
     react-router-dom: ^6.2.1
     reactflow: ^11.7.2
     single-spa-react: ^4.2.0
@@ -26759,15 +26759,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resize-aware@npm:3.1.0":
-  version: 3.1.0
-  resolution: "react-resize-aware@npm:3.1.0"
-  peerDependencies:
-    react: ^16.8.0
-  checksum: 341c1a1075984adefaacf951758e3739618436793ce82bbfe84d1fc9296df6fdd458159a0cd1b70ac616fbe795ba9186e2778710cd1b9b776ded46d533f4f681
-  languageName: node
-  linkType: hard
-
 "react-resize-aware@npm:3.1.1":
   version: 3.1.1
   resolution: "react-resize-aware@npm:3.1.1"
@@ -26777,7 +26768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resize-aware@npm:^3.1.1":
+"react-resize-aware@npm:^3.1.1, react-resize-aware@npm:^3.1.2":
   version: 3.1.2
   resolution: "react-resize-aware@npm:3.1.2"
   peerDependencies:
