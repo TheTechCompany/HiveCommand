@@ -611,19 +611,6 @@ export const Controls = (props) => {
                             refetch()
                         })
 
-
-                        // data.extras.icon = HMIIcons[data.extras.icon]
-
-                        // setNodes([...nodes, {
-                        //     id: nanoid(),
-                        //     x: position.x,
-                        //     y: position.y,
-                        //     extras: {
-                        //         icon: data.extras.icon,
-                        //         rotation: 0
-                        //     },
-                        //     type: 'hmi-node'
-                        // }])
                     }}
                 >
 
