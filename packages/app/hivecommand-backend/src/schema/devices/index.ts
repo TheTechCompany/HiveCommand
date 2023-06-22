@@ -1,4 +1,4 @@
-import { PrismaClient, cache } from "@hive-command/data";
+import { PrismaClient } from "@hive-command/data";
 import gql from "graphql-tag";
 import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
