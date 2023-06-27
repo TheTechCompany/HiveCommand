@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start:prod": "node index.js",
+    "start:prod": "node dist/index.js",
     "build": "tsc -b",
     "db:update": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
