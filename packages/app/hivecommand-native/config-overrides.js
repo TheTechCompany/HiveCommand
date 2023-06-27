@@ -31,7 +31,7 @@ module.exports = function override(config, env) {
     config.resolve.alias = {
         ...config.resolve.alias,
 
-        // typescript: path.resolve(__dirname, 'node_modules/typescript'),
+        typescript: path.resolve(__dirname, '../../../node_modules/typescript'),
         // },
         // alias: {
           'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
@@ -39,7 +39,7 @@ module.exports = function override(config, env) {
         //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
         //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
   
-        //   react: path.resolve(__dirname, '../../../node_modules/react'),
+          react: path.resolve(__dirname, '../../../node_modules/react'),
 
         // // 'react': path.resolve(__dirname, 'node_modules/react'),
         // // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
@@ -50,13 +50,13 @@ module.exports = function override(config, env) {
         // 'moment': path.resolve(__dirname, 'node_modules/moment'),
         // 'typescript': path.resolve(__dirname, 'node_modules/typescript'),
         '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
-        // '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+        '@hexhive/utils': path.resolve(__dirname, '../../../node_modules/@hexhive/utils'),
         // "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
         // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
         '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
-        // 'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+        'styled-components': path.resolve(__dirname, '../../../node_modules/styled-components'),
         'react-router-dom': path.resolve(__dirname, '../../../node_modules/react-router-dom'),
-        // '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
+        '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react'),
         // '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
     }
 
