@@ -16,7 +16,7 @@
 		"@hive-command/scripting": "^1.4.15-alpha.259",
 		"@monaco-editor/react": "^4.4.6",
 		"@mui/lab": "5.0.0-alpha.102",
-		"@mui/material": "5.10.11",
+		"@mui/material": "^5.13.6",
 		"@mui/x-date-pickers": "^5.0.6",
 		"@tauri-apps/api": "^1.1.0",
 		"axios": "^1.1.3",

@@ -3561,7 +3561,7 @@ __metadata:
     "@hive-command/scripting": ^1.4.15-alpha.259
     "@monaco-editor/react": ^4.4.6
     "@mui/lab": 5.0.0-alpha.102
-    "@mui/material": 5.10.11
+    "@mui/material": ^5.13.6
     "@mui/x-date-pickers": ^5.0.6
     "@tauri-apps/api": ^1.1.0
     "@tauri-apps/cli": ^1.1.1
@@ -4920,7 +4920,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material@npm:^5.10.11, @mui/material@npm:^5.10.16":
+"@mui/material@npm:^5.10.11, @mui/material@npm:^5.10.16, @mui/material@npm:^5.13.6":
   version: 5.13.6
   resolution: "@mui/material@npm:5.13.6"
   dependencies:

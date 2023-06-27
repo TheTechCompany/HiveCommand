@@ -51,6 +51,7 @@ module.exports = function override(config, env) {
         // 'typescript': path.resolve(__dirname, 'node_modules/typescript'),
         '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
         '@hexhive/utils': path.resolve(__dirname, '../../../node_modules/@hexhive/utils'),
+        '@hexhive/styles': path.resolve(__dirname, '../../../node_modules/@hexhive/styles'),
         // "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
         // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
         '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
