@@ -1,4 +1,4 @@
-import { PrismaClient, ProgramTypeField } from "@hive-command/data";
+import { PrismaClient, ProgramTagType, ProgramType, ProgramTypeField } from "@hive-command/data";
 import { nanoid } from "nanoid";
 import { isStringType } from "./util";
 import { toJSType } from "@hive-command/scripting";
@@ -30,6 +30,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             fields: [CommandProgramTypeField]
+
+            usedByTag: [CommandProgramTag]
         }
 
         input CommandProgramTypeFieldInput {
@@ -48,6 +50,14 @@ export default (prisma: PrismaClient) => {
     `
 
     const resolvers = {
+
+        CommandProgramType: {
+            usedByTag: async (root: any) => {
+                if(root.usedByTagType){
+                    return root.usedByTagType?.map((x) => x.tag)
+                }
+            }
+        },
         CommandProgramTypeField: {
             type: async (root: ProgramTypeField) => {
                 if(root.typeId){

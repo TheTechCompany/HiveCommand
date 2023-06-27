@@ -7,7 +7,6 @@ import * as d3 from 'd3-hierarchy'
 import { nanoid } from 'nanoid';
 import 'reactflow/dist/style.css';
 import { PipelineEditor } from './pipeline';
-import { ConditionEditor } from './conditions';
 import { CodeEditor } from './code';
 
 
@@ -121,8 +120,6 @@ export const AlarmEditor = (props: any) => {
         switch(view){
             case 'pipeline':
                 return <PipelineEditor active={props.active} />
-            case 'conditions':
-                return <ConditionEditor conditions={conditions} setConditions={setConditions} />
             case 'code':
                 return <CodeEditor conditions={conditions} />
         }
@@ -130,7 +127,7 @@ export const AlarmEditor = (props: any) => {
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            <Paper sx={{bgcolor: 'secondary.main'}}>
+            <Paper sx={{bgcolor: 'secondary.main', color: 'white'}}>
                 <Typography sx={{padding: '6px'}}>{alarms?.find((a) => a.id == props.active)?.name}</Typography>
                 <Tabs value={view} onChange={(e, newValue) => setView(newValue)}>
                     <Tab value="conditions" label="Conditions"/>   

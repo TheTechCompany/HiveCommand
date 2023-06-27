@@ -121,6 +121,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                         name
                         type
                     }
+
+                    usedByTag {
+                        id
+                        name
+                    }
                 }
 
                 templates {

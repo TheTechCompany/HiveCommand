@@ -123,13 +123,15 @@ export class Sidecar extends EventEmitter {
 
         await this.client?.connect(async (message) => {
             try {
-                const { routingKey: key, messageContent: {value} } = message;
+                let { routingKey: key, messageContent: {value} } = message;
 
                 if (!this.client) {
                     return console.error("No client currently connected");
                 }
 
                 console.log("SET TAG", key, value)
+
+                try{ value = JSON.parse(value) }catch(err){ };
 
                 if(!key) return console.error("Set Tag Failed: " + value)
 

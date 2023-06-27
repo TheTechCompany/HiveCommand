@@ -1,7 +1,25 @@
-import {Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import React from 'react';
+import {Autocomplete, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, TextField, Typography } from '@mui/material';
+import React, { useMemo } from 'react';
 
 export const ActionModal = (props) => {
+
+    const optionFields = useMemo(() => {
+        return Object.keys(props.options || {}).map((key) => {
+            switch(props.options[key]){
+                case 'string[]':
+                    return (
+                        <Box sx={{flexDirection: 'column', display: 'flex',}}>
+                            <Typography>{key}</Typography>
+                            <TextField fullWidth size="small" />
+                            <Button>Add</Button>
+                        </Box>
+                    );
+                case 'string':
+                    return (<TextField fullWidth label={key} size="small" />)
+            }
+        }).map((x) => (<Box sx={{marginBottom: '6px'}}>{x}<Divider /></Box>))
+    }, [props.options]);
+
     return (
         <Dialog
             fullWidth
@@ -10,13 +28,8 @@ export const ActionModal = (props) => {
             <DialogTitle>
                 Add action
             </DialogTitle>
-            <DialogContent>
-                <Box sx={{paddingTop: '12px'}}>
-                    <Autocomplete
-                        options={[]}
-                        renderInput={(params) => <TextField {...params} label="Type" />}
-                            />
-                </Box>
+            <DialogContent sx={{display: 'flex', flexDirection: 'column'}}>
+            {optionFields}
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>

@@ -1,6 +1,7 @@
 
 import { BaseCommandDriver, DriverOptions } from '@hive-command/drivers-base';
 import { CIP, ControllerManager, ManagedController, Tag, Types } from '@hive-command/ethernet-ip'
+import { DataTypes } from '@hive-command/ethernet-ip/dist/enip/cip';
 import { Observable, Subject  } from '@hive-command/threads/observable';
 
 interface ENIPTag {
@@ -135,6 +136,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         // this.controller.PLC?.readTag()
         if (!plcTag) throw new Error(`Couldn't add tag ${tag}`)
 
+        if(plcTag)
         // plcTag.tag.value = value;
         plcTag.write(value);
 
@@ -223,6 +225,9 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
             write = (value: any) => {
                 if(tag){
+
+                    try{value = parseFloat(value)}catch(e){}
+
                     tag.value = value;
                     this.writeTag(tag);
                 }
