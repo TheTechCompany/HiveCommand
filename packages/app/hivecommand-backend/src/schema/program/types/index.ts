@@ -4,6 +4,7 @@ import { isStringType } from "./util";
 import { toJSType } from "@hive-command/scripting";
 
 export default (prisma: PrismaClient) => {
+    
 
     const typeDefs = `
         type Mutation {

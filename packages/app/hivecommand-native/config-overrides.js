@@ -30,22 +30,34 @@ module.exports = function override(config, env) {
 
     config.resolve.alias = {
         ...config.resolve.alias,
-        'react': path.resolve(__dirname, 'node_modules/react'),
-        'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
-        // "react/jsx-runtime.js": "react/jsx-runtime",
-        // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
-        'lodash': path.resolve(__dirname, 'node_modules/lodash'),
-        'moment': path.resolve(__dirname, 'node_modules/moment'),
-        'typescript': path.resolve(__dirname, 'node_modules/typescript'),
-        '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
-        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
-        "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
-        '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
-        '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
-        'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
-        'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
-        '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
-        '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+
+        typescript: path.resolve(__dirname, 'node_modules/typescript'),
+        // },
+        // alias: {
+          'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
+        //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+        //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
+        //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+  
+          react: path.resolve(__dirname, '../../../node_modules/react'),
+
+        // // 'react': path.resolve(__dirname, 'node_modules/react'),
+        // // 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
+
+        // // "react/jsx-runtime.js": "react/jsx-runtime",
+        // // "react/jsx-dev-runtime.js": "react/jsx-dev-runtime",
+        // 'lodash': path.resolve(__dirname, 'node_modules/lodash'),
+        // 'moment': path.resolve(__dirname, 'node_modules/moment'),
+        // 'typescript': path.resolve(__dirname, 'node_modules/typescript'),
+        // '@hexhive/ui': path.resolve(__dirname, 'node_modules/@hexhive/ui'),
+        // '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
+        // "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
+        // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+        // '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+        // 'styled-components': path.resolve(__dirname, 'node_modules/styled-components'),
+        // 'react-router-dom': path.resolve(__dirname, 'node_modules/react-router-dom'),
+        // '@emotion/react': path.resolve(__dirname, 'node_modules/@emotion/react'),
+        // '@hexhive/utils': path.resolve(__dirname, 'node_modules/@hexhive/utils'),
     }
 
     config.resolve.fallback = {
