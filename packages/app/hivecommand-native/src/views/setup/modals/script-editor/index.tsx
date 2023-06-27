@@ -104,7 +104,6 @@ export const setter = (data: ${toJSType(props.dataType?.replace('[]', '') as any
             <DialogContent sx={{overflow: 'visible', display: 'flex', position: 'relative'}}>
                 <Box sx={{flex: 1, zIndex: 99, display: 'flex', overflow: 'visible', position: 'relative', minHeight: '200px', maxHeight: '100%', margin: '6px'}}>
                 <Editor
-                    // height="100%"
                     beforeMount={(monaco) => {
                         monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
                             // noSemanticValidation: true,
