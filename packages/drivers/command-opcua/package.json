@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-opcua",
-  "version": "1.4.15-alpha.258",
+  "version": "1.4.15-alpha.259",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -18,7 +18,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@hive-command/drivers-base": "^1.4.15-alpha.258",
-    "@hive-command/opcua-client": "^1.4.15-alpha.258"
+    "@hive-command/drivers-base": "^1.4.15-alpha.259",
+    "@hive-command/opcua-client": "^1.4.15-alpha.259"
   }
 }
