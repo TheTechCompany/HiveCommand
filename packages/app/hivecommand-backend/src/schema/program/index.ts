@@ -106,6 +106,11 @@ export default (prisma: PrismaClient) => {
 						},
 						types: {
 							include: {
+								usedByTagType: {
+									include: {
+										tag: true
+									}
+								},
 								fields: {
 									include: {
 										type: true

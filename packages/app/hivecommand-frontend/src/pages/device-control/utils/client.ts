@@ -23,7 +23,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
                 deviceId, 
                 deviceName,
                 key: stateKey,
-                value: `${value}`
+                value: Array.isArray(value) ? JSON.stringify(value) : `${value}`
             }
         })
     }

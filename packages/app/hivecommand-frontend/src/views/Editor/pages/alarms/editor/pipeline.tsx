@@ -7,6 +7,7 @@ import { useCommandEditor } from '../../../context';
 import * as d3 from 'd3-hierarchy'
 import { nanoid } from 'nanoid';
 import { ActionModal } from './modals/actions';
+import { TriggerModal } from './modals/conditions';
 
 export const PipelineEditor = (props: any) => {
     const { program: { tags, types, alarms } } = useCommandEditor()
@@ -26,8 +27,9 @@ export const PipelineEditor = (props: any) => {
         }).concat([{id: 'trigger', label: "Trigger"}])
     }, [alarm])
 
+    const [ actionModalOptions, setActionOptions ] = useState<any | null>(null)
     
-    const [ actionModalOpen, openActionModal ] = useState(false);
+    const [ triggerModalOpen, openTriggerModal ] = useState(false);
 
     const [ nodes, setNodes ] = useState<any[]>([])
 
@@ -80,46 +82,66 @@ export const PipelineEditor = (props: any) => {
         return [nodesObj].reduce(reduceToEdge, [])
     }, [nodesObj])
 
-    const flowControls = [
-        "IF condition",
-        "For Loop"
-    ]
-
     const actions = [
-        "Email",
-        "HTTP Request",
-        "SMS",
-        "Create Log"
+        {
+            name: "Email",
+            properties: {
+                addresses: "string[]",
+                subject: "string",
+                message: "string"
+            }
+        },
+        {
+            name: "SMS",
+            properties: {
+                numbers: "string[]",
+                message: "string"
+            }
+        },
+        {
+            name: "Log",
+            properties: {
+                message: "string"
+            }
+        }
     ]
     
     return (
-    <DndContext onDragEnd={({over}) => {
-        console.log({over: over.id})
-        if(over.id.toString().indexOf('add-') > -1){
+    <DndContext onDragEnd={({active, over}) => {
+        if(over?.id?.toString().indexOf('add-') > -1){
 
-            openActionModal(true);
+            setActionOptions(
+                actions.find((a) => a.name == active.id).properties
+            );
 
+            console.log(active.id)
             // setAlarmNodes((nodes) => {
             //     return [...nodes, {id: nanoid(), label: "NEW", parent: over.id.toString().split('-')?.[1]}]
             // })
         }
     }}>
     <Box sx={{ flex: 1, display: 'flex' }}>
-
+        <TriggerModal open={triggerModalOpen} onClose={() => openTriggerModal(false)} />
         <ActionModal
-            open={actionModalOpen}
-            onClose={() => openActionModal(false)}
+            open={Boolean(actionModalOptions)}
+            options={actionModalOptions}
+            onClose={() => setActionOptions(null)}
             />
         <ReactFlow
             onNodeClick={(e, node) => {
-                if(node.id.indexOf('add-') > -1){
-                    
-                    openActionModal(true);
-
-                    // setAlarmNodes((nodes) => {
-                    //     return [...nodes, {id: nanoid(), label: "NEW", parent: node.id.split('-')?.[1]}]
-                    // })
+                console.log(node.id)
+                if(node.id == 'trigger'){
+                    openTriggerModal(true);
                 }
+
+                // if(node.id.indexOf('add-') > -1){
+                    
+                //     setA(true);
+
+                //     // setAlarmNodes((nodes) => {
+                //     //     return [...nodes, {id: nanoid(), label: "NEW", parent: node.id.split('-')?.[1]}]
+                //     // })
+                // }
             }}
             nodeTypes={{
                 addNode: (params) => <NodeDropzone {...params} />
@@ -136,21 +158,13 @@ export const PipelineEditor = (props: any) => {
         </ReactFlow>
         <Paper 
             sx={{minWidth: '200px', padding: '6px', overflow: 'visible', background: '#dfdfdf'}}>
-            <Typography>Flow Controls</Typography>
-            
-            {flowControls.map((control) => (
-                <DropNode  style={{marginBottom: '6px'}} id={control}>
-                    <Paper sx={{padding: '3px'}}>
-                        {control}
-                    </Paper>
-                </DropNode>
-            ))}
+
 
             <Typography>Actions</Typography>
             {actions.map((action) => (
-                <DropNode style={{marginBottom: '6px'}} id={action}>
+                <DropNode style={{marginBottom: '6px'}} id={action.name}>
                     <Paper sx={{padding: '3px'}}>
-                        {action}
+                        {action.name}
                     </Paper>
                 </DropNode>
             ))}
