@@ -26,7 +26,7 @@
 		"@hexhive/ui": "1.0.1-alpha.119",
 		"@mui/icons-material": "^5.10.6",
 		"@mui/lab": "5.0.0-alpha.134",
-		"@mui/material": "5.10.11",
+		"@mui/material": "5.x",
 		"@mui/x-date-pickers": "^5.0.6",
 		"react": "17.x",
 		"styled-components": "^5.3.6"
@@ -55,6 +55,7 @@
 		"@hive-command/canvas-nodes": "^1.4.15-alpha.259",
 		"@hive-command/remote-components": "^1.4.15-alpha.259",
 		"@hive-command/scripting": "^1.4.15-alpha.259",
+		"@mui/system": "^5.13.6",
 		"dot": "^1.1.3",
 		"typescript": "4.3.5"
 	}
