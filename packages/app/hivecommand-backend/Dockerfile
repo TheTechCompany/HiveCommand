@@ -12,15 +12,19 @@ COPY package.json .
 COPY yarn.lock .
 COPY lerna.json .
 
-RUN yarn
+
+# COPY . .
 
 COPY packages/app/hivecommand-backend/ packages/app/hivecommand-backend/
 COPY packages/communication/amqp-client/ packages/communication/amqp-client/
 COPY packages/core/command-scripting/ packages/core/command-scripting/
 COPY packages/core/command-data/ packages/core/command-data/
-# COPY . . 
 
 RUN yarn
+
+# COPY . . 
+
+# RUN yarn
 
 # RUN npx lerna bootstrap --scope @hive-command/backend --include-dependencies
 
@@ -32,14 +36,14 @@ RUN npx lerna run build --scope @hive-command/backend --include-dependencies
 
 WORKDIR /app/packages/app/hivecommand-backend
 
-RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
+# RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
 
-FROM node:16
+# FROM node:16
 
-WORKDIR /app
+# WORKDIR /app
 
-COPY --from=build /app/packages/app/hivecommand-backend/package.json .
-COPY --from=build /app/packages/app/hivecommand-backend/dist .
-COPY --from=build /app/packages/app/hivecommand-backend/_node_modules node_modules/
+# COPY --from=build /app/packages/app/hivecommand-backend/package.json .
+# COPY --from=build /app/packages/app/hivecommand-backend/dist .
+# COPY --from=build /app/packages/app/hivecommand-backend/_node_modules node_modules/
 
 CMD ["yarn", "run", "start:prod"]
