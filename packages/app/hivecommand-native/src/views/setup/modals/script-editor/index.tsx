@@ -113,7 +113,7 @@ export const setter = (data: ${toJSType(props.dataType?.replace('[]', '') as any
                         
                           // compiler options
                           monaco.languages.typescript.javascriptDefaults.setCompilerOptions({
-                            target: monaco.languages.typescript.ScriptTarget.ES6,
+                            target: monaco.languages.typescript.ScriptTarget.ES5,
                             allowNonTsExtensions: true
                           });
 
