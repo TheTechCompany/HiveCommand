@@ -3575,7 +3575,7 @@ __metadata:
     react: 17.0.2
     react-app-rewired: ^2.2.1
     react-dom: 17.0.2
-    react-resize-aware: ^3.1.2
+    react-resize-aware: 3.1.1
     react-router-dom: 6.4.2
     react-scripts: 5.0.1
     socket.io-client: ^4.5.4
@@ -26770,7 +26770,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-resize-aware@npm:^3.1.1, react-resize-aware@npm:^3.1.2":
+"react-resize-aware@npm:^3.1.1":
   version: 3.1.2
   resolution: "react-resize-aware@npm:3.1.2"
   peerDependencies:
