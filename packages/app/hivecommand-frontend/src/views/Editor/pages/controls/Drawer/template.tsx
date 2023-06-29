@@ -35,8 +35,8 @@ export const TemplateMenu = () => {
     const updateHMINode = useUpdateHMINode(programId)
 
     const [ assignNodeTemplate ] = useMutation(gql`
-        mutation AssignNode ($nodeId: ID, $template: String){
-            updateCommandProgramInterfaceNode(id: $nodeId, input: {template: $template}){
+        mutation AssignNode ($nodeId: ID, $input: ComandProgramInterfaceNodeInput!){
+            updateCommandProgramInterfaceNode(id: $nodeId, input: $input){
                 id
             }
         }
@@ -423,7 +423,9 @@ export const TemplateMenu = () => {
                         assignNodeTemplate({
                             variables: {
                                 nodeId: selected?.id,
-                                template: newVal.id
+                                input: {
+                                    template: newVal?.id || null
+                                }
                             }
                         }).then(() => refetch?.());
                     }}

@@ -226,7 +226,11 @@ export default class EthernetIPDriver extends BaseCommandDriver {
             write = (value: any) => {
                 if(tag){
 
-                    try{value = parseFloat(value)}catch(e){}
+                    try{
+                        if(!Number.isNaN(parseFloat(value))){
+                            value = parseFloat(value)
+                        }
+                    }catch(e){}
 
                     tag.value = value;
                     this.writeTag(tag);
