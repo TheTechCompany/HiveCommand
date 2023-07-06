@@ -59,7 +59,7 @@ export default class EthernetIPDriver extends BaseCommandDriver {
         // this.controller.PLC.ta
     }
 
-    async start() {
+    async start(noRetry = false) {
         try {
             await this.controller.connect()
 
@@ -72,6 +72,15 @@ export default class EthernetIPDriver extends BaseCommandDriver {
 
         } catch (e) {
             console.error("Error starting driver", e);
+
+            if(!noRetry){
+                console.log("Retrying start in 5 seconds...")
+                await new Promise(async (resolve) => {
+                    setTimeout(() => resolve(true), 5 * 1000)
+                })
+                
+                await this.start();
+            }
         }
     }
 
