@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-base",
-  "version": "1.4.15-alpha.260",
+  "version": "1.4.15-alpha.261",
   "description": "",
   "publishConfig": {
     "access": "public"
