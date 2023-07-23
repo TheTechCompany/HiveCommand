@@ -3,7 +3,7 @@ import { ProgramModal } from '../../components/modals/program';
 import { useNavigate } from 'react-router-dom';
 import { useCreateProgram } from '@hive-command/api';
 import { gql, useQuery, useApolloClient } from '@apollo/client';
-import { Box, IconButton, List, ListItem, Paper } from '@mui/material';
+import { Box, IconButton, List, ListItem, Paper, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 
 export interface ProgramListProps  {
@@ -22,7 +22,7 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
 
     const client = useApolloClient()
 
-    const { data } = useQuery(gql`
+    const { data, error } = useQuery(gql`
         query Programs {
             commandPrograms {
                 id
@@ -71,13 +71,18 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
                         <Add />
                     </IconButton>
                 </Box>
-                <List>
-                    {programs?.map((program) => (
-                        <ListItem button onClick={() => navigate(`${program.id}`)}>
-                            {program.name}
-                        </ListItem>
-                    ))}
-                </List>
+                {error ? (
+                    <Typography>{error.message}</Typography>
+                ) : (
+                    <List>
+                        {programs?.map((program) => (
+                            <ListItem button onClick={() => navigate(`${program.id}`)}>
+                                {program.name}
+                            </ListItem>
+                        ))}
+                    </List>
+                )}
+         
             </Paper>
             {/* <NestedList
                 data={programs}

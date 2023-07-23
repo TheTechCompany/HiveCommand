@@ -5,6 +5,8 @@ import { Box, Typography, Button, Table, TableBody, TableContainer, Checkbox, Ta
 import { useNavigate } from 'react-router-dom';
 
 export interface DeploymentListProps {
+    error?: string;
+
     onClickRow?: (row: any) => void;
     onEditRow?: (row: any) => void;
 
@@ -154,7 +156,7 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
                     </TableHead>
 
                     <TableBody>
-                        {props.devices?.map((device) => (
+                        {props.error ? ( <Typography sx={{marginLeft: '12px'}}>Error: {props.error}</Typography>) : props.devices?.map((device) => (
                             <TableRow
                                 style={{cursor: 'pointer'}}
                                 hover 
