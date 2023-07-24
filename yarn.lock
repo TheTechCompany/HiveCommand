@@ -2994,7 +2994,7 @@ __metadata:
   dependencies:
     "@allenbradley/l5x": ^1.0.0-beta.5
     "@casl/ability": ^6.5.0
-    "@hexhive/graphql-server": 1.0.2-beta.58
+    "@hexhive/graphql-server": 1.0.2-beta.62
     "@hive-command/amqp-client": ^1.4.15-alpha.261
     "@hive-command/data": ^1.4.15-alpha.261
     "@hive-command/scripting": ^1.4.15-alpha.261
