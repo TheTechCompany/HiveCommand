@@ -8,7 +8,6 @@ import cors from 'cors';
 import express from 'express';
 import schema from './schema'
 
-
 import { Pool, types } from 'pg';
 
 import { PrismaClient } from "@hive-command/data";
