@@ -2853,9 +2853,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hexhive/graphql-server@portal:/Users/thekid/Work/Ultraviolet/HexHive/packages/core/hexhive-graphql-server::locator=%40hivecomand-clients%2Froot%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@hexhive/graphql-server@portal:/Users/thekid/Work/Ultraviolet/HexHive/packages/core/hexhive-graphql-server::locator=%40hivecomand-clients%2Froot%40workspace%3A."
+"@hexhive/graphql-server@npm:1.0.2-beta.62":
+  version: 1.0.2-beta.62
+  resolution: "@hexhive/graphql-server@npm:1.0.2-beta.62"
   dependencies:
     "@casl/ability": ^6.5.0
     "@graphql-tools/merge": ^8.2.6
@@ -2871,8 +2871,9 @@ __metadata:
   peerDependencies:
     graphql: 16.x
     neo4j-driver: ^4.4.1
+  checksum: 11804b603754c7e5aa879b073f9be8e58d1303165b651060f1a132be2401c4f166b94d06052cf1799c996540821207ebd07207a660d8f7da8d824f46c966103c
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@hexhive/styles@npm:1.0.1-alpha.84":
   version: 1.0.1-alpha.84
