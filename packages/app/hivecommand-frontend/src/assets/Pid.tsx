@@ -12,6 +12,7 @@ function SvgPid(props: React.SVGProps<SVGSVGElement>) {
       id="pid_svg__svg11881"
       {...props}
     >
+      
       <style type="text/css" id="style7820">
         {
           ".pid_svg__st0{font-family:&apos;RomanS&apos;}.pid_svg__st1{font-size:3.5311px}.pid_svg__st2{fill:none;stroke:#000;stroke-width:.4;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}.pid_svg__st3{font-size:4.2373px}.pid_svg__st4{font-size:3.4879px}.pid_svg__st5{font-size:2.8249px}.pid_svg__st6{fill-rule:evenodd;clip-rule:evenodd}.pid_svg__st7{fill:none;stroke:#000;stroke-width:.7087;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}.pid_svg__st8{font-family:&apos;SolidEdgeISO&apos;}.pid_svg__st9{font-size:4.9435px}.pid_svg__st10{font-family:&apos;MyriadPro-Regular&apos;}.pid_svg__st12{fill:none;stroke:#000;stroke-width:.707;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10}.pid_svg__st13{font-size:2.4718px}.pid_svg__st14,.pid_svg__st15{fill:none;stroke:#000;stroke-width:.25;stroke-miterlimit:10}.pid_svg__st15{stroke-linecap:round;stroke-linejoin:round}.pid_svg__st17{font-size:2.1186px}.pid_svg__st18{font-size:3.5876px}.pid_svg__st19{font-size:4.3051px}"
