@@ -36,8 +36,11 @@ export default (prisma: PrismaClient) => {
 			},
 			Query: {
 				commandPrograms: async (root: any, args: any, context: any) => {
+
+					if(!context?.jwt?.acl?.can('read', 'CommandProgram')) throw new Error('Not allowed to read ProgramList');
+
 					let filter = args.where || {}
-					return await prisma.program.findMany({
+					const programs = await prisma.program.findMany({
 						where: {...filter, organisation: context.jwt.organisation
 					}, include: {
 						remoteHomepage: true,
@@ -188,11 +191,15 @@ export default (prisma: PrismaClient) => {
 						// 	}
 						// }
 					}});
+
+					return programs.filter((a) => context?.jwt?.acl?.can('read', 'CommandProgram', a))
 				},
 				
 			},
 			Mutation: {
 				createCommandProgram: async (root: any, args: {input: {name: string, templatePacks: string[]}}, context: any) => {
+					if(!context?.jwt?.acl.can('create', 'CommandProgram')) throw new Error('Cannot create new CommandProgram');
+
 					const program = await prisma.program.create({
 						data: {
 							id: nanoid(),
@@ -212,6 +219,10 @@ export default (prisma: PrismaClient) => {
 					return program;
 				},
 				updateCommandProgram: async (root: any, args: {id: string, input: {name: string, templatePacks: string[]}}, context: any) => {
+					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
+
+					if(!context?.jwt?.acl.can('update', 'CommandProgram', currentProgram)) throw new Error('Cannot update CommandProgram');
+					
 					const program = await prisma.program.update({
 						where: {id: args.id},
 						data: {
@@ -225,6 +236,10 @@ export default (prisma: PrismaClient) => {
 					return program
 				},
 				deleteCommandProgram: async (root: any, args: {id: string}, context: any) => {
+					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
+
+					if(!context?.jwt?.acl.can('delete', 'CommandProgram', currentProgram)) throw new Error('Cannot delete CommandProgram');
+					
 					const res = await prisma.program.delete({where: {id: args.id}})
 					return res != null
 				}

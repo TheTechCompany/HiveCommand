@@ -7,6 +7,7 @@ import analytics from "./analytics";
 import { Channel } from "amqplib";
 import { GraphQLContext } from "../../context";
 import { PubSubChannels, redis } from "../../context/pubsub";
+import { subject } from '@casl/ability'
 
 const Moniker = require('moniker')
 
@@ -133,6 +134,14 @@ export default (prisma: PrismaClient) => {
 			},
 		Query: {
 			commandDevices: async (root: any, args: any, context: any) => {
+				if(
+					!context.jwt.acl.can('read', 'CommandDevice') &&
+					!context.jwt.acl.can('control', 'CommandDevice')
+				) throw new Error("Not allowed to access device list");
+
+				//  .indexOf('APPLICATION')
+				// context.jwt.permissions.indexOf('GET_DEVICES' || 'CONTROL_DEVICE', ) 
+
 				let whereArg : any = {};
 				if(args.where){
 					if(args.where.id) whereArg['id'] = args.where.id;
@@ -265,7 +274,10 @@ export default (prisma: PrismaClient) => {
 					}
 				}) || []
 
-				return devices;
+				return devices.filter((device) => {
+					const sub = subject('CommandDevice', device);
+					return context.jwt.acl.can('read', sub) || context.jwt.acl.can('control', sub)
+				});
 			}
 		},
 		Subscription: {

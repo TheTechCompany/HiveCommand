@@ -108,6 +108,7 @@ export const setter = (data: ${toJSType(props.dataType?.replace('[]', '') as any
                         monaco.languages.typescript.javascriptDefaults.setDiagnosticsOptions({
                             // noSemanticValidation: true,
                             noSyntaxValidation: false
+                            
                           });
                         
                           // compiler options

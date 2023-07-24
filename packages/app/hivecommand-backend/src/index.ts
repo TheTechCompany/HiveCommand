@@ -51,6 +51,32 @@ const prisma = new PrismaClient();
 			typeDefs: typeDefs,
 			resolvers: resolvers,
 		},
+		resources: [
+			{
+				name: 'CommandDevice', 
+				actions: ['read', 'manage', 'control'], 
+				fields: ['id', 'name', 'provisioned']
+			}, {
+				name: 'CommandProgram', 
+				actions: ['read', 'write', 'delete'],
+				fields: ['id', 'name']
+			}
+		],
+		// aclPermissions: [
+		// 	can: 'Manage',
+		// 	device: ''
+		// 	{
+		// 		action: 'CONTROL_DEVICES',
+		// 		args: {
+		// 			ids: '[String]'
+		// 		},
+
+		// 	}
+		// 	'CONTROL_DEVICE', - Device
+		// 	'GET_DEVICES', Device - id, ids
+		// 	'GET_DEVICE_INFO', - Device
+		// 	'CREATE_PROGRAM', - Program
+		// ],
 		contextFactory: contextFactory
 	})
 

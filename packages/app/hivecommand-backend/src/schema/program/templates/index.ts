@@ -84,6 +84,17 @@ export default (prisma: PrismaClient) => {
         Mutation : {
 
             createCommandProgramTemplate: async (root: any, args: any, context: any) => {
+                const program = await prisma.program.findFirst({
+                    where: {
+                        id: args.program,
+                        organisation: context?.jwt?.organisation
+                    }
+                })
+
+                if (!program) throw new Error("Program access not allowed");
+
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
                 return await prisma.program.update({
                     where: {
                         id: args.program,
@@ -101,6 +112,17 @@ export default (prisma: PrismaClient) => {
                 })
             },
             updateCommandProgramTemplate: async (root: any, args: any, context: any) => {
+                const program = await prisma.program.findFirst({
+                    where: {
+                        id: args.program,
+                        organisation: context?.jwt?.organisation
+                    }
+                })
+
+                if (!program) throw new Error("Program access not allowed");
+
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
                 return await prisma.program.update({
                     where: {
                         id: args.program
@@ -120,6 +142,17 @@ export default (prisma: PrismaClient) => {
                 })
             },
             deleteCommandProgramTemplate: async (root: any, args: any, context: any) => {
+                const program = await prisma.program.findFirst({
+                    where: {
+                        id: args.program,
+                        organisation: context?.jwt?.organisation
+                    }
+                })
+
+                if (!program) throw new Error("Program access not allowed");
+
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
                 return await prisma.program.update({
                     where: {
                         id: args.program
@@ -134,6 +167,18 @@ export default (prisma: PrismaClient) => {
                 })
             },
             createCommandTemplateEdge: async (root: any, args: any, context: any) => {
+                // const program = await prisma.program.findFirst({
+                //     where: {
+                //         id: args.program,
+                //         organisation: context?.jwt?.organisation
+                //     }
+                // })
+
+                // if (!program) throw new Error("Program access not allowed");
+
+                // if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
+
                 let sourcedBy : any = {from: {connect: {id: args.input.from}}};
 
                 if(args.input.script){

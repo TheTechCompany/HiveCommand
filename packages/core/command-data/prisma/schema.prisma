@@ -130,6 +130,24 @@ model DeviceValue {
 }
 
 
+model DeviceValueChange {
+  id Int @default(autoincrement())
+
+  placeholder String
+  key String?
+  value String
+
+  userId String
+
+  lastUpdated DateTime @default(now())
+
+  deviceId String
+
+  @@id([id, lastUpdated])
+  @@unique([deviceId, placeholder, key, userId, lastUpdated])
+  
+}
+
 model DeviceReport {
   id String @id
 

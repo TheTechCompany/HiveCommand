@@ -430,21 +430,29 @@ export default (prisma: PrismaClient) => {
 				if (args.input.rotation != undefined) deviceUpdate['rotation'] = args.input.rotation;
 				if (args.input.type) deviceUpdate['type'] = args.input.type //{ connect: { id: args.input.type } };
 
-				if(args.input.template) deviceUpdate['dataTransformer'] = {
-					upsert: {
-						update: {
-							template: {
-								connect: {id: args.input.template}
-							}
-						},
-						create: {
-							id: nanoid(),
-							template: {
-								connect: {id: args.input.template}
-							}
+				if(args.input.template || args.input.template === null){
+					if(args.input.template === null){
+						deviceUpdate['dataTransformer'] = {
+							delete: true
 						}
+					}else{
+					 	deviceUpdate['dataTransformer'] = {
+							upsert: {
+								update: {
+									template: {
+										connect: {id: args.input.template}
+									}
+								},
+								create: {
+									id: nanoid(),
+									template: {
+										connect: {id: args.input.template}
+									}
+								}
+							}
+						};
 					}
-				};
+				}
 
 				if(args.input.options) deviceUpdate['options'] = args.input.options;
 
@@ -563,6 +571,7 @@ export default (prisma: PrismaClient) => {
 					where: { id: args.id },
 					data: {
 						...deviceUpdate,
+						
 						// hmi: {
 						// 	connect: { programId: args.program }
 						// }

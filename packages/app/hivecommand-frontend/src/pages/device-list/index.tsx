@@ -29,8 +29,8 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
     //     suspense: false
     // })
 
-    const { data } = useApollo(gql`
-        query Q {
+    const { data, error } = useApollo(gql`
+        query DeviceList {
             commandDevices { 
                 id
                 name
@@ -46,21 +46,26 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                 }
             }
 
-            commandPrograms {
-                id
-                name
-            }
+      
         }
     ` )
 
+    const { data: programData } = useApollo(gql`
+    query ProgramList {
+        commandPrograms {
+            id
+            name
+        }
+    }
+    `)
     const client = useApolloClient()
 
     const refetch = () => {
-        client.refetchQueries({include: ['Q']})
+        client.refetchQueries({include: ['DeviceList']})
     }
 
     const devices = data?.commandDevices || [];
-    const programs = data?.commandPrograms || []
+    const programs = programData?.commandPrograms || []
 
     const createDevice = useCreateDevice()
     const updateDevice = useUpdateDevice()
@@ -183,6 +188,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                 sx={{ flex: 1, flexDirection: 'row', display: 'flex'}}
                 >
             <DeploymentList
+                error={error?.message}
                 devices={devices}
                 programs={programs}
                 selected={[selectedDevice?.id]}

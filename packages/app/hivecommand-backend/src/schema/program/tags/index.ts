@@ -55,6 +55,19 @@ export default (prisma: PrismaClient) => {
             importCommandProgramTags: async (root: any, args: any, context: any) => {
                 // const doc = new Document(args.file);
                 // console.log({doc})
+                       
+                const program = await prisma.program.findFirst({
+                    where: {
+                        id: args.program,
+                        organisation: context?.jwt?.organisation
+                    }
+                })
+
+                if (!program) throw new Error("Program access not allowed");
+
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
+                
                 return await Promise.all(args.input.map(async (programTag) => {
 
                     let isScalar = toJSType(programTag?.type) != 'unknown';
@@ -96,7 +109,7 @@ export default (prisma: PrismaClient) => {
                 }))
             },
             createCommandProgramTag: async (root: any, args: { program: string, input: any }, context: any) => {
-
+                
                 const program = await prisma.program.findFirst({
                     where: {
                         id: args.program,
@@ -105,6 +118,9 @@ export default (prisma: PrismaClient) => {
                 })
 
                 if (!program) throw new Error("Program access not allowed");
+
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
                
                 let [isType, type] = isStringType(args.input?.type);
                 
@@ -147,6 +163,7 @@ export default (prisma: PrismaClient) => {
                 })
 
                 if (!program) throw new Error("Program tag access not allowed");
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
                 
                 let [isType, type] = isStringType(args.input.type);
                 
@@ -194,6 +211,8 @@ export default (prisma: PrismaClient) => {
 
 
                 if (!program) throw new Error("Program tag access not allowed");
+                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+
 
                 return await prisma.programTag.delete({
                     where: { id: program.id }
