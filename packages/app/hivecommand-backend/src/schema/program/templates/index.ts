@@ -1,3 +1,4 @@
+import { subject } from "@casl/ability";
 import { PrismaClient } from "@hive-command/data";
 import { nanoid } from "nanoid";
 
@@ -93,7 +94,7 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
 
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
                 return await prisma.program.update({
                     where: {
@@ -121,7 +122,7 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
 
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
                 return await prisma.program.update({
                     where: {
@@ -151,7 +152,7 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
 
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
                 return await prisma.program.update({
                     where: {

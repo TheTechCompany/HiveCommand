@@ -3,6 +3,7 @@ import { nanoid } from "nanoid";
 import { isStringType } from "../types/util";
 import { Document } from '@allenbradley/l5x'
 import { toJSType } from '@hive-command/scripting'
+import { subject } from "@casl/ability";
 
 export default (prisma: PrismaClient) => {
 
@@ -65,9 +66,9 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
 
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
-                
+
                 return await Promise.all(args.input.map(async (programTag) => {
 
                     let isScalar = toJSType(programTag?.type) != 'unknown';
@@ -119,7 +120,7 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
 
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
                
                 let [isType, type] = isStringType(args.input?.type);
@@ -163,7 +164,7 @@ export default (prisma: PrismaClient) => {
                 })
 
                 if (!program) throw new Error("Program tag access not allowed");
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
                 
                 let [isType, type] = isStringType(args.input.type);
                 
@@ -211,7 +212,7 @@ export default (prisma: PrismaClient) => {
 
 
                 if (!program) throw new Error("Program tag access not allowed");
-                if(!context?.jwt?.acl.can('update', 'CommandProgram', program)) throw new Error('Cannot create update CommandProgram');
+                if(!context?.jwt?.acl.can('update', subject('CommandProgram', program) )) throw new Error('Cannot create update CommandProgram');
 
 
                 return await prisma.programTag.delete({
