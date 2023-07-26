@@ -9,6 +9,7 @@ import dataScopes from './scopes';
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
 import components from "./components";
+import { subject } from "@casl/ability";
 
 export default (prisma: PrismaClient) => {
 	
@@ -192,7 +193,7 @@ export default (prisma: PrismaClient) => {
 						// }
 					}});
 
-					return programs.filter((a) => context?.jwt?.acl?.can('read', 'CommandProgram', a))
+					return programs.filter((a) => context?.jwt?.acl?.can('read', subject('CommandProgram', a) ))
 				},
 				
 			},
@@ -221,7 +222,8 @@ export default (prisma: PrismaClient) => {
 				updateCommandProgram: async (root: any, args: {id: string, input: {name: string, templatePacks: string[]}}, context: any) => {
 					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
 
-					if(!context?.jwt?.acl.can('update', 'CommandProgram', currentProgram)) throw new Error('Cannot update CommandProgram');
+					if(!currentProgram) throw new Error('Program not found');
+					if(!context?.jwt?.acl.can('update', subject('CommandProgram', currentProgram) )) throw new Error('Cannot update CommandProgram');
 					
 					const program = await prisma.program.update({
 						where: {id: args.id},
@@ -237,8 +239,8 @@ export default (prisma: PrismaClient) => {
 				},
 				deleteCommandProgram: async (root: any, args: {id: string}, context: any) => {
 					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
-
-					if(!context?.jwt?.acl.can('delete', 'CommandProgram', currentProgram)) throw new Error('Cannot delete CommandProgram');
+					if(!currentProgram) throw new Error('Program not found');
+					if(!context?.jwt?.acl.can('delete', subject('CommandProgram', currentProgram) )) throw new Error('Cannot delete CommandProgram');
 					
 					const res = await prisma.program.delete({where: {id: args.id}})
 					return res != null
