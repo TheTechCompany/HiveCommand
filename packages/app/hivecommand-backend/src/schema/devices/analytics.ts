@@ -163,6 +163,9 @@ export default (prisma: PrismaClient) => {
 
 				// console.log(query, params)
 
+				const timeBucketString = root.timeBucket || '5 minute';
+
+				const timeBucket = mathUnit(timeBucketString).toNumber('seconds');
 				
 				try{
 					const result = await prisma.$queryRaw<any[]>`
@@ -170,7 +173,7 @@ export default (prisma: PrismaClient) => {
 						placeholder,
 						"deviceId",
 						key,
-						time_bucket_gapfill(${root.timeBucket || '5 minute'}, "lastUpdated") as time, 
+						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "lastUpdated") as time, 
 						COALESCE(avg(value::float), 0) as value
 					FROM "DeviceValue" 
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
