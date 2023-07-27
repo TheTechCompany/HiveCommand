@@ -1,17 +1,29 @@
 import { Box } from '@mui/material';
 import { QueryBuilder, Rule, RuleProps, useRule } from 'react-querybuilder';
-import React from 'react';
+import React, { useState } from 'react';
 import 'react-querybuilder/dist/query-builder.css';
+import { useCommandEditor } from '../../../context';
 
 export const AlarmConditions = () => {
+
+    const { refetch, program: {templates, components, tags, types} } = useCommandEditor()
+
+    const [query, setQuery] = useState( {combinator: 'and', rules: []})
+    
+    console.log(query);
+    
     return (
         <Box>
             <QueryBuilder
-                fields={[
-                    {name: 'AV101', label: 'AV101', inputType: 'valve'},
-                    {name: 'AV201', label: 'AV201', inputType: 'valve'}
-                ]}
-                
+                query={query}
+                onQueryChange={(e) => {
+                    setQuery(e)
+                }}
+                fields={tags.map((tag) => ({
+                    name: tag.name,
+                    label: tag.name,
+                    inputType: tag.type
+                }))} 
                 controlElements={{
                     rule: AlarmRule
                 }}
@@ -23,10 +35,12 @@ export const AlarmConditions = () => {
 
 export const AlarmRule = (props: RuleProps) => {
     const r = { ...props, ...useRule(props) };
+
+    const { refetch, program: {templates, components, tags, types} } = useCommandEditor()
   
     console.log(props);
 
-    if (props.schema.fieldMap[props.rule.field].inputType === 'valve') {
+    if (types.findIndex((idx) => idx.name == props.schema.fieldMap[props.rule.field].inputType) > -1) {
       const {
         schema: {
           controls: {
@@ -92,7 +106,10 @@ export const AlarmRule = (props: RuleProps) => {
             />
           </div>
           <QueryBuilder
-            fields={[{label: 'open', name: "Open"}]}
+            fields={types.find((idx) => idx.name == props.schema.fieldMap[props.rule.field].inputType)?.fields?.map((x) => ({
+                name: x.name,
+                label: x.name
+            })) || []}
             query={props.value}
             onQueryChange={valueChangeHandler}
           />
