@@ -53,13 +53,16 @@ export const Properties = (props: {
                 <Table size="small" stickyHeader>
                     <TableHead sx={{ bgcolor: 'secondary.main' }}>
                         <TableRow>
+                            <TableCell sx={{padding: '0px', width: '10px', bgcolor: 'secondary.main'}}>
+                                    
+                            </TableCell>
                             <TableCell sx={{ padding: '6px', bgcolor: 'secondary.main' }}>
                                 Name
                             </TableCell>
                             <TableCell sx={{ padding: '6px', bgcolor: 'secondary.main' }}>
                                 Datatype
                             </TableCell>
-                            <TableCell sx={{ bgcolor: 'secondary.main' }}>
+                            <TableCell sx={{ padding: 0, bgcolor: 'secondary.main' }}>
 
                             </TableCell>
                         </TableRow>
@@ -67,21 +70,24 @@ export const Properties = (props: {
                     <TableBody sx={{ overflowY: 'auto' }}>
                         {typeFields.map((field) => (
                             <TableRow>
-                                <TableCell sx={{ padding: '6px' }}>
+                                <TableCell sx={{padding: '0px', cursor: 'pointer', width: '10px', borderRight: '2px solid #dfdfdf'}}>
+
+                                </TableCell>
+                                <TableCell sx={{ padding: '0px', borderRight: '2px solid #dfdfdf' }}>
                                     <TextField
                                         onChange={(e) => {
                                             updateField(field.id, { name: e.target.value })
                                         }}
                                         fullWidth
                                         size="small"
-                                        variant="filled"
+                                        variant="standard"
                                         value={field.name} />
                                 </TableCell>
-                                <TableCell sx={{ padding: '6px' }}>
+                                <TableCell sx={{ padding: '0px' }}>
                                     <Autocomplete
                                         size="small"
                                         value={field.type}
-                                        renderInput={(params) => <TextField {...params} variant="filled" />}
+                                        renderInput={(params) => <TextField {...params} variant="standard" />}
                                         options={scalarTypes.concat(scalarTypes.map((x) => `${x}[]`))}
                                         onChange={(e, newValue) => {
                                             updateField(field.id, { type: newValue })
@@ -90,7 +96,7 @@ export const Properties = (props: {
                                     />
                                     {/* {field.type} */}
                                 </TableCell>
-                                <TableCell sx={{ width: '30px' }}>
+                                <TableCell sx={{ padding: 0, width: '30px' }}>
                                     <IconButton
                                         onClick={() => {
                                             deleteTypeField(field.id).then(() => {

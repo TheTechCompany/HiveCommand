@@ -3257,7 +3257,7 @@ __metadata:
     react-dom: 17.x
     react-error-boundary: ^4.0.9
     react-grid-layout: ^1.3.3
-    react-querybuilder: ^3.12.1
+    react-querybuilder: ^6.5.1
     react-resize-aware: 3.1.1
     react-router-dom: ^6.2.1
     reactflow: ^11.7.2
@@ -7825,36 +7825,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*, @types/react@npm:^18.0.24, @types/react@npm:^18.2.6":
-  version: 18.2.15
-  resolution: "@types/react@npm:18.2.15"
+"@types/react@npm:17.0.2":
+  version: 17.0.2
+  resolution: "@types/react@npm:17.0.2"
   dependencies:
     "@types/prop-types": "*"
-    "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 36989f638201bfe2f4110b06c119180f6df9c0e13d7060481e82e7a745f81745a01ae543c478a25b61e0767cb52e82da2ad5b0dedacabf99339e523d06176705
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17, @types/react@npm:17.x, @types/react@npm:^17, @types/react@npm:^17.0.11":
-  version: 17.0.62
-  resolution: "@types/react@npm:17.0.62"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 428a5aff44824ef504e9a9259b5894fe44a5db1c344b536990f07e132900ff5b34cbef0be77a84f30f37be1f88fc8b56dce328f568de8d65de3bfe414c05b2e1
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:17.0.39":
-  version: 17.0.39
-  resolution: "@types/react@npm:17.0.39"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: bf04d3c2894559012710d595553e12b422d3b91cd8f4f7e122d8cb044ba9c2ba17f6e8a4e09581359cc5509ddc59cd8c8fabd6774f3505a40a45393f074d6e6e
+  checksum: a5198857165feddcbfc7d33e3322460ac62b8894d702414496a825b0c82272911ec33a42ef7c9d623a59308070eef4dfee6ff834b0674aa3f87eeb644196ee3b
   languageName: node
   linkType: hard
 
@@ -7894,13 +7871,6 @@ __metadata:
   version: 0.12.0
   resolution: "@types/retry@npm:0.12.0"
   checksum: 61a072c7639f6e8126588bf1eb1ce8835f2cb9c2aba795c4491cf6310e013267b0c8488039857c261c387e9728c1b43205099223f160bb6a76b4374f741b5603
-  languageName: node
-  linkType: hard
-
-"@types/scheduler@npm:*":
-  version: 0.16.3
-  resolution: "@types/scheduler@npm:0.16.3"
-  checksum: 2b0aec39c24268e3ce938c5db2f2e77f5c3dd280e05c262d9c2fe7d890929e4632a6b8e94334017b66b45e4f92a5aa42ba3356640c2a1175fa37bef2f5200767
   languageName: node
   linkType: hard
 
@@ -16442,6 +16412,13 @@ __metadata:
   version: 5.2.4
   resolution: "ignore@npm:5.2.4"
   checksum: 3d4c309c6006e2621659311783eaea7ebcd41fe4ca1d78c91c473157ad6666a57a2df790fe0d07a12300d9aac2888204d7be8d59f9aaf665b1c7fcdb432517ef
+  languageName: node
+  linkType: hard
+
+"immer@npm:^10.0.2":
+  version: 10.0.2
+  resolution: "immer@npm:10.0.2"
+  checksum: 525a3b14210d02ae420c3b9f6ca14f7e9bcf625611d1356e773e7739f14c7c8de50dac442e6c7de3a6e24a782f7b792b6b8666bc0b3f00269d21a95f8f68ca84
   languageName: node
   linkType: hard
 
@@ -26249,15 +26226,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-querybuilder@npm:^3.12.1":
-  version: 3.12.1
-  resolution: "react-querybuilder@npm:3.12.1"
+"react-querybuilder@npm:^6.5.1":
+  version: 6.5.1
+  resolution: "react-querybuilder@npm:6.5.1"
   dependencies:
-    lodash: ^4.17.20
+    clsx: ^1.2.1
+    immer: ^10.0.2
   peerDependencies:
     react: ">=16.8.0"
-    react-dom: ">=16.8.0"
-  checksum: f1dd0a1466fef5048c875f40b80b4a71a6331c32666e2a4a7838369a1554c3344e72919741bdca473990ddaa250158939eb619b9aaa659aa5b7d7dcbbd7863db
+  checksum: 09d9346eaa823a0eb9f40123e59430bb2c52d49c5f867ab44d1b4462ee7102a5802bd3635f508d683de0e0fe090d91dfdc5237daedcd7b02134f560ae994e310
   languageName: node
   linkType: hard
 

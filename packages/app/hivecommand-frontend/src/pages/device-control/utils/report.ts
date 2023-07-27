@@ -31,7 +31,10 @@ export const useDeviceReports = (id: string) => {
               name
             }
 
+            unit
    
+            timeBucket
+            
           }
       
         }

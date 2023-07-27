@@ -134,7 +134,6 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
         */
 
         const componentsInterface = components.map((x) => {
-            console.log("PATH", x.main.path)
             return x.files.map((file) => {
                 return {
                     path: `file:///node_modules/@module/components/${x.name}/${file.path}`,

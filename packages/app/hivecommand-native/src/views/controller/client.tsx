@@ -267,7 +267,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
             setReportPages(reports)
         },
-        addChart: async (pageId, type, deviceId, keyId, x, y, w, h, totalize) => {
+        addChart: async (pageId, type, deviceId, keyId, units, x, y, w, h, totalize) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(pageId)
             if (ix > -1) {

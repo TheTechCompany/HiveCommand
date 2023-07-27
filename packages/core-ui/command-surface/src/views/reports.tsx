@@ -260,7 +260,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
           if (!graph.id) {
             console.log("Add chart")
-            client?.addChart?.(activePage, 'line-chart', graph.deviceID, graph.keyID, 0, 0, 8, 6, graph.totalize).then(() => {
+            client?.addChart?.(activePage, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, 0, 0, 8, 6, graph.totalize).then(() => {
               openModal(false);
               console.log("Chart added");
               // refetchStructure?.()
@@ -268,7 +268,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
               setSelected(undefined)
             })
           } else {
-            client?.updateChart?.(activePage, graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
+            client?.updateChart?.(activePage, graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
               openModal(false);
               // refetchStructure?.()
               // refetchValues?.()

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { IconButton, Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField } from '@mui/material'
+import { IconButton, Autocomplete, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Paper } from '@mui/material'
 import { createFilterOptions } from '@mui/material/Autocomplete'
 import { ImportExport, Close } from '@mui/icons-material'
 
@@ -152,6 +152,9 @@ export const TagEditor = (props: any) => {
                 <Table size='small' stickyHeader>
                     <TableHead sx={{bgcolor: 'secondary.main'}}>
                         <TableRow>
+                            <TableCell sx={{padding: 0, width: '10px', bgcolor: 'secondary.main'}}>
+
+                            </TableCell>
                             <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}}>
                                 Tag name
                             </TableCell>
@@ -161,7 +164,7 @@ export const TagEditor = (props: any) => {
                             <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}}>
                                 Scope
                             </TableCell>
-                            <TableCell sx={{bgcolor: 'secondary.main'}}>
+                            <TableCell sx={{padding: 0, bgcolor: 'secondary.main'}}>
 
                             </TableCell>
                         </TableRow>
@@ -174,17 +177,21 @@ export const TagEditor = (props: any) => {
                             return true;
                         })?.sort((a, b) => a.name?.localeCompare(b.name)).map((tag) => (
                             <TableRow key={tag.id || tag.name}>
-                                <TableCell sx={{padding: '3px', paddingRight: 0,}}>
+                                <TableCell sx={{padding: 0, width: '10px', cursor: 'pointer', borderRight: '2px solid #dfdfdf'}}>
+                                    {/* <Paper sx={{height: '30px', borderBottomLeftRadius: 0, borderTopLeftRadius: 0}} elevation={3}></Paper> */}
+                                </TableCell>
+                                <TableCell sx={{padding: '0px', paddingLeft: '6px', paddingRight: 0, borderRight: '2px solid #dfdfdf'}}>
                                     <TextField 
                                         // sx={{lineHeight: '1em', fontSize: '0.8rem'}}
                                         fullWidth
                                         size="small"
+                                        variant="standard"
                                         onChange={(e) => {
                                             updateRow(tag.id, {name: e.target.value})
                                         }}
                                         value={tag.name} />
                                 </TableCell>
-                                <TableCell sx={{padding: '3px', paddingRight: 0,}}>
+                                <TableCell sx={{padding: '0px', paddingRight: 0,  borderRight: '2px solid #dfdfdf'}}>
                                     <Autocomplete 
                                         // sx={{height: '1em', fontSize: '0.8rem'}}
                                         fullWidth
@@ -194,7 +201,7 @@ export const TagEditor = (props: any) => {
                                             updateRow(tag.id, {type: value.id})
                                         }}
                                         value={dataTypes.find((a) => a.name === tag.type)}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params} variant='standard' />}
                                         options={dataTypes}
                                         getOptionLabel={(option) => option.inputValue ? option.title : option.name}
                                         filterOptions={(options, params) => {
@@ -214,7 +221,7 @@ export const TagEditor = (props: any) => {
                                         }}
                                         />
                                 </TableCell>
-                                <TableCell sx={{ minWidth: '200px', padding: '3px', paddingRight: 0,}}>
+                                <TableCell sx={{ minWidth: '200px', padding: '0px', paddingRight: 0}}>
                                     <Autocomplete 
                                         fullWidth
                                         size="small"
@@ -223,7 +230,7 @@ export const TagEditor = (props: any) => {
                                             updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value.id})
                                         }}
                                         value={dataScopes.find((a) => a.id === tag.scope?.id)}
-                                        renderInput={(params) => <TextField {...params} />}
+                                        renderInput={(params) => <TextField {...params} variant='standard' />}
                                         options={dataScopes || []}
                                         getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
                                         // filterOptions={(options, params) => {
@@ -243,7 +250,7 @@ export const TagEditor = (props: any) => {
                                         // }}
                                         />
                                 </TableCell>
-                                <TableCell sx={{width: '30px'}}>
+                                <TableCell sx={{width: '30px', padding: 0}}>
                                         <IconButton 
                                             onClick={() => {
                                                 deleteTag({

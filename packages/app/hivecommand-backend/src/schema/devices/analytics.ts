@@ -45,6 +45,7 @@ export default (prisma: PrismaClient) => {
 
 		input CommandDeviceReportInput {
 			id: ID
+
 			x: Int
 			y: Int
 			width: Int
@@ -55,6 +56,9 @@ export default (prisma: PrismaClient) => {
 
 			tagId: String
 			subkeyId: String
+
+			unit: String
+			timeBucket: String
 
 			device: String
 		}
@@ -71,6 +75,9 @@ export default (prisma: PrismaClient) => {
 
 			tag: CommandProgramTag
 			subkey: CommandProgramTypeField
+
+			unit: String
+			timeBucket: String
 
 			values(startDate: DateTime, endDate: DateTime): [CommandDeviceTimeseriesData]
 			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
@@ -163,7 +170,7 @@ export default (prisma: PrismaClient) => {
 						placeholder,
 						"deviceId",
 						key,
-						time_bucket_gapfill('5 minute', "lastUpdated") as time, 
+						time_bucket_gapfill(root.timeBucket || '5 minute', "lastUpdated") as time, 
 						COALESCE(avg(value::float), 0) as value
 					FROM "DeviceValue" 
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
@@ -251,12 +258,26 @@ export default (prisma: PrismaClient) => {
 			
 						 */
 
-		
+					
+				const { unit } = root;
+				let unitTimeDimension = 60; //60 = minutedata, 60 * 60 = hrdata, 60 * 60 * 24 = daydata
+						
+				if(unit){
+					try{
+						let nu = mathUnit(unit);	
+						if(nu.units.length >= 2){
+							unitTimeDimension = mathUnit(nu.units[1].unit.name).toNumber('seconds')
+						}
+					}catch(e){
+						console.error("Error making unit", e);
+					}
+				}
+
 				const result = await prisma.$queryRaw<any[]>`
 				SELECT 			
 					sum(SUB.total) as total
 				FROM 
-						(SELECT	(NULLIF(value, '0')::numeric / ${60}) * EXTRACT(EPOCH from (LEAD("lastUpdated") over (order by "lastUpdated") - "lastUpdated")) as total
+						(SELECT	(NULLIF(value, '0')::numeric / ${unitTimeDimension}) * EXTRACT(EPOCH from (LEAD("lastUpdated") over (order by "lastUpdated") - "lastUpdated")) as total
 						FROM
 							"DeviceValue"
 						WHERE
@@ -352,6 +373,8 @@ export default (prisma: PrismaClient) => {
 						subkey: {
 							connect: {id: args.input.subkeyId}
 						},
+						unit: args.input.unit,
+						timeBucket: args.input.timeBucket,
 						page: {
 							connect: {id: args.page}
 						}
@@ -375,7 +398,9 @@ export default (prisma: PrismaClient) => {
 						},
 						subkey: {
 							connect: {id: args.input.subkeyId}
-						}
+						},
+						unit: args.input.unit,
+						timeBucket: args.input.timeBucket
 
 					}
 				})
