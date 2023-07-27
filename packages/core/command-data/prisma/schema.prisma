@@ -166,6 +166,10 @@ model DeviceReport {
   subkey ProgramTypeField? @relation(name: "reportsOnTagField", fields: [subkeyId], references: [id])
   subkeyId String?
 
+  unit String?
+
+  timeBucket String?
+
   page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
   pageId String
 }

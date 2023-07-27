@@ -3,11 +3,11 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useCommandEditor } from '../../../context';
 import { Add } from '@mui/icons-material'
 import { DataTypes, formatInterface, lookupType, toJSType } from '@hive-command/scripting';
-import * as d3 from 'd3-hierarchy'
 import { nanoid } from 'nanoid';
 import 'reactflow/dist/style.css';
 import { PipelineEditor } from './pipeline';
 import { CodeEditor } from './code';
+import { AlarmConditions } from './condition';
 
 
 export const AlarmEditor = (props: any) => {
@@ -118,6 +118,8 @@ export const AlarmEditor = (props: any) => {
 
     const renderView = () => {
         switch(view){
+            case 'conditions':
+                return <AlarmConditions />
             case 'pipeline':
                 return <PipelineEditor active={props.active} />
             case 'code':
