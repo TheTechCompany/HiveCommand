@@ -170,7 +170,7 @@ export default (prisma: PrismaClient) => {
 						placeholder,
 						"deviceId",
 						key,
-						time_bucket_gapfill(root.timeBucket || '5 minute', "lastUpdated") as time, 
+						time_bucket_gapfill(${root.timeBucket || '5 minute'}, "lastUpdated") as time, 
 						COALESCE(avg(value::float), 0) as value
 					FROM "DeviceValue" 
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
