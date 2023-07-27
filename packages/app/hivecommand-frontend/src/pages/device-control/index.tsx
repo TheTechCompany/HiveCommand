@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { CommandSurface } from '@hive-command/command-surface';
 import { useWatchers } from './utils/watchers';
 import { useParams } from 'react-router-dom';
 import { useDevice } from './utils/program';
-import { useDeviceHistory, useDeviceValues } from './utils/value';
-import { useChangeDeviceValue, useChangeMode, usePerformDeviceAction } from '@hive-command/api';
 import moment from 'moment';
 import { useDeviceReports } from './utils/report';
 import { useWebClient } from './utils/client';
