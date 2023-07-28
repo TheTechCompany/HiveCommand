@@ -11,7 +11,7 @@ import { Graph, GraphContainer } from "../components/graph";
 // import { useApolloClient } from "@apollo/client";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
 import { ButtonGroup, Menu, Paper } from "@mui/material";
-
+import { unit as mathUnit } from 'mathjs';
 import { Box, Typography, IconButton, Button } from '@mui/material'
 
 export type ReportHorizon = { start: Date, end: Date };
@@ -24,8 +24,11 @@ export interface ReportChart {
   y: number;
   width: number;
   height: number;
+
   totalValue: { total: any };
   values: { timestamp: any, value: any }[];
+
+  unit: string;
 }
 
 export interface ReportViewProps {
@@ -344,7 +347,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
                 }}
                 dataKey={item.subkey?.name}
                 label={`${item.tag?.name} - ${item.subkey?.name}`}
-                total={item?.totalValue?.total}>
+                total={item?.totalValue?.total ? (item?.totalValue?.total + (item.unit ? mathUnit(item.unit).units?.[0]?.unit.name : '')) : ''}>
                 <Graph data={item.values} xKey={"timestamp"} yKey={"value"} />
               </GraphContainer>
             )}
