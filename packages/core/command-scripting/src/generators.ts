@@ -17,19 +17,13 @@ export const isTypeDeclaration = (typeDeclaration: any) : typeDeclaration is Typ
 }
 
 export const getKeyedValue = (key: string, type: TypeArg) : string => {
-
-
     const templatedKey = key.replace(/[ -]/g, '_');
     const value = getValue(type);
-
-    console.log(templatedKey)
 
     return `${templatedKey}: ${value};`;
 }
 
 export const getValue = (type: TypeArg) : string => {
-    console.log("Get value", type);
-    
     if(type && typeof(type) === 'object' && !Array.isArray(type)){
         return `{ ${Object.keys(type).map((key) => getKeyedValue(key, type[key])).join('\n')} }`;
     }else if(type && Array.isArray(type)){

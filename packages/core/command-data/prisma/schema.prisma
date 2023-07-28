@@ -335,6 +335,8 @@ model ProgramAlarm {
 
   description String?
 
+  conditions Json?
+
   nodes ProgramAlarmAction[] @relation(name: "useAlarmAction")
   edges ProgramAlarmEdge[] @relation(name: "useAlarmEdge")
 

@@ -111,6 +111,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
                     
                     }
+
+                    conditions
                 }
 
                 types {
@@ -306,15 +308,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         "Alarms"
     ]
 
-    useEffect(() => {
-
-        menu.forEach((item, ix) => {
-            console.log(item, window.location.pathname)
-           
-
-        })
-
-    }, [window.location.pathname])
 
     const treeMenu = [
         {

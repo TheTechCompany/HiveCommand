@@ -21,6 +21,8 @@ export default (prisma: PrismaClient) => {
             name: String
 
             description: String
+
+            conditions: JSON
         }
 
         type CommandProgramAlarm {
@@ -29,16 +31,10 @@ export default (prisma: PrismaClient) => {
             name: String
             description: String
 
+            conditions: JSON
+
             edges: [CommandProgramAlarmEdge]
             nodes: [CommandProgramAlarmAction]
-        }
-
-        type CommandProgramAlarmCondition {
-            id: ID
-            name: String
-
-            input: String
-            value: String
         }
 
         type CommandProgramAlarmType {
@@ -102,6 +98,7 @@ export default (prisma: PrismaClient) => {
                         id: nanoid(),
                         name: args.input.name,
                         description: args.input.description,
+                        conditions: args.input.conditions,
                         program: { 
                             connect: { 
                                 id: args.program 
@@ -127,7 +124,7 @@ export default (prisma: PrismaClient) => {
                     data: {
                         name: args.input.name,
                         description: args.input.description,
-                        
+                        conditions: args.input.conditions
                     }
                 })
             },
