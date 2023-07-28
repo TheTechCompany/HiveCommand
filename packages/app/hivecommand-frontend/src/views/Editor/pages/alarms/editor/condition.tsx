@@ -1,23 +1,57 @@
 import { Box } from '@mui/material';
-import { QueryBuilder, Rule, RuleProps, useRule } from 'react-querybuilder';
-import React, { useState } from 'react';
+import { QueryBuilder, Rule, RuleProcessor, RuleProps, formatQuery, useRule } from 'react-querybuilder';
+import React, { useEffect, useState } from 'react';
 import 'react-querybuilder/dist/query-builder.css';
 import { useCommandEditor } from '../../../context';
+import { gql, useMutation } from '@apollo/client'
+import { parseMongoDB, defaultRuleProcessorMongoDB } from '../utils'
 
-export const AlarmConditions = () => {
+export const AlarmConditions = (props: any) => {
 
-    const { refetch, program: {templates, components, tags, types} } = useCommandEditor()
-
-    const [query, setQuery] = useState( {combinator: 'and', rules: []})
+    const { refetch, program: { id, templates, components, tags, types, alarms } } = useCommandEditor()
+////
+//
+    const [query, setQuery] = useState<any>((alarms.find((a) => a.id == props.active).conditions) ? parseMongoDB(alarms.find((a) => a.id == props.active).conditions) :  {combinator: 'and', rules: []})
     
-    console.log(query);
-    
+    const [ updateAlarm ] = useMutation(gql`
+        mutation UpdateAlarm($program: ID, $id: ID!, $conditions: JSON){
+            updateCommandProgramAlarm(program: $program, id: $id, input: {conditions: $conditions}){
+                id
+            }
+        }
+    `, {
+        refetchQueries: ['EditorCommandProgram']
+    })
+
+    useEffect(() => {
+        if(props.active) setQuery(parseMongoDB(alarms.find((a) => a.id == props.active).conditions))
+    }, [props.active])
+
+console.log(1, {conditions: alarms.find((a) => a.id == props.active).conditions})
+
+    useEffect(() => {
+
+        const conditions =  formatQuery(query, {format: 'mongodb', ruleProcessor: customMongoProcessor});
+
+        console.log({conditions})
+        updateAlarm({
+            variables: {
+                program: id,
+                id: props.active,
+                conditions
+            }
+        })
+
+    }, [query])
+
     return (
-        <Box>
+        <Box sx={{padding: '6px'}}>
             <QueryBuilder
-                query={query}
+                query={query || null}
                 onQueryChange={(e) => {
                     setQuery(e)
+
+                   
                 }}
                 fields={tags.map((tag) => ({
                     name: tag.name,
@@ -32,15 +66,34 @@ export const AlarmConditions = () => {
     )
 }
 
+export const customMongoProcessor : RuleProcessor = (rule, options) => {
+    
+    if(typeof(rule.value) == 'object'){
+        const ruleValue =  JSON.parse(formatQuery(rule.value, {format: 'mongodb', ruleProcessor: customMongoProcessor})) ;
+        console.log("RuleValue", ruleValue)
+
+        return defaultRuleProcessorMongoDB({
+            ...rule, 
+            value: ruleValue
+        }, options);
+        
+        // return {
+        //     [rule.field]: formatQuery(rule.value, {format: 'mongodb', ruleProcessor: customMongoProcessor})
+        // }
+    }
+
+
+    // if(options.)
+    return defaultRuleProcessorMongoDB(rule, options)
+}
+
 
 export const AlarmRule = (props: RuleProps) => {
     const r = { ...props, ...useRule(props) };
 
     const { refetch, program: {templates, components, tags, types} } = useCommandEditor()
   
-    console.log(props);
-
-    if (types.findIndex((idx) => idx.name == props.schema.fieldMap[props.rule.field].inputType) > -1) {
+    if (types.findIndex((idx) => idx.name == props.schema.fieldMap[props.rule.field]?.inputType) > -1) {
       const {
         schema: {
           controls: {
@@ -106,7 +159,7 @@ export const AlarmRule = (props: RuleProps) => {
             />
           </div>
           <QueryBuilder
-            fields={types.find((idx) => idx.name == props.schema.fieldMap[props.rule.field].inputType)?.fields?.map((x) => ({
+            fields={types.find((idx) => idx.name == props.schema.fieldMap[props.rule.field]?.inputType)?.fields?.map((x) => ({
                 name: x.name,
                 label: x.name
             })) || []}

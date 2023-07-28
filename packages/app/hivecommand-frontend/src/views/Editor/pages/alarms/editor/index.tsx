@@ -119,7 +119,7 @@ export const AlarmEditor = (props: any) => {
     const renderView = () => {
         switch(view){
             case 'conditions':
-                return <AlarmConditions />
+                return <AlarmConditions active={props.active} />
             case 'pipeline':
                 return <PipelineEditor active={props.active} />
             case 'code':
