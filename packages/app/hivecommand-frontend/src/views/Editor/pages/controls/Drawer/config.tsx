@@ -4,12 +4,10 @@ import { TableView as Aggregate, TripOrigin, RotateLeft, RotateRight, Remove as 
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import {  useUpdateHMINode } from "@hive-command/api";
 import { useHMIContext } from "../context";
-import { FunctionArgumentsModal } from "../../../../../components/modals/function-arguments";
-import { MenuItem } from "@mui/material";
-import { FormControl } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import { FormGroup } from "@mui/material";
-import { ScriptEditorModal } from "../../../../../components/script-editor";
+
+import { Edge, Node, useEdges, useNodes } from 'reactflow';
+import { NodeConfig } from "./node-config";
+import { EdgeConfig } from "./edge-config";
 // import { HMICanvasContext } from "../context";
 
 export interface ConfigMenuProps {
@@ -24,21 +22,28 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     // const { interfaces } = useContext(HMICanvasContext)
 
-    const { programId, interfaces, refetch, selected, nodes } = useHMIContext();
+    const { programId, interfaces, refetch, selected } = useHMIContext();
 
     const updateHMINode = useUpdateHMINode(programId)
 
-    const item = nodes?.find((a) => a.id == selected.id);
+    const nodes = useNodes<Node>()
+    const edges = useEdges<Edge>();
 
-    const options = item?.extras?.options || {};
+    const selected_nodes = nodes.filter((a) =>selected.nodes.findIndex((b) => b.id == a.id) > -1) || [];
+    const selected_edges = edges.filter((a) =>selected.edges.findIndex((b) => b.id == a.id) > -1) || [];
+
+    const item = selected_nodes?.[0] || selected_edges?.[0] //nodes?.find((a) => a.id == selected.id);
+
+    console.log({item, nodes, selected_nodes, selected})
+    // const options = item?.data?.options || {};
 
     const [ state, setState ] = useState<any>([])
 
-    useEffect(() => {
-        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
+    // useEffect(() => {
+    //     let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: options?.[optionKey]}));
 
-        setState(newState)
-    }, [selected, options])
+    //     setState(newState)
+    // }, [selected, options])
 
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
@@ -55,7 +60,7 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
         }
         setUpdateBouncer(
             setTimeout(() => {
-                updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+                updateHMINode(item.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
                     refetch?.()
                 })
             }, 500)
@@ -182,122 +187,11 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
                     reverse
                     label="Show Totalizer" />
             </Box> */} 
-            <TextField
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="X"
-                value={item?.x}
-                onChange={(e) => {
-                    updateHMINode(selected.id, { x: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number" />
-            <TextField
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="Y"
-                value={item?.y}
-                onChange={(e) => {
-                    updateHMINode(selected.id, { y: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number" />
-            <TextField 
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="Width" 
-                value={item?.width} 
-                onChange={(e) => {
-                    updateHMINode(selected.id, { width: parseInt(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number"  />
-            <TextField 
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="Height" 
-                value={item?.height} 
-                onChange={(e) => {
-                    updateHMINode(selected.id, { height: parseInt(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number" />
-
-            <TextField 
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="Scale X" 
-                value={item?.extras?.scaleX} 
-                onChange={(e) => {
-                    updateHMINode(selected.id, { scaleX: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number" />
-
-            <TextField 
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                size="small"
-                label="Scale Y" 
-                value={item?.extras?.scaleY} 
-                onChange={(e) => {
-                    updateHMINode(selected.id, { scaleY: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
-                }}
-                type="number" />
-
-            <TextField
-                sx={{marginBottom: '6px', marginTop: '6px'}}
-                fullWidth
-                type="number"
-                size="small"
-                label="Z Index"
-                value={item?.extras?.zIndex}
-                onChange={(e) => {
-                    updateHMINode(selected.id, { zIndex: parseFloat(e.target.value)}).then(() => {
-                        refetch()
-                    })
-                }} />
-            <BumpInput
-                placeholder="Rotation"
-                type="number"
-                leftIcon={<RotateLeft  fontSize="small"  />}
-                rightIcon={<RotateRight  fontSize="small" />}
-                value={item?.extras?.rotation}
-                onLeftClick={() => {
-                    updateHMINode(selected.id, { rotation: (item?.extras?.rotation || 0) - 90 }).then(() => {
-                        refetch()
-                    })
-                }}
-                onRightClick={() => {
-                    updateHMINode(
-                        selected.id,
-                        { rotation: (item?.extras?.rotation || 0) + 90 }
-                    ).then(() => {
-                        refetch()
-                    })
-                }}
-                onChange={(e) => {
-                    updateHMINode(
-                        selected.id,
-                        { rotation: parseFloat(e) }
-                    ).then(() => {
-                        refetch()
-                    })
-
-                }}
-            />
+            {item && (item as Node)?.position != null ? (
+                <NodeConfig item={item as Node} />
+            ) : item ? (
+                <EdgeConfig />
+            ) : null}
 
             {/* <BumpInput
                 placeholder="Scale X"

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import { Node, Edge } from 'reactflow';
 
 export interface HMINodeData {
     position?: {x: number, y: number};
@@ -34,7 +35,10 @@ export const HMIContext = React.createContext<{
     actions?: any[]
     interfaces?: any[];
     refetch?: () => void;
-    selected?: any;
+    selected?: {
+        nodes: Node[],
+        edges: Edge[]
+    };
     
     tags?: HMITag[]
     types?: HMIType[];

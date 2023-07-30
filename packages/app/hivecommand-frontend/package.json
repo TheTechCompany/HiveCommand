@@ -102,7 +102,7 @@
     "react-querybuilder": "^6.5.1",
     "react-resize-aware": "3.1.1",
     "react-router-dom": "^6.2.1",
-    "reactflow": "^11.7.2",
+    "reactflow": "^11.7.4",
     "single-spa-react": "^4.2.0",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",

@@ -13,12 +13,19 @@ export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Numb
 export const TemplateMenu = () => {
 
     const {  templates, selected, refetch, programId, tags, types, nodes } = useContext(HMIContext);
+// 
+    // const item = nodes?.find((a) => a.id == selected.id);
 
-    const item = nodes?.find((a) => a.id == selected.id);
 
-    const options = item?.extras?.options || {};
+    const selected_nodes = selected.nodes || [];
+    const selected_edges = selected.edges || [];
 
-    const templateOptions = item?.templateOptions || [];
+    const item = selected_nodes?.[0] || selected_edges?.[0] //nodes?.find((a) => a.id == selected.id);
+
+
+    const options = item?.data?.options || {};
+
+    const templateOptions = item?.data?.templateOptions || [];
 
     const [ templateState, setTemplateState ] = useState<any>([])
 
@@ -85,18 +92,18 @@ export const TemplateMenu = () => {
         }).reduce((prev, curr) => prev.concat(curr), []);
 
     }, [tags, types])
-    useEffect(() => {
-        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.options?.[optionKey]}));
+    // useEffect(() => {
+    //     let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: item?.data?.options?.[optionKey]}));
 
-        setState(newState)
+    //     setState(newState)
 
-    }, [selected, options])
+    // }, [selected, options])
 
-    useEffect(() => {
-        if(templateOptions){
-            setTemplateState(templateOptions);
-        }
-    }, [templateOptions])
+    // useEffect(() => {
+    //     if(templateOptions){
+    //         setTemplateState(templateOptions);
+    //     }
+    // }, [templateOptions])
 
 
 
@@ -115,7 +122,7 @@ export const TemplateMenu = () => {
         }
         setUpdateBouncer(
             setTimeout(() => {
-                updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+                updateHMINode(item.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
                     refetch?.()
                 })
             }, 500)
@@ -343,7 +350,7 @@ export const TemplateMenu = () => {
         }
     }
 
-    const activeTemplate = useMemo(() => templates?.find((a) => a.id === item?.extras?.template), [item?.extras?.template]);
+    const activeTemplate = useMemo(() => templates?.find((a) => a.id === item?.data?.template), [item?.data?.template]);
 
     const templateInputs = useMemo(() => {
         
@@ -358,7 +365,7 @@ export const TemplateMenu = () => {
                             (key, value) => {
                                 updateNodeTemplateConfig({
                                     variables: {
-                                        nodeId: selected?.id,
+                                        nodeId: item?.id,
                                         fieldId: key,
                                         value
                                     }
@@ -415,14 +422,14 @@ export const TemplateMenu = () => {
                 <Autocomplete
                     fullWidth
                     options={templates || []}
-                    value={templates?.find((a) => a.id === item?.extras?.template) || null}
+                    value={templates?.find((a) => a.id === item?.data?.template) || null}
                     disablePortal
                     onChange={(e, newVal) => {
                         if(typeof(newVal) === 'string') return;
-                        if(!selected?.id) return
+                        if(!item?.id) return
                         assignNodeTemplate({
                             variables: {
-                                nodeId: selected?.id,
+                                nodeId: item?.id,
                                 input: {
                                     template: newVal?.id || null
                                 }
