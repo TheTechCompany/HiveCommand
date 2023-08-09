@@ -60,6 +60,8 @@ export default (prisma: PrismaClient) => {
 			unit: String
 			timeBucket: String
 
+			conditions: JSON
+
 			device: String
 		}
 
@@ -78,6 +80,8 @@ export default (prisma: PrismaClient) => {
 
 			unit: String
 			timeBucket: String
+
+			conditions: JSON
 
 			values(startDate: DateTime, endDate: DateTime): [CommandDeviceTimeseriesData]
 			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
@@ -167,6 +171,13 @@ export default (prisma: PrismaClient) => {
 
 				const timeBucket = mathUnit(timeBucketString).toNumber('seconds');
 				
+				let joins = root.conditions?.rules?.map((ruleRoot) => {
+					if(ruleRoot.value?.combinator){
+						return ruleRoot?.value?.rules?.map((rule) => `placeholder="${ruleRoot.field}" AND key="${rule.field}" AND value="${rule.value}"`)
+					}
+					return [`placeholder="${ruleRoot.field}" AND value="${ruleRoot.value}"`];
+				}).reduce((prev, curr) => prev.concat(curr), [])
+
 				try{
 					const result = await prisma.$queryRaw<any[]>`
 					SELECT 
@@ -176,10 +187,12 @@ export default (prisma: PrismaClient) => {
 						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "lastUpdated") as time, 
 						COALESCE(avg(value::float), 0) as value
 					FROM "DeviceValue" 
-						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
+						WHERE 
+							"deviceId"=${root.page?.device?.id} 
+							AND placeholder=${root.tag?.name}
 						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
 						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
-						 AND key=${root.subkey?.name}
+						 	AND key=${root.subkey?.name}
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
@@ -378,6 +391,7 @@ export default (prisma: PrismaClient) => {
 						},
 						unit: args.input.unit,
 						timeBucket: args.input.timeBucket,
+						conditions: args.input.conditions,
 						page: {
 							connect: {id: args.page}
 						}
@@ -403,7 +417,8 @@ export default (prisma: PrismaClient) => {
 							connect: {id: args.input.subkeyId}
 						},
 						unit: args.input.unit,
-						timeBucket: args.input.timeBucket
+						timeBucket: args.input.timeBucket,
+						conditions: args.input.conditions,
 
 					}
 				})

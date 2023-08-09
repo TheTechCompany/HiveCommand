@@ -1,16 +1,21 @@
 import { FormControl } from "@hexhive/ui"
 import { HMITag, HMIType } from "../../../";
-import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions, Autocomplete, TextField, Divider } from "@mui/material";
+import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions, Autocomplete, TextField, Divider, Tabs, Tab } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { unit as mathUnit } from 'mathjs';
+import { UnitEditor } from "./tabs/units";
+import { ConditionBuilder } from "./tabs/conditions";
 
 export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], selected?: any, open: boolean, onClose?: () => void, onSubmit?: (graph: any) => void}) => {
+  const [ tab, setTab ] = useState('units');
+
   const [graph, setGraph] = useState<{
     unit?: string;
     deviceID?: string;
     keyID?: string;
     totalize?: boolean;
     timeBucket?: string;
+    conditions?: any;
   }>({});
 
   
@@ -37,26 +42,7 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
 
   console.log({subkeyOptions, graph, types: props.types, tags: props.tags});
 
-  const graphError = useMemo(() => {
-    try{
-      if(graph.unit) return (mathUnit(graph.unit).units.length < 2)
-      return false;
-    }catch(e){
-      console.log({error: e})
-      return true;
-    }
-  }, [graph.unit])
-
-  const timeBucketError = useMemo(() => {
-    try{
-      if(graph.timeBucket) return (mathUnit(graph.timeBucket).to('seconds') == null)
-      return false;
-    }catch(e){
-      console.log({error: e})
-      return true;
-    }
-  }, [graph.timeBucket])
-
+  
   return (
     <Dialog
       fullWidth
@@ -97,25 +83,26 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
             />
           )}
 
-          <Divider sx={{marginBottom: '12px'}} />
-
-          <TextField 
-            sx={{marginBottom: '12px'}}
-            size="small"
-            label="Units" 
-            error={graphError}
-            value={graph.unit} 
-            onChange={(e) => setGraph({...graph, unit: e.target.value })} />
-
-          <TextField 
-            sx={{marginBottom: '12px'}}
-            size="small"
-            label="Time bucket"
-            error={timeBucketError}
-            value={graph.timeBucket}
-            onChange={(e) => setGraph({ ...graph, timeBucket: e.target.value })} />
-     
           <FormControlLabel label="Totalise" control={<Checkbox checked={graph.totalize || false} onChange={(e) => setGraph({...graph, totalize: e.target.checked})} />} />
+
+          <Box sx={{bgcolor: 'secondary.main', marginBottom: '12px'}}>
+            <Tabs onChange={(e, value) => setTab(value)}>
+              <Tab value="units" label="Units" />
+              <Tab value="conditions" label="Conditions" />
+            </Tabs>
+          </Box>
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            {tab == 'units' ? (
+              <UnitEditor graph={graph} onChange={(e) => setGraph(e)} />
+            ) : (
+              <ConditionBuilder 
+                types={props.types} 
+                tags={props.tags}
+                conditions={graph.conditions}
+                onChange={(conditions) => setGraph({...graph, conditions})}  
+                />
+            )}
+          </Box>
         </Box>
       </DialogContent>
       <DialogActions>

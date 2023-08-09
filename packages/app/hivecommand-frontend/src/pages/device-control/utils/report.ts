@@ -34,6 +34,8 @@ export const useDeviceReports = (id: string) => {
             unit
    
             timeBucket
+
+            conditions
             
           }
       

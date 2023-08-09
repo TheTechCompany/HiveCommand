@@ -82,6 +82,7 @@ export interface CommandDeviceInput {
 }
 
 export interface CommandDeviceReportInput {
+  conditions?: InputMaybe<Scalars["JSON"]>;
   device?: InputMaybe<Scalars["String"]>;
   height?: InputMaybe<Scalars["Int"]>;
   id?: InputMaybe<Scalars["ID"]>;
@@ -150,6 +151,7 @@ export interface CommandProgramAlarmActionInput {
 }
 
 export interface CommandProgramAlarmInput {
+  conditions?: InputMaybe<Scalars["JSON"]>;
   description?: InputMaybe<Scalars["String"]>;
   name?: InputMaybe<Scalars["String"]>;
 }
@@ -373,6 +375,7 @@ export const generatedSchema = {
   },
   CommandDeviceReport: {
     __typename: { __type: "String!" },
+    conditions: { __type: "JSON" },
     device: { __type: "CommandDevice" },
     height: { __type: "Int" },
     id: { __type: "ID!" },
@@ -395,6 +398,7 @@ export const generatedSchema = {
     y: { __type: "Int" },
   },
   CommandDeviceReportInput: {
+    conditions: { __type: "JSON" },
     device: { __type: "String" },
     height: { __type: "Int" },
     id: { __type: "ID" },
@@ -603,6 +607,7 @@ export const generatedSchema = {
   },
   CommandProgramAlarm: {
     __typename: { __type: "String!" },
+    conditions: { __type: "JSON" },
     description: { __type: "String" },
     edges: { __type: "[CommandProgramAlarmEdge]" },
     id: { __type: "ID" },
@@ -621,13 +626,6 @@ export const generatedSchema = {
     targetedBy: { __type: "String" },
     type: { __type: "String" },
   },
-  CommandProgramAlarmCondition: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID" },
-    input: { __type: "String" },
-    name: { __type: "String" },
-    value: { __type: "String" },
-  },
   CommandProgramAlarmEdge: {
     __typename: { __type: "String!" },
     id: { __type: "ID" },
@@ -635,6 +633,7 @@ export const generatedSchema = {
     target: { __type: "CommandProgramAlarmAction" },
   },
   CommandProgramAlarmInput: {
+    conditions: { __type: "JSON" },
     description: { __type: "String" },
     name: { __type: "String" },
   },
@@ -1347,6 +1346,7 @@ export interface CommandDevice {
 
 export interface CommandDeviceReport {
   __typename?: "CommandDeviceReport";
+  conditions?: Maybe<ScalarsEnums["JSON"]>;
   device?: Maybe<CommandDevice>;
   height?: Maybe<ScalarsEnums["Int"]>;
   id: ScalarsEnums["ID"];
@@ -1538,6 +1538,7 @@ export interface CommandProgram {
 
 export interface CommandProgramAlarm {
   __typename?: "CommandProgramAlarm";
+  conditions?: Maybe<ScalarsEnums["JSON"]>;
   description?: Maybe<ScalarsEnums["String"]>;
   edges?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
   id?: Maybe<ScalarsEnums["ID"]>;
@@ -1552,14 +1553,6 @@ export interface CommandProgramAlarmAction {
   sourcedBy?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
   targetedBy?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
   type?: Maybe<CommandProgramAlarmType>;
-}
-
-export interface CommandProgramAlarmCondition {
-  __typename?: "CommandProgramAlarmCondition";
-  id?: Maybe<ScalarsEnums["ID"]>;
-  input?: Maybe<ScalarsEnums["String"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  value?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandProgramAlarmEdge {
@@ -2142,7 +2135,6 @@ export interface SchemaObjectTypes {
   CommandProgram: CommandProgram;
   CommandProgramAlarm: CommandProgramAlarm;
   CommandProgramAlarmAction: CommandProgramAlarmAction;
-  CommandProgramAlarmCondition: CommandProgramAlarmCondition;
   CommandProgramAlarmEdge: CommandProgramAlarmEdge;
   CommandProgramAlarmType: CommandProgramAlarmType;
   CommandProgramComponent: CommandProgramComponent;
@@ -2190,7 +2182,6 @@ export type SchemaObjectTypesNames =
   | "CommandProgram"
   | "CommandProgramAlarm"
   | "CommandProgramAlarmAction"
-  | "CommandProgramAlarmCondition"
   | "CommandProgramAlarmEdge"
   | "CommandProgramAlarmType"
   | "CommandProgramComponent"

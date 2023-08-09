@@ -72,6 +72,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 		keyId: string,
 		unit: string,
 		timeBucket: string,
+		conditions: any,
 		x: number,
 		y: number,
 		w: number,
@@ -91,6 +92,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 				tagId: args.templateId,
 				subkeyId: args.keyId,
 				timeBucket: args.timeBucket,
+				conditions: args.conditions,
 				device: deviceId
 			}
 		})
@@ -101,7 +103,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, conditions: any, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
 			args: {
 				page: page,
@@ -109,6 +111,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 				templateId,
 				keyId,
 				unit,
+				conditions,
 				x,
 				y,
 				w,
@@ -129,6 +132,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 		keyId: string,
 		unit: string,
 		timeBucket: string,
+		conditions: any,
 		x: number,
 		y: number,
 		w: number,
@@ -147,6 +151,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 				height: args.h,
 				unit: args.unit,
 				timeBucket: args.timeBucket,
+				conditions: args.conditions,
 				tagId: args.templateId,
 				subkeyId: args.keyId
 			}
@@ -158,7 +163,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, conditions: any, x: number, y: number, w: number, h: number, total?: boolean) => {
 		return addGraph({
 			args: {
 				page,
@@ -168,6 +173,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 				keyId,
 				unit,
 				timeBucket,
+				conditions,
 				x,
 				y,
 				w,

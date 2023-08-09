@@ -167,9 +167,10 @@ model DeviceReport {
   subkeyId String?
 
   unit String?
-
   timeBucket String?
 
+  conditions Json?
+  
   page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
   pageId String
 }
