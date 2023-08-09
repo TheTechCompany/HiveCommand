@@ -173,27 +173,30 @@ export default (prisma: PrismaClient) => {
 				
 				let joins = root.conditions?.rules?.map((ruleRoot) => {
 					if(ruleRoot.value?.combinator){
-						return ruleRoot?.value?.rules?.map((rule) => `placeholder="${ruleRoot.field}" AND key="${rule.field}" AND value="${rule.value}"`)
+						return ruleRoot?.value?.rules?.map((rule) => `$table.placeholder="${ruleRoot.field}" AND $table.key="${rule.field}" AND $table.value="${rule.value}"`)
 					}
-					return [`placeholder="${ruleRoot.field}" AND value="${ruleRoot.value}"`];
-				}).reduce((prev, curr) => prev.concat(curr), [])
+					return [`$table.placeholder="${ruleRoot.field}" AND $table.value="${ruleRoot.value}"`];
+				}).reduce((prev, curr) => prev.concat(curr), []).map((x, ix) => x.replaceAll('$table', String.fromCharCode(65 + ix)))
+
+				console.log({joins});
 
 				try{
 					const result = await prisma.$queryRaw<any[]>`
 					SELECT 
-						placeholder,
-						"deviceId",
-						key,
-						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "lastUpdated") as time, 
-						COALESCE(avg(value::float), 0) as value
+						"DeviceValue".placeholder,
+						"DeviceValue"."deviceId",
+						"DeviceValue".key,
+						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "DeviceValue"."lastUpdated") as time, 
+						COALESCE(avg("DeviceValue".value::float), 0) as value
 					FROM "DeviceValue" 
+					${joins.length > 0 ? joins.map((join, ix) => `LEFT JOIN "DeviceValue" ${String.fromCharCode(65 + ix)} ON time_bucket(${timeBucket}::decimal * '1 second'::interval, "DeviceValue"."lastUpdated") = time_bucket(${timeBucket}::decimal * '1 second'::interval, ${String.fromCharCode(65 + ix)}."lastUpdated") AND (${join})`) : Prisma.empty}
 						WHERE 
-							"deviceId"=${root.page?.device?.id} 
-							AND placeholder=${root.tag?.name}
-						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
-						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
-						 	AND key=${root.subkey?.name}
-						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
+						"DeviceValue"."deviceId"=${root.page?.device?.id} 
+							AND "DeviceValue".placeholder=${root.tag?.name}
+						 ${afterTime ? Prisma.sql`AND "DeviceValue"."lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
+						 ${beforeTime ? Prisma.sql`AND "DeviceValue"."lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
+						 	AND "DeviceValue".key=${root.subkey?.name}
+						GROUP BY "DeviceValue".placeholder, "DeviceValue"."deviceId", "DeviceValue".key, time ORDER BY time ASC`
 
 
 						return (result || []).map((row) => ({
