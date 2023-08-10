@@ -1,7 +1,8 @@
 import { Box, Divider, Typography } from '@mui/material'
-import React, {useState} from 'react' 
+import React, { useState } from 'react'
 import { Block, BlockTray } from '@hexhive/ui';
 import styled from 'styled-components'
+import { Node } from './node';
 
 export interface NodeDropdownProps {
     title?: string;
@@ -9,14 +10,48 @@ export interface NodeDropdownProps {
     className?: string;
 }
 
-export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
-    const [ expanded, setExpanded ] = useState(false)
+export const BaseNodeDropdown: React.FC<NodeDropdownProps> = (props) => {
+    const [expanded, setExpanded] = useState(false)
 
-    console.log({items: props.items})
     return (
-            <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
-                    
-                    <BlockTray 
+        <Box sx={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+            {props.items?.map((block) => (
+                <Node id={`${block.extras?.pack}:${block.extras?.name}`}>
+                    <Box
+                        sx={{
+                            cursor: 'pointer',
+                            borderRadius: '3px',
+                            padding: '4px',
+                            bgcolor: 'secondary.main',
+                            color: 'white',
+                            alignItems: 'center',
+                            justifyContent: block.extras?.dimensions ? 'center' : 'start',
+                            display: 'flex'
+                        }}>
+
+
+                        {/* <Box 
+         style={{cursor: 'pointer'}}
+         background="neutral-4" 
+         round="xsmall" 
+         pad={{horizontal: "xsmall"}}>
+         {node.icon} 
+     </Box>
+ ) */}
+                        <div >
+                            {React.cloneElement(block.icon, { style: { stroke: 'gray', width: `${block.extras.width}px`, height: `${block.extras.height}px` } })}
+                        </div>
+                        <Box
+                            style={
+                                block.extras?.dimensions ||
+                                { marginLeft: 8 }
+                            }>
+                            {block.content || block?.label}
+                        </Box>
+                    </Box>
+                </Node>
+            ))}
+            {/* <BlockTray 
                         groupBy="group"
                         renderHeader={(header) => (
                             <>
@@ -25,40 +60,9 @@ export const BaseNodeDropdown : React.FC<NodeDropdownProps> = (props) => {
                             </>
                         )}
                         renderItem={(block) => (
-                        <Box   
-                            sx={{
-                                cursor: 'pointer',
-                                borderRadius: '3px',
-                                padding: '4px',
-                                bgcolor: 'secondary.main',
-                                color: 'white',
-                                alignItems: 'center',
-                                justifyContent: block.extras?.dimensions ? 'center' : 'start',
-                                display: 'flex'
-                            }}>
-
-
-                            {/* <Box 
-                                style={{cursor: 'pointer'}}
-                                background="neutral-4" 
-                                round="xsmall" 
-                                pad={{horizontal: "xsmall"}}>
-                                {node.icon} 
-                            </Box>
-                        ) */}
-                                <div style={{position: 'relative'}}>
-                                    {React.cloneElement(block.icon, {style: {stroke: 'gray', width: `${block.extras.width}px`, height: `${block.extras.height}px`}})}
-                                </div>
-                            <Box 
-                                style={
-                                    block.extras?.dimensions || 
-                                    {marginLeft: 8}
-                                }>
-                                    {block.content || block?.label}
-                            </Box>
-                        </Box>)}
-                        blocks={props.items as any} />
-                </Box>
+                       )}
+                        blocks={props.items as any} /> */}
+        </Box>
 
     )
 }

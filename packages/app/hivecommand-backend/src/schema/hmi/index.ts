@@ -22,6 +22,12 @@ export default (prisma: PrismaClient) => {
 
 	const resolvers = {
 		CommandProgramHMI: {
+			nodes: (root: any) => {
+				return root.jsonNodes;
+			},
+			edges: (root: any) => {
+				return root.jsonEdges;
+			},
 			localHomepage: (root: any) => {
 				return root.localHomepage?.length > 0;
 			},
@@ -219,6 +225,8 @@ export default (prisma: PrismaClient) => {
 					data: {
 						id,
 						name: args.input.name,
+						jsonEdges: args.input.edges,
+						jsonNodes: args.input.nodes,
 						programId: args.program
 					}
 				})
@@ -278,7 +286,10 @@ export default (prisma: PrismaClient) => {
 									id: args.id
 								},
 								data: {
-									name: args.input.name
+									name: args.input.name,
+									jsonNodes: args.input.nodes,
+									jsonEdges: args.input.edges
+									// nodes
 								}
 							}
 						}
@@ -823,6 +834,9 @@ export default (prisma: PrismaClient) => {
 	input CommandProgramInterfaceInput {
 		name: String
 
+		nodes: JSON
+		edges: JSON
+
 		localHomepage: Boolean
 		remoteHomepage: Boolean
 	}
@@ -834,9 +848,9 @@ export default (prisma: PrismaClient) => {
 		localHomepage: Boolean
 		remoteHomepage: Boolean
 
-		edges: [CommandHMIEdge]
+		edges: JSON
 
-		nodes: [CommandHMINode]
+		nodes: JSON
 		programs: [CommandProgram]
 	}
 

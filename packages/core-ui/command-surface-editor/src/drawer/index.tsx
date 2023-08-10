@@ -34,7 +34,7 @@ export const HMIDrawer : React.FC<HMIDrawerProps> = (props) => {
     return (
         <Box
             sx={{
-                overflow: 'auto',
+                overflowY: 'auto',
                 height: '100%',
                 width: '250px'
             }}

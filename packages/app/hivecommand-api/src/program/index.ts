@@ -94,13 +94,23 @@ export const useDeleteProgramHMI = (programId: string) => {
 
 export const useUpdateProgramHMI = (programId: string) => {
 
-	const [ mutateFn ] = useMutation((mutation, args: {id: string, name: string, parent?: string, remoteHomepage?: boolean, localHomepage?: boolean}) => {
+	const [ mutateFn ] = useMutation((mutation, args: {
+		id: string, 
+		name?: string, 
+		parent?: string, 
+		remoteHomepage?: boolean, 
+		localHomepage?: boolean,
+		nodes?: any,
+		edges?: any
+	}) => {
 
 		const item = mutation.updateCommandProgramInterface({
 			program: programId,
 			id: args.id,
 			input: {
 				name: args.name,
+				nodes: args.nodes,
+				edges: args.edges,
 				localHomepage: args.localHomepage,
 				remoteHomepage: args.remoteHomepage,
 			}
@@ -112,14 +122,10 @@ export const useUpdateProgramHMI = (programId: string) => {
 			}
 		}
 	})
-	return async (id: string, name: string, localHomepage?: boolean, remoteHomepage?: boolean, parent?: string) => {
+	return async (update: {id: string, name?: string, localHomepage?: boolean, remoteHomepage?: boolean, parent?: string, nodes?: any, edges?: any}) => {
 		return await mutateFn({
 			args: {
-				id,
-				name,
-				parent,
-				remoteHomepage,
-				localHomepage
+				...update,
 			}
 		})
 	}

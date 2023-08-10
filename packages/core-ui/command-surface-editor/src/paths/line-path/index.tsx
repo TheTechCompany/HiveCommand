@@ -1,3 +1,4 @@
+import React from "react";
 import { useMemo } from "react";
 import { EdgeProps } from "reactflow";
 import styled from "styled-components";
@@ -46,7 +47,7 @@ export const LinePath = (props: EdgeProps) => {
     return (
         <FlowPathSegment 
             selected={props.selected}
-            points={[{x: sourceX, y: sourceY}, ...props.data?.points, {x: targetX, y: targetY}]} />
+            points={[{x: sourceX, y: sourceY}, ...(props.data?.points || []), {x: targetX, y: targetY}]} />
     )   
 }
 

@@ -16,6 +16,7 @@
     {"path": "../../core-ui/command-canvas-nodes"},
     {"path": "../../core-ui/command-remote-components"},
     {"path": "../../core-ui/command-surface"},
+    {"path": "../../core-ui/command-surface-editor"},
     {"path": "../../core/command-scripting"}
   ]
 }

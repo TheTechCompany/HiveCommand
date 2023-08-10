@@ -200,8 +200,10 @@ export interface CommandProgramInput {
 }
 
 export interface CommandProgramInterfaceInput {
+  edges?: InputMaybe<Scalars["JSON"]>;
   localHomepage?: InputMaybe<Scalars["Boolean"]>;
   name?: InputMaybe<Scalars["String"]>;
+  nodes?: InputMaybe<Scalars["JSON"]>;
   remoteHomepage?: InputMaybe<Scalars["Boolean"]>;
 }
 
@@ -715,8 +717,10 @@ export const generatedSchema = {
     templatePacks: { __type: "[String]" },
   },
   CommandProgramInterfaceInput: {
+    edges: { __type: "JSON" },
     localHomepage: { __type: "Boolean" },
     name: { __type: "String" },
+    nodes: { __type: "JSON" },
     remoteHomepage: { __type: "Boolean" },
   },
   CommandProgramTag: {

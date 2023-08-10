@@ -170,7 +170,7 @@ model DeviceReport {
   timeBucket String?
 
   conditions Json?
-  
+
   page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
   pageId String
 }
@@ -399,6 +399,9 @@ model ProgramHMI {
   id String @id
 
   name String? 
+
+  jsonNodes Json?
+  jsonEdges Json?
 
   nodes CanvasNode[] @relation(name: "useNode")
 

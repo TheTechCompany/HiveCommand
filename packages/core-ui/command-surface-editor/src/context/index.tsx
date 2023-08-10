@@ -34,12 +34,11 @@ export const HMIContext = React.createContext<{
     programId?: string;
     actions?: any[]
     interfaces?: any[];
-    refetch?: () => void;
     selected?: {
         nodes: Node[],
         edges: Edge[]
     };
-    
+    setSelected?: (selected: {nodes: Node[], edges: Edge[]}) => void;
     tags?: HMITag[]
     types?: HMIType[];
 

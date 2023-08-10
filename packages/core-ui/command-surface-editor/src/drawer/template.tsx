@@ -1,24 +1,23 @@
 import React, { useMemo, useEffect, useState, useContext } from 'react';
 import { Autocomplete, Box, Card, Divider, FormGroup, IconButton, Select, TextField, Typography } from '@mui/material'
 import { HMIContext } from '../context';
-import { useUpdateHMINode } from '@hive-command/api';
 import { Close, Delete, Javascript } from '@mui/icons-material'
 import { useMutation, gql } from '@apollo/client';
-import { TemplateInput } from '../../../../../components/template-input';
-import { ScriptEditorModal } from '../../../../../components/script-editor';
+import { TemplateInput } from '../components/template-input';
+import { ScriptEditorModal } from '../components/script-editor';
 import { DataTypes, formatInterface, fromOPCType, lookupType, toJSType } from '@hive-command/scripting';
 
 export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Number' | 'Boolean'
 
 export const TemplateMenu = () => {
 
-    const {  templates, selected, refetch, programId, tags, types, nodes } = useContext(HMIContext);
+    const {  templates, selected, programId, tags, types, nodes } = useContext(HMIContext);
 // 
     // const item = nodes?.find((a) => a.id == selected.id);
 
 
-    const selected_nodes = selected.nodes || [];
-    const selected_edges = selected.edges || [];
+    const selected_nodes = selected?.nodes || [];
+    const selected_edges = selected?.edges || [];
 
     const item = selected_nodes?.[0] || selected_edges?.[0] //nodes?.find((a) => a.id == selected.id);
 
@@ -39,7 +38,7 @@ export const TemplateMenu = () => {
 
     const [ws, setWs] = useState<any>({});
 
-    const updateHMINode = useUpdateHMINode(programId)
+    // const updateHMINode = useUpdateHMINode(programId)
 
     const [ assignNodeTemplate ] = useMutation(gql`
         mutation AssignNode ($nodeId: ID, $input: ComandProgramInterfaceNodeInput!){
@@ -85,8 +84,8 @@ export const TemplateMenu = () => {
 
     const tagInputs = useMemo(() => {
 
-        return tags.map((tag) => {
-            let fields = types.find((a) => a.name === tag.type)?.fields || [];
+        return tags?.map((tag) => {
+            let fields = types?.find((a) => a.name === tag.type)?.fields || [];
 
             return [{label: `${tag.name}`, type: 'keyword'}, ...fields.map((field) => ({label: `${tag.name}.${field.name}`, type: 'keyword'}))]
         }).reduce((prev, curr) => prev.concat(curr), []);
@@ -110,8 +109,8 @@ export const TemplateMenu = () => {
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
     const _updateState = (key: string, value: any) => {
-        setState((state) => {
-            let ix = state.map((x) => x.key).indexOf(key)
+        setState((state: any) => {
+            let ix = state.map((x: any) => x.key).indexOf(key)
             state[ix].value = value;
             return state;
         })
@@ -122,9 +121,9 @@ export const TemplateMenu = () => {
         }
         setUpdateBouncer(
             setTimeout(() => {
-                updateHMINode(item.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
-                    refetch?.()
-                })
+                // updateHMINode(item.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+                //     refetch?.()
+                // })
             }, 500)
         )
 
@@ -154,7 +153,7 @@ export const TemplateMenu = () => {
                 let options = tags?.slice()?.sort((a, b) => `${a.name}`.localeCompare(`${b.name}`));
 
                 if(type_parts[1]){
-                    options = options.filter((a) => a?.type == types.find((a) => a.id === type_parts[1]).name );
+                    options = options?.filter((a) => a?.type == types?.find((a) => a.id === type_parts[1])?.name );
                 }
 
 
@@ -163,7 +162,7 @@ export const TemplateMenu = () => {
 
                     <Autocomplete 
                         disablePortal
-                        options={options}
+                        options={options || []}
                         value={options?.find((a) => a.id == value) || null}
                         
                         onChange={(event, newValue) => {
@@ -265,7 +264,7 @@ export const TemplateMenu = () => {
 
                                 ${typeSchema}
 
-                                ${formatInterface('Tags', tagSchema)}
+                                ${formatInterface('Tags', tagSchema || {})}
                             `
                             });
                         }}>
@@ -301,10 +300,10 @@ export const TemplateMenu = () => {
                         onKeyDown={(e) => {
                             if(e.key === "Enter"){
                                 updateState(id || label, [ ...new Set((value || []).concat(ws?.[label])) ])
-                                setWs((ws) => { ws[label] = ''; return ws })
+                                setWs((ws: any) => { ws[label] = ''; return ws })
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs((ws) => {ws[label] = e.target.value; return ws} )} label={label} />}
+                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs((ws: any) => {ws[label] = e.target.value; return ws} )} label={label} />}
                         freeSolo
                         />)
                 })();
@@ -361,7 +360,7 @@ export const TemplateMenu = () => {
                 {activeTemplate?.inputs?.map((input) => (
                     <Box sx={{marginBottom: '6px'}}>
                         {renderConfigInput(
-                            { id: input.id, type: input.type, value: templateState?.find((a) => input.id === a.field?.id)?.value || null, label: input.name },
+                            { id: input.id, type: input.type, value: templateState?.find((a: any) => input.id === a.field?.id)?.value || null, label: input.name },
                             (key, value) => {
                                 updateNodeTemplateConfig({
                                     variables: {
@@ -370,7 +369,7 @@ export const TemplateMenu = () => {
                                         value
                                     }
                                 }).then(() => {
-                                    refetch();
+                                    // refetch();
                                 })
                             }
                         )}
@@ -434,7 +433,8 @@ export const TemplateMenu = () => {
                                     template: newVal?.id || null
                                 }
                             }
-                        }).then(() => refetch?.());
+                        })
+                        //.then(() => refetch?.());
                     }}
                     getOptionLabel={(option) => typeof(option) === 'string' ? option : option?.name}
                     renderInput={(params) => <TextField  {...params} size="small" label="Template" />}
@@ -448,7 +448,7 @@ export const TemplateMenu = () => {
             <FormGroup>
                     {Object.keys(options).map((optionKey) => {
                         const type = options[optionKey];
-                        const value = state?.find((a) => a.key == optionKey)?.value;
+                        const value = state?.find((a: any) => a.key == optionKey)?.value;
                         const label = optionKey
 
                         const templateOutput = activeTemplate?.outputs?.find((a) => a.name === label && a.type === type)
@@ -494,7 +494,7 @@ export const setter = (value: ${toJSType(lookupType(type))}, setValues: (values:
 `,
                                             extraLib: `
                                             ${typeSchema}
-                                            ${formatInterface('Tags', tagSchema)}
+                                            ${formatInterface('Tags', tagSchema || {})}
                                         `
                                         });
                                     }}
