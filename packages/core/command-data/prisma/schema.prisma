@@ -412,6 +412,8 @@ model ProgramHMI {
 
   localHomepage Program[] @relation(name: "localHomepage", map: "localHomepage")
   remoteHomepage Program[] @relation(name: "remoteHomepage", map: "remoteHomepage")
+
+  createdAt DateTime @default(now())
 }
 
 

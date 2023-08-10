@@ -10,6 +10,8 @@ import { HMIContext } from "./context";
 import { nanoid } from 'nanoid'
 import { HMIDrawer } from "./drawer";
 import Settings from "./icons/Settings";
+import { isEqual } from 'lodash';
+import { getOptionValues } from "./utils";
 
 export interface SurfaceEditorProps {
     nodePacks: {
@@ -43,13 +45,18 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
     const [nodes, setNodes, onNodesChange] = useNodesState([])
     const [edges, setEdges, onPathsChange] = useEdgesState([])
 
-    const [selection, setSelection] = useState<{
+    const [selection, _setSelection] = useState<{
         nodes: Node[],
         edges: Edge[]
     }>({
         nodes: [],
         edges: []
     })
+
+    const setSelection = (selection: any) => {
+        console.log(selection)
+        _setSelection(selection)
+    }
 
     const [ activeId, setActiveId ] = useState<any>(null)
     const [ currPosition, setCurrPosition ] = useState<any>(null);
@@ -68,133 +75,113 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
         if (program && packsDownloaded) {
 
             // console.log({nodes})
-            Promise.all((props.nodes || []).map(async (node: any) => {
+            if(props.nodes){
+                Promise.all(props.nodes.map(async (node: any) => {
 
-                const [packId, templateName] = (node.type || '').split(':')
-                // const url = templatePacks.find((a) => a.id == packId)?.url;
+                    const [packId, templateName] = (node.type || '').split(':')
+                    
+                        const {pack} = nodePacks.find((a) => a.id == packId) || {}
 
-                // if (url) {
-                  
-                    const {pack} = nodePacks.find((a) => a.id == packId) || {}
+                        const item = pack?.find((a) => a.name == templateName);
 
-                    const item = pack?.find((a) => a.name == templateName);
+                        return {
+                            ...node,
+                            metadata: item?.component?.metadata,
+                            icon: item?.component
+                        }
 
-                    return {
-                        ...node,
-                        metadata: item?.component?.metadata,
-                        icon: item?.component
-                    }
-                // }
+                })).then((nodes) => {
 
-                // return node;
-                // return pack
+                    setNodes(nodes.map((x: any) => {
+                        let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                        let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
 
-            })).then((nodes) => {
-                // console.log("ASD", {nodes})
+                        let scaleX = x.width / width;
+                        let scaleY = x.height / height;
 
+                        if (x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
 
-                setNodes(nodes.map((x: any) => {
-                    let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
-                    let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
-                    //x.width ||
-                    //x.height || 
-                    let scaleX = x.width / width;
-                    let scaleY = x.height / height;
+                        let extraOptions = x.icon?.metadata?.options || {};
+                        let nodeOptions = x.options;
 
-                    if (x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
-
-
-                    let extraOptions = x.icon?.metadata?.options || {};
-                    let nodeOptions = x.options;
-
-                    let node = {
-                        id: x.id,
-                        type: 'hmi-node',
-                        position: {
-                            x: x.x,
-                            y: x.y,
-                        },
-                        data: {
-                            type: x.type,
-                            width,
-                            height,
-                            zIndex: x.zIndex != undefined ? x.zIndex : 1,
-                            scaleX: x.scaleX != undefined ? x.scaleX : 1,
-                            scaleY: x.scaleY != undefined ? x.scaleY : 1,
-                            rotation: x.rotation || 0,
-
-                            options: x.options,
-                            templateOptions: x.dataTransformer?.configuration || [],
-
-                            metadata: x.metadata,
-
-                            icon: x.icon,
-                            ports: x?.icon?.metadata?.ports?.map((y: any) => ({ ...y, id: y.key })) || []
-                        },
-
-                        options: x.options,
-                        templateOptions: x.dataTransformer?.configuration || [],
-
-                        //  width: `${x?.type?.width || 50}px`,
-                        // height: `${x?.type?.height || 50}px`,
-                        extras: {
-                            template: x.dataTransformer?.template?.id,
-                            options: x.icon?.metadata?.options || {},
-                            devicePlaceholder: {
-                                ...x.devicePlaceholder,
-                                tag: x?.devicePlaceholder?.tag ? `${x?.devicePlaceholder?.type?.tagPrefix || ''}${x?.devicePlaceholder?.tag}` : ''
+                        let node = {
+                            id: x.id,
+                            type: 'hmi-node',
+                            position: {
+                                x: x.x,
+                                y: x.y,
                             },
-                            rotation: x.rotation || 0,
-                            zIndex: x.zIndex != undefined ? x.zIndex : 1,
-                            scaleX: x.scaleX != undefined ? x.scaleX : 1,
-                            scaleY: x.scaleY != undefined ? x.scaleY : 1,
-                            showTotalizer: x.showTotalizer || false,
-                            metadata: x.metadata,
-                            icon: x.icon, //HMIIcons[x.type?.name],
-                        },
-                        // type: 'hmi-node',
+                            selected: selection.nodes.findIndex((a: any) => a.id == x.id) > -1,
+                            data: {
 
-                    };
+                                type: x.type,
+                                width,
+                                height,
+                                zIndex: x.zIndex != undefined ? x.zIndex : 1,
+                                scaleX: x.scaleX != undefined ? x.scaleX : 1,
+                                scaleY: x.scaleY != undefined ? x.scaleY : 1,
+                                rotation: x.rotation || 0,
 
-                    // let values = Object.keys(extraOptions).map((optionKey) => {
-                    //     let optionValue = nodeOptions?.[optionKey]
+                                options: x.options,
 
-                    //     let parsedValue : any;
+                                template: x.dataTransformer?.template?.id,
+                                templateOptions: x.dataTransformer?.configuration || [],
 
-                    //     try{
-                    //         // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                    //         parsedValue = getOptionValues(node, tags, components, {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
-                    //     }catch(e){
-                    //         console.log({e, node, optionKey});
-                    //     }
+                                metadata: x.metadata,
 
-                    //     return {key: optionKey, value: parsedValue}
+                                icon: x.icon,
+                                iconOptions: x.icon?.metadata?.options || {},
 
-                    // }).reduce((prev, curr) => ({
-                    //     ...prev,
-                    //     [curr.key]: curr.value
-                    // }), {});
+                                ports: x?.icon?.metadata?.ports?.map((y: any) => ({ ...y, id: y.key })) || [],
 
-                    // (node.extras as any).dataValue = values;
+                                devicePlaceholder: {
+                                    ...x.devicePlaceholder,
+                                    tag: x?.devicePlaceholder?.tag ? `${x?.devicePlaceholder?.type?.tagPrefix || ''}${x?.devicePlaceholder?.tag}` : ''
+                                },
+                            },
 
+                        };
 
-                    return node;
-                }))
-                // setNodes(nodes);
-            })
+                        let values = Object.keys(extraOptions).map((optionKey) => {
+                            let optionValue = nodeOptions?.[optionKey]
+
+                            let parsedValue : any;
+
+                            try{
+                                // console.log({nodeValue: nodeInputValues.current.values[node.id]})
+                                parsedValue = getOptionValues(node, program.tags, program.components, {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
+                            }catch(e){
+                                console.log({e, node, optionKey});
+                            }
+
+                            return {key: optionKey, value: parsedValue}
+
+                        }).reduce((prev, curr) => ({
+                            ...prev,
+                            [curr.key]: curr.value
+                        }), {});
+
+                        (node.data as any).dataValue = values;
+
+                        return node;
+                    }))
+                    // setNodes(nodes);
+                })
+            }
 
             setEdges((props.edges || []).map((x: any) => {
                 return {
                     id: x.id,
                     ...x,
                     type: 'line-path',
+                    selected: selection.edges.findIndex((a: any) => a.id == x.id) > -1,
 
                     // source: x?.from?.id,
                     // sourceHandle: x.fromPoint || x.fromHandle,
                     // target: x?.to?.id,
                     // targetHandle: x.toPoint || x.toHandle,
                     data: {
-                        points: x.points
+                        points: x.points || []
                     }
                 }
             }).reduce((prev, curr) => {
@@ -202,7 +189,7 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
             }, []))
         }
 
-    }, [props.nodes, props.edges, nodePacks, program, packsDownloaded])
+    }, [props.nodes, props.edges, selection, nodePacks, program, packsDownloaded])
 
 
     return (
@@ -223,7 +210,8 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
 
 
                 if (event.over?.id == 'canvas') {
-                    let n = program?.nodes.slice();
+
+                    let n = (props?.nodes || []).slice();
                     n.push({
                         id: nanoid(),
                         type: event.active.id.toString(),
@@ -240,7 +228,7 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
                     actions: activeProgram?.actions,
                     interfaces: program?.interface || [],
                     selected: selection,
-                    setSelected: setSelection,
+                    // setSelected: setSelection,
                     tags: program?.tags || [],
                     types: program?.types || [],
                     templates: program?.templates || [],
@@ -261,13 +249,20 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
                             id={!loading && props.activeProgram}
                             nodes={nodes}
                             edges={edges}
+                            // selected={selection}
+                            onSelect={setSelection}
                             onNodesChange={(nodes) => {
-                                console.log("nodesChanged", nodes)
-                                onNodesChanged?.(nodes)
+                                if(!isEqual(props.nodes, nodes)) {
+                                    console.log("nodesChanged", nodes, props.nodes)
+                                    onNodesChanged?.(nodes)
+                                }
                             }}
                             onEdgesChange={(edges) => {
-                                console.log("edgesChanged", edges)
-                                onEdgesChanged?.(edges)
+                                console.log({edges})
+                                if(!isEqual(props.edges, edges)){
+                                    console.log("edgesChanged", edges, props.edges)
+                                    onEdgesChanged?.(edges)
+                                }
                             }}
                         />
                         <DragOverlay>

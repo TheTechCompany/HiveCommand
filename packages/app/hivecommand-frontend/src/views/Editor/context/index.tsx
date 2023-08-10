@@ -1,7 +1,34 @@
 // import { HMIType } from "@hive-command/command-surface";
 import React from "react";
-import { HMITag, HMITemplate, HMIType } from "../pages/controls/context";
 
+export interface HMINodeData {
+    position?: {x: number, y: number};
+    size?: {width: number, height: number};
+    rotation?: number;
+}
+
+export interface HMITag {
+    id: string;
+    name: string;
+    type: string;
+}
+
+export interface HMIType {
+    id: string;
+    name: string;
+    fields: {id: string, name: string, type: string}[];
+}
+
+export interface HMITemplate {
+    id: string;
+    name: string;
+
+    inputs?: any[];
+    outputs?: {id: string, name: string, type: string}[];
+
+    edges?: any[];
+
+}
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
 	refetch?: () => void;

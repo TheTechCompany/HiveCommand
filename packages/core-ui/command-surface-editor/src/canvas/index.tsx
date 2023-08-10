@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core';
 import { Box } from '@mui/material';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import ReactFlow, { Background, ConnectionMode, Edge, Node, MiniMap, useEdgesState, useNodesState, useReactFlow, addEdge } from 'reactflow';
+import ReactFlow, { Background, ConnectionMode, Edge, Node, MiniMap, useEdgesState, useNodesState, useReactFlow, addEdge, useOnSelectionChange } from 'reactflow';
 import { isEqual } from 'lodash'
 import { LinePath } from '../paths/line-path';
 import { useHMIContext } from '../context';
@@ -25,6 +25,8 @@ export interface EditorCanvasProps {
     onNodesChange?: (nodes: EditorNode[]) => void;
     edges: Edge[];
     onEdgesChange?: (edges: Edge[]) => void;
+
+    onSelect?: (selection: any) => void;
 }
 
 export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
@@ -38,43 +40,55 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     const [nodes, setNodes, onNodesChange] = useNodesState(props.nodes || [])
     const [edges, setEdges, onEdgesChange] = useEdgesState(props.edges || [])
 
+
     const onConnect = useCallback((params) => setEdges((els) => addEdge({...params, type: 'line-path'}, els)), [])
 
-    const { selected, setSelected } = useHMIContext();
+    const { onSelect } = props;
 
     const { isOver, over, rect, setNodeRef } = useDroppable({
         id: 'canvas'
     })
 
-    useEffect(() => {
-        if(props.id && !isEqual(props.nodes, nodes)){
-            console.log("nodesChange", nodes)
-            props.onNodesChange?.(nodes.map((node) => ({
-                id: node.id,
+    const nodeMap = (node: any) => ({
+        id: node.id,
                 
-                type: node.data.type,
+        type: node.data.type,
 
-                x: node.position.x,
-                y: node.position.y,
-                width: node.width,
-                height: node.height,
-            })))
-        }
-    }, [props.id, nodes])
+        x: node.position.x,
+        y: node.position.y,
+        width: node.data.width,
+        height: node.data.height,
+    })
+
+    // useEffect(() => {
+    //     if(props.nodes && nodes && !isEqual(props.nodes?.map(nodeMap), nodes?.map(nodeMap))){
+    //         console.log("nodesChange", nodes, props.nodes)
+    //         props.onNodesChange?.(nodes.map(nodeMap))
+    //     }
+    // }, [nodes])
+
+    // useEffect(() => {
+    //     if(props.id && !isEqual(props.edges, edges)){
+    //         props.onEdgesChange?.(edges.map((edge) => ({
+    //             id: edge.id,
+    //             source: edge.source,
+    //             sourceHandle: edge.sourceHandle,
+    //             target: edge.target,
+    //             targetHandle: edge.targetHandle,
+    //             type: edge.type
+
+    //         })))
+    //     }
+    // }, [props.id, edges])
 
     useEffect(() => {
-        if(props.id && !isEqual(props.edges, edges)){
-            props.onEdgesChange?.(edges)
-        }
-    }, [props.id, edges])
+        // if(!isEqual(props.nodes, nodes)) 
+        if(props.nodes && !isEqual(props.nodes, nodes)) setNodes(props.nodes || [])
+    }, [props.nodes])
 
     useEffect(() => {
-        if(!isEqual(props.nodes, nodes)) setNodes(props.nodes || [])
-    }, [props.nodes, nodes])
-
-    useEffect(() => {
-        if(!isEqual(props.edges, edges)) setEdges(props.edges || [])
-    }, [props.edges, edges])
+        if(props.edges) setEdges(props.edges || [])
+    }, [props.edges])
 
     const dragNode = useMemo(() => {
         if(props.dragNode){
@@ -107,24 +121,84 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     }, [props.dragNode, rect])
 
+    useOnSelectionChange({
+        onChange: (_selection) => {
+            onSelect?.(_selection)
+
+        }
+    })
+
+    const flowNodes = useMemo(() => {
+        return (nodes || [])?.concat(dragNode)
+    }, [nodes, dragNode])
+
     return (
         <Box sx={{ display: 'flex', flex: 1 }} ref={setNodeRef}>
             <ReactFlow
-                nodes={(nodes || [])?.concat(dragNode)}
+                snapToGrid
+                nodes={flowNodes}
                 edges={edges || []}
                 connectionMode={ConnectionMode.Loose}
                 edgeTypes={edgeTypes}
                 nodeTypes={nodeTypes}
                 // onNodeClick={}
-                onSelectionChange={(_selection) => {
-                    if (!isEqual(selected, _selection)) {
-                        // alert("Selection")
-                        setSelected?.(_selection)
-                    }
+                
+                // onSelectionChange={(_selection) => {
+                //     // console.log(_selection, selected)
+                //     // if (!isEqual(selected, _selection)) {
+                //         // alert("Selection")
+                //         onSelect?.(_selection)
+                //     // }
+                // }}
+                onEdgesChange={(changes) => {
+                    onEdgesChange(changes);
+
+                    props.onEdgesChange?.(edges.map((edge) => ({
+                        id: edge.id,
+                        source: edge.source,
+                        sourceHandle: edge.sourceHandle,
+                        target: edge.target,
+                        targetHandle: edge.targetHandle,
+                        type: edge.type
+        
+                    })))
                 }}
-                onEdgesChange={onEdgesChange}
-                onNodesChange={onNodesChange}
-                onConnect={onConnect}
+                onNodesDelete={(nodes) => {
+                    setNodes((_nodes: any[]) => {
+                        let newNodes = _nodes.slice().filter((a: any) => nodes.findIndex((b) => b.id == a.id) < 0)
+
+                        props.onNodesChange?.(newNodes.map(nodeMap))
+
+                        return newNodes;
+                    })
+                }}
+                onNodesChange={(changes) => {
+                    onNodesChange(changes);
+                    console.log("nodeChange 1", nodes)
+        
+                    props.onNodesChange?.(nodes.map(nodeMap))
+
+                }}
+                onConnect={(connection) => {
+                    onConnect(connection);
+
+                    setEdges((els) => {
+                    
+                        let edges = addEdge({...connection, type: 'line-path'}, els) 
+
+                        props.onEdgesChange?.(edges.map((edge) => ({
+                            id: edge.id,
+                            source: edge.source,
+                            sourceHandle: edge.sourceHandle,
+                            target: edge.target,
+                            targetHandle: edge.targetHandle,
+                            type: edge.type
+            
+                        })))
+                        return edges;
+                    })
+
+                }}
             >
                 <Background />
                 <MiniMap />

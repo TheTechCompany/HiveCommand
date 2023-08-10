@@ -93,6 +93,10 @@ export const Controls = (props) => {
         }
     })
 
+    const refetch = () => {
+        client.refetchQueries({include: ['GetInterfaceInfo']})
+    }
+
 
     const updateHMI = useUpdateProgramHMI(id)
 
@@ -140,13 +144,12 @@ export const Controls = (props) => {
     }, [loading])
 
     useEffect(() => {
-        let program = data?.commandPrograms?.[0]
-        if (program && !loading) {
+        if (activeProgram) {
 
             let {nodes, edges} = activeProgram || []
 
             if(!isEqual(nodes, nodeState)){
-                console.log("setNode", nodes)
+                console.log("setNode", nodes, activeProgram)
                 setNodeState(nodes)
             }
 
@@ -156,29 +159,31 @@ export const Controls = (props) => {
 
             setIsData(true)
         }
-    }, [activeProgram, data?.commandPrograms?.[0], loading])
-
-
+    }, [activeProgram])
 
 
     const debouncedHMIUpdate = useMemo(() => {
-        return debounce(updateHMI, 500)
+        return debounce((params: any) => {
+            updateHMI(params).then(() => {
+                // refetch()
+            })
+        }, 500, {maxWait: 1000});
     }, [])
 
-    useEffect(() => {
-        let {nodes, edges} = activeProgram || []
+    // useEffect(() => {
+    //     let {nodes, edges} = activeProgram || []
 
-        if(isData && !loading && ((nodes && !isEqual(nodeState, nodes)) || (edges && !isEqual(edgeState, edges)))){
+    //     if(isData && ((nodes && !isEqual(nodeState, nodes)) || (edges && !isEqual(edgeState, edges)))){
 
-            console.log({nodeState, nodes, edgeState, edges})
+    //         console.log({nodeState, nodes, edgeState, edges})
             
-            debouncedHMIUpdate({
-                id: props.activeProgram,
-                nodes: nodeState,
-                edges: edgeState
-            });
-        }
-    }, [nodeState, edgeState, activeProgram, loading, isData])
+    //         debouncedHMIUpdate({
+    //             id: props.activeProgram,
+    //             nodes: nodeState,
+    //             edges: edgeState
+    //         })
+    //     }
+    // }, [nodeState, edgeState, activeProgram, isData])
 
    
     return (
@@ -193,10 +198,22 @@ export const Controls = (props) => {
             nodes={nodeState}
             edges={edgeState}
             onNodesChanged={(nodes) => {
-                console.log({nodes});
+                setNodeState(nodes);
+
+                debouncedHMIUpdate({
+                    id: props.activeProgram,
+                    nodes: nodes,
+                    edges: edgeState
+                })
             }}
             onEdgesChanged={(edges) => {
+                setEdgeState(edges)
 
+                debouncedHMIUpdate({
+                    id: props.activeProgram,
+                    nodes: nodeState,
+                    edges: edges
+                })
             }} />
     )
 }

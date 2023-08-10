@@ -9,7 +9,7 @@ export const HMINode = (props: NodeProps) => {
     console.log("HMI Node", props)
 
     return Icon ? (
-        <ErrorBoundary fallback={<div>Error rendering node</div>}>
+        <ErrorBoundary key={`hmi-node-${props.id}`} fallback={<div>Error rendering node</div>}>
             {props.data?.ports?.map((port: any) => (
                 <Handle id={port.id} type={port.type || "source"} style={{
                     left: port.x,
@@ -38,5 +38,5 @@ export const HMINode = (props: NodeProps) => {
                     size="medium" />
             </div>
         </ErrorBoundary>
-    ) : <div>Error rendering node</div>
+    ) : <div key={`hmi-node-${props.id}`} >Error rendering node</div>
 }

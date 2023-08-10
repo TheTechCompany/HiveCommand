@@ -30,6 +30,8 @@ export const ConfigMenu : React.FC<ConfigMenuProps> = (props) => {
 
     const item = selected_nodes?.[0] || selected_edges?.[0] //nodes?.find((a) => a.id == selected.id);
 
+    // console.log({item});
+
     return (
 
         <Box

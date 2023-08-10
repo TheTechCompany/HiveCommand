@@ -31,7 +31,7 @@ export const NodeMenu : React.FC<NodeMenuProps> = (props) => {
     }, [props.nodes])
 
     return (
-        <Box sx={{flex: 1, display: 'flex', padding: '6px'}}>
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', padding: '6px'}}>
         
             {items?.map((block: any) => (
                 <Node id={`${block.extras?.pack}:${block.extras?.name}`}>

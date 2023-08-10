@@ -168,7 +168,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
             if(mainModel){ 
                 mainModel.setValue(props.defaultValue || '')
             }else{
-                mainModel = monaco.editor.createModel(props.defaultValue, "typescript", monaco.Uri.parse("file:///main.tsx"));
+                mainModel = monaco.editor.createModel(props.defaultValue || '', "typescript", monaco.Uri.parse("file:///main.tsx"));
             }
 
 
@@ -193,14 +193,14 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			});
 
             editor.current.onDidChangeModelContent((e) => {
-                props.onChange?.(editor.current.getValue())
+                props.onChange?.(editor.current?.getValue() || '')
             })
 
 
 		}
 		return () => {
-			editor.current.dispose();
-            editor.current = null;
+			editor.current?.dispose();
+            editor.current = undefined;
 		};
 	}, []);
 

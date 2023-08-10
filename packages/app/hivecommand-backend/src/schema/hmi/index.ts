@@ -852,6 +852,8 @@ export default (prisma: PrismaClient) => {
 
 		nodes: JSON
 		programs: [CommandProgram]
+
+		createdAt: DateTime
 	}
 
 

@@ -184,7 +184,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     localHomepage
                     remoteHomepage
 
-                    nodes 
+                    createdAt
                 }
 
              
@@ -291,7 +291,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     }
    
     const refetch = () => {
-        client.refetchQueries({include: ['EditorCommandProgram']})
+        // client.refetchQueries({include: ['EditorCommandProgram']})
     }
    
     const program = data?.commandPrograms?.[0] || {};
@@ -339,7 +339,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'hmi-root',
             name: 'Views',
-            children: program?.interface?.map((x) => ({
+            children: program?.interface?.slice()?.sort((a,b) => a.createdAt > b.createdAt)?.map((x) => ({
                 id: x.id,
                 name: x.name,
                 icon: x.localHomepage ? <HomeIcon fontSize="small"/> : x.remoteHomepage ? <HomeIcon fontSize="small" /> : undefined,

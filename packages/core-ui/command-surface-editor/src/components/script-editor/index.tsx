@@ -102,7 +102,7 @@ export const handler = () => {
                 <Editor 
                     extraLib={props.extraLib}
                     defaultValue={props.defaultValue}
-                    value={value}
+                    value={value || ''}
                     onChange={(editorValue) => {
                         setValue(editorValue)
                     }}

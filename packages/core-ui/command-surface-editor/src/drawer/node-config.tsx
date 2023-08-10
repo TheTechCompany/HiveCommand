@@ -1,4 +1,4 @@
-import { useUpdateHMINode } from '@hive-command/api';
+// import { useUpdateHMINode } from '@hive-command/api';
 import { Box, TextField } from '@mui/material';
 import React from 'react';
 import { Node } from 'reactflow';
@@ -10,9 +10,9 @@ export const NodeConfig = (props: {item: Node}) => {
 
     const { item } = props;
 
-    const { programId, interfaces, refetch, selected } = useHMIContext();
+    const { programId, interfaces, selected } = useHMIContext();
 
-    const updateHMINode = useUpdateHMINode(programId)
+    // const updateHMINode = useUpdateHMINode(programId)
 
 
     return (
@@ -24,9 +24,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="X"
                 value={(item as Node)?.position?.x || null}
                 onChange={(e) => {
-                    updateHMINode(item.id, { x: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { x: parseFloat(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number" />
             <TextField
@@ -36,9 +36,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Y"
                 value={(item as Node)?.position?.y || null}
                 onChange={(e) => {
-                    updateHMINode(item.id, { y: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { y: parseFloat(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number" />
             <TextField 
@@ -48,9 +48,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Width" 
                 value={item?.data?.width || ''} 
                 onChange={(e) => {
-                    updateHMINode(item.id, { width: parseInt(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { width: parseInt(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number"  />
             <TextField 
@@ -60,9 +60,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Height" 
                 value={item?.data?.height || ''} 
                 onChange={(e) => {
-                    updateHMINode(item.id, { height: parseInt(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { height: parseInt(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number" />
 
@@ -73,9 +73,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Scale X" 
                 value={item?.data?.scaleX || ''} 
                 onChange={(e) => {
-                    updateHMINode(item.id, { scaleX: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { scaleX: parseFloat(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number" />
 
@@ -86,9 +86,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Scale Y" 
                 value={item?.data?.scaleY || ''} 
                 onChange={(e) => {
-                    updateHMINode(item.id, { scaleY: parseFloat(e.target.value) }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { scaleY: parseFloat(e.target.value) }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 type="number" />
 
@@ -100,9 +100,9 @@ export const NodeConfig = (props: {item: Node}) => {
                 label="Z Index"
                 value={item?.data?.zIndex || ''}
                 onChange={(e) => {
-                    updateHMINode(item.id, { zIndex: parseFloat(e.target.value)}).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { zIndex: parseFloat(e.target.value)}).then(() => {
+                    //     refetch()
+                    // })
                 }} />
             <BumpInput
                 placeholder="Rotation"
@@ -111,25 +111,25 @@ export const NodeConfig = (props: {item: Node}) => {
                 rightIcon={<RotateRight  fontSize="small" />}
                 value={item?.data?.rotation}
                 onLeftClick={() => {
-                    updateHMINode(item.id, { rotation: (item?.data?.rotation || 0) - 90 }).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(item.id, { rotation: (item?.data?.rotation || 0) - 90 }).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 onRightClick={() => {
-                    updateHMINode(
-                        item.id,
-                        { rotation: (item?.data?.rotation || 0) + 90 }
-                    ).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(
+                    //     item.id,
+                    //     { rotation: (item?.data?.rotation || 0) + 90 }
+                    // ).then(() => {
+                    //     refetch()
+                    // })
                 }}
                 onChange={(e) => {
-                    updateHMINode(
-                        item.id,
-                        { rotation: parseFloat(e) }
-                    ).then(() => {
-                        refetch()
-                    })
+                    // updateHMINode(
+                    //     item.id,
+                    //     { rotation: parseFloat(e) }
+                    // ).then(() => {
+                    //     refetch()
+                    // })
 
                 }}
             />

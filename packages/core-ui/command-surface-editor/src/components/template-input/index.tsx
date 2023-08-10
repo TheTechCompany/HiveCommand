@@ -67,8 +67,8 @@ export const TemplateInput: React.FC<TemplateInputProps> = (props) => {
                         <BaseTemplateInput
                             value={props.value}
                             options={props.options}
-                            onFocus={(focus) => !focus && handleBlur()}
-                            onChange={(e) => setValue(e)} />
+                            onFocus={(focus: any) => !focus && handleBlur()}
+                            onChange={(e: any) => setValue(e)} />
                         {/* <TextField 
                             onBlur={handleBlur}
                             multiline 
