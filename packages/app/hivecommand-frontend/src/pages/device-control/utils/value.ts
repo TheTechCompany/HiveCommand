@@ -123,6 +123,7 @@ export const useValues = (deviceId: string, program: {tags: any[], types: any[]}
 
                     if (
                         field.type &&
+                        value[field.name] && 
                         typeof (field.type) === "string" &&
                         field.type.indexOf('[]') > -1
                     ){ 
