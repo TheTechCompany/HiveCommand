@@ -107,12 +107,18 @@ export const useValues = (deviceId: string, program: {tags: any[], types: any[]}
             if (
                 type &&
                 typeof (type) === "string" &&
-                type.indexOf('[]') > -1 &&
-                typeof (value) === "object" &&
-                !Array.isArray(value) &&
-                Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0
+                type.indexOf('[]') > -1
             ) {
-                value = Object.keys(value).map((x) => value[x]);
+
+                if( typeof (value) === "object" &&
+                    !Array.isArray(value) &&
+                    Object.keys(value).map((x: any) => x % 1 == 0).indexOf(false) < 0
+                ) {
+                    value = Object.keys(value).map((x) => value[x]);
+                }else if(typeof(value) === 'string'){
+                    value = value.split(',')
+                }
+                
             }
 
             return {
