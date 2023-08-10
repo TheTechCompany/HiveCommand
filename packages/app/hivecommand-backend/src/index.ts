@@ -58,7 +58,7 @@ const prisma = new PrismaClient();
 				fields: ['id', 'name', 'provisioned']
 			}, {
 				name: 'CommandProgram', 
-				actions: ['read', 'write', 'delete'],
+				actions: ['read', 'update', 'delete'],
 				fields: ['id', 'name']
 			}
 		],

@@ -5,7 +5,7 @@ import { Typography, Menu, MenuItem, Box, IconButton, Paper } from "@mui/materia
 export interface GraphContainerProps {
   dataKey: string;
   label: string;
-  total: number;
+  total: string;
   // onRemove: () => void;
 
   onEdit?: () => void;
@@ -50,7 +50,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
       >
         <Box style={{display: 'flex', flexDirection: 'column', paddingLeft: 8}}>
           <Typography>{props.label}</Typography>
-          <Typography fontSize="small">{props.total && `total: ${props.total?.toFixed(2)}`}</Typography>
+          <Typography fontSize="small">{props.total && `Total: ${props.total}`}</Typography>
         </Box>
 
         <IconButton
