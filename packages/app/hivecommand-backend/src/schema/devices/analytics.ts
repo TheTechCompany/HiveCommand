@@ -359,6 +359,12 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 			createCommandDeviceReport: async (root: any, args: any) => {
+
+				let subkey = {};
+				if( args.input.subkeyId ){
+					subkey = { connect : {id: args.input.subkeyId } };
+				}
+
 				return await prisma.deviceReport.create({
 					data: {
 						id: nanoid(),
@@ -373,9 +379,7 @@ export default (prisma: PrismaClient) => {
 						tag: {
 							connect: {id: args.input.tagId}
 						},
-						subkey: {
-							connect: {id: args.input.subkeyId}
-						},
+						...subkey,
 						unit: args.input.unit,
 						timeBucket: args.input.timeBucket,
 						page: {
@@ -385,6 +389,12 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 			updateCommandDeviceReport: async (root: any, args: any) => {
+
+				let subkey = {};
+				if( args.input.subkeyId ){
+					subkey = { connect : {id: args.input.subkeyId } };
+				}
+
 				return await prisma.deviceReport.update({
 					where: {id: args.id},
 					data: {
@@ -399,9 +409,7 @@ export default (prisma: PrismaClient) => {
 						tag: {
 							connect: {id: args.input.tagId}
 						},
-						subkey: {
-							connect: {id: args.input.subkeyId}
-						},
+						...subkey,
 						unit: args.input.unit,
 						timeBucket: args.input.timeBucket
 
