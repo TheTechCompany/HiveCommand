@@ -122,7 +122,7 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
                                 scaleY: x.scaleY != undefined ? x.scaleY : 1,
                                 rotation: x.rotation || 0,
 
-                                options: x.options,
+                                options: x.options || {},
 
                                 template: x.dataTransformer?.template?.id,
                                 templateOptions: x.dataTransformer?.configuration || [],
@@ -233,6 +233,7 @@ export const SurfaceEditor : React.FC<SurfaceEditorProps> = (props) => {
                     types: program?.types || [],
                     templates: program?.templates || [],
                     nodes: nodes,
+                    onNodesChanged
                     // updateNode
                 }}>
                 <ReactFlowProvider>

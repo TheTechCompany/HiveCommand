@@ -11,7 +11,7 @@ export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Numb
 
 export const TemplateMenu = () => {
 
-    const {  templates, selected, programId, tags, types, nodes } = useContext(HMIContext);
+    const {  templates, selected, programId, tags, types, nodes, onNodesChanged } = useContext(HMIContext);
 // 
     // const item = nodes?.find((a) => a.id == selected.id);
 
@@ -22,13 +22,13 @@ export const TemplateMenu = () => {
     const item = selected_nodes?.[0] || selected_edges?.[0] //nodes?.find((a) => a.id == selected.id);
 
 
-    const options = item?.data?.options || {};
+    const options = item?.data?.iconOptions || {};
 
     const templateOptions = item?.data?.templateOptions || [];
 
     const [ templateState, setTemplateState ] = useState<any>([])
 
-    const [ state, setState ] = useState<any>([])
+    // const [ state, setState ] = useState<any>([])
 
     let scalarTypes = Object.keys(DataTypes).concat(Object.keys(DataTypes).map((x) => `${x}[]`))
 
@@ -108,12 +108,47 @@ export const TemplateMenu = () => {
 
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
+    const nodeMap = (node: any) => ({
+        id: node.id,
+                
+        type: node.data.type,
+
+        options: node.data.options,
+
+        x: node.position.x,
+        y: node.position.y,
+        width: node.data.width,
+        height: node.data.height,
+    })
+
+
     const _updateState = (key: string, value: any) => {
-        setState((state: any) => {
-            let ix = state.map((x: any) => x.key).indexOf(key)
-            state[ix].value = value;
-            return state;
-        })
+        console.log(key, value);
+
+        let n = (nodes || []).slice();
+        let ix = n.findIndex((a: any) => a.id == item.id);
+        console.log(n, ix, nodes);
+
+        if(ix > -1){
+            
+            n[ix].data = {
+                ...n[ix].data,
+                options: {
+                    ...n[ix].data?.options || {},
+                    [key]: value
+                }
+            }
+
+            onNodesChanged?.(n.map(nodeMap));
+        }
+
+
+        // setState((state: any) => {
+        //     console.log(state)
+        //     let ix = state.map((x: any) => x.key).indexOf(key)
+        //     state[ix].value = value;
+        //     return state;
+        // })
 
         if(updateBouncer){
             clearTimeout(updateBouncer)
@@ -448,7 +483,7 @@ export const TemplateMenu = () => {
             <FormGroup>
                     {Object.keys(options).map((optionKey) => {
                         const type = options[optionKey];
-                        const value = state?.find((a: any) => a.key == optionKey)?.value;
+                        const value = item?.data?.options?.[optionKey] //state?.find((a: any) => a.key == optionKey)?.value;
                         const label = optionKey
 
                         const templateOutput = activeTemplate?.outputs?.find((a) => a.name === label && a.type === type)

@@ -12,6 +12,7 @@ export const NodeConfig = (props: {item: Node}) => {
 
     const { programId, interfaces, selected } = useHMIContext();
 
+    const fields = ['x', 'y', 'width', 'height', 'scaleX', 'scaleY', 'zIndex', 'rotation'];
     // const updateHMINode = useUpdateHMINode(programId)
 
 

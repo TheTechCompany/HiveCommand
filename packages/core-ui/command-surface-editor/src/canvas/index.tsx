@@ -54,6 +54,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 
         type: node.data.type,
 
+        options: node.data.options,
+
         x: node.position.x,
         y: node.position.y,
         width: node.data.width,
@@ -150,6 +152,15 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 //         onSelect?.(_selection)
                 //     // }
                 // }}
+                onEdgesDelete={(edges) => {
+                    setEdges((_edges: any[]) => {
+                        let newEdges = _edges.slice().filter((a: any) => edges.findIndex((b) => b.id == a.id) < 0)
+
+                        props.onEdgesChanged?.(newEdges.map(edgeMap))
+
+                        return newEdges;
+                    })
+                }}
                 onEdgesChange={(changes) => {
                     onEdgesChange(changes);
 

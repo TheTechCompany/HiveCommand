@@ -90,7 +90,8 @@ export const HMIContext = React.createContext<{
     templates?: HMITemplate[];
 
     nodes?: any[]
-
+    onNodesChanged?: any;
+    
     updateNode?: (
         id: string, 
         data: ((data: HMINodeData) => HMINodeData)
