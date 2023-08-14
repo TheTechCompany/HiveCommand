@@ -179,7 +179,8 @@ export default (prisma: PrismaClient) => {
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
 						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
 						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
-						 AND key=${root.subkey?.name}
+						 ${root.subkey ? Prisma.sql`AND key=${root.subkey?.name}` : Prisma.empty}
+						 
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
