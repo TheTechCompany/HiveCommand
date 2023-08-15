@@ -179,7 +179,8 @@ export default (prisma: PrismaClient) => {
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
 						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
 						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
-						 AND key=${root.subkey?.name}
+						 ${root.subkey ? Prisma.sql`AND key=${root.subkey?.name}` : Prisma.empty}
+						 
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
@@ -359,6 +360,12 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 			createCommandDeviceReport: async (root: any, args: any) => {
+
+				let subkey = {};
+				if( args.input.subkeyId ){
+					subkey = { connect : {id: args.input.subkeyId } };
+				}
+
 				return await prisma.deviceReport.create({
 					data: {
 						id: nanoid(),
@@ -373,9 +380,7 @@ export default (prisma: PrismaClient) => {
 						tag: {
 							connect: {id: args.input.tagId}
 						},
-						subkey: {
-							connect: {id: args.input.subkeyId}
-						},
+						...subkey,
 						unit: args.input.unit,
 						timeBucket: args.input.timeBucket,
 						page: {
@@ -385,6 +390,12 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 			updateCommandDeviceReport: async (root: any, args: any) => {
+
+				let subkey = {};
+				if( args.input.subkeyId ){
+					subkey = { connect : {id: args.input.subkeyId } };
+				}
+
 				return await prisma.deviceReport.update({
 					where: {id: args.id},
 					data: {
@@ -399,9 +410,7 @@ export default (prisma: PrismaClient) => {
 						tag: {
 							connect: {id: args.input.tagId}
 						},
-						subkey: {
-							connect: {id: args.input.subkeyId}
-						},
+						...subkey,
 						unit: args.input.unit,
 						timeBucket: args.input.timeBucket
 
