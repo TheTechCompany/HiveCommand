@@ -11,7 +11,9 @@
     "typescript": "^5.1.6"
   },
   "peerDependencies": {
-    "@mui/material": "*"
+    "@mui/material": "*",
+    "react": "*",
+    "reactflow": "*"
   },
   "dependencies": {
     "@hive-command/remote-components": "workspace:^"

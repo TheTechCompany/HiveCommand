@@ -3148,6 +3148,8 @@ __metadata:
     typescript: ^5.1.6
   peerDependencies:
     "@mui/material": "*"
+    react: "*"
+    reactflow: "*"
   languageName: unknown
   linkType: soft
 
