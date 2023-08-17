@@ -249,6 +249,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         if(editItem){
             switch(type){
+                // case 'schematics':
+                //     promise = updatePro
+                //     break;
                 case 'components':
                     promise = updateProgramComponent(editItem.id, data.name, data.description, data.mainId)
                     break;
@@ -268,6 +271,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             }
         }else{
             switch(type){
+                // case 'schematics':
+                    // promise = createProgramSchematic()
+                    // break;
                 case 'components':
                     promise = createProgramComponent(data.name, data.description)
                     break;
@@ -316,6 +322,25 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             dontAdd: true,
             element: <Home />
         },
+        {
+            id: 'variables-root',
+            name: 'Tags',
+            element: <TagEditor types={program.types || []} tags={program.tags || []} program={program.id}  />,
+            // children: program?.variables?.slice()
+        },
+        {
+            id: 'types-root',
+            name: 'Types',
+            // element: <TypeEditor />,
+            children: program.types || [], //[{id: 'valve', name: 'Valve'}],
+            editor: <TypeEditor active={selected?.id} types={program.types || []} />
+        },
+        {
+            id: 'templates-root',
+            name: 'Templates',
+            children: program?.templates?.slice(),
+            editor: <TemplateEditor active={selected?.id} />
+        },
         // {
         //     id: 'program-root',
         //     name: 'Program',
@@ -329,6 +354,15 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         //     })),
         //     element: <div>Program</div>,
         //     editor: <Program activeProgram={selected?.id} />
+        // },
+        // {
+        //     id: 'schematics-root',
+        //     name: 'Schematics',
+        //     editor: <Electrical />,
+        //     children: program?.schematics?.map((x) => ({
+        //         id: x.id,
+        //         name: x.name
+        //     }))
         // },
         {
             id: 'components-root',
@@ -370,25 +404,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         //     })),
         //     // element: <Devices />
         // },
-        {
-            id: 'variables-root',
-            name: 'Tags',
-            element: <TagEditor types={program.types || []} tags={program.tags || []} program={program.id}  />,
-            // children: program?.variables?.slice()
-        },
-        {
-            id: 'types-root',
-            name: 'Types',
-            // element: <TypeEditor />,
-            children: program.types || [], //[{id: 'valve', name: 'Valve'}],
-            editor: <TypeEditor active={selected?.id} types={program.types || []} />
-        },
-        {
-            id: 'templates-root',
-            name: 'Templates',
-            children: program?.templates?.slice(),
-            editor: <TemplateEditor active={selected?.id} />
-        },
+     
         {
             id: 'alarms-root',
             name: 'Alarms',

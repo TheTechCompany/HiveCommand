@@ -1,0 +1,19 @@
+{
+  "name": "@hive-command/electrical-editor",
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "@mui/material": "*"
+  },
+  "dependencies": {
+    "@hive-command/remote-components": "workspace:^"
+  }
+}

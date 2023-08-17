@@ -5,7 +5,7 @@
 
 */
 -- CreateTimeseries
--- CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE; 
+CREATE EXTENSION IF NOT EXISTS timescaledb CASCADE; 
 
 -- DropForeignKey
 ALTER TABLE "DeviceSnapshotValue" DROP CONSTRAINT "DeviceSnapshotValue_deviceId_fkey";
