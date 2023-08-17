@@ -363,7 +363,7 @@ export default (prisma: PrismaClient) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
-					subkey = { connect : {id: args.input.subkeyId } };
+					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
 				return await prisma.deviceReport.create({
@@ -393,7 +393,7 @@ export default (prisma: PrismaClient) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
-					subkey = { connect : {id: args.input.subkeyId } };
+					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
 				return await prisma.deviceReport.update({
