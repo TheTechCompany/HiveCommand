@@ -4,11 +4,15 @@ import { ECADPage } from '..';
 export const ElectricalEditorContext = React.createContext<{
     selectedPage?: string;
     pages?: ECADPage[],
-    onUpdatePage?: (page: any) => void;
+    page?: ECADPage;
+    onUpdatePage?: (page: any, log?: string) => void;
 
     elements?: any[],
     cursorActive?: boolean,
     cursorPosition?: {x: number, y: number} | null
+    draftWire?: any;
+    setDraftWire?: any;
+
     symbolRotation?: number;
     selectedSymbol?: any | null;
     setSelectedSymbol?: any;

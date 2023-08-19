@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Divider, List, ListItem, Paper, Typography, TextField } from '@mui/material';
+import { Box, Divider, List, ListItem, Paper, Typography, TextField, IconButton } from '@mui/material';
 import { Canvas } from './canvas';
 import { useRemoteComponents } from '@hive-command/remote-components'
 import { ElectricalEditorProvider } from './context'
 import { ReactFlowProvider } from 'reactflow';
 import { PagesPane } from './panes/pages';
 import { SymbolsPane } from './panes/symbols';
+import { Create } from '@mui/icons-material';
 
 export interface ECADPage {
     id: string;
@@ -18,7 +19,7 @@ export interface ECadEditorProps {
     pages: ECADPage[]
     
     onCreatePage?: (page: any) => void;
-    onUpdatePage?: (page: any) => void;
+    onUpdatePage?: (page: any, log?: string) => void;
 }
 
 export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
@@ -27,15 +28,14 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
 
     const [ pages, setPages ] = useState<ECADPage[]>(props.pages || [])
 
-    const [ nodes, setNodes ] = useState<any[]>([]);
-
-    const [cursorActive, setCursorActive] = useState(false);
-    const [cursorPosition, setCursorPosition] = useState<{ x: number, y: number } | null>(null)
-
     const [items, setItems] = useState<any[]>([]);
+
+    const [ draftWire, setDraftWire ] = useState<any>(null);
 
     const [ selectedSymbol, setSelectedSymbol ] = useState<any>(null);
     const [ symbolRotation, setSymbolRotation ] = useState(0);
+
+    const [ activeTool, setActiveTool ] = useState<any | null>(null);
 
     const { getPack } = useRemoteComponents()
 
@@ -79,20 +79,26 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
 
 
     return (
+        <ReactFlowProvider>
+
         <ElectricalEditorProvider
             value={{
                 pages,
+                page: pages?.find((a) => a.id == selectedPage),
                 selectedPage,
                 onUpdatePage: props.onUpdatePage,
                 elements: items,
-                cursorActive,
-                cursorPosition,
+                draftWire,
+                setDraftWire,
+
                 symbolRotation,
                 selectedSymbol,
-                setSelectedSymbol
+                setSelectedSymbol: (symbol: any) => {
+                    setActiveTool('symbol')
+                    setSelectedSymbol(symbol);
+                }
             }}
         >
-            <ReactFlowProvider>
                 <Paper
                   
                     sx={{ flex: 1, display: 'flex', height: '100vh' }}>
@@ -101,25 +107,29 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
                         onSelectPage={(page: any) => setSelectedPage(page.id)}
                         />
 
-                    <Box
-                        onMouseEnter={() => { 
-                            // setCursorActive(true)
-                         }}
-                        onMouseLeave={() => {
-                            // setCursorActive(false)
-                            // setCursorPosition(null)
-                        }}
-                        onMouseMove={(e) => {
-                            // setCursorPosition({ x: e.clientX, y: e.clientY })
-                        }}
-                    
-                        sx={{ flex: 1, display: 'flex' }}>
-                        <Canvas />
+                    <Box                    
+                        sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                        <Paper sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <IconButton 
+                                sx={{bgcolor: activeTool == 'wire' ? 'secondary.main' : null}}
+                                onClick={() => {
+                                    setActiveTool(activeTool != 'wire'  ? 'wire' : null);
+                                }}
+                            >
+                                <Create />
+                            </IconButton>
+                        </Paper>
+                        <Canvas 
+                            activeTool={activeTool}
+                            selectedSymbol={selectedSymbol}
+                            symbolRotation={symbolRotation}
+                            />
                     </Box>
                     
                     <SymbolsPane />
                 </Paper>
-            </ReactFlowProvider>
         </ElectricalEditorProvider>
+        </ReactFlowProvider>
+
     )
 }

@@ -92,6 +92,9 @@ import { API } from './api';
         } 
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
+
+            console.log('onStatus: ', id, status);
+            
             const device = await prisma.device.findFirst({ where: { network_name: id } })
 
             if(!device) return;
