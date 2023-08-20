@@ -54,12 +54,16 @@ const prisma = new PrismaClient();
 		resources: [
 			{
 				name: 'CommandDevice', 
-				actions: ['read', 'manage', 'control'], 
+				actions: ['create', 'read', 'update', 'manage', 'control', 'delete'], 
 				fields: ['id', 'name', 'provisioned']
 			}, {
 				name: 'CommandProgram', 
-				actions: ['read', 'update', 'delete'],
+				actions: ['create', 'read', 'update', 'delete'],
 				fields: ['id', 'name']
+			},
+			{
+				name: 'CommandSchematic',
+				actions: ['create', 'read', 'update', 'delete']
 			}
 		],
 		// aclPermissions: [

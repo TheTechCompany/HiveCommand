@@ -30,6 +30,7 @@
 		"@hive-command/opcua-amqp-bridge": ["./communication/opc-amqp-bridge/src"],
 		"@hive-command/amqp-client": ["./communication/amqp-client/src"],
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
+		"@hive-command/electrical-editor": ["./core-ui/command-electrical-editor/src"],
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
 		"@hive-command/data": ["./core/command-data/src"],

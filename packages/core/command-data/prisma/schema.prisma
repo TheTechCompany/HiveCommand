@@ -233,6 +233,30 @@ model IOTemplateState {
   deviceId String
 }
 
+model ElectricalSchematic {
+  id String @id
+
+  name String
+
+  // devices ElectricalDevice[]
+
+  pages ElectricalSchematicPage[] @relation(name: "hasPages")
+
+  organisation String
+}
+
+model ElectricalSchematicPage {
+  id String @id
+
+  name String
+
+  nodes Json?
+  edges Json?
+
+  schematic ElectricalSchematic @relation(name: "hasPages", fields: [schematicId], references: [id])
+  schematicId String
+}
+
 model Program {
   id String @id
 

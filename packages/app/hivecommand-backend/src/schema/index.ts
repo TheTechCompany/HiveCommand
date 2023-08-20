@@ -6,6 +6,8 @@ import hmi from './hmi';
 import program from './program';
 import plugins from './plugins'
 import operations from './operations'
+import schematics from "./schematics";
+
 import { MQTTPublisher } from '@hive-command/amqp-client';
 import { Pool } from 'pg';
 import templates from "./program/templates";
@@ -17,18 +19,20 @@ export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 	const { typeDefs: deviceTypeDefs, resolvers: deviceResolvers } = devices(prisma);
 	const { typeDefs: programTypeDefs, resolvers: programResolvers } = program(prisma)
 	const { typeDefs: hmiTypeDefs, resolvers: hmiResolvers } = hmi(prisma)
+	const { typeDefs: schematicTypeDefs, resolvers: schematicResolvers } = schematics(prisma);
 
 	const { typeDefs: templateTypeDefs, resolvers: templateResolvers } = templates(prisma);
 
 	const { typeDefs: operationTypeDefs, resolvers: operationResolvers } = operations(prisma, deviceChannel)
 
 	const resolvers = mergeResolvers([
+		schematicResolvers,
 		pluginResolvers,
 		deviceResolvers,
 		programResolvers,
 		hmiResolvers,
 		operationResolvers,
-		templateResolvers
+		templateResolvers,
 	]);
 
 	/*
@@ -59,6 +63,7 @@ export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 			value: String
 		}
 		`,
+		schematicTypeDefs,
 		pluginTypeDefs,
 		templateTypeDefs,
 		operationTypeDefs,

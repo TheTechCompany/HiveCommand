@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 
 import { Route, Routes, useNavigate, Outlet } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
-import {Map, Handyman, Extension} from '@mui/icons-material';
+import {Map, Handyman, Extension, Schema} from '@mui/icons-material';
 
 import { Sidebar } from '@hexhive/ui'
 import { ElementEditor } from '../../pages/element-editor';
 import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';
 import { DeviceSettings } from '../../pages/device-settings';
+import { SchematicList } from '../../pages/schematic-list';
 
 const Devices = React.lazy(() => import('../../pages/device-list').then((r) => ({ default: r.Devices })))
 
@@ -33,6 +34,18 @@ const pages = [
             component: <ProgramList/>    
         },
        ]
+    },
+    {
+        icon: <Schema />,
+        label: "Schematics",
+        path: "schematics",
+        component: <Outlet />,
+        children: [
+            {
+                path: '',
+                component: <SchematicList />
+            }
+        ]
     },
     {
         icon: <Extension />,

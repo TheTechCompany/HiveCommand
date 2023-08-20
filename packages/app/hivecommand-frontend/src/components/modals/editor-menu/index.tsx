@@ -7,6 +7,7 @@ import { TemplateView } from "./views/templates";
 import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
 import { ComponentsView } from "./views/components";
+import { SchematicsView } from "./views/schematics";
 
 export interface EditorMenuDialogProps {
     open: boolean;
@@ -31,6 +32,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getTitle = () => {
         switch(type){
+            case 'schematics':
+                return `${selected ? 'Edit' : 'Create'} Schematic`;
             case 'components':
                 return `${selected ? 'Edit' : 'Create'} Component`;
             case 'types':
@@ -52,6 +55,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getContent = () => {
         switch(type){
+            case 'schematics':
+                return <SchematicsView />;
             case 'components':
                 return <ComponentsView />;
             case 'types':
@@ -78,6 +83,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
             case 'devices':
             case 'alarms':
             case 'variables':
+            case 'schematics':
                 return <Box sx={{display: 'flex', flex: 1, alignItems: 'center', justifyContent: ( Boolean(props.selected?.id) ? 'space-between' : 'flex-end') }}>
                     {props.selected?.id ? (
                         <Button variant="contained" color="error" onClick={props.onDelete}>
