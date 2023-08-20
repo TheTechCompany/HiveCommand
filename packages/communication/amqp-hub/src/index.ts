@@ -76,6 +76,8 @@ export class MQTTHub {
                     messageContent: messageContent,
                     userId: topic.match(regex)?.[1]
                 });
+            }else{
+                console.log("Message received on topic: " + topic);
             }
 
             if(topic.indexOf(this.DEVICE_ONLINE_PREFIX) > -1){

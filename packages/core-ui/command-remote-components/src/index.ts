@@ -7,7 +7,7 @@ export interface RemoteComponent {
 
 export type RemoteComponentCache = [packs: { [key: string]: RemoteComponent[] }, setPacks: (packs: { [key: string]: RemoteComponent[] }) => void]
 
- const baseRequirements : any = {
+ let baseRequirements : any = {
     react: require('react'),
     '@mui/material': require('@mui/material'),
     '@mui/x-date-pickers': require('@mui/x-date-pickers'),
@@ -27,7 +27,7 @@ const Loader = async (base_url: string, start: string) => {
                 const m_name = name;
                 const m = await Loader(base_url, name.substring(2, name.length) + '.js')
 
-                baseRequirements[m_name] = m
+                baseRequirements[m_name] = m;
             })())
         }
     }
@@ -52,6 +52,8 @@ const Loader = async (base_url: string, start: string) => {
     await Promise.all(requirementFetch);
 
     func(_requires, module, exports);
+
+    console.log({module})
 
     return module.exports;
 }
@@ -82,7 +84,7 @@ const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
                 const data: any = await loader
 
-                setPacks({
+                setPacks( {
                     ...packs,
                     [id]: Object.keys(data).map((x) => ({ name: x, component: data[x] }))
                 })
