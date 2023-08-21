@@ -22,6 +22,8 @@ export const SchematicEditor = () => {
 
                     nodes
                     edges
+
+                    rank
                 }
             }
         }
@@ -53,6 +55,14 @@ export const SchematicEditor = () => {
         // awaitRefetchQueries: true
     })
 
+    const [ updatePageOrder ] = useMutation(gql`
+        mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
+            updateCommandSchematicPageOrder(schematic: $schematic, oldIx: $oldIx, newIx: $newIx)
+        }
+    `, {
+        refetchQueries: ['GetSchematic']
+    })
+
     const debouncedUpdate = useMemo(() => debounce(updatePage, 500), [])
 
 
@@ -82,6 +92,14 @@ export const SchematicEditor = () => {
 
                     console.log(oldIx, newIx, pages)
                     
+                    updatePageOrder({
+                        variables: {
+                            schematic: id,
+                            oldIx,
+                            newIx
+                        }
+                    })
+
                     setPages((pages) => {
                         return arrayMove(pages, oldIx, newIx);
                     })

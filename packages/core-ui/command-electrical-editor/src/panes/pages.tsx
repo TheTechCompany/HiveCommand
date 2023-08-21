@@ -4,6 +4,7 @@ import { Add, DragHandle } from '@mui/icons-material'
 import { PageModal } from '../components/page-modal';
 import { useEditorContext } from '../context';
 import {CSS} from '@dnd-kit/utilities';
+import { DragOverlay } from '@dnd-kit/core';
 
 import {
     DndContext,
@@ -23,6 +24,8 @@ import {
 
 export const PagesPane = (props: any) => {
     const [modalOpen, openModal] = useState(false);
+
+    const [ activeId, setActiveId ] = useState(null);
 
     const { pages, onReorderPage } = useEditorContext();
 
@@ -45,12 +48,21 @@ export const PagesPane = (props: any) => {
             onReorderPage?.(oldIndex, newIndex)
 
         }
+
+        setActiveId(null);
+    }
+
+    const handleDragStart = (event: any) => {
+        const { active } = event;
+
+        setActiveId(active);
     }
 
     return (
         <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
+            onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
         >
             <SortableContext
@@ -78,13 +90,24 @@ export const PagesPane = (props: any) => {
                         </Box>
                     </Box>
                     <Divider />
-
+                    
                     <List>
-                        {pages?.map((page) => (
-                            <PageItem page={page} />
+                        {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (
+                            <PageItem  key={props.id} page={page} />
 
                         ))}
                     </List>
+{/* 
+                    <DragOverlay>
+                        {activeId ? (
+                            <Paper sx={{display: 'flex', flex: 1}}>
+                            <IconButton>
+                                <DragHandle />
+                            </IconButton>
+                            <ListItemButton>{pages?.find((a) => a.id == activeId)?.name}</ListItemButton>
+                            </Paper>
+                        ) : null}
+                    </DragOverlay> */}
                 </Paper>
             </SortableContext>
         </DndContext>

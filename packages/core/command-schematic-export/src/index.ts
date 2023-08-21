@@ -6,6 +6,8 @@ import { writeFileSync } from 'fs';
 
 export const export_schematic = async (schematic: {pages: any[]}) => {
 
+    const pages = (schematic?.pages || []).sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
+
     const pdfDoc = await PDFDocument.create();
 
     const app = express();
@@ -15,7 +17,7 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
     app.get('/schematic/pages/:ix', (req, res) => {
 
         res.send( {
-            page: schematic.pages?.[parseInt(req.params.ix)] 
+            page: pages?.[parseInt(req.params.ix)] 
         } );
 
     })
@@ -30,7 +32,7 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
                 const page = await browser.newPage();
 
-                for(var i = 0; i < schematic.pages.length; i++){
+                for(var i = 0; i < pages.length; i++){
 
                     await page.goto(`http://localhost:${address?.port}#ix=${i}`)
 

@@ -80,6 +80,22 @@ export default (prisma: PrismaClient) => {
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
                     
+					const lastPage = await prisma.electricalSchematicPage.findFirst({
+						where: {
+							schematicId: args.schematic
+						},
+						orderBy: {
+							rank: 'asc'
+						}
+					})
+
+					const { rank } = lastPage || {}
+
+					let aboveRank = LexoRank.parse(rank || LexoRank.min().toString())
+                    let belowRank = LexoRank.parse(LexoRank.max().toString())
+
+                    let newRank = aboveRank.between(belowRank).toString()
+
                     return await prisma.electricalSchematicPage.create({
                        
                         data: {
@@ -87,11 +103,13 @@ export default (prisma: PrismaClient) => {
                                     name: args.input.name,
                                     nodes: args.input.nodes,
                                     edges: args.input.edges,
+									rank: newRank.toString(),
                                     schematic: {
                                         connect: {id: args.schematic}
                                     }
                         }
-                    })
+                    });
+
                 },
                 updateCommandSchematicPage: async (root: any, args: {schematic: string, id: string, input: any}, context: any) => {
                     return await prisma.electricalSchematicPage.update({
@@ -111,17 +129,32 @@ export default (prisma: PrismaClient) => {
                 deleteCommandSchematicPage: async (root: any, args: {schematic: string, id: string}, context: any) => {
                     return await prisma.electricalSchematicPage.delete({where: {id: args.id}})
                 },
-				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string }, context: any) => {
+				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, oldIx: number, newIx: number }, context: any) => {
 
 					const schematic = await prisma.electricalSchematic.findFirst({
 						where: {
 							id: args.schematic,
 							organisation: context?.jwt?.organisation
+						},
+						include: {
+							pages: true
 						}
 					})
 
 					if(!schematic) throw new Error("Schematic not found");
+
+					console.log(args);
 					
+					const pages = schematic?.pages?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))
+
+					const oldIx = pages?.[args.oldIx];
+
+
+					const aboveIx = pages?.[args.newIx]?.rank;
+
+					const belowIx = pages?.[args.newIx + 1]?.rank;
+
+					console.log(oldIx.rank)
 					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
                     //     SELECT id, rank FROM "TimelineItem" 
                     //     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
@@ -134,28 +167,38 @@ export default (prisma: PrismaClient) => {
 
 					// const { rank, lead_rank } = result?.[0];
 
-                    // let aboveRank = LexoRank.parse(rank || LexoRank.min().toString())
-                    // let belowRank = LexoRank.parse(lead_rank || LexoRank.max().toString())
+                    let aboveRank = LexoRank.parse(aboveIx || LexoRank.min().toString())
+                    let belowRank = LexoRank.parse(belowIx || LexoRank.max().toString())
 
-                    // newRank = aboveRank.between(belowRank).toString()
+                    let newRank = aboveRank.between(belowRank).toString()
+					
+					console.log(newRank.toString())
 
-					const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
-						SELECT id, rank FROM "ElectricalSchematicPage" 
-						WHERE schematicId=${args.schematic}
-						ORDER BY rank
-					), cte2 as (
-						SELECT id, rank, ${isForward ? Prisma.sql`LEAD(rank)` : Prisma.sql`LAG(rank)`} OVER (ORDER BY rank) as lead_rank FROM cte
-					)
-					SELECT id, rank, lead_rank FROM cte2 WHERE id=${prev || next}
+					await prisma.electricalSchematicPage.update({
+						where: {
+							id: oldIx?.id,
+						},
+						data: {
+							rank: newRank.toString()
+						}
+					})
+					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
+					// 	SELECT id, rank FROM "ElectricalSchematicPage" 
+					// 	WHERE schematicId=${args.schematic}
+					// 	ORDER BY rank
+					// ), cte2 as (
+					// 	SELECT id, rank, ${isForward ? Prisma.sql`LEAD(rank)` : Prisma.sql`LAG(rank)`} OVER (ORDER BY rank) as lead_rank FROM cte
+					// )
+					// SELECT id, rank, lead_rank FROM cte2 WHERE id=${prev || next}
 					
-					`
+					// `
 					
-					const { rank, lead_rank } = result?.[0]
+					// const { rank, lead_rank } = result?.[0]
 	
-					const belowRank = LexoRank.parse((isForward ? rank : lead_rank) || LexoRank.min().toString());
-					const aboveRank = LexoRank.parse((isForward ? lead_rank : rank) || LexoRank.max().toString()); //TODO anything but just using max
+					// const belowRank = LexoRank.parse((isForward ? rank : lead_rank) || LexoRank.min().toString());
+					// const aboveRank = LexoRank.parse((isForward ? lead_rank : rank) || LexoRank.max().toString()); //TODO anything but just using max
 	
-					const newRank = belowRank.between(aboveRank)
+					// const newRank = belowRank.between(aboveRank)
 
 
 				}
@@ -214,6 +257,8 @@ export default (prisma: PrismaClient) => {
     type CommandSchematicPage {
         id: ID!
         name: String
+
+		rank: String
 
         nodes: JSON
         edges: JSON

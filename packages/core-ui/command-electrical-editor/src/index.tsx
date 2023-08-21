@@ -13,6 +13,8 @@ export interface ECADPage {
     name: string;
     nodes?: any[];
     edges?: any[];
+    rank?: string;
+
 }
 
 export interface ECadEditorProps {
