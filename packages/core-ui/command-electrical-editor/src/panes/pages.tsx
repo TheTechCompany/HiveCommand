@@ -93,7 +93,10 @@ export const PagesPane = (props: any) => {
                     
                     <List>
                         {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (
-                            <PageItem  key={props.id} page={page} />
+                            <PageItem  
+                                key={props.id}
+                                onSelectPage={props.onSelectPage} 
+                                page={page} />
 
                         ))}
                     </List>

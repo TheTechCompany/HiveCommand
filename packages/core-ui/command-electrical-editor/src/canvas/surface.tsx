@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from 'react';
-import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState } from 'reactflow';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 import { useEditorContext } from '../context';
 import { BoxNode, CanvasNode, ElectricalSymbol, TextNode } from './node';
 import { WireEdge } from './edge';
@@ -9,10 +9,12 @@ export const CanvasSurface = () => {
 
     const { pages, selectedPage, onUpdatePage, draftWire } = useEditorContext();
     
-    const flowNodes = useMemo(() => pages?.find((a: any) => a.id == selectedPage)?.nodes || [], [selectedPage, pages])
+    const {nodes: flowNodes, edges: flowEdges} = useMemo(() => pages?.find((a: any) => a.id == selectedPage) || {edges: [], nodes: []}, [selectedPage, pages])
+
+    const [ selected, setSelected ] = useState<any>({nodes: [], edges: []})
 
     const [ nodes, setNodes, onNodesChange ] = useNodesState(flowNodes || [])
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState(flowNodes || [])
+    const [ edges, setEdges, onEdgesChange ] = useEdgesState(flowEdges || [])
 
     useEffect(() => {
         console.log('SetNodes')
@@ -34,19 +36,29 @@ export const CanvasSurface = () => {
     const nodeMap = (item: any) => {
         return {
             id: item.id,
+            type: item.type,
             position: item.position,
-            data: item.data,
-            
+            data: item.data
         }
     }
+
+    const finalNodes = useMemo(() => (nodes.map((x) => ({...x, selected: selected.nodes.findIndex((a: any) => a.id == x.id) > -1})) as any[]), [nodes, selected])
+    const finalEdges = useMemo(() => (edges.map((x) => ({...x, selected: selected.edges.findIndex((a: any) => a.id == x.id) > -1})) as any[]), [edges, selected])
     
+
     return (
         <ReactFlow
             snapGrid={[5, 5]}
             snapToGrid
             connectionMode={ConnectionMode.Loose}
             onSelectionChange={(selection) => {
-                // console.log({selection})
+
+                if(!isEqual(selected, selection)){
+                    console.log({selection})
+                    setSelected(selection)
+
+                }
+
             }}
             onNodesChange={(changes) => {
 
@@ -54,7 +66,13 @@ export const CanvasSurface = () => {
 
                 onNodesChange(changes);
 
-                if(!isEqual((oldNodes || []).map(nodeMap), (nodes || []).map(nodeMap))){
+
+                if(!isEqual((flowNodes || []).map(nodeMap), (nodes || []).map(nodeMap))){
+                
+                    console.log("NODES CHANGED", {changes})
+
+                    console.log("update page");
+
                     onUpdatePage?.({
                         ...pages?.find((a) => a.id == selectedPage),
                         nodes: nodes

@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
 import { useEditorContext } from '../context';
-import { IconButton, TextField } from '@mui/material';
+import { IconButton, TextField, Typography } from '@mui/material';
 import { Done } from '@mui/icons-material'
 
 export const ElectricalSymbol = (props: NodeProps) => {
@@ -61,6 +61,8 @@ export const BoxNode = (props: NodeProps) => {
 
 export const TextNode = (props: NodeProps) => {
 
+    const nodeRef = useRef<any>(null);
+
     const { onUpdatePage, page } = useEditorContext();
 
     const [ editText, setEditText ] = useState<any>(null);
@@ -69,16 +71,59 @@ export const TextNode = (props: NodeProps) => {
 
     useEffect(() => {
         if(applying && props.data.text == editText){
-            setApplying(false)
+            setApplying(false);
+
+            // setEditText(null);
+            // (async () => {
+
+            // })();
 
             setTimeout(() => {
                 setEditText(null);
+
             }, 100)
         }
     }, [props.data.text, editText, applying])
 
+    // useEffect(() => {
+ 
+    //     if(nodeRef.current){
+
+    //         let oldBounds : any = {};
+
+    //         let timer = setInterval(() => {
+    //             const bounds = nodeRef.current?.getBoundingClientRect()
+
+    //             if(oldBounds.width != bounds.width || oldBounds.height != bounds.height){
+    //                 console.log(bounds.width, bounds.height);
+    //             }
+
+    //             oldBounds = bounds;
+    //         }, 10)
+
+    //         // const ro = new ResizeObserver(entries => {
+    //         //     for (let entry of entries) {
+    //         //       const cr = entry.contentRect;
+    //         //       console.log('Element:', entry.target);
+    //         //       console.log(`Element size: ${cr.width}px x ${cr.height}px`);
+    //         //       console.log(`Element padding: ${cr.top}px ; ${cr.left}px`);
+    //         //     }
+    //         // });
+    
+    //         // const elem = nodeRef.current;
+
+    //         // ro.observe(elem);
+
+    //         return () => {
+    //             // ro.unobserve(elem)
+    //             clearInterval(timer)
+    //         }
+    //     }
+    // }, [nodeRef.current])
+
     return (
         <div 
+        ref={nodeRef}
         onDoubleClick={() => {
             setEditText(props.data.text)
         }}
@@ -104,6 +149,8 @@ export const TextNode = (props: NodeProps) => {
                             }
                         }
 
+                        console.log("new text")
+
                         setApplying(true)
 
                         onUpdatePage?.({
@@ -117,9 +164,9 @@ export const TextNode = (props: NodeProps) => {
                     </IconButton>
                 </div>
             ) : (
-                <text>
+                <Typography>
                     {props.data.text}
-                </text>
+                </Typography>
             )}
         </div>
     )

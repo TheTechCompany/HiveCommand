@@ -110,7 +110,16 @@ export const SchematicEditor = () => {
 
                     console.log({ page });
 
-                    debouncedUpdate({ variables: { schematic: id, id: page.id, input: { nodes: page.nodes, edges: page.edges } } })
+                    debouncedUpdate({ 
+                        variables: { 
+                            schematic: id, 
+                            id: page.id, 
+                            input: { 
+                                nodes: page.nodes.map((x) => ({id: x.id, data: x.data, position: x.position, type: x.type})),
+                                edges: page.edges
+                             } 
+                        } 
+                    })
 
                     setPages((pages) => {
                         let p = pages.slice();

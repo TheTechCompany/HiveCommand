@@ -141,7 +141,6 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
                 if(props.activeTool) (tools as any)[props.activeTool]?.onMouseDown?.(e)
             }}
             onKeyDown={(e) => {
-                console.log({key: e.key});
 
                 if(props.activeTool) (tools as any)[props.activeTool]?.onKeyDown?.(e);
             }}
