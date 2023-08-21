@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from 'react';
 import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState } from 'reactflow';
 import { useEditorContext } from '../context';
-import { CanvasNode, ElectricalSymbol } from './node';
+import { BoxNode, CanvasNode, ElectricalSymbol, TextNode } from './node';
 import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
 
@@ -22,7 +22,9 @@ export const CanvasSurface = () => {
   
     const nodeTypes = useMemo(() => ({
         electricalSymbol: ElectricalSymbol,
-        canvasNode: CanvasNode
+        canvasNode: CanvasNode,
+        box: BoxNode,
+        text: TextNode,
     }), [])
 
     const edgeTypes = useMemo(() => ({

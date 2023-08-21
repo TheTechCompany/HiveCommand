@@ -5,7 +5,9 @@ export const ElectricalEditorContext = React.createContext<{
     selectedPage?: string;
     pages?: ECADPage[],
     page?: ECADPage;
+    
     onUpdatePage?: (page: any, log?: string) => void;
+    onReorderPage?: (oldIx: any, newIx: any) => void;
 
     elements?: any[],
     cursorActive?: boolean,

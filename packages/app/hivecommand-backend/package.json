@@ -44,6 +44,7 @@
     "graphql-redis-subscriptions": "^2.5.0",
     "graphql-subscriptions": "^2.0.0",
     "graphql-tag": "^2.12.6",
+    "lexorank": "^1.0.5",
     "mathjs": "^10.1.1",
     "moment": "^2.29.1",
     "moniker": "^0.1.2",

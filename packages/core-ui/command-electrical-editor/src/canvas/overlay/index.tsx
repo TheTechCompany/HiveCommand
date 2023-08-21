@@ -35,9 +35,9 @@ export const CanvasOverlay : React.FC<CanvasOverlayProps> = (props) => {
                 selectedSymbol={selectedSymbol} />
                  */}
 
-            {/* <CursorCrosshairs 
+            <CursorCrosshairs 
                 cursorPosition={props.cursorPosition}
-                wrapper={props.wrapper} /> */}
+                wrapper={props.wrapper} />
         </Box>
     )
 }

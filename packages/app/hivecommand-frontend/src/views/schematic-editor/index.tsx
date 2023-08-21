@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ECadEditor } from '@hive-command/electrical-editor'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { useParams } from 'react-router-dom';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export const SchematicEditor = () => {
 
@@ -57,6 +58,8 @@ export const SchematicEditor = () => {
 
     const schematic = data?.commandSchematics?.[0];
 
+    console.log(schematic)
+
     useEffect(() => {
         setPages(schematic?.pages || []);
     }, [schematic]);
@@ -74,9 +77,19 @@ export const SchematicEditor = () => {
                     createPage({ variables: { schematic: id, name: page.name } })
 
                 }}
+
+                onUpdatePageOrder={(oldIx, newIx) => {
+
+                    console.log(oldIx, newIx, pages)
+                    
+                    setPages((pages) => {
+                        return arrayMove(pages, oldIx, newIx);
+                    })
+
+                }}
                 onUpdatePage={(page: any, log) => {
                     console.log(log);
-                    
+
                     console.log({ page });
 
                     debouncedUpdate({ variables: { schematic: id, id: page.id, input: { nodes: page.nodes, edges: page.edges } } })

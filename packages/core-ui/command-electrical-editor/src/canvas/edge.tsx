@@ -1,6 +1,8 @@
 import React, { MouseEventHandler, useState } from 'react';
 import { BaseEdge, EdgeProps, getBezierPath, useReactFlow } from 'reactflow';
 import { useEditorContext } from '../context';
+import { nanoid } from 'nanoid';
+import { useCanvasContext } from './context';
 
 
 export const WireEdge = ({
@@ -18,6 +20,8 @@ export const WireEdge = ({
 
     const { project } = useReactFlow()
 
+    const { wrapper } = useCanvasContext();
+
     const { onUpdatePage, page } = useEditorContext();
 
     const directPath = `M ${data?.points?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < data?.points?.length - 1 ? 'L' : ''}`).join(' ')}`;
@@ -28,7 +32,66 @@ export const WireEdge = ({
 
     return (
         <>
-            <BaseEdge path={directPath} markerEnd={markerEnd} style={style} />
+        {/* <BaseEdge path={directPath} style={style} /> */}
+        {data?.points?.map((point: any, ix: number) => data?.points?.[ix + 1] && (
+            <path
+                onClick={(e) => {
+                    if(e.metaKey || e.ctrlKey){
+
+                        let newEdges = (page?.edges || []).slice();
+
+                        let edgeIx = newEdges.findIndex((a) => a.id == id);
+
+                        let points = [...(data?.points || [])];
+                        console.log(points)
+
+                        const bounds = wrapper?.current?.getBoundingClientRect();
+
+                        points?.splice(ix + 1, 0, project({x: e.clientX - bounds.x, y: e.clientY - bounds.y}) )
+
+                        newEdges[edgeIx] = {
+                            ...newEdges?.[edgeIx],
+                            data: {
+                                ...newEdges?.[edgeIx]?.data,
+                                points
+                            }
+                        }
+
+                        console.log(points)
+
+                        console.log(newEdges[edgeIx])
+                        //.data?.points?.splice(ix, 0, project({x: e.clientX, y: e.clientY}) );
+
+                        onUpdatePage?.({
+                            ...page,
+                            edges: newEdges
+                        }, "newPoint")
+                    }
+                }}
+                className="react-flow__edge-path"
+                style={{
+                    // fill: 'none',
+                    // stroke: style.stroke || 'black',
+                    ...style
+                }}
+                d={`M ${point.x} ${point.y} L ${data?.points?.[ix + 1].x} ${data?.points?.[ix + 1].y}`} />
+ 
+        ))}
+            {/* <path 
+                className="react-flow__edge-path"
+                d={directPath} 
+                onClick={(e) => {
+                    if(e.metaKey || e.ctrlKey){
+                        alert("CTRL")
+                    }
+                }}
+                // markerEnd={markerEnd} 
+                
+                style={{
+                    // fill: 'none',
+                    // stroke: style.stroke || 'black',
+                    ...style
+                }} /> */}
             {data?.points?.map((point: any, ix: number) => (
                 <circle
                     onMouseDown={(e) => {

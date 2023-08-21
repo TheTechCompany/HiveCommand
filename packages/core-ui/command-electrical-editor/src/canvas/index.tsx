@@ -10,7 +10,8 @@ import { nanoid } from 'nanoid'
 import { CanvasOverlay } from "./overlay";
 import { CanvasSurface } from "./surface";
 import { SymbolTool } from "../tools/symbol";
-import { WireTool } from "../tools";
+import { WireTool, BoxOutlineTool, BoxTool, TextTool } from "../tools";
+import { CanvasProvider } from "./context";
 
 const cursorImport = require('./cursor.svg');
 
@@ -44,7 +45,10 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
 
     const tools = { 
         symbol: SymbolTool(flowWrapper, page),
-        wire: WireTool(flowWrapper, page)
+        wire: WireTool(flowWrapper, page),
+        box: BoxTool(flowWrapper, page),
+        boxOutline: BoxOutlineTool(flowWrapper, page),
+        text: TextTool(flowWrapper, page)
     } //].map((tool) => tool(flowWrapper, page))
 
     const symbolPosition = useMemo(() => {
@@ -127,6 +131,7 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
     // }, [props.activeTool])
 
     return (
+        <CanvasProvider value={{wrapper: flowWrapper}}>
         <Box
             tabIndex={0}
             ref={flowWrapper}
@@ -140,15 +145,19 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
 
                 if(props.activeTool) (tools as any)[props.activeTool]?.onKeyDown?.(e);
             }}
-            onMouseEnter={() => { 
-                setCursorActive(true)
+            onMouseEnter={(e) => { 
+                setCursorActive(true);
+
             }}
             // onMouseMove={() => console.log("move")}
-            onMouseLeave={() => {
+            onMouseLeave={(e) => {
                 console.log("Leave")
 
-                setCursorActive(false)
-                setCursorPosition(null)
+                setCursorActive(false);
+                setCursorPosition(null);
+
+                // (e.currentTarget as HTMLElement).exitPointerLock()
+
             }}
             onClick={(e) => {
                 
@@ -166,5 +175,6 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
                 wrapper={flowWrapper}
                 />
         </Box>
+        </CanvasProvider>
     )
 }

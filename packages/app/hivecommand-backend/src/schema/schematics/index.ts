@@ -5,6 +5,8 @@ import gql from "graphql-tag";
 import { nanoid } from "nanoid";
 import { subject } from "@casl/ability";
 
+import { LexoRank } from 'lexorank';
+
 
 export default (prisma: PrismaClient) => {
 	
@@ -108,7 +110,55 @@ export default (prisma: PrismaClient) => {
                 },
                 deleteCommandSchematicPage: async (root: any, args: {schematic: string, id: string}, context: any) => {
                     return await prisma.electricalSchematicPage.delete({where: {id: args.id}})
-                }
+                },
+				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string }, context: any) => {
+
+					const schematic = await prisma.electricalSchematic.findFirst({
+						where: {
+							id: args.schematic,
+							organisation: context?.jwt?.organisation
+						}
+					})
+
+					if(!schematic) throw new Error("Schematic not found");
+					
+					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
+                    //     SELECT id, rank FROM "TimelineItem" 
+                    //     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
+                    //     ORDER BY rank
+                    // ), cte2 as (
+                    //     SELECT id, rank, LEAD(rank) OVER (ORDER BY rank) as lead_rank FROM cte
+                    // )
+                    // SELECT id, rank, lead_rank FROM cte2 WHERE id=${args.prev}`
+
+
+					// const { rank, lead_rank } = result?.[0];
+
+                    // let aboveRank = LexoRank.parse(rank || LexoRank.min().toString())
+                    // let belowRank = LexoRank.parse(lead_rank || LexoRank.max().toString())
+
+                    // newRank = aboveRank.between(belowRank).toString()
+
+					const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
+						SELECT id, rank FROM "ElectricalSchematicPage" 
+						WHERE schematicId=${args.schematic}
+						ORDER BY rank
+					), cte2 as (
+						SELECT id, rank, ${isForward ? Prisma.sql`LEAD(rank)` : Prisma.sql`LAG(rank)`} OVER (ORDER BY rank) as lead_rank FROM cte
+					)
+					SELECT id, rank, lead_rank FROM cte2 WHERE id=${prev || next}
+					
+					`
+					
+					const { rank, lead_rank } = result?.[0]
+	
+					const belowRank = LexoRank.parse((isForward ? rank : lead_rank) || LexoRank.min().toString());
+					const aboveRank = LexoRank.parse((isForward ? lead_rank : rank) || LexoRank.max().toString()); //TODO anything but just using max
+	
+					const newRank = belowRank.between(aboveRank)
+
+
+				}
 			}
 		},
 	])
@@ -127,6 +177,8 @@ export default (prisma: PrismaClient) => {
         createCommandSchematicPage(schematic: ID, input: CommandSchematicPageInput): CommandSchematicPage!
         updateCommandSchematicPage(schematic: ID, id: ID, input: CommandSchematicPageInput): CommandSchematicPage!
         deleteCommandSchematicPage(schematic: ID, id: ID): Boolean!
+
+		updateCommandSchematicPageOrder(schematic: ID, oldIx: Int, newIx: Int): Boolean
 	}
 
 

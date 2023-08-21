@@ -253,6 +253,8 @@ model ElectricalSchematicPage {
   nodes Json?
   edges Json?
 
+  rank String?
+
   schematic ElectricalSchematic @relation(name: "hasPages", fields: [schematicId], references: [id])
   schematicId String
 }

@@ -47,7 +47,7 @@ npm manifest:
   		"@types/react-dom": "../../../node_modules/@types/react-dom",
   	},
   	"peerDependencies": {
-  		"@apollo/client": "^3.6.9",
+  		"@apollo/client": "^3.8.1",
   		"@hexhive/ui": "1.0.1-alpha.116",
   		"@mui/icons-material": "^5.10.6",
   		"@mui/lab": "5.0.0-alpha.10",

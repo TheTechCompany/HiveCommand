@@ -4,7 +4,7 @@
 	"private": true,
 	"sideEffects": false,
 	"dependencies": {
-		"@apollo/client": "^3.7.16",
+		"@apollo/client": "^3.8.1",
 		"@emotion/react": "11.10.4",
 		"@hexhive/styles": "^1.0.1-alpha.77",
 		"@hexhive/ui": "1.0.1-alpha.119",
