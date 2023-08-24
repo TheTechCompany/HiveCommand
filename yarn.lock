@@ -3210,7 +3210,7 @@ __metadata:
     "@svgr/core": ^6.1.2
     "@testing-library/jest-dom": ^5.14.1
     "@testing-library/react": ^12.0.0
-    "@types/jest": ^26.0.23
+    "@types/jest": ^27.0.3
     "@types/papaparse": ^5.3.7
     "@types/react": ^17.0.11
     "@types/react-dom": ^17.0.8
@@ -3377,7 +3377,7 @@ __metadata:
     "@mui/x-date-pickers": ^5.0.6
     "@tauri-apps/api": ^1.1.0
     "@tauri-apps/cli": ^1.1.1
-    "@types/jest": ^27.5.2
+    "@types/jest": ^27.0.3
     "@types/node": ^16.18.3
     "@types/react": 17.0.39
     "@types/react-dom": 17.0.17
@@ -3423,7 +3423,7 @@ __metadata:
     "@hive-command/opcua-server": ^1.4.15-alpha.263
     "@hive-command/opcua-utils": ^1.4.15-alpha.263
     "@sinonjs/fake-timers": ^10.0.2
-    "@types/jest": ^26.0.23
+    "@types/jest": ^27.0.3
     "@types/sinon": ^10.0.13
     "@types/sinonjs__fake-timers": ^8.1.2
     commander: ^7.2.0
@@ -7530,23 +7530,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/jest@npm:27.x, @types/jest@npm:^27.0.1, @types/jest@npm:^27.0.3, @types/jest@npm:^27.5.2":
+"@types/jest@npm:27.x, @types/jest@npm:^27.0.3":
   version: 27.5.2
   resolution: "@types/jest@npm:27.5.2"
   dependencies:
     jest-matcher-utils: ^27.0.0
     pretty-format: ^27.0.0
   checksum: 7e11c6826aa429ad990dc262e4e4b54aa36573287fddf15773e4137f07d11d3105f0dd9f1baff73252160a057df23f5529bb83b1bf83cd3f45f9460a5ca5c22e
-  languageName: node
-  linkType: hard
-
-"@types/jest@npm:^26.0.23":
-  version: 26.0.24
-  resolution: "@types/jest@npm:26.0.24"
-  dependencies:
-    jest-diff: ^26.0.0
-    pretty-format: ^26.0.0
-  checksum: ae39675412f08d884926254e9b12bfd2b5a4e4d204c94d3148cb942174a474930d0c60540133c968f22241d4712b7940c96cbc883096eb326a4d5b206fb78bd0
   languageName: node
   linkType: hard
 
@@ -7692,7 +7682,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^16, @types/node@npm:^16.18.3, @types/node@npm:^16.18.32, @types/node@npm:^16.7.13":
+"@types/node@npm:^16, @types/node@npm:^16.18.3, @types/node@npm:^16.18.32, @types/node@npm:^16.x":
   version: 16.18.44
   resolution: "@types/node@npm:16.18.44"
   checksum: 5600765a303e2ab8913e8dbc6871f2740678bf6420f0b009a0ad059d4cbf7cd93a9679dc304c9d382bee57fa9cf802ea8b8b70839d11903e98bd9e09c98a7e32
@@ -14696,8 +14686,8 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@hive-command/remote-components": "workspace:^"
     "@hive-command/schematic-viewer": "workspace:^"
-    "@types/jest": ^27.0.1
-    "@types/node": ^16.7.13
+    "@types/jest": ^27.0.3
+    "@types/node": ^16.x
     "@types/react": ^17.x
     "@types/react-dom": ^17.x
     react: ^17.x
@@ -16248,7 +16238,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^13.5.0
-    "@types/jest": ^27.5.2
+    "@types/jest": ^27.0.3
     "@types/node": ^16.18.32
     "@types/react": ^18.2.6
     "@types/react-dom": ^18.2.4
@@ -17989,7 +17979,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^26.0.0, jest-diff@npm:^26.6.2":
+"jest-diff@npm:^26.6.2":
   version: 26.6.2
   resolution: "jest-diff@npm:26.6.2"
   dependencies:
@@ -25899,7 +25889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pretty-format@npm:^26.0.0, pretty-format@npm:^26.6.2":
+"pretty-format@npm:^26.6.2":
   version: 26.6.2
   resolution: "pretty-format@npm:26.6.2"
   dependencies:
