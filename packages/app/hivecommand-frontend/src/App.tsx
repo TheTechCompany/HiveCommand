@@ -31,7 +31,6 @@ const URL = `${process.env.NODE_ENV == 'production'
 
 const splitLink = split(
 
-  
   ({ query }) => {
 
     const definition = getMainDefinition(query);
