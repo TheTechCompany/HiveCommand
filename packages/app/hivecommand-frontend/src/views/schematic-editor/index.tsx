@@ -106,9 +106,6 @@ export const SchematicEditor = () => {
 
                 }}
                 onUpdatePage={(page: any, log) => {
-                    console.log(log);
-
-                    console.log({ page });
 
                     debouncedUpdate({ 
                         variables: { 
