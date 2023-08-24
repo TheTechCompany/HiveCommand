@@ -18,5 +18,9 @@
   "dependencies": {
     "@hive-command/electrical-nodes": "workspace:^",
     "@mui/material": "^5.14.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "react-dom": "*"
   }
 }

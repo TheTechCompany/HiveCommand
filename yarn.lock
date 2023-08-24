@@ -3504,6 +3504,9 @@ __metadata:
     "@hive-command/electrical-nodes": "workspace:^"
     "@mui/material": ^5.14.5
     typescript: ^5.1.6
+  peerDependencies:
+    react: "*"
+    react-dom: "*"
   languageName: unknown
   linkType: soft
 
@@ -6821,7 +6824,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:^13.0.0, @testing-library/react@npm:^13.4.0":
+"@testing-library/react@npm:^13.4.0":
   version: 13.4.0
   resolution: "@testing-library/react@npm:13.4.0"
   dependencies:
@@ -6835,7 +6838,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/user-event@npm:^13.2.1, @testing-library/user-event@npm:^13.5.0":
+"@testing-library/user-event@npm:^13.5.0":
   version: 13.5.0
   resolution: "@testing-library/user-event@npm:13.5.0"
   dependencies:
@@ -14693,9 +14696,6 @@ __metadata:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@hive-command/remote-components": "workspace:^"
     "@hive-command/schematic-viewer": "workspace:^"
-    "@testing-library/jest-dom": ^5.14.1
-    "@testing-library/react": ^13.0.0
-    "@testing-library/user-event": ^13.2.1
     "@types/jest": ^27.0.1
     "@types/node": ^16.7.13
     "@types/react": ^17.x
