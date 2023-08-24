@@ -6,8 +6,7 @@
     "packages/clients/*",
     "packages/network/*",
     "packages/drivers/*",
-    "packages/app/*",
-    "packages/core/command-schematic-export/src/export-page"
+    "packages/app/*"
   ],
   "npmClient": "yarn",
   "version": "1.4.15-alpha.263"

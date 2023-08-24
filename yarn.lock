@@ -14679,9 +14679,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"export-page-ui@workspace:packages/core/command-schematic-export/src/export-page":
+"export-page-ui@workspace:packages/core-ui/export-page":
   version: 0.0.0-use.local
-  resolution: "export-page-ui@workspace:packages/core/command-schematic-export/src/export-page"
+  resolution: "export-page-ui@workspace:packages/core-ui/export-page"
   dependencies:
     "@babel/plugin-proposal-private-property-in-object": ^7.21.11
     "@hive-command/remote-components": "workspace:^"

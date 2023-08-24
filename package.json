@@ -5,8 +5,7 @@
   "main": "index.js",
   "private": true,
   "workspaces": [
-    "packages/**/*",
-    "packages/core/command-schematic-export/src/export-page"
+    "packages/**/*"
   ],
   "repository": {
     "type": "git",
