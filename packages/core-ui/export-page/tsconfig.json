@@ -26,6 +26,6 @@
     "src"
   ],
   "references": [
-    {"path": "../../../../../core-ui/command-schematic-viewer"}
+    {"path": "../command-schematic-viewer"}
   ]
 }

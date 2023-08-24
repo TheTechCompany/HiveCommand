@@ -1,5 +1,5 @@
 {
-  "name": "export-page-ui",
+  "name": "@hive-command/export-page",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
