@@ -9,7 +9,7 @@ import { ComponentProperties } from './views/properties';
 import { Code } from './views/code';
 import clsx from 'clsx';
 import { TreeItems } from './TreeItemContent';
-import { ComponentFileModal } from 'app/hivecommand-frontend/src/components/modals/component-file';
+import { ComponentFileModal } from '../../../../components/modals/component-file';
 import { useMutation } from '@apollo/client';
 import { debounce } from 'lodash';
 import { Preview } from './views/preview';

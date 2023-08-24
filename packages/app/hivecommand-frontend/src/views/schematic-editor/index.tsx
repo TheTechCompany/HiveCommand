@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { ECadEditor } from '@hive-command/electrical-editor'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { useParams } from 'react-router-dom';
+import { arrayMove } from '@dnd-kit/sortable';
 
 export const SchematicEditor = () => {
 
@@ -21,6 +22,8 @@ export const SchematicEditor = () => {
 
                     nodes
                     edges
+
+                    rank
                 }
             }
         }
@@ -52,10 +55,20 @@ export const SchematicEditor = () => {
         // awaitRefetchQueries: true
     })
 
+    const [ updatePageOrder ] = useMutation(gql`
+        mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
+            updateCommandSchematicPageOrder(schematic: $schematic, oldIx: $oldIx, newIx: $newIx)
+        }
+    `, {
+        refetchQueries: ['GetSchematic']
+    })
+
     const debouncedUpdate = useMemo(() => debounce(updatePage, 500), [])
 
 
     const schematic = data?.commandSchematics?.[0];
+
+    console.log(schematic)
 
     useEffect(() => {
         setPages(schematic?.pages || []);
@@ -74,12 +87,36 @@ export const SchematicEditor = () => {
                     createPage({ variables: { schematic: id, name: page.name } })
 
                 }}
-                onUpdatePage={(page: any, log) => {
-                    console.log(log);
-                    
-                    console.log({ page });
 
-                    debouncedUpdate({ variables: { schematic: id, id: page.id, input: { nodes: page.nodes, edges: page.edges } } })
+                onUpdatePageOrder={(oldIx, newIx) => {
+
+                    console.log(oldIx, newIx, pages)
+                    
+                    updatePageOrder({
+                        variables: {
+                            schematic: id,
+                            oldIx,
+                            newIx
+                        }
+                    })
+
+                    setPages((pages) => {
+                        return arrayMove(pages, oldIx, newIx);
+                    })
+
+                }}
+                onUpdatePage={(page: any, log) => {
+
+                    debouncedUpdate({ 
+                        variables: { 
+                            schematic: id, 
+                            id: page.id, 
+                            input: { 
+                                nodes: page.nodes.map((x) => ({id: x.id, data: x.data, position: x.position, type: x.type})),
+                                edges: page.edges
+                             } 
+                        } 
+                    })
 
                     setPages((pages) => {
                         let p = pages.slice();

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { Box, IconButton, List, ListItem, Paper, Typography } from '@mui/material'
 import { Add, MoreVert } from '@mui/icons-material';
-import { ElementPackListModal } from 'app/hivecommand-frontend/src/components/modals/element-pack-list';
+import { ElementPackListModal } from '../../../../components/modals/element-pack-list';
 import { gql, useQuery } from '@apollo/client';
 import { useMutation } from '@apollo/client';
 import { CommandEditorContext } from '../../context';
-import { DataScopeModal } from 'app/hivecommand-frontend/src/components/modals/data-scope';
+import { DataScopeModal } from '../../../../components/modals/data-scope';
 
 export const Home = () => {
 

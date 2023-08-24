@@ -1,5 +1,6 @@
 {
   "name": "@hive-command/electrical-editor",
+  "version": "1.4.15-alpha.263",
   "files": [
     "dist/"
   ],
@@ -16,6 +17,6 @@
     "reactflow": "*"
   },
   "dependencies": {
-    "@hive-command/remote-components": "workspace:^"
+    "@hive-command/remote-components": "^1.4.15-alpha.263"
   }
 }

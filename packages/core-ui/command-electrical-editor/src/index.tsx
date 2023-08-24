@@ -6,13 +6,15 @@ import { ElectricalEditorProvider } from './context'
 import { ReactFlowProvider } from 'reactflow';
 import { PagesPane } from './panes/pages';
 import { SymbolsPane } from './panes/symbols';
-import { Create } from '@mui/icons-material';
+import { Create, CheckBoxOutlineBlank, HighlightAlt, FormatColorText } from '@mui/icons-material';
 
 export interface ECADPage {
     id: string;
     name: string;
     nodes?: any[];
     edges?: any[];
+    rank?: string;
+
 }
 
 export interface ECadEditorProps {
@@ -20,7 +22,29 @@ export interface ECadEditorProps {
     
     onCreatePage?: (page: any) => void;
     onUpdatePage?: (page: any, log?: string) => void;
+    onUpdatePageOrder?: (oldIx: number, newIx: number) => void;
 }
+
+export const Tools = [
+    {
+        id: 'text',
+        icon: <FormatColorText />
+    },
+    {
+        id: 'box',
+        icon: <CheckBoxOutlineBlank />
+    },
+    {
+        id: 'boxOutline',
+        icon: <HighlightAlt />
+    },
+    {
+        id: 'wire',
+        icon: <Create />
+    }
+
+]
+
 
 export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
 
@@ -34,6 +58,8 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
 
     const [ selectedSymbol, setSelectedSymbol ] = useState<any>(null);
     const [ symbolRotation, setSymbolRotation ] = useState(0);
+
+    const [ tools, setTools ] = useState<any[]>([]);
 
     const [ activeTool, setActiveTool ] = useState<any | null>(null);
 
@@ -87,6 +113,7 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
                 page: pages?.find((a) => a.id == selectedPage),
                 selectedPage,
                 onUpdatePage: props.onUpdatePage,
+                onReorderPage: props.onUpdatePageOrder,
                 elements: items,
                 draftWire,
                 setDraftWire,
@@ -110,14 +137,16 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
                     <Box                    
                         sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         <Paper sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                            <IconButton 
-                                sx={{bgcolor: activeTool == 'wire' ? 'secondary.main' : null}}
+                            {Tools.map((tool) => (
+                                <IconButton 
+                                sx={{ borderRadius: '5px', marginRight: '3px', bgcolor: activeTool == tool.id ? 'secondary.main' : null}}
                                 onClick={() => {
-                                    setActiveTool(activeTool != 'wire'  ? 'wire' : null);
-                                }}
-                            >
-                                <Create />
-                            </IconButton>
+                                    setActiveTool(activeTool != tool.id ? tool.id : null)
+                                }}>
+                                    {tool.icon}
+                                </IconButton>
+                            ))}
+                        
                         </Paper>
                         <Canvas 
                             activeTool={activeTool}
