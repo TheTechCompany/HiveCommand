@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 16.x
-      - run: yarn
+      - run: yarn --frozen-lockfile
 
       - name: Setup stack
         run: |
