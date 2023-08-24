@@ -34,7 +34,6 @@ const splitLink = split(
   ({ query }) => {
 
     const definition = getMainDefinition(query);
-
     return (
 
       definition.kind === 'OperationDefinition' &&
