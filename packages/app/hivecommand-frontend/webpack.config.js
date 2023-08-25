@@ -56,7 +56,7 @@ module.exports = (webpackConfigEnv, argv) => {
       //   '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react')
       // },
       plugins: [
-        new TsconfigPathsPlugin({logLevel: 'info', logInfoToStdOut: true}),
+        new TsconfigPathsPlugin(),
       ],
       fallback: {
         // https: false,
