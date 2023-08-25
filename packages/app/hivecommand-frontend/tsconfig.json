@@ -2,7 +2,6 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
-    // "target": "es5",
     "esModuleInterop": true,
     "lib": ["ES2021", "DOM"],
     "outDir": "dist/",
