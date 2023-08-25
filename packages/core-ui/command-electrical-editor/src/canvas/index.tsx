@@ -13,8 +13,6 @@ import { SymbolTool } from "../tools/symbol";
 import { WireTool, BoxOutlineTool, BoxTool, TextTool } from "../tools";
 import { CanvasProvider } from "./context";
 
-const cursorImport = require('./cursor.svg');
-
 export const rendererPointToPoint = ({ x, y }: XYPosition, [tx, ty, tScale]: Transform): XYPosition => {
     return {
       x: x * tScale + tx,

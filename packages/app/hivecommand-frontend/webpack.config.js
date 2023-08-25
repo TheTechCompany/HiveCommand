@@ -35,11 +35,11 @@ module.exports = (webpackConfigEnv, argv) => {
     },
 
     resolve: {
+      alias: {
+        typescript: path.resolve(__dirname, 'node_modules/typescript'),
+      // },
       // alias: {
-      //   typescript: path.resolve(__dirname, 'node_modules/typescript'),
-      // // },
-      // // alias: {
-      //   'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
+        'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
       // //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
       // //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
       // //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
@@ -54,7 +54,7 @@ module.exports = (webpackConfigEnv, argv) => {
       //   'styled-components': path.resolve(__dirname, '../../../node_modules/styled-components'),
       //   'react-router-dom': path.resolve(__dirname, '../../../node_modules/react-router-dom'),
       //   '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react')
-      // },
+      },
       plugins: [
         new TsconfigPathsPlugin(),
       ],
@@ -78,13 +78,14 @@ module.exports = (webpackConfigEnv, argv) => {
           },
         },
         {
-          test: /\.tsx?$/,
-          loader: 'ts-loader',
-          options: { projectReferences: true },
-        },
-        {
           test: /\.ttf$/,
           use: ['file-loader']
+        },
+        {
+          test: /\.tsx?$/,
+          exclude: /src/,
+          loader: 'ts-loader',
+          options: { projectReferences: true },
         }
       ]
     },

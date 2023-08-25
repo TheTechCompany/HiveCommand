@@ -2,6 +2,7 @@
   "extends": "../../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
+    // "target": "es5",
     "esModuleInterop": true,
     "lib": ["ES2021", "DOM"],
     "outDir": "dist/",
@@ -13,9 +14,9 @@
   "exclude": ["src/**/*.test*"],
   "references": [
     {"path": "../hivecommand-api"},
+    {"path": "../../core/command-scripting"},
     {"path": "../../core-ui/command-electrical-editor"},
     {"path": "../../core-ui/command-remote-components"},
-    {"path": "../../core-ui/command-surface"},
-    {"path": "../../core/command-scripting"}
+    {"path": "../../core-ui/command-surface"}
   ]
 }

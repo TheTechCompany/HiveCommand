@@ -19,40 +19,40 @@
 		"@hive-command/threads": ["../node_modules/@hive-command/threads"],
 		// "node-opcua": ["../node_modules/node-opcua"],
 
-		"@hive-command/remote-components": ["./core-ui/command-remote-components/src"],
+		"@hive-command/remote-components": ["./core-ui/command-remote-components"],
 
 		"@hexhive/ui": ["../node_modules/@hexhive/ui"],
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
-		"@hive-command/api": ["./app/hivecommand-api/src"],
+		"@hive-command/api": ["./app/hivecommand-api"],
 
 		// "@hive-command/export-page": ["./core-ui/command-export-page/src"],
 
 		
-		"@hive-command/rabbitmq-auth": ["./communication/rabbitmq-auth/src"],
-		"@hive-command/amqp-hub": ["./communication/amqp-hub/src"],
-		"@hive-command/opcua-amqp-bridge": ["./communication/opc-amqp-bridge/src"],
-		"@hive-command/amqp-client": ["./communication/amqp-client/src"],
+		"@hive-command/rabbitmq-auth": ["./communication/rabbitmq-auth"],
+		"@hive-command/amqp-hub": ["./communication/amqp-hub"],
+		"@hive-command/opcua-amqp-bridge": ["./communication/opc-amqp-bridge"],
+		"@hive-command/amqp-client": ["./communication/amqp-client"],
 
-		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
-		"@hive-command/electrical-editor": ["./core-ui/command-electrical-editor/src"],
-		"@hive-command/schematic-viewer": ["./core-ui/command-schematic-viewer/src"],
-		"@hive-command/export-page": ["./core-ui/command-export-page/src"],
+		"@hive-command/command-surface": ["./core-ui/command-surface"],
+		"@hive-command/electrical-editor": ["./core-ui/command-electrical-editor"],
+		"@hive-command/schematic-viewer": ["./core-ui/command-schematic-viewer"],
+		"@hive-command/export-page": ["./core-ui/command-export-page"],
 
-		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
+		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes"],
 
-		"@hive-command/data": ["./core/command-data/src"],
+		"@hive-command/data": ["./core/command-data"],
 
-		"@hive-command/evented-values": ["./core/evented-values/src"],
-		"@hive-command/drivers-base": ["./drivers/command-driver/src"],
+		"@hive-command/evented-values": ["./core/evented-values"],
+		"@hive-command/drivers-base": ["./drivers/command-driver"],
 
 		"@hive-command/scripting": ["./core/command-scripting/src"],
 
-		"@hive-command/subscription-lock": ["./core/command-subscription-lock/src"],
-		"@hive-command/sms": ["./communication/sms-utils/src"],
+		"@hive-command/subscription-lock": ["./core/command-subscription-lock"],
+		"@hive-command/sms": ["./communication/sms-utils"],
 
-		"@hive-command/opcua-server": ["./communication/opc-server/src"],
-		"@hive-command/opcua-client": ["./communication/opc-client/src"],
-		"@hive-command/opcua-utils": ["./communication/opc-utils/src"]
+		"@hive-command/opcua-server": ["./communication/opc-server"],
+		"@hive-command/opcua-client": ["./communication/opc-client"],
+		"@hive-command/opcua-utils": ["./communication/opc-utils"]
 
 	  }
 	}
