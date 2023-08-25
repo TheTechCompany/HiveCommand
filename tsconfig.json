@@ -19,7 +19,7 @@
 		"@hive-command/threads": ["../node_modules/@hive-command/threads"],
 		// "node-opcua": ["../node_modules/node-opcua"],
 
-		"@hive-command/remote-components": ["../core-ui/command-remote-components/src"],
+		"@hive-command/remote-components": ["./core-ui/command-remote-components/src"],
 
 		"@hexhive/ui": ["../node_modules/@hexhive/ui"],
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
@@ -35,6 +35,9 @@
 
 		"@hive-command/command-surface": ["./core-ui/command-surface/src"],
 		"@hive-command/electrical-editor": ["./core-ui/command-electrical-editor/src"],
+		"@hive-command/schematic-viewer": ["./core-ui/command-schematic-viewer/src"],
+		"@hive-command/export-page": ["./core-ui/command-export-page/src"],
+
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
 		"@hive-command/data": ["./core/command-data/src"],

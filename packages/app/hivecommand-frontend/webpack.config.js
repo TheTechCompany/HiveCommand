@@ -35,28 +35,28 @@ module.exports = (webpackConfigEnv, argv) => {
     },
 
     resolve: {
-      alias: {
-        typescript: path.resolve(__dirname, 'node_modules/typescript'),
-      // },
       // alias: {
-        'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
-      //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
-      //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
-      //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+      //   typescript: path.resolve(__dirname, 'node_modules/typescript'),
+      // // },
+      // // alias: {
+      //   'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
+      // //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+      // //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
+      // //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
 
-        react: path.resolve(__dirname, '../../../node_modules/react'),
-        '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
-        '@hexhive/utils': path.resolve(__dirname, '../../../node_modules/@hexhive/utils'),
-        '@hexhive/styles': path.resolve(__dirname, '../../../node_modules/@hexhive/styles'),
-        "@mui/x-date-pickers": path.resolve(__dirname, '../../../node_modules/@mui/x-date-pickers'),
-        // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
-        '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
-        'styled-components': path.resolve(__dirname, '../../../node_modules/styled-components'),
-        'react-router-dom': path.resolve(__dirname, '../../../node_modules/react-router-dom'),
-        '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react')
-      },
+      //   react: path.resolve(__dirname, '../../../node_modules/react'),
+      //   '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
+      //   '@hexhive/utils': path.resolve(__dirname, '../../../node_modules/@hexhive/utils'),
+      //   '@hexhive/styles': path.resolve(__dirname, '../../../node_modules/@hexhive/styles'),
+      //   "@mui/x-date-pickers": path.resolve(__dirname, '../../../node_modules/@mui/x-date-pickers'),
+      //   // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+      //   '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
+      //   'styled-components': path.resolve(__dirname, '../../../node_modules/styled-components'),
+      //   'react-router-dom': path.resolve(__dirname, '../../../node_modules/react-router-dom'),
+      //   '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react')
+      // },
       plugins: [
-        new TsconfigPathsPlugin(),
+        new TsconfigPathsPlugin({logLevel: 'info', logInfoToStdOut: true}),
       ],
       fallback: {
         // https: false,
@@ -76,6 +76,11 @@ module.exports = (webpackConfigEnv, argv) => {
           resolve: {
               fullySpecified: false,
           },
+        },
+        {
+          test: /\.tsx?$/,
+          loader: 'ts-loader',
+          options: { projectReferences: true },
         },
         {
           test: /\.ttf$/,

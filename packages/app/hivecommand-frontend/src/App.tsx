@@ -5,8 +5,6 @@ import { HexHiveTheme } from "@hexhive/styles";
 import { ApolloClient, ApolloProvider, fallbackHttpConfig, InMemoryCache, selectHttpOptionsAndBody, serializeFetchParameter, split } from "@apollo/client";
 import { AuthProvider } from '@hexhive/auth-ui'
 import { ThemeProvider, Box, createTheme, CircularProgress } from '@mui/material'
-import { CommandSurface } from "@hive-command/command-surface";
-// import { EditorPage } from "./views/Editor";
 import { HttpLink } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { ApolloLink } from "@apollo/client";

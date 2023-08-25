@@ -2,6 +2,10 @@
   "name": "@hive-command/export-page",
   "version": "0.1.0",
   "private": true,
+  "main": "build/index.html",
+  "files": [
+    "build/"
+  ],
   "dependencies": {
     "@hive-command/remote-components": "workspace:^",
     "@hive-command/schematic-viewer": "workspace:^",
