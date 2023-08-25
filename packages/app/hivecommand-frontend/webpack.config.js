@@ -15,6 +15,7 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
+  console.log(defaultConfig.module.rules)
 
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
@@ -40,9 +41,9 @@ module.exports = (webpackConfigEnv, argv) => {
       // },
       // alias: {
         'react-resize-aware': path.resolve(__dirname, '../../../node_modules/react-resize-aware'),
-      //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
-      //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
-      //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
+      // //   '@mui/material': path.resolve(__dirname, 'node_modules/@mui/material'),
+      // //   "@mui/x-date-pickers": path.resolve(__dirname, 'node_modules/@mui/x-date-pickers'),
+      // //   '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
 
         react: path.resolve(__dirname, '../../../node_modules/react'),
         '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
@@ -80,6 +81,12 @@ module.exports = (webpackConfigEnv, argv) => {
         {
           test: /\.ttf$/,
           use: ['file-loader']
+        },
+        {
+          test: /\.tsx?$/,
+          exclude: /src/,
+          loader: 'ts-loader',
+          options: { projectReferences: true },
         }
       ]
     },

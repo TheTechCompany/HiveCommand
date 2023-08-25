@@ -9,15 +9,15 @@
     ],
     "@babel/preset-typescript"
   ],
-  "plugins": [
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "useESModules": true,
-        "regenerator": false
-      }
-    ]
-  ],
+  // "plugins": [
+  //   [
+  //     "@babel/plugin-transform-runtime",
+  //     {
+  //       "useESModules": true,
+  //       "regenerator": false
+  //     }
+  //   ]
+  // ],
   "env": {
     "test": {
       "presets": [

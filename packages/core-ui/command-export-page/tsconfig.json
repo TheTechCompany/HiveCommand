@@ -8,6 +8,9 @@
       "dom.iterable",
       "esnext"
     ],
+    "composite": true,
+    "outDir": "build/",
+    "rootDir": "src/",
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,

@@ -9,7 +9,6 @@ import { ValueStore } from "./valuestore";
 import { Runner } from "./runner";
 
 export interface SidecarOptions {
-
     tags: { name: string, type: string }[]
     types: { name: string, fields: { name: string, type: string }[] }[]
 

@@ -41,10 +41,7 @@ jobs:
           echo "PUBLIC_PATH=https://apps.hexhive.io/${{matrix.apps}}/" >> $GITHUB_ENV
           echo "REACT_APP_API=https://api.hexhive.io" >> $GITHUB_ENV       
         if: ${{ github.ref == 'refs/heads/master' }}
-        
-      - name: Build deps
-        run: lerna run build --scope @hive-command/electrical-editor
-        
+
       - name: Build web
         run: (export NODE_ENV=production CI=false; lerna run build --scope @hive-command/${{ matrix.apps }} --include-dependencies)
         env:

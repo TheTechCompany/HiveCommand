@@ -4,6 +4,8 @@ import express from 'express';
 import { PDFDocument } from 'pdf-lib';
 import { writeFileSync } from 'fs';
 
+const html_index = require.resolve('@hive-command/export-page');
+
 export const export_schematic = async (schematic: {pages: any[]}) => {
 
     const pages = (schematic?.pages || []).sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
@@ -12,7 +14,7 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
     const app = express();
 
-    app.use(express.static(path.join(__dirname, 'export-page/build')));
+    app.use(express.static(path.dirname(html_index)));
 
     app.get('/schematic/pages/:ix', (req, res) => {
 
@@ -69,9 +71,9 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
 }
 
-export_schematic({
-    pages: [
-        {id: '1', nodes: [{id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} }]},
-        {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
-    ]
-})
+// export_schematic({
+//     pages: [
+//         {id: '1', nodes: [{id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} }]},
+//         {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
+//     ]
+// })

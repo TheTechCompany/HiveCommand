@@ -5,7 +5,6 @@ import { Prec } from "@codemirror/state";
 import { basicSetup } from 'codemirror'
 import { bracketMatching, syntaxTree } from '@codemirror/language'
 
-
 const compartments: Compartment[] = [];
 
 export const useExtensions = (props: any) => {

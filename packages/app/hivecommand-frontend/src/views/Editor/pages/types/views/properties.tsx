@@ -6,6 +6,7 @@ import { useCreateTypeField, useDeleteTypeField, useUpdateTypeField } from '../a
 import { useCommandEditor } from '../../../context';
 import { DataTypes } from '@hive-command/scripting';
 
+
 export const Properties = (props: {
     types: any[],
     active: any
