@@ -174,7 +174,7 @@ export default (prisma: PrismaClient) => {
 					
 					console.log(newRank.toString())
 
-					await prisma.electricalSchematicPage.update({
+					return await prisma.electricalSchematicPage.update({
 						where: {
 							id: oldIx?.id,
 						},
@@ -182,25 +182,7 @@ export default (prisma: PrismaClient) => {
 							rank: newRank.toString()
 						}
 					})
-					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
-					// 	SELECT id, rank FROM "ElectricalSchematicPage" 
-					// 	WHERE schematicId=${args.schematic}
-					// 	ORDER BY rank
-					// ), cte2 as (
-					// 	SELECT id, rank, ${isForward ? Prisma.sql`LEAD(rank)` : Prisma.sql`LAG(rank)`} OVER (ORDER BY rank) as lead_rank FROM cte
-					// )
-					// SELECT id, rank, lead_rank FROM cte2 WHERE id=${prev || next}
 					
-					// `
-					
-					// const { rank, lead_rank } = result?.[0]
-	
-					// const belowRank = LexoRank.parse((isForward ? rank : lead_rank) || LexoRank.min().toString());
-					// const aboveRank = LexoRank.parse((isForward ? lead_rank : rank) || LexoRank.max().toString()); //TODO anything but just using max
-	
-					// const newRank = belowRank.between(aboveRank)
-
-
 				}
 			}
 		},
