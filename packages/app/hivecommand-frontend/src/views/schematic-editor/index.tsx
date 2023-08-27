@@ -78,7 +78,9 @@ export const SchematicEditor = () => {
         <Box sx={{
             flex: 1,
             height: 'calc(100% - 36px)',
-            display: 'flex', flexDirection: 'column'
+            padding: '6px',
+            display: 'flex', 
+            flexDirection: 'column'
         }}>
             <ECadEditor
 
