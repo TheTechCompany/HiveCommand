@@ -71,12 +71,23 @@ export default (prisma: PrismaClient) => {
 					return program
 				},
 				deleteCommandSchematic: async (root: any, args: {id: string}, context: any) => {
-					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
-					if(!currentProgram) throw new Error('Program not found');
+					const currentProgram = await prisma.electricalSchematic.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
+					if(!currentProgram) throw new Error('CommandSchematic not found');
 					if(!context?.jwt?.acl.can('delete', subject('CommandSchematic', currentProgram) )) throw new Error('Cannot delete CommandSchematic');
 					
 					const res = await prisma.electricalSchematic.delete({where: {id: args.id}})
 					return res != null
+				},
+
+				exportCommandSchematic: async (root: any, args: {id: string}, context: any) => {
+					const currentProgram = await prisma.electricalSchematic.findFirst({
+						where: {
+							id: args.id,
+							organisation: context?.jwt?.organisation
+						}
+					})
+
+					
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
                     
@@ -199,9 +210,12 @@ export default (prisma: PrismaClient) => {
 		updateCommandSchematic(id: ID!, input: CommandSchematicInput!): CommandSchematic!
 		deleteCommandSchematic(id: ID!): Boolean!
 
+		exportCommandSchematic(id: ID!): String
+
         createCommandSchematicPage(schematic: ID, input: CommandSchematicPageInput): CommandSchematicPage!
         updateCommandSchematicPage(schematic: ID, id: ID, input: CommandSchematicPageInput): CommandSchematicPage!
         deleteCommandSchematicPage(schematic: ID, id: ID): Boolean!
+
 
 		updateCommandSchematicPageOrder(schematic: ID, oldIx: Int, newIx: Int): Boolean
 	}

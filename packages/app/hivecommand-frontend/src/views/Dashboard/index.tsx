@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Route, Routes, useNavigate, Outlet } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
-import {Map, Handyman, Extension, Schema} from '@mui/icons-material';
+import {Map, Handyman, Extension, Schema, Psychology} from '@mui/icons-material';
 
 import { Sidebar } from '@hexhive/ui'
 import { ElementEditor } from '../../pages/element-editor';
@@ -10,6 +10,7 @@ import { ElementList } from '../../pages/element-list';
 import { DeviceMapper } from '../../pages/device-mapper';
 import { DeviceSettings } from '../../pages/device-settings';
 import { SchematicList } from '../../pages/schematic-list';
+import { FunctionList } from '../../pages/function-list';
 
 const Devices = React.lazy(() => import('../../pages/device-list').then((r) => ({ default: r.Devices })))
 
@@ -24,16 +25,16 @@ const pages = [
         component: <Devices/>
     },
     {
-        icon: <Handyman />,
-        label: "Programs",
-        path: 'programs',
+        icon: <Psychology />,
+        label: "Functions",
+        path: "functions",
         component: <Outlet />,
         children: [
-        {
-            path: '',
-            component: <ProgramList/>    
-        },
-       ]
+            {
+                path: '',
+                component: <FunctionList />
+            }
+        ]
     },
     {
         icon: <Schema />,
@@ -46,6 +47,18 @@ const pages = [
                 component: <SchematicList />
             }
         ]
+    },
+    {
+        icon: <Handyman />,
+        label: "Programs",
+        path: 'programs',
+        component: <Outlet />,
+        children: [
+        {
+            path: '',
+            component: <ProgramList/>    
+        },
+       ]
     },
     {
         icon: <Extension />,

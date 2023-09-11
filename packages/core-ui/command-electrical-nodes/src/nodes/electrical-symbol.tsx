@@ -8,11 +8,9 @@ export const ElectricalSymbol = (props: NodeProps) => {
     
     console.log({elements, symbol: props.data.symbol});
 
-    const { component } = useMemo(() => elements?.find((a: any) => a.name == props.data.symbol) || {}, [elements, props.data.symbol]);
+    const { component } = useMemo(() => (elements?.find((a: any) => a.name == props.data.symbol) || {}), [elements, props.data.symbol]);
 
     const ports = component?.metadata?.ports || [];
-
-    console.log(component);
 
     return (
         <div style={{ 

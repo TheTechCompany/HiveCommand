@@ -45,15 +45,15 @@ export const SchematicEditor = () => {
     })
 
     const [updatePage] = useMutation(gql`
-    mutation UpdatePage($schematic: ID, $id: ID, $input: CommandSchematicPageInput) {
-        updateCommandSchematicPage(schematic: $schematic, id: $id, input: $input){
-            id
+        mutation UpdatePage($schematic: ID, $id: ID, $input: CommandSchematicPageInput) {
+            updateCommandSchematicPage(schematic: $schematic, id: $id, input: $input){
+                id
+            }
         }
-    }
-`, {
-        // refetchQueries: ['GetSchematic'],
-        // awaitRefetchQueries: true
-    })
+    `, {
+            // refetchQueries: ['GetSchematic'],
+            // awaitRefetchQueries: true
+        })
 
     const [ updatePageOrder ] = useMutation(gql`
         mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
@@ -90,6 +90,9 @@ export const SchematicEditor = () => {
 
                 }}
 
+                onExport={() => {
+
+                }}
                 onUpdatePageOrder={(oldIx, newIx) => {
 
                     console.log(oldIx, newIx, pages)
