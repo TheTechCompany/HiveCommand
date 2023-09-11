@@ -103,7 +103,6 @@ export const SortableItem : React.FC<{id: string, onClick: any}> = (props) => {
             onClick={props.onClick}
             {...attributes} >
             <DragHandle {...listeners} />
-
             {props.children}
         </ListItem> 
     )
