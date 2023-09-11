@@ -320,7 +320,6 @@ const SortableTreeItem = React.forwardRef(function CustomContent(
     };
 
     const handleExpansionClick = (
-        event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => {
         toggleExpanded(props.nodeId)
         // handleExpansion(event);
