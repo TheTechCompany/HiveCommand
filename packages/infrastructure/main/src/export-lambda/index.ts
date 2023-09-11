@@ -34,7 +34,7 @@ export const ExportLambda = async () => {
     zip.outputStream.pipe(fs.createWriteStream("./archive.zip"));
 
     const fn = new Function(`hivecommand-export-schematic-fn`, {
-        code: new pulumi.asset.FileArchive("archive.zip"),
+        code: new pulumi.asset.FileArchive("./archive.zip"),
         role: iamForLambda.arn,
         handler: "index.handler",
         runtime: "nodejs18.x"
