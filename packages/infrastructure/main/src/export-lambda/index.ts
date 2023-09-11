@@ -1,6 +1,7 @@
 import { Function } from '@pulumi/aws/lambda'
 import * as archive from "@pulumi/archive";
 import * as aws from "@pulumi/aws";
+import * as pulumi from '@pulumi/pulumi'
 
 export const ExportLambda = () => {
 
