@@ -1,4 +1,8 @@
 {
-  "name": "global-ping-alert",
+  "name": "@hive-command/global-ping-alert",
+  "version": "1.4.15-alpha.264",
+  "publishConfig": {
+    "access": "public"
+  },
   "packageManager": "yarn@3.6.0"
 }
