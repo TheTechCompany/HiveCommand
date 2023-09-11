@@ -2,9 +2,12 @@ import { Function } from '@pulumi/aws/lambda'
 import * as archive from "@pulumi/archive";
 import * as aws from "@pulumi/aws";
 import * as pulumi from '@pulumi/pulumi'
+import { zipDir } from './zipper';
+import yazl from 'yazl';
+import fs from 'fs';
 import path = require('path');
 
-export const ExportLambda = () => {
+export const ExportLambda = async () => {
 
     const assumeRole = aws.iam.getPolicyDocument({
         statements: [{
@@ -19,15 +22,19 @@ export const ExportLambda = () => {
 
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
 
-    
-    const lambda = archive.getFile({
-        type: "zip",
-        sourceDir: path.join(__dirname, "/../../../../lambdas/export-schematic"),
-        outputPath: "lambda_function_payload.zip",
-    });
+    const zip = new yazl.ZipFile();
+
+    await zipDir(
+        zip,
+        path.join(__dirname, "/../../../../lambdas/export-schematic"),
+        null
+    );
+
+    zip.end();
+    zip.outputStream.pipe(fs.createWriteStream("./archive.zip"));
 
     const fn = new Function(`hivecommand-export-schematic-fn`, {
-        code: new pulumi.asset.FileArchive("lambda_function_payload.zip"),
+        code: new pulumi.asset.FileArchive("archive.zip"),
         role: iamForLambda.arn,
         handler: "index.handler",
         runtime: "nodejs18.x"
