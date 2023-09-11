@@ -198,6 +198,11 @@ jobs:
           HEXHIVE_API_URL: ${{ env.HEXHIVE_API_URL }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: archive
+          path: packages/infrastructure/main/src/export-lambda/archive.zip
+
 
   deploy-db:
     name: Deploy DB Migration
