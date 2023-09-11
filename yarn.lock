@@ -3323,6 +3323,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert"
+  languageName: unknown
+  linkType: soft
+
 "@hive-command/iot-cli@workspace:packages/clients/iot-cli":
   version: 0.0.0-use.local
   resolution: "@hive-command/iot-cli@workspace:packages/clients/iot-cli"
@@ -16119,12 +16125,6 @@ __metadata:
   checksum: d6197f25856c878c2fb5f038899f2dca7cbb2f7b7cf8999660c0104972d5cfa5c68b5a0a77fa8206bb536c3903a4615665acb9709b4d80846e1bb47eaef65430
   languageName: node
   linkType: hard
-
-"global-ping-alert@workspace:packages/network/global-ping-alert":
-  version: 0.0.0-use.local
-  resolution: "global-ping-alert@workspace:packages/network/global-ping-alert"
-  languageName: unknown
-  linkType: soft
 
 "global-prefix@npm:^3.0.0":
   version: 3.0.0
