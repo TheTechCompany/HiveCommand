@@ -28,7 +28,6 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
         const address = listener.address();
 
         if(typeof(address) != 'string'){
-            console.log(address?.port)
 
                 const browser = await puppeteer.launch({headless: false});
 
@@ -60,9 +59,9 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
                 const pdfBuffer = await pdfDoc.save()
 
                 writeFileSync(path.join(__dirname, 'test.pdf'), pdfBuffer)
-                // await browser.close();
 
-                // listener.close()
+                browser.close();
+                listener.close();
 
         }
     })
