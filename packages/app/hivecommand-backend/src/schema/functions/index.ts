@@ -165,6 +165,7 @@ export default (prisma: PrismaClient) => {
                             name: args.input.name,
 							...parentUpdate
 							
+
                             // nodes: args.input.nodes,
                             // edges: args.input.edges,
                                     // schematic: {
