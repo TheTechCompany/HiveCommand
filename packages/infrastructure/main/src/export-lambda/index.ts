@@ -2,6 +2,7 @@ import { Function } from '@pulumi/aws/lambda'
 import * as archive from "@pulumi/archive";
 import * as aws from "@pulumi/aws";
 import * as pulumi from '@pulumi/pulumi'
+import path = require('path');
 
 export const ExportLambda = () => {
 
@@ -20,7 +21,7 @@ export const ExportLambda = () => {
     
     const lambda = archive.getFile({
         type: "zip",
-        sourceFile: "lambda.js",
+        sourceFile: path.join(__dirname, "lambda.js"),
         outputPath: "lambda_function_payload.zip",
     });
 
