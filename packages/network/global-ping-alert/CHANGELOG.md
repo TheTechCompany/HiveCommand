@@ -5,12 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.4.15-alpha.265](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.264...v1.4.15-alpha.265) (2023-09-11)
 
-**Note:** Version bump only for package @hive-command/export-page
-
-
-
-
-
-## [1.4.15-alpha.264](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.263...v1.4.15-alpha.264) (2023-08-25)
-
-**Note:** Version bump only for package @hive-command/export-page
+**Note:** Version bump only for package @hive-command/global-ping-alert
