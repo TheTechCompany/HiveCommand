@@ -2923,7 +2923,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/amqp-client@^1.4.15-alpha.264, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
+"@hive-command/amqp-client@^1.4.15-alpha.265, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-client@workspace:packages/communication/amqp-client"
   dependencies:
@@ -2934,12 +2934,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/amqp-hub@^1.4.15-alpha.264, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
+"@hive-command/amqp-hub@^1.4.15-alpha.265, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-hub@workspace:packages/communication/amqp-hub"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.264
-    "@hive-command/data": ^1.4.15-alpha.264
+    "@hive-command/amqp-client": ^1.4.15-alpha.265
+    "@hive-command/data": ^1.4.15-alpha.265
     "@types/amqplib": ^0.10.1
     amqplib: ^0.10.3
     dotenv: ^16.0.3
@@ -2949,7 +2949,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/api@^1.4.15-alpha.264, @hive-command/api@workspace:packages/app/hivecommand-api":
+"@hive-command/api@^1.4.15-alpha.265, @hive-command/api@workspace:packages/app/hivecommand-api":
   version: 0.0.0-use.local
   resolution: "@hive-command/api@workspace:packages/app/hivecommand-api"
   dependencies:
@@ -2974,9 +2974,9 @@ __metadata:
     "@allenbradley/l5x": ^1.0.0-beta.5
     "@casl/ability": ^6.5.0
     "@hexhive/graphql-server": 1.0.2-beta.62
-    "@hive-command/amqp-client": ^1.4.15-alpha.264
-    "@hive-command/data": ^1.4.15-alpha.264
-    "@hive-command/scripting": ^1.4.15-alpha.264
+    "@hive-command/amqp-client": ^1.4.15-alpha.265
+    "@hive-command/data": ^1.4.15-alpha.265
+    "@hive-command/scripting": ^1.4.15-alpha.265
     "@prisma/client": ^3.12.0
     "@types/amqplib": ^0.8.2
     "@types/cors": ^2.8.12
@@ -3006,7 +3006,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/canvas-nodes@^1.4.15-alpha.264, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
+"@hive-command/canvas-nodes@^1.4.15-alpha.265, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
   version: 0.0.0-use.local
   resolution: "@hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes"
   dependencies:
@@ -3028,7 +3028,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/command-surface@^1.4.15-alpha.264, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
+"@hive-command/command-surface@^1.4.15-alpha.265, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
   version: 0.0.0-use.local
   resolution: "@hive-command/command-surface@workspace:packages/core-ui/command-surface"
   dependencies:
@@ -3038,9 +3038,9 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.45
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.264
-    "@hive-command/remote-components": ^1.4.15-alpha.264
-    "@hive-command/scripting": ^1.4.15-alpha.264
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.265
+    "@hive-command/remote-components": ^1.4.15-alpha.265
+    "@hive-command/scripting": ^1.4.15-alpha.265
     "@mui/material": 5.10.11
     "@mui/system": ^5.13.6
     "@testing-library/react": 12.0.0
@@ -3075,7 +3075,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/data@^1.4.15-alpha.264, @hive-command/data@workspace:packages/core/command-data":
+"@hive-command/data@^1.4.15-alpha.265, @hive-command/data@workspace:packages/core/command-data":
   version: 0.0.0-use.local
   resolution: "@hive-command/data@workspace:packages/core/command-data"
   dependencies:
@@ -3085,7 +3085,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/drivers-base@^1.4.15-alpha.264, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
+"@hive-command/drivers-base@^1.4.15-alpha.265, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-base@workspace:packages/drivers/command-driver"
   dependencies:
@@ -3099,7 +3099,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-ethernet-ip@workspace:packages/drivers/command-ethernet-ip"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.264
+    "@hive-command/drivers-base": ^1.4.15-alpha.265
     "@hive-command/ethernet-ip": ^2.5.6-alpha.37
     jest: ^27.x
     observable-fns: ^0.6.1
@@ -3111,17 +3111,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-opcua@workspace:packages/drivers/command-opcua"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.264
-    "@hive-command/opcua-client": ^1.4.15-alpha.264
+    "@hive-command/drivers-base": ^1.4.15-alpha.265
+    "@hive-command/opcua-client": ^1.4.15-alpha.265
     typescript: ^4.3.5
   languageName: unknown
   linkType: soft
 
-"@hive-command/electrical-editor@^1.4.15-alpha.264, @hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor":
+"@hive-command/electrical-editor@^1.4.15-alpha.265, @hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor":
   version: 0.0.0-use.local
   resolution: "@hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor"
   dependencies:
-    "@hive-command/remote-components": ^1.4.15-alpha.264
+    "@hive-command/remote-components": ^1.4.15-alpha.265
     typescript: ^5.1.6
   peerDependencies:
     "@mui/material": "*"
@@ -3144,7 +3144,7 @@ __metadata:
   resolution: "@hive-command/enip-bridge@workspace:packages/communication/opc-ethernet-ip-bridge"
   dependencies:
     "@hive-command/ethernet-ip": ^2.5.6-alpha.31
-    "@hive-command/opcua-server": ^1.4.15-alpha.264
+    "@hive-command/opcua-server": ^1.4.15-alpha.265
     "@types/express": ^4.17.14
     express: ^4.18.2
     jest: ^29.4.2
@@ -3169,7 +3169,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/evented-values@^1.4.15-alpha.264, @hive-command/evented-values@workspace:packages/core/evented-values":
+"@hive-command/evented-values@^1.4.15-alpha.265, @hive-command/evented-values@workspace:packages/core/evented-values":
   version: 0.0.0-use.local
   resolution: "@hive-command/evented-values@workspace:packages/core/evented-values"
   dependencies:
@@ -3222,13 +3222,13 @@ __metadata:
     "@hexhive/auth-ui": 1.0.2-beta.44
     "@hexhive/styles": 1.0.1-alpha.84
     "@hexhive/ui": 1.0.1-alpha.119
-    "@hive-command/api": ^1.4.15-alpha.264
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.264
-    "@hive-command/command-surface": ^1.4.15-alpha.264
+    "@hive-command/api": ^1.4.15-alpha.265
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.265
+    "@hive-command/command-surface": ^1.4.15-alpha.265
     "@hive-command/data-types": ^1.4.15-alpha.52
-    "@hive-command/electrical-editor": ^1.4.15-alpha.264
-    "@hive-command/remote-components": ^1.4.15-alpha.264
-    "@hive-command/scripting": ^1.4.15-alpha.264
+    "@hive-command/electrical-editor": ^1.4.15-alpha.265
+    "@hive-command/remote-components": ^1.4.15-alpha.265
+    "@hive-command/scripting": ^1.4.15-alpha.265
     "@monaco-editor/react": ^4.4.6
     "@mui/icons-material": ^5.6.2
     "@mui/lab": ^5.0.0-alpha.105
@@ -3307,9 +3307,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/gds@workspace:packages/network/global-discovery-network"
   dependencies:
-    "@hive-command/amqp-hub": ^1.4.15-alpha.264
-    "@hive-command/data": ^1.4.15-alpha.264
-    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.264
+    "@hive-command/amqp-hub": ^1.4.15-alpha.265
+    "@hive-command/data": ^1.4.15-alpha.265
+    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.265
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.14
     "@types/jsonwebtoken": ^8.5.9
@@ -3333,7 +3333,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/iot-cli@workspace:packages/clients/iot-cli"
   dependencies:
-    "@hive-command/local-sidecar": ^1.4.15-alpha.264
+    "@hive-command/local-sidecar": ^1.4.15-alpha.265
     axios: ^1.3.3
     loglevel: ^1.8.1
     typescript: ^4.3.5
@@ -3342,13 +3342,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/local-sidecar@^1.4.15-alpha.264, @hive-command/local-sidecar@workspace:packages/core/command-local-sidecar":
+"@hive-command/local-sidecar@^1.4.15-alpha.265, @hive-command/local-sidecar@workspace:packages/core/command-local-sidecar":
   version: 0.0.0-use.local
   resolution: "@hive-command/local-sidecar@workspace:packages/core/command-local-sidecar"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.264
-    "@hive-command/drivers-base": ^1.4.15-alpha.264
-    "@hive-command/evented-values": ^1.4.15-alpha.264
+    "@hive-command/amqp-client": ^1.4.15-alpha.265
+    "@hive-command/drivers-base": ^1.4.15-alpha.265
+    "@hive-command/evented-values": ^1.4.15-alpha.265
     "@hive-command/threads": ^1.7.0
     "@types/express": ^4.17.14
     "@types/pg": ^8.6.5
@@ -3379,8 +3379,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/mqtt-auth-server@workspace:packages/network/mqtt-auth-server"
   dependencies:
-    "@hive-command/data": ^1.4.15-alpha.264
-    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.264
+    "@hive-command/data": ^1.4.15-alpha.265
+    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.265
     "@types/body-parser": ^1.19.2
     "@types/cors": ^2.8.13
     "@types/express": ^4.17.17
@@ -3402,11 +3402,11 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.77
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/api": ^1.4.15-alpha.264
-    "@hive-command/command-surface": ^1.4.15-alpha.264
-    "@hive-command/local-sidecar": ^1.4.15-alpha.264
-    "@hive-command/remote-components": ^1.4.15-alpha.264
-    "@hive-command/scripting": ^1.4.15-alpha.264
+    "@hive-command/api": ^1.4.15-alpha.265
+    "@hive-command/command-surface": ^1.4.15-alpha.265
+    "@hive-command/local-sidecar": ^1.4.15-alpha.265
+    "@hive-command/remote-components": ^1.4.15-alpha.265
+    "@hive-command/scripting": ^1.4.15-alpha.265
     "@monaco-editor/react": ^4.4.6
     "@mui/icons-material": ^5.11.16
     "@mui/lab": 5.0.0-alpha.102
@@ -3442,9 +3442,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-amqp-bridge@workspace:packages/communication/opc-amqp-bridge"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.264
-    "@hive-command/opcua-client": ^1.4.15-alpha.264
-    "@hive-command/scripting": ^1.4.15-alpha.264
+    "@hive-command/amqp-client": ^1.4.15-alpha.265
+    "@hive-command/opcua-client": ^1.4.15-alpha.265
+    "@hive-command/scripting": ^1.4.15-alpha.265
     jest: 27.x
     lodash: ^4.17.21
     loglevel: ^1.8.1
@@ -3454,12 +3454,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-client@^1.4.15-alpha.264, @hive-command/opcua-client@workspace:packages/communication/opc-client":
+"@hive-command/opcua-client@^1.4.15-alpha.265, @hive-command/opcua-client@workspace:packages/communication/opc-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-client@workspace:packages/communication/opc-client"
   dependencies:
-    "@hive-command/opcua-server": ^1.4.15-alpha.264
-    "@hive-command/opcua-utils": ^1.4.15-alpha.264
+    "@hive-command/opcua-server": ^1.4.15-alpha.265
+    "@hive-command/opcua-utils": ^1.4.15-alpha.265
     "@sinonjs/fake-timers": ^10.0.2
     "@types/jest": ^27.0.3
     "@types/sinon": ^10.0.13
@@ -3476,12 +3476,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-server@^1.4.15-alpha.264, @hive-command/opcua-server@workspace:packages/communication/opc-server":
+"@hive-command/opcua-server@^1.4.15-alpha.265, @hive-command/opcua-server@workspace:packages/communication/opc-server":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-server@workspace:packages/communication/opc-server"
   dependencies:
-    "@hive-command/opcua-client": ^1.4.15-alpha.264
-    "@hive-command/opcua-utils": ^1.4.15-alpha.264
+    "@hive-command/opcua-client": ^1.4.15-alpha.265
+    "@hive-command/opcua-utils": ^1.4.15-alpha.265
     "@types/jest": ^27.0.3
     jest: ^26.6.3
     node-opcua: 2.68.1
@@ -3492,7 +3492,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-utils@^1.4.15-alpha.264, @hive-command/opcua-utils@workspace:packages/communication/opc-utils":
+"@hive-command/opcua-utils@^1.4.15-alpha.265, @hive-command/opcua-utils@workspace:packages/communication/opc-utils":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-utils@workspace:packages/communication/opc-utils"
   dependencies:
@@ -3503,7 +3503,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/rabbitmq-auth@^1.4.15-alpha.264, @hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth":
+"@hive-command/rabbitmq-auth@^1.4.15-alpha.265, @hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth":
   version: 0.0.0-use.local
   resolution: "@hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth"
   dependencies:
@@ -3513,7 +3513,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/remote-components@^1.4.15-alpha.264, @hive-command/remote-components@workspace:^, @hive-command/remote-components@workspace:packages/core-ui/command-remote-components":
+"@hive-command/remote-components@^1.4.15-alpha.265, @hive-command/remote-components@workspace:^, @hive-command/remote-components@workspace:packages/core-ui/command-remote-components":
   version: 0.0.0-use.local
   resolution: "@hive-command/remote-components@workspace:packages/core-ui/command-remote-components"
   dependencies:
@@ -3550,7 +3550,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scripting@^1.4.15-alpha.264, @hive-command/scripting@workspace:packages/core/command-scripting":
+"@hive-command/scripting@^1.4.15-alpha.265, @hive-command/scripting@workspace:packages/core/command-scripting":
   version: 0.0.0-use.local
   resolution: "@hive-command/scripting@workspace:packages/core/command-scripting"
   dependencies:
