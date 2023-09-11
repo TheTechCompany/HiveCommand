@@ -13,6 +13,7 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
     const pdfDoc = await PDFDocument.create();
 
     const app = express();
+    
 
     app.use(express.static(path.dirname(html_index)));
 
