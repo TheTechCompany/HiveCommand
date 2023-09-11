@@ -41,7 +41,6 @@ const prisma = new PrismaClient();
 
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
-
 	const graphServer = new HiveGraph({
 		dev: false,
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
@@ -68,21 +67,7 @@ const prisma = new PrismaClient();
 				actions: ['create', 'read', 'update', 'delete']
 			}
 		],
-		// aclPermissions: [
-		// 	can: 'Manage',
-		// 	device: ''
-		// 	{
-		// 		action: 'CONTROL_DEVICES',
-		// 		args: {
-		// 			ids: '[String]'
-		// 		},
-
-		// 	}
-		// 	'CONTROL_DEVICE', - Device
-		// 	'GET_DEVICES', Device - id, ids
-		// 	'GET_DEVICE_INFO', - Device
-		// 	'CREATE_PROGRAM', - Program
-		// ],
+	
 		contextFactory: contextFactory
 	})
 
