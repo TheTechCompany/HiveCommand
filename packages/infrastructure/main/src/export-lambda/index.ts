@@ -22,7 +22,7 @@ export const ExportLambda = () => {
     
     const lambda = archive.getFile({
         type: "zip",
-        sourceDir: path.join(__dirname, "/../../../../lambdas/export-schematic/"),
+        sourceDir: path.join(__dirname, "/../../../../lambdas/export-schematic"),
         outputPath: "lambda_function_payload.zip",
     });
 
