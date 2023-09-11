@@ -24,6 +24,8 @@ export const ExportLambda = async () => {
 
     const zip = new yazl.ZipFile();
 
+    const zipPath = path.join(__dirname, "./archive.zip");
+
     await zipDir(
         zip,
         path.join(__dirname, "/../../../../lambdas/export-schematic"),
@@ -31,10 +33,10 @@ export const ExportLambda = async () => {
     );
 
     zip.end();
-    zip.outputStream.pipe(fs.createWriteStream("./archive.zip"));
+    zip.outputStream.pipe(fs.createWriteStream(zipPath));
 
     const fn = new Function(`hivecommand-export-schematic-fn`, {
-        code: new pulumi.asset.FileArchive("./archive.zip"),
+        code: new pulumi.asset.FileArchive(zipPath),
         role: iamForLambda.arn,
         handler: "index.handler",
         runtime: "nodejs18.x"
