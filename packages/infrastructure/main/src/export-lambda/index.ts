@@ -20,7 +20,7 @@ export const ExportLambda = () => {
     
     const lambda = archive.getFile({
         type: "zip",
-        sourceFile: "lambda.js",
+        sourceFile: path.join(__dirname, "lambda.js"),
         outputPath: "lambda_function_payload.zip",
     });
 
