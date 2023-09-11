@@ -34,6 +34,11 @@ export const FunctionEditor = () => {
                         id
                     }
                     
+                    children {
+                        id
+                        name
+                        label
+                    }
 
                     rank
                 }
@@ -66,8 +71,8 @@ export const FunctionEditor = () => {
     })
 
 
-
-const [ editingPage, setEditingPage ] = useState<any>(null);
+    
+    const [ editingPage, setEditingPage ] = useState<any>(null);
 
     const [ value, setValue ] = useState('');
 
@@ -75,6 +80,25 @@ const [ editingPage, setEditingPage ] = useState<any>(null);
     
     const [ nodes, setNodes, onNodesChange ] = useNodesState<any[]>([]);
     const [ edges, setEdges, onEdgesChange] = useEdgesState<any[]>([]);
+
+    useEffect(() => {
+        setNodes(editingPage?.children?.map((x, ix) => ({
+            id: x?.id, 
+            label: x?.name,
+            position: {
+                x: 50,
+                y: ix * 50
+            },
+            data: {
+                label: x?.name
+                // label: node.label,
+                // width: node.width,
+                // height: node.height
+            }
+        })))
+        setEdges(editingPage?.children?.map((x, ix) => ({id: x?.id, source: x?.id, target: editingPage?.children?.[ix + 1]?.id})))
+
+    }, [editingPage])
 
     useEffect(() => {
 

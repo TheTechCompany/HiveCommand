@@ -3,6 +3,7 @@ import path from 'path';
 import express from 'express';
 import { PDFDocument } from 'pdf-lib';
 import { writeFileSync } from 'fs';
+import chromium from 'chrome-aws-lambda';
 
 const html_index = require.resolve('@hive-command/export-page');
 
@@ -29,7 +30,11 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
         if(typeof(address) != 'string'){
 
-                const browser = await puppeteer.launch({headless: false});
+                const browser = await puppeteer.launch({
+                    args: chromium.args,
+                    headless: chromium.headless,
+                    executablePath: await chromium.executablePath
+                });
 
                 const page = await browser.newPage();
 

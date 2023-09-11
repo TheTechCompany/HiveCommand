@@ -22,14 +22,14 @@ export const ExportLambda = () => {
     
     const lambda = archive.getFile({
         type: "zip",
-        sourceDir: path.join(__dirname, "/../../../lambdas/export-schematic/"),
+        sourceDir: path.join(__dirname, "/../../../../lambdas/export-schematic/"),
         outputPath: "lambda_function_payload.zip",
     });
 
     const fn = new Function(`hivecommand-export-schematic-fn`, {
         code: new pulumi.asset.FileArchive("lambda_function_payload.zip"),
         role: iamForLambda.arn,
-        handler: "index.test",
+        handler: "index.handler",
         runtime: "nodejs18.x"
     })
 

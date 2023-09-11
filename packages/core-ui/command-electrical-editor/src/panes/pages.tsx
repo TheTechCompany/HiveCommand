@@ -79,8 +79,8 @@ export const PagesPane = (props: any) => {
                         }}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ flex: 1 }}><Button onClick={props.onExport}>Export</Button></Box>
-                        <Box sx={{ flex: 1 }}>
+                        <Box sx={{ flex: 1 }}><Button size="small" variant='contained' onClick={props.onExport}>Export</Button></Box>
+                        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                             <Typography>Pages</Typography>
                         </Box>
                         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
@@ -89,7 +89,7 @@ export const PagesPane = (props: any) => {
                             </IconButton>
                         </Box>
                     </Box>
-                    <Divider />
+                    <Divider sx={{margin: '6px'}}/>
                     
                     <List>
                         {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (

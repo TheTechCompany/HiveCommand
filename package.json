@@ -4,14 +4,9 @@
   "description": "",
   "main": "index.js",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/**/*"
-    ],
-    "nohoist": [
-      "packages/lambdas/**"
-    ]
-  },
+  "workspaces": [
+    "packages/**/*"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TheTechCompany/HiveCommandClient.git"
