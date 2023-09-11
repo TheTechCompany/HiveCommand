@@ -55,7 +55,6 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
                 }
 
-
                 const pdfBuffer = await pdfDoc.save()
 
                 writeFileSync(path.join(__dirname, 'test.pdf'), pdfBuffer)

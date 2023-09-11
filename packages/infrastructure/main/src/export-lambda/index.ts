@@ -16,12 +16,13 @@ export const ExportLambda = () => {
             actions: ["sts:AssumeRole"],
         }],
     });
+
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
 
     
     const lambda = archive.getFile({
         type: "zip",
-        sourceFile: path.join(__dirname, "lambda.js"),
+        sourceDir: path.join(__dirname, "/../../../lambdas/export-schematic/"),
         outputPath: "lambda_function_payload.zip",
     });
 
