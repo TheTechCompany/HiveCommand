@@ -1,5 +1,6 @@
 {
     "name": "hivecommand-mqtt",
+    "private": true,
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^16"
