@@ -41,8 +41,6 @@ const prisma = new PrismaClient();
 
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
-	console.log({typeDefs})
-
 
 	const graphServer = new HiveGraph({
 		dev: false,
