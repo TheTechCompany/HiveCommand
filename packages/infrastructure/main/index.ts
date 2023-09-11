@@ -9,7 +9,7 @@ import { Service } from './src/service'
 // import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
-
+import { ExportLambda } from './src/export-lambda'
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -61,6 +61,7 @@ const main = (async () => {
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 
+    const exportFn = await ExportLambda();
 
 
     const deployment = await all([rootServer, internalURL]).apply(async ([url, internal]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`));

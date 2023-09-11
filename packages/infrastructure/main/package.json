@@ -6,6 +6,7 @@
         "dotenv": "^16.0.1"
     },
     "dependencies": {
+        "@pulumi/archive": "^0.0.2",
         "@pulumi/aws": "^5.0.0",
         "@pulumi/awsx": "^0.40.0",
         "@pulumi/eks": "^0.37.1",

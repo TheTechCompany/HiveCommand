@@ -11,9 +11,10 @@ import { ApolloLink } from "@apollo/client";
 import { Observable } from "@apollo/client/utilities";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
-import { SchematicEditor } from "./views/schematic-editor";
 // import { DeviceControlView } from "./pages/device-control";
 
+const SchematicEditor = lazy(() => import('./views/schematic-editor').then((r) => ({default: r.SchematicEditor})) )
+const FunctionEditor = lazy(() => import('./views/function-editor').then((r) => ({default: r.FunctionEditor})) )
 const DeviceControlView = lazy(() => import('./pages/device-control').then((r) => ({default: r.DeviceControlView}) ))
 const EditorPage = lazy(() => import('./views/Editor').then((r) => ({default: r.EditorPage }) ))
 
@@ -155,6 +156,7 @@ function App(props: any) {
 
                     <Route path={`programs/:id/*`} element={<EditorPage />} />
                     <Route path={`schematics/:id/*`} element={<SchematicEditor />} />
+                    <Route path={`functions/:id/*`} element={<FunctionEditor />} />
                     <Route path={'*'} element={<Dashboard />} />
                     <Route path={`:id/controls`} element={<DeviceControlView />} />
 

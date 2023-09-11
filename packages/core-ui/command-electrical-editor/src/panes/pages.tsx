@@ -1,4 +1,4 @@
-import { IconButton, Paper, Box, Typography, Divider, List, ListItem, ListItemButton } from '@mui/material';
+import { IconButton, Paper, Box, Typography, Divider, List, ListItem, ListItemButton, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { Add, DragHandle } from '@mui/icons-material'
 import { PageModal } from '../components/page-modal';
@@ -79,7 +79,7 @@ export const PagesPane = (props: any) => {
                         }}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ flex: 1 }}></Box>
+                        <Box sx={{ flex: 1 }}><Button onClick={props.onExport}>Export</Button></Box>
                         <Box sx={{ flex: 1 }}>
                             <Typography>Pages</Typography>
                         </Box>

@@ -6,6 +6,7 @@
     "packages/clients/*",
     "packages/network/*",
     "packages/drivers/*",
+    "packages/infrastructure/*",
     "packages/app/*"
   ],
   "npmClient": "yarn",

@@ -64,6 +64,10 @@ const prisma = new PrismaClient();
 			{
 				name: 'CommandSchematic',
 				actions: ['create', 'read', 'update', 'delete']
+			},
+			{
+				name: 'CommandFunction',
+				actions: ['create', 'read', 'update', 'delete']
 			}
 		],
 		// aclPermissions: [

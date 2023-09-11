@@ -23,6 +23,8 @@ export interface ECadEditorProps {
     onCreatePage?: (page: any) => void;
     onUpdatePage?: (page: any, log?: string) => void;
     onUpdatePageOrder?: (oldIx: number, newIx: number) => void;
+    
+    onExport?: () => void;
 }
 
 export const Tools = [
@@ -127,9 +129,9 @@ export const ECadEditor : React.FC<ECadEditorProps> = (props) => {
             }}
         >
                 <Paper
-                  
                     sx={{ flex: 1, display: 'flex', height: '100vh' }}>
                     <PagesPane
+                        onExport={props.onExport}
                         onCreatePage={props.onCreatePage}
                         onSelectPage={(page: any) => setSelectedPage(page.id)}
                         />

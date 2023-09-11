@@ -233,6 +233,45 @@ model IOTemplateState {
   deviceId String
 }
 
+model FunctionalDescription {
+  id String @id
+  name String
+
+  pages FunctionalDescriptionPage[] @relation(name: "hasFDPage")
+
+  organisation String
+
+  createdAt DateTime @default(now())
+}
+
+model FunctionalDescriptionPage {
+  id String @id
+  name String
+
+  rank String
+
+  blocks FunctionalDescriptionBlock[] @relation(name: "hasFDBlock")
+
+  parent FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
+  parentId String?
+  
+  children FunctionalDescriptionPage[] @relation(name: "hasFDParent")
+
+  functionalDescription FunctionalDescription @relation(name: "hasFDPage", references: [id], fields: [functionalDescriptionId])
+  functionalDescriptionId String
+}
+
+model FunctionalDescriptionBlock {
+  id String @id
+
+  rank String
+
+  text String
+  
+  page FunctionalDescriptionPage @relation(name: "hasFDBlock", references: [id], fields: [pageId])
+  pageId String 
+}
+
 model ElectricalSchematic {
   id String @id
 
@@ -243,6 +282,8 @@ model ElectricalSchematic {
   pages ElectricalSchematicPage[] @relation(name: "hasPages")
 
   organisation String
+
+  createdAt DateTime @default(now())
 }
 
 model ElectricalSchematicPage {
@@ -257,6 +298,8 @@ model ElectricalSchematicPage {
 
   schematic ElectricalSchematic @relation(name: "hasPages", fields: [schematicId], references: [id])
   schematicId String
+
+  createdAt DateTime @default(now())
 }
 
 model Program {
