@@ -68,21 +68,7 @@ const prisma = new PrismaClient();
 				actions: ['create', 'read', 'update', 'delete']
 			}
 		],
-		// aclPermissions: [
-		// 	can: 'Manage',
-		// 	device: ''
-		// 	{
-		// 		action: 'CONTROL_DEVICES',
-		// 		args: {
-		// 			ids: '[String]'
-		// 		},
-
-		// 	}
-		// 	'CONTROL_DEVICE', - Device
-		// 	'GET_DEVICES', Device - id, ids
-		// 	'GET_DEVICE_INFO', - Device
-		// 	'CREATE_PROGRAM', - Program
-		// ],
+	
 		contextFactory: contextFactory
 	})
 
