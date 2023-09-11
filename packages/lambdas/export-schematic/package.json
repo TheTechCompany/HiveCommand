@@ -1,0 +1,11 @@
+{
+  "name": "export-schematic",
+  "private": true,
+  "packageManager": "yarn@3.6.0",
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
+  "dependencies": {
+    "@hive-command/schematic-export": "workspace:^"
+  }
+}

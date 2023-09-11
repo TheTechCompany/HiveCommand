@@ -3524,7 +3524,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/schematic-export@workspace:packages/core/command-schematic-export":
+"@hive-command/schematic-export@workspace:^, @hive-command/schematic-export@workspace:packages/core/command-schematic-export":
   version: 0.0.0-use.local
   resolution: "@hive-command/schematic-export@workspace:packages/core/command-schematic-export"
   dependencies:
@@ -15094,6 +15094,14 @@ __metadata:
   checksum: 3d21519a4f8207c99f7457287291316306255a328770d320b401114ec8481986e4e467e854cb9914dd965e0a1ca810a23ccb559c642c88f4c7f55c55778a9b48
   languageName: node
   linkType: hard
+
+"export-schematic@workspace:packages/lambdas/export-schematic":
+  version: 0.0.0-use.local
+  resolution: "export-schematic@workspace:packages/lambdas/export-schematic"
+  dependencies:
+    "@hive-command/schematic-export": "workspace:^"
+  languageName: unknown
+  linkType: soft
 
 "express-graphql@npm:^0.12.0":
   version: 0.12.0
