@@ -12,7 +12,7 @@ import aws from 'aws-sdk';
 
 export default (prisma: PrismaClient) => {
 	
-	const lambda = new aws.Lambda()
+	const lambda = new aws.Lambda({region: 'ap-southeast-2'})
 
 	const resolvers = mergeResolvers([
 		{

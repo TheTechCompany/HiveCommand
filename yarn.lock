@@ -4187,10 +4187,9 @@ __metadata:
   resolution: "@hive-command/schematic-export@workspace:packages/core/command-schematic-export"
   dependencies:
     "@hive-command/export-page": "workspace:^"
-    chrome-aws-lambda: ^10.1.0
     express: ^4.18.2
     pdf-lib: ^1.17.1
-    puppeteer: ^21.1.0
+    puppeteer-core: ^21.1.1
     typescript: ^5.1.6
   languageName: unknown
   linkType: soft
@@ -7579,6 +7578,16 @@ __metadata:
   version: 3.1.0
   resolution: "@socket.io/component-emitter@npm:3.1.0"
   checksum: db069d95425b419de1514dffe945cc439795f6a8ef5b9465715acf5b8b50798e2c91b8719cbf5434b3fe7de179d6cdcd503c277b7871cb3dd03febb69bdd50fa
+  languageName: node
+  linkType: hard
+
+"@sparticuz/chromium@npm:^116.0.0":
+  version: 116.0.0
+  resolution: "@sparticuz/chromium@npm:116.0.0"
+  dependencies:
+    follow-redirects: ^1.15.2
+    tar-fs: ^3.0.4
+  checksum: 61fc331415eb0ae192f0bc45d188035a2b23020b6fe0dd134c40cf75491a4146340036822d349809b8ffceb87e33f345f8d5e9471fe621ed13815839e261a81f
   languageName: node
   linkType: hard
 
@@ -12435,17 +12444,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chrome-aws-lambda@npm:^10.1.0":
-  version: 10.1.0
-  resolution: "chrome-aws-lambda@npm:10.1.0"
-  dependencies:
-    lambdafs: ^2.0.3
-  peerDependencies:
-    puppeteer-core: ^10.1.0
-  checksum: e5ad2dc68cfaf33123fd94503fdacd1744f127f097a1a20e40a07a2e0b9f97ce7650aaec96a3ae6a941e86a2757d7c426f7d4171bff997e8d1454c4be1f298e0
-  languageName: node
-  linkType: hard
-
 "chrome-trace-event@npm:^1.0.2":
   version: 1.0.3
   resolution: "chrome-trace-event@npm:1.0.3"
@@ -12453,14 +12451,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chromium-bidi@npm:0.4.20":
-  version: 0.4.20
-  resolution: "chromium-bidi@npm:0.4.20"
+"chromium-bidi@npm:0.4.22":
+  version: 0.4.22
+  resolution: "chromium-bidi@npm:0.4.22"
   dependencies:
     mitt: 3.0.1
   peerDependencies:
     devtools-protocol: "*"
-  checksum: 397145b3728948d403dbf087af97b7112988ed3c4cf43286754452a4b88f087f2088e1b3f18fa5974ceecc8200ca004ed258e18b784ecb4c6ab1ed78c1b280b0
+  checksum: b17d0e908948792724346d609d857aba79e4a18b3f0d1f65f5cb2b5bd66a576a93661422557e94d7d091644f66c3bc40f2785683d1510845d9ffe865045abab3
   languageName: node
   linkType: hard
 
@@ -13251,18 +13249,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cosmiconfig@npm:8.2.0, cosmiconfig@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "cosmiconfig@npm:8.2.0"
-  dependencies:
-    import-fresh: ^3.2.1
-    js-yaml: ^4.1.0
-    parse-json: ^5.0.0
-    path-type: ^4.0.0
-  checksum: 836d5d8efa750f3fb17b03d6ca74cd3154ed025dffd045304b3ef59637f662bde1e5dc88f8830080d180ec60841719cf4ea2ce73fb21ec694b16865c478ff297
-  languageName: node
-  linkType: hard
-
 "cosmiconfig@npm:^6.0.0":
   version: 6.0.0
   resolution: "cosmiconfig@npm:6.0.0"
@@ -13286,6 +13272,18 @@ __metadata:
     path-type: ^4.0.0
     yaml: ^1.10.0
   checksum: c53bf7befc1591b2651a22414a5e786cd5f2eeaa87f3678a3d49d6069835a9d8d1aef223728e98aa8fec9a95bf831120d245096db12abe019fecb51f5696c96f
+  languageName: node
+  linkType: hard
+
+"cosmiconfig@npm:^8.2.0":
+  version: 8.2.0
+  resolution: "cosmiconfig@npm:8.2.0"
+  dependencies:
+    import-fresh: ^3.2.1
+    js-yaml: ^4.1.0
+    parse-json: ^5.0.0
+    path-type: ^4.0.0
+  checksum: 836d5d8efa750f3fb17b03d6ca74cd3154ed025dffd045304b3ef59637f662bde1e5dc88f8830080d180ec60841719cf4ea2ce73fb21ec694b16865c478ff297
   languageName: node
   linkType: hard
 
@@ -16337,7 +16335,8 @@ __metadata:
     "@aws-sdk/client-s3": ^3.410.0
     "@aws-sdk/s3-request-presigner": ^3.410.0
     "@hive-command/schematic-export": "workspace:^"
-    nanoid: ^4.0.2
+    "@sparticuz/chromium": ^116.0.0
+    nanoid: ^3.x
   languageName: unknown
   linkType: soft
 
@@ -16769,7 +16768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.2":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -21225,17 +21224,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lambdafs@npm:^2.0.3":
-  version: 2.1.1
-  resolution: "lambdafs@npm:2.1.1"
-  dependencies:
-    tar-fs: "*"
-  bin:
-    lambdafs: bin/brotli.js
-  checksum: e277462851769dbb9062096e793d0da67f8bada78be9988bb177ddab91f9335ba1f67ea9fc0768c966dc52381301575945211b6e34061a068b82f127e6848e4e
-  languageName: node
-  linkType: hard
-
 "language-subtag-registry@npm:~0.3.2":
   version: 0.3.22
   resolution: "language-subtag-registry@npm:0.3.22"
@@ -22966,21 +22954,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.1.30, nanoid@npm:^3.3.6":
+"nanoid@npm:^3.1.30, nanoid@npm:^3.3.6, nanoid@npm:^3.x":
   version: 3.3.6
   resolution: "nanoid@npm:3.3.6"
   bin:
     nanoid: bin/nanoid.cjs
   checksum: 7d0eda657002738aa5206107bd0580aead6c95c460ef1bdd0b1a87a9c7ae6277ac2e9b945306aaa5b32c6dcb7feaf462d0f552e7f8b5718abfc6ead5c94a71b3
-  languageName: node
-  linkType: hard
-
-"nanoid@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "nanoid@npm:4.0.2"
-  bin:
-    nanoid: bin/nanoid.js
-  checksum: 747c399cea4664dd0be1d0ec498ffd1ef8f1f5221676fc8b577e3f46f66d9afcddb9595d63d19a2e78d0bc6cc33984f65e66bf1682c850b9e26288883d96b53f
   languageName: node
   linkType: hard
 
@@ -28217,28 +28196,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"puppeteer-core@npm:21.1.0":
-  version: 21.1.0
-  resolution: "puppeteer-core@npm:21.1.0"
+"puppeteer-core@npm:^21.1.1":
+  version: 21.1.1
+  resolution: "puppeteer-core@npm:21.1.1"
   dependencies:
     "@puppeteer/browsers": 1.7.0
-    chromium-bidi: 0.4.20
+    chromium-bidi: 0.4.22
     cross-fetch: 4.0.0
     debug: 4.3.4
     devtools-protocol: 0.0.1159816
     ws: 8.13.0
-  checksum: 1c3f2a2bb6de3ec90808f06f0c3ef769f0854e7df610c16080c1dd5434cedf865f48d5059c5406fa84227aab8bfae7dec789e5701adb800895c7a7ec888cfb04
-  languageName: node
-  linkType: hard
-
-"puppeteer@npm:^21.1.0":
-  version: 21.1.0
-  resolution: "puppeteer@npm:21.1.0"
-  dependencies:
-    "@puppeteer/browsers": 1.7.0
-    cosmiconfig: 8.2.0
-    puppeteer-core: 21.1.0
-  checksum: 15e343dd1c048a0ef228aa52a2df2240dc76d543c379fc9246c41a87f226a2e820c957a911d5fed9e0394c5dd56da5fc163b6626e1219a857268e88cc2544163
+  checksum: b5c854c48a3daa58d43d9c586936c5aedf272b4998b6e8182a34440c1dbe408ea7fd3b9db479a3164e2c92fe44a221ff6413314408ad0dd9031f2e7492edcbbe
   languageName: node
   linkType: hard
 
@@ -31458,7 +31426,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-fs@npm:*, tar-fs@npm:3.0.4":
+"tar-fs@npm:3.0.4, tar-fs@npm:^3.0.4":
   version: 3.0.4
   resolution: "tar-fs@npm:3.0.4"
   dependencies:

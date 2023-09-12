@@ -1,17 +1,22 @@
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import path from 'path';
 import express from 'express';
 import { PDFDocument } from 'pdf-lib';
 import { writeFileSync } from 'fs';
-import chromium from 'chrome-aws-lambda';
 
 const html_index = require.resolve('@hive-command/export-page');
 
-export const export_schematic = async (schematic: {pages: any[]}, outputPath: string) => {
+export const export_schematic = async (schematic: {pages: any[]}, puppeteerArgs?: any) => {
 
     const pages = (schematic?.pages || []).sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
 
+    console.log("Creating PDF Doc...");
+
     const pdfDoc = await PDFDocument.create();
+    
+    console.log("Created PDF Doc!");
+
+    console.log("Starting Express...");
 
     const app = express();
 
@@ -25,50 +30,78 @@ export const export_schematic = async (schematic: {pages: any[]}, outputPath: st
 
     })
 
-    const listener = app.listen(0, async () => {
-        const address = listener.address();
-
-        if(typeof(address) != 'string'){
-
-                const browser = await puppeteer.launch({
-                    args: chromium.args,
-                    headless: chromium.headless,
-                    executablePath: await chromium.executablePath
-                });
-
-                const page = await browser.newPage();
-
-                for(var i = 0; i < pages.length; i++){
-
-                    await page.goto(`http://localhost:${address?.port}#ix=${i}`)
-
-                    // await page.
-                    //@ts-ignore
-                    await page.waitForSelector<any>(".loaded")
-
-                    await new Promise((resolve) => setTimeout(() => resolve(true), 500));
-
-                    const pdfData = await page.pdf({format: 'A4', landscape: true});
-                    
-                    const pdfPage = await PDFDocument.load(pdfData)
-
-                    const copiedPages = await pdfDoc.copyPages(pdfPage, pdfPage.getPageIndices());
-                    copiedPages.forEach((page) => {
-                        pdfDoc.addPage(page); 
-                    }); 
+    return await new Promise((resolve, reject) => {
+        const listener = app.listen(0, async () => {
+            const address = listener.address();
 
 
-                }
+            if(typeof(address) != 'string'){
+                console.log("Started Express! - " + address?.port);
+    
+                    console.log("Launching browser...");
 
-                const pdfBuffer = await pdfDoc.save()
+                    const browser = await puppeteer.launch({
+                        ...puppeteerArgs
+                    });
+    
+                    console.log("Launched browser!");
 
-                writeFileSync(outputPath, pdfBuffer)
+                    const page = await browser.newPage();
+    
+                    for(var i = 0; i < pages.length; i++){
+    
+                        console.log(`Exporting page ${i}...`);
 
-                browser.close();
-                listener.close();
+                        await page.goto(`http://localhost:${address?.port}#ix=${i}`)
+    
+                        console.log(`Exporting page ${i} - OnPage.`);
+    
+                        // await page.
+                        //@ts-ignore
+                        await page.waitForSelector<any>(".loaded")
+    
+                        await new Promise((resolve) => setTimeout(() => resolve(true), 500));
+                        
+                        console.log(`Exporting page ${i} - Waited.`);
 
-        }
-    })
+    
+                        const pdfData = await page.pdf({format: 'A4', landscape: true});
+                        console.log(`Exporting page ${i} - PDF'd.`);
+                        
+                        const pdfPage = await PDFDocument.load(pdfData)
+                        console.log(`Exporting page ${i} - Loaded to PDF.`);
+    
+                        const copiedPages = await pdfDoc.copyPages(pdfPage, pdfPage.getPageIndices());
+                        copiedPages.forEach((page) => {
+                            pdfDoc.addPage(page); 
+                        }); 
+                        console.log(`Exporting page ${i} - Copied to PDF.`);
+
+    
+                        console.log(`Exported page ${i}!`);
+
+    
+                    }
+                    console.log(`Exporting PDF...`);
+    
+                    const pdfBuffer = await pdfDoc.save()
+    
+                    console.log(`Exported PDF!`);
+
+                    // writeFileSync(outputPath, pdfBuffer)
+                    // console.log(`Write PDF!`);
+    
+                    browser.close();
+                    listener.close();
+
+                    console.log(`Close!`);
+
+                    resolve(pdfBuffer);
+    
+            }
+        })
+    });
+    
 
    
 

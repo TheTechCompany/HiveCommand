@@ -20,8 +20,17 @@ export const ExportLambda = async () => {
                 type: "Service",
                 identifiers: ["lambda.amazonaws.com"],
             }],
+            roles
             actions: ["sts:AssumeRole"],
-        }],
+        }, {
+			// "Sid": "VisualEditor0",
+			effect: "Allow",
+			actions: [
+				"s3:PutObject",
+				"s3:GetObject"
+			],
+			resources: [`arn:aws:s3:::${s3.bucket}/*`]
+		}],
     });
 
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
@@ -42,11 +51,14 @@ export const ExportLambda = async () => {
     const fn = new Function(`hivecommand-export-schematic-fn`, {
         code: new pulumi.asset.FileArchive(zipPath),
         role: iamForLambda.arn,
+        timeout: 30,
+        memorySize: 512,
         handler: "index.handler",
         runtime: "nodejs18.x",
+        layers: ['arn:aws:lambda:ap-southeast-2:764866452798:layer:chrome-aws-lambda:33'],
         environment: {
             variables: {
-                BUCKET_NAME: s3.arn
+                BUCKET_NAME: s3.bucket
             }
         }
     })

@@ -7,7 +7,8 @@
     "packages/network/*",
     "packages/drivers/*",
     "packages/infrastructure/*",
-    "packages/app/*"
+    "packages/app/*",
+    "packages/lambdas/*"
   ],
   "npmClient": "yarn",
   "version": "1.4.15-alpha.265"
