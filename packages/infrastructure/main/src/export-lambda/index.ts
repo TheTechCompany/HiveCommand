@@ -26,6 +26,7 @@ export const ExportLambda = async () => {
     });
 
     const s3Document = {
+        Version: "2012-10-17",
         Statement: [
             {
                 Sid: "AllowS3",
