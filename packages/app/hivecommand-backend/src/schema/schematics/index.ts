@@ -7,9 +7,13 @@ import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
 
+import aws from 'aws-sdk';
+
 
 export default (prisma: PrismaClient) => {
 	
+	const lambda = new aws.Lambda()
+
 	const resolvers = mergeResolvers([
 		{
 			
@@ -84,10 +88,21 @@ export default (prisma: PrismaClient) => {
 						where: {
 							id: args.id,
 							organisation: context?.jwt?.organisation
+						},
+						include: {
+							pages: true
 						}
 					})
 
-					
+					const result = await lambda.invoke({
+						FunctionName: process.env.EXPORT_LAMBDA || '',
+						Payload: JSON.stringify({
+							program: currentProgram
+						})
+					}).promise()
+
+					return result.Payload
+				
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
                     

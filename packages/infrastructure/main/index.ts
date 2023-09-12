@@ -63,8 +63,7 @@ const main = (async () => {
 
     const exportFn = await ExportLambda();
 
-
-    const deployment = await all([rootServer, internalURL]).apply(async ([url, internal]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`));
+    const deployment = await all([rootServer, internalURL, exportFn.arn]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn));
     const service = await Service(provider)
 
     return {

@@ -2983,6 +2983,7 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/pg": ^8.6.3
     amqplib: ^0.8.0
+    aws-sdk: ^2.1455.0
     axios: ^0.27.2
     cors: ^2.8.5
     dotenv: ^10.0.0
@@ -10049,6 +10050,24 @@ __metadata:
     uuid: 8.0.0
     xml2js: 0.5.0
   checksum: 494124cded48679ec449bfa1cee54db969141639414b71fd984d519f5cc4904b614a023339ad17f58f89d5ca45e038d9bc89b22bdd4e5b02b138eb0d800162f7
+  languageName: node
+  linkType: hard
+
+"aws-sdk@npm:^2.1455.0":
+  version: 2.1455.0
+  resolution: "aws-sdk@npm:2.1455.0"
+  dependencies:
+    buffer: 4.9.2
+    events: 1.1.1
+    ieee754: 1.1.13
+    jmespath: 0.16.0
+    querystring: 0.2.0
+    sax: 1.2.1
+    url: 0.10.3
+    util: ^0.12.4
+    uuid: 8.0.0
+    xml2js: 0.5.0
+  checksum: da90b4458709554b52e7deb4176ff785a69b62d859986e4682b98a50d46a9e644cd9d0ce8fc07497e7bd1086c3ba02153b6af0a2c49db36599095897bae7d746
   languageName: node
   linkType: hard
 
