@@ -26,15 +26,15 @@ export const ExportLambda = async () => {
     });
 
     const s3Document = {
-        statements: [
+        Statement: [
             {
-                sid: "AllowS3",
-                effect: "Allow",
-                actions: [
+                Sid: "AllowS3",
+                Effect: "Allow",
+                Action: [
                     "s3:PutObject",
                     "s3:GetObject"
                 ],
-                resources: [s3.bucket.apply(bucketName => `arn:aws:s3:::${bucketName}/*`)]
+                Resource: [s3.bucket.apply(bucketName => `arn:aws:s3:::${bucketName}/*`)]
             }
         ]
     }

@@ -51,10 +51,11 @@ export const SchematicEditor = () => {
             }
         }
     `, {
+        
             // refetchQueries: ['GetSchematic'],
             // awaitRefetchQueries: true
         })
-        
+
 
     const [ updatePageOrder ] = useMutation(gql`
         mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
