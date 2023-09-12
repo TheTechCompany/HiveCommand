@@ -168,6 +168,10 @@ jobs:
           echo "HEXHIVE_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/master' }}
       
+      - name: Build export-lambda ui
+        run: yarn build
+        working-directory: packages/core-ui/command-export-page
+
       - name: Build export-lambda
         run: yarn build
         working-directory: packages/core/command-schematic-export
