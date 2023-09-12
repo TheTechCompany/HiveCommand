@@ -10,6 +10,7 @@ import { LexoRank } from 'lexorank';
 
 export default (prisma: PrismaClient) => {
 	
+	
 	const resolvers = mergeResolvers([
 		{
 			Query: {
