@@ -34,6 +34,7 @@ const prisma = new PrismaClient();
 		})
 		await deviceMQ.connect();
 	}
+	
 
 	// const deviceMQ = await amqp.connect(
 	// 	process.env.DEVICE_MQ || ''
