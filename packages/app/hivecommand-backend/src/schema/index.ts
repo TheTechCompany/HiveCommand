@@ -75,7 +75,6 @@ export default (prisma: PrismaClient, deviceChannel?: MQTTPublisher) => {
 		hmiTypeDefs,
 		functionTypeDefs
 	 ])
-	
 
 
 
