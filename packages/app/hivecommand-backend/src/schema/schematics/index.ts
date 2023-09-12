@@ -9,7 +9,6 @@ import { LexoRank } from 'lexorank';
 
 import aws from 'aws-sdk';
 
-
 export default (prisma: PrismaClient) => {
 	
 	const lambda = new aws.Lambda({region: 'ap-southeast-2'})

@@ -1,14 +1,11 @@
 {
   "name": "@hive-command/export-page",
-  "version": "1.4.15-alpha.265",
+  "version": "1.4.15-alpha.266",
   "private": true,
   "main": "build/index.html",
   "files": [
     "build/"
   ],
-  "installConfig": {
-    "hoistingLimits": "none"
-  },
   "dependencies": {
     "@hive-command/remote-components": "workspace:^",
     "@hive-command/schematic-viewer": "workspace:^",

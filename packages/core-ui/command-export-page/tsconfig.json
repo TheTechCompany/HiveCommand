@@ -29,6 +29,7 @@
     "src"
   ],
   "references": [
-    {"path": "../command-schematic-viewer"}
+    {"path": "../command-schematic-viewer"},
+    {"path": "../command-remote-components"}
   ]
 }
