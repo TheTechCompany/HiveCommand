@@ -22,18 +22,18 @@ export const ExportLambda = async () => {
 
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
 
-    const zip = new yazl.ZipFile();
+    // const zip = new yazl.ZipFile();
 
     const zipPath = path.join(__dirname, "./archive.zip");
 
-    await zipDir(
-        zip,
-        path.join(__dirname, "/../../../../lambdas/export-schematic"),
-        null
-    );
+    // await zipDir(
+    //     zip,
+    //     path.join(__dirname, "/../../../../lambdas/export-schematic"),
+    //     null
+    // );
 
-    zip.end();
-    zip.outputStream.pipe(fs.createWriteStream(zipPath));
+    // zip.end();
+    // zip.outputStream.pipe(fs.createWriteStream(zipPath));
 
     const fn = new Function(`hivecommand-export-schematic-fn`, {
         code: new pulumi.asset.FileArchive(zipPath),
