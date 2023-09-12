@@ -93,7 +93,6 @@ export default (prisma: PrismaClient) => {
 							// }
 						}
 					})
-
 					return program
 				},
 				deleteCommandFunction: async (root: any, args: {id: string}, context: any) => {
