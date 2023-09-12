@@ -1,4 +1,4 @@
-const {PutObjectCommand, S3Client} = require("@aws-sdk/client-s3");
+const {PutObjectCommand, GetObjectCommand, S3Client} = require("@aws-sdk/client-s3");
 const {getSignedUrl} = require("@aws-sdk/s3-request-presigner");
 const {export_schematic} = require('@hive-command/schematic-export')
 const path = require('path');
