@@ -6,7 +6,6 @@ import { nanoid } from "nanoid";
 import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
-
 import aws from 'aws-sdk';
 
 export default (prisma: PrismaClient) => {

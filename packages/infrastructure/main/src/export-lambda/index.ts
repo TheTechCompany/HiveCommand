@@ -22,19 +22,36 @@ export const ExportLambda = async () => {
             }],
             // roles
             actions: ["sts:AssumeRole"],
-        }, {
-			sid: "AllowS3",
-			effect: "Allow",
-			actions: [
-				"s3:PutObject",
-				"s3:GetObject"
-			],
-			resources: [`arn:aws:s3:::${s3.bucket}/*`]
-		}],
+        }],
     });
+
+    const s3Document = aws.iam.getPolicyDocument({
+        statements: [
+            {
+                sid: "AllowS3",
+                effect: "Allow",
+                actions: [
+                    "s3:PutObject",
+                    "s3:GetObject"
+                ],
+                resources: [`arn:aws:s3:::${s3.bucket}/*`]
+            }
+        ]
+    })
 
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
 
+    const policyPolicy = new aws.iam.Policy("policyPolicy", {
+        description: "A test policy",
+        policy: s3Document.then(policyPolicyDocument => policyPolicyDocument.json),
+    });
+
+    const policyAttachment = new aws.iam.PolicyAttachment("test-attach", {
+        // users: [user.name],
+        roles: [iamForLambda.name],
+        // groups: [group.name],
+        policyArn: policyPolicy.arn,
+    });
     // const zip = new yazl.ZipFile();
 
     const zipPath = path.join(__dirname, "./archive.zip");
