@@ -63,6 +63,12 @@ export const SchematicEditor = () => {
         refetchQueries: ['GetSchematic']
     })
 
+    const [ exportSchematic ] = useMutation(gql`
+        mutation ExportSchematic ($id: ID){
+            exportCommandSchematic(id: $id)
+        }
+    `)
+
     const debouncedUpdate = useMemo(() => debounce(updatePage, 500), [])
 
 
@@ -91,7 +97,7 @@ export const SchematicEditor = () => {
                 }}
 
                 onExport={() => {
-
+                    exportSchematic({variables: {id: schematic.id}})
                 }}
                 onUpdatePageOrder={(oldIx, newIx) => {
 
