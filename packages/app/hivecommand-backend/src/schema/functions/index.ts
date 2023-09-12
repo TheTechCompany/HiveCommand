@@ -7,6 +7,7 @@ import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
 
+
 export default (prisma: PrismaClient) => {
 	
 	const resolvers = mergeResolvers([
