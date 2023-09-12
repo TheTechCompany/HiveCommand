@@ -7,7 +7,6 @@ import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
 
-
 export default (prisma: PrismaClient) => {
 	
 	const resolvers = mergeResolvers([
@@ -164,7 +163,7 @@ export default (prisma: PrismaClient) => {
                         data: {
                             name: args.input.name,
 							...parentUpdate
-							
+
 
                             // nodes: args.input.nodes,
                             // edges: args.input.edges,

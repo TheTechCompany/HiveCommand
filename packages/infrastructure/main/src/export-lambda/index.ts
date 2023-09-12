@@ -9,6 +9,10 @@ import path = require('path');
 
 export const ExportLambda = async () => {
 
+    const s3 = new aws.s3.Bucket('hivecommand-schematic-export-bucket', {
+        
+    })
+
     const assumeRole = aws.iam.getPolicyDocument({
         statements: [{
             effect: "Allow",
@@ -39,7 +43,12 @@ export const ExportLambda = async () => {
         code: new pulumi.asset.FileArchive(zipPath),
         role: iamForLambda.arn,
         handler: "index.handler",
-        runtime: "nodejs18.x"
+        runtime: "nodejs18.x",
+        environment: {
+            variables: {
+                BUCKET_NAME: s3.arn
+            }
+        }
     })
 
     return fn;

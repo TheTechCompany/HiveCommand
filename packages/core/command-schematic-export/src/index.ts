@@ -7,7 +7,7 @@ import chromium from 'chrome-aws-lambda';
 
 const html_index = require.resolve('@hive-command/export-page');
 
-export const export_schematic = async (schematic: {pages: any[]}) => {
+export const export_schematic = async (schematic: {pages: any[]}, outputPath: string) => {
 
     const pages = (schematic?.pages || []).sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
 
@@ -62,7 +62,7 @@ export const export_schematic = async (schematic: {pages: any[]}) => {
 
                 const pdfBuffer = await pdfDoc.save()
 
-                writeFileSync(path.join(__dirname, 'test.pdf'), pdfBuffer)
+                writeFileSync(outputPath, pdfBuffer)
 
                 browser.close();
                 listener.close();
