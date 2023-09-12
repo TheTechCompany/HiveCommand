@@ -25,20 +25,21 @@ export const ExportLambda = async () => {
         }],
     });
 
-    const s3Document = s3.bucket.apply(bucketName => ({
-        Version: "2012-10-17",
-        Statement: [
-            {
-                Sid: "AllowS3",
-                Effect: "Allow",
-                Action: [
-                    "s3:PutObject",
-                    "s3:GetObject"
-                ],
-                Resource: [`arn:aws:s3:::${bucketName}/*`]
-            }
-        ]
-    }));
+    const s3Document = aws.iam.getPolicyDocumentOutput(s3.bucket.apply(bucketName => ({
+        // Version: "2012-10-17",
+            statements: [
+                {
+                    sid: "AllowS3",
+                    effect: "Allow",
+                    actions: [
+                        "s3:PutObject",
+                        "s3:GetObject"
+                    ],
+                    resources: [`arn:aws:s3:::${bucketName}/*`]
+                }
+            ]
+        }))
+    );
 
 
 
@@ -46,7 +47,7 @@ export const ExportLambda = async () => {
 
     const policyPolicy = new aws.iam.Policy("policyPolicy", {
         description: "A test policy",
-        policy: JSON.stringify(s3Document)
+        policy: s3Document.apply((doc) => doc.json)
     });
 
     const policyAttachment = new aws.iam.PolicyAttachment("test-attach", {
