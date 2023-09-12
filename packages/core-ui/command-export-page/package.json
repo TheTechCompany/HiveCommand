@@ -6,9 +6,6 @@
   "files": [
     "build/"
   ],
-  "installConfig": {
-    "hoistingLimits": "none"
-  },
   "dependencies": {
     "@hive-command/remote-components": "workspace:^",
     "@hive-command/schematic-viewer": "workspace:^",
