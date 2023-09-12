@@ -21,13 +21,13 @@ exports.handler = async function (event, context) {
 
     const id = nanoid();
 
-    const command = new PutObjectCommand({
+    const putCommand = new PutObjectCommand({
         Bucket: process.env.BUCKET_NAME || "test-bucket",
         Key: id,
         Body: fs.readFileSync(pdfPath)
     });
     
-    const response = await client.send(command);
+    const response = await client.send(putCommand);
 
     // await s3.upload({
     //     Bucket: process.env.BUCKET_NAME,
@@ -35,6 +35,8 @@ exports.handler = async function (event, context) {
     //     Body: fs.readFileSync(pdfPath)
     // }).promise();
 
-    return getSignedUrl(client, command, {expiresIn: 3600});
+    const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: id});
+
+    return getSignedUrl(client, getCommand, {expiresIn: 3600});
     // return context.logStreamName;
 };
