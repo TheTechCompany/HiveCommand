@@ -20,7 +20,7 @@ export const ExportLambda = async () => {
                 type: "Service",
                 identifiers: ["lambda.amazonaws.com"],
             }],
-            roles
+            // roles
             actions: ["sts:AssumeRole"],
         }, {
 			// "Sid": "VisualEditor0",
