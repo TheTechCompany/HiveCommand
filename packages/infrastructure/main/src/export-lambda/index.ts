@@ -23,7 +23,7 @@ export const ExportLambda = async () => {
             // roles
             actions: ["sts:AssumeRole"],
         }, {
-			// "Sid": "VisualEditor0",
+			sid: "AllowS3",
 			effect: "Allow",
 			actions: [
 				"s3:PutObject",
