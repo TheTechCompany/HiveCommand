@@ -75,6 +75,7 @@ const prisma = new PrismaClient();
 
 	await graphServer.init()
 	console.log("Graph server init")
+	
 
 	const app = express()
 	
