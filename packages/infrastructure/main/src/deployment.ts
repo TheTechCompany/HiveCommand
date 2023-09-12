@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string) => {
 
     const config = new Config();
 
@@ -33,6 +33,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                         env: [
                             // { name: 'CLIENT_ID', value: process.env.CLIENT_ID || 'test'},
                             // { name: 'CLIENT_SECRET', value: process.env.CLIENT_SECRET || 'secret' },
+                            { name: 'EXPORT_LAMBDA', value: lambdaFunction },
                             { name: 'NODE_ENV', value: 'production' },
                             { name: 'ROOT_SERVER', value: `http://${rootServer}` },
                             { name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`) },

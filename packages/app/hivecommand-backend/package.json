@@ -35,6 +35,7 @@
     "@hive-command/scripting": "^1.4.15-alpha.265",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
+    "aws-sdk": "^2.1455.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
