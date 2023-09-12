@@ -64,7 +64,7 @@ export const SchematicEditor = () => {
     })
 
     const [ exportSchematic ] = useMutation(gql`
-        mutation ExportSchematic ($id: ID){
+        mutation ExportSchematic ($id: ID!){
             exportCommandSchematic(id: $id)
         }
     `)
