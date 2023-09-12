@@ -25,7 +25,7 @@ export const ExportLambda = async () => {
         }],
     });
 
-    const s3Document = aws.iam.getPolicyDocument({
+    const s3Document = {
         statements: [
             {
                 sid: "AllowS3",
@@ -34,16 +34,18 @@ export const ExportLambda = async () => {
                     "s3:PutObject",
                     "s3:GetObject"
                 ],
-                resources: [`arn:aws:s3:::${s3.bucket}/*`]
+                resources: [s3.bucket.apply(bucketName => `arn:aws:s3:::${bucketName}/*`)]
             }
         ]
-    })
+    }
+
+
 
     const iamForLambda = new aws.iam.Role("iamForLambda", {assumeRolePolicy: assumeRole.then(assumeRole => assumeRole.json)});
 
     const policyPolicy = new aws.iam.Policy("policyPolicy", {
         description: "A test policy",
-        policy: s3Document.then(policyPolicyDocument => policyPolicyDocument.json),
+        policy: JSON.stringify(s3Document)
     });
 
     const policyAttachment = new aws.iam.PolicyAttachment("test-attach", {
