@@ -71,7 +71,6 @@ const prisma = new PrismaClient();
 		contextFactory: contextFactory
 	})
 
-
 	console.log("Graph server setup")
 
 	await graphServer.init()
