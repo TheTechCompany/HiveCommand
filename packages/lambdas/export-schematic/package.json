@@ -10,8 +10,5 @@
     "@aws-sdk/s3-request-presigner": "^3.410.0",
     "@hive-command/schematic-export": "workspace:^",
     "nanoid": "^3.x"
-  },
-  "devDependencies": {
-    "@sparticuz/chromium": "^116.0.0"
   }
 }

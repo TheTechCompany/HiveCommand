@@ -7581,16 +7581,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sparticuz/chromium@npm:^116.0.0":
-  version: 116.0.0
-  resolution: "@sparticuz/chromium@npm:116.0.0"
-  dependencies:
-    follow-redirects: ^1.15.2
-    tar-fs: ^3.0.4
-  checksum: 61fc331415eb0ae192f0bc45d188035a2b23020b6fe0dd134c40cf75491a4146340036822d349809b8ffceb87e33f345f8d5e9471fe621ed13815839e261a81f
-  languageName: node
-  linkType: hard
-
 "@ster5/global-mutex@npm:^1.2.0":
   version: 1.3.0
   resolution: "@ster5/global-mutex@npm:1.3.0"
@@ -16335,7 +16325,6 @@ __metadata:
     "@aws-sdk/client-s3": ^3.410.0
     "@aws-sdk/s3-request-presigner": ^3.410.0
     "@hive-command/schematic-export": "workspace:^"
-    "@sparticuz/chromium": ^116.0.0
     nanoid: ^3.x
   languageName: unknown
   linkType: soft
@@ -16768,7 +16757,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.2":
+"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.0, follow-redirects@npm:^1.14.4, follow-redirects@npm:^1.14.9, follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -31426,7 +31415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar-fs@npm:3.0.4, tar-fs@npm:^3.0.4":
+"tar-fs@npm:3.0.4":
   version: 3.0.4
   resolution: "tar-fs@npm:3.0.4"
   dependencies:
