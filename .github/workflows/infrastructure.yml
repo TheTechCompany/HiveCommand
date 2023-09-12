@@ -168,13 +168,8 @@ jobs:
           echo "HEXHIVE_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/master' }}
       
-      - name: Build export-lambda ui
-        run: yarn build
-        working-directory: packages/core-ui/command-export-page
-
       - name: Build export-lambda
-        run: yarn build
-        working-directory: packages/core/command-schematic-export
+        run: npx lerna run build --scope @hive-command/schematic-export --include-dependencies
 
       - name: Install zip
         uses: montudor/action-zip@v1
