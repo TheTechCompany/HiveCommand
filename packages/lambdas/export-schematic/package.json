@@ -6,6 +6,9 @@
     "hoistingLimits": "dependencies"
   },
   "dependencies": {
-    "@hive-command/schematic-export": "workspace:^"
+    "@aws-sdk/client-s3": "^3.410.0",
+    "@aws-sdk/s3-request-presigner": "^3.410.0",
+    "@hive-command/schematic-export": "workspace:^",
+    "nanoid": "^4.0.2"
   }
 }
