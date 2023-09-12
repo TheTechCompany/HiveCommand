@@ -34,7 +34,7 @@ const prisma = new PrismaClient();
 		})
 		await deviceMQ.connect();
 	}
-	
+
 
 	// const deviceMQ = await amqp.connect(
 	// 	process.env.DEVICE_MQ || ''
@@ -49,6 +49,7 @@ const prisma = new PrismaClient();
 			typeDefs: typeDefs,
 			resolvers: resolvers,
 		},
+		
 		resources: [
 			{
 				name: 'CommandDevice', 
