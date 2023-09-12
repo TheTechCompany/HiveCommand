@@ -12,6 +12,7 @@ export default (prisma: PrismaClient) => {
 			commandDeviceTimeseries(deviceId: String, device: String, valueKey: String, startDate: String): [CommandDeviceTimeseriesData]
 			commandDeviceTimeseriesTotal(deviceId: String, device: String, valueKey: String, startDate: String, endDate: String): CommandDeviceTimeseriesTotal
 		}
+		
 
 		type Mutation {
 			createCommandDeviceReport(page: ID, input: CommandDeviceReportInput): CommandDeviceReport
