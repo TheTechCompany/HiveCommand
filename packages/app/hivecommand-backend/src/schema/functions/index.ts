@@ -12,7 +12,6 @@ export default (prisma: PrismaClient) => {
 	
 	const resolvers = mergeResolvers([
 		{
-	
 			Query: {
 				commandFunctions: async (root: any, args: any, context: any) => {
 
