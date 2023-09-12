@@ -25,7 +25,7 @@ export const ExportLambda = async () => {
         }],
     });
 
-    const s3Document = {
+    const s3Document = s3.bucket.apply(bucketName => ({
         Version: "2012-10-17",
         Statement: [
             {
@@ -35,10 +35,10 @@ export const ExportLambda = async () => {
                     "s3:PutObject",
                     "s3:GetObject"
                 ],
-                Resource: [s3.bucket.apply(bucketName => `arn:aws:s3:::${bucketName}/*`)]
+                Resource: [`arn:aws:s3:::${bucketName}/*`]
             }
         ]
-    }
+    }));
 
 
 
