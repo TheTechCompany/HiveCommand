@@ -1,4 +1,4 @@
-name: HiveCommand Supporting Infrastructure
+name: HiveCommand Lambda Infrastructure
 
 on:
   push:
