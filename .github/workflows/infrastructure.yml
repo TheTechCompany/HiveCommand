@@ -168,23 +168,6 @@ jobs:
           echo "HEXHIVE_API_URL=${{ secrets.PROD_API_URL }}" >> $GITHUB_ENV
         if: ${{ github.ref == 'refs/heads/master' }}
       
-      - name: Build export-lambda
-        run: npx lerna run build --scope @hive-command/schematic-export --include-dependencies
-        env:
-          CI: false
-
-      - name: Install zip
-        uses: montudor/action-zip@v1
-
-      - name: Zip output
-        run: zip -qq -r ../../infrastructure/main/src/export-lambda/archive.zip * -x "*/@hive-command/export-page/node_modules/*"
-        working-directory: packages/lambdas/export-schematic
-
-      - uses: actions/upload-artifact@v3
-        with:
-          name: archive
-          path: packages/infrastructure/main/src/export-lambda/archive.zip
-
 
       - name: Update infrastructure
         uses: pulumi/actions@v3

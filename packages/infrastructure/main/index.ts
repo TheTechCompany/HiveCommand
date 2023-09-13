@@ -9,7 +9,6 @@ import { Service } from './src/service'
 // import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
-import { ExportLambda } from './src/export-lambda'
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -31,6 +30,8 @@ const main = (async () => {
 
     const mqttRef = new pulumi.StackReference(`${org}/hivecommand-mqtt/mqtt-${suffix}`);
 
+    const lambdaRef = new pulumi.StackReference(`${org}/hivecommand-lambdas/lambdas-${suffix}`)
+
     const vpcId = stackRef.getOutput('vpcId');
 
     const kubeconfig = stackRef.getOutput('k3sconfig');
@@ -47,6 +48,8 @@ const main = (async () => {
     const internalURL = mqttRef.getOutput('internalURL');
     const externalURL = mqttRef.getOutput('externalURL');
 
+    const exportLambda = lambdaRef.getOutput('exportLambda');
+
     // const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
     const provider = new Provider('eks', { kubeconfig });
@@ -61,9 +64,8 @@ const main = (async () => {
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 
-    const exportFn = await ExportLambda();
 
-    const deployment = await all([rootServer, internalURL, exportFn.arn]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn));
+    const deployment = await all([rootServer, internalURL, exportFn.arn]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, exportLambda));
     const service = await Service(provider)
 
     return {

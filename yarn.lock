@@ -3968,6 +3968,7 @@ __metadata:
     eslint-config-ts-react-important-stuff: ^3.0.0
     eslint-plugin-prettier: ^3.4.0
     file-loader: ^6.2.0
+    file-saver: ^2.0.5
     graphql: ^16.2.0
     husky: ^6.0.0
     identity-obj-proxy: ^3.0.0
@@ -6603,7 +6604,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pulumi/aws@npm:^5.0.0, @pulumi/aws@npm:^5.30.0":
+"@pulumi/aws@npm:^5.0.0, @pulumi/aws@npm:^5.30.0, @pulumi/aws@npm:^5.35.0":
   version: 5.42.0
   resolution: "@pulumi/aws@npm:5.42.0"
   dependencies:
@@ -6631,7 +6632,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pulumi/docker@npm:^3.0.0":
+"@pulumi/awsx@npm:^1.0.0":
+  version: 1.0.5
+  resolution: "@pulumi/awsx@npm:1.0.5"
+  dependencies:
+    "@pulumi/aws": ^5.35.0
+    "@pulumi/docker": ^3.6.1
+    "@pulumi/pulumi": ^3.0.0
+    "@types/aws-lambda": ^8.10.23
+    mime: ^2.0.0
+  checksum: a82280171bbbf98041968af6235cd34d13b8f7dfad589849451371aee718780852ff14b449711b501f6888158c523a560473b9db3993232922471f588e55ddf9
+  languageName: node
+  linkType: hard
+
+"@pulumi/docker@npm:^3.0.0, @pulumi/docker@npm:^3.6.1":
   version: 3.6.1
   resolution: "@pulumi/docker@npm:3.6.1"
   dependencies:
@@ -8248,6 +8262,13 @@ __metadata:
   version: 8.10.93
   resolution: "@types/aws-lambda@npm:8.10.93"
   checksum: 82eac08a9e1c77724708192ff5c487ffbef572d4dd3851908c56c8bd7f174dd3fa558090ff5c499e04c3e7afa0dc885fb8cf12cd1b1044542b55b17c61846d14
+  languageName: node
+  linkType: hard
+
+"@types/aws-lambda@npm:^8.10.23":
+  version: 8.10.120
+  resolution: "@types/aws-lambda@npm:8.10.120"
+  checksum: ee4f1e08660a5ddce1d9a966f19228816197ce063a2be3e0feb328f026204ba4d60c485dc7f1948f407665a2c5c4053f7137e6805de6f34809dfbcbbf6d2b588
   languageName: node
   linkType: hard
 
@@ -16635,6 +16656,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"file-saver@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "file-saver@npm:2.0.5"
+  checksum: c62d96e5cebc58b4bdf3ae8a60d5cf9607ad82f75f798c33a4ee63435ac2203002584d5256a2a780eda7feb5e19dc3b6351c2212e58b3f529e63d265a7cc79f7
+  languageName: node
+  linkType: hard
+
 "file-selector@npm:^0.5.0":
   version: 0.5.0
   resolution: "file-selector@npm:0.5.0"
@@ -17906,6 +17934,20 @@ __metadata:
     "@types/node": ^17.0.31
     "@types/yazl": ^2.4.2
     dotenv: ^16.0.1
+    yazl: ^2.5.1
+  languageName: unknown
+  linkType: soft
+
+"hivecommand-lambdas@workspace:packages/infrastructure/lambdas":
+  version: 0.0.0-use.local
+  resolution: "hivecommand-lambdas@workspace:packages/infrastructure/lambdas"
+  dependencies:
+    "@pulumi/archive": ^0.0.2
+    "@pulumi/aws": ^5.0.0
+    "@pulumi/awsx": ^1.0.0
+    "@pulumi/pulumi": ^3.0.0
+    "@types/node": ^16
+    "@types/yazl": ^2.4.2
     yazl: ^2.5.1
   languageName: unknown
   linkType: soft
