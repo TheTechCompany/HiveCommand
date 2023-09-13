@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@allenbradley/l5x": "^1.0.0-beta.5",
+    "@aws-sdk/client-lambda": "^3.410.0",
     "@casl/ability": "^6.5.0",
     "@hexhive/graphql-server": "1.0.2-beta.62",
     "@hive-command/amqp-client": "^1.4.15-alpha.267",
@@ -35,7 +36,6 @@
     "@hive-command/scripting": "^1.4.15-alpha.267",
     "@prisma/client": "^3.12.0",
     "amqplib": "^0.8.0",
-    "aws-sdk": "^2.1455.0",
     "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",

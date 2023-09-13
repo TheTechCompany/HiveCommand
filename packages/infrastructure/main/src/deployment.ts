@@ -33,6 +33,8 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                         env: [
                             // { name: 'CLIENT_ID', value: process.env.CLIENT_ID || 'test'},
                             // { name: 'CLIENT_SECRET', value: process.env.CLIENT_SECRET || 'secret' },
+                            { name: 'AWS_ACCESS_KEY_ID', value: process.env.AWS_ACCESS_KEY_ID },
+                            { name: 'AWS_SECRET_ACCESS_KEY', value: process.env.AWS_SECRET_ACCESS_KEY },
                             { name: 'EXPORT_LAMBDA', value: lambdaFunction },
                             { name: 'NODE_ENV', value: 'production' },
                             { name: 'ROOT_SERVER', value: `http://${rootServer}` },

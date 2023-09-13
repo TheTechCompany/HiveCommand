@@ -172,7 +172,7 @@ jobs:
         run: npx lerna run build --scope @hive-command/schematic-export --include-dependencies
         env:
           CI: false
-          
+
       - name: Install zip
         uses: montudor/action-zip@v1
 
@@ -198,6 +198,8 @@ jobs:
           HEXHIVE_API_KEY: ${{ env.HEXHIVE_API_KEY }}
           HEXHIVE_API_URL: ${{ env.HEXHIVE_API_URL }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   
       - name: Update infrastructure
         uses: pulumi/actions@v3
@@ -215,6 +217,8 @@ jobs:
           HEXHIVE_API_KEY: ${{ env.HEXHIVE_API_KEY }}
           HEXHIVE_API_URL: ${{ env.HEXHIVE_API_URL }}
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
  
   deploy-db:
