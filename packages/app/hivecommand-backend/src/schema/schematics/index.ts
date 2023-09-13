@@ -107,7 +107,7 @@ export default (prisma: PrismaClient) => {
 					// 	})
 					// }).promise()
 
-					return result.Payload
+					return result.Payload?.toString()
 				
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
