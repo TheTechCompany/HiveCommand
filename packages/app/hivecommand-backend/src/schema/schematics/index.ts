@@ -107,7 +107,10 @@ export default (prisma: PrismaClient) => {
 					// 	})
 					// }).promise()
 
-					return result.Payload?.toString()
+					if(result.Payload)
+						return Buffer.from(result.Payload).toString('utf-8')
+					else 
+						throw new Error("No payload received");
 				
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
