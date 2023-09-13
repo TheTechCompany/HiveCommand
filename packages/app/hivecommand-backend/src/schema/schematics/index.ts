@@ -6,11 +6,11 @@ import { nanoid } from "nanoid";
 import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
-import aws from 'aws-sdk';
+import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda'
 
 export default (prisma: PrismaClient) => {
 	
-	const lambda = new aws.Lambda({region: 'ap-southeast-2'})
+	const lambda = new LambdaClient({ region: 'ap-southeast-2'})
 
 	const resolvers = mergeResolvers([
 		{
@@ -92,12 +92,20 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
-					const result = await lambda.invoke({
+					const invokeCommand = new InvokeCommand({
 						FunctionName: process.env.EXPORT_LAMBDA || '',
 						Payload: JSON.stringify({
 							program: currentProgram
 						})
-					}).promise()
+					})
+
+					const result = await lambda.send(invokeCommand) 
+					// {
+					// 	FunctionName: process.env.EXPORT_LAMBDA || '',
+					// 	Payload: JSON.stringify({
+					// 		program: currentProgram
+					// 	})
+					// }).promise()
 
 					return result.Payload
 				

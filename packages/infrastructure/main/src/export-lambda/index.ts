@@ -73,7 +73,7 @@ export const ExportLambda = async () => {
         code: new pulumi.asset.FileArchive(zipPath),
         role: iamForLambda.arn,
         timeout: 30,
-        memorySize: 512,
+        memorySize: 1024,
         handler: "index.handler",
         runtime: "nodejs18.x",
         layers: ['arn:aws:lambda:ap-southeast-2:764866452798:layer:chrome-aws-lambda:33'],

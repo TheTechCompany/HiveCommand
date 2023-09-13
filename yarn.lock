@@ -340,6 +340,55 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/client-lambda@npm:^3.410.0":
+  version: 3.410.0
+  resolution: "@aws-sdk/client-lambda@npm:3.410.0"
+  dependencies:
+    "@aws-crypto/sha256-browser": 3.0.0
+    "@aws-crypto/sha256-js": 3.0.0
+    "@aws-sdk/client-sts": 3.410.0
+    "@aws-sdk/credential-provider-node": 3.410.0
+    "@aws-sdk/middleware-host-header": 3.410.0
+    "@aws-sdk/middleware-logger": 3.410.0
+    "@aws-sdk/middleware-recursion-detection": 3.410.0
+    "@aws-sdk/middleware-signing": 3.410.0
+    "@aws-sdk/middleware-user-agent": 3.410.0
+    "@aws-sdk/types": 3.410.0
+    "@aws-sdk/util-endpoints": 3.410.0
+    "@aws-sdk/util-user-agent-browser": 3.410.0
+    "@aws-sdk/util-user-agent-node": 3.410.0
+    "@smithy/config-resolver": ^2.0.7
+    "@smithy/eventstream-serde-browser": ^2.0.6
+    "@smithy/eventstream-serde-config-resolver": ^2.0.6
+    "@smithy/eventstream-serde-node": ^2.0.6
+    "@smithy/fetch-http-handler": ^2.1.2
+    "@smithy/hash-node": ^2.0.6
+    "@smithy/invalid-dependency": ^2.0.6
+    "@smithy/middleware-content-length": ^2.0.8
+    "@smithy/middleware-endpoint": ^2.0.6
+    "@smithy/middleware-retry": ^2.0.9
+    "@smithy/middleware-serde": ^2.0.6
+    "@smithy/middleware-stack": ^2.0.0
+    "@smithy/node-config-provider": ^2.0.9
+    "@smithy/node-http-handler": ^2.1.2
+    "@smithy/protocol-http": ^3.0.2
+    "@smithy/smithy-client": ^2.1.3
+    "@smithy/types": ^2.3.0
+    "@smithy/url-parser": ^2.0.6
+    "@smithy/util-base64": ^2.0.0
+    "@smithy/util-body-length-browser": ^2.0.0
+    "@smithy/util-body-length-node": ^2.1.0
+    "@smithy/util-defaults-mode-browser": ^2.0.7
+    "@smithy/util-defaults-mode-node": ^2.0.9
+    "@smithy/util-retry": ^2.0.0
+    "@smithy/util-stream": ^2.0.9
+    "@smithy/util-utf8": ^2.0.0
+    "@smithy/util-waiter": ^2.0.6
+    tslib: ^2.5.0
+  checksum: 7f5309bf4387d86eba4d5a7d117c99c9d055775733a0bf00dc200c958d9aad52680558f12d9973b73d1a5d64b16cac4c324a28937d3143150ffa3dce5a76c9ba
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/client-s3@npm:^3.410.0":
   version: 3.410.0
   resolution: "@aws-sdk/client-s3@npm:3.410.0"
@@ -3629,6 +3678,7 @@ __metadata:
   resolution: "@hive-command/backend@workspace:packages/app/hivecommand-backend"
   dependencies:
     "@allenbradley/l5x": ^1.0.0-beta.5
+    "@aws-sdk/client-lambda": ^3.410.0
     "@casl/ability": ^6.5.0
     "@hexhive/graphql-server": 1.0.2-beta.62
     "@hive-command/amqp-client": ^1.4.15-alpha.267
@@ -3640,7 +3690,6 @@ __metadata:
     "@types/express": ^4.17.13
     "@types/pg": ^8.6.3
     amqplib: ^0.8.0
-    aws-sdk: ^2.1455.0
     axios: ^0.27.2
     cors: ^2.8.5
     dotenv: ^10.0.0
@@ -11231,24 +11280,6 @@ __metadata:
     uuid: 8.0.0
     xml2js: 0.5.0
   checksum: 494124cded48679ec449bfa1cee54db969141639414b71fd984d519f5cc4904b614a023339ad17f58f89d5ca45e038d9bc89b22bdd4e5b02b138eb0d800162f7
-  languageName: node
-  linkType: hard
-
-"aws-sdk@npm:^2.1455.0":
-  version: 2.1455.0
-  resolution: "aws-sdk@npm:2.1455.0"
-  dependencies:
-    buffer: 4.9.2
-    events: 1.1.1
-    ieee754: 1.1.13
-    jmespath: 0.16.0
-    querystring: 0.2.0
-    sax: 1.2.1
-    url: 0.10.3
-    util: ^0.12.4
-    uuid: 8.0.0
-    xml2js: 0.5.0
-  checksum: da90b4458709554b52e7deb4176ff785a69b62d859986e4682b98a50d46a9e644cd9d0ce8fc07497e7bd1086c3ba02153b6af0a2c49db36599095897bae7d746
   languageName: node
   linkType: hard
 
