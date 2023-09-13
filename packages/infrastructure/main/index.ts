@@ -65,7 +65,7 @@ const main = (async () => {
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
 
 
-    const deployment = await all([rootServer, internalURL, exportFn.arn]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, exportLambda));
+    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn));
     const service = await Service(provider)
 
     return {

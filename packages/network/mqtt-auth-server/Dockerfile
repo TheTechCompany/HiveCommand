@@ -8,7 +8,7 @@ COPY . .
 
 RUN yarn
 
-RUN npx lerna bootstrap --scope @hive-command/mqtt-auth-server --include-dependencies
+# RUN xnpx lerna bootstrap --scope @hive-command/mqtt-auth-server --include-dependencies
 
 RUN npx lerna run build --scope @hive-command/mqtt-auth-server --include-dependencies
 
