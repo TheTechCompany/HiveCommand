@@ -2,7 +2,6 @@ import * as pulumi from "@pulumi/pulumi";
 import * as aws from "@pulumi/aws";
 import { MQTTAuth, MQTT } from './src'
 import * as k8s from '@pulumi/kubernetes';
-
 import { Config } from "@pulumi/pulumi";
 
 const main = (async () => {
@@ -14,15 +13,12 @@ const main = (async () => {
 
     const stackRef = new pulumi.StackReference(`${org}/base-infrastructure/prod`)
 
-    
     const dbRef = new pulumi.StackReference(`${org}/hexhive-db/db-${suffix}`)
-
 
     const kubeconfig = stackRef.getOutput('k3sconfig');
     const vpcId = stackRef.getOutput('vpcId');
     
     const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
-
 
     const dbUrl = dbRef.getOutput('timescale_url');
     const dbPass = dbRef.getOutput('postgres_pass');

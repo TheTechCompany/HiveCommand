@@ -15,8 +15,6 @@ module.exports = (webpackConfigEnv, argv) => {
     argv,
   });
 
-  console.log(defaultConfig.module.rules)
-
   return merge(defaultConfig, {
     // modify the webpack config however you'd like to by adding to this object
     // entry: {

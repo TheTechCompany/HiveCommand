@@ -1,4 +1,4 @@
-import { IconButton, Paper, Box, Typography, Divider, List, ListItem, ListItemButton, Button } from '@mui/material';
+import { IconButton, Paper, Box, Typography, Divider, List, ListItem, CircularProgress, ListItemButton, Button } from '@mui/material';
 import React, { useState } from 'react';
 import { Add, DragHandle } from '@mui/icons-material'
 import { PageModal } from '../components/page-modal';
@@ -79,7 +79,11 @@ export const PagesPane = (props: any) => {
                         }}
                     />
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Box sx={{ flex: 1 }}><Button size="small" variant='contained' onClick={props.onExport}>Export</Button></Box>
+                        <Box sx={{ flex: 1 }}>
+                            <Button size="small" disabled={props.exporting} variant='contained' onClick={props.onExport}>
+                                {props.exporting ? <CircularProgress size={'small'} sx={{marginRight: '6px'}} /> : null} Export
+                            </Button>
+                        </Box>
                         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
                             <Typography>Pages</Typography>
                         </Box>
