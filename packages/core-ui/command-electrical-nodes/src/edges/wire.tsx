@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useState } from 'react';
+import React, { MouseEventHandler, useState, useMemo, useEffect } from 'react';
 import { BaseEdge, EdgeProps, getBezierPath, useReactFlow } from 'reactflow';
 import { useElectricalNodeContext } from '../context';
 
@@ -18,16 +18,21 @@ export const WireEdge = ({
 
     const { project } = useReactFlow()
 
+    const [ points, setPoints ] = useState<any[]>(data?.points || []);
+    
     const { onEdgePointCreated, onEdgePointChanged } = useElectricalNodeContext();
 
     // const { onUpdatePage, page } = useEditorContext();
 
-    const directPath = `M ${data?.points?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < data?.points?.length - 1 ? 'L' : ''}`).join(' ')}`;
+    const directPath = useMemo(() => `M ${points?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < points?.length - 1 ? 'L' : ''}`).join(' ')}`, [points]);
 
     const [draggingPoint, setDraggingPoint] = useState<number | null>(null)
     const [deltaPoint, setDeltaPoint] = useState<{ x: number, y: number } | null>(null);
 
 
+    useEffect(() => {
+        setPoints(data?.points);
+    }, [data?.points])
     /*
         let newEdges = (page?.edges || []).slice();
 
@@ -56,7 +61,7 @@ export const WireEdge = ({
     return (
         <>
             {/* <BaseEdge path={directPath} style={style} /> */}
-            {data?.points?.map((point: any, ix: number) => data?.points?.[ix + 1] && (
+            {points?.map((point: any, ix: number) => points?.[ix + 1] && (
                 <path
                     onClick={(e) => {
                         if (e.metaKey || e.ctrlKey) {
@@ -68,7 +73,7 @@ export const WireEdge = ({
                     style={{
                         ...style
                     }}
-                    d={`M ${point.x} ${point.y} L ${data?.points?.[ix + 1].x} ${data?.points?.[ix + 1].y}`} />
+                    d={`M ${point.x} ${point.y} L ${points?.[ix + 1].x} ${points?.[ix + 1].y}`} />
 
             ))}
             {/* <path 
@@ -86,59 +91,80 @@ export const WireEdge = ({
                         // stroke: style.stroke || 'black',
                         ...style
                     }} /> */}
-            {data?.points?.map((point: any, ix: number) => (
+            {points?.map((point: any, ix: number) => (
                 <circle
-                    onMouseDown={(e) => {
+                    onPointerDown={(e) => {
 
                         (e.currentTarget as any).setPointerCapture((e as any).pointerId)
 
                         setDraggingPoint(ix);
                         setDeltaPoint(project({ x: e.clientX, y: e.clientY }))
                     }}
-                    onMouseMove={(e) => {
+                    onPointerMove={(e) => {
 
+                        console.log("MOVING", draggingPoint, points)
                         let nextPoint = project({ x: e.clientX, y: e.clientY });
 
-                        if (deltaPoint && draggingPoint != null) {
-                            let delta = { x: nextPoint.x - deltaPoint.x, y: nextPoint.y - deltaPoint.y };
+                        if(deltaPoint && draggingPoint != null){
+                            setPoints((points: any[]) => {
+                                let p = points.slice();
 
-                            // let e = (page?.edges || []).slice();
-
-                            // let edgeIx = (page?.edges || []).findIndex((a: any) => a.id == id)
-
-                            // const points = (e[edgeIx].data.points || []).slice();
-
-                            // points[ix] = {
-                            //     ...points[ix],
-                            //     x: e[edgeIx].data.points[draggingPoint].x + delta.x,
-                            //     y: e[edgeIx].data.points[draggingPoint].y + delta.y
-                            // }
-
-                            // e[edgeIx] = {
-                            //     ...e[edgeIx],
-                            //     data: {
-                            //         ...e[edgeIx].data,
-                            //         points
-                            //     }
-                            // }
-
-                            // onUpdatePage?.({
-                            //     ...page,
-                            //     edges: e
-                            // }, "mouseMove")
-
-                            onEdgePointChanged?.(id, ix, {
-                                x: delta.x,
-                                y: delta.y
+                                p[ix] = {
+                                    x: p[ix].x + (nextPoint.x - deltaPoint.x), //nextPoint.x,
+                                    y: p[ix].y + (nextPoint.y - deltaPoint.y) //nextPoint.y
+                                }
+                                return p;
                             })
                         }
+
+                        // if (deltaPoint && draggingPoint != null) {
+                        //     let delta = { x: nextPoint.x - deltaPoint.x, y: nextPoint.y - deltaPoint.y };
+
+                        //     // let e = (page?.edges || []).slice();
+
+                        //     // let edgeIx = (page?.edges || []).findIndex((a: any) => a.id == id)
+
+                        //     // const points = (e[edgeIx].data.points || []).slice();
+
+                        //     // points[ix] = {
+                        //     //     ...points[ix],
+                        //     //     x: e[edgeIx].data.points[draggingPoint].x + delta.x,
+                        //     //     y: e[edgeIx].data.points[draggingPoint].y + delta.y
+                        //     // }
+
+                        //     // e[edgeIx] = {
+                        //     //     ...e[edgeIx],
+                        //     //     data: {
+                        //     //         ...e[edgeIx].data,
+                        //     //         points
+                        //     //     }
+                        //     // }
+
+                        //     // onUpdatePage?.({
+                        //     //     ...page,
+                        //     //     edges: e
+                        //     // }, "mouseMove")
+
+                        //     onEdgePointChanged?.(id, ix, {
+                        //         x: delta.x,
+                        //         y: delta.y
+                        //     })
+                        // }
 
                         if (draggingPoint != null) {
                             setDeltaPoint(nextPoint)
                         }
                     }}
-                    onMouseUp={(e) => {
+                    onPointerUp={(e) => {
                         (e.currentTarget as any).releasePointerCapture((e as any).pointerId)
+
+                        // let nextPoint = project({ x: e.clientX, y: e.clientY });
+
+                        
+                        onEdgePointChanged?.(id, ix, {
+                                    x: points[ix].x,  //- (deltaPoint?.x || 0),
+                                    y: points[ix].y // - (deltaPoint?.y || 0)
+                            })
 
                         setDraggingPoint(null)
                         setDeltaPoint(null);

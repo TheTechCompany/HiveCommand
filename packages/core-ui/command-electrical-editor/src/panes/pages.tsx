@@ -1,6 +1,6 @@
 import { IconButton, Paper, Box, Typography, Divider, List, ListItem, CircularProgress, ListItemButton, Button } from '@mui/material';
 import React, { useState } from 'react';
-import { Add, DragHandle } from '@mui/icons-material'
+import { Add, DragIndicator } from '@mui/icons-material'
 import { PageModal } from '../components/page-modal';
 import { useEditorContext } from '../context';
 import {CSS} from '@dnd-kit/utilities';
@@ -134,8 +134,8 @@ export const PageItem = (props: any) => {
             <ListItem onClick={() => {
                 props.onSelectPage?.(props.page)
             }}>
-                <IconButton {...listeners}>
-                    <DragHandle />
+                <IconButton  size="small" {...listeners}>
+                    <DragIndicator fontSize="inherit" />
                 </IconButton>
                 <ListItemButton>{props.page?.name}</ListItemButton>
             </ListItem>

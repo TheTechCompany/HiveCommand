@@ -14,7 +14,8 @@ export const CanvasSurface = () => {
 
     const { project } = useReactFlow()
 
-    const { nodes: flowNodes, edges: flowEdges } = useMemo(() => pages?.find((a: any) => a.id == selectedPage) || { edges: [], nodes: [] }, [selectedPage, pages])
+    const page = useMemo(() => pages?.find((a: any) => a.id == selectedPage) || { edges: [], nodes: [] }, [selectedPage, pages])
+    const { nodes: flowNodes, edges: flowEdges } = page;
 
     const [selected, setSelected] = useState<any>({ nodes: [], edges: [] })
 
@@ -44,11 +45,11 @@ export const CanvasSurface = () => {
     const finalEdges = useMemo(() => (edges.map((x) => ({ ...x, selected: selected.edges.findIndex((a: any) => a.id == x.id) > -1 })) as any[]), [edges, selected])
 
     const onEdgePointCreated = (id: string, ix: number, pos: {x: number, y: number}) => {
-        let newEdges = (finalEdges).slice();
+        let newEdges = (edges).slice();
 
         let edgeIx = newEdges.findIndex((a) => a.id == id);
 
-        let points = [...(newEdges[edgeIx]?.points || [])];
+        let points = [...(newEdges[edgeIx]?.data?.points || [])];
 
         const bounds = wrapper?.current?.getBoundingClientRect();
 
@@ -63,13 +64,13 @@ export const CanvasSurface = () => {
         }
 
         onUpdatePage?.({
-            ...selected,
+            ...page,
             edges: newEdges
         })
     }
 
     const onEdgePointChanged = (id: string, ix: number, change: {x: number, y: number}) => {
-        let e = (finalEdges).slice();
+        let e = (edges).slice();
 
         let edgeIx = (e).findIndex((a) => a.id == id)
 
@@ -77,9 +78,11 @@ export const CanvasSurface = () => {
 
         points[ix] = {
             ...points[ix],
-            x: points[ix].x + change.x,
-            y: points[ix].y + change.y
+            x: change.x,
+            y: change.y
         }
+
+        console.log({change})
 
         e[edgeIx] = {
             ...e[edgeIx],
@@ -90,7 +93,7 @@ export const CanvasSurface = () => {
         }
 
         onUpdatePage?.({
-            ...selected,
+            ...page,
             edges: e
         })
     }

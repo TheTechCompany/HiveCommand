@@ -96,8 +96,8 @@ export const WireEdge = ({
                 <circle
                     onMouseDown={(e) => {
 
-                        console.log(ix, point);
-                        (e.currentTarget as any).setPointerCapture((e as any).pointerId)
+                        console.log(ix, point, (e as any).pointerId);
+                        // (e.currentTarget as any).setPointerCapture((e as any).pointerId)
 
                         setDraggingPoint(ix);
                         setDeltaPoint(project({ x: e.clientX, y: e.clientY }))
