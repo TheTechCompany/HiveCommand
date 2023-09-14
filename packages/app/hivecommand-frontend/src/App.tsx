@@ -153,7 +153,6 @@ function App(props: any) {
               <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
                 <Box sx={{ height: '100%', color: 'white', flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'primary.dark' }}>
                   <Routes>
-
                     <Route path={`programs/:id/*`} element={<EditorPage />} />
                     <Route path={`schematics/:id/*`} element={<SchematicEditor />} />
                     <Route path={`functions/:id/*`} element={<FunctionEditor />} />
