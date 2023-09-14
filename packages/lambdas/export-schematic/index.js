@@ -15,6 +15,7 @@ exports.handler = async function (event, context) {
     console.log("Exporting Schematic...")
 
     const data = await export_schematic(event.program || {
+        name: "Default Project",
         pages: [
             {id: '1', nodes: [{id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} }]},
             {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
@@ -35,7 +36,7 @@ exports.handler = async function (event, context) {
         Body: data
     });
     
-    
+
     const response = await client.send(putCommand);
     console.log("Posted Schematic!")
 

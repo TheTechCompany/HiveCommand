@@ -8,6 +8,7 @@ function App() {
 
   const query = qs.parse(window.location.hash?.replace('#', ''), {ignoreQueryPrefix: true});
 
+  const [ project, setProject ] = useState<any>(null);
   const [ page, setPage ] = useState<any>(null);
 
   const [ pageReady, setPageReady ] = useState(false)
@@ -42,6 +43,7 @@ function App() {
       // setTimeout(() => setPageReady(true), 500);
       setPageReady(true);
 
+      setProject(result.project)
       setPage(result.page);
     })
   }, [query])
@@ -56,6 +58,10 @@ function App() {
         elements={items}
         nodes={page?.nodes || []}
         edges={page?.edges || []}
+        info={{
+          project,
+          page: query?.ix
+        }}
           />
     </>
   )
