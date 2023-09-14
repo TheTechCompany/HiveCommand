@@ -6,7 +6,7 @@ import { writeFileSync } from 'fs';
 
 const html_index = require.resolve('@hive-command/export-page');
 
-export const export_schematic = async (schematic: {name: string, pages: any[]}, puppeteerArgs?: any) => {
+export const export_schematic = async (schematic: {name: string, pages: any[]}, ratio?: number, puppeteerArgs?: any) => {
 
     console.log(JSON.stringify(puppeteerArgs));
 
@@ -54,7 +54,7 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 
                     console.log(page.viewport());
 
-                    page.setViewport({width: 1920, height: 1080});
+                    page.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
 
                     for(var i = 0; i < pages.length; i++){
     
@@ -78,7 +78,7 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
                         const pdfPage = await PDFDocument.load(pdfData)
                         console.log(`Exporting page ${i} - Loaded to PDF.`);
     
-                        const copiedPages = await pdfDoc.copyPages(pdfPage, pdfPage.getPageIndices());
+                        const copiedPages = await pdfDoc.copyPages(pdfPage, [0]);
                         copiedPages.forEach((page) => {
                             pdfDoc.addPage(page); 
                         }); 
@@ -115,36 +115,3 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 }
 
 
-
-// export_schematic({
-//     name: 'Projec',
-//     pages: [
-//         {
-//             id: '1', 
-//             nodes: [
-//                 {id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, 
-//                 {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} 
-//             }
-//         ],
-//             edges: [{id: '2', type: 'wire', source: 'canvas', target: 'canvas', points: [{x: 50, y: 50}, {x: 100, y: 100}] }]
-//         },
-//         {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
-//     ]
-// }, {
-//     executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
-//     defaultViewport: {
-//         // "deviceScaleFactor":1,"hasTouch":false,
-//         "height":1080,
-//         // "isLandscape":true,"isMobile":false,
-//         "width":1920
-//     },
-//     headless: false,
-//     // args: ["--allow-running-insecure-content","--autoplay-policy=user-gesture-required","--disable-background-timer-throttling","--disable-component-update","--disable-domain-reliability","--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process","--disable-ipc-flooding-protection","--disable-print-preview","--disable-dev-shm-usage","--disable-setuid-sandbox","--disable-site-isolation-trials","--disable-speech-api","--disable-web-security","--disk-cache-size=33554432","--enable-features=SharedArrayBuffer","--hide-scrollbars","--ignore-gpu-blocklist","--in-process-gpu","--mute-audio","--no-default-browser-check","--no-first-run","--no-pings","--no-sandbox","--no-zygote","--use-gl=angle","--use-angle=swiftshader","--window-size=1920,1080","--single-process"]
-//     // viewport: {
-//     //     width: 600,
-//     //     height: 800
-//     // }
-// }).then((pdf: any) => {
-//         writeFileSync('./test.pdf', pdf)
-
-// })

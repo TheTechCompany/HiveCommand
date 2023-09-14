@@ -9,32 +9,32 @@ import { LexoRank } from 'lexorank';
 import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda'
 
 export default (prisma: PrismaClient) => {
-	
-	const lambda = new LambdaClient({ region: 'ap-southeast-2'})
+
+	const lambda = new LambdaClient({ region: 'ap-southeast-2' })
 
 	const resolvers = mergeResolvers([
 		{
-			
+
 			Query: {
 				commandSchematics: async (root: any, args: any, context: any) => {
 
-					if(!context?.jwt?.acl?.can('read', 'CommandSchematic')) throw new Error('Not allowed to read SchematicList');
+					if (!context?.jwt?.acl?.can('read', 'CommandSchematic')) throw new Error('Not allowed to read SchematicList');
 
 					let filter = args.where || {}
 					const programs = await prisma.electricalSchematic.findMany({
-						where: {...filter, organisation: context.jwt.organisation},
-                        include: {
-                            pages: true
-                        }
-                    });
+						where: { ...filter, organisation: context.jwt.organisation },
+						include: {
+							pages: true
+						}
+					});
 
-					return programs.filter((a) => context?.jwt?.acl?.can('read', subject('CommandSchematic', a) ))
+					return programs.filter((a) => context?.jwt?.acl?.can('read', subject('CommandSchematic', a)))
 				},
-				
+
 			},
 			Mutation: {
-				createCommandSchematic: async (root: any, args: {input: {name: string, templatePacks: string[]}}, context: any) => {
-					if(!context?.jwt?.acl.can('create', 'CommandSchematic')) throw new Error('Cannot create new CommandSchematic');
+				createCommandSchematic: async (root: any, args: { input: { name: string, templatePacks: string[] } }, context: any) => {
+					if (!context?.jwt?.acl.can('create', 'CommandSchematic')) throw new Error('Cannot create new CommandSchematic');
 
 					const program = await prisma.electricalSchematic.create({
 						data: {
@@ -54,14 +54,14 @@ export default (prisma: PrismaClient) => {
 					})
 					return program;
 				},
-				updateCommandSchematic: async (root: any, args: {id: string, input: {name: string, templatePacks: string[]}}, context: any) => {
-					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
+				updateCommandSchematic: async (root: any, args: { id: string, input: { name: string, templatePacks: string[] } }, context: any) => {
+					const currentProgram = await prisma.program.findFirst({ where: { id: args.id, organisation: context?.jwt?.organisation } });
 
-					if(!currentProgram) throw new Error('Program not found');
-					if(!context?.jwt?.acl.can('update', subject('CommandSchematic', currentProgram) )) throw new Error('Cannot update CommandSchematic');
-					
+					if (!currentProgram) throw new Error('Program not found');
+					if (!context?.jwt?.acl.can('update', subject('CommandSchematic', currentProgram))) throw new Error('Cannot update CommandSchematic');
+
 					const program = await prisma.electricalSchematic.update({
-						where: {id: args.id},
+						where: { id: args.id },
 						data: {
 							name: args.input.name,
 							// templatePacks: {
@@ -72,16 +72,16 @@ export default (prisma: PrismaClient) => {
 
 					return program
 				},
-				deleteCommandSchematic: async (root: any, args: {id: string}, context: any) => {
-					const currentProgram = await prisma.electricalSchematic.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
-					if(!currentProgram) throw new Error('CommandSchematic not found');
-					if(!context?.jwt?.acl.can('delete', subject('CommandSchematic', currentProgram) )) throw new Error('Cannot delete CommandSchematic');
-					
-					const res = await prisma.electricalSchematic.delete({where: {id: args.id}})
+				deleteCommandSchematic: async (root: any, args: { id: string }, context: any) => {
+					const currentProgram = await prisma.electricalSchematic.findFirst({ where: { id: args.id, organisation: context?.jwt?.organisation } });
+					if (!currentProgram) throw new Error('CommandSchematic not found');
+					if (!context?.jwt?.acl.can('delete', subject('CommandSchematic', currentProgram))) throw new Error('Cannot delete CommandSchematic');
+
+					const res = await prisma.electricalSchematic.delete({ where: { id: args.id } })
 					return res != null
 				},
 
-				exportCommandSchematic: async (root: any, args: {id: string}, context: any) => {
+				exportCommandSchematic: async (root: any, args: { id: string }, context: any) => {
 					const currentProgram = await prisma.electricalSchematic.findFirst({
 						where: {
 							id: args.id,
@@ -99,18 +99,18 @@ export default (prisma: PrismaClient) => {
 						})
 					})
 
-					const result = await lambda.send(invokeCommand) 
+					const result = await lambda.send(invokeCommand)
 
-					if(result.Payload){
+					if (result.Payload) {
 						let url = Buffer.from(result.Payload).toString('utf-8');
-						return url.substring(1, url.length -1);
-					}else{
+						return url.substring(1, url.length - 1);
+					} else {
 						throw new Error("No payload received");
 					}
-				
+
 				},
-                createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
-                    
+				createCommandSchematicPage: async (root: any, args: { schematic: string, input: any }, context: any) => {
+
 					const lastPage = await prisma.electricalSchematicPage.findFirst({
 						where: {
 							schematicId: args.schematic
@@ -123,43 +123,43 @@ export default (prisma: PrismaClient) => {
 					const { rank } = lastPage || {}
 
 					let aboveRank = LexoRank.parse(rank || LexoRank.min().toString())
-                    let belowRank = LexoRank.parse(LexoRank.max().toString())
+					let belowRank = LexoRank.parse(LexoRank.max().toString())
 
-                    let newRank = aboveRank.between(belowRank).toString()
+					let newRank = aboveRank.between(belowRank).toString()
 
-                    return await prisma.electricalSchematicPage.create({
-                       
-                        data: {
-                                    id: nanoid(),
-                                    name: args.input.name,
-                                    nodes: args.input.nodes,
-                                    edges: args.input.edges,
-									rank: newRank.toString(),
-                                    schematic: {
-                                        connect: {id: args.schematic}
-                                    }
-                        }
-                    });
+					return await prisma.electricalSchematicPage.create({
 
-                },
-                updateCommandSchematicPage: async (root: any, args: {schematic: string, id: string, input: any}, context: any) => {
-                    return await prisma.electricalSchematicPage.update({
-                        where: {
-                            id: args.id,
-                        },
-                        data: {
-                            name: args.input.name,
-                            nodes: args.input.nodes,
-                            edges: args.input.edges,
-                                    schematic: {
-                                        connect: {id: args.schematic}
-                                    }
-                        }
-                    })
-                },
-                deleteCommandSchematicPage: async (root: any, args: {schematic: string, id: string}, context: any) => {
-                    return await prisma.electricalSchematicPage.delete({where: {id: args.id}})
-                },
+						data: {
+							id: nanoid(),
+							name: args.input.name,
+							nodes: args.input.nodes,
+							edges: args.input.edges,
+							rank: newRank.toString(),
+							schematic: {
+								connect: { id: args.schematic }
+							}
+						}
+					});
+
+				},
+				updateCommandSchematicPage: async (root: any, args: { schematic: string, id: string, input: any }, context: any) => {
+					return await prisma.electricalSchematicPage.update({
+						where: {
+							id: args.id,
+						},
+						data: {
+							name: args.input.name,
+							nodes: args.input.nodes,
+							edges: args.input.edges,
+							schematic: {
+								connect: { id: args.schematic }
+							}
+						}
+					})
+				},
+				deleteCommandSchematicPage: async (root: any, args: { schematic: string, id: string }, context: any) => {
+					return await prisma.electricalSchematicPage.delete({ where: { id: args.id } })
+				},
 				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, oldIx: number, newIx: number }, context: any) => {
 
 					const schematic = await prisma.electricalSchematic.findFirst({
@@ -172,11 +172,11 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
-					if(!schematic) throw new Error("Schematic not found");
+					if (!schematic) throw new Error("Schematic not found");
 
 					console.log(args);
-					
-					const pages = schematic?.pages?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))
+
+					const pages = schematic?.pages?.sort((a, b) => (a.rank || '').localeCompare(b.rank || ''))
 
 					const oldIx = pages?.[args.oldIx];
 
@@ -187,22 +187,22 @@ export default (prisma: PrismaClient) => {
 
 					console.log(oldIx.rank)
 					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
-                    //     SELECT id, rank FROM "TimelineItem" 
-                    //     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
-                    //     ORDER BY rank
-                    // ), cte2 as (
-                    //     SELECT id, rank, LEAD(rank) OVER (ORDER BY rank) as lead_rank FROM cte
-                    // )
-                    // SELECT id, rank, lead_rank FROM cte2 WHERE id=${args.prev}`
+					//     SELECT id, rank FROM "TimelineItem" 
+					//     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
+					//     ORDER BY rank
+					// ), cte2 as (
+					//     SELECT id, rank, LEAD(rank) OVER (ORDER BY rank) as lead_rank FROM cte
+					// )
+					// SELECT id, rank, lead_rank FROM cte2 WHERE id=${args.prev}`
 
 
 					// const { rank, lead_rank } = result?.[0];
 
-                    let aboveRank = LexoRank.parse(aboveIx || LexoRank.min().toString())
-                    let belowRank = LexoRank.parse(belowIx || LexoRank.max().toString())
+					let aboveRank = LexoRank.parse(aboveIx || LexoRank.min().toString())
+					let belowRank = LexoRank.parse(belowIx || LexoRank.max().toString())
 
-                    let newRank = aboveRank.between(belowRank).toString()
-					
+					let newRank = aboveRank.between(belowRank).toString()
+
 					console.log(newRank.toString())
 
 					return await prisma.electricalSchematicPage.update({
@@ -213,12 +213,12 @@ export default (prisma: PrismaClient) => {
 							rank: newRank.toString()
 						}
 					})
-					
+
 				}
 			}
 		},
 	])
-	
+
 	const typeDefs = `
 
 	type Query {
