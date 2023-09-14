@@ -159,8 +159,6 @@ function App(props: any) {
                     <Route path={`functions/:id/*`} element={<FunctionEditor />} />
                     <Route path={'*'} element={<Dashboard />} />
                     <Route path={`:id/controls`} element={<DeviceControlView />} />
-
-
                   </Routes>
                 </Box>
               </Router>
