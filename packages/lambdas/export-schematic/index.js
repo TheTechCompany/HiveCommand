@@ -40,15 +40,8 @@ exports.handler = async function (event, context) {
     const response = await client.send(putCommand);
     console.log("Posted Schematic!")
 
-    // await s3.upload({
-    //     Bucket: process.env.BUCKET_NAME,
-    //     Key: id,
-    //     Body: fs.readFileSync(pdfPath)
-    // }).promise();
-
     const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: id});
     console.log("Presigned Schematic!")
 
     return getSignedUrl(client, getCommand, {expiresIn: 3600});
-    // return context.logStreamName;
 };
