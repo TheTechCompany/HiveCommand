@@ -104,8 +104,6 @@ export const SchematicEditor = () => {
                 }}
 
                 onExport={() => {
-
-        
                     setExporting(true);
                     exportSchematic({variables: {id: schematic.id}}).then(async (response) => {
 

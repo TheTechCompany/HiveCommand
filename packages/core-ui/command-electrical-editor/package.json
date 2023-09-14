@@ -17,6 +17,7 @@
     "reactflow": "*"
   },
   "dependencies": {
+    "@hive-command/electrical-nodes": "workspace:^",
     "@hive-command/remote-components": "^1.4.15-alpha.267"
   }
 }
