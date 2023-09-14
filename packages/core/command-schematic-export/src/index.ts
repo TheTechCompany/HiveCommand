@@ -8,6 +8,8 @@ const html_index = require.resolve('@hive-command/export-page');
 
 export const export_schematic = async (schematic: {name: string, pages: any[]}, puppeteerArgs?: any) => {
 
+    console.log(JSON.stringify(puppeteerArgs));
+
     const pages = (schematic?.pages || []).sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
 
     console.log("Creating PDF Doc...");
@@ -124,7 +126,15 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 //         {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
 //     ]
 // }, {
-//     executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+//     executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
+//     defaultViewport: {
+//         width: 400,
+//         height: 600
+//     }
+//     // viewport: {
+//     //     width: 600,
+//     //     height: 800
+//     // }
 // }).then((pdf: any) => {
 //         writeFileSync('./test.pdf', pdf)
 

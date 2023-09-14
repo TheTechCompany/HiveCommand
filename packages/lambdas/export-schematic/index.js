@@ -14,7 +14,7 @@ exports.handler = async function (event, context) {
     const pdfPath = path.join(__dirname, 'output.pdf');
     console.log("Exporting Schematic...")
 
-    
+
     const data = await export_schematic(event.program || {
         name: "Default Project",
         pages: [
@@ -23,6 +23,7 @@ exports.handler = async function (event, context) {
         ]
     }, {
         args: chromium.args,
+        defaultViewport: chromium.defaultViewport,
         headless: chromium.headless,
         executablePath: await chromium.executablePath
     })
