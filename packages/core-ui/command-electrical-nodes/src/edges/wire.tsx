@@ -61,7 +61,7 @@ export const WireEdge = ({
                     onClick={(e) => {
                         if (e.metaKey || e.ctrlKey) {
 
-                            onEdgePointCreated?.(id, { x: e.clientX, y: e.clientY })
+                            onEdgePointCreated?.(id, ix, { x: e.clientX, y: e.clientY })
                         }
                     }}
                     className="react-flow__edge-path"

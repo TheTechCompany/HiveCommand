@@ -35,6 +35,7 @@ exports.handler = async function (event, context) {
         Body: data
     });
     
+    
     const response = await client.send(putCommand);
     console.log("Posted Schematic!")
 
