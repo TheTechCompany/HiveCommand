@@ -1,13 +1,18 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
+import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from 'reactflow';
 import { useEditorContext } from '../context';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes';
 import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
+import { useCanvasContext } from './context';
 
 export const CanvasSurface = () => {
 
     const { pages, selectedPage, onUpdatePage, draftWire, elements } = useEditorContext();
+
+    const { wrapper } = useCanvasContext();
+
+    const { project } = useReactFlow()
 
     const { nodes: flowNodes, edges: flowEdges } = useMemo(() => pages?.find((a: any) => a.id == selectedPage) || { edges: [], nodes: [] }, [selectedPage, pages])
 
@@ -38,11 +43,64 @@ export const CanvasSurface = () => {
     const finalNodes = useMemo(() => (nodes.map((x) => ({ ...x, selected: selected.nodes.findIndex((a: any) => a.id == x.id) > -1 })) as any[]), [nodes, selected])
     const finalEdges = useMemo(() => (edges.map((x) => ({ ...x, selected: selected.edges.findIndex((a: any) => a.id == x.id) > -1 })) as any[]), [edges, selected])
 
+    const onEdgePointCreated = (id: string, ix: number, pos: {x: number, y: number}) => {
+        let newEdges = (finalEdges).slice();
+
+        let edgeIx = newEdges.findIndex((a) => a.id == id);
+
+        let points = [...(newEdges[edgeIx]?.points || [])];
+
+        const bounds = wrapper?.current?.getBoundingClientRect();
+
+        points?.splice(ix + 1, 0, project({x: pos.x - bounds.x, y: pos.y - bounds.y}) )
+
+        newEdges[edgeIx] = {
+            ...newEdges?.[edgeIx],
+            data: {
+                ...newEdges?.[edgeIx]?.data,
+                points
+            }
+        }
+
+        onUpdatePage?.({
+            ...selected,
+            edges: newEdges
+        })
+    }
+
+    const onEdgePointChanged = (id: string, ix: number, change: {x: number, y: number}) => {
+        let e = (finalEdges).slice();
+
+        let edgeIx = (e).findIndex((a) => a.id == id)
+
+        const points = (e[edgeIx].data.points || []).slice();
+
+        points[ix] = {
+            ...points[ix],
+            x: points[ix].x + change.x,
+            y: points[ix].y + change.y
+        }
+
+        e[edgeIx] = {
+            ...e[edgeIx],
+            data: {
+                ...e[edgeIx].data,
+                points
+            }
+        }
+
+        onUpdatePage?.({
+            ...selected,
+            edges: e
+        })
+    }
 
     return (
         <ElectricalNodesProvider
             value={{
-                elements: elements
+                elements: elements,
+                onEdgePointCreated,
+                onEdgePointChanged
             }}>
             <ReactFlow
                 snapGrid={[5, 5]}
