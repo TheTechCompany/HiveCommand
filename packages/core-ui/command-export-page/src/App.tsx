@@ -3,6 +3,7 @@ import './App.css'
 import qs from 'qs'
 import { SchematicViewer } from '@hive-command/schematic-viewer'
 import { useRemoteComponents } from '@hive-command/remote-components'
+import { Box } from '@mui/material'
 
 function App() {
 

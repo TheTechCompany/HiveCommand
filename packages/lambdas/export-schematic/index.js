@@ -41,6 +41,7 @@ exports.handler = async function (event, context) {
     
 
     const response = await client.send(putCommand);
+
     console.log("Posted Schematic!")
 
     const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: id});
