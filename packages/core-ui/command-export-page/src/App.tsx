@@ -9,7 +9,10 @@ function App() {
   const query = qs.parse(window.location.hash?.replace('#', ''), {ignoreQueryPrefix: true});
 
   const [ project, setProject ] = useState<any>(null);
-  const [ page, setPage ] = useState<any>(null);
+  const [ page, setPage ] = useState<any>({
+    nodes: [{id: '1', type: 'default', data: {}, position: {x: 1, y: 1}}],
+    edges: [{id: '1', type: 'wire', source: 'canvas', target: 'canvas', data: {points: [{x: 10, y: 10,}, {x: 50, y: 50}, {x: 100, y: 100}]} }]
+  } || null);
 
   const [ pageReady, setPageReady ] = useState(false)
 
@@ -35,17 +38,17 @@ function App() {
   useEffect(() => {
     setPageReady(false);
 
-    fetch(
-      `/schematic/pages/${query?.ix}`
-    ).then((r) => r.json()).then((result) => {
-      console.log("pages", result.page)
+    // fetch(
+    //   `/schematic/pages/${query?.ix}`
+    // ).then((r) => r.json()).then((result) => {
+    //   console.log("pages", result.page)
       
-      // setTimeout(() => setPageReady(true), 500);
-      setPageReady(true);
+    //   // setTimeout(() => setPageReady(true), 500);
+    //   setPageReady(true);
 
-      setProject(result.project)
-      setPage(result.page);
-    })
+    //   setProject(result.project)
+    //   setPage(result.page);
+    // })
   }, [query])
 
 

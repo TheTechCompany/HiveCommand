@@ -17,6 +17,8 @@ export const WireTool = (flowWrapper: any, page: any) => {
 
     const onClick = (e: MouseEvent) => {
 
+        e.stopPropagation();
+
         console.log("OnMouseDown");
 
         const wrapperBounds = flowWrapper?.current?.getBoundingClientRect()
@@ -30,7 +32,7 @@ export const WireTool = (flowWrapper: any, page: any) => {
                 y: (e.clientY || 0) - (wrapperBounds?.y || 0)
             });
 
-            (e.currentTarget as HTMLElement).setPointerCapture((e as PointerEvent).pointerId)
+            // (e.currentTarget as HTMLElement).setPointerCapture((e as PointerEvent).pointerId)
 
             setPoints([startPoint])
 

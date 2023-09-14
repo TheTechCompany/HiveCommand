@@ -25,6 +25,7 @@ exports.handler = async function (event, context) {
         headless: chromium.headless,
         executablePath: await chromium.executablePath
     })
+    
 
     console.log("Exported Schematic!")
 

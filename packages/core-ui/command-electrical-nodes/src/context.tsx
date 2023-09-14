@@ -3,6 +3,8 @@ import React from 'react';
 
 export const ElectricalNodesContext = React.createContext<{
 
+    printMode?: boolean;
+
     onEdgePointCreated?: (id: string, ix: number, pos: {x: number, y: number}) => void;
     onEdgePointChanged?: (id: string, ix: number, change: {x: number, y: number}) => void; 
 

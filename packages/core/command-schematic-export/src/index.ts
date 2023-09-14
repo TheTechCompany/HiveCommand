@@ -110,8 +110,22 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 }
 
 // export_schematic({
+//     name: 'Projec',
 //     pages: [
-//         {id: '1', nodes: [{id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} }]},
+//         {
+//             id: '1', 
+//             nodes: [
+//                 {id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, 
+//                 {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} 
+//             }
+//         ],
+//             edges: [{id: '2', type: 'wire', source: 'canvas', target: 'canvas', points: [{x: 50, y: 50}, {x: 100, y: 100}] }]
+//         },
 //         {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
 //     ]
+// }, {
+//     executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
+// }).then((pdf: any) => {
+//         writeFileSync('./test.pdf', pdf)
+
 // })
