@@ -128,9 +128,10 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 // }, {
 //     executablePath: '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome',
 //     defaultViewport: {
-//         width: 400,
-//         height: 600
-//     }
+//         "deviceScaleFactor":1,"hasTouch":false,"height":1080,"isLandscape":true,"isMobile":false,"width":1920
+//     },
+//     headless: false,
+//     args: ['--window-size=1920,1080']
 //     // viewport: {
 //     //     width: 600,
 //     //     height: 800

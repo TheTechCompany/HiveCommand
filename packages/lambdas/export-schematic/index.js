@@ -22,8 +22,8 @@ exports.handler = async function (event, context) {
             {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
         ]
     }, {
-        args: chromium.args,
-        defaultViewport: chromium.defaultViewport,
+        // args: chromium.args,
+        // defaultViewport: chromium.defaultViewport,
         headless: chromium.headless,
         executablePath: await chromium.executablePath
     })
