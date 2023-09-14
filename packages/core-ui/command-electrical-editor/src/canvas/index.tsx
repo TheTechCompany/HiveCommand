@@ -1,7 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 
 import { Background, Controls, MiniMap, ReactFlow, SelectionMode, Transform, Viewport, XYPosition, useNodesState, useOnSelectionChange, useOnViewportChange, useReactFlow } from 'reactflow'
-import { ElectricalSymbol } from './node';
 
 import 'reactflow/dist/style.css';
 import { useEditorContext } from "../context";

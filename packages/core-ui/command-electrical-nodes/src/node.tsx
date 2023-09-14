@@ -1,4 +1,4 @@
-import { CanvasNode, ElectricalSymbol } from './nodes';
+import { CanvasNode, BoxNode, TextNode, ElectricalSymbol } from './nodes';
 
 export const nodeTypes = {
     electricalSymbol: ElectricalSymbol,
