@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import { Box, Typography } from '@mui/material';
-import { ReactFlow, ReactFlowProvider, Node, Edge } from 'reactflow';
+import { ReactFlow, ReactFlowProvider, Node, Edge, ConnectionMode } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ViewportLogger } from './viewport';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes'
@@ -16,7 +16,7 @@ export interface SchematicViewerProps {
 }
 
 export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
-    console.log(props);
+    console.log("RATIO", props, _edgeTypes);
 // width: 1080, height: 1080 * (props.ratio || 1.77),
 
     const nodeTypes = useMemo(() => _nodeTypes, []);
@@ -26,7 +26,8 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <ElectricalNodesProvider
                 value={{
-                    elements: props.elements
+                    elements: props.elements,
+                    printMode: true
                 }}
                 >
                 <ReactFlowProvider>
@@ -34,13 +35,14 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                     <ReactFlow 
                         fitView
                         maxZoom={0.8}
+                        connectionMode={ConnectionMode.Loose}
                         nodeTypes={nodeTypes}
                         edgeTypes={edgeTypes}
-                        nodes={props.nodes || [] }
+                        nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: 10, y: 10 }, data: {} }])}
                         edges={props.edges || []}
                         />
                 </ReactFlowProvider>
-                <Box sx={{display: 'flex', height: '40px'}}>
+                <Box sx={{display: 'flex'}}>
                     <InfoFooter info={props.info} />
                 </Box>
             </ElectricalNodesProvider>

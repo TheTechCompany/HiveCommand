@@ -132,9 +132,9 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
         <Box
             tabIndex={0}
             ref={flowWrapper}
-            onMouseDown={(e) => {
+            onPointerDown={(e) => {
                 // (e.currentTarget as HTMLElement).setPointerCapture((e as any).pointerId);
-
+                // e.preventDefault();
                 if(props.activeTool) (tools as any)[props.activeTool]?.onMouseDown?.(e)
             }}
             onKeyDown={(e) => {

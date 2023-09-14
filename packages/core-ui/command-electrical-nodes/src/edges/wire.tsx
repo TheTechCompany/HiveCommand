@@ -16,11 +16,13 @@ export const WireEdge = ({
     data
 }: EdgeProps) => {
 
+    console.log("EDGE", id, data)
+
     const { project } = useReactFlow()
 
     const [ points, setPoints ] = useState<any[]>(data?.points || []);
     
-    const { onEdgePointCreated, onEdgePointChanged } = useElectricalNodeContext();
+    const { onEdgePointCreated, onEdgePointChanged, printMode } = useElectricalNodeContext();
 
     // const { onUpdatePage, page } = useEditorContext();
 
@@ -91,7 +93,7 @@ export const WireEdge = ({
                         // stroke: style.stroke || 'black',
                         ...style
                     }} /> */}
-            {points?.map((point: any, ix: number) => (
+            {points?.map((point: any, ix: number) => !printMode && (
                 <circle
                     onPointerDown={(e) => {
 
