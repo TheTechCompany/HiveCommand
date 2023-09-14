@@ -73,6 +73,7 @@
   "include": ["src/"],
   "exclude": ["dist/"],
   "references": [
-    {"path": "../command-remote-components"}
+    {"path": "../command-remote-components"},
+    {"path": "../command-electrical-nodes"}
   ]
 }
