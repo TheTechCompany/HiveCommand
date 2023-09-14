@@ -100,17 +100,13 @@ export default (prisma: PrismaClient) => {
 					})
 
 					const result = await lambda.send(invokeCommand) 
-					// {
-					// 	FunctionName: process.env.EXPORT_LAMBDA || '',
-					// 	Payload: JSON.stringify({
-					// 		program: currentProgram
-					// 	})
-					// }).promise()
 
-					if(result.Payload)
-						return Buffer.from(result.Payload).toString('utf-8')
-					else 
+					if(result.Payload){
+						let url = Buffer.from(result.Payload).toString('utf-8');
+						return url.substring(1, url.length -1);
+					}else{
 						throw new Error("No payload received");
+					}
 				
 				},
                 createCommandSchematicPage: async (root: any, args: {schematic: string, input: any}, context: any) => {
