@@ -153,6 +153,7 @@ export const SchematicEditor = () => {
                         } 
                     })
 
+                    
                     setPages((pages) => {
                         let p = pages.slice();
 
