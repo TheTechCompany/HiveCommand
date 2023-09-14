@@ -51,7 +51,7 @@ function App() {
 
 
   return (
-    <Box sx={{height: '100%', width: '100%', display: 'flex', border: '1px solid black'}}>
+    <Box sx={{height: '100%', width: '100%', display: 'flex'}}>
       {pageReady != null && packReady != null && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
       
       <SchematicViewer

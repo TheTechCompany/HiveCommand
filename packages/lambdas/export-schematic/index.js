@@ -24,6 +24,7 @@ exports.handler = async function (event, context) {
     }, {
         args: chromium.args,
         // args: ['--no-sandbox']
+        
         // args: chromium.args,
         defaultViewport: chromium.defaultViewport,
         headless: chromium.headless,
@@ -46,7 +47,7 @@ exports.handler = async function (event, context) {
     console.log("Posted Schematic!")
 
     const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: id});
-    
+
     console.log("Presigned Schematic!")
 
     return getSignedUrl(client, getCommand, {expiresIn: 3600});
