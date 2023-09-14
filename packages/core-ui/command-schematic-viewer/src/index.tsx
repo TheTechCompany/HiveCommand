@@ -4,12 +4,15 @@ import { ReactFlow, ReactFlowProvider, Node, Edge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ViewportLogger } from './viewport';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes'
+import { InfoFooter } from './info-footer';
 
 export interface SchematicViewerProps {
     ratio: number,
-    elements: any[]
+    elements: any[],
+
     nodes: Node[],
     edges: Edge[],
+    info?: any;
 }
 
 export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
@@ -20,7 +23,7 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
     const edgeTypes = useMemo(() => _edgeTypes, []);
 
     return (
-        <Box sx={{flex: 1, display: 'flex'}}>
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <ElectricalNodesProvider
                 value={{
                     elements: props.elements
@@ -37,6 +40,9 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                         edges={props.edges || []}
                         />
                 </ReactFlowProvider>
+                <Box sx={{display: 'flex', height: '40px'}}>
+                    <InfoFooter info={props.info} />
+                </Box>
             </ElectricalNodesProvider>
         </Box>
     )

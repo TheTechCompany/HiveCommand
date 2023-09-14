@@ -148,7 +148,7 @@ export default (prisma: PrismaClient) => {
                             id: args.id,
                         },
                         data: {
-                                    name: args.input.name,
+                            name: args.input.name,
                             nodes: args.input.nodes,
                             edges: args.input.edges,
                                     schematic: {
