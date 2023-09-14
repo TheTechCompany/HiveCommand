@@ -81,7 +81,7 @@ export const PagesPane = (props: any) => {
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Box sx={{ flex: 1 }}>
                             <Button size="small" disabled={props.exporting} variant='contained' onClick={props.onExport}>
-                                {props.exporting ? <CircularProgress size={'small'} sx={{marginRight: '6px'}} /> : null} Export
+                                {props.exporting ? <CircularProgress size={'20px'} sx={{marginRight: '6px'}} /> : null} Export
                             </Button>
                         </Box>
                         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>

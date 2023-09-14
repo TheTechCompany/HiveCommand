@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 import { useEditorContext } from '../context';
 import { BoxNode, CanvasNode, ElectricalSymbol, TextNode } from './node';
+import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes } from '@hive-command/electrical-nodes';
 import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
 
@@ -22,16 +23,9 @@ export const CanvasSurface = () => {
         setEdges(pages?.find((a: any) => a.id == selectedPage)?.edges || [])
     }, [selectedPage, pages])
   
-    const nodeTypes = useMemo(() => ({
-        electricalSymbol: ElectricalSymbol,
-        canvasNode: CanvasNode,
-        box: BoxNode,
-        text: TextNode,
-    }), [])
+    const nodeTypes = useMemo(() => _nodeTypes, [])
 
-    const edgeTypes = useMemo(() => ({
-        wire: WireEdge
-    }), [])
+    const edgeTypes = useMemo(() => _edgeTypes, [])
 
     const nodeMap = (item: any) => {
         return {
