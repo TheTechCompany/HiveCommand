@@ -16,15 +16,11 @@ export const WireEdge = ({
     data
 }: EdgeProps) => {
 
-    console.log("EDGE", id, data)
-
     const { project } = useReactFlow()
 
     const [ points, setPoints ] = useState<any[]>(data?.points || []);
     
     const { onEdgePointCreated, onEdgePointChanged, printMode } = useElectricalNodeContext();
-
-    // const { onUpdatePage, page } = useEditorContext();
 
     const directPath = useMemo(() => `M ${points?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < points?.length - 1 ? 'L' : ''}`).join(' ')}`, [points]);
 
@@ -35,31 +31,7 @@ export const WireEdge = ({
     useEffect(() => {
         setPoints(data?.points);
     }, [data?.points])
-    /*
-        let newEdges = (page?.edges || []).slice();
-
-        let edgeIx = newEdges.findIndex((a: any) => a.id == id);
-
-        let points = [...(data?.points || [])];
-
-        const bounds = wrapper?.current?.getBoundingClientRect();
-
-        points?.splice(ix + 1, 0, project({x: e.clientX - bounds.x, y: e.clientY - bounds.y}) )
-
-                        newEdges[edgeIx] = {
-                            ...newEdges?.[edgeIx],
-                            data: {
-                                ...newEdges?.[edgeIx]?.data,
-                                points
-                            }
-                        }
-
-                        onUpdatePage?.({
-                            ...page,
-                            edges: newEdges
-                        }, "newPoint")
-
-    */
+  
     return (
         <>
             {/* <BaseEdge path={directPath} style={style} /> */}

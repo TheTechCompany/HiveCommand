@@ -19,11 +19,11 @@ export const ElectricalSymbol = (props: NodeProps) => {
             height: props.data.height || 'auto'
         }}>
             {props.data.symbol ? component?.() : "no icon found"}
-            <Handle type={"target"} id={props.id} position={Position.Left} style={{position: "absolute"}} />
-            <Handle type={"source"} id={props.id} position={Position.Left} style={{position: "absolute"}} />
+            {/* <Handle type={"target"} id={props.id} position={Position.Left} style={{position: "absolute"}} />
+            <Handle type={"source"} id={props.id} position={Position.Left} style={{position: "absolute"}} /> */}
 
             {ports.map((port: any) => (
-                <Handle type={"target"} id={port.id} position={Position.Left} style={{position: "absolute", left: port.x, top: port.y}} />
+                <Handle type={"target"} id={port.id} position={Position.Left} style={{position: "absolute", opacity: 0, left: port.x, top: port.y}} />
             ))}
         </div>
     )
