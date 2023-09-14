@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange } from 'reactflow';
 import { useEditorContext } from '../context';
-import { BoxNode, CanvasNode, ElectricalSymbol, TextNode } from './node';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes } from '@hive-command/electrical-nodes';
 import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
