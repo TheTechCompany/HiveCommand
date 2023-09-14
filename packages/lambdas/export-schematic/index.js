@@ -23,6 +23,7 @@ exports.handler = async function (event, context) {
         ]
     }, {
         
+
         args: chromium.args,
         // args: ['--no-sandbox']
 
