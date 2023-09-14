@@ -44,8 +44,6 @@ export const CanvasSurface = () => {
     const finalNodes = useMemo(() => (nodes.map((x) => ({ ...x, selected: selected.nodes.findIndex((a: any) => a.id == x.id) > -1 })) as any[]), [nodes, selected])
     const finalEdges = useMemo(() => (edges.map((x) => ({ ...x, selected: selected.edges.findIndex((a: any) => a.id == x.id) > -1 })) as any[]), [edges, selected])
 
-    console.log({finalEdges})
-
     const onEdgePointCreated = (id: string, ix: number, pos: {x: number, y: number}) => {
         let newEdges = (edges).slice();
 

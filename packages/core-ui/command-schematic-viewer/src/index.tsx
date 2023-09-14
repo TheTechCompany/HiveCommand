@@ -30,18 +30,20 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                     printMode: true
                 }}
                 >
-                <ReactFlowProvider>
-                    <ViewportLogger />
-                    <ReactFlow 
-                        fitView
-                        maxZoom={0.8}
-                        connectionMode={ConnectionMode.Loose}
-                        nodeTypes={nodeTypes}
-                        edgeTypes={edgeTypes}
-                        nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: 10, y: 10 }, data: {} }])}
-                        edges={props.edges || []}
-                        />
-                </ReactFlowProvider>
+                <Box sx={{flex: 1, display: 'flex'}}>
+                    <ReactFlowProvider>
+                        <ViewportLogger />
+                        <ReactFlow 
+                            fitView
+                            maxZoom={0.8}
+                            connectionMode={ConnectionMode.Loose}
+                            nodeTypes={nodeTypes}
+                            edgeTypes={edgeTypes}
+                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: 10, y: 10 }, data: {} }])}
+                            edges={props.edges || []}
+                            />
+                    </ReactFlowProvider>
+                </Box>
                 <Box sx={{display: 'flex'}}>
                     <InfoFooter info={props.info} />
                 </Box>
