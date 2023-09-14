@@ -23,6 +23,8 @@ exports.handler = async function (event, context) {
         ]
     }, {
         // args: chromium.args,
+        args: ['--no-sandbox']
+        // args: chromium.args,
         // defaultViewport: chromium.defaultViewport,
         headless: chromium.headless,
         executablePath: await chromium.executablePath
