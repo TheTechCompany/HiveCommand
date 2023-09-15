@@ -22,6 +22,19 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
     const nodeTypes = useMemo(() => _nodeTypes, []);
     const edgeTypes = useMemo(() => _edgeTypes, []);
 
+    const pageMiddle = useMemo(() => {
+        let minX = Math.min(...props.nodes?.map((x) => x.position?.x))
+        let maxX = Math.max(...props.nodes?.map((x) => x.position?.x))
+
+        let minY = Math.min(...props.nodes?.map((x) => x.position?.y))
+        let maxY = Math.max(...props.nodes?.map((x) => x.position?.y))
+
+        return {
+            x: minX + ((maxX - minX) / 2),
+            y: minY + ((maxY - minY) / 2)
+        }
+    }, [props.nodes])
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <ElectricalNodesProvider
@@ -39,7 +52,7 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                             connectionMode={ConnectionMode.Loose}
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
-                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: 10, y: 10 }, data: {} }])}
+                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
                             edges={props.edges || []}
                             />
                     </ReactFlowProvider>
