@@ -6,6 +6,8 @@ import { ViewportLogger } from './viewport';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes'
 import { InfoFooter } from './info-footer';
 
+export * from './context';
+
 export interface SchematicViewerProps {
     ratio: number,
     elements: any[],
@@ -44,7 +46,6 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                 }}
                 >
                 <Box sx={{flex: 1, display: 'flex'}}>
-                    <ReactFlowProvider>
                         <ViewportLogger />
                         <ReactFlow 
                             fitView
@@ -55,7 +56,6 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                             nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
                             edges={props.edges || []}
                             />
-                    </ReactFlowProvider>
                 </Box>
                 <Box sx={{display: 'flex'}}>
                     <InfoFooter info={props.info} />

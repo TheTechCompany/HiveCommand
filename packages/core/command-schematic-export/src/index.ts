@@ -26,7 +26,7 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
 
 
     app.get('/schematic/pages/:ix', (req, res) => {
-
+        console.log("GET", req.params.ix,  pages?.[parseInt(req.params.ix)] );
         res.send({
             project: schematic.name,
             page: pages?.[parseInt(req.params.ix)] 
@@ -50,32 +50,55 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
     
                     console.log("Launched browser!");
 
-                    const page = await browser.newPage();
-
-                    console.log(page.viewport());
-
-                    page.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
-
-                    for(var i = 0; i < pages.length; i++){
+                    const pdfPages = await Promise.all(pages.map(async (page, i) => {
+                        const browserPage = await browser.newPage();
     
-                        console.log(`Exporting page ${i}...`);
-
-                        await page.goto(`http://localhost:${address?.port}#ix=${i}`)
+                        browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
+    
+                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`)
     
                         console.log(`Exporting page ${i} - OnPage.`);
     
                         // await page.
                         //@ts-ignore
-                        await page.waitForSelector<any>(".loaded")
+                        await browserPage.waitForSelector<any>(".loaded")
     
-                        await new Promise((resolve) => setTimeout(() => resolve(true), 500));
+                        await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
                         
                         console.log(`Exporting page ${i} - Waited.`);
     
-                        const pdfData = await page.pdf({format: 'A4', landscape: true});
+                        const pdfData = await browserPage.pdf({format: 'A4', landscape: true});
                         console.log(`Exporting page ${i} - PDF'd.`);
+
+                        return pdfData;
+                    })) 
+
+                    // const page = await browser.newPage();
+
+                    // console.log(page.viewport());
+
+                    // page.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
+
+                    for(var i = 0; i < pdfPages.length; i++){
+    
+                        // console.log(`Exporting page ${i}...`);
+
+                        // await page.goto(`http://localhost:${address?.port}#ix=${i}`)
+    
+                        // console.log(`Exporting page ${i} - OnPage.`);
+    
+                        // // await page.
+                        // //@ts-ignore
+                        // await page.waitForSelector<any>(".loaded")
+    
+                        // await new Promise((resolve) => setTimeout(() => resolve(true), 500));
                         
-                        const pdfPage = await PDFDocument.load(pdfData)
+                        // console.log(`Exporting page ${i} - Waited.`);
+    
+                        // const pdfData = await page.pdf({format: 'A4', landscape: true});
+                        // console.log(`Exporting page ${i} - PDF'd.`);
+                        
+                        const pdfPage = await PDFDocument.load(pdfPages[i])
                         console.log(`Exporting page ${i} - Loaded to PDF.`);
     
                         const copiedPages = await pdfDoc.copyPages(pdfPage, [0]);
