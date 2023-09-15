@@ -50,10 +50,10 @@ function App() {
     })
   }, [query?.ix])
 
-  const nodesInitialized = useNodesInitialized();
+  const nodesInitialized = useNodesInitialized({includeHiddenNodes: false});
 
   console.log({nodesInitialized});
-  
+
   return (
     <Box sx={{height: '100%', width: '100%', display: 'flex'}}>
         {nodesInitialized && pageReady && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}

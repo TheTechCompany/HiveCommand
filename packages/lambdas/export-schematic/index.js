@@ -22,7 +22,6 @@ exports.handler = async function (event, context) {
             {id: '2', nodes: [{ id: '2', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {symbol: 'AcCoil'} }]},
         ]
     }, 297/210, {
-
         args: chromium.args.filter((a) => a.indexOf('--window-size') < 0),
         defaultViewport: chromium.defaultViewport,
         headless: chromium.headless,
