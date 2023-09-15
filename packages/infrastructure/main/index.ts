@@ -48,7 +48,7 @@ const main = (async () => {
     const internalURL = mqttRef.getOutput('internalURL');
     const externalURL = mqttRef.getOutput('externalURL');
 
-    const exportLambda = lambdaRef.getOutput('exportLambda');
+    const exportLambda = lambdaRef.getOutput('exportFunction');
 
     // const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
