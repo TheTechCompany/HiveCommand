@@ -1,6 +1,7 @@
 import { IconButton, Paper, Box, Typography, Divider, List, ListItem, CircularProgress, ListItemButton, Button } from '@mui/material';
 import React, { useState } from 'react';
-import { Add, DragIndicator } from '@mui/icons-material'
+import { Add, DragIndicator, MoreVert } from '@mui/icons-material'
+
 import { PageModal } from '../components/page-modal';
 import { useEditorContext } from '../context';
 import {CSS} from '@dnd-kit/utilities';
@@ -24,10 +25,11 @@ import {
 
 export const PagesPane = (props: any) => {
     const [modalOpen, openModal] = useState(false);
+    const [ selected, setSelected ] = useState<any | null>(null)
 
     const [ activeId, setActiveId ] = useState(null);
 
-    const { pages, onReorderPage } = useEditorContext();
+    const { pages, onReorderPage, selectedPage } = useEditorContext();
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -58,6 +60,12 @@ export const PagesPane = (props: any) => {
         setActiveId(active);
     }
 
+    const onEdit = (page: any) => {
+        openModal(true);
+        setSelected(page);
+
+    }
+
     return (
         <DndContext
             sensors={sensors}
@@ -69,12 +77,26 @@ export const PagesPane = (props: any) => {
                 items={(pages || []).map((x) => x.id)}
                 strategy={verticalListSortingStrategy}
             >
-                <Paper sx={{ minWidth: '200px', padding: '6px' }}>
+                <Paper sx={{ minWidth: '200px', display: 'flex', flexDirection: 'column', padding: '6px' }}>
                     <PageModal
                         open={modalOpen}
-                        onClose={() => { openModal(false) }}
+                        selected={selected}
+                        onDelete={() => {
+                            props.onDeletePage?.(selected)
+
+                            openModal(false) 
+                            setSelected(null);
+                        }}
+                        onClose={() => { 
+                            openModal(false) 
+                            setSelected(null);
+                        }}
                         onSubmit={(page) => {
-                            props.onCreatePage?.(page);
+                            if(selected){
+                                props.onUpdatePage?.(page);
+                            }else{
+                                props.onCreatePage?.(page);
+                            }
                             openModal(false);
                         }}
                     />
@@ -94,27 +116,30 @@ export const PagesPane = (props: any) => {
                         </Box>
                     </Box>
                     <Divider sx={{margin: '6px'}}/>
-                    
-                    <List>
-                        {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (
-                            <PageItem  
-                                key={props.id}
-                                onSelectPage={props.onSelectPage} 
-                                page={page} />
+                    <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
+                        <List>
+                            {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (
+                                <PageItem  
+                                    selected={selectedPage == page.id}
+                                    key={props.id}
+                                    onEdit={() => onEdit(page)}
+                                    onSelectPage={props.onSelectPage} 
+                                    page={page} />
 
-                        ))}
-                    </List>
-{/* 
+                            ))}
+                        </List>
+                    </Box>
+
                     <DragOverlay>
                         {activeId ? (
                             <Paper sx={{display: 'flex', flex: 1}}>
                             <IconButton>
-                                <DragHandle />
+                                <DragIndicator />
                             </IconButton>
                             <ListItemButton>{pages?.find((a) => a.id == activeId)?.name}</ListItemButton>
                             </Paper>
                         ) : null}
-                    </DragOverlay> */}
+                    </DragOverlay>
                 </Paper>
             </SortableContext>
         </DndContext>
@@ -131,13 +156,18 @@ export const PageItem = (props: any) => {
 
     return (
         <div ref={setNodeRef} style={style} {...attributes}>
-            <ListItem onClick={() => {
-                props.onSelectPage?.(props.page)
-            }}>
+            <ListItem sx={{'&:hover .edit-button': {opacity: 1}, background: props.selected ? '#dfdfdf' : undefined}} >
                 <IconButton  size="small" {...listeners}>
                     <DragIndicator fontSize="inherit" />
                 </IconButton>
-                <ListItemButton>{props.page?.name}</ListItemButton>
+                <ListItemButton onClick={() => {
+                    props.onSelectPage?.(props.page)
+                }}>
+                    {props.page?.name}
+                </ListItemButton>
+                <IconButton onClick={props.onEdit} sx={{opacity: 0}} className="edit-button" size="small">
+                    <MoreVert fontSize="inherit" />
+                </IconButton>
             </ListItem>
         </div>
     )

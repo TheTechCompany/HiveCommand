@@ -3,6 +3,13 @@ import { Ref, useState } from "react"
 import { useReactFlow } from 'reactflow';
 import { useEditorContext } from "../context";
 
+export const SymbolToolProps = {
+    symbol: 'String',
+    rotation: 'Number',
+    width: 'Number',
+    height: 'Number'
+}
+
 export const SymbolTool = (flowWrapper: any, page: any) => {
 
     // const [ startPoin, setStartPoint ] = useState<any>(null)

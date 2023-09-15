@@ -6,7 +6,7 @@ import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
 import { useCanvasContext } from './context';
 
-export const CanvasSurface = () => {
+export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
 
     const { pages, selectedPage, onUpdatePage, draftWire, elements } = useEditorContext();
 
@@ -160,7 +160,9 @@ export const CanvasSurface = () => {
                 ])}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
-
+                onNodeDoubleClick={(ev, node) => {
+                    props.onEdit?.(node);
+                }}
             // onNodeClick={undefined}
             // onPaneClick={undefined}
             >
