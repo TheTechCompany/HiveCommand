@@ -57,9 +57,7 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
     
                         console.log("Loading pages", i)
 
-                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`, {
-                            waitUntil: 'networkidle0'
-                        })
+                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`)
     
                         return browserPage;
                     }))
