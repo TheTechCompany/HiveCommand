@@ -55,6 +55,8 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
     
                         browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
     
+                        console.log("Loading pages", i)
+
                         await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`, {
                             waitUntil: 'networkidle0'
                         })
@@ -66,6 +68,7 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
                     
                     for(var i = 0; i < loadedPages.length; i++){
 
+                        console.log("Loaded pages", i)
                         await loadedPages[i].bringToFront();
 
 
