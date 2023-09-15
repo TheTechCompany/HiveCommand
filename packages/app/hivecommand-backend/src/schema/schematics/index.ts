@@ -161,7 +161,7 @@ export default (prisma: PrismaClient) => {
 					})
 				},
 				deleteCommandSchematicPage: async (root: any, args: { schematic: string, id: string }, context: any) => {
-					const res = await prisma.electricalSchematicPage.delete({ where: { id: args.id, schematicId: args.schematic } })
+					const res = await prisma.electricalSchematicPage.delete({ where: { id: args.id } })
 					return res != null;
 				},
 				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, oldIx: number, newIx: number }, context: any) => {
