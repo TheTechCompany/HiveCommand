@@ -50,28 +50,34 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
     
                     console.log("Launched browser!");
 
-                    const pdfPages = await Promise.all(pages.map(async (page, i) => {
+                    const loadedPages = await Promise.all(pages.map(async (page, i) => {
                         const browserPage = await browser.newPage();
     
                         browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
     
-                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`)
+                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`, {
+                            waitUntil: 'networkidle0'
+                        })
     
-                        console.log(`Exporting page ${i} - OnPage.`);
-    
-                        // await page.
-                        //@ts-ignore
-                        await browserPage.waitForSelector<any>(".loaded")
-    
-                        await new Promise((resolve) => setTimeout(() => resolve(true), 1000));
-                        
-                        console.log(`Exporting page ${i} - Waited.`);
-    
-                        const pdfData = await browserPage.pdf({format: 'A4', landscape: true});
-                        console.log(`Exporting page ${i} - PDF'd.`);
+                        return browserPage;
+                    }))
 
-                        return pdfData;
-                    })) 
+                    let pdfPages = [];
+                    
+                    for(var i = 0; i < loadedPages.length; i++){
+
+                        await loadedPages[i].bringToFront();
+
+
+                        //@ts-ignore
+                        await loadedPages[i].waitForSelector<any>(".loaded")
+                        
+
+                        const pdfData = await loadedPages[i].pdf({format: 'A4', landscape: true});
+                        
+                        pdfPages.push(pdfData);
+                        
+                    }
 
                     // const page = await browser.newPage();
 
