@@ -23,7 +23,6 @@ exports.handler = async function (event, context) {
         ]
     }, 297/210, {
 
-
         args: chromium.args.filter((a) => a.indexOf('--window-size') < 0),
         // args: ['--no-sandbox']
 

@@ -3,6 +3,10 @@ import { Ref, useState } from "react"
 import { useReactFlow } from 'reactflow';
 import { useEditorContext } from "../context";
 
+export const TextToolProps = {
+    text: 'String',
+    fontSize: 'Number'
+}
 
 const BaseTextTool = (flowWrapper?: any, page?: any) => {
    // const [ startPoin, setStartPoint ] = useState<any>(null)

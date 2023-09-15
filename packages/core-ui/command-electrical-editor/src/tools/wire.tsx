@@ -53,7 +53,6 @@ export const WireTool = (flowWrapper: any, page: any) => {
             })
         }
 
-        console.log({points})
 
 
         // const mouseMove = () => {

@@ -23,6 +23,8 @@ export interface CanvasProps {
     activeTool?: string;
     symbolRotation?: number;
     selectedSymbol?: any;
+
+    onEdit?: (elem: any) => void;
 }
 
 export const Canvas : React.FC<CanvasProps> = (props) => {
@@ -71,7 +73,7 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
     //     }
     // ] : []), [cursorPosition, selectedSymbol, symbolRotation])
 
-    const surface = useMemo(() => <CanvasSurface />, [])
+    const surface = useMemo(() => <CanvasSurface onEdit={props.onEdit} />, [])
 
     let [ viewportDatum, setViewportDatum ] = useState<{x: number, y: number, zoom: number} | null>(null)
 

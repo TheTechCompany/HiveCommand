@@ -116,16 +116,19 @@ export default (prisma: PrismaClient) => {
 							schematicId: args.schematic
 						},
 						orderBy: {
-							rank: 'asc'
+							rank: 'desc'
 						}
 					})
 
 					const { rank } = lastPage || {}
 
+
 					let aboveRank = LexoRank.parse(rank || LexoRank.min().toString())
 					let belowRank = LexoRank.parse(LexoRank.max().toString())
 
 					let newRank = aboveRank.between(belowRank).toString()
+
+					console.log({rank, aboveRank, belowRank, newRank})
 
 					return await prisma.electricalSchematicPage.create({
 
@@ -158,7 +161,8 @@ export default (prisma: PrismaClient) => {
 					})
 				},
 				deleteCommandSchematicPage: async (root: any, args: { schematic: string, id: string }, context: any) => {
-					return await prisma.electricalSchematicPage.delete({ where: { id: args.id } })
+					const res = await prisma.electricalSchematicPage.delete({ where: { id: args.id, schematicId: args.schematic } })
+					return res != null;
 				},
 				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, oldIx: number, newIx: number }, context: any) => {
 
@@ -185,7 +189,7 @@ export default (prisma: PrismaClient) => {
 
 					const belowIx = pages?.[args.newIx + 1]?.rank;
 
-					console.log(oldIx.rank)
+					console.log(oldIx.rank, pages)
 					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
 					//     SELECT id, rank FROM "TimelineItem" 
 					//     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
@@ -205,7 +209,7 @@ export default (prisma: PrismaClient) => {
 
 					console.log(newRank.toString())
 
-					return await prisma.electricalSchematicPage.update({
+					const result = await prisma.electricalSchematicPage.update({
 						where: {
 							id: oldIx?.id,
 						},
@@ -214,6 +218,7 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
+					return result.rank == newRank.toString();
 				}
 			}
 		},

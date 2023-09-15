@@ -4,6 +4,11 @@ import { useReactFlow } from 'reactflow';
 import { useEditorContext } from "../context";
 
 
+export const BoxToolProps = {
+    width: 'Number',
+    height: 'Number'
+}
+
 const BaseBoxTool = (flowWrapper?: any, page?: any, border?: any) => {
    // const [ startPoin, setStartPoint ] = useState<any>(null)
 

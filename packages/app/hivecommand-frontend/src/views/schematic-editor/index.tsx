@@ -59,6 +59,14 @@ export const SchematicEditor = () => {
             // awaitRefetchQueries: true
         })
 
+    const [deletePage] = useMutation(gql`
+        mutation DeletePage($schematic: ID, $id: ID) {
+            deleteCommandSchematicPage(schematic: $schematic, id: $id)
+        }
+    `, {
+            refetchQueries: ['GetSchematic'],
+            awaitRefetchQueries: true
+        })
 
     const [ updatePageOrder ] = useMutation(gql`
         mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
@@ -102,6 +110,9 @@ export const SchematicEditor = () => {
                     createPage({ variables: { schematic: id, name: page.name } })
 
                 }}
+                onDeletePage={(page) => {
+                    deletePage({variables: {schematic: id, id: page.id}});
+                }}
 
                 onExport={() => {
                     setExporting(true);
@@ -142,14 +153,24 @@ export const SchematicEditor = () => {
                 }}
                 onUpdatePage={(page: any, log) => {
 
+                    let update = {};
+
+                    if(page.nodes){
+                        update['nodes'] =  page.nodes?.map((x) => ({id: x.id, data: x.data, position: x.position, type: x.type}))
+                    }
+                    if(page.edges){
+                        update['edges'] = page.edges;
+                    }
+                    if(page.name)
+                        update['name'] = page.name;
+
                     debouncedUpdate({ 
                         variables: { 
                             schematic: id, 
                             id: page.id, 
                             input: { 
-                                nodes: page.nodes.map((x) => ({id: x.id, data: x.data, position: x.position, type: x.type})),
-                                edges: page.edges
-                             } 
+                                ...update
+                            } 
                         } 
                     })
 
