@@ -9,7 +9,8 @@ export const InfoFooter = (props: {info: any}) => {
 
             </Box>
             <Box sx={{flex: 1}}>
-                <Box sx={{border: '1px solid black', padding: '3px 6px 3px 6px'}}>Page: {props.info?.page}</Box>
+                <Box sx={{border: '1px solid black', padding: '3px 6px 3px 6px'}}>{props.info?.pageTitle}</Box>
+                <Box sx={{border: '1px solid black', padding: '3px 6px 3px 6px', fontSize: '12px'}}>Page: {props.info?.page}</Box>
             </Box>
         </Box>
     )

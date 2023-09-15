@@ -3,10 +3,17 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { SchematicViewerProvider } from '@hive-command/schematic-viewer';
+import { ReactFlowProvider } from 'reactflow';
 
 ReactDOM.render(
   <React.StrictMode>
+    <ReactFlowProvider>
+      <SchematicViewerProvider>
+
     <App />
+    </SchematicViewerProvider>
+    </ReactFlowProvider>
   </React.StrictMode>,
   document.getElementById('root') as HTMLElement
 );

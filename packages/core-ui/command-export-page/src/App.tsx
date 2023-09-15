@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import qs from 'qs'
+import { useNodesInitialized } from 'reactflow';
 import { SchematicViewer } from '@hive-command/schematic-viewer'
 import { useRemoteComponents } from '@hive-command/remote-components'
 import { Box } from '@mui/material'
@@ -41,29 +42,33 @@ function App() {
     ).then((r) => r.json()).then((result) => {
       console.log("pages", result.page)
       
-      // setTimeout(() => setPageReady(true), 500);
-      setPageReady(true);
+      setTimeout(() => setPageReady(true), 500);
+      // setPageReady(true);/
 
       setProject(result.project)
       setPage(result.page);
     })
-  }, [query])
+  }, [query?.ix])
 
+  const nodesInitialized = useNodesInitialized();
 
+  console.log({nodesInitialized});
+  
   return (
     <Box sx={{height: '100%', width: '100%', display: 'flex'}}>
-      {pageReady != null && packReady != null && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
-      
-      <SchematicViewer
-        ratio={297/210}
-        elements={items}
-        nodes={page?.nodes || []}
-        edges={page?.edges || []}
-        info={{
-          project,
-          page: query?.ix
-        }}
-          />
+        {nodesInitialized && pageReady && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
+
+        <SchematicViewer
+          ratio={297/210}
+          elements={items}
+          nodes={page?.nodes || []}
+          edges={page?.edges || []}
+          info={{
+            project,
+            page: parseInt(query?.ix?.toString() || '0') + 1,
+            pageTitle: page?.name,
+          }}
+            />
     </Box>
   )
 }
