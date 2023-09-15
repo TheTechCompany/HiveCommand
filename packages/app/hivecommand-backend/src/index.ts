@@ -49,7 +49,6 @@ const prisma = new PrismaClient();
 			typeDefs: typeDefs,
 			resolvers: resolvers,
 		},
-		
 		resources: [
 			{
 				name: 'CommandDevice', 
