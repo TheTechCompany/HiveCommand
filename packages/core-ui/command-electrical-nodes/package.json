@@ -15,5 +15,8 @@
   "devDependencies": {
     "@types/react": "^17.x",
     "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "reactflow": "*"
   }
 }

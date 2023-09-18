@@ -19,8 +19,6 @@ function App() {
     // return qs.parse(location.search, {ignoreQueryPrefix: true})
   }, [location.hash])
 
-
-
   const [ project, setProject ] = useState<any>(null);
   const [ page, setPage ] = useState<any>(null);
 
@@ -55,8 +53,6 @@ function App() {
     setLoading(true);
     setPageReady(false);
 
-    console.log("QUERY IX CHANGED", query?.ix);
-
     try{
       let ix = parseInt(query?.ix?.toString() || '-1')
       if(ix > -1){
@@ -79,21 +75,6 @@ function App() {
   
   }, [JSON.stringify(query)])
 
-  useEffect(() => {
-
-    const { width, height } = store.getState()
-    console.log("WIDTH", {width, height})
-    // fitBounds({x: 0, y: 0, width: parseInt(query.width?.toString() || '0'), height: parseInt(query.height?.toString() || '0')})
-
-
-  }, [page, project])
-
-  useEffect(() => {
-
-    const { width, height } = store.getState()
-    console.log("WIDTH", {width, height})
-
-  }, [])
 
   const nodesInitialized = useNodesInitialized({includeHiddenNodes: false});
 
@@ -103,7 +84,6 @@ function App() {
     if(nodesInitialized){
       setTimeout(() => {
         const fits = fitView?.({ minZoom: 0.1, padding: 0.2 });
-        console.log("FITS", fits);
         if(fits)
           setPageReady(true);
       }, 10)
@@ -126,6 +106,7 @@ function App() {
           info={{
             project,
             page: parseInt(query?.ix?.toString() || '0') + 1,
+
             pageTitle: page?.name,
           }}
             />

@@ -36,7 +36,6 @@ exports.handler = async function (event, context) {
         Key: id,
         Body: data
     });
-    
 
     const response = await client.send(putCommand);
 
