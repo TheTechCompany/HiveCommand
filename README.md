@@ -2,6 +2,8 @@
 
 SCADA system for IIOT 4.0
 
+- [Electrical Editor](packages/core-ui/command-electrical-editor/README.md)
+
 ## Getting Started
 
 Developer pathway

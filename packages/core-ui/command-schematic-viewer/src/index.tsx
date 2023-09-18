@@ -1,6 +1,6 @@
-import React, {useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import { Box, Typography } from '@mui/material';
-import { ReactFlow, ReactFlowProvider, Node, Edge, ConnectionMode } from 'reactflow';
+import { useReactFlow, ReactFlow, ReactFlowProvider, Node, Edge, ConnectionMode } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ViewportLogger } from './viewport';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes'
@@ -21,6 +21,8 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
     console.log("RATIO", props, _edgeTypes);
 // width: 1080, height: 1080 * (props.ratio || 1.77),
 
+    // const { fitView } = useReactFlow();
+
     const nodeTypes = useMemo(() => _nodeTypes, []);
     const edgeTypes = useMemo(() => _edgeTypes, []);
 
@@ -37,6 +39,13 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
         }
     }, [props.nodes])
 
+    // useEffect(() => {
+        
+    //     fitView?.();
+
+    // }, [JSON.stringify(props.nodes), JSON.stringify(props.edges)])
+
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <ElectricalNodesProvider
@@ -48,12 +57,14 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                 <Box sx={{flex: 1, display: 'flex'}}>
                         <ViewportLogger />
                         <ReactFlow 
-                            fitView
-                            maxZoom={0.8}
+                            // fitView
+                            // maxZoom={0.5}
+                            minZoom={0.1}
+                            maxZoom={1}
                             connectionMode={ConnectionMode.Loose}
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
-                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
+                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', hidden: true, position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
                             edges={props.edges || []}
                             />
                 </Box>

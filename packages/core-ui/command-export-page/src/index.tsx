@@ -5,15 +5,17 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SchematicViewerProvider } from '@hive-command/schematic-viewer';
 import { ReactFlowProvider } from 'reactflow';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 ReactDOM.render(
   <React.StrictMode>
+    <Router>
     <ReactFlowProvider>
       <SchematicViewerProvider>
 
     <App />
     </SchematicViewerProvider>
     </ReactFlowProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root') as HTMLElement
 );

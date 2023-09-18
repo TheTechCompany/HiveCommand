@@ -1,4 +1,4 @@
-import puppeteer from 'puppeteer-core';
+import puppeteer, { KnownDevices } from 'puppeteer-core';
 import path from 'path';
 import express from 'express';
 import { PDFDocument } from 'pdf-lib';
@@ -45,36 +45,44 @@ export const export_schematic = async (schematic: {name: string, pages: any[]}, 
                     console.log("Launching browser...");
 
                     const browser = await puppeteer.launch({
-                        ...puppeteerArgs
+                        ...puppeteerArgs,
+                        defaultViewport: null
                     });
     
                     console.log("Launched browser!");
 
-                    const loadedPages = await Promise.all(pages.map(async (page, i) => {
-                        const browserPage = await browser.newPage();
-    
-                        browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 });
-    
-                        console.log("Loading pages", i)
+                    const browserPage = await browser.newPage();
 
-                        await browserPage.goto(`http://localhost:${address?.port}#ix=${i}`)
-    
-                        return browserPage;
-                    }))
+                    // browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 })
+
+                    // const iphone = KnownDevices['iPhone 11 Pro Max']
+                    
+                    // await browserPage.emulate({viewport: {width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080}, userAgent: ''})
+
+                    await browserPage.goto(`http://localhost:${address?.port}#ix=-1`)
+                    
+                    //@ts-ignore
+                    await browserPage.waitForSelector('.pre-loaded');
 
                     let pdfPages = [];
                     
-                    for(var i = 0; i < loadedPages.length; i++){
+                    for(var i = 0; i < pages.length; i++){
 
-                        console.log("Loaded pages", i)
-                        await loadedPages[i].bringToFront();
+                        let page = pages[i];
 
+                        console.log("Loading pages", i)
+
+                        browserPage.goto(`http://localhost:${address?.port}#ix=${i}&width=1920&height=${ratio ? parseInt(`${1920 / ratio}`) : 1080}`)
+                        
+                        // //@ts-ignore
+                        // await browserPage.waitForSelector<any>('.loading');
 
                         //@ts-ignore
-                        await loadedPages[i].waitForSelector<any>(".loaded")
-                        
+                        await browserPage.waitForSelector<any>(".loaded")
 
-                        const pdfData = await loadedPages[i].pdf({format: 'A4', landscape: true});
+                        const pdfData = await browserPage.pdf({format: 'A4', landscape: true});
+
+                        await new Promise((resolve) => setTimeout(() => resolve(true), 1 *1000))
                         
                         pdfPages.push(pdfData);
                         

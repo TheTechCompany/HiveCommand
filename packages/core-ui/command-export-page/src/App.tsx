@@ -1,23 +1,40 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import qs from 'qs'
-import { useNodesInitialized } from 'reactflow';
+import { useNodesInitialized, useReactFlow, useOnViewportChange, useStoreApi } from 'reactflow';
 import { SchematicViewer } from '@hive-command/schematic-viewer'
 import { useRemoteComponents } from '@hive-command/remote-components'
 import { Box } from '@mui/material'
+import { useLocation } from 'react-router-dom'
+import useResizeAware from 'react-resize-aware';
 
 function App() {
 
-  const query = qs.parse(window.location.hash?.replace('#', ''), {ignoreQueryPrefix: true});
+  const [resizeListener, sizes] = useResizeAware();
+
+  const location = useLocation();
+
+  const query = useMemo(() => {
+    return qs.parse(location.hash?.replace('#', ''), {ignoreQueryPrefix: true})
+    // return qs.parse(location.search, {ignoreQueryPrefix: true})
+  }, [location.hash])
+
+
 
   const [ project, setProject ] = useState<any>(null);
   const [ page, setPage ] = useState<any>(null);
+
+  const [ loading, setLoading ] = useState(false);
 
   const [ pageReady, setPageReady ] = useState(false)
 
   const [items, setItems] = useState<any[]>([]);
 
   const { getPack } = useRemoteComponents()
+  
+  const { fitView, fitBounds } = useReactFlow()
+  const store = useStoreApi();
+
 
   const [ packReady, setPackReady ] = useState(false);
 
@@ -35,28 +52,71 @@ function App() {
     }, [])
 
   useEffect(() => {
+    setLoading(true);
     setPageReady(false);
 
-    fetch(
-      `/schematic/pages/${query?.ix}`
-    ).then((r) => r.json()).then((result) => {
-      console.log("pages", result.page)
-      
-      setTimeout(() => setPageReady(true), 500);
-      // setPageReady(true);/
+    console.log("QUERY IX CHANGED", query?.ix);
 
-      setProject(result.project)
-      setPage(result.page);
-    })
-  }, [query?.ix])
+    try{
+      let ix = parseInt(query?.ix?.toString() || '-1')
+      if(ix > -1){
+        fetch(
+          `/schematic/pages/${query?.ix}`
+        ).then((r) => r.json()).then((result) => {
+          console.log("pages", result.page)
+          
+
+          setProject(result.project)
+          setPage(result.page);
+
+          setLoading(false);
+
+        })
+      }
+    }catch(e){
+
+    }
+  
+  }, [JSON.stringify(query)])
+
+  useEffect(() => {
+
+    const { width, height } = store.getState()
+    console.log("WIDTH", {width, height})
+    // fitBounds({x: 0, y: 0, width: parseInt(query.width?.toString() || '0'), height: parseInt(query.height?.toString() || '0')})
+
+
+  }, [page, project])
+
+  useEffect(() => {
+
+    const { width, height } = store.getState()
+    console.log("WIDTH", {width, height})
+
+  }, [])
 
   const nodesInitialized = useNodesInitialized({includeHiddenNodes: false});
 
-  console.log({nodesInitialized});
+
+  useEffect(() => {
+    (window as any).fitView = fitView;
+    if(nodesInitialized){
+      setTimeout(() => {
+        const fits = fitView?.({ minZoom: 0.1, padding: 0.2 });
+        console.log("FITS", fits);
+        if(fits)
+          setPageReady(true);
+      }, 10)
+    }
+  }, [page, nodesInitialized])
+
 
   return (
     <Box sx={{height: '100%', width: '100%', display: 'flex'}}>
-        {nodesInitialized && pageReady && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
+        {resizeListener}
+        {/* <div>{width}x{height}</div> */}
+        {packReady && <div className='pre-loaded' style={{display: 'none'}} />}
+        {(nodesInitialized || page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
 
         <SchematicViewer
           ratio={297/210}
