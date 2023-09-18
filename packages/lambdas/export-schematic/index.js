@@ -14,7 +14,6 @@ exports.handler = async function (event, context) {
     const pdfPath = path.join(__dirname, 'output.pdf');
     console.log("Exporting Schematic...")
 
-
     const data = await export_schematic(event.program || {
         name: "Default Project",
         pages: [
