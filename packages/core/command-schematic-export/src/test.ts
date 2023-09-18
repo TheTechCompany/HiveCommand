@@ -8,9 +8,8 @@ export_schematic({
             id: '1',
             name: 'Page 1', 
             nodes: [
-                // {id: '1', type: 'electricalSymbol', position: {x: 10, y: 10}, data: {} }, 
-                {id: '2', type: 'electricalSymbol', position: {x:  10, y: 10}, data: {symbol: 'AcCoil'} 
-            }
+                {id: '1', type: 'electricalSymbol', position: {x: 0, y: 0}, data: {symbol: 'AcCoil'} }, 
+                {id: '2', type: 'electricalSymbol', position: {x:  1800, y: 10}, data: {symbol: 'AcCoil'}  }
         ],
             edges: [{id: '2', type: 'wire', source: 'canvas', target: 'canvas', points: [{x: 50, y: 50}, {x: 100, y: 100}] }]
         },
