@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Background, ConnectionMode, Controls, MiniMap, ReactFlow, SelectionMode, useEdgesState, useNodesState, useOnSelectionChange, useReactFlow } from 'reactflow';
 import { useEditorContext } from '../context';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes';
-import { WireEdge } from './edge';
 import { isEqual } from 'lodash'
 import { useCanvasContext } from './context';
 
@@ -98,6 +97,8 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
         })
     }
 
+    console.log({edgeTypes, edges})
+
     return (
         <ElectricalNodesProvider
             value={{
@@ -154,10 +155,10 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
                         edges: edges.filter((a) => deleted_edges.findIndex((b) => b.id == a.id) < 0)
                     })
                 }}
-                nodes={nodes.concat([{ id: 'canvas', type: 'canvasNode', hidden: true, position: { x: 500, y: 500 }, data: {} }])}
+                nodes={nodes.concat([{ id: 'canvas', type: 'canvasNode', position: { x: 500, y: 500 }, data: {} }])}
                 edges={edges.concat([
                     { id: '1', type: 'wire', data: { points: draftWire?.points || [] }, source: "canvas", target: "canvas" }
-                ])}
+                ]).map((x) => ({...x, hidden: false}))}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 onNodeDoubleClick={(ev, node) => {

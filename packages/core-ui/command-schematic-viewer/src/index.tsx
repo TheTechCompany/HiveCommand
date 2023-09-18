@@ -18,9 +18,9 @@ export interface SchematicViewerProps {
 }
 
 export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
-    console.log("RATIO", props, _edgeTypes);
 // width: 1080, height: 1080 * (props.ratio || 1.77),
 
+console.log(props.edges)
     // const { fitView } = useReactFlow();
 
     const nodeTypes = useMemo(() => _nodeTypes, []);
@@ -64,7 +64,7 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
                             connectionMode={ConnectionMode.Loose}
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
-                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', hidden: true, position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
+                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
                             edges={props.edges || []}
                             />
                 </Box>

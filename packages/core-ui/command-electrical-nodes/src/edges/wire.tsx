@@ -27,7 +27,6 @@ export const WireEdge = ({
     const [draggingPoint, setDraggingPoint] = useState<number | null>(null)
     const [deltaPoint, setDeltaPoint] = useState<{ x: number, y: number } | null>(null);
 
-
     useEffect(() => {
         setPoints(data?.points);
     }, [data?.points])
