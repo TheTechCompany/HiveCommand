@@ -12,6 +12,7 @@ import { SymbolTool } from "../tools/symbol";
 import { WireTool, BoxOutlineTool, BoxTool, TextTool } from "../tools";
 import { CanvasProvider } from "./context";
 import { CanvasTool } from "./tool";
+import { ElectricalNodesProvider } from "@hive-command/electrical-nodes";
 
 export const rendererPointToPoint = ({ x, y }: XYPosition, [tx, ty, tScale]: Transform): XYPosition => {
     return {
@@ -33,7 +34,7 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
   
     const flowWrapper = useRef<HTMLDivElement>(null);
 
-    const { pages, selectedPage, selected, clipboard, setClipboard  } = useEditorContext();
+    const { pages, selectedPage, selected, clipboard, setClipboard, elements  } = useEditorContext();
 
     const { project, getViewport } = useReactFlow()
 
@@ -123,6 +124,10 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
 
 
     return (
+        <ElectricalNodesProvider
+        value={{
+            elements: elements,
+        }}>
         <CanvasProvider value={{wrapper: flowWrapper}}>
         <Box
             className={`canvas-wrapper ${props.activeTool ? 'active-tool' : ''}`}
@@ -192,5 +197,6 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
                 />
         </Box>
         </CanvasProvider>
+        </ElectricalNodesProvider>
     )
 }
