@@ -3,6 +3,10 @@ import { ECADPage } from '..';
 
 export const ElectricalEditorContext = React.createContext<{
     selectedPage?: string;
+
+    selected?: any;
+    setSelected?: any;
+
     pages?: ECADPage[],
     page?: ECADPage;
     
@@ -15,7 +19,9 @@ export const ElectricalEditorContext = React.createContext<{
     draftWire?: any;
     setDraftWire?: any;
 
-    symbolRotation?: number;
+    clipboard?: any;
+    setClipboard?: any;
+
     selectedSymbol?: any | null;
     setSelectedSymbol?: any;
 }>({});

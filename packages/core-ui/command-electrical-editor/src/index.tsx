@@ -85,12 +85,14 @@ export const ECadEditor: React.FC<ECadEditorProps> = (props) => {
 
     const [items, setItems] = useState<any[]>([]);
 
+    const [ clipboard, setClipboard ] = useState<{cut?: boolean, items?: any[]} | null>(null);
+
     const [draftWire, setDraftWire] = useState<any>(null);
 
     const [selectedSymbol, setSelectedSymbol] = useState<any>(null);
-    const [symbolRotation, setSymbolRotation] = useState(0);
 
-    const [tools, setTools] = useState<any[]>([]);
+    const [selected, setSelected] = useState<any>({ nodes: [], edges: [] })
+
 
     const [activeTool, setActiveTool] = useState<any | null>(null);
 
@@ -113,19 +115,14 @@ export const ECadEditor: React.FC<ECadEditorProps> = (props) => {
 
     useEffect(() => {
         const listener = (e: KeyboardEvent) => {
-            if (e.key == 'Tab') {
-                e.preventDefault();
-                e.stopPropagation();
-
-                setSymbolRotation((symbolRotation) => ((symbolRotation || 0) + 90) % 360);
-            }
+           
 
             if (e.key == 'Escape') {
                 e.preventDefault();
                 e.stopPropagation();
 
                 setSelectedSymbol(null);
-                setSymbolRotation(0);
+                setActiveTool(null);
             }
         }
 
@@ -151,7 +148,12 @@ export const ECadEditor: React.FC<ECadEditorProps> = (props) => {
                     draftWire,
                     setDraftWire,
 
-                    symbolRotation,
+                    selected,
+                    setSelected,
+
+                    clipboard,
+                    setClipboard,
+
                     selectedSymbol,
                     setSelectedSymbol: (symbol: any) => {
                         setActiveTool('symbol')
@@ -210,11 +212,12 @@ export const ECadEditor: React.FC<ECadEditorProps> = (props) => {
 
                     <Box
                         sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                        <Paper sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Paper tabIndex={0} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                             {Tools.map((tool) => (
                                 <IconButton
                                     sx={{ borderRadius: '5px', marginRight: '3px', bgcolor: activeTool == tool.id ? 'secondary.main' : null }}
                                     onClick={() => {
+                                        setSelectedSymbol(null);
                                         setActiveTool(activeTool != tool.id ? tool.id : null)
                                     }}>
                                     {tool.icon}
@@ -225,7 +228,9 @@ export const ECadEditor: React.FC<ECadEditorProps> = (props) => {
                         <Canvas
                             activeTool={activeTool}
                             selectedSymbol={selectedSymbol}
-                            symbolRotation={symbolRotation}
+                            onPaste={() => {
+                                setActiveTool('clipboard')
+                            }}
                             onEdit={(elem) => {
 
                                 const { props }: any = ToolProps.find((a) => a.id == elem.type) || {}

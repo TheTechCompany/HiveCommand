@@ -1,0 +1,3 @@
+.canvas-wrapper.active-tool .react-flow__pane{
+    cursor: crosshair !important;
+}

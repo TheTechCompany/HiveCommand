@@ -22,7 +22,7 @@ export const NodePropsModal = (props: NodePropsModalProps) => {
     }
 
     return (
-        <Dialog fullWidth open={props.open} onClose={props.onClose}>
+        <Dialog onKeyDown={(e) => e.stopPropagation()} fullWidth open={props.open} onClose={props.onClose}>
             <DialogTitle>
                 Node Properties
             </DialogTitle>

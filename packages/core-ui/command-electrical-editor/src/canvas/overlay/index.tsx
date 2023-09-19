@@ -2,10 +2,8 @@ import { Box } from '@mui/material';
 import React, { useMemo, useState } from 'react';
 import { useEditorContext } from '../../context';
 import { CursorCrosshairs } from './cursor-crosshairs';
-import { SymbolOverlay } from './symbol-overlay';
 import { useReactFlow } from 'reactflow';
 import { nanoid } from 'nanoid';
-import { WireOverlay } from './wire-overlay';
 
 export interface CanvasOverlayProps {
     cursorPosition?: {x: number, y: number} | null;
@@ -13,6 +11,8 @@ export interface CanvasOverlayProps {
     wrapper?: any;
     page?: any;
     onCursorMoved?: (pos: any) => void;
+
+    tool?: any;
 }
 
 export const CanvasOverlay : React.FC<CanvasOverlayProps> = (props) => {
@@ -21,14 +21,18 @@ export const CanvasOverlay : React.FC<CanvasOverlayProps> = (props) => {
 
     const { selectedSymbol } = useEditorContext();
 
+    const Overlay = props.tool ? props.tool?.Overlay : () => <div />;
+
     return (
         <Box 
             sx={{position: 'absolute', pointerEvents: 'none', left: 0, top: 0, width: '100%', height: '100%'}}>
             
+            <Overlay cursorPosition={props.cursorPosition} />
+{/*             
             <SymbolOverlay 
                 wrapper={props.wrapper}
                 cursorPosition={props.cursorPosition} 
-                selectedSymbol={selectedSymbol} />
+                selectedSymbol={selectedSymbol} /> */}
             {/* <WireOverlay
                 wrapper={props.wrapper}
                 cursorPosition={props.cursorPosition} 
