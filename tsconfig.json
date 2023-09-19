@@ -37,6 +37,7 @@
 
 		"@hive-command/command-surface": ["./core-ui/command-surface"],
 		"@hive-command/electrical-editor": ["./core-ui/command-electrical-editor"],
+		"@hive-command/electrical-nodes": ["./core-ui/command-electrical-nodes"],
 		"@hive-command/schematic-viewer": ["./core-ui/command-schematic-viewer"],
 		"@hive-command/export-page": ["./core-ui/command-export-page"],
 

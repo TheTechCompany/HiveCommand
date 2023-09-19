@@ -11,6 +11,8 @@ import { CanvasSurface } from "./surface";
 import { SymbolTool } from "../tools/symbol";
 import { WireTool, BoxOutlineTool, BoxTool, TextTool } from "../tools";
 import { CanvasProvider } from "./context";
+import { CanvasTool } from "./tool";
+import { ElectricalNodesProvider } from "@hive-command/electrical-nodes";
 
 export const rendererPointToPoint = ({ x, y }: XYPosition, [tx, ty, tScale]: Transform): XYPosition => {
     return {
@@ -25,15 +27,14 @@ export interface CanvasProps {
     selectedSymbol?: any;
 
     onEdit?: (elem: any) => void;
+    onPaste?: () => void;
 }
 
 export const Canvas : React.FC<CanvasProps> = (props) => {
   
     const flowWrapper = useRef<HTMLDivElement>(null);
 
-    const { selectedSymbol, symbolRotation } = props;
-
-    const { pages, selectedPage  } = useEditorContext();
+    const { pages, selectedPage, selected, clipboard, setClipboard, elements  } = useEditorContext();
 
     const { project, getViewport } = useReactFlow()
 
@@ -42,21 +43,13 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
     const [cursorActive, setCursorActive] = useState(false);
     const [cursorPosition, setCursorPosition] = useState<{ x: number, y: number } | null>(null)
 
-    const tools = { 
-        symbol: SymbolTool(flowWrapper, page),
-        wire: WireTool(flowWrapper, page),
-        box: BoxTool(flowWrapper, page),
-        boxOutline: BoxOutlineTool(flowWrapper, page),
-        text: TextTool(flowWrapper, page)
-    } //].map((tool) => tool(flowWrapper, page))
-
-    const symbolPosition = useMemo(() => {
-        const wrapperBounds = flowWrapper.current?.getBoundingClientRect()
-        return cursorActive ? project({
-            x: (cursorPosition?.x || 0) - (wrapperBounds?.x || 0),
-            y: (cursorPosition?.y || 0) - (wrapperBounds?.y || 0)
-        }) : null;
-    }, [ cursorActive, cursorPosition, selectedSymbol ])
+    // const tools = { 
+    //     symbol: SymbolTool(flowWrapper), //(flowWrapper, page),
+    //     wire: WireTool(flowWrapper), //(flowWrapper, page),
+    //     box: BoxTool(flowWrapper), //(flowWrapper, page),
+    //     boxOutline: BoxOutlineTool(flowWrapper), //(flowWrapper, page),
+    //     text: TextTool(flowWrapper) //(flowWrapper, page)
+    // } //].map((tool) => tool(flowWrapper, page))
 
 
     // const finalFlowNodes = useMemo(() => ((nodes || []) as any[]).concat(cursorPosition && selectedSymbol ? [
@@ -113,35 +106,58 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
         }
     })
 
+    const toolRef = useRef<any>(null);
 
-    // useEffect(() => {
-    //     const listener = (e: KeyboardEvent) => {
-    //      console.log("KeyDown")
+    useEffect(() => {
+        const listener = (e: KeyboardEvent) => {
+           
+            toolRef?.current?.onKeyDown?.(e);
+             
+        }
 
-    //         if(props.activeTool)
-    //         (tools as any)[props.activeTool]?.onKeyDown?.(e)
-    //     }
-        
-    //     window.addEventListener('keydown', listener);
+        window.addEventListener('keydown', listener);
 
-    //     return () => {
-    //         window.removeEventListener('keydown', listener);
-    //     }
-    // }, [props.activeTool])
+        return () => {
+            window.removeEventListener('keydown', listener);
+        }
+    }, [])
+
 
     return (
+        <ElectricalNodesProvider
+        value={{
+            elements: elements,
+        }}>
         <CanvasProvider value={{wrapper: flowWrapper}}>
         <Box
+            className={`canvas-wrapper ${props.activeTool ? 'active-tool' : ''}`}
             tabIndex={0}
             ref={flowWrapper}
             onPointerDown={(e) => {
                 // (e.currentTarget as HTMLElement).setPointerCapture((e as any).pointerId);
                 // e.preventDefault();
-                if(props.activeTool) (tools as any)[props.activeTool]?.onMouseDown?.(e)
+
+                toolRef?.current?.onMouseDown?.(e);
+                // if(activeTool) activeTool?.onMouseDown?.(e)
             }}
             onKeyDown={(e) => {
 
-                if(props.activeTool) (tools as any)[props.activeTool]?.onKeyDown?.(e);
+                switch(e.key){
+                    case "c":
+                        setClipboard({cut: false, items: selected});
+                        return;
+                    case "v":
+                        // copyClipboard(clipboard)
+                        //if cut
+                        props.onPaste?.()
+                        return;
+                    case "x":
+                        setClipboard({cut: true, items: selected});
+                        //temp cut from board finish when pasted
+                        return;
+                }
+                // toolRef?.current?.onKeyDown?.(e);
+                // if(activeTool) activeTool?.onKeyDown?.(e);
             }}
             onMouseEnter={(e) => { 
                 setCursorActive(true);
@@ -159,20 +175,28 @@ export const Canvas : React.FC<CanvasProps> = (props) => {
             }}
             onClick={(e) => {
                 
-                if(props.activeTool) (tools as any)[props.activeTool]?.onClick?.(e);
+                toolRef?.current?.onClick(e);
+                // if(activeTool) activeTool?.onClick?.(e);
 
               
             }}
-            sx={{ display: 'flex', flex: 1, position: 'relative'}}>
-          
+            sx={{ display: 'flex', cursor: props.activeTool ? 'crosshair !important' : undefined, flex: 1, position: 'relative'}}>
+            
             {surface}
 
-            <CanvasOverlay 
+            {props.activeTool && <CanvasTool 
+                ref={toolRef}
+                activeTool={props.activeTool} 
+                page={page} />}
+
+            <CanvasOverlay
+                tool={toolRef.current} 
                 cursorPosition={cursorActive ? cursorPosition : null}
                 page={pages?.find((a) => a.id == selectedPage)}
                 wrapper={flowWrapper}
                 />
         </Box>
         </CanvasProvider>
+        </ElectricalNodesProvider>
     )
 }

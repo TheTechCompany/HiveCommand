@@ -6,6 +6,8 @@ import { useParams } from 'react-router-dom';
 import { arrayMove } from '@dnd-kit/sortable';
 import { saveAs } from 'file-saver';
 
+import './index.css';
+
 export const SchematicEditor = () => {
 
     const [ pages, setPages ] = useState<any[]>([])

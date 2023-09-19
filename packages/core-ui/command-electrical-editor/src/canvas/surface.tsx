@@ -7,7 +7,7 @@ import { useCanvasContext } from './context';
 
 export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
 
-    const { pages, selectedPage, onUpdatePage, draftWire, elements } = useEditorContext();
+    const { selected, setSelected, pages, selectedPage, onUpdatePage, draftWire, elements } = useEditorContext();
 
     const { wrapper } = useCanvasContext();
 
@@ -16,13 +16,12 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
     const page = useMemo(() => pages?.find((a: any) => a.id == selectedPage) || { edges: [], nodes: [] }, [selectedPage, pages])
     const { nodes: flowNodes, edges: flowEdges } = page;
 
-    const [selected, setSelected] = useState<any>({ nodes: [], edges: [] })
+    // const [selected, setSelected] = useState<any>({ nodes: [], edges: [] })
 
     const [nodes, setNodes, onNodesChange] = useNodesState(flowNodes || [])
     const [edges, setEdges, onEdgesChange] = useEdgesState(flowEdges || [])
 
     useEffect(() => {
-        console.log('SetNodes')
         setNodes(pages?.find((a: any) => a.id == selectedPage)?.nodes || [])
         setEdges(pages?.find((a: any) => a.id == selectedPage)?.edges || [])
     }, [selectedPage, pages])
@@ -81,8 +80,6 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
             y: change.y
         }
 
-        console.log({change})
-
         e[edgeIx] = {
             ...e[edgeIx],
             data: {
@@ -96,8 +93,6 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
             edges: e
         })
     }
-
-    console.log({edgeTypes, edges})
 
     return (
         <ElectricalNodesProvider
@@ -156,9 +151,7 @@ export const CanvasSurface = (props: {onEdit?: (elem: any) => void;}) => {
                     })
                 }}
                 nodes={nodes.concat([{ id: 'canvas', type: 'canvasNode', position: { x: 500, y: 500 }, data: {} }])}
-                edges={edges.concat([
-                    { id: '1', type: 'wire', data: { points: draftWire?.points || [] }, source: "canvas", target: "canvas" }
-                ]).map((x) => ({...x, hidden: false}))}
+                edges={edges}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
                 onNodeDoubleClick={(ev, node) => {

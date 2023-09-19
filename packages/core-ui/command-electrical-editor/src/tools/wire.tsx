@@ -1,7 +1,8 @@
 import { nanoid } from "nanoid";
-import { Ref, useCallback, useState } from "react"
+import { Ref, useCallback, useMemo, useState } from "react"
 import { useReactFlow } from 'reactflow';
 import { useEditorContext } from "../context";
+import { OverlayProps } from ".";
 
 export const WireTool = (flowWrapper: any, page: any) => {
 
@@ -9,11 +10,11 @@ export const WireTool = (flowWrapper: any, page: any) => {
 
     const { project } = useReactFlow();
 
-    const { onUpdatePage, setDraftWire } = useEditorContext();
+    const { onUpdatePage } = useEditorContext();
 
-    const [ isWiring, setIsWiring ] = useState(false);
+    const [isWiring, setIsWiring] = useState(false);
 
-    const [ points, setPoints ] = useState<any[]>([]);
+    const [points, setPoints] = useState<any[]>([]);
 
     const onClick = (e: MouseEvent) => {
 
@@ -23,7 +24,7 @@ export const WireTool = (flowWrapper: any, page: any) => {
 
         const wrapperBounds = flowWrapper?.current?.getBoundingClientRect()
 
-        if(!isWiring){
+        if (!isWiring) {
             setIsWiring(true);
 
 
@@ -36,10 +37,8 @@ export const WireTool = (flowWrapper: any, page: any) => {
 
             setPoints([startPoint])
 
-            setDraftWire({
-                    points: [startPoint]
-            })
-        }else{
+      
+        } else {
 
             let nextPoint = project({
                 x: (e.clientX || 0) - (wrapperBounds?.x || 0),
@@ -48,9 +47,7 @@ export const WireTool = (flowWrapper: any, page: any) => {
 
             setPoints([...points, nextPoint]);
 
-            setDraftWire({
-                    points: [...points, nextPoint]
-            })
+          
         }
 
 
@@ -67,7 +64,7 @@ export const WireTool = (flowWrapper: any, page: any) => {
         // (e.currentTarget as HTMLElement).addEventListener('mousemove', mouseMove);
         // (e.currentTarget as HTMLElement).addEventListener('mouseup', mouseUp);
 
-    
+
 
         // setPoints((points) => {
         //     let p = points.slice();
@@ -83,32 +80,44 @@ export const WireTool = (flowWrapper: any, page: any) => {
         //     x: (e.clientX || 0) - (wrapperBounds?.x || 0),
         //     y: (e.clientY || 0) - (wrapperBounds?.y || 0)
         // })
-        
 
-   
+
+
         // onUpdatePage?.({
         //     ...page,
         //     nodes: n
         // })
-       
+
 
     }
 
     const onKeyDown = useCallback((e: KeyboardEvent) => {
         console.log("onKeyDown", points)
-        if(e.key == 'Enter'){
+        if (e.key == 'Enter') {
             onUpdatePage?.({
                 ...page,
-                edges: [...(page?.edges || []), {id: nanoid(), type: 'wire', source: 'canvas', target: 'canvas', data: { points: points.slice() } } ]
+                edges: [...(page?.edges || []), { id: nanoid(), type: 'wire', source: 'canvas', target: 'canvas', data: { points: points.slice() } }]
             }, "onKeyDown")
             setPoints([])
-            setDraftWire(null)
         }
     }, [page, points])
-    
+
+    const Overlay = (props: OverlayProps) => {
+        const wrapperBounds = flowWrapper?.current?.getBoundingClientRect();
+        
+        const realPoints = useMemo(() => [...points].concat(props.cursorPosition ? [{x: props.cursorPosition?.x - wrapperBounds?.x, y: props.cursorPosition?.y - wrapperBounds?.y}] : []), [points, props.cursorPosition])
+
+        return realPoints?.length > 0 ? (
+            <svg style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+                <path style={{fill: 'none'}} stroke="black" d={`M ${realPoints?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < (realPoints?.length - 1) ? 'L' : ''}`).join(' ')}`} />
+            </svg>
+        ) : null;
+    }
+
 
     return {
         onClick,
-        onKeyDown
+        onKeyDown,
+        Overlay
     }
 }
