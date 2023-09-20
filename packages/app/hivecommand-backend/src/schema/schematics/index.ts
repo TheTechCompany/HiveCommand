@@ -164,7 +164,7 @@ export default (prisma: PrismaClient) => {
 					const res = await prisma.electricalSchematicPage.delete({ where: { id: args.id } })
 					return res != null;
 				},
-				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, oldIx: number, newIx: number }, context: any) => {
+				updateCommandSchematicPageOrder: async (root: any, args: { schematic: string, id: string, above: string, below: string }, context: any) => {
 
 					const schematic = await prisma.electricalSchematic.findFirst({
 						where: {
@@ -182,14 +182,11 @@ export default (prisma: PrismaClient) => {
 
 					const pages = schematic?.pages?.sort((a, b) => (a.rank || '').localeCompare(b.rank || ''))
 
-					const oldIx = pages?.[args.oldIx];
+
+					const aboveIx = pages?.find((a) => a.id == args.above)?.rank;
+					const belowIx = pages?.find((a) => a.id == args.below)?.rank;
 
 
-					const aboveIx = pages?.[args.newIx]?.rank;
-
-					const belowIx = pages?.[args.newIx + 1]?.rank;
-
-					console.log(oldIx.rank, pages)
 					// const result = await prisma.$queryRaw<{id: string, rank: string, lead_rank?: string}>`WITH cte as (
 					//     SELECT id, rank FROM "TimelineItem" 
 					//     WHERE organisation=${context?.jwt?.organisation} AND timeline=${args.input?.timelineId}
@@ -211,7 +208,7 @@ export default (prisma: PrismaClient) => {
 
 					const result = await prisma.electricalSchematicPage.update({
 						where: {
-							id: oldIx?.id,
+							id: args?.id,
 						},
 						data: {
 							rank: newRank.toString()
@@ -242,7 +239,7 @@ export default (prisma: PrismaClient) => {
         deleteCommandSchematicPage(schematic: ID, id: ID): Boolean!
 
 
-		updateCommandSchematicPageOrder(schematic: ID, oldIx: Int, newIx: Int): Boolean
+		updateCommandSchematicPageOrder(schematic: ID, id: String, above: String, below: String): Boolean
 	}
 
 

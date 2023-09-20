@@ -1,5 +1,5 @@
 import { IconButton, Paper, Box, Typography, Divider, List, ListItem, CircularProgress, ListItemButton, Button } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Add, DragIndicator, MoreVert } from '@mui/icons-material'
 
 import { PageModal } from '../components/page-modal';
@@ -27,9 +27,11 @@ export const PagesPane = (props: any) => {
     const [modalOpen, openModal] = useState(false);
     const [ selected, setSelected ] = useState<any | null>(null)
 
-    const [ activeId, setActiveId ] = useState(null);
+    const [ activeId, setActiveId ] = useState<any>(null);
 
     const { pages, onReorderPage, selectedPage } = useEditorContext();
+
+    const sortedPages = useMemo(() => pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -45,9 +47,26 @@ export const PagesPane = (props: any) => {
         if (active.id !== over.id) {
 
             const oldIndex = pages?.findIndex((a) => a.id == active.id);
-            const newIndex = pages?.findIndex((a) => a.id == over.id);
 
-            onReorderPage?.(oldIndex, newIndex)
+            const newIndex = (sortedPages || []).findIndex((a) => a.id == over.id)
+
+            console.log("OVER", over, newIndex, pages?.[newIndex])
+
+            // let above = sortedPages?.[newIndex - 1]?.id;
+            // let below = sortedPages?.[newIndex]?.id;
+
+            if(oldIndex != null && newIndex != null){
+                const p = arrayMove(sortedPages || [], oldIndex, newIndex)
+
+                let above = p?.[newIndex - 1]?.id;
+                let below = p?.[newIndex + 1]?.id;
+    
+                onReorderPage?.(active.id, above, below)
+
+            }
+            // console.log(above, below);
+
+            // onReorderPage?.(active.id, above, below)
 
         }
 
@@ -66,6 +85,7 @@ export const PagesPane = (props: any) => {
 
     }
 
+    console.log(pages, activeId)
     return (
         <DndContext
             sensors={sensors}
@@ -74,7 +94,7 @@ export const PagesPane = (props: any) => {
             onDragEnd={handleDragEnd}
         >
             <SortableContext
-                items={(pages || []).map((x) => x.id)}
+                items={(sortedPages || []).map((x) => x.id)}
                 strategy={verticalListSortingStrategy}
             >
                 <Paper sx={{ minWidth: '200px', display: 'flex', flexDirection: 'column', padding: '6px' }}>
@@ -118,10 +138,10 @@ export const PagesPane = (props: any) => {
                     <Divider sx={{margin: '6px'}}/>
                     <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto'}}>
                         <List>
-                            {pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''))?.map((page) => (
+                            {sortedPages?.map((page) => (
                                 <PageItem  
                                     selected={selectedPage == page.id}
-                                    key={props.id}
+                                    key={page.id}
                                     onEdit={() => onEdit(page)}
                                     onSelectPage={props.onSelectPage} 
                                     page={page} />
@@ -136,7 +156,7 @@ export const PagesPane = (props: any) => {
                             <IconButton>
                                 <DragIndicator />
                             </IconButton>
-                            <ListItemButton>{pages?.find((a) => a.id == activeId)?.name}</ListItemButton>
+                            <ListItemButton>{sortedPages?.find((a) => a.id == activeId?.id)?.name}</ListItemButton>
                             </Paper>
                         ) : null}
                     </DragOverlay>
