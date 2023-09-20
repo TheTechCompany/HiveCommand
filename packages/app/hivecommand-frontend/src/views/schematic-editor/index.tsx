@@ -71,8 +71,8 @@ export const SchematicEditor = () => {
         })
 
     const [ updatePageOrder ] = useMutation(gql`
-        mutation UpdatePageOrder($schematic: ID, $oldIx: Int, $newIx: Int){
-            updateCommandSchematicPageOrder(schematic: $schematic, oldIx: $oldIx, newIx: $newIx)
+        mutation UpdatePageOrder($schematic: ID, $id: String, $above: String, $below: String){
+            updateCommandSchematicPageOrder(schematic: $schematic, id: $id, below: $below, above: $above)
         }
     `, {
         refetchQueries: ['GetSchematic']
@@ -97,6 +97,9 @@ export const SchematicEditor = () => {
         setPages(schematic?.pages || []);
     }, [schematic]);
     
+    const sortedPages = useMemo(() => pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
+
+
     return (
         <Box sx={{
             flex: 1,
@@ -107,7 +110,7 @@ export const SchematicEditor = () => {
         }}>
             <ECadEditor
                 exporting={exporting}
-                pages={pages || []}
+                pages={sortedPages || []}
                 onCreatePage={(page: any) => {
                     createPage({ variables: { schematic: id, name: page.name } })
 
@@ -136,20 +139,26 @@ export const SchematicEditor = () => {
                         setExporting(false);
                     })
                 }}
-                onUpdatePageOrder={(oldIx, newIx) => {
+                onUpdatePageOrder={(pageId, above, below) => {
 
-                    console.log(oldIx, newIx, pages)
+                    console.log({pageId, above, below})
+                    
+                    let oldIx = sortedPages?.findIndex((a) => a.id == pageId);
+                    let newIx = above ? sortedPages?.findIndex((a) => a.id == above) : sortedPages?.findIndex((a) => a.id == below);
+
+                    console.log(pageId, oldIx, newIx, sortedPages)
                     
                     updatePageOrder({
                         variables: {
                             schematic: id,
-                            oldIx,
-                            newIx
+                            id: pageId,
+                            above,
+                            below
                         }
                     })
 
                     setPages((pages) => {
-                        return arrayMove(pages, oldIx, newIx);
+                        return arrayMove(sortedPages, oldIx, newIx);
                     })
 
                 }}

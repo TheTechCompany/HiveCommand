@@ -25,7 +25,7 @@ export interface ECadEditorProps {
     onCreatePage?: (page: any) => void;
     onUpdatePage?: (page: any, log?: string) => void;
     onDeletePage?: (page: any) => void;
-    onUpdatePageOrder?: (oldIx: number, newIx: number) => void;
+    onUpdatePageOrder?: (id: string, above: string, below: string) => void;
 
     exporting?: boolean;
     onExport?: () => void;
