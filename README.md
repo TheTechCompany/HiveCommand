@@ -15,9 +15,13 @@ git clone
 cd HiveCommand/
 
 yarn
-
-npx lerna bootstrap
 ```
+
+Start Storybook (Component development)
+```
+yarn storybook
+```
+
 
 Start backend + web-frontend (HexHive gateway needs configuring first) [HexHive Gateway](https://github.com/TheTechCompany/HexHive)
 ```

@@ -18,12 +18,24 @@
   },
   "homepage": "https://github.com/TheTechCompany/HiveCommandClient#readme",
   "devDependencies": {
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-react": "^7.22.15",
+    "@babel/preset-typescript": "^7.22.15",
+    "@storybook/addon-essentials": "^7.4.3",
+    "@storybook/addon-interactions": "^7.4.3",
+    "@storybook/addon-links": "^7.4.3",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.4.3",
+    "@storybook/react": "^7.4.3",
+    "@storybook/react-webpack5": "^7.4.3",
+    "@storybook/testing-library": "^0.2.1",
     "@types/jest": "^27.0.3",
     "@types/react": "17",
     "@types/react-dom": "^17.0.11",
     "jest": "^27.3.1",
     "lerna": "7.0.2",
     "process": "^0.11.10",
+    "storybook": "^7.4.3",
     "ts-jest": "^27.0.7"
   },
   "dependencies": {
@@ -53,5 +65,9 @@
   "resolutions": {
     "@types/react": "17.0.2"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@3.6.0",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  }
 }
