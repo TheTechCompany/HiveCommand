@@ -1,8 +1,5 @@
 {
   "name": "@hive-command/ui",
-  "dependencies": {
-    "react": "17.x"
-  },
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
@@ -15,12 +12,18 @@
     "@storybook/react-webpack5": "^7.4.3",
     "@storybook/testing-library": "^0.2.1",
     "prop-types": "^15.8.1",
-    "react-dom": "^18.2.0",
+    "react": "17.x",
+    "react-dom": "^17.x",
     "storybook": "^7.4.3",
-    "tsconfig-paths-webpack-plugin": "^4.1.0"
+    "ts-loader": "^9.4.4",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
+    "typescript": "^5.2.2"
   },
   "scripts": {
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
+  },
+  "dependencies": {
+    "@hive-command/electrical-editor": "workspace:^"
   }
 }
