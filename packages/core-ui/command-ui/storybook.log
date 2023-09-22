@@ -1,0 +1,270 @@
+➤ YN0000: ┌ Project validation
+➤ YN0057: │ @hive-command/canvas-nodes: Resolutions field will be ignored
+➤ YN0057: │ @hive-command/remote-components: Resolutions field will be ignored
+➤ YN0057: │ @hive-command/command-surface: Resolutions field will be ignored
+➤ YN0000: └ Completed
+➤ YN0000: ┌ Resolution step
+➤ YN0002: │ @hexhive/auth-ui@npm:1.0.2-beta.44 doesn't provide react-dom (p81729), requested by styled-components
+➤ YN0002: │ @hexhive/auth-ui@npm:1.0.2-beta.44 doesn't provide react-is (pdb514), requested by styled-components
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [03560] doesn't provide react (pe0ab5), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [664cb] doesn't provide react (pf324e), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [8e685] doesn't provide react (p9024b), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [aad4b] doesn't provide react (p66023), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [d9d61] doesn't provide react (p967f9), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.120 [e7aae] doesn't provide react (p8c2a5), requested by @emotion/styled
+➤ YN0002: │ @hexhive/styles@npm:1.0.1-alpha.84 [0b2d6] doesn't provide react (pf1915), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide @mui/system (p19f96), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide prop-types (p40d33), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p0798d), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pebf25), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p5f64e), requested by @dnd-kit/sortable
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p5f659), requested by @emotion/react
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p9c5ee), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pa9b68), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pf963d), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pbb281), requested by react-dropzone
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p9cf98), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p87a48), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p1df73), requested by react-resize-aware
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pdc9ed), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pc9068), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p912f4), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p2e386), requested by @mui/icons-material
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (pea34c), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react (p1cdbb), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (pe73c8), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (pd2d80), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (pc3906), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (pc71af), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p3b860), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p27304), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p2a4ec), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p10252), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p54568), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p02d3b), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-dom (p120fa), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [03560] doesn't provide react-is (p345b0), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide @mui/system (p8f267), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide prop-types (p6c349), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (pc942f), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (pd49b9), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p05d6e), requested by @dnd-kit/sortable
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p03009), requested by @emotion/react
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p51889), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p70d99), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p79018), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p2d998), requested by react-dropzone
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p5d169), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p3e46b), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p8ff24), requested by react-resize-aware
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (pff873), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p63058), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p041c3), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (p27119), requested by @mui/icons-material
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (pf937c), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react (peb7f1), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p6e002), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (pf450c), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p885c4), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p7231a), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p9371b), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p5fea1), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p9e756), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (pf04c0), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (pbec79), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (pabac6), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-dom (p9fad9), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [0b2d6] doesn't provide react-is (p82582), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide @mui/system (p996aa), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide prop-types (p2df32), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p40b46), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p9ade6), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pa47a7), requested by @dnd-kit/sortable
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pf4d68), requested by @emotion/react
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pd1897), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pcd1a1), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p0a696), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p676f8), requested by react-dropzone
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pbbe27), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pc1215), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p5acba), requested by react-resize-aware
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pf6b67), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p47d5d), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pc7851), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p6ade0), requested by @mui/icons-material
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (pcc9f0), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react (p7abe8), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p0436f), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p6b966), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (paaa0c), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p8dcd8), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p68a7e), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (pca658), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (pb0d23), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p48249), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (pddbae), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (pacc99), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-dom (p81f5b), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [664cb] doesn't provide react-is (pedaf1), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide @mui/system (p0412e), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide prop-types (p66d9f), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p317eb), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pc7237), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pfef53), requested by @dnd-kit/sortable
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p0585e), requested by @emotion/react
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p0720c), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pfeb1e), requested by @mui/icons-material
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (ped486), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pf03ca), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p941da), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p703ca), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p5137a), requested by react-dropzone
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pf71b8), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pf0e26), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p95f8b), requested by react-resize-aware
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (pd5496), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p2431f), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react (p9a9b5), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (pcc4ca), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (pdfe66), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (pcedf8), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p440a0), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (pce352), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p1a9dd), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p1252b), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p5528a), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p3e088), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p37d4c), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-dom (p062e3), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [8e685] doesn't provide react-is (pae123), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide @mui/system (p04001), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide prop-types (p0531e), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (pd7315), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p98019), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p627d7), requested by @dnd-kit/sortable
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p26e33), requested by @emotion/react
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p31857), requested by @emotion/styled
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p68e6f), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p0e9a6), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p6fbdf), requested by react-dropzone
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p3f394), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p43a36), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p66a6e), requested by react-resize-aware
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p540f0), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p25420), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p0b96f), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p0eb8e), requested by @mui/icons-material
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p38e42), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react (p95dd4), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (p0d356), requested by styled-components
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pff36d), requested by @dnd-kit/core
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pe0125), requested by react-ace
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pb1f17), requested by react-beautiful-dnd
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pa2fb1), requested by react-grid-layout
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (p2920b), requested by react-multi-date-picker
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (p893b1), requested by react-router-dom
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pe6f05), requested by react-window
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (pc5c24), requested by recharts
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (p643e0), requested by @mui/lab
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-dom (p7a99c), requested by @mui/x-date-pickers
+➤ YN0002: │ @hexhive/ui@npm:1.0.1-alpha.119 [e7aae] doesn't provide react-is (pc2267), requested by styled-components
+➤ YN0002: │ @hive-command/backend@workspace:packages/app/hivecommand-backend doesn't provide @types/node (pfaf47), requested by ts-node
+➤ YN0060: │ @hive-command/backend@workspace:packages/app/hivecommand-backend provides graphql (pf3c97) with version 15.8.0, which doesn't satisfy what @hexhive/graphql-server and some of its descendants request
+➤ YN0002: │ @hive-command/backend@workspace:packages/app/hivecommand-backend doesn't provide neo4j-driver (p259bb), requested by @hexhive/graphql-server
+➤ YN0002: │ @hive-command/enip-bridge@workspace:packages/communication/opc-ethernet-ip-bridge doesn't provide @types/node (p4a1cb), requested by ts-node
+➤ YN0002: │ @hive-command/export-page@workspace:packages/core-ui/command-export-page doesn't provide @babel/core (p0f8bb), requested by @babel/plugin-proposal-private-property-in-object
+➤ YN0060: │ @hive-command/frontend@workspace:packages/app/hivecommand-frontend provides @mui/lab (pf6015) with version 5.0.0-alpha.140, which doesn't satisfy what @hive-command/command-surface requests
+➤ YN0002: │ @hive-command/frontend@workspace:packages/app/hivecommand-frontend doesn't provide @mui/system (p41ad0), requested by @mui/x-date-pickers
+➤ YN0002: │ @hive-command/frontend@workspace:packages/app/hivecommand-frontend doesn't provide styled-components (p22eef), requested by @hive-command/command-surface
+➤ YN0002: │ @hive-command/gds@workspace:packages/network/global-discovery-network doesn't provide @types/node (pfdc49), requested by ts-node
+➤ YN0002: │ @hive-command/local-sidecar@workspace:packages/core/command-local-sidecar doesn't provide @types/node (p55039), requested by ts-node
+➤ YN0002: │ @hive-command/mqtt-auth-server@workspace:packages/network/mqtt-auth-server doesn't provide @types/node (p0c43c), requested by ts-node
+➤ YN0060: │ @hive-command/native@workspace:packages/app/hivecommand-native provides @mui/lab (p01ce9) with version 5.0.0-alpha.102, which doesn't satisfy what @hive-command/command-surface requests
+➤ YN0002: │ @hive-command/native@workspace:packages/app/hivecommand-native doesn't provide monaco-editor (p1b6fc), requested by @monaco-editor/react
+➤ YN0002: │ @hive-command/native@workspace:packages/app/hivecommand-native doesn't provide react-is (p9920b), requested by styled-components
+➤ YN0002: │ @hive-command/schematic-viewer@workspace:packages/core-ui/command-schematic-viewer doesn't provide reactflow (p041fb), requested by @hive-command/electrical-nodes
+➤ YN0002: │ @hive-command/schematic-viewer@workspace:packages/core-ui/command-schematic-viewer [3738f] doesn't provide reactflow (pf1b3e), requested by @hive-command/electrical-nodes
+➤ YN0002: │ @hive-command/ui@workspace:packages/core-ui/command-ui doesn't provide vite (p5d0fc), requested by @storybook/react-vite
+➤ YN0002: │ @hivecomand-clients/root@workspace:. doesn't provide @babel/core (pe0654), requested by @babel/preset-react
+➤ YN0002: │ @hivecomand-clients/root@workspace:. doesn't provide @babel/core (pbaa59), requested by @babel/preset-env
+➤ YN0002: │ @hivecomand-clients/root@workspace:. doesn't provide @babel/core (p056f3), requested by @babel/preset-typescript
+➤ YN0002: │ @hivecomand-clients/root@workspace:. doesn't provide react-is (pda6ed), requested by styled-components
+➤ YN0002: │ @nrwl/devkit@npm:16.7.4 doesn't provide nx (p3eb51), requested by @nx/devkit
+➤ YN0060: │ @yarnpkg/plugin-interactive-tools@npm:4.0.0-rc.50 [62985] provides react (p4fe74) with version 16.14.0, which doesn't satisfy what ink and some of its descendants request
+➤ YN0060: │ @yarnpkg/plugin-version@npm:4.0.0-rc.50 [62985] provides react (pf89e4) with version 16.14.0, which doesn't satisfy what ink and some of its descendants request
+➤ YN0002: │ eslint-config-react-app@npm:7.0.1 [534ea] doesn't provide @babel/plugin-syntax-flow (p0e3db), requested by eslint-plugin-flowtype
+➤ YN0002: │ eslint-config-react-app@npm:7.0.1 [534ea] doesn't provide @babel/plugin-transform-react-jsx (paed29), requested by eslint-plugin-flowtype
+➤ YN0002: │ eslint-config-react-important-stuff@npm:3.0.0 doesn't provide eslint (pa5258), requested by eslint-plugin-jsx-a11y
+➤ YN0002: │ eslint-config-react-important-stuff@npm:3.0.0 doesn't provide eslint (p0530a), requested by eslint-plugin-react-hooks
+➤ YN0002: │ hivecommand-native-designer@workspace:packages/app/hivecommand-native-designer doesn't provide @testing-library/dom (p9dadb), requested by @testing-library/user-event
+➤ YN0002: │ react-dev-utils@npm:12.0.1 doesn't provide typescript (p9c21e), requested by fork-ts-checker-webpack-plugin
+➤ YN0002: │ react-dev-utils@npm:12.0.1 doesn't provide webpack (p882e9), requested by fork-ts-checker-webpack-plugin
+➤ YN0002: │ react-doc-viewer@npm:0.1.5 doesn't provide react (pea87d), requested by react-pdf
+➤ YN0002: │ react-doc-viewer@npm:0.1.5 doesn't provide react (p947d7), requested by styled-components
+➤ YN0002: │ react-doc-viewer@npm:0.1.5 doesn't provide react-dom (pf2977), requested by react-pdf
+➤ YN0002: │ react-doc-viewer@npm:0.1.5 doesn't provide react-dom (p43a9b), requested by styled-components
+➤ YN0002: │ react-doc-viewer@npm:0.1.5 doesn't provide react-is (pc2ea8), requested by styled-components
+➤ YN0002: │ react-pdf@npm:5.0.0 [9ce6d] doesn't provide webpack (p70c67), requested by worker-loader
+➤ YN0002: │ react-resizable@npm:3.0.5 [cf62c] doesn't provide react-dom (pe6bf3), requested by react-draggable
+➤ YN0002: │ webpack-config-single-spa-ts@npm:3.0.0 [0b2d6] doesn't provide webpack (pfbb55), requested by fork-ts-checker-webpack-plugin
+➤ YN0002: │ webpack-config-single-spa-ts@npm:3.0.0 [d77e9] doesn't provide webpack (p82c85), requested by fork-ts-checker-webpack-plugin
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide @babel/core (p720f8), requested by babel-loader
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (p7c18f), requested by babel-loader
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (p287e2), requested by css-loader
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (pebf45), requested by html-webpack-plugin
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (p5b3d4), requested by standalone-single-spa-webpack-plugin
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (p23559), requested by style-loader
+➤ YN0002: │ webpack-config-single-spa@npm:4.0.0 doesn't provide webpack (p9cc8b), requested by systemjs-webpack-interop
+➤ YN0000: │ Some peer dependencies are incorrectly met; run yarn explain peer-requirements <hash> for details, where <hash> is the six-letter p-prefixed code
+➤ YN0000: └ Completed in 3s 40ms
+➤ YN0000: ┌ Fetch step
+➤ YN0013: │ @joshwooding/vite-plugin-react-docgen-typescript@npm:0.2.1 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @rollup/pluginutils@npm:5.0.4 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/builder-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/react-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @types/glob@npm:7.2.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @rollup/pluginutils@npm:5.0.4 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/builder-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/react-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @types/glob@npm:7.2.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @vitejs/plugin-react@npm:3.1.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/builder-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/react-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @types/glob@npm:7.2.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @vitejs/plugin-react@npm:3.1.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ es-module-lexer@npm:0.9.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @storybook/react-vite@npm:7.4.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @types/glob@npm:7.2.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @vitejs/plugin-react@npm:3.1.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ es-module-lexer@npm:0.9.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ estree-walker@npm:2.0.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @types/glob@npm:7.2.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @vitejs/plugin-react@npm:3.1.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ es-module-lexer@npm:0.9.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ estree-walker@npm:2.0.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ glob-promise@npm:4.2.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ @vitejs/plugin-react@npm:3.1.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ es-module-lexer@npm:0.9.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ estree-walker@npm:2.0.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ glob-promise@npm:4.2.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.27.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ es-module-lexer@npm:0.9.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ estree-walker@npm:2.0.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ glob-promise@npm:4.2.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.27.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.30.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ estree-walker@npm:2.0.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ glob-promise@npm:4.2.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.27.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.30.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ react-docgen@npm:6.0.0-alpha.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ glob-promise@npm:4.2.2 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.27.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.30.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ react-docgen@npm:6.0.0-alpha.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ resolve@npm:1.22.6 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.27.0 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ magic-string@npm:0.30.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ react-docgen@npm:6.0.0-alpha.3 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ resolve@npm:1.22.6 can't be found in the cache and will be fetched from the remote registry
+➤ YN0013: │ rollup@npm:3.29.2 can't be found in the cache and will be fetched from the remote registry
