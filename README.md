@@ -19,6 +19,8 @@ yarn
 
 Start Storybook (Component development)
 ```
+cd packages/core-ui/command-electrical-editor
+
 yarn storybook
 ```
 
