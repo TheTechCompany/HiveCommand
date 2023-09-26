@@ -19,7 +19,8 @@ function App() {
     // return qs.parse(location.search, {ignoreQueryPrefix: true})
   }, [location.hash])
 
-  const [ project, setProject ] = useState<any>(null);
+  const [ info, setInfo ] = useState<any>(null);
+
   const [ page, setPage ] = useState<any>(null);
 
   const [ loading, setLoading ] = useState(false);
@@ -62,8 +63,11 @@ function App() {
           console.log("pages", result.page)
           
 
-          setProject(result.project)
-          setPage(result.page);
+          setInfo({
+            project: result.project,
+            version: result.version,
+            versionDate: result.versionDate
+          })
 
           setLoading(false);
 
@@ -104,7 +108,7 @@ function App() {
           nodes={page?.nodes || []}
           edges={page?.edges || []}
           info={{
-            project,
+            ...info,
             page: parseInt(query?.ix?.toString() || '0') + 1,
 
             pageTitle: page?.name,

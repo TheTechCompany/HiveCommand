@@ -7,6 +7,7 @@ import { subject } from "@casl/ability";
 
 import { LexoRank } from 'lexorank';
 import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda'
+import moment from "moment";
 
 export default (prisma: PrismaClient) => {
 
@@ -80,7 +81,36 @@ export default (prisma: PrismaClient) => {
 					const res = await prisma.electricalSchematic.delete({ where: { id: args.id } })
 					return res != null
 				},
+				createCommandSchematicVersion: async (root: any, args: any, context: any) => {
 
+					const schematic = await prisma.electricalSchematic.findFirst({
+						where: {
+							id: args.id, 
+							organisation: context?.jwt?.organisation
+						},
+						include: {
+							pages: true,
+							versions: true
+						}
+					})
+
+					const {versions} = schematic || {};
+
+					const nextVersion = (versions?.sort((a, b) => b.rank - a.rank)?.[0]?.rank || 0) + 1;
+
+					const version = await prisma.electricalSchematicVersion.create({
+						data: {
+							id: nanoid(),
+							data: schematic || {},
+							rank: nextVersion,
+							commit: args.input.commit,
+							createdBy: context?.jwt?.id,
+							schematic: {connect: {id: args.id}}
+						}
+					})
+
+					return nextVersion + 1;
+				},
 				exportCommandSchematic: async (root: any, args: { id: string }, context: any) => {
 					const currentProgram = await prisma.electricalSchematic.findFirst({
 						where: {
@@ -88,14 +118,17 @@ export default (prisma: PrismaClient) => {
 							organisation: context?.jwt?.organisation
 						},
 						include: {
-							pages: true
+							pages: true,
+							versions: true
 						}
 					})
+
+					const version = currentProgram?.versions?.sort((a, b) => b.rank - a.rank)?.[0];
 
 					const invokeCommand = new InvokeCommand({
 						FunctionName: process.env.EXPORT_LAMBDA || '',
 						Payload: JSON.stringify({
-							program: currentProgram
+							program: { ...currentProgram, version: (version?.rank || 0) + 1, versionDate: moment(version?.createdAt).format('DD/MM/YY') }
 						})
 					})
 
@@ -232,6 +265,7 @@ export default (prisma: PrismaClient) => {
 		updateCommandSchematic(id: ID!, input: CommandSchematicInput!): CommandSchematic!
 		deleteCommandSchematic(id: ID!): Boolean!
 
+		createCommandSchematicVersion(id: ID!, input: CommandSchematicVersionInput): String
 		exportCommandSchematic(id: ID!): String
 
         createCommandSchematicPage(schematic: ID, input: CommandSchematicPageInput): CommandSchematicPage!
@@ -257,12 +291,33 @@ export default (prisma: PrismaClient) => {
 	type CommandSchematic {
 		id: ID! 
 		name: String
+		versions: [CommandSchematicVersion]
 
         pages: [CommandSchematicPage]
 
 		createdAt: DateTime 
 
 		organisation: HiveOrganisation
+	}
+
+	input CommandSchematicVersionInput {
+		commit: String
+	}
+
+	type CommandSchematicVersion {
+		id: ID
+	  
+		rank: Int
+	  
+		data: JSON
+	  
+		commit: String
+	  
+		createdAt: DateTime
+	  
+		createdBy: HiveUser
+	  
+		schematic: CommandSchematic 
 	}
 
     input CommandSchematicPageInput{
