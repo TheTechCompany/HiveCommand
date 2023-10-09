@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.4.15-alpha.268",
+  "version": "1.4.15-alpha.269",
   "description": "",
   "main": "index.js",
   "publishConfig": {
@@ -20,9 +20,9 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@hive-command/amqp-hub": "^1.4.15-alpha.268",
-    "@hive-command/data": "^1.4.15-alpha.268",
-    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.268",
+    "@hive-command/amqp-hub": "^1.4.15-alpha.269",
+    "@hive-command/data": "^1.4.15-alpha.269",
+    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.269",
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
