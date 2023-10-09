@@ -212,8 +212,8 @@ export default (prisma: PrismaClient) => {
 
                 return await prisma.canvasDataTemplateEdge.update({
                     where: {
-                        id: args.id,
-                        templateId: args.template
+                        id: args.id
+                        // templateId: args.template
                     },
                     data: {
                         ...sourcedByUpdate
