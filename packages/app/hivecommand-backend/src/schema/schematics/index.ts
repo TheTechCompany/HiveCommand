@@ -15,7 +15,11 @@ export default (prisma: PrismaClient) => {
 
 	const resolvers = mergeResolvers([
 		{
-
+			CommandSchematicVersion: {
+				createdBy: (root: any) => {
+					return {id: root.createdBy}
+				}
+			},
 			Query: {
 				commandSchematics: async (root: any, args: any, context: any) => {
 
@@ -25,7 +29,8 @@ export default (prisma: PrismaClient) => {
 					const programs = await prisma.electricalSchematic.findMany({
 						where: { ...filter, organisation: context.jwt.organisation },
 						include: {
-							pages: true
+							pages: true,
+							versions: true
 						}
 					});
 
@@ -168,8 +173,8 @@ export default (prisma: PrismaClient) => {
 						data: {
 							id: nanoid(),
 							name: args.input.name,
-							nodes: args.input.nodes,
-							edges: args.input.edges,
+							nodes: args.input.nodes || [],
+							edges: args.input.edges || [],
 							rank: newRank.toString(),
 							schematic: {
 								connect: { id: args.schematic }

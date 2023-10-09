@@ -59,6 +59,7 @@ console.log(props.edges)
                         <ReactFlow 
                             // fitView
                             // maxZoom={0.5}
+                            proOptions={{ hideAttribution: true }}
                             minZoom={0.1}
                             maxZoom={1}
                             connectionMode={ConnectionMode.Loose}

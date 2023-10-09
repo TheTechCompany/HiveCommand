@@ -12,6 +12,7 @@
   "include": ["src/**/*", "node_modules/@types"],
   "exclude": ["src/**/*.test*"],
   "references": [
+    {"path": "../../editors/electrical"},
     {"path": "../hivecommand-api"},
     {"path": "../../core/command-scripting"},
     {"path": "../../core-ui/command-electrical-editor"},

@@ -250,7 +250,8 @@ model FunctionalDescriptionPage {
 
   rank String
 
-  blocks FunctionalDescriptionBlock[] @relation(name: "hasFDBlock")
+  nodes Json?
+  edges Json?
 
   parent FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
   parentId String?
@@ -259,17 +260,6 @@ model FunctionalDescriptionPage {
 
   functionalDescription FunctionalDescription @relation(name: "hasFDPage", references: [id], fields: [functionalDescriptionId])
   functionalDescriptionId String
-}
-
-model FunctionalDescriptionBlock {
-  id String @id
-
-  rank String
-
-  text String
-  
-  page FunctionalDescriptionPage @relation(name: "hasFDBlock", references: [id], fields: [pageId])
-  pageId String 
 }
 
 model ElectricalSchematic {

@@ -5,8 +5,9 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import { useParams } from 'react-router-dom';
 import { arrayMove } from '@dnd-kit/sortable';
 import { saveAs } from 'file-saver';
-
+import { ElectricalEditor } from '@hive-command/electrical-editor-v2'
 import './index.css';
+import { ExportModal } from './export-modal';
 
 export const SchematicEditor = () => {
 
@@ -20,6 +21,16 @@ export const SchematicEditor = () => {
                 id
 
                 name
+
+                versions {
+                    id
+                    rank
+
+                    createdAt
+		            createdBy {
+                        name
+                    }
+                }
 
                 pages {
                     id
@@ -86,12 +97,73 @@ export const SchematicEditor = () => {
         }
     `)
 
+
+    const onCreatePage = (page: any) => {
+        createPage({
+            variables: {
+                schematic: id,
+                name: page?.name
+            }
+        })
+    }
+
+
+    const onUpdatePage = (page: any) => {
+
+        console.log("updatePage", page);
+
+        let input : any = {};
+
+        if(page.nodes){
+            input.nodes = page.nodes;
+        }
+
+        if(page.edges){
+            input.edges = page.edges;
+        }
+
+        debouncedUpdate({
+            variables:{
+                schematic: id,
+                id: page.id,
+                input
+            }
+        })
+
+
+        setPages((pages) => {
+            let p = pages.slice();
+
+            let ix = p.findIndex((a) => a.id == page.id);
+
+            p[ix] = {...p[ix], ...page}
+            return p;
+        })
+    }
+
+    const onDeletePage = (page: any) => {
+        deletePage({
+            variables: {
+                schematic: id,
+                id: page.id
+            }
+        })
+    }
+
+    const onUpdatePageOrder = (id: string, above: any, below: any) => {
+        updatePageOrder({
+            variables: {
+                schematic: id,
+                id,
+                above,
+                below
+            }
+        })
+    }
+
     const debouncedUpdate = useMemo(() => debounce(updatePage, 500), [])
 
-
     const schematic = data?.commandSchematics?.[0];
-
-    console.log(schematic)
 
     useEffect(() => {
         setPages(schematic?.pages || []);
@@ -99,6 +171,7 @@ export const SchematicEditor = () => {
     
     const sortedPages = useMemo(() => pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
 
+    const [ exportModalOpen, openExportModal ] = useState(false);
 
     return (
         <Box sx={{
@@ -108,6 +181,24 @@ export const SchematicEditor = () => {
             display: 'flex', 
             flexDirection: 'column'
         }}>
+            <ExportModal
+                open={exportModalOpen}
+                versions={schematic?.versions || []}
+                onClose={() => openExportModal(false)}
+                />
+            <ElectricalEditor
+                title={schematic?.name}
+                versions={schematic?.versions || []}
+                pages={pages || []}
+                onCreatePage={onCreatePage}
+                onUpdatePage={onUpdatePage}
+                onDeletePage={onDeletePage}
+                onUpdatePageOrder={onUpdatePageOrder}
+                onExport={() => {
+                    openExportModal(true)
+                }}
+             />
+{/*              
             <ECadEditor
                 exporting={exporting}
                 pages={sortedPages || []}
@@ -195,7 +286,7 @@ export const SchematicEditor = () => {
                         return p;
                     })
                 }}
-            />
+            /> */}
         </Box>
         
     )

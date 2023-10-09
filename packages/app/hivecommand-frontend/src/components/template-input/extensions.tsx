@@ -1,9 +1,10 @@
 import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { autocompletion, closeCompletion, moveCompletionSelection, acceptCompletion, CompletionContext, CompletionSource } from "@codemirror/autocomplete";
-import { Compartment, CompletionResult, EditorState, EditorView, Extension, keymap, StateEffect, ViewUpdate } from "./codemirror";
+import { Compartment, CompletionResult, EditorState, EditorView, Extension, StateEffect, ViewUpdate } from "./codemirror";
 import { Prec } from "@codemirror/state";
 import { basicSetup } from 'codemirror'
 import { bracketMatching, syntaxTree } from '@codemirror/language'
+import { keymap } from '@codemirror/view';
 
 const compartments: Compartment[] = [];
 
