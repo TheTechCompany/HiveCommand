@@ -1,8 +1,11 @@
 {
   "name": "@hive-command/electrical-nodes",
-  "version": "1.4.15-alpha.267",
+  "version": "1.4.15-alpha.271",
   "description": "",
   "main": "dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/"
   ],

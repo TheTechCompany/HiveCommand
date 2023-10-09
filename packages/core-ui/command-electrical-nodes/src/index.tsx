@@ -1,3 +1,3 @@
 export * from './node';
 export * from './edge';
-export { ElectricalNodesProvider } from './context';
+export { ElectricalNodesProvider, useElectricalNodeContext } from './context';

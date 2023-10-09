@@ -47,6 +47,7 @@ module.exports = (webpackConfigEnv, argv) => {
         '@hexhive/ui': path.resolve(__dirname, '../../../node_modules/@hexhive/ui'),
         '@hexhive/utils': path.resolve(__dirname, '../../../node_modules/@hexhive/utils'),
         '@hexhive/styles': path.resolve(__dirname, '../../../node_modules/@hexhive/styles'),
+
         "@mui/x-date-pickers": path.resolve(__dirname, '../../../node_modules/@mui/x-date-pickers'),
         // '@mui/icons-material': path.resolve(__dirname, 'node_modules/@mui/icons-material'),
         '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
@@ -71,6 +72,12 @@ module.exports = (webpackConfigEnv, argv) => {
     module: {
       rules: [
         {
+          test: /\.tsx?$/,
+          // exclude: /src/,
+          loader: 'ts-loader',
+          options: { projectReferences: true },
+        },
+        {
           test: /\.m?js/,
           resolve: {
               fullySpecified: false,
@@ -79,12 +86,6 @@ module.exports = (webpackConfigEnv, argv) => {
         {
           test: /\.ttf$/,
           use: ['file-loader']
-        },
-        {
-          test: /\.tsx?$/,
-          exclude: /src/,
-          loader: 'ts-loader',
-          options: { projectReferences: true },
         }
       ]
     },

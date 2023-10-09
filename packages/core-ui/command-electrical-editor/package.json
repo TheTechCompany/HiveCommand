@@ -1,9 +1,10 @@
 {
   "name": "@hive-command/electrical-editor",
-  "version": "1.4.15-alpha.267",
+  "version": "1.4.15-alpha.271",
   "files": [
     "dist/"
   ],
+  "private": true,
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -b"
@@ -18,6 +19,6 @@
   },
   "dependencies": {
     "@hive-command/electrical-nodes": "workspace:^",
-    "@hive-command/remote-components": "^1.4.15-alpha.267"
+    "@hive-command/remote-components": "^1.4.15-alpha.271"
   }
 }

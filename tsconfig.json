@@ -18,6 +18,8 @@
 
 		"reactflow": ["../node_modules/reactflow"],
 
+		"@mui/icons-material": ["../node_modules/@mui/icons-material"],
+
 		"@hive-command/threads": ["../node_modules/@hive-command/threads"],
 		"node-opcua": ["../node_modules/node-opcua"],
 
@@ -29,6 +31,11 @@
 
 		// "@hive-command/export-page": ["./core-ui/command-export-page/src"],
 
+		"@hive-command/electrical-editor-v2": ["./editors/electrical"],
+		"@hive-command/editor-toolbar": ["./core-ui/editor-toolbar"],
+		"@hive-command/editor-panes": ["./core-ui/editor-panes"],
+		"@hive-command/editor-canvas": ["./core-ui/editor-canvas"],
+	
 		
 		"@hive-command/rabbitmq-auth": ["./communication/rabbitmq-auth"],
 		"@hive-command/amqp-hub": ["./communication/amqp-hub"],

@@ -8,8 +8,9 @@
     "packages/drivers/*",
     "packages/infrastructure/*",
     "packages/app/*",
-    "packages/lambdas/*"
+    "packages/lambdas/*",
+    "packages/editors/*"
   ],
   "npmClient": "yarn",
-  "version": "1.4.15-alpha.267"
+  "version": "1.4.15-alpha.271"
 }

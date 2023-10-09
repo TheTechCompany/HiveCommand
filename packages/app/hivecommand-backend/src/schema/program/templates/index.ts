@@ -210,23 +210,16 @@ export default (prisma: PrismaClient) => {
                     sourcedByUpdate = {script: args.input.script, from: {disconnect: true}};
                 }
 
-                return await prisma.canvasDataTemplate.update({
+                return await prisma.canvasDataTemplateEdge.update({
                     where: {
-                        id: args.template
+                        id: args.id,
+                        templateId: args.template
                     },
                     data: {
-                        edges: {
-                            update: {
-                                where: {
-                                    id: args.id,
-                                },
-                                data: {
-                                    ...sourcedByUpdate
-                                }
-                            }
-                        }
+                        ...sourcedByUpdate
                     }
                 })
+                
             },
             deleteCommandTemplateEdge: async (root: any, args: any, context: any) => {
                 return await prisma.canvasDataTemplate.update({

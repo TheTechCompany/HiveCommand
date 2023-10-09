@@ -10,7 +10,6 @@ import { Bubble } from '../components/Bubble/Bubble';
 // import { useApolloClient } from '@apollo/client';
 import { IconButton, InputAdornment, Select, Box, Typography, TextField, Button, Paper, Divider, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { InfiniteScrubber } from '@hexhive/ui';
-import { ActionMenu } from '../components/action-menu';
 import moment from 'moment';
 
 import { DataTypes, parseValue } from '@hive-command/scripting'

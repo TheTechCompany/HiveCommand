@@ -33,6 +33,15 @@ cd packages/app/hivecommand-frontend/; yarn start
 
 ```
 
+## Typescript references
+To keep typescript inference throughout the monorepo follow the below steps;
+
+Keep the root tsconfig.json up to date with project references
+Extend each project from the root tsconfig.json
+Add composite to each module that is re-used
+Add references at the bottom of modules that use shared modules
+
+For webpack ts-loader with projectReferences and tsconfig-paths-webpack-plugin must be setup
 
 Integrator pathway
 

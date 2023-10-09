@@ -250,7 +250,8 @@ model FunctionalDescriptionPage {
 
   rank String
 
-  blocks FunctionalDescriptionBlock[] @relation(name: "hasFDBlock")
+  nodes Json?
+  edges Json?
 
   parent FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
   parentId String?
@@ -261,21 +262,12 @@ model FunctionalDescriptionPage {
   functionalDescriptionId String
 }
 
-model FunctionalDescriptionBlock {
-  id String @id
-
-  rank String
-
-  text String
-  
-  page FunctionalDescriptionPage @relation(name: "hasFDBlock", references: [id], fields: [pageId])
-  pageId String 
-}
-
 model ElectricalSchematic {
   id String @id
 
   name String
+
+  versions ElectricalSchematicVersion[] @relation(name: "hasSchematicVersion")
 
   // devices ElectricalDevice[]
 
@@ -284,6 +276,23 @@ model ElectricalSchematic {
   organisation String
 
   createdAt DateTime @default(now())
+}
+
+model ElectricalSchematicVersion {
+  id String @id
+
+  rank Int
+
+  data Json?
+
+  commit String?
+
+  createdAt DateTime @default(now())
+
+  createdBy String
+
+  schematic ElectricalSchematic @relation(name: "hasSchematicVersion", references: [id], fields: [schematicId])
+  schematicId String
 }
 
 model ElectricalSchematicPage {

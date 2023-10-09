@@ -1,0 +1,24 @@
+{
+  "name": "@hive-command/electrical-editor-v2",
+  "version": "1.4.15-alpha.271",
+  "private": true,
+  "packageManager": "yarn@3.6.0",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "@hive-command/editor-canvas": "workspace:^",
+    "@hive-command/editor-panes": "workspace:^",
+    "@hive-command/editor-toolbar": "workspace:^"
+  },
+  "peerDependencies": {
+    "@mui/material": "*"
+  }
+}

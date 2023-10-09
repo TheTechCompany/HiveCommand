@@ -3,6 +3,8 @@ import { writeFileSync } from 'fs';
 
 export_schematic({
     name: 'Projec',
+    version: '1',
+    versionDate: '04/12/23',
     pages: [
         {
             id: '1',
@@ -24,13 +26,17 @@ export_schematic({
         "height":1080,
         // "isLandscape":true,"isMobile":false,
         "width":1920
+        
     },
+
     headless: false,
     // args: ["--allow-running-insecure-content","--autoplay-policy=user-gesture-required","--disable-background-timer-throttling","--disable-component-update","--disable-domain-reliability","--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process","--disable-ipc-flooding-protection","--disable-print-preview","--disable-dev-shm-usage","--disable-setuid-sandbox","--disable-site-isolation-trials","--disable-speech-api","--disable-web-security","--disk-cache-size=33554432","--enable-features=SharedArrayBuffer","--hide-scrollbars","--ignore-gpu-blocklist","--in-process-gpu","--mute-audio","--no-default-browser-check","--no-first-run","--no-pings","--no-sandbox","--no-zygote","--use-gl=angle","--use-angle=swiftshader","--window-size=1920,1080","--single-process"]
     // viewport: {
     //     width: 600,
     //     height: 800
     // }
+
+
 }).then((pdf: any) => {
         writeFileSync('./test.pdf', pdf)
 
