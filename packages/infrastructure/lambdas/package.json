@@ -1,6 +1,7 @@
 {
     "name": "hivecommand-lambdas",
     "main": "index.ts",
+    "private": true,
     "devDependencies": {
         "@types/node": "^16",
         "@types/yazl": "^2.4.2"
