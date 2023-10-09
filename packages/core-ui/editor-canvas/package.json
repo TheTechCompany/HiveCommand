@@ -1,0 +1,15 @@
+{
+  "name": "@hive-command/editor-canvas",
+  "private": true,
+  "main": "dist/index.js",
+  "packageManager": "yarn@3.6.0",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "dependencies": {
+    "reactflow": "^11.9.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  }
+}

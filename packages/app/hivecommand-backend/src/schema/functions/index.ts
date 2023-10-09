@@ -31,7 +31,7 @@ export default (prisma: PrismaClient) => {
                         }
                     });
 
-					return programs.filter((a) => context?.jwt?.acl?.can('read', subject('CommandFunction', a) )).map((program) => {
+					const functions = programs.filter((a) => context?.jwt?.acl?.can('read', subject('CommandFunction', a) )).map((program) => {
 
 						let rootDocs = program?.pages?.slice()?.filter((a) => !a.parent)?.sort((a,b) => a.rank?.localeCompare(b.rank))
 
@@ -41,8 +41,6 @@ export default (prisma: PrismaClient) => {
 						}
 
 						let labels = rootDocs.map((x, ix) => findLabels(x, `S${ix + 1}`)).reduce((p, v) => p.concat(v), [] as any[]);
-
-						console.log(labels)
 
 						let pages = program?.pages?.map((x) => ({
 							...x,
@@ -54,6 +52,10 @@ export default (prisma: PrismaClient) => {
 							pages
 						}
 					})
+
+					console.log({functions: functions?.[0]?.pages})
+
+					return functions;
 				},
 				
 			},
@@ -162,8 +164,9 @@ export default (prisma: PrismaClient) => {
                         },
                         data: {
                             name: args.input.name,
+							nodes: args.input.nodes,
+							edges: args.input.edges,
 							...parentUpdate
-
 
                             // nodes: args.input.nodes,
                             // edges: args.input.edges,
@@ -290,6 +293,7 @@ export default (prisma: PrismaClient) => {
 
     type CommandFunctionPage {
         id: ID!
+
         name: String
 		label: String
 

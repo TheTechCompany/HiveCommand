@@ -24,6 +24,7 @@
     "jest.config.js",
     "dist/",
     "**/**.test.ts",
+    "**/**.test.tsx",
     "node_modules/"
   ],
   "references": [

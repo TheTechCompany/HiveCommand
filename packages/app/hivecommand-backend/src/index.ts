@@ -83,7 +83,6 @@ const prisma = new PrismaClient();
 
 	app.use(graphServer.middleware)
 
-	
 	app.listen('9010', () => {
 		console.log("Listening on 9010")
 	})

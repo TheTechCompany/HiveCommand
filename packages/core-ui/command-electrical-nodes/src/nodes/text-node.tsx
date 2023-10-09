@@ -12,6 +12,7 @@ export const TextNode = (props: NodeProps) => {
         <div
             ref={nodeRef}
             style={{
+                transformOrigin: 'left top',
                 transform: props.data?.rotation ? `rotate(${props.data?.rotation}deg)` : undefined,
                 background: props.selected ? 'rgba(0, 89, 220, 0.08)' : undefined,
                 border: props.selected ? '1px dotted rgba(0, 89, 220, 0.8)' : undefined,

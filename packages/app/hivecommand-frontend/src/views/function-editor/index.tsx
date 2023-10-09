@@ -2,17 +2,19 @@ import { Box, Divider, IconButton, List, ListItem, ListItemButton, Paper, TextFi
 import React, { useEffect, useMemo, useState } from 'react';
 import { FunctionTextEditor } from './editor';
 import mermaid from 'mermaid';
-import ReactFlow, { Handle, MarkerType, NodeProps, Position, useEdgesState, useNodesState } from 'reactflow';
+import ReactFlow, { Background, Handle, MarkerType, NodeProps, Position, useEdgesState, useNodesState } from 'reactflow';
 
 import dagre from 'dagre'
 
 import 'reactflow/dist/style.css';
-import { Add, Delete, DragHandle, Visibility } from '@mui/icons-material';
+import { Add, Delete, DragHandle, Visibility, Home } from '@mui/icons-material';
 import { useParams } from 'react-router-dom';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { SortableList } from '../../components/sortable-list';
 import { TreeViewSortableList } from '../../components/sortable-list/tree-view';
 import { arrayMove } from '@dnd-kit/sortable'
+import { FunctionBlock } from './node';
+import { LayoutGuides } from './guides';
 
 export const FunctionEditor = () => {
 
@@ -24,11 +26,15 @@ export const FunctionEditor = () => {
             commandFunctions(where: {id: $id}){
                 id
 
+                name
+
                 pages {
                     id
                     name
 
                     label
+
+                    rank
 
                     parent { 
                         id
@@ -36,8 +42,9 @@ export const FunctionEditor = () => {
                     
                     children {
                         id
-                        name
-                        label
+
+                        rank
+
                     }
 
                     rank
@@ -51,15 +58,27 @@ export const FunctionEditor = () => {
     })
 
     const [createPage] = useMutation(gql`
-    mutation CreatePage($fd: ID, $name: String, $parent: String) {
-        createCommandFunctionPage(fd: $fd, input: {name: $name, parent: $parent}){
-            id
+        mutation CreatePage($fd: ID, $name: String, $parent: String) {
+            createCommandFunctionPage(fd: $fd, input: {name: $name, parent: $parent}){
+                id
+            }
         }
-    }
-`, {
-    refetchQueries: ['GetSchematic'],
-    awaitRefetchQueries: true
-})
+    `, {
+        refetchQueries: ['GetSchematic'],
+        awaitRefetchQueries: true
+    })
+
+
+    const [updatePage] = useMutation(gql`
+        mutation UpdatePage($fd: ID, $id: ID, $name: String, $nodes: JSON, $edges: JSON) {
+            updateCommandFunctionPage(fd: $fd, id: $id, input: {name: $name, nodes: $nodes, edges: $edges}){
+                id
+            }
+        }
+    `, {
+        refetchQueries: ['GetSchematic'],
+        awaitRefetchQueries: true
+    })
 
     const [updatePageOrder] = useMutation(gql`
     mutation UpdateOrder($fd: ID, $id: ID, $parent: String, $above: String, $below: String) {
@@ -71,6 +90,9 @@ export const FunctionEditor = () => {
     })
 
 
+    const [ rootHandle, setRootHandle ] = useState<any>(null)
+
+    const [ creatingEdgeHandle, setCreatingEdgeHandle ] = useState<any>(null);
     
     const [ editingPage, setEditingPage ] = useState<any>(null);
 
@@ -81,24 +103,84 @@ export const FunctionEditor = () => {
     const [ nodes, setNodes, onNodesChange ] = useNodesState<any[]>([]);
     const [ edges, setEdges, onEdgesChange] = useEdgesState<any[]>([]);
 
+    const [ draggingNode, setDraggingNode ] = useState<any>(null);
+    const [ guides, setGuides ] = useState<any>({xGuides: [], yGuides: []});
+
+    const [ activeGuides, setActiveGuides ] = useState<any>({x: [], y: []})
+
     useEffect(() => {
-        setNodes(editingPage?.children?.map((x, ix) => ({
+
+        const available_nodes = nodes.filter((a) => a.id != draggingNode?.id);
+
+        const xGuides = available_nodes?.map((x) => 
+            [x.position.x, x.position.x + (x.width / 2), x.position.x + x.width]
+        ).reduce((prev, curr) => prev.concat(curr), [])
+
+        const yGuides = available_nodes?.map((x) => 
+            [x.position.y, x.position.y + (x.height / 2), x.position.y + x.height]
+        ).reduce((prev, curr) => prev.concat(curr), [])
+
+        setGuides({
+            xGuides,
+            yGuides
+        })
+        
+    }, [nodes, draggingNode])
+
+    console.log(nodes.filter((a) => a.id != draggingNode?.id), draggingNode?.id)
+
+    useEffect(() => {
+
+        if(draggingNode){
+
+            let node = nodes.find((a) => a.id == draggingNode.id)
+
+            let xMatches = [node.position.x, node.position.x + (node.width  /2), node.position.x + node.width].filter((x) => guides.xGuides.indexOf(x) > -1)
+            let yMatches = [node.position.y, node.position.y + (node.height  /2), node.position.y + node.height].filter((x) => guides.yGuides.indexOf(x) > -1)
+
+            setActiveGuides({x: xMatches, y: yMatches})
+            
+
+            console.log(xMatches, yMatches)
+        }
+
+    }, [guides, draggingNode])
+    console.log(guides);
+
+    const fd = data?.commandFunctions?.[0];
+
+
+    useEffect(() => {
+
+        let pages = (fd?.pages?.find((a) => a.id == rootHandle)?.children || [])?.slice()?.sort((a, b) => a.rank?.localeCompare(b.rank));
+
+        console.log(pages, fd.pages?.map((x) => x.label))
+
+        const n = pages?.map((x, ix) => ({
             id: x?.id, 
-            label: x?.name,
+            type: 'fb',
             position: {
                 x: 50,
                 y: ix * 50
             },
             data: {
-                label: x?.name
+                label: fd?.pages?.find((a) => a.id == x.id)?.label,
+                name: fd?.pages?.find((a) => a.id == x.id)?.name,
+                start: ix == 0,
+                end: ix == editingPage?.children?.length - 1
                 // label: node.label,
                 // width: node.width,
                 // height: node.height
             }
-        })))
+        }))
+
+        console.log({n});
+
+        setNodes(n)
+
         setEdges(editingPage?.children?.map((x, ix) => ({id: x?.id, source: x?.id, target: editingPage?.children?.[ix + 1]?.id})))
 
-    }, [editingPage])
+    }, [editingPage, fd, rootHandle])
 
     useEffect(() => {
 
@@ -114,13 +196,14 @@ export const FunctionEditor = () => {
 
     const nodeTypes = useMemo(() => ({ 
         add: AddNode,
+        canvas: CanvasNode,
         node: EditorNode,
-        root: RootNode
+        root: RootNode,
+        fb: FunctionBlock
      }), []);
 
      
      
-    const fd = data?.commandFunctions?.[0];
 
     const pages = useMemo(() => {
 
@@ -143,7 +226,7 @@ export const FunctionEditor = () => {
     return (
         <Box sx={{flex: 1, display: 'flex'}}>
             <Paper sx={{minWidth: '300px', display: 'flex', flexDirection: 'column'}}>
-                
+{/*                 
                 <Box sx={{display: 'flex', alignItems: 'center'}}>    
                     <Typography sx={{flex: 1, textAlign: 'center'}} fontWeight={"bold"}>Pages</Typography>
                     <IconButton onClick={() => {
@@ -151,8 +234,19 @@ export const FunctionEditor = () => {
                         createPage({variables: {fd: id, name: 'New page'}});
 
                     }} size="small"><Add /></IconButton>
-                </Box>
+                </Box> */}
                 <Divider />
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <ListItemButton onClick={() => setRootHandle(null)}>
+                        <Home />
+                        <Typography>{fd?.name}</Typography>
+                    </ListItemButton>
+                    <IconButton onClick={() => {
+                        
+                        createPage({variables: {fd: id, name: 'New page'}});
+
+                    }} size="small"><Add /></IconButton>
+                </Box>
                 <TreeViewSortableList 
                     onReorderItems={(pageId: string, newIx: number, parent?: string) => {
                         let pages = fd?.pages?.slice()?.sort((a,b) => a.rank.localeCompare(b.rank))
@@ -170,8 +264,9 @@ export const FunctionEditor = () => {
                         return updatePageOrder({variables: { fd: id, id: pageId, parent, above, below }});
                     }}
                     onItemClick={(item) => {
-                        console.log(item)
                         setEditingPage(item)
+
+                        setRootHandle(item?.id)
                     }}
                     onItemAdd={(parent) => {
                         createPage({variables: {fd: id, name: 'New page', parent}});
@@ -187,7 +282,7 @@ export const FunctionEditor = () => {
                     <input style={{background: 'transparent', width: '100%', outline: "none", border: 'none', height: '24px', fontSize: '1rem'}} type="text" value={editingPage?.name || ''} />
                 </Box>
                 <Box sx={{flex: 1, display :'flex'}}>
-                <Box sx={{flex: 1, display: 'flex'}}>
+                {/* <Box sx={{flex: 1, display: 'flex'}}>
                     <FunctionTextEditor 
                         value={value}
                         onChange={(e) => {
@@ -273,22 +368,86 @@ export const FunctionEditor = () => {
                             }
                         }}
                             />
-                </Box>
+                </Box> */}
                 <Box sx={{flex: 1, display: 'flex'}}>
                     <ReactFlow
+                        fitView
+                        maxZoom={1}
+                        snapToGrid
                         onNodesChange={onNodesChange}
                         onEdgesChange={onEdgesChange}
-                        onSelectionChange={(selection) => {
+                        onSelectionStart={(e) => {
+                            console.log("Start", e);
+
+                        }}
+                        onSelectionEnd={(e) => {
+                            console.log("Stop", e);
+
+                        }}
+                       onSelectionChange={(selection) => {
                             // setSelected(selection)
+                        }}
+                        onEdgeUpdateStart={(e, edge) => {
+                            console.log("Start edge u[date")
+                        }}
+                        onEdgeUpdate={() => {
+
+                        }}
+                        onEdgeUpdateEnd={() => {
+
+                        }}
+                        onNodeDragStart={(e, node) => {
+                            setDraggingNode(node)
+                        }}
+                        onNodeDragStop={() => {
+                            setDraggingNode(null)
+                        }}
+                        onConnectStart={(e, params) => {
+                            console.log("conenct start", params)
+                            setCreatingEdgeHandle(params)
+                        }}
+                        onConnect={(conn) => {
+                            console.log(conn);
+                            setCreatingEdgeHandle(null);
+                            console.log("Start Connect u[date")
+                        }}
+                        onConnectEnd={(e) => {
+                            console.log("conenct end", e, e.target)
+
+                            if(e.target && (e.target as HTMLElement)?.className?.indexOf('react-flow__pane') > -1){
+                                // alert("Create connect " + creatingEdgeHandle?.nodeId)
+
+                                createPage({variables: {fd: id, name: 'New page', parent: editingPage?.parent?.id}});
+
+                            }
+
                         }}
                         nodeTypes={nodeTypes}
                         nodes={nodes}
                         edges={edges}
-                        />
+                        // translateExtent={[[0, 0], [297 * 5, 210 * 5]]}
+                        // translateExtent={}
+                    >
+                        <Background />
+                        <LayoutGuides activeGuides={activeGuides} />
+                   
+                    </ReactFlow>
                 </Box>
                 </Box>
             </Paper>
         </Box>
+    )
+}
+
+//[{ id: 'canvas', type: 'canvas', draggable: false, selectable: false, position: {x: 0, y: 0}, data: {width: 297 * 5, height: 210 * 5} } as any].concat(
+
+export const CanvasNode = (props: NodeProps) => {
+    return (
+        <Paper sx={{width: props.data?.width, height: props.data?.height}}> 
+            <div style={{border: '1px solid black', padding: '3px'}}>
+                Project info
+            </div>
+        </Paper>
     )
 }
 
@@ -302,7 +461,7 @@ export const AddNode = (props: NodeProps) => {
 
 export const EditorNode = (props: NodeProps) => {
     return (
-        <div style={{background: 'white', width: '150px', borderRadius: '3px', padding: '6px'}}>
+        <div style={{backgroundColor: 'white', width: '150px', borderRadius: '3px', padding: '6px'}}>
             <Handle type='target' position={Position.Top} />
             {props.data.label?.map((x, ix)=> 
                 <div style={{color: 'black', borderBottom:  (ix == 0 && props.data?.label?.length > 1) ? '1px solid black' : undefined, textAlign: 'center'}}>

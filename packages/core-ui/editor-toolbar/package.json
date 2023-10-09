@@ -1,0 +1,18 @@
+{
+  "name": "@hive-command/editor-toolbar",
+  "private": true,
+  "main": "dist/index.js",
+  "packageManager": "yarn@3.6.0",
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "peerDependencies": {
+    "@mui/material": "*"
+  },
+  "dependencies": {
+    "@mui/base": "^5.0.0-beta.18"
+  }
+}
