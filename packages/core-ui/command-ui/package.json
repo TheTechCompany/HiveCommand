@@ -1,5 +1,9 @@
 {
   "name": "@hive-command/ui",
+  "version": "1.4.15-alpha.267",
+  "publishConfig": {
+    "access": "public"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",

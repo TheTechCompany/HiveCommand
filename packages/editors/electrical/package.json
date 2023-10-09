@@ -1,9 +1,13 @@
 {
   "name": "@hive-command/electrical-editor-v2",
+  "version": "1.4.15-alpha.267",
   "packageManager": "yarn@3.6.0",
   "main": "dist/index.js",
   "devDependencies": {
     "typescript": "^5.2.2"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
     "build": "tsc -b"
