@@ -8,6 +8,8 @@ export interface EditorCanvasProps {
     nodeTypes?: NodeTypes,
     edgeTypes?: EdgeTypes
 
+    fitView?: boolean;
+    
     onNodeDoubleClick?: (node: Node) => void;
 }
 
@@ -44,7 +46,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 edgeTypes={props.edgeTypes}
                 nodes={props.nodes || []}
                 edges={props.edges || []}
-                // fitView
+                fitView={props.fitView}
                 onSelectionStart={onSelectionStart}
                 onSelectionEnd={onSelectionEnd}
                 onNodeDoubleClick={(ev, node) => props.onNodeDoubleClick?.(node)}

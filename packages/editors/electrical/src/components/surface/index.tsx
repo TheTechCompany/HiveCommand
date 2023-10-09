@@ -221,7 +221,8 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                     <EditorCanvas 
                         nodeTypes={nodeTypes}
                         edgeTypes={edgeTypes}
-                        nodes={props?.page?.nodes}
+                        fitView
+                        nodes={[{id: 'page', type: 'page', draggable: false, selectable: false, position: { x: 0, y: 0 }, data: {} } as any].concat(props?.page?.nodes || [])}
                         edges={props?.page?.edges}
                         onNodeDoubleClick={(node) => {
                             const { props }: any = ToolProps.find((a) => a.id == node.type) || {}
