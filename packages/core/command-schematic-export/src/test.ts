@@ -3,6 +3,8 @@ import { writeFileSync } from 'fs';
 
 export_schematic({
     name: 'Projec',
+    version: '1',
+    versionDate: '04/12/23',
     pages: [
         {
             id: '1',
