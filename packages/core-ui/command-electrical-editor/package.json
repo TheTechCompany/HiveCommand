@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/electrical-editor",
-  "version": "1.4.15-alpha.267",
+  "version": "1.4.15-alpha.268",
   "files": [
     "dist/"
   ],
@@ -18,6 +18,6 @@
   },
   "dependencies": {
     "@hive-command/electrical-nodes": "workspace:^",
-    "@hive-command/remote-components": "^1.4.15-alpha.267"
+    "@hive-command/remote-components": "^1.4.15-alpha.268"
   }
 }
