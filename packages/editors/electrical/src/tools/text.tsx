@@ -74,7 +74,7 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
         const { zoom } = useViewport();
 
-        return (
+        return props.cursorPosition && (
             <Box sx={{
                 pointerEvents: 'none',
                 position: 'absolute',
