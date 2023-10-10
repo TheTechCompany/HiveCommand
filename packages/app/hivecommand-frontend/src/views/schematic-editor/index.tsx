@@ -32,6 +32,11 @@ export const SchematicEditor = () => {
                     }
                 }
 
+                templates {
+                    id
+                    name
+                }
+
                 pages {
                     id
                     name
@@ -75,6 +80,39 @@ export const SchematicEditor = () => {
     const [deletePage] = useMutation(gql`
         mutation DeletePage($schematic: ID, $id: ID) {
             deleteCommandSchematicPage(schematic: $schematic, id: $id)
+        }
+    `, {
+            refetchQueries: ['GetSchematic'],
+            awaitRefetchQueries: true
+        })
+
+
+    const [createPageTemplate] = useMutation(gql`
+        mutation CreatePageTemplate($schematic: ID, $name: String) {
+            createCommandSchematicPageTemplate(schematic: $schematic, input: {name: $name}){
+                id
+            }
+        }
+    `, {
+        refetchQueries: ['GetSchematic'],
+        awaitRefetchQueries: true
+    })
+
+    const [updatePageTemplate] = useMutation(gql`
+        mutation UpdatePageTemplate($schematic: ID, $id: ID, $input: CommandSchematicPageTemplateInput) {
+            updateCommandSchematicPageTemplate(schematic: $schematic, id: $id, input: $input){
+                id
+            }
+        }
+    `, {
+
+            // refetchQueries: ['GetSchematic'],
+            // awaitRefetchQueries: true
+        })
+
+    const [deletePageTemplate] = useMutation(gql`
+        mutation DeletePageTemplate($schematic: ID, $id: ID) {
+            deleteCommandSchematicPageTemplate(schematic: $schematic, id: $id)
         }
     `, {
             refetchQueries: ['GetSchematic'],
@@ -150,6 +188,35 @@ export const SchematicEditor = () => {
         })
     }
 
+    const onCreateTemplate = (page: any) => {
+        createPageTemplate({
+            variables: {
+                schematic: id,
+                name: page.name
+            }
+        })
+    }
+
+
+    const onUpdateTemplate = (page: any) => {
+        updatePageTemplate({
+            variables: {
+                schematic: id,
+                id: page.id,
+                input: page
+            }
+        })
+    }
+
+    const onDeleteTemplate = (page: any) => {
+        deletePageTemplate({
+            variables: {
+                schematic: id,
+                id: page.id
+            }
+        })
+    }
+
     const onUpdatePageOrder = (id: string, above: any, below: any) => {
         updatePageOrder({
             variables: {
@@ -190,9 +257,14 @@ export const SchematicEditor = () => {
                 title={schematic?.name}
                 versions={schematic?.versions || []}
                 pages={pages || []}
+                templates={schematic?.templates || []}
                 onCreatePage={onCreatePage}
                 onUpdatePage={onUpdatePage}
                 onDeletePage={onDeletePage}
+                onCreateTemplate={onCreateTemplate}
+                onUpdateTemplate={onUpdateTemplate}
+                onDeleteTemplate={onDeleteTemplate}
+
                 onUpdatePageOrder={onUpdatePageOrder}
                 onExport={() => {
                     openExportModal(true)

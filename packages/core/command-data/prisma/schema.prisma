@@ -273,6 +273,8 @@ model ElectricalSchematic {
 
   pages ElectricalSchematicPage[] @relation(name: "hasPages")
 
+  templates ElectricalSchematicPageTemplate[] @relation(name: "hasPageTemplates")
+
   organisation String
 
   createdAt DateTime @default(now())
@@ -300,6 +302,9 @@ model ElectricalSchematicPage {
 
   name String
 
+  template ElectricalSchematicPageTemplate? @relation(name: "usesPageTemplate", references: [id], fields: [templateId])
+  templateId String?
+
   nodes Json?
   edges Json?
 
@@ -309,6 +314,20 @@ model ElectricalSchematicPage {
   schematicId String
 
   createdAt DateTime @default(now())
+}
+
+
+model ElectricalSchematicPageTemplate {
+  id String @id
+
+  name String
+
+  nodes Json?
+
+  pages ElectricalSchematicPage[] @relation(name: "usesPageTemplate")
+
+  schematic ElectricalSchematic @relation(name: "hasPageTemplates", fields: [schematicId], references: [id])
+  schematicId String
 }
 
 model Program {

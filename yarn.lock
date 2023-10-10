@@ -4783,8 +4783,10 @@ __metadata:
     "@hive-command/editor-canvas": "workspace:^"
     "@hive-command/editor-panes": "workspace:^"
     "@hive-command/editor-toolbar": "workspace:^"
+    "@mui/base": ^5.0.0-beta.18
     typescript: ^5.2.2
   peerDependencies:
+    "@mui/base": "*"
     "@mui/material": "*"
   languageName: unknown
   linkType: soft
@@ -4978,6 +4980,7 @@ __metadata:
     webpack-config-single-spa-react: ^3.0.0
     webpack-config-single-spa-react-ts: ^3.0.0
     webpack-config-single-spa-ts: ^3.0.0
+    webpack-dev-middleware: ^6.1.1
     webpack-dev-server: 4.15.1
     webpack-merge: ^5.8.0
   languageName: unknown

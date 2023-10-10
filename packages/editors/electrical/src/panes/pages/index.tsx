@@ -22,9 +22,13 @@ import {
 } from '@dnd-kit/sortable';
 import { PageItem } from './item';
 import { BasePane } from '@hive-command/editor-panes';
+import { StyledOption } from './type-selector/components';
+import { TypeSelector } from './type-selector';
 
 export interface PagePaneProps {
     pages?: any[];
+    templates?: any[];
+
     onReorderPage?: (id: string, above: any, below: any) => void,
     selectedPage?: any;
 
@@ -32,9 +36,15 @@ export interface PagePaneProps {
     onCreatePage?: (page: any) => void;
     onUpdatePage?: (page: any) => void;
     onDeletePage?: (page: any) => void;
+
+    onCreateTemplate?: (page: any) => void;
+    onUpdateTemplate?: (page: any) => void;
+    onDeleteTemplate?: (page: any) => void;
 }
 
 export const PagesPane : React.FC<PagePaneProps> = (props) => {
+
+    const [ view, setView ] = useState<'templates' | 'pages'>('pages');
 
     const [ search, setSearch ] = useState<string | null>(null);
 
@@ -43,9 +53,11 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
 
     const [activeId, setActiveId] = useState<any>(null);
 
-    const { pages, onReorderPage, selectedPage } = props; //useEditorContext();
+    const { pages, templates, onReorderPage, selectedPage } = props; //useEditorContext();
 
     const sortedPages = useMemo(() => pages?.slice()?.sort((a: any, b: any) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
+
+    const sortedTemplates = useMemo(() => templates?.slice()?.sort((a: any, b: any) => (a.rank || '').localeCompare(b.rank || '')), [templates])
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -99,6 +111,30 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
 
     }
 
+    const items = useMemo(() => {
+
+        if(view == 'pages'){
+            return sortedPages?.map((page: any) => (
+                <PageItem
+                    selected={selectedPage?.id == page.id}
+                    key={page.id}
+                    onEdit={() => onEdit(page)}
+                    onSelectPage={props.onSelectPage}
+                    page={page} />
+
+            ));
+        }else{
+            return sortedTemplates?.map((template: any) => (
+                <PageItem
+                    selected={selectedPage?.id == template.id}
+                    key={template.id}
+                    onEdit={() => onEdit(template)}
+                    onSelectPage={props.onSelectPage}
+                    page={template} />
+            ))
+        }
+    }, [view, sortedPages, sortedTemplates, selectedPage])
+
     return (
         <DndContext
             sensors={sensors}
@@ -128,9 +164,18 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                                     <Search fontSize='inherit' />
                                 </IconButton>
 
-                                <Typography>Pages</Typography>
+                                <TypeSelector 
+                                    options={[
+                                        {id: 'pages', label: "Pages"},
+                                        {id: 'templates', label: "Templates"},
+                                    ]}
+                                    value={view}
+                                    onChange={(e: any, value) => {
+                                        setView(value as any)
+                                    }} />
+                                   
 
-                                <IconButton size="small">
+                                <IconButton onClick={() => openModal(true)} size="small">
                                     <Add fontSize='inherit' />
                                 </IconButton>
                             </>
@@ -140,9 +185,15 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                     <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                         <PageModal
                             open={modalOpen}
+                            view={view}
                             selected={selected}
+                            templates={sortedTemplates}
                             onDelete={() => {
-                                props.onDeletePage?.(selected)
+                                if(view == 'pages'){
+                                    props.onDeletePage?.(selected)
+                                }else{
+                                    props.onDeleteTemplate?.(selected)
+                                }
 
                                 openModal(false)
                                 setSelected(null);
@@ -153,9 +204,17 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                             }}
                             onSubmit={(page: any) => {
                                 if (selected) {
-                                    props.onUpdatePage?.(page);
+                                    if(view == 'pages'){
+                                        props.onUpdatePage?.(page);
+                                    }else{
+                                        props.onUpdateTemplate?.(page)
+                                    }
                                 } else {
-                                    props.onCreatePage?.(page);
+                                    if(view == 'pages'){
+                                        props.onCreatePage?.(page);
+                                    }else{
+                                        props.onCreateTemplate?.(page);
+                                    }
                                 }
                                 openModal(false);
                             }}
@@ -163,15 +222,7 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
         
                         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
                             <List>
-                                {sortedPages?.map((page: any) => (
-                                    <PageItem
-                                        selected={selectedPage?.id == page.id}
-                                        key={page.id}
-                                        onEdit={() => onEdit(page)}
-                                        onSelectPage={props.onSelectPage}
-                                        page={page} />
-
-                                ))}
+                                {items}
                             </List>
                         </Box>
 

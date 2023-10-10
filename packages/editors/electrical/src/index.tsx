@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { EditorToolbar } from '@hive-command/editor-toolbar'
 import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
 import { ActiveTool, Tools, ToolMenu } from './tools';
@@ -10,18 +10,26 @@ import { ElectricalSurface } from './components/surface';
 import { ReactFlowProvider } from 'reactflow';
 
 import 'reactflow/dist/style.css';
+import { EditorCanvasSelection } from '@hive-command/editor-canvas';
 
 export interface ElectricalEditorProps {
     title: string;
     
     versions: {id: string, rank: number, createdAt: Date, createdBy: any}[]
     pages: { id: string, name: string, nodes: any[], edges: any[] }[]
+    templates?: {id: string, name: string}[];
 
     onExport?: () => void;
 
     onCreatePage?: (page: any) => void;
     onUpdatePage?: (page: any) => void;
     onDeletePage?: (page: any) => void;
+
+
+    onCreateTemplate?: (page: any) => void;
+    onUpdateTemplate?: (page: any) => void;
+    onDeleteTemplate?: (page: any) => void;
+
 
     onUpdatePageOrder?: (id: string, above: any, below: any) => void;
 }
@@ -38,16 +46,39 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
 
    const activePage = props.pages?.find((a) => a.id == selectedPage?.id);
 
+   const activeTemplate = props.templates?.find((a) => a.id == selectedPage?.id);
+
     const [ activeTool, setActiveTool ] = useState<ActiveTool>()
 
-    console.log(ToolMenu, Tools)
+    const [ selection, setSelection ] = useState<EditorCanvasSelection>({});
 
     const tools = useMemo(() => ToolMenu(), [])
 
+
+    const onDelete = useCallback(() => {
+        // alert("Deleting " + selection?.length)
+        props.onUpdatePage?.({
+            ...activePage,
+            nodes: activePage?.nodes?.filter((a) => {
+                return (selection.nodes || []).findIndex((b) => b.id == a.id) < 0;
+            }),
+            edges: activePage?.edges?.filter((a) => {
+                return (selection.edges || []).findIndex((b) => b.id == a.id) < 0;
+            })
+        })
+        setSelection({});
+    }, [selection, activePage])
+
     useEffect(() => {
         const onKeyDown = (e: KeyboardEvent) => {
-            if(e.key == 'Escape'){
-                setActiveTool(undefined)
+            switch(e.key){
+                case 'Escape':
+                    setActiveTool(undefined);
+                    break;
+                case 'Delete':
+                case 'Backspace':
+                    onDelete();
+                    break;
             }
         }
 
@@ -56,11 +87,12 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
         return () => {
             document.removeEventListener('keydown', onKeyDown)
         }
-    }, [])
+    }, [onDelete])
+
     return (
         <ReactFlowProvider>
             <ElectricalNodesProvider value={{elements}}>
-                <Paper sx={{flex: 1, display: 'flex',  zIndex: 2, flexDirection: 'column'}}>
+                <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             
                     <EditorToolbar 
                         title={props.title} 
@@ -77,22 +109,32 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                     <Box sx={{flex: 1, display: 'flex'}}>
                         <PagesPane
                             pages={props.pages}
+                            templates={props.templates}
                             selectedPage={selectedPage}
                             onCreatePage={props.onCreatePage}
                             onUpdatePage={props.onUpdatePage}
                             onDeletePage={props.onDeletePage}
+
+                            onCreateTemplate={props.onCreateTemplate}
+                            onUpdateTemplate={props.onUpdateTemplate}
+                            onDeleteTemplate={props.onDeleteTemplate}
+                            
                             onReorderPage={props.onUpdatePageOrder}
                             onSelectPage={(pageId) => {
                                 setSelectedPage(pageId)
                             }} />
                         
                         <Divider orientation='vertical' />
-                        <Box sx={{flex: 1, zIndex: 1, display: 'flex'}}>
+                        <Box sx={{flex: 1, display: 'flex'}}>
                             <ElectricalSurface
                                 page={activePage}
                                 onUpdate={(page) => {
-                                    console.log("UPDATE", page);
                                     props.onUpdatePage?.(page)
+                                }}
+                                selection={selection}
+                                onSelect={(selection) => {
+                                    console.log(selection);
+                                    setSelection(selection)
                                 }}
                                 clipboard={{}}
                                 activeTool={activeTool}
@@ -102,7 +144,6 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                         <SymbolsPane
                             activeTool={activeTool}
                             onSelectSymbol={(symbol) => {
-                                console.log(symbol)
                                 setActiveTool({type: 'symbol', data: {symbol: elements?.find((a) => a.name == symbol)}})
                             }}
                             />

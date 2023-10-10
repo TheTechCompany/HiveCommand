@@ -5,6 +5,7 @@
   "packageManager": "yarn@3.6.0",
   "main": "dist/index.js",
   "devDependencies": {
+    "@mui/base": "^5.0.0-beta.18",
     "typescript": "^5.2.2"
   },
   "publishConfig": {
@@ -19,6 +20,7 @@
     "@hive-command/editor-toolbar": "workspace:^"
   },
   "peerDependencies": {
+    "@mui/base": "*",
     "@mui/material": "*"
   }
 }

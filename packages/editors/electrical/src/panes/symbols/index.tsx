@@ -31,8 +31,8 @@ export const SymbolsPane : React.FC<SymbolsPaneProps> = (props) => {
             <Box sx={{flex: 1, overflow: 'auto'}}>
                 <List sx={{display: 'flex', height: 0, flexWrap: 'wrap'}}>
                     {elements?.filter(filterSearch)?.map((item) => (
-                        <ListItem 
-
+                        <ListItem
+                            key={item.name} 
                             onClick={() => props.onSelectSymbol?.(item?.name)} 
                             sx={{ 
                                 display: 'flex', 
