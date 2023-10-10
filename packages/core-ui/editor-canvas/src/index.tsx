@@ -15,6 +15,7 @@ export interface EditorCanvasProps {
     edgeTypes?: EdgeTypes
 
     fitView?: boolean;
+    nodeExtent?: CoordinateExtent;
     translateExtent?: CoordinateExtent
 
     selection?: EditorCanvasSelection;
@@ -124,6 +125,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 fitView={props.fitView}
                 minZoom={0.8}
                 translateExtent={props.translateExtent}
+                nodeExtent={props.nodeExtent}
                 onSelectionStart={onSelectionStart}
                 onSelectionEnd={onSelectionEnd}
                 // onSelectionDrag={()}
@@ -132,7 +134,6 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 >
                 <Background />
                 <Controls />
-                <MiniMap />
                 {props.children}
             </ReactFlow>
         </Box>

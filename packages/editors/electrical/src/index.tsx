@@ -7,16 +7,18 @@ import { ElectricalNodesProvider, edgeTypes, nodeTypes } from "@hive-command/ele
 import { useComponents } from './hooks/useComponents';
 import { SymbolsPane } from './panes/symbols';
 import { ElectricalSurface } from './components/surface';
-import { ReactFlowProvider } from 'reactflow';
-
+import { ReactFlowProvider, Edge, Node } from 'reactflow';
+import moment from 'moment';
 import 'reactflow/dist/style.css';
 import { EditorCanvasSelection } from '@hive-command/editor-canvas';
+import { ElectricalPage, ElectricalVersion } from './types';
+
 
 export interface ElectricalEditorProps {
     title: string;
     
-    versions: {id: string, rank: number, createdAt: Date, createdBy: any}[]
-    pages: { id: string, name: string, nodes: any[], edges: any[] }[]
+    versions: ElectricalVersion[]
+    pages: ElectricalPage[]
     templates?: {id: string, name: string}[];
 
     onExport?: () => void;
@@ -38,13 +40,19 @@ export interface ElectricalEditorProps {
 
 export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
 
-    const selectedVersion = props.versions?.[props.versions?.length - 1];
+    const sortedPages = useMemo(() => props.pages?.slice()?.sort((a, b) => (a.rank || '').localeCompare(b.rank || '') ), [props.pages])
+
+    // const selectedVersion = props.versions?.[props.versions?.length - 1];
+
+    const [ selectedVersion, setSelectedVersion ] = useState<ElectricalVersion | null>(null)
 
     const [ selectedPage, setSelectedPage ] = useState<any | null>(null);
 
    const elements = useComponents();
 
-   const activePage = props.pages?.find((a) => a.id == selectedPage?.id);
+   const activePage = sortedPages?.find((a) => a.id == selectedPage?.id);
+
+   const activePageIndex = sortedPages?.findIndex((a) => a.id == selectedPage?.id);
 
    const activeTemplate = props.templates?.find((a) => a.id == selectedPage?.id);
 
@@ -127,7 +135,15 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                         <Divider orientation='vertical' />
                         <Box sx={{flex: 1, display: 'flex'}}>
                             <ElectricalSurface
-                                page={activePage}
+                                page={{
+                                    ...activePage,
+                                    number: activePageIndex
+                                }}
+                                project={{
+                                    name: props.title,
+                                    version: selectedVersion?.rank,
+                                    versionDate: moment(selectedVersion?.createdAt).format('hh:mma - DD/MM/YY')
+                                }}
                                 onUpdate={(page) => {
                                     props.onUpdatePage?.(page)
                                 }}

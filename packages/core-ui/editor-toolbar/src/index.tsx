@@ -71,7 +71,8 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = (props) => {
                     onChange={(event) => {
                         console.log(event)
                     }}
-                    value={props.activeVersion}>
+                    value={props.activeVersion || 'draft'}>
+                        <StyledOption value={'draft'}>Draft</StyledOption>
                     {props.versions?.sort((a, b) => a.rank - b.rank)?.map((version) => (
                         <StyledOption value={version.id}>v{version.rank}</StyledOption>
                     ))}

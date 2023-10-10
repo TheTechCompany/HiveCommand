@@ -25,8 +25,8 @@ export const SymbolTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
         const symbolPosition = project({
-            x: (e.clientX || 0) - (wrapperBounds?.x || 0),
-            y: (e.clientY || 0) - (wrapperBounds?.y || 0)
+            x: (e.clientX || 0), // - (wrapperBounds?.x || 0),
+            y: (e.clientY || 0) //- (wrapperBounds?.y || 0)
         })
 
 

@@ -8,15 +8,11 @@ import { EditorTool } from "./tool";
 import { EditorProvider } from "./context";
 import { ActiveTool, ToolProps } from "../../tools";
 import { NodePropsModal } from "../node-props";
-
-export interface ElectricalPage {
-    id?: string;
-    nodes?: Node[]
-    edges?: Edge[]
-}
+import { ElectricalPage } from "../../types";
 
 export interface ElectricalSurfaceProps {
     page?: ElectricalPage
+    project?: {name: string, versionDate?: string, version?: number};
    
     onUpdate?: (page?: ElectricalPage) => void;
 
@@ -155,11 +151,30 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
             edgeTypes={edgeTypes}
             fitView
             translateExtent={[[0, 0], [width, height]]}
+            nodeExtent={[[0,0], [width, height - 55]]}
             wrapper={surfaceRef.current}
             // selection={props.selection}
             onSelect={props.onSelect}
             nodes={[
-                {id: 'page', type: 'page', draggable: false, selectable: false, position: { x: 0, y: 0 }, data: { width, height } } as any,
+                {
+                    id: 'page', 
+                    type: 'page', 
+                    draggable: false, 
+                    selectable: false, 
+                    position: { x: 0, y: 0 }, 
+                    data: { 
+                        width,
+                        height,
+                        project: {
+                            name: props.project?.name,
+                            version: props.project?.version ? `Revision ${props.project?.version} - ${props.project?.versionDate}` : 'Draft'
+                        },
+                        page: {
+                            name: props.page?.name, 
+                            number: props.page?.number != null ? `Page: ${props.page?.number + 1}` : ''
+                        }
+                    } 
+                } as any,
                 {id: 'canvas', type: 'canvasNode', draggable: false, selectable: false, position: {x: 0, y: 0}, data: {} }
             ].concat(props?.page?.nodes || [])}
             edges={props?.page?.edges}
@@ -174,7 +189,7 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                 }
             }} />
         )
-    }, [props.page])
+    }, [props.page, props.project])
 
     return (
         <Box

@@ -154,7 +154,17 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                                 <IconButton onClick={() => setSearch(null)} size="small">
                                     <ArrowLeft fontSize="inherit" />
                                 </IconButton>
-                                <input type="text" placeholder='Search...' value={search} onChange={(e) => setSearch(e.target.value)} />
+                                <input 
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        outline: 'none',
+                                        border: 'none'
+                                    }}
+                                    type="text" 
+                                    placeholder='Search' 
+                                    value={search} 
+                                    onChange={(e) => setSearch(e.target.value)} />
                             </>
                         ) : (
                             <>
