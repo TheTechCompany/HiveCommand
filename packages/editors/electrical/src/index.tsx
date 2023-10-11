@@ -149,7 +149,6 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                                 }}
                                 selection={selection}
                                 onSelect={(selection) => {
-                                    console.log(selection);
                                     setSelection(selection)
                                 }}
                                 clipboard={{}}
