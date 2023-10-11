@@ -105,8 +105,6 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     useOnSelectionChange({
         onChange: (params) => {
-            console.log("Selection change", params);
-
             setSelection(params);
             props.onSelect?.(params)
         }
