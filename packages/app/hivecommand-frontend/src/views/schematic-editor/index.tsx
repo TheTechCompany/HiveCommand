@@ -145,13 +145,23 @@ export const SchematicEditor = () => {
         })
     }
 
+    const nodeMap = (item: any) => {
+        return {
+            id: item.id,
+            type: item.type,
+            position: item.position,
+            data: item.data
+        }
+    }
+
+
 
     const onUpdatePage = (page: any) => {
 
         let input : any = {};
 
         if(page.nodes){
-            input.nodes = page.nodes?.filter((a) => a.id != 'page' && a.id != 'canvas');
+            input.nodes = page.nodes?.filter((a) => a.id != 'page' && a.id != 'canvas')?.map(nodeMap);
         }
 
         if(page.edges){

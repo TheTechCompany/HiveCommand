@@ -1,6 +1,6 @@
 import React, {MouseEvent, useEffect, useState} from 'react';
 import { Box } from '@mui/material';
-import { ReactFlow, MiniMap, Controls, Background, Node, Edge, NodeTypes, EdgeTypes, useOnSelectionChange, useNodesState, useEdgesState, CoordinateExtent, ConnectionMode, useViewport, useReactFlow } from 'reactflow';
+import { ReactFlow, MiniMap, Controls, Background, Node, Edge, NodeTypes, EdgeTypes, useOnSelectionChange, useNodesState, useEdgesState, CoordinateExtent, ConnectionMode, useViewport, useReactFlow, SelectionMode, useStore, Rect, Transform, getNodePositionWithOrigin, useStoreApi } from 'reactflow';
 import { isEqual } from 'lodash';
 
 export interface EditorCanvasSelection {
@@ -32,6 +32,16 @@ export interface EditorCanvasProps {
 
 export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
+    const storeApi = useStoreApi();
+    // const { selectActive, nodeOrigin, nodeInternals, selectRect } = useStore((state) => ({
+    //     selectRect: state.userSelectionRect, 
+    //     selectActive: state.userSelectionActive,
+    //     nodeInternals: state.nodeInternals,
+    //     nodeOrigin: state.nodeOrigin
+    // }))
+
+    // console.log(selectActive, selectRect)
+
     const [ nodes, setNodes, onNodesChange ] = useNodesState(props.nodes || [])
     const [ edges, setEdges, onEdgesChange ] = useEdgesState(props.edges || [])
 
@@ -42,8 +52,6 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     const [ selectionZone, setSelectionZone ] = useState<{start?: {x: number, y: number}} | null>(null);
 
     const { project } = useReactFlow();
-
-    const { x, y, zoom }  = useViewport()
 
     const onSelectionStart = (e: MouseEvent) => {
         let bounds = props.wrapper?.getBoundingClientRect();
@@ -66,6 +74,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 y: e.clientY - (bounds.y || 0)
             })
         }
+
 
         let zoneOrientationX = (zone?.start?.x || 0) < (zone.end?.x || 0)
         let zoneOrientationY = (zone?.start?.y || 0) < (zone.end?.y || 0)
@@ -296,6 +305,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 // onSelectionDrag={()}
                 onNodeDoubleClick={(ev, node) => props.onNodeDoubleClick?.(node)}
                 connectionMode={ConnectionMode.Loose}
+                selectionMode={SelectionMode.Full}
                 >
                 <Background />
                 <Controls />

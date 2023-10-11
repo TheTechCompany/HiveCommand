@@ -62,9 +62,9 @@ export default (prisma: PrismaClient) => {
 					return program;
 				},
 				updateCommandSchematic: async (root: any, args: { id: string, input: { name: string, templatePacks: string[] } }, context: any) => {
-					const currentProgram = await prisma.program.findFirst({ where: { id: args.id, organisation: context?.jwt?.organisation } });
+					const currentProgram = await prisma.electricalSchematic.findFirst({ where: { id: args.id, organisation: context?.jwt?.organisation } });
 
-					if (!currentProgram) throw new Error('Program not found');
+					if (!currentProgram) throw new Error('CommandSchematic not found');
 					if (!context?.jwt?.acl.can('update', subject('CommandSchematic', currentProgram))) throw new Error('Cannot update CommandSchematic');
 
 					const program = await prisma.electricalSchematic.update({

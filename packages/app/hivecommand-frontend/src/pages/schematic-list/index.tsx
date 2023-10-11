@@ -1,10 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, ListItemButton } from '@mui/material';
 import React, { useState } from 'react';
 import { SchematicModal } from '../../components/modals/schematic';
 import { Paper, IconButton, List, Typography, ListItem } from '@mui/material';
 import { useQuery, useMutation, gql } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
-import { Add } from '@mui/icons-material'
+import { Add, MoreVert } from '@mui/icons-material'
 
 export const SchematicList = () => {
 
@@ -12,7 +12,7 @@ export const SchematicList = () => {
 
     const [selectedSchematic, setSelectedSchematic] = useState<any>(null);
 
-    const [modalOpen, openModal] = useState(false);
+    const [modalOpen, openModal] = useState(false)
 
     const { data, error } = useQuery(gql`
         query GetSchematics {
@@ -35,7 +35,7 @@ export const SchematicList = () => {
     })
 
     const [ updateSchematic ] = useMutation(gql`
-        mutation CreateSchematic ($id: ID, $name: String) {
+        mutation CreateSchematic ($id: ID!, $name: String) {
             updateCommandSchematic(id: $id, input: {name: $name}){
                 id
             }
@@ -57,12 +57,22 @@ export const SchematicList = () => {
                     setSelectedSchematic(null)
                     openModal(false)
                 }}
-                onSubmit={(schematic: { name: string }) => {
-                    if (schematic.name) {
+                onSubmit={(schematic: { id: string, name: string }) => {
+                    if(!schematic.name) return;
+
+                    if(schematic.id){
+                        updateSchematic({variables: {id: schematic.id, name: schematic.name}}).then(() => {
+                            openModal(false)
+                            setSelectedSchematic(null);
+                        })
+                    }else{
 
                         // alert(program.name)
 
-                        createSchematic({variables: {name: schematic.name}}).then(() => openModal(false));
+                        createSchematic({variables: {name: schematic.name}}).then(() => { 
+                            openModal(false)
+                            setSelectedSchematic(null);
+                        });
                         // createProgram(
                         //     program.name
                         // ).then((program) => {
@@ -93,8 +103,20 @@ export const SchematicList = () => {
                 ) : (
                     <List>
                         {schematics?.map((program) => (
-                            <ListItem button onClick={() => navigate(`${program.id}`)}>
-                                {program.name}
+                            <ListItem 
+                                disablePadding
+                                secondaryAction={(
+                                    <IconButton onClick={() => {
+                                        openModal(true);
+                                        setSelectedSchematic(program);
+                                    }} size="small">
+                                        <MoreVert fontSize="inherit" />
+                                    </IconButton>
+                                )}>
+                                <ListItemButton 
+                                    onClick={() => navigate(`${program.id}`)}>
+                                    {program.name}
+                                </ListItemButton>
                             </ListItem>
                         ))}
                     </List>
