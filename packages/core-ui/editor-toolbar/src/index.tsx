@@ -23,8 +23,6 @@ export interface EditorToolbarProps {
 
 export const EditorToolbar: React.FC<EditorToolbarProps> = (props) => {
 
-    console.log(props);
-    
     return (
         <Box sx={{
             height: '48px',

@@ -28,8 +28,6 @@ export const TypeSelector = React.forwardRef(function CustomSelect<
       value
     });
 
-    console.log(selectValue)
-  
     React.useEffect(() => {
       if (listboxVisible) {
         listboxRef.current?.focus();

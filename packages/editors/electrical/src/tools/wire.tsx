@@ -17,8 +17,6 @@ export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
         e.stopPropagation();
 
-        console.log("OnMouseDown");
-
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
 
         if (!isWiring) {
@@ -98,7 +96,6 @@ export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
     }
 
     const onKeyDown = useCallback((e: KeyboardEvent) => {
-        console.log("onKeyDown", points)
         if (e.key == 'Enter') {
             onUpdate?.({
                 ...page,
@@ -112,8 +109,6 @@ export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         const { x, y, zoom } = useViewport();
 
         const { unproject } = useViewportExtras();
-
-        console.log(zoom, x, y);
 
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect();
         

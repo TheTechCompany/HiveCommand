@@ -24,8 +24,6 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
     const onClick = (e: MouseEvent) => {
 
-        console.log("Click Text");
-
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
         const symbolPosition = project({
             x: e.clientX,
@@ -46,8 +44,6 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
             type: 'text'
         })
 
-        console.log("Nodes", n, onUpdate)
-
         onUpdate?.({
             ...page,
             nodes: n
@@ -64,7 +60,6 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         if (e.key == "Tab") {
             e.preventDefault();
             e.stopPropagation();
-            console.log("ROT", rotation)
             setRotation((r) => (r + 90) % 360)
         }
     }

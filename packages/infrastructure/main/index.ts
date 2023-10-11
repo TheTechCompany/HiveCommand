@@ -54,10 +54,6 @@ const main = (async () => {
 
     const provider = new Provider('eks', { 
         kubeconfig
-    }, {
-        aliases: [
-            'urn:pulumi:hivecommand-prod::hivecommand-app::pulumi:providers:kubernetes::eks::505a5ec8-50f9-449d-8610-623756cc905e' //2022-2023
-        ]
     });
 
     const namespace = new k8s.core.v1.Namespace(`hivecommand-sync-${suffix}`, {

@@ -280,8 +280,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                         props.onEdgesChanged?.(edges)
                     }
                 }}
-                nodesFocusable={false}
-                edgesFocusable={false}
+                // nodesFocusable={false}
+                // edgesFocusable={false}
                 disableKeyboardA11y
                 // nodesDraggable={false}
                 fitView={props.fitView}

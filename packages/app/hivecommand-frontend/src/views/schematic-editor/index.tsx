@@ -148,12 +148,10 @@ export const SchematicEditor = () => {
 
     const onUpdatePage = (page: any) => {
 
-        console.log("updatePage", page);
-
         let input : any = {};
 
         if(page.nodes){
-            input.nodes = page.nodes;
+            input.nodes = page.nodes?.filter((a) => a.id != 'page' && a.id != 'canvas');
         }
 
         if(page.edges){

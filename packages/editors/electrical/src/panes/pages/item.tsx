@@ -26,7 +26,6 @@ export const PageItem = (props: any) => {
             }} >
                 <ListItemButton
                     onClick={(e) => {
-                        console.log("Button click")
                         props.onSelectPage?.(props.page)
 
                     }}
