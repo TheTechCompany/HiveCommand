@@ -20,7 +20,7 @@ const Loader = async (base_url: string, start: string) => {
 
     let requirementFetch: any[] = [];
     const _initialRequire = (name: string) => {
-        console.log({name, baseRequirements})
+
         if (!(name in baseRequirements)) {
 
             requirementFetch.push((async () => {
@@ -52,8 +52,6 @@ const Loader = async (base_url: string, start: string) => {
     await Promise.all(requirementFetch);
 
     func(_requires, module, exports);
-
-    console.log({module})
 
     return module.exports;
 }
@@ -93,7 +91,6 @@ const useRemoteComponents = (cache?: RemoteComponentCache) => {
 
                 return Object.keys(data).map((x) => ({ name: x, component: data[x] }))
             } catch (e) {
-                console.log(e);
 
                 // console.log({ e, base_url, url })
                 lock.current[id] = undefined;
