@@ -140,7 +140,6 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
     }, [])
 
     const onNodesChange = useCallback((nodes: Node[]) => {
-        console.log(props.page)
         props.onUpdate?.({
             ...props.page,
             nodes
@@ -154,7 +153,6 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
         const height = 1080 * ratio;
 
         const page = props.page;
-        console.log("Page", props.page)
 
         return (
             <EditorCanvas 
@@ -312,7 +310,6 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                             clipboard={props.clipboard} 
                             page={{nodes: props.page?.nodes, edges: props.page?.edges}} 
                             onUpdate={(page) => {
-                                console.log("onUpdate")
                                 props.onUpdate?.({
                                     id: props.page?.id,
                                     ...page

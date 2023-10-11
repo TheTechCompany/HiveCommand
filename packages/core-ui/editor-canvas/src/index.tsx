@@ -37,6 +37,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     const [ selection, setSelection ] = useState<EditorCanvasSelection>({});
 
+    const [ lastDrag, setLastDrag ] = useState<{x: number, y: number}>()
+
     const [ selectionZone, setSelectionZone ] = useState<{start?: {x: number, y: number}} | null>(null);
 
     const { project } = useReactFlow();
@@ -98,6 +100,39 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
             props.onSelect?.(params)
         }
     })
+
+    const onSelectionDragStart = (e: MouseEvent) => {
+        console.log("Start Drag")
+        setLastDrag(project({
+            x: e.clientX,
+            y: e.clientY
+        }))
+    }
+
+    const onSelectionDrag = (e: MouseEvent) => {
+        console.log("Drag")
+
+        if(!lastDrag) return;
+
+        let currentPoint = project({
+            x: e.clientX,
+            y: e.clientY
+        })
+
+        let delta = {
+            x: currentPoint.x - lastDrag?.x,
+            y: currentPoint.y - lastDrag?.y
+        }
+
+        moveSelection(delta.x, delta.y)
+
+        setLastDrag(currentPoint)
+    }
+
+    const onSelectionDragStop = (e: MouseEvent) => {
+        console.log("Stop drag")
+        setLastDrag(undefined)
+    }
 
     useEffect(() => {
         setNodes(
@@ -247,11 +282,15 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 }}
                 nodesFocusable={false}
                 edgesFocusable={false}
-                nodesDraggable={false}
+                disableKeyboardA11y
+                // nodesDraggable={false}
                 fitView={props.fitView}
                 minZoom={0.8}
                 translateExtent={props.translateExtent}
                 nodeExtent={props.nodeExtent}
+                onSelectionDragStart={onSelectionDragStart}
+                onSelectionDrag={onSelectionDrag}
+                onSelectionDragStop={onSelectionDragStop}
                 onSelectionStart={onSelectionStart}
                 onSelectionEnd={onSelectionEnd}
                 // onSelectionDrag={()}
