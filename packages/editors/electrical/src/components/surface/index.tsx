@@ -1,6 +1,6 @@
 import { EditorCanvas, EditorCanvasSelection } from "@hive-command/editor-canvas";
 import { Box } from "@mui/material";
-import React, {KeyboardEvent, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, KeyboardEvent, useEffect, useMemo, useRef, useState} from "react";
 import { EditorOverlay } from "./overlay";
 import { Node, Edge } from 'reactflow';
 import { nodeTypes, edgeTypes } from "@hive-command/electrical-nodes";
@@ -139,11 +139,22 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
         }
     }, [])
 
+    const onNodesChange = useCallback((nodes: Node[]) => {
+        console.log(props.page)
+        props.onUpdate?.({
+            ...props.page,
+            nodes
+        })
+    }, [JSON.stringify(props.page)])
+
     const canvas = useMemo(() => {
         const ratio = 210/297 //A4;
 
         const width = 1080;
         const height = 1080 * ratio;
+
+        const page = props.page;
+        console.log("Page", props.page)
 
         return (
             <EditorCanvas 
@@ -178,6 +189,19 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                 {id: 'canvas', type: 'canvasNode', draggable: false, selectable: false, position: {x: 0, y: 0}, data: {} }
             ].concat(props?.page?.nodes || [])}
             edges={props?.page?.edges}
+            onPageChanged={(newPage) => {
+                props.onUpdate?.({
+                    ...page,
+                    ...newPage
+                })
+            }}
+            onNodesChanged={onNodesChange}
+            onEdgesChanged={(edges) => {
+                props.onUpdate?.({
+                    ...page,
+                    edges
+                })
+            }}
             onNodeDoubleClick={(node) => {
                 const { props }: any = ToolProps.find((a) => a.id == node.type) || {}
 
@@ -189,7 +213,7 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                 }
             }} />
         )
-    }, [props.page, props.project])
+    }, [props.page, props.project, onNodesChange])
 
     return (
         <Box

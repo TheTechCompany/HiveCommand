@@ -1,6 +1,7 @@
 import React, {MouseEvent, useEffect, useState} from 'react';
 import { Box } from '@mui/material';
 import { ReactFlow, MiniMap, Controls, Background, Node, Edge, NodeTypes, EdgeTypes, useOnSelectionChange, useNodesState, useEdgesState, CoordinateExtent, ConnectionMode, useViewport, useReactFlow } from 'reactflow';
+import { isEqual } from 'lodash';
 
 export interface EditorCanvasSelection {
     nodes?: Node[];
@@ -10,6 +11,10 @@ export interface EditorCanvasSelection {
 export interface EditorCanvasProps {
     nodes?: Node[],
     edges?: Edge[],
+
+    onNodesChanged?: (nodes: Node[]) => void;
+    onEdgesChanged?: (edges: Edge[]) => void;
+    onPageChanged?: (page: any) => void;
 
     nodeTypes?: NodeTypes,
     edgeTypes?: EdgeTypes
@@ -112,16 +117,137 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         )
     }, [props.edges, selection])
 
+    const nodeMap = (item: any) => {
+        return {
+            id: item.id,
+            type: item.type,
+            position: item.position,
+            data: item.data
+        }
+    }
+
+
+    const moveSelection = (xVector: number, yVector: number) => {
+
+        let modifiedNodes = props.nodes?.map((x) => {
+            if((selection.nodes || []).findIndex((a) => a.id == x.id) > -1){
+                return {
+                    ...x,
+                    position: {
+                        ...x.position,
+                        x: x.position.x + xVector,
+                        y: x.position.y + yVector
+                    }
+                }
+            }
+            return x;
+        }) 
+
+        let modifiedEdges = props.edges?.map((x) => {
+            if((selection.edges || []).findIndex((a) => a.id == x.id) > -1){
+                return {
+                    ...x,
+                    data: {
+                        ...x.data,
+                        points: x.data?.points?.map((point: any) => ({
+                            x: point.x + xVector,
+                            y: point.y + yVector
+                        }))
+                    }
+                }
+            }
+
+            return x;
+        });
+
+        if(modifiedEdges && modifiedNodes){
+            props.onPageChanged?.({
+                nodes: modifiedNodes,
+                edges: modifiedEdges
+            })
+        }else{
+            if(modifiedNodes) props.onNodesChanged?.(modifiedNodes)
+            if(modifiedEdges) props.onEdgesChanged?.(modifiedEdges)
+        }
+    }
+
+    // useEffect(() => {
+    //     const listener = (e: KeyboardEvent) => {
+    //         const mod = e.shiftKey ? 2 : 1;
+    //         const amt = 1 * mod;
+
+    //         switch(e.key){
+    //             case 'ArrowLeft':
+    //                 moveSelection(amt * -1, amt * 0);
+    //                 break;
+    //             case 'ArrowRight':
+    //                 moveSelection(amt * 1, amt * 0)
+    //                 break;
+    //             case 'ArrowDown':
+    //                 moveSelection(amt * 0, amt * 1)
+    //                 break;
+    //             case 'ArrowUp':
+    //                 moveSelection(amt * 0, amt * -1)
+    //                 break;
+    //         }
+    //     }
+
+    //     document.addEventListener('keydown', listener)
+
+    //     return () => {
+    //         document.removeEventListener('keydown', listener)
+    //     }
+    // }, [])
 
     return (
-        <Box sx={{flex: 1, display: 'flex'}}>
+        <Box
+            tabIndex={0}
+            onKeyDown={(e) => {
+                const mod = e.shiftKey ? 2 : 1;
+                const amt = 1 * mod;
+    
+                switch(e.key){
+                    case 'ArrowLeft':
+                        moveSelection(amt * -1, amt * 0);
+                        break;
+                    case 'ArrowRight':
+                        moveSelection(amt * 1, amt * 0)
+                        break;
+                    case 'ArrowDown':
+                        moveSelection(amt * 0, amt * 1)
+                        break;
+                    case 'ArrowUp':
+                        moveSelection(amt * 0, amt * -1)
+                        break;
+                }
+            }}
+            sx={{flex: 1, display: 'flex'}}>
             <ReactFlow
                 nodeTypes={props.nodeTypes}
                 edgeTypes={props.edgeTypes}
                 nodes={nodes || []}
                 edges={edges || []}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
+                onNodesChange={(changes) => {
+                    onNodesChange(changes);
+
+                    if (!isEqual((props.nodes || []).map(nodeMap), (nodes || []).map(nodeMap))) {
+                        props.onNodesChanged?.(nodes)
+                    }
+                }}
+                onNodesDelete={(deleted_nodes) => {
+                    props.onNodesChanged?.(nodes?.filter((a) => deleted_nodes.findIndex((b) => a.id == b.id) < 0))
+                }}
+                onEdgesChange={(changes) => {
+                    
+                    onEdgesChange(changes);
+
+                    if(!isEqual((props.edges || []), (edges || []))){
+                        props.onEdgesChanged?.(edges)
+                    }
+                }}
+                nodesFocusable={false}
+                edgesFocusable={false}
+                nodesDraggable={false}
                 fitView={props.fitView}
                 minZoom={0.8}
                 translateExtent={props.translateExtent}
