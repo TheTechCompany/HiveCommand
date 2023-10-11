@@ -30,6 +30,7 @@ export default (prisma: PrismaClient) => {
 						where: { ...filter, organisation: context.jwt.organisation },
 						include: {
 							pages: true,
+							templates: true,
 							versions: true
 						}
 					});
@@ -176,6 +177,7 @@ export default (prisma: PrismaClient) => {
 							nodes: args.input.nodes || [],
 							edges: args.input.edges || [],
 							rank: newRank.toString(),
+							templateId: args.input.templateId,
 							schematic: {
 								connect: { id: args.schematic }
 							}
@@ -192,6 +194,7 @@ export default (prisma: PrismaClient) => {
 							name: args.input.name,
 							nodes: args.input.nodes,
 							edges: args.input.edges,
+							templateId: args.input.templateId,
 							schematic: {
 								connect: { id: args.schematic }
 							}
@@ -254,6 +257,36 @@ export default (prisma: PrismaClient) => {
 					})
 
 					return result.rank == newRank.toString();
+				},
+				createCommandSchematicPageTemplate: async (root: any, args: { schematic: string, input: any }, context: any) => {
+					return await prisma.electricalSchematicPageTemplate.create({
+						data: {
+							...args.input,
+							id: nanoid(),
+							schematic: {
+								connect: { id: args.schematic }
+							}
+						}
+					});
+				},	
+				updateCommandSchematicPageTemplate: async (root: any, args: { schematic: string, id: string, input: any }, context: any) => {
+					return await prisma.electricalSchematicPageTemplate.update({
+						where: {
+							id: args.id,
+						},
+						data: {
+							...args.input
+						}
+					});
+
+				},
+				deleteCommandSchematicPageTemplate: async (root: any, args: { schematic: string, id: string }, context: any) => {
+					const res = await prisma.electricalSchematicPageTemplate.delete({
+						where: {
+							id: args.id,
+						}
+					});
+					return res != null;
 				}
 			}
 		},
@@ -278,6 +311,10 @@ export default (prisma: PrismaClient) => {
         deleteCommandSchematicPage(schematic: ID, id: ID): Boolean!
 
 
+		createCommandSchematicPageTemplate(schematic: ID, input: CommandSchematicPageTemplateInput): CommandSchematicPageTemplate
+		updateCommandSchematicPageTemplate(schematic: ID, id: ID, input: CommandSchematicPageTemplateInput): CommandSchematicPageTemplate
+		deleteCommandSchematicPageTemplate(schematic: ID, id: ID): Boolean!
+
 		updateCommandSchematicPageOrder(schematic: ID, id: String, above: String, below: String): Boolean
 	}
 
@@ -299,6 +336,7 @@ export default (prisma: PrismaClient) => {
 		versions: [CommandSchematicVersion]
 
         pages: [CommandSchematicPage]
+		templates: [CommandSchematicPageTemplate]
 
 		createdAt: DateTime 
 
@@ -330,6 +368,8 @@ export default (prisma: PrismaClient) => {
 
         nodes: JSON
         edges: JSON
+
+		templateId: String
     }
 
     type CommandSchematicPage {
@@ -338,9 +378,23 @@ export default (prisma: PrismaClient) => {
 
 		rank: String
 
+		template: CommandSchematicPageTemplate
+
         nodes: JSON
         edges: JSON
     }
+
+	input CommandSchematicPageTemplateInput {
+		name: String
+		nodes: JSON
+	}
+
+	type CommandSchematicPageTemplate {
+		id: ID!
+		name: String
+
+		nodes: JSON
+	}
 
 
 `

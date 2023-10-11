@@ -1,6 +1,6 @@
-import { EditorCanvas } from "@hive-command/editor-canvas";
+import { EditorCanvas, EditorCanvasSelection } from "@hive-command/editor-canvas";
 import { Box } from "@mui/material";
-import React, {KeyboardEvent, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, KeyboardEvent, useEffect, useMemo, useRef, useState} from "react";
 import { EditorOverlay } from "./overlay";
 import { Node, Edge } from 'reactflow';
 import { nodeTypes, edgeTypes } from "@hive-command/electrical-nodes";
@@ -8,23 +8,23 @@ import { EditorTool } from "./tool";
 import { EditorProvider } from "./context";
 import { ActiveTool, ToolProps } from "../../tools";
 import { NodePropsModal } from "../node-props";
-
-export interface ElectricalPage {
-    id?: string;
-    nodes?: Node[]
-    edges?: Edge[]
-}
+import { ElectricalPage } from "../../types";
 
 export interface ElectricalSurfaceProps {
     page?: ElectricalPage
+    project?: {name: string, versionDate?: string, version?: number};
    
     onUpdate?: (page?: ElectricalPage) => void;
+
+    selection?: EditorCanvasSelection;
+    onSelect?: (selection: EditorCanvasSelection) => void;
 
     clipboard?: any;
     activeTool?: ActiveTool;
 }
 
 export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
+
     const surfaceRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLDivElement>(null);
 
@@ -40,6 +40,7 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
             y: (cursorPosition?.y || 0) - (b?.y || 0)
         }
     }, [cursorPosition, surfaceRef.current])
+
 
     const [editNode, setEditNode] = useState<any>(null);
 
@@ -72,10 +73,14 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
         }
 
         const mouseDown = (ev: MouseEvent) => {
-            ev.stopPropagation();
+            // ev.stopPropagation();
 
-            surfaceRef?.current?.setPointerCapture((ev as any).pointerId)
+            // console.log("PointerDown");
 
+            // surfaceRef?.current?.setPointerCapture((ev as any).pointerId)
+
+
+            //---
             // console.log("CURRENT TARGET", ev.currentTarget)
             // // console.log("MouseDown", ev, surfaceRef.current, canvasRef.current);
             // if(!(ev as any).fake && ev.target && canvasRef.current?.contains(ev.target as any)){
@@ -118,7 +123,7 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
         }
 
         const mouseUp = (ev: MouseEvent) => {
-            surfaceRef?.current?.releasePointerCapture((ev as any).pointerId)
+            // surfaceRef?.current?.releasePointerCapture((ev as any).pointerId)
         }
 
         surfaceRef?.current?.addEventListener('pointerdown', mouseDown, true)
@@ -134,6 +139,81 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
         }
     }, [])
 
+    const onNodesChange = useCallback((nodes: Node[]) => {
+        console.log(props.page)
+        props.onUpdate?.({
+            ...props.page,
+            nodes
+        })
+    }, [JSON.stringify(props.page)])
+
+    const canvas = useMemo(() => {
+        const ratio = 210/297 //A4;
+
+        const width = 1080;
+        const height = 1080 * ratio;
+
+        const page = props.page;
+        console.log("Page", props.page)
+
+        return (
+            <EditorCanvas 
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            fitView
+            translateExtent={[[0, 0], [width, height]]}
+            nodeExtent={[[0,0], [width, height - 55]]}
+            wrapper={surfaceRef.current}
+            // selection={props.selection}
+            onSelect={props.onSelect}
+            nodes={[
+                {
+                    id: 'page', 
+                    type: 'page', 
+                    draggable: false, 
+                    selectable: false, 
+                    position: { x: 0, y: 0 }, 
+                    data: { 
+                        width,
+                        height,
+                        project: {
+                            name: props.project?.name,
+                            version: props.project?.version ? `Revision ${props.project?.version} - ${props.project?.versionDate}` : 'Draft'
+                        },
+                        page: {
+                            name: props.page?.name, 
+                            number: props.page?.number != null ? `Page: ${props.page?.number + 1}` : ''
+                        }
+                    } 
+                } as any,
+                {id: 'canvas', type: 'canvasNode', draggable: false, selectable: false, position: {x: 0, y: 0}, data: {} }
+            ].concat(props?.page?.nodes || [])}
+            edges={props?.page?.edges}
+            onPageChanged={(newPage) => {
+                props.onUpdate?.({
+                    ...page,
+                    ...newPage
+                })
+            }}
+            onNodesChanged={onNodesChange}
+            onEdgesChanged={(edges) => {
+                props.onUpdate?.({
+                    ...page,
+                    edges
+                })
+            }}
+            onNodeDoubleClick={(node) => {
+                const { props }: any = ToolProps.find((a) => a.id == node.type) || {}
+
+                if (props) {
+                    setEditNode({
+                        ...node,
+                        props: Object.keys(props).map((key) => ({ key, type: props[key], value: node?.data?.[key] }))
+                    })
+                }
+            }} />
+        )
+    }, [props.page, props.project, onNodesChange])
 
     return (
         <Box
@@ -147,11 +227,8 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
 
                 let b = surfaceRef?.current?.getBoundingClientRect();
 
-                console.log(e.clientX, e.clientY);
-
                 e.clientX = e.clientX - (b?.x || 0);
                 e.clientY = e.clientY - (b?.y || 0);
-                console.log(e.clientX, e.clientY);
                
                 toolRef?.current?.onClick(e);
             }}
@@ -178,7 +255,14 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                 // // event.clientY = e.clientY;
                 // canvasRef.current?.dispatchEvent(event)
             }}>
-            <Box className={`canvas-container ${props.activeTool ? 'active-tool' : ''}`} ref={canvasRef} sx={{flex: 1, display: 'flex'}}>
+            <Box 
+                className={`canvas-container ${props.activeTool ? 'active-tool' : ''}`} 
+                ref={canvasRef}
+                sx={{
+                    flex: 1, 
+                    display: 'flex',
+                    backgroundColor: '#dfdfdf'
+                }}>
                 <EditorProvider value={{surface: surfaceRef}}>
                 <NodePropsModal
                     open={Boolean(editNode)}
@@ -203,9 +287,6 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                             }
                         }
 
-                        console.log("new text")
-
-                        // setApplying(true)
 
                         props.onUpdate?.({
                             ...props.page,
@@ -218,22 +299,7 @@ export const ElectricalSurface : React.FC<ElectricalSurfaceProps> = (props) => {
                     onClose={() => {
                         setEditNode(null);
                     }} />
-                    <EditorCanvas 
-                        nodeTypes={nodeTypes}
-                        edgeTypes={edgeTypes}
-                        fitView
-                        nodes={[{id: 'page', type: 'page', draggable: false, selectable: false, position: { x: 0, y: 0 }, data: {} } as any].concat(props?.page?.nodes || [])}
-                        edges={props?.page?.edges}
-                        onNodeDoubleClick={(node) => {
-                            const { props }: any = ToolProps.find((a) => a.id == node.type) || {}
-
-                            if (props) {
-                                setEditNode({
-                                    ...node,
-                                    props: Object.keys(props).map((key) => ({ key, type: props[key], value: node?.data?.[key] }))
-                                })
-                            }
-                        }} />
+                    {canvas}
                     
                     <EditorOverlay 
                         wrapper={surfaceRef}

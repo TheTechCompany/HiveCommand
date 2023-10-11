@@ -23,6 +23,10 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
 console.log(props.edges)
     // const { fitView } = useReactFlow();
 
+    const ratio = 210/297;
+    const width = 1080;
+    const height = 1080 * ratio;
+
     const nodeTypes = useMemo(() => _nodeTypes, []);
     const edgeTypes = useMemo(() => _edgeTypes, []);
 
@@ -65,12 +69,30 @@ console.log(props.edges)
                             connectionMode={ConnectionMode.Loose}
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
-                            nodes={(props.nodes || []).concat([{ id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }])}
+                            nodes={[
+                                {
+                                    id: 'page', 
+                                    type: 'page', 
+                                    draggable: false, 
+                                    selectable: false, 
+                                    position: { x: 0, y: 0 }, 
+                                    data: { 
+                                        width,
+                                        height,
+                                        // project: {
+                                        //     name: props.project?.name,
+                                        //     version: `v${props.project?.version} - ${props.project?.versionDate}`
+                                        // },
+                                        // page: {
+                                        //     name: props.page?.name, 
+                                        //     number: props.page?.number != null ? `Page: ${props.page?.number + 1}` : ''
+                                        // }
+                                    } 
+                                },
+                                { id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }
+                            ].concat(props.nodes as any[] || [])}
                             edges={props.edges || []}
                             />
-                </Box>
-                <Box sx={{display: 'flex'}}>
-                    <InfoFooter info={props.info} />
                 </Box>
             </ElectricalNodesProvider>
         </Box>

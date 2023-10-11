@@ -2,6 +2,7 @@ import { BasePane } from '@hive-command/editor-panes';
 import { Box, Divider, List, ListItem, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { useElectricalNodeContext } from '@hive-command/electrical-nodes';
+import { Search } from '@mui/icons-material'
 
 export interface SymbolsPaneProps {
     activeTool?: {type: string, data?: any} | null;
@@ -20,8 +21,16 @@ export const SymbolsPane : React.FC<SymbolsPaneProps> = (props) => {
 
     return (
         <BasePane>
-            <Box sx={{height: '28px'}}>
+            <Box sx={{height: '28px', display: 'flex', alignItems: 'center'}}>
+                <Search fontSize='small' />
                 <input 
+                    style={{
+                        background: 'transparent',
+                        outline: 'none',
+                        border: 'none',
+                        width: '100%',
+                        height: '100%'
+                    }}
                     type="text" 
                     placeholder='Search'
                     value={search || ''}
@@ -31,8 +40,8 @@ export const SymbolsPane : React.FC<SymbolsPaneProps> = (props) => {
             <Box sx={{flex: 1, overflow: 'auto'}}>
                 <List sx={{display: 'flex', height: 0, flexWrap: 'wrap'}}>
                     {elements?.filter(filterSearch)?.map((item) => (
-                        <ListItem 
-
+                        <ListItem
+                            key={item.name} 
                             onClick={() => props.onSelectSymbol?.(item?.name)} 
                             sx={{ 
                                 display: 'flex', 
