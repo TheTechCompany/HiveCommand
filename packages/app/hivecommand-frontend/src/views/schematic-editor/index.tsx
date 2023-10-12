@@ -167,6 +167,10 @@ export const SchematicEditor = () => {
         if(page.edges){
             input.edges = page.edges;
         }
+        
+        if(page.name){
+            input.name = page.name;
+        }
 
         debouncedUpdate({
             variables:{
@@ -225,11 +229,11 @@ export const SchematicEditor = () => {
         })
     }
 
-    const onUpdatePageOrder = (id: string, above: any, below: any) => {
+    const onUpdatePageOrder = (pageId: string, above: any, below: any) => {
         updatePageOrder({
             variables: {
                 schematic: id,
-                id,
+                id: pageId,
                 above,
                 below
             }

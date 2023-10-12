@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CursorCrosshairs } from './cursor-crosshairs';
 import { useReactFlow } from 'reactflow';
 import { nanoid } from 'nanoid';
@@ -10,31 +10,20 @@ export interface EditorOverlayProps {
     wrapper?: any;
 
     tool?: any;
+
+    keyCounter?: number;
 }
 
 export const EditorOverlay : React.FC<EditorOverlayProps> = (props) => {
       
-    const { project } = useReactFlow();
-
-    // const { selectedSymbol } = useEditorContext();
-
     const Overlay = props.tool ? props.tool?.Overlay : () => <div />;
 
     return (
-        <Box 
+        <Box
             sx={{position: 'absolute', pointerEvents: 'none', left: 0, top: 0, width: '100%', height: '100%'}}>
             
-            {props.cursorPosition && <Overlay cursorPosition={props.cursorPosition} />}
-{/*             
-            <SymbolOverlay 
-                wrapper={props.wrapper}
-                cursorPosition={props.cursorPosition} 
-                selectedSymbol={selectedSymbol} /> */}
-            {/* <WireOverlay
-                wrapper={props.wrapper}
-                cursorPosition={props.cursorPosition} 
-                selectedSymbol={selectedSymbol} />
-                 */}
+            {props.cursorPosition && 
+                <Overlay keyCounter={props.keyCounter} cursorPosition={props.cursorPosition} />}
 
             <CursorCrosshairs 
                 cursorPosition={props.cursorPosition}

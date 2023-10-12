@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useRef, useReducer } from 'react';
 import { EditorToolbar } from '@hive-command/editor-toolbar'
 import { Box, Divider, IconButton, Paper, Typography } from '@mui/material';
-import { ActiveTool, Tools, ToolMenu } from './tools';
+import { ActiveTool, Tools, ToolMenu, ToolInstance } from './tools';
 import { PagesPane } from './panes/pages';
 import { ElectricalNodesProvider, edgeTypes, nodeTypes } from "@hive-command/electrical-nodes";
 import { useComponents } from './hooks/useComponents';
@@ -12,14 +12,15 @@ import moment from 'moment';
 import 'reactflow/dist/style.css';
 import { EditorCanvasSelection } from '@hive-command/editor-canvas';
 import { ElectricalPage, ElectricalVersion } from './types';
+import { useEditorFocus } from './hooks/useEditorFocus';
 
 
 export interface ElectricalEditorProps {
     title: string;
-    
+
     versions: ElectricalVersion[]
     pages: ElectricalPage[]
-    templates?: {id: string, name: string}[];
+    templates?: { id: string, name: string }[];
 
     onExport?: () => void;
 
@@ -38,30 +39,38 @@ export interface ElectricalEditorProps {
 
 
 
-export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
+export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
 
-    const sortedPages = useMemo(() => props.pages?.slice()?.sort((a, b) => (a.rank || '').localeCompare(b.rank || '') ), [props.pages])
+
+    const sortedPages = useMemo(() => props.pages?.slice()?.sort((a, b) => (a.rank || '').localeCompare(b.rank || '')), [props.pages])
 
     // const selectedVersion = props.versions?.[props.versions?.length - 1];
 
-    const [ selectedVersion, setSelectedVersion ] = useState<ElectricalVersion | null>(null)
+    const [selectedVersion, setSelectedVersion] = useState<ElectricalVersion | null>(null)
 
-    const [ selectedPage, setSelectedPage ] = useState<any | null>(null);
+    const [selectedPage, setSelectedPage] = useState<any | null>(null);
 
-   const elements = useComponents();
+    const elements = useComponents();
 
-   const activePage = sortedPages?.find((a) => a.id == selectedPage?.id);
+    const activePage = sortedPages?.find((a) => a.id == selectedPage?.id);
 
-   const activePageIndex = sortedPages?.findIndex((a) => a.id == selectedPage?.id);
+    const activePageIndex = sortedPages?.findIndex((a) => a.id == selectedPage?.id);
 
-   const activeTemplate = props.templates?.find((a) => a.id == selectedPage?.id);
+    const activeTemplate = props.templates?.find((a) => a.id == selectedPage?.id);
 
-    const [ activeTool, setActiveTool ] = useState<ActiveTool>()
+    const [activeTool, setActiveTool] = useState<ActiveTool>()
 
-    const [ selection, setSelection ] = useState<EditorCanvasSelection>({});
+    const [selection, setSelection] = useState<EditorCanvasSelection>({});
+
+    const [clipboard, setClipboard] = useState<any>(null);
 
     const tools = useMemo(() => ToolMenu(), [])
 
+    const toolRef = useRef<ToolInstance | null>(null);
+
+    const [ keyRng, setKeyRng ] = useState(0)
+
+    const { editorActive, onEditorEnter, onEditorLeave } = useEditorFocus();
 
     const onDelete = useCallback(() => {
         // alert("Deleting " + selection?.length)
@@ -77,44 +86,104 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
         setSelection({});
     }, [selection, activePage])
 
-    useEffect(() => {
-        const onKeyDown = (e: KeyboardEvent) => {
-            switch(e.key){
-                case 'Escape':
-                    setActiveTool(undefined);
-                    break;
-                case 'Delete':
-                case 'Backspace':
-                    onDelete();
-                    break;
-            }
+    const onKeyDown = (e: KeyboardEvent) => {
+
+        const key = e.key;
+     
+
+        if(e.key == 'Escape'){
+            e.stopPropagation();
+        
+            setActiveTool(undefined);
+            setSelection({});
         }
 
-        document.addEventListener('keydown', onKeyDown)
+
+        if(editorActive){
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case "c":
+                        // dispatch({type: 'onCopy'})
+                        onCopy?.();
+                        return;
+                    case "v":
+                        onPaste?.()
+                        return;
+                    case "x":
+                        onCut?.();
+                        //TODO temp cut from board finish when pasted
+                        return;
+                }
+            } else {
+                switch (e.key) {        
+                    case 'Tab':
+                        e.preventDefault();
+                        
+                        break;
+                    case 'Delete':
+                    case 'Backspace':
+                        onDelete?.();
+                        break;
+                }
+            }
+            toolRef?.current?.onKeyDown?.(e as any);
+
+            setKeyRng((k) => (k + 1) % 10)
+
+        }
+
+        
+        
+    }
+
+
+    const onCopy = () => {
+        setClipboard({ cut: false, items: selection })
+    }
+
+    const onCut = () => {
+        setClipboard({ cut: true, items: selection });
+    }
+
+    const onPaste = () => {
+        setActiveTool({ type: 'clipboard', data: clipboard })
+        setSelection({})//TODO Change to the temp ids of anything in clipboard
+    }
+
+    useEffect(() => {
+        window.addEventListener('keydown', onKeyDown)
 
         return () => {
-            document.removeEventListener('keydown', onKeyDown)
+            window.removeEventListener('keydown', onKeyDown)
         }
-    }, [onDelete])
+    }, [editorActive])
 
     return (
         <ReactFlowProvider>
-            <ElectricalNodesProvider value={{elements}}>
-                <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            
-                    <EditorToolbar 
-                        title={props.title} 
+            <ElectricalNodesProvider value={{ elements }}>
+                <Paper
+                    tabIndex={0}
+                    // onKeyDown={onKeyDown}
+                    sx={{
+                        flex: 1,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        userSelect: 'none'
+                    }}>
+
+                    <EditorToolbar
+                        title={props.title}
                         tools={tools}
                         activeTool={activeTool}
                         onToolChange={(tool, data) => {
-                            setActiveTool(tool ? {type: tool, data} : undefined)
+                            setActiveTool(tool ? { type: tool, data } : undefined)
                         }}
-                        versions={props.versions} 
+                        versions={props.versions}
                         activeVersion={selectedVersion?.id}
                         onExport={props.onExport}
-                        />
+                    />
                     <Divider />
-                    <Box sx={{flex: 1, display: 'flex'}}>
+                    <Box sx={{ flex: 1, display: 'flex' }}>
                         <PagesPane
                             pages={props.pages}
                             templates={props.templates}
@@ -126,15 +195,17 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                             onCreateTemplate={props.onCreateTemplate}
                             onUpdateTemplate={props.onUpdateTemplate}
                             onDeleteTemplate={props.onDeleteTemplate}
-                            
+
                             onReorderPage={props.onUpdatePageOrder}
                             onSelectPage={(pageId) => {
                                 setSelectedPage(pageId)
                             }} />
-                        
+
                         <Divider orientation='vertical' />
-                        <Box sx={{flex: 1, display: 'flex'}}>
+                        <Box sx={{ flex: 1, display: 'flex' }}>
                             <ElectricalSurface
+                                ref={toolRef}
+                                keyRng={keyRng}
                                 page={{
                                     ...activePage,
                                     number: activePageIndex
@@ -151,17 +222,22 @@ export const ElectricalEditor : React.FC<ElectricalEditorProps> = (props) => {
                                 onSelect={(selection) => {
                                     setSelection(selection)
                                 }}
-                                clipboard={{}}
+                                onCopy={onCopy}
+                                onCut={onCut}
+                                onPaste={onPaste}
+                                onDelete={onDelete}
+                                onEditorEnter={onEditorEnter}
+                                onEditorLeave={onEditorLeave}
                                 activeTool={activeTool}
-                                />
+                            />
                         </Box>
                         <Divider orientation='vertical' />
                         <SymbolsPane
                             activeTool={activeTool}
                             onSelectSymbol={(symbol) => {
-                                setActiveTool({type: 'symbol', data: {symbol: elements?.find((a) => a.name == symbol)}})
+                                setActiveTool({ type: 'symbol', data: { symbol: elements?.find((a) => a.name == symbol) } })
                             }}
-                            />
+                        />
                     </Box>
                 </Paper>
             </ElectricalNodesProvider>

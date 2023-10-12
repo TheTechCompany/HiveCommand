@@ -278,6 +278,7 @@ model ElectricalSchematic {
   organisation String
 
   createdAt DateTime @default(now())
+  lastUpdated DateTime?
 }
 
 model ElectricalSchematicVersion {

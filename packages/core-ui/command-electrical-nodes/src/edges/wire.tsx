@@ -35,7 +35,8 @@ export const WireEdge = ({
         <>
             {/* <BaseEdge path={directPath} style={style} /> */}
             {points?.map((point: any, ix: number) => points?.[ix + 1] && (
-                <path
+                <path   
+                    key={`edge-${id}-point${ix}`}
                     onClick={(e) => {
                         if (e.metaKey || e.ctrlKey) {
 
@@ -66,6 +67,7 @@ export const WireEdge = ({
                     }} /> */}
             {points?.map((point: any, ix: number) => !printMode && (
                 <circle
+                    key={`edge-${id}-circle${ix}`}
                     onPointerDown={(e) => {
 
                         (e.currentTarget as any).setPointerCapture((e as any).pointerId)

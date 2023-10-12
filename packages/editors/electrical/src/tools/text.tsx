@@ -49,27 +49,20 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
             nodes: n
         })
 
-        //    setStartPoint(null);
-        // }
-
-
     }
 
 
-    const onKeyDown = (e: KeyboardEvent) => {
+    const onKeyDown = (e: KeyboardEvent, origin?: string) => {
         if (e.key == "Tab") {
-            e.preventDefault();
-            e.stopPropagation();
             setRotation((r) => (r + 90) % 360)
         }
     }
 
 
     const Overlay = (props: OverlayProps) => {
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
         const { zoom } = useViewport();
 
-        return props.cursorPosition && (
+        return props.cursorPosition?.x && props.cursorPosition?.y && (
             <Box sx={{
                 pointerEvents: 'none',
                 position: 'absolute',
@@ -86,6 +79,7 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
 
     return {
+
         onClick,
         onKeyDown,
         Overlay
