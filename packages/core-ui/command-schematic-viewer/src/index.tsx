@@ -79,11 +79,13 @@ console.log(props.edges)
                                     data: { 
                                         width,
                                         height,
-                                        // project: {
+                                        project: props.info?.project,
+                                        // {
                                         //     name: props.project?.name,
                                         //     version: `v${props.project?.version} - ${props.project?.versionDate}`
                                         // },
-                                        // page: {
+                                        page: props.info?.page
+                                        //  {
                                         //     name: props.page?.name, 
                                         //     number: props.page?.number != null ? `Page: ${props.page?.number + 1}` : ''
                                         // }
