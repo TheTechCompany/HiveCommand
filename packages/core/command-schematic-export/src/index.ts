@@ -6,7 +6,12 @@ import { writeFileSync } from 'fs';
 
 const html_index = require.resolve('@hive-command/export-page');
 
-export const export_schematic = async (schematic: {name: string, pages: any[], version: string, versionDate: string}, ratio?: number, puppeteerArgs?: any) => {
+export const export_schematic = async (schematic: {
+    name: string, 
+    pages: any[], 
+    version: string, 
+    versionDate: string
+}, ratio?: number, puppeteerArgs?: any) => {
 
     console.log(JSON.stringify(puppeteerArgs));
 
@@ -28,10 +33,13 @@ export const export_schematic = async (schematic: {name: string, pages: any[], v
     app.get('/schematic/pages/:ix', (req, res) => {
         console.log("GET", req.params.ix,  pages?.[parseInt(req.params.ix)] );
         res.send({
-            project: schematic.name,
-            version: schematic.version,
-            versionDate: schematic.versionDate,
-            page: pages?.[parseInt(req.params.ix)] 
+            project: {
+                name: schematic.name,
+                version: `v${schematic?.version} - ${schematic?.versionDate}`
+
+            },
+            page: pages?.[parseInt(req.params.ix)],
+            pageNumber: parseInt(req.params.ix) + 1
         } );
 
     })

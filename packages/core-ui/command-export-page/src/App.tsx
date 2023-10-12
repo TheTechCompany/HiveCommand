@@ -21,8 +21,6 @@ function App() {
 
   const [ info, setInfo ] = useState<any>(null);
 
-  const [ page, setPage ] = useState<any>(null);
-
   const [ loading, setLoading ] = useState(false);
 
   const [ pageReady, setPageReady ] = useState(false)
@@ -65,8 +63,7 @@ function App() {
 
           setInfo({
             project: result.project,
-            version: result.version,
-            versionDate: result.versionDate
+            page: {...result.page, number: result.pageNumber}
           })
 
           setLoading(false);
@@ -92,7 +89,7 @@ function App() {
           setPageReady(true);
       }, 10)
     }
-  }, [page, nodesInitialized])
+  }, [info?.page, nodesInitialized])
 
 
   return (
@@ -100,18 +97,15 @@ function App() {
         {resizeListener}
         {/* <div>{width}x{height}</div> */}
         {packReady && <div className='pre-loaded' style={{display: 'none'}} />}
-        {(nodesInitialized || page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
+        {(nodesInitialized || info?.page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
 
         <SchematicViewer
           ratio={297/210}
           elements={items}
-          nodes={page?.nodes || []}
-          edges={page?.edges || []}
+          nodes={info?.page?.nodes || []}
+          edges={info?.page?.edges || []}
           info={{
-            ...info,
-            page: parseInt(query?.ix?.toString() || '0') + 1,
-
-            pageTitle: page?.name,
+            ...info
           }}
             />
     </Box>
