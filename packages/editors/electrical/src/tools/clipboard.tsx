@@ -14,17 +14,13 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
     const onClick = (e: MouseEvent) => {
 
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
         const position = project({
-            x: (e.clientX || 0) - (wrapperBounds?.x || 0),
-            y: (e.clientY || 0) - (wrapperBounds?.y || 0)
+            x: (e.clientX || 0),
+            y: (e.clientY || 0)
         })
 
         const minX = Math.min(...clipboard?.items?.nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
         const minY = Math.min(...clipboard?.items?.nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y=
-
-        // const { nodes, edges } = clipboard?.items || {};
-
 
         let nodes = (page?.nodes || []).slice();
         let edges = (page?.edges || []).slice();
