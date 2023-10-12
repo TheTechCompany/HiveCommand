@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/remote-components",
-  "version": "1.4.15-alpha.272",
+  "version": "1.4.15-alpha.273",
   "description": "",
   "main": "dist/index.js",
   "files": [

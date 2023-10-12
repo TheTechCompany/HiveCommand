@@ -10,7 +10,7 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
     const { project } = useReactFlow();
 
-    const { clipboard } = flowWrapper?.state;
+    const clipboard = flowWrapper?.state?.activeTool?.data || {};
 
     const onClick = (e: MouseEvent) => {
 
@@ -73,16 +73,13 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
         const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
 
-
-
-        const { nodes, edges } = clipboard?.items || {};
+        const { nodes, edges } = clipboard?.items || {nodes: [], edges: []};
 
         const minX = Math.min(...nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
         const minY = Math.min(...nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y
 
         const width = Math.max(...nodes.map((n: any) => n.position.x + n.width)) - minX;
         const height = Math.max(...nodes.map((n: any) => n.position.y + n.height)) - minY;
-
       
         const renderedNodes = nodes?.map((x: any) => {
            
@@ -104,8 +101,8 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
                 transformBox: 'fill-box', 
                 transformOrigin: 'top left', 
                 transform: `scale(${zoom})`, 
-                left: (props.cursorPosition?.x  ||0 )- (wrapperBounds?.x || 0), 
-                top: (props.cursorPosition?.y  || 0)- (wrapperBounds?.y || 0)
+                left: (props.cursorPosition?.x  ||0 ),
+                top: (props.cursorPosition?.y  || 0)
             }}>
                 <div style={{position: 'relative'}}>
                 {renderedNodes}

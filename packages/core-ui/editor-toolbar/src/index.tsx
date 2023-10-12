@@ -43,7 +43,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = (props) => {
                             sx={{
                                 borderRadius: '5px',
                                 marginRight: '3px',
-                                backgroundColor: props.activeTool?.type == tool.id ? 'rgba(0,0,0,0.04)' : null
+                                backgroundColor: props.activeTool?.type == tool.id ? 'rgba(0,0,0,0.1)' : null
                             }}
                             onClick={() => {
                                 props.onToolChange?.(props.activeTool?.type == tool.id ? null : tool.id)

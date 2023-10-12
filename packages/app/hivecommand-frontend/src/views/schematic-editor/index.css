@@ -1,3 +1,4 @@
 .canvas-container .react-flow__pane{
-    cursor: crosshair !important;
+    /* cursor: crosshair !important; */
+    cursor: none !important;
 }

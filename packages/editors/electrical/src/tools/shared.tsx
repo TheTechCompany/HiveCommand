@@ -28,7 +28,7 @@ export interface Surface {
 
 export interface ToolInstance {
     onClick?: (event: MouseEvent) => void;
-    onKeyDown?: (event: KeyboardEvent) => void;
+    onKeyDown?: (event: KeyboardEvent, origin?: string) => void;
     Overlay?: (props: OverlayProps) => any;
 }
 

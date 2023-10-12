@@ -215,15 +215,15 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                             onSubmit={(page: any) => {
                                 if (selected) {
                                     if(view == 'pages'){
-                                        props.onUpdatePage?.(page);
+                                        props.onUpdatePage?.({id: page?.id, name: page?.name});
                                     }else{
-                                        props.onUpdateTemplate?.(page)
+                                        props.onUpdateTemplate?.({id: page?.id, name: page?.name})
                                     }
                                 } else {
                                     if(view == 'pages'){
-                                        props.onCreatePage?.(page);
+                                        props.onCreatePage?.({id: page?.id, name: page?.name});
                                     }else{
-                                        props.onCreateTemplate?.(page);
+                                        props.onCreateTemplate?.({id: page?.id, name: page?.name});
                                     }
                                 }
                                 openModal(false);

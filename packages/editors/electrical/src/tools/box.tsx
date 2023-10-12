@@ -3,7 +3,6 @@ import { MouseEvent, Ref, useState } from "react"
 import { useReactFlow, useViewport } from 'reactflow';
 import { OverlayProps, ToolFactory, useViewportExtras } from "./shared";
 
-
 export const BoxToolProps = {
     width: 'Number',
     height: 'Number'

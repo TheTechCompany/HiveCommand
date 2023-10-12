@@ -53,6 +53,13 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     const { project } = useReactFlow();
 
+    useEffect(() => {
+        console.log(props.selection)
+        if(!isEqual(props.selection, selection)){
+            setSelection({...props.selection});
+        }
+    }, [props.selection])
+
     const onSelectionStart = (e: MouseEvent) => {
         let bounds = props.wrapper?.getBoundingClientRect();
 
@@ -94,19 +101,28 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
             })?.length > 0;
         })
 
-        currentSelection.edges = currentSelection.edges?.concat(selectEdges || [])
+        currentSelection.edges = (currentSelection.edges || []).concat(selectEdges || [])
         
         setSelection(currentSelection);
 
         props.onSelect?.(currentSelection);
+
+        console.log("Selection change moar", currentSelection);
+
         
         setSelectionZone(null);
     }
 
     useOnSelectionChange({
         onChange: (params) => {
-            setSelection(params);
-            props.onSelect?.(params)
+
+            if(!isEqual(selection, params)){
+
+                console.log("Selection change", params, selection, props.selection);
+
+                setSelection(params);
+                props.onSelect?.(params)
+            }
         }
     })
 
@@ -146,11 +162,12 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     useEffect(() => {
         setNodes(
             (props.nodes || []).map((e) => ({
+                ...nodes?.find((a) => a.id == e.id),
                 ...e,
                 selected: selection?.nodes?.find((a) => a.id == e.id) != null
             }))
         )
-    }, [props.nodes, selection])
+    }, [JSON.stringify(props.nodes), selection])//, selection])
 
     useEffect(() => {
         setEdges(
@@ -159,7 +176,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 selected: selection?.edges?.find((a) => a.id == e.id) != null
             }))
         )
-    }, [props.edges, selection])
+    }, [JSON.stringify(props.edges), selection])
 
     const nodeMap = (item: any) => {
         return {
@@ -247,7 +264,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         <Box
             tabIndex={0}
             onKeyDown={(e) => {
-                const mod = e.shiftKey ? 2 : 1;
+                const mod = e.shiftKey ? 5 : 1;
                 const amt = 1 * mod;
     
                 switch(e.key){
@@ -289,8 +306,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                         props.onEdgesChanged?.(edges)
                     }
                 }}
-                // nodesFocusable={false}
-                // edgesFocusable={false}
+                nodesFocusable={false}
+                edgesFocusable={false}
                 disableKeyboardA11y
                 // nodesDraggable={false}
                 fitView={props.fitView}
