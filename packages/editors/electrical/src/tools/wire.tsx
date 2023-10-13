@@ -118,7 +118,7 @@ export const WireTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryPr
     const realPoints = useMemo(() => [...points].map((a) => unproject(a)).concat(props.cursorPosition ? [{x: props.cursorPosition?.x, y: props.cursorPosition?.y}] : []), [points, props.cursorPosition])
 
     return realPoints?.length > 0 ? (
-        <svg style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+        <svg style={{position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
             <path style={{fill: 'none'}} stroke="black" d={`M ${realPoints?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < (realPoints?.length - 1) ? 'L' : ''}`).join(' ')}`} />
         </svg>
     ) : null;
