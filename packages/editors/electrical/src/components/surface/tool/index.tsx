@@ -9,6 +9,7 @@ export interface EditorToolProps {
     activeTool?: ActiveTool;
     page?: any;
 
+    cursorPosition?: {x: number, y: number} | null;
     onUpdate?: (page?: any) => void;
 }
 
@@ -16,39 +17,55 @@ export const EditorTool = forwardRef<any, EditorToolProps>((props, ref) => {
 
     const { surface } = useEditor()
 
-    const instances = Object.keys(Tools).map((toolKey) => {
-            return {
-                inst: (Tools as any)[toolKey]?.(
-                    {
-                        container: surface, 
-                        state: {
-                            activeTool: props.activeTool, 
-                            // clipboard: props.clipboard
-                        }
-                    }, 
-                    props.page,
-                    props.onUpdate
-                ),
-                key: toolKey
-            }
-    }).reduce((prev, curr) => ({...prev, [curr.key]: curr.inst}), {});
+
+
+    // const instances = Object.keys(Tools).map((toolKey) => {
+    //         return {
+    //             inst: (Tools as any)[toolKey]?.(
+    //                 {
+    //                     container: surface, 
+    //                     state: {
+    //                         activeTool: props.activeTool, 
+    //                         // clipboard: props.clipboard
+    //                     }
+    //                 }, 
+    //                 props.page,
+    //                 props.onUpdate
+    //             ),
+    //             key: toolKey
+    //         }
+    // }).reduce((prev, curr) => ({...prev, [curr.key]: curr.inst}), {});
 
     // const factory = useMemo(() => props.activeTool ? (Tools as any)[props.activeTool?.type] as ToolFactory : null, [props.activeTool])
-    const activeTool = surface && props.activeTool && (instances as any)[props.activeTool?.type];
+
+    // const activeTool = surface && props.activeTool && (instances as any)[props.activeTool?.type];
+
     //?.({container: surface, state: { activeTool: props.activeTool, clipboard: props.clipboard }}, props.page, props.onUpdate)
 
-    useImperativeHandle(ref, () => {
-        return activeTool ? {
-            ...activeTool,
+    const Tool = surface && props.activeTool && (Tools as any)[props.activeTool?.type] || (() => <div />)
 
-            // onClick: () => alert("Stuff"),
-            // onKeyDown: 
-            // onMouseDown: 
-        } : null
-    });
+    // useImperativeHandle(ref, () => {
+    //     return activeTool ? {
+    //         ...activeTool,
 
+    //         // onClick: () => alert("Stuff"),
+    //         // onKeyDown: 
+    //         // onMouseDown: 
+    //     } : null
+    // });
 
-    return null;
+    return (props.cursorPosition?.x && props.cursorPosition?.y) ? <Tool
+        page={props.page}
+        onUpdate={props.onUpdate}
+        cursorPosition={props.cursorPosition}
+        flowWrapper={{
+            container: surface,
+            state: {
+                activeTool: props.activeTool,
+                // clipboard: props.clipboard
+            }
+        }}
+        ref={ref} /> : null;
 
 })
 

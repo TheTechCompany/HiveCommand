@@ -1,16 +1,18 @@
-import { MouseEvent } from "react";
+import { MouseEvent, forwardRef, useImperativeHandle } from "react";
 import { nodeTypes } from "@hive-command/electrical-nodes";
-import { OverlayProps, ToolFactory } from "./shared";
+import { OverlayProps, ToolFactory, ToolFactoryProps, ToolInstance } from "./shared";
 import { useReactFlow, useViewport } from "reactflow";
 import { nanoid } from "nanoid";
 
-export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
+export const ClipboardTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
+    
+    const {surface, page, onUpdate} = props;
 
     const { zoom } = useViewport();
 
     const { project } = useReactFlow();
 
-    const clipboard = flowWrapper?.state?.activeTool?.data || {};
+    const clipboard = surface?.state?.activeTool?.data || {};
 
     const onClick = (e: MouseEvent) => {
 
@@ -65,50 +67,45 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
     }
 
-    const Overlay = (props: OverlayProps) => {
+    useImperativeHandle(ref, () => ({
+        onClick,
+    }));
 
-        const { nodes, edges } = clipboard?.items || {nodes: [], edges: []};
+    const { nodes, edges } = clipboard?.items || {nodes: [], edges: []};
 
-        const minX = Math.min(...nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
-        const minY = Math.min(...nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y
+    const minX = Math.min(...nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
+    const minY = Math.min(...nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y
 
-        const width = Math.max(...nodes.map((n: any) => n.position.x + n.width)) - minX;
-        const height = Math.max(...nodes.map((n: any) => n.position.y + n.height)) - minY;
-      
-        console.log(minX, minY, width, height)
+    const width = Math.max(...nodes.map((n: any) => n.position.x + n.width)) - minX;
+    const height = Math.max(...nodes.map((n: any) => n.position.y + n.height)) - minY;
+  
 
-        const renderedNodes = nodes?.map((x: any) => {
+    const renderedNodes = nodes?.map((x: any) => {
            
-            return (<div style={{position: 'absolute', left: (x.position.x - minX), top: (x.position.y - minY) }}>
-                {(nodeTypes as any)[x.type]({ ...x, id: `tmp-${nanoid()}` })}
-                </div>
-            )
-            // switch(x.type){
-            //     case 'box':
-            //         return (<BoxNode)
-            // }
-        });
-
-        return (
-            <div style={{
-                position: 'absolute', 
-                width: Math.abs(width), 
-                height: Math.abs(height), 
-                transformBox: 'fill-box', 
-                transformOrigin: 'top left', 
-                transform: `scale(${zoom})`, 
-                left: (props.cursorPosition?.x  ||0 ),
-                top: (props.cursorPosition?.y  || 0)
-            }}>
-                <div style={{position: 'relative'}}>
-                {renderedNodes}
-                </div>
+        return (<div style={{position: 'absolute', left: (x.position.x - minX), top: (x.position.y - minY) }}>
+            {(nodeTypes as any)[x.type]({ ...x, id: `tmp-${nanoid()}` })}
             </div>
         )
-    }
+        // switch(x.type){
+        //     case 'box':
+        //         return (<BoxNode)
+        // }
+    });
 
-    return {
-        onClick,
-        Overlay
-    }
-}
+    return (
+        <div style={{
+            position: 'absolute', 
+            width: Math.abs(width), 
+            height: Math.abs(height), 
+            transformBox: 'fill-box', 
+            transformOrigin: 'top left', 
+            transform: `scale(${zoom})`, 
+            left: (props.cursorPosition?.x  ||0 ),
+            top: (props.cursorPosition?.y  || 0)
+        }}>
+            <div style={{position: 'relative'}}>
+            {renderedNodes}
+            </div>
+        </div>
+    )
+})

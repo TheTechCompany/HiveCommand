@@ -1,9 +1,11 @@
 import { nanoid } from "nanoid";
-import { Ref, MouseEvent, KeyboardEvent, useCallback, useMemo, useState } from "react"
+import { Ref, MouseEvent, KeyboardEvent, useCallback, useMemo, useState, forwardRef, useImperativeHandle } from "react"
 import { useReactFlow, useViewport } from 'reactflow';
-import { OverlayProps, ToolFactory, useViewportExtras } from "./shared";
+import { OverlayProps, ToolFactory, ToolFactoryProps, ToolInstance, useViewportExtras } from "./shared";
 
-export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
+export const WireTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
+    
+    const {surface, page, onUpdate} = props;
 
     // const [ startPoin, setStartPoint ] = useState<any>(null)
 
@@ -16,8 +18,6 @@ export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
     const onClick = (e: MouseEvent) => {
 
         e.stopPropagation();
-
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
 
         if (!isWiring) {
             setIsWiring(true);
@@ -105,25 +105,22 @@ export const WireTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         }
     }, [page, points])
 
-    const Overlay = (props: OverlayProps) => {
-        const { x, y, zoom } = useViewport();
 
-        const { unproject } = useViewportExtras();
-
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect();
-        
-        const realPoints = useMemo(() => [...points].map((a) => unproject(a)).concat(props.cursorPosition ? [{x: props.cursorPosition?.x, y: props.cursorPosition?.y}] : []), [points, props.cursorPosition])
-
-        return realPoints?.length > 0 ? (
-            <svg style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
-                <path style={{fill: 'none'}} stroke="black" d={`M ${realPoints?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < (realPoints?.length - 1) ? 'L' : ''}`).join(' ')}`} />
-            </svg>
-        ) : null;
-    }
-
-    return {
+    useImperativeHandle(ref, () => ({
         onClick,
         onKeyDown,
-        Overlay
-    }
-}
+    }))
+
+    const { x, y, zoom } = useViewport();
+
+    const { unproject } = useViewportExtras();
+
+    const realPoints = useMemo(() => [...points].map((a) => unproject(a)).concat(props.cursorPosition ? [{x: props.cursorPosition?.x, y: props.cursorPosition?.y}] : []), [points, props.cursorPosition])
+
+    return realPoints?.length > 0 ? (
+        <svg style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+            <path style={{fill: 'none'}} stroke="black" d={`M ${realPoints?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < (realPoints?.length - 1) ? 'L' : ''}`).join(' ')}`} />
+        </svg>
+    ) : null;
+
+});

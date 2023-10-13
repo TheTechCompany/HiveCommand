@@ -9,6 +9,7 @@ import { EditorProvider } from "./context";
 import { ActiveTool, ToolInstance, ToolProps } from "../../tools";
 import { NodePropsModal } from "../node-props";
 import { ElectricalPage } from "../../types";
+import { useEditorPosition } from "../../hooks/useEditorPosition";
 
 
 export interface ElectricalSurfaceProps {
@@ -67,16 +68,15 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     const surfaceRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLDivElement>(null);
 
-
-    const [cursorPosition, setCursorPosition] = useState<{ x: number, y: number } | null>(null)
+    const [ cursorPosition, setCursorPosition, editorActive, setEditorActive ] = useEditorPosition();
 
     const realCursorPosition = useMemo(() => {
         let b = surfaceRef?.current?.getBoundingClientRect?.();
 
-        return {
+        return cursorPosition ?  {
             x: (cursorPosition?.x || 0) - (b?.x || 0),
             y: (cursorPosition?.y || 0) - (b?.y || 0)
-        }
+        } : null;
     }, [cursorPosition, surfaceRef.current])
 
 
@@ -131,7 +131,6 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
             ev.stopPropagation();
 
             // cursorPosition.current = {x: ev.clientX, y: ev.clientY};
-
             setCursorPosition({ x: ev.clientX, y: ev.clientY })
 
         }
@@ -336,6 +335,8 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
 
                 props.onEditorEnter?.();
 
+                setEditorActive(true);
+
                 setCursorPosition({ x: e.clientX, y: e.clientY });
 
                 // let event : any = new Event('MouseEnter');
@@ -347,6 +348,9 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                 e.stopPropagation();
 
                 props.onEditorLeave?.();
+
+                setEditorActive(false);
+
 
                 setCursorPosition(null);
                 // cursorPosition.current = null
@@ -394,6 +398,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                                 ...page
                             })
                         }}
+                        cursorPosition={realCursorPosition} 
                         activeTool={props.activeTool}
                     />
                 </EditorProvider>

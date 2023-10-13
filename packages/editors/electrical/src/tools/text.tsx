@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
-import { Ref, useState, MouseEvent, KeyboardEvent } from "react"
+import { Ref, useState, MouseEvent, KeyboardEvent, forwardRef, useImperativeHandle } from "react"
 import { useReactFlow, useViewport } from 'reactflow';
-import { OverlayProps, ToolFactory } from "./shared";
+import { OverlayProps, ToolFactory, ToolFactoryProps, ToolInstance, ToolOverlay } from "./shared";
 import { Box, Typography } from "@mui/material";
 
 export const TextToolProps = {
@@ -10,17 +10,16 @@ export const TextToolProps = {
     fontSize: 'Number'
 }
 
-const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
-    // const [ startPoin, setStartPoint ] = useState<any>(null)
+//ToolFactory
+const BaseTextTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props: any, ref) => {
 
+    const {flowWrapper, page, onUpdate} = props;
 
     const [rotation, setRotation] = useState(0);
 
     const { project } = useReactFlow();
 
-
-
-    //    const [ text, setText ] = useState<any>(null);
+    const { zoom } = useViewport();
 
     const onClick = (e: MouseEvent) => {
 
@@ -76,16 +75,29 @@ const BaseTextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         )
     }
 
-
-
-    return {
-
+    useImperativeHandle(ref, () => ({
         onClick,
         onKeyDown,
         Overlay
-    }
-}
+    }))
 
-export const TextTool : ToolFactory = (flowWrapper, page, onUpdate) => {
-    return BaseTextTool(flowWrapper, page, onUpdate);
-}
+
+    console.log({props})
+
+    return (props.cursorPosition?.x && props.cursorPosition?.y) ? (
+        <Box sx={{
+            pointerEvents: 'none',
+            position: 'absolute',
+            transformOrigin: 'left top',
+            transform: `rotate(${rotation}deg) scale(${zoom})`,
+            left: (props.cursorPosition?.x || 0) ,
+            top: (props.cursorPosition?.y || 0)
+        }}>
+            <Typography sx={{fontSize: '12px'}}>Text</Typography>
+        </Box>
+    ) : null;
+})
+
+export const TextTool : ToolFactory<{}>  = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
+    return <BaseTextTool {...props} ref={ref} />;
+})

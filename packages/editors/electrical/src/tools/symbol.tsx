@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
-import { Ref, useState, KeyboardEvent, MouseEvent } from "react"
+import { Ref, useState, KeyboardEvent, MouseEvent, forwardRef, useImperativeHandle } from "react"
 import { useReactFlow, useViewport } from 'reactflow';
 import { Box } from "@mui/material";
-import { OverlayProps, ToolFactory } from "./shared";
+import { OverlayProps, ToolFactory, ToolFactoryProps, ToolInstance } from "./shared";
 
 export const SymbolToolProps = {
     symbol: 'String',
@@ -11,19 +11,23 @@ export const SymbolToolProps = {
     height: 'Number'
 }
 
-export const SymbolTool : ToolFactory = (flowWrapper, page, onUpdate) => {
+export const SymbolTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
 
+    const { surface, page, onUpdate } = props
     const [rotation, setRotation] = useState(0);
+
+    const { zoom } = useViewport();
+
 
     const { project } = useReactFlow();
 
-    const { symbol } = flowWrapper?.state?.activeTool?.data || {symbol: null};
+    const { symbol } = surface?.state?.activeTool?.data || {symbol: null};
 
     const onClick = (e: MouseEvent) => {
 
         if (!symbol) return;
 
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
+        const wrapperBounds = surface?.container?.current?.getBoundingClientRect()
         const symbolPosition = project({
             x: (e.clientX || 0), // - (wrapperBounds?.x || 0),
             y: (e.clientY || 0) //- (wrapperBounds?.y || 0)
@@ -63,30 +67,25 @@ export const SymbolTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         }
     }
 
-    const Overlay = (props: OverlayProps) => {
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
-        const { zoom } = useViewport();
-
-        return (
-            <Box sx={{
-                position: 'absolute',
-                transform: `rotate(${rotation}deg)`,
-                left: (props.cursorPosition?.x || 0),
-                top: (props.cursorPosition?.y || 0),
-                width: symbol?.component?.metadata?.width * zoom,
-                height: symbol?.component?.metadata?.height * zoom,
-            }}>
-                {symbol?.component()}
-            </Box>
-        )
-    }
 
 
-
-    return {
+    useImperativeHandle(ref, () => ({
         onClick,
-        onKeyDown,
-        Overlay
-    }
+        onKeyDown
+    }));
 
-}
+
+    return (
+        <Box sx={{
+            position: 'absolute',
+            transform: `rotate(${rotation}deg)`,
+            left: (props.cursorPosition?.x || 0),
+            top: (props.cursorPosition?.y || 0),
+            width: symbol?.component?.metadata?.width * zoom,
+            height: symbol?.component?.metadata?.height * zoom,
+        }}>
+            {symbol?.component()}
+        </Box>
+    )
+
+})
