@@ -29,11 +29,16 @@ export interface Surface {
 export interface ToolInstance {
     onClick?: (event: MouseEvent) => void;
     onKeyDown?: (event: KeyboardEvent, origin?: string) => void;
-    Overlay?: (props: OverlayProps) => any;
+    // Overlay?: (props: OverlayProps) => any;
 }
 
-export type ToolFactory = (
+export interface ToolFactoryProps {
     surface: Surface, 
     page: any, 
-    onUpdate?: (page: any) => void, ...args: any[]
-) => ToolInstance
+    onUpdate?: (page: any) => void
+    cursorPosition?: {x: number, y: number};
+}
+
+export type ToolFactory<P> = React.ForwardRefExoticComponent<ToolFactoryProps & P & React.RefAttributes<ToolInstance>>;
+
+export type ToolOverlay = JSX.Element;

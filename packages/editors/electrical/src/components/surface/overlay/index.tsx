@@ -16,14 +16,14 @@ export interface EditorOverlayProps {
 
 export const EditorOverlay : React.FC<EditorOverlayProps> = (props) => {
       
-    const Overlay = props.tool ? props.tool?.Overlay : () => <div />;
+    // const Overlay = props.tool ? props.tool?.Overlay : () => <div />;
 
     return (
         <Box
             sx={{position: 'absolute', pointerEvents: 'none', left: 0, top: 0, width: '100%', height: '100%'}}>
             
-            {props.cursorPosition && 
-                <Overlay keyCounter={props.keyCounter} cursorPosition={props.cursorPosition} />}
+            {/* {props.cursorPosition?.x && props.cursorPosition?.y && 
+                <Overlay keyCounter={props.keyCounter} cursorPosition={props.cursorPosition} />} */}
 
             <CursorCrosshairs 
                 cursorPosition={props.cursorPosition}

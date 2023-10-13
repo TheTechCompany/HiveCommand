@@ -108,6 +108,9 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         currentSelection.edges = (currentSelection.edges || []).concat(selectEdges || []);
         
         let selectNodes = props.nodes?.filter((node) => {
+            if(node.type == 'canvasNode' || node.type == 'page'){
+                return false;
+            }
             if((currentSelection?.nodes || []).indexOf(node.id) > -1){
                 return false;
             }
@@ -301,6 +304,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
         setSelectedNodes(nodesSelection)
         props.onSelect?.({...props.selection, nodes: nodesSelection})
+
+        console.log(props.selection)
     }
 
     const onEdgeClick = (e: MouseEvent, edge: Edge) => {
@@ -330,6 +335,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     const onPaneClick = () => {
         setSelectedEdges([]);
         setSelectedNodes([]);
+        
+        props.onSelect?.({nodes: [], edges: []})
     }
 
     return (
