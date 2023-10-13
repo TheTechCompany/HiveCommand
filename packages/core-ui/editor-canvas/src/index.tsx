@@ -2,10 +2,11 @@ import React, {MouseEvent, useEffect, useState} from 'react';
 import { Box } from '@mui/material';
 import { ReactFlow, MiniMap, Controls, Background, Node, Edge, NodeTypes, EdgeTypes, useOnSelectionChange, useNodesState, useEdgesState, CoordinateExtent, ConnectionMode, useViewport, useReactFlow, SelectionMode, useStore, Rect, Transform, getNodePositionWithOrigin, useStoreApi } from 'reactflow';
 import { isEqual } from 'lodash';
+import { useNodeState, useEdgeState } from './hooks'
 
 export interface EditorCanvasSelection {
-    nodes?: Node[];
-    edges?: Edge[];
+    nodes?: string[];
+    edges?: string[];
 }
 
 export interface EditorCanvasProps {
@@ -25,6 +26,7 @@ export interface EditorCanvasProps {
 
     selection?: EditorCanvasSelection;
     onSelect?: (selection: EditorCanvasSelection) => void;
+
     onNodeDoubleClick?: (node: Node) => void;
 
     wrapper?: any;
@@ -42,10 +44,11 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     // console.log(selectActive, selectRect)
 
-    const [ nodes, setNodes, onNodesChange ] = useNodesState(props.nodes || [])
-    const [ edges, setEdges, onEdgesChange ] = useEdgesState(props.edges || [])
+    const [nodes, setNodes, selectedNodes, setSelectedNodes, onNodesChange] = useNodeState(props.nodes || [])
+    const [edges, setEdges, selectedEdges, setSelectedEdges, onEdgesChange] = useEdgeState(props.edges || [])
 
-    const [ selection, setSelection ] = useState<EditorCanvasSelection>({});
+    // const [ nodes, setNodes, onNodesChange ] = useNodesState(props.nodes || [])
+    // const [ edges, setEdges, onEdgesChange ] = useEdgesState(props.edges || [])
 
     const [ lastDrag, setLastDrag ] = useState<{x: number, y: number}>()
 
@@ -54,9 +57,10 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     const { project } = useReactFlow();
 
     useEffect(() => {
-        console.log(props.selection)
-        if(!isEqual(props.selection, selection)){
-            setSelection({...props.selection});
+        if(!isEqual(props.selection, {nodes: selectedNodes, edges: selectedEdges})){
+            // setSelection({...props.selection});
+            setSelectedEdges(props.selection?.edges || [])
+            setSelectedNodes(props.selection?.nodes || [])
         }
     }, [props.selection])
 
@@ -86,10 +90,10 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         let zoneOrientationX = (zone?.start?.x || 0) < (zone.end?.x || 0)
         let zoneOrientationY = (zone?.start?.y || 0) < (zone.end?.y || 0)
 
-        let currentSelection = Object.assign({}, selection);
+        let currentSelection = Object.assign({}, {nodes: selectedNodes, edges: selectedEdges});
 
         let selectEdges = props.edges?.filter((edge) => {
-            if((currentSelection?.edges || []).findIndex((a) => a.id == edge.id) > -1){
+            if((currentSelection?.edges || []).indexOf(edge.id) > -1){
                 return false;
             }
             return edge.data?.points?.filter((point: {x: number, y: number}) => {
@@ -99,11 +103,28 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
                 return xIn && yIn
             })?.length > 0;
-        })
+        }).map((x) => x.id);
 
-        currentSelection.edges = (currentSelection.edges || []).concat(selectEdges || [])
+        currentSelection.edges = (currentSelection.edges || []).concat(selectEdges || []);
         
-        setSelection(currentSelection);
+        let selectNodes = props.nodes?.filter((node) => {
+            if((currentSelection?.nodes || []).indexOf(node.id) > -1){
+                return false;
+            }
+
+            let nodeWidth = node.width || 0;
+            let nodeHeight = node.height || 0;
+
+            let xIn = zoneOrientationX ? node.position.x > (zone.start?.x || 0) && node.position.x + nodeWidth < (zone.end?.x || 0) : node.position.x > (zone.end?.x || 0) && node.position.x + nodeWidth < (zone.start?.x || 0)
+            let yIn = zoneOrientationY ? node.position.y > (zone.start?.y || 0) && node.position.y + nodeHeight < (zone.end?.y || 0) : node.position.y > (zone.end?.y || 0) && node.position.y + nodeHeight < (zone.start?.y || 0)
+
+            return xIn && yIn
+        }).map((x) => x.id)
+
+        currentSelection.nodes = (currentSelection.nodes || []).concat(selectNodes || []);
+
+        setSelectedEdges(currentSelection.edges);
+        setSelectedNodes(currentSelection.nodes)
 
         props.onSelect?.(currentSelection);
 
@@ -116,13 +137,13 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     useOnSelectionChange({
         onChange: (params) => {
 
-            if(!isEqual(selection, params)){
+            // if(!isEqual(selection, params)){
 
-                console.log("Selection change", params, selection, props.selection);
+            //     console.log("Selection change", params, selection, props.selection);
 
-                setSelection(params);
-                props.onSelect?.(params)
-            }
+            //     setSelection(params);
+            //     props.onSelect?.(params)
+            // }
         }
     })
 
@@ -164,19 +185,18 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
             (props.nodes || []).map((e) => ({
                 ...nodes?.find((a) => a.id == e.id),
                 ...e,
-                selected: selection?.nodes?.find((a) => a.id == e.id) != null
+                // selected: selection?.nodes?.find((a) => a.id == e.id) != null
             }))
         )
-    }, [JSON.stringify(props.nodes), selection])//, selection])
+    }, [JSON.stringify(props.nodes)])//, selection])
 
     useEffect(() => {
         setEdges(
             (props.edges || []).map((e) => ({
                 ...e,
-                selected: selection?.edges?.find((a) => a.id == e.id) != null
             }))
-        )
-    }, [JSON.stringify(props.edges), selection])
+        );
+    }, [JSON.stringify(props.edges)])
 
     const nodeMap = (item: any) => {
         return {
@@ -187,11 +207,10 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         }
     }
 
-
     const moveSelection = (xVector: number, yVector: number) => {
 
         let modifiedNodes = props.nodes?.map((x) => {
-            if((selection.nodes || []).findIndex((a) => a.id == x.id) > -1){
+            if((selectedNodes || []).indexOf(x.id) > -1){
                 return {
                     ...x,
                     position: {
@@ -202,10 +221,10 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 }
             }
             return x;
-        }) 
+        })
 
         let modifiedEdges = props.edges?.map((x) => {
-            if((selection.edges || []).findIndex((a) => a.id == x.id) > -1){
+            if((selectedEdges || []).indexOf(x.id) > -1){
                 return {
                     ...x,
                     data: {
@@ -260,6 +279,59 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     //     }
     // }, [])
 
+    const onNodeClick = (e: MouseEvent, node: Node) => {
+        let multiple = e.ctrlKey || e.metaKey;
+        let exists = selectedNodes?.indexOf(node.id) > -1;
+
+        let nodesSelection : string[] = [];
+
+        if(multiple){
+            if(exists){
+                nodesSelection = selectedNodes.filter((a) => a != node.id);
+            }else{
+                nodesSelection = [...selectedNodes, node.id]
+            }
+        }else{
+            if(exists){
+                nodesSelection = [];
+            }else{
+                nodesSelection = [node.id]
+            }
+        }
+
+        setSelectedNodes(nodesSelection)
+        props.onSelect?.({...props.selection, nodes: nodesSelection})
+    }
+
+    const onEdgeClick = (e: MouseEvent, edge: Edge) => {
+        let multiple = e.ctrlKey || e.metaKey;
+        let exists = selectedEdges?.indexOf(edge.id) > -1;
+
+        let edgesSelection : string[] = [];
+
+        if(multiple){
+            if(exists){
+                edgesSelection = selectedEdges.filter((a) => a != edge.id)
+            }else{
+                edgesSelection = [...selectedEdges, edge.id]
+            }
+        }else{
+            if(exists){
+                edgesSelection = [];
+            }else{
+                edgesSelection = [edge.id];
+            }
+        }
+
+        setSelectedEdges(edgesSelection)
+        props.onSelect?.({...props.selection, edges: edgesSelection})
+    }
+
+    const onPaneClick = () => {
+        setSelectedEdges([]);
+        setSelectedNodes([]);
+    }
+
     return (
         <Box
             tabIndex={0}
@@ -286,26 +358,37 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
             <ReactFlow
                 nodeTypes={props.nodeTypes}
                 edgeTypes={props.edgeTypes}
-                nodes={nodes || []}
-                edges={edges || []}
+                nodes={nodes.map((x) => ({...x, selectable: false})) || []}
+                edges={edges.map((x) => ({...x, selectable: false})) || []}
+                onPaneClick={onPaneClick}
                 onNodesChange={(changes) => {
-                    onNodesChange(changes);
+                    // console.log("Node", changes)
+                    // onNodesChange(changes);
 
-                    if (!isEqual((props.nodes || []).map(nodeMap), (nodes || []).map(nodeMap))) {
-                        props.onNodesChanged?.(nodes)
-                    }
+                    // if (!isEqual((props.nodes || []).map(nodeMap), (nodes || []).map(nodeMap))) {
+                    //     props.onNodesChanged?.(nodes)
+                    // }
                 }}
-                onNodesDelete={(deleted_nodes) => {
-                    props.onNodesChanged?.(nodes?.filter((a) => deleted_nodes.findIndex((b) => a.id == b.id) < 0))
-                }}
+                // onNodesDelete={(deleted_nodes) => {
+                //     props.onNodesChanged?.(nodes?.filter((a) => deleted_nodes.findIndex((b) => a.id == b.id) < 0))
+                // }}
                 onEdgesChange={(changes) => {
                     
-                    onEdgesChange(changes);
+                    // console.log("Edge", changes)
 
-                    if(!isEqual((props.edges || []), (edges || []))){
-                        props.onEdgesChanged?.(edges)
-                    }
+                    // onEdgesChange(changes);
+                    // console.log("Edge", edges)
+
+                    // if(!isEqual((props.edges || []), (edges || []))){
+                    //     props.onEdgesChanged?.(edges)
+                    // }
                 }}
+                onEdgeClick={onEdgeClick}
+                onNodeClick={onNodeClick}
+                // nodesDraggable={false}
+                // nodesConnectable={false}
+                // elementsSelectable={false}
+
                 nodesFocusable={false}
                 edgesFocusable={false}
                 disableKeyboardA11y

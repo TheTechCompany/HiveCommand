@@ -38,7 +38,7 @@ export const PageModal : React.FC<PageModalProps> = (props) => {
                         fullWidth />
                     
                     {props.view == 'pages' && (
-                        <FormControl size="small" fullWidth>
+                        <FormControl sx={{marginTop: '6px'}} size="small" fullWidth>
                             <InputLabel>Template</InputLabel>
                             <Select label="Template">
                                 {props.templates?.map((template) => (

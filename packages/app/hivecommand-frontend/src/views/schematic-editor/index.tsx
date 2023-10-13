@@ -165,13 +165,14 @@ export const SchematicEditor = () => {
         }
 
         if(page.edges){
+        
             input.edges = page.edges;
         }
         
         if(page.name){
             input.name = page.name;
         }
-
+        
         debouncedUpdate({
             variables:{
                 schematic: id,
