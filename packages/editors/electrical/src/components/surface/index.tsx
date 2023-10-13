@@ -25,10 +25,6 @@ export interface ElectricalSurfaceProps {
     // toolRef?: RefObject<ToolInstance>;
     activeTool?: ActiveTool;
 
-    onCopy?: () => void;
-    onCut?: () => void;
-    onPaste?: () => void;
-
     onDelete?: () => void;
 
     onEditorEnter?: () => void;
@@ -236,6 +232,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                     {
                         id: 'page',
                         type: 'page',
+                        focusable: false,
                         draggable: false,
                         selectable: false,
                         position: { x: 0, y: 0 },

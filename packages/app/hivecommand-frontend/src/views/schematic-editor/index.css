@@ -2,3 +2,7 @@
     /* cursor: crosshair !important; */
     cursor: none !important;
 }
+
+.react-flow__node-page {
+    pointer-events: none !important;
+}

@@ -67,8 +67,6 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
 
     const Overlay = (props: OverlayProps) => {
 
-        const wrapperBounds = flowWrapper?.container?.current?.getBoundingClientRect()
-
         const { nodes, edges } = clipboard?.items || {nodes: [], edges: []};
 
         const minX = Math.min(...nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
@@ -77,6 +75,8 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
         const width = Math.max(...nodes.map((n: any) => n.position.x + n.width)) - minX;
         const height = Math.max(...nodes.map((n: any) => n.position.y + n.height)) - minY;
       
+        console.log(minX, minY, width, height)
+
         const renderedNodes = nodes?.map((x: any) => {
            
             return (<div style={{position: 'absolute', left: (x.position.x - minX), top: (x.position.y - minY) }}>
@@ -93,7 +93,7 @@ export const ClipboardTool : ToolFactory = (flowWrapper, page, onUpdate) => {
             <div style={{
                 position: 'absolute', 
                 width: Math.abs(width), 
-                height: Math.abs(width), 
+                height: Math.abs(height), 
                 transformBox: 'fill-box', 
                 transformOrigin: 'top left', 
                 transform: `scale(${zoom})`, 

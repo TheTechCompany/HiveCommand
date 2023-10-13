@@ -72,19 +72,27 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
 
     const { editorActive, onEditorEnter, onEditorLeave } = useEditorFocus();
 
-    const onDelete = useCallback(() => {
-        // alert("Deleting " + selection?.length)
-        props.onUpdatePage?.({
+    const onDelete = () => {
+        console.log("Deleting ", selection, activePage?.edges?.filter((a) => {
+            return (selection.edges || []).indexOf(a.id) < 0;
+        }))
+        const sel = Object.assign({}, selection);
+        
+        const updatedPage = {
             ...activePage,
             nodes: activePage?.nodes?.filter((a) => {
-                return (selection.nodes || []).findIndex((b) => b.id == a.id) < 0;
+                return (selection.nodes || []).indexOf(a.id) < 0;
             }),
             edges: activePage?.edges?.filter((a) => {
-                return (selection.edges || []).findIndex((b) => b.id == a.id) < 0;
+                return (selection.edges || []).indexOf(a.id) < 0;
             })
-        })
+        }
+        console.log({updatedPage});
+
+        props.onUpdatePage?.(updatedPage)
+
         setSelection({});
-    }, [selection, activePage])
+    }
 
     const onKeyDown = (e: KeyboardEvent) => {
 
@@ -136,16 +144,23 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
         
     }
 
+    const mapSelection = (selection: EditorCanvasSelection) => {
+        return {
+            nodes: selection.nodes?.map((n) => activePage?.nodes?.find((a) => a.id == n)),
+            edges: selection.edges?.map((n) => activePage?.edges?.find((a) => a.id == n)),
+        }
+    }
 
     const onCopy = () => {
-        setClipboard({ cut: false, items: selection })
+        setClipboard({ cut: false, items: mapSelection(selection) })
     }
 
     const onCut = () => {
-        setClipboard({ cut: true, items: selection });
+        setClipboard({ cut: true, items: mapSelection(selection) });
     }
 
     const onPaste = () => {
+        console.log("CLIPBOARD", clipboard)
         setActiveTool({ type: 'clipboard', data: clipboard })
         setSelection({})//TODO Change to the temp ids of anything in clipboard
     }
@@ -156,7 +171,8 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown)
         }
-    }, [editorActive])
+    }, [editorActive, selection, activePage, clipboard])
+
 
     return (
         <ReactFlowProvider>
@@ -215,17 +231,11 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
                                     version: selectedVersion?.rank,
                                     versionDate: moment(selectedVersion?.createdAt).format('hh:mma - DD/MM/YY')
                                 }}
-                                onUpdate={(page) => {
-                                    props.onUpdatePage?.(page)
-                                }}
+                                onUpdate={props.onUpdatePage}
                                 selection={selection}
                                 onSelect={(selection) => {
                                     setSelection(selection)
                                 }}
-                                onCopy={onCopy}
-                                onCut={onCut}
-                                onPaste={onPaste}
-                                onDelete={onDelete}
                                 onEditorEnter={onEditorEnter}
                                 onEditorLeave={onEditorLeave}
                                 activeTool={activeTool}

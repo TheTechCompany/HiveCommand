@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/mqtt-auth-server",
-  "version": "1.4.15-alpha.273",
+  "version": "1.4.15-alpha.274",
   "description": "",
   "main": "index.js",
   "private": true,
@@ -19,8 +19,8 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@hive-command/data": "^1.4.15-alpha.273",
-    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.273",
+    "@hive-command/data": "^1.4.15-alpha.274",
+    "@hive-command/rabbitmq-auth": "^1.4.15-alpha.274",
     "cors": "^2.8.5",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",

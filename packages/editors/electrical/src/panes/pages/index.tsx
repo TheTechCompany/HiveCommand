@@ -24,6 +24,7 @@ import { PageItem } from './item';
 import { BasePane } from '@hive-command/editor-panes';
 import { StyledOption } from './type-selector/components';
 import { TypeSelector } from './type-selector';
+import { useModal } from '../../hooks/useModal';
 
 export interface PagePaneProps {
     pages?: any[];
@@ -48,9 +49,8 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
 
     const [ search, setSearch ] = useState<string | null>(null);
 
-    const [modalOpen, openModal] = useState(false);
-    const [selected, setSelected] = useState<any | null>(null)
-
+    const [ modalOpen, openModal, selected, setSelected ] = useModal();
+    
     const [activeId, setActiveId] = useState<any>(null);
 
     const { pages, templates, onReorderPage, selectedPage } = props; //useEditorContext();
@@ -106,8 +106,7 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
     }
 
     const onEdit = (page: any) => {
-        openModal(true);
-        setSelected(page);
+        openModal(true, page);
 
     }
 
@@ -227,6 +226,7 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                                     }
                                 }
                                 openModal(false);
+                                setSelected(null);
                             }}
                         />
         
