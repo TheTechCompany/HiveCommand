@@ -68,13 +68,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     const surfaceRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLDivElement>(null);
 
-
-
     const [ cursorPosition, setCursorPosition, editorActive, setEditorActive ] = useEditorPosition();
-
-    console.log(editorActive)
-
-    // const [cursorPosition, setCursorPosition] = useState<{ x: number, y: number } | null>(null)
 
     const realCursorPosition = useMemo(() => {
         let b = surfaceRef?.current?.getBoundingClientRect?.();
