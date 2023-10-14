@@ -172,6 +172,8 @@ export const SchematicEditor = () => {
         if(page.name){
             input.name = page.name;
         }
+
+        console.log("UPDATING", page);
         
         debouncedUpdate({
             variables:{
