@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/iot-cli",
-  "version": "1.4.15-alpha.275",
+  "version": "1.4.15-alpha.276",
   "description": "",
   "files": [
     "dist/"
@@ -19,7 +19,7 @@
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@hive-command/local-sidecar": "^1.4.15-alpha.275",
+    "@hive-command/local-sidecar": "^1.4.15-alpha.276",
     "axios": "^1.3.3",
     "loglevel": "^1.8.1"
   }

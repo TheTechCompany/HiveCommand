@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.276](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.275...v1.4.15-alpha.276) (2023-10-14)
+
+**Note:** Version bump only for package @hive-command/mqtt-auth-server
+
+
+
+
+
 ## [1.4.15-alpha.275](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.274...v1.4.15-alpha.275) (2023-10-14)
 
 **Note:** Version bump only for package @hive-command/mqtt-auth-server
