@@ -56,7 +56,11 @@ export const export_schematic = async (schematic: {
 
                     const browser = await puppeteer.launch({
                         ...puppeteerArgs,
-                        defaultViewport: null
+                        // defaultViewport: null
+                        defaultViewport: {
+                            width: 1120,
+                            height: 793
+                        }
                     });
     
                     console.log("Launched browser!");
@@ -67,7 +71,7 @@ export const export_schematic = async (schematic: {
 
                     console.log(viewport?.width, viewport?.height)
 
-                    browserPage.setViewport({ width: 1122, height: parseInt(`${1122 * (210/297)}`)  })
+                    // browserPage.setViewport({ width: 1122, height: parseInt(`${1122 * (210/297)}`)  })
 
                     // const iphone = KnownDevices['iPhone 11 Pro Max']
                     
