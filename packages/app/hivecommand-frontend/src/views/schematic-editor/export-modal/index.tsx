@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 export interface ExportModalProps {
     open: boolean;
     onClose?: () => void;
+    onDownload?: (version: string) => void;
 
     versions: { id: string, rank: number, createdAt: Date, createdBy: any }[]
 }
@@ -80,7 +81,7 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>
-                <Button color="primary" variant="contained">Download PDF</Button>
+                <Button onClick={() => props.onDownload?.(activeVersion)} color="primary" variant="contained">Download PDF</Button>
             </DialogActions>
         </Dialog>
     )

@@ -7,6 +7,7 @@ import { useRemoteComponents } from '@hive-command/remote-components'
 import { Box } from '@mui/material'
 import { useLocation } from 'react-router-dom'
 import useResizeAware from 'react-resize-aware';
+import { Margins } from './components/margin';
 
 function App() {
 
@@ -15,99 +16,108 @@ function App() {
   const location = useLocation();
 
   const query = useMemo(() => {
-    return qs.parse(location.hash?.replace('#', ''), {ignoreQueryPrefix: true})
+    return qs.parse(location.hash?.replace('#', ''), { ignoreQueryPrefix: true })
     // return qs.parse(location.search, {ignoreQueryPrefix: true})
   }, [location.hash])
 
-  const [ info, setInfo ] = useState<any>(null);
+  const [info, setInfo] = useState<any>(null);
 
-  const [ loading, setLoading ] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const [ pageReady, setPageReady ] = useState(false)
+  const [pageReady, setPageReady] = useState(false)
 
   const [items, setItems] = useState<any[]>([]);
 
   const { getPack } = useRemoteComponents()
-  
-  const { fitView, fitBounds } = useReactFlow()
+
+  // const { fitView, fitBounds } = useReactFlow()
   const store = useStoreApi();
 
 
-  const [ packReady, setPackReady ] = useState(false);
+  const [packReady, setPackReady] = useState(false);
 
-    useEffect(() => {
-        setPackReady(false);
+  useEffect(() => {
+    setPackReady(false);
 
-        getPack('github-01', 'https://raw.githubusercontent.com/TheTechCompany/hive-command-electrical-symbols/main/dist/components/', 'index.js').then((pack) => {
-            setItems((pack || []))
-  
-            setPackReady(true);
+    getPack('github-01', 'https://raw.githubusercontent.com/TheTechCompany/hive-command-electrical-symbols/main/dist/components/', 'index.js').then((pack) => {
+      setItems((pack || []))
 
-            console.log({ pack })
-        })
+      setPackReady(true);
 
-    }, [])
+      console.log({ pack })
+    })
+
+  }, [])
 
   useEffect(() => {
     setLoading(true);
     setPageReady(false);
 
-    try{
+    try {
       let ix = parseInt(query?.ix?.toString() || '-1')
-      if(ix > -1){
+      if (ix > -1) {
         fetch(
           `/schematic/pages/${query?.ix}`
         ).then((r) => r.json()).then((result) => {
           console.log("pages", result.page)
-          
+
 
           setInfo({
             project: result.project,
-            page: {...result.page, number: result.pageNumber}
+            page: { ...result.page, number: result.pageNumber }
           })
 
           setLoading(false);
 
         })
       }
-    }catch(e){
+    } catch (e) {
 
     }
-  
+
   }, [JSON.stringify(query)])
 
 
-  const nodesInitialized = useNodesInitialized({includeHiddenNodes: false});
+  const nodesInitialized = useNodesInitialized({ includeHiddenNodes: false });
 
 
   useEffect(() => {
-    (window as any).fitView = fitView;
-    if(nodesInitialized){
+    // (window as any).fitView = fitView;
+    if (nodesInitialized) {
       setTimeout(() => {
-        const fits = fitView?.({ minZoom: 0.1, padding: 0.2 });
-        if(fits)
-          setPageReady(true);
+        // const fits = fitView?.({ minZoom: 0.1, padding: 0.2 });
+        // if(fits)
+        setPageReady(true);
       }, 10)
     }
   }, [info?.page, nodesInitialized])
 
 
   return (
-    <Box sx={{height: '100%', width: '100%', display: 'flex'}}>
-        {resizeListener}
-        {/* <div>{width}x{height}</div> */}
-        {packReady && <div className='pre-loaded' style={{display: 'none'}} />}
-        {(nodesInitialized || info?.page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{display: 'none'}}/>}
+    <Box sx={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%', display: 'flex' }}>
+      {resizeListener}
+      {/* <div>{width}x{height}</div> */}
+      {packReady && <div className='pre-loaded' style={{ display: 'none' }} />}
+      {(nodesInitialized || info?.page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{ display: 'none' }} />}
 
+        
+        {/* <Margins direction={'column'} letters divisions={6} /> */}
+      <div style={{ display: 'flex', flex: 1, flexDirection: 'column' }}>
+        {/* <Margins direction={'row'} divisions={8} /> */}
         <SchematicViewer
-          ratio={297/210}
+          ratio={297 / 210}
           elements={items}
           nodes={info?.page?.nodes || []}
           edges={info?.page?.edges || []}
           info={{
             ...info
           }}
-            />
+        />
+        {/* <Margins direction={'row'} divisions={8} /> */}
+
+      </div>
+
+        {/* <Margins direction={'column'} letters divisions={6} /> */}
     </Box>
   )
 }

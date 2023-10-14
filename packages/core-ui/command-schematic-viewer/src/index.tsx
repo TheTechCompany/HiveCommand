@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo} from 'react';
 import { Box, Typography } from '@mui/material';
-import { useReactFlow, ReactFlow, ReactFlowProvider, Node, Edge, ConnectionMode } from 'reactflow';
+import { useReactFlow, ReactFlow, ReactFlowProvider, Node, Edge, ConnectionMode, useViewport } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { ViewportLogger } from './viewport';
 import { nodeTypes as _nodeTypes, edgeTypes as _edgeTypes, ElectricalNodesProvider } from '@hive-command/electrical-nodes'
@@ -21,7 +21,11 @@ export const SchematicViewer : React.FC<SchematicViewerProps> = (props) => {
 // width: 1080, height: 1080 * (props.ratio || 1.77),
 
 console.log(props.edges)
+
+    const { x, y, zoom } = useViewport()
     // const { fitView } = useReactFlow();
+
+    console.log({x, y, zoom})
 
     const ratio = 210/297;
     const width = 1080;
@@ -61,11 +65,28 @@ console.log(props.edges)
                 <Box sx={{flex: 1, display: 'flex'}}>
                         <ViewportLogger />
                         <ReactFlow 
-                            // fitView
+                            fitView
+                            
+                            fitViewOptions={{
+                                padding: 0
+                            }}
+
                             // maxZoom={0.5}
+                            maxZoom={1.1}
+                            minZoom={0.9}
+                            // defaultViewport={{x: 0, y: 0, zoom: 0.8}}
+                            // fitView
+                            // fitViewOptions={{
+                            //     padding: 0,
+                            //     // maxZoom: 1,
+                            //     // minZoom: 1
+                            // }}
+                            translateExtent={[[0, 0], [width, height]]}
+                            nodeExtent={[[0, 0], [width, height - 55]]}
+
                             proOptions={{ hideAttribution: true }}
-                            minZoom={0.1}
-                            maxZoom={1}
+                            // minZoom={0.1}
+                            // maxZoom={1}
                             connectionMode={ConnectionMode.Loose}
                             nodeTypes={nodeTypes}
                             edgeTypes={edgeTypes}
@@ -91,7 +112,7 @@ console.log(props.edges)
                                         // }
                                     } 
                                 },
-                                { id: 'canvas', type: 'canvasNode', position: { x: pageMiddle.x, y: pageMiddle.y }, data: {} }
+                                { id: 'canvas', type: 'canvasNode', position: { x: 500, y: 500 }, data: {} }
                             ].concat(props.nodes as any[] || [])}
                             edges={props.edges || []}
                             />

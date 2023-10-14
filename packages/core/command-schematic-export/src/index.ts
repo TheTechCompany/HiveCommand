@@ -63,7 +63,11 @@ export const export_schematic = async (schematic: {
 
                     const browserPage = await browser.newPage();
 
-                    // browserPage.setViewport({ width: 1920, height: ratio ? parseInt(`${1920 / ratio}`) : 1080 })
+                    const viewport = browserPage.viewport();
+
+                    console.log(viewport?.width, viewport?.height)
+
+                    browserPage.setViewport({ width: 1122, height: parseInt(`${1122 * (210/297)}`)  })
 
                     // const iphone = KnownDevices['iPhone 11 Pro Max']
                     
@@ -82,11 +86,12 @@ export const export_schematic = async (schematic: {
 
                         console.log("Loading pages", i)
 
-                        browserPage.goto(`http://localhost:${address?.port}#ix=${i}&width=1920&height=${ratio ? parseInt(`${1920 / ratio}`) : 1080}`)
+                        browserPage.goto(`http://localhost:${address?.port}#ix=${i}&width=${1080}&height=${(1080 * (210/297))?.toFixed(0)}`)
                         
                         // //@ts-ignore
                         // await browserPage.waitForSelector<any>('.loading');
-
+ 
+                        // await 
                         //@ts-ignore
                         await browserPage.waitForSelector<any>(".loaded")
 

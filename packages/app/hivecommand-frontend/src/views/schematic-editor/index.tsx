@@ -264,6 +264,26 @@ export const SchematicEditor = () => {
             <ExportModal
                 open={exportModalOpen}
                 versions={schematic?.versions || []}
+                onDownload={(version) => {
+                    setExporting(true);
+                    exportSchematic({variables: {id: schematic.id}}).then(async (response) => {
+
+                        console.log(response.data)
+
+                        const resp = await fetch(response.data?.exportCommandSchematic);
+
+                        const data = await resp.blob()
+                        saveAs(
+                            data,
+                            `${schematic?.name}.pdf`
+                        );
+    
+                        setExporting(false);
+                        
+                    }).catch((e) => {
+                        setExporting(false);
+                    })
+                }}
                 onClose={() => openExportModal(false)}
                 />
             <ElectricalEditor
