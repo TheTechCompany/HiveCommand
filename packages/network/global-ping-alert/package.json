@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/global-ping-alert",
-  "version": "1.4.15-alpha.274",
+  "version": "1.4.15-alpha.275",
   "publishConfig": {
     "access": "public"
   },
