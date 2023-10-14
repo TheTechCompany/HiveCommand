@@ -1,5 +1,5 @@
 import React, { MouseEventHandler, useState, useMemo, useEffect } from 'react';
-import { BaseEdge, EdgeProps, getBezierPath, useReactFlow } from 'reactflow';
+import { BaseEdge, EdgeProps, getBezierPath, useReactFlow,useStore, useStoreApi } from 'reactflow';
 import { useElectricalNodeContext } from '../context';
 
 
@@ -16,6 +16,51 @@ export const WireEdge = ({
     data
 }: EdgeProps) => {
 
+    const store = useStoreApi()
+
+    const onEdgesChange : any = useStore((s) => s.onEdgesChange)
+
+    const updateEdge = (id: string, ix: number, pos: any) => {
+        let edges = store.getState()?.edges || [];
+        let main = edges?.findIndex((a) => a.id == id);
+
+        let points = edges[main].data.points?.slice();
+
+        points[ix] = pos;
+
+        edges[main] = {
+            ...edges[main],
+            data: {
+                ...edges[main].data,
+                points
+            }
+        }
+
+        onEdgesChange([{id: id, type: 'points-changed', item: {ix, pos} }])
+    }
+
+    const createEdge = (id: string, ix: number, pos: any) => {
+        let edges = store.getState()?.edges || [];
+
+        let edgeIx = edges.findIndex((a) => a.id == id);
+
+        let points = [...(edges[edgeIx]?.data?.points || [])];
+
+        points?.splice(ix + 1, 0, {x: pos.x, y: pos.y} )
+
+        edges[edgeIx] = {
+            ...edges?.[edgeIx],
+            data: {
+                ...edges?.[edgeIx]?.data,
+                points
+            }
+        }
+
+
+        onEdgesChange([{id: id, type: 'points-create', item: {ix, pos} }])
+     
+    }
+
     const { project } = useReactFlow()
 
     const [ points, setPoints ] = useState<any[]>(data?.points || []);
@@ -25,6 +70,9 @@ export const WireEdge = ({
     const directPath = useMemo(() => `M ${points?.map((x: any, ix: any) => `${x.x} ${x.y} ${ix < points?.length - 1 ? 'L' : ''}`).join(' ')}`, [points]);
 
     const [draggingPoint, setDraggingPoint] = useState<number | null>(null)
+
+    const [startPoint, setStartPoint] = useState<{ x: number, y: number } | null>(null);
+
     const [deltaPoint, setDeltaPoint] = useState<{ x: number, y: number } | null>(null);
 
     useEffect(() => {
@@ -39,9 +87,28 @@ export const WireEdge = ({
                     key={`edge-${id}-point${ix}`}
                     onClick={(e) => {
                         if (e.metaKey || e.ctrlKey) {
+                            createEdge(id, ix, {x: e.clientX, y: e.clientY});
 
-                            onEdgePointCreated?.(id, ix, { x: e.clientX, y: e.clientY })
+                            // onEdgePointCreated?.(id, ix, { x: e.clientX, y: e.clientY })
                         }
+                    }}
+                    onPointerDown={(e) => {
+                        setDeltaPoint(project({x: e.clientX, y: e.clientY}))
+                    }}
+                    onPointerMove={(e) => {
+                        let nextPoint = project({x: e.clientX, y: e.clientY})
+                        let delta = {
+                            x: nextPoint.x - (deltaPoint?.x || 0),
+                            y: nextPoint.y - (deltaPoint?.y || 0)
+                        }
+                        
+                        onEdgesChange?.([{ id, type: 'position', position: delta }])
+
+                        setDeltaPoint(delta);
+                    }}
+                    onPointerUp={() => {
+                        setStartPoint(null)
+                        setDeltaPoint(null);
                     }}
                     className="react-flow__edge-path"
                     style={{
@@ -70,14 +137,17 @@ export const WireEdge = ({
                     key={`edge-${id}-circle${ix}`}
                     onPointerDown={(e) => {
 
-                        (e.currentTarget as any).setPointerCapture((e as any).pointerId)
+                        (e.target as any).setPointerCapture((e as any).pointerId)
+
+                        // console.log("CIRLCE CLICK", e);
 
                         setDraggingPoint(ix);
+                        setStartPoint(project({x: e.clientX, y: e.clientY}))
                         setDeltaPoint(project({ x: e.clientX, y: e.clientY }))
                     }}
                     onPointerMove={(e) => {
 
-                        console.log("MOVING", draggingPoint, points)
+                        // console.log("MOVING", draggingPoint, points)
                         let nextPoint = project({ x: e.clientX, y: e.clientY });
 
                         if(deltaPoint && draggingPoint != null){
@@ -135,11 +205,23 @@ export const WireEdge = ({
 
                         // let nextPoint = project({ x: e.clientX, y: e.clientY });
 
+                        console.log({
+                            xDelta: ((startPoint?.x || 0) - (deltaPoint?.x || 0)), 
+                            yDelta: ((startPoint?.y || 0) - (deltaPoint?.y || 0)), 
+                            startPoint,
+                            deltaPoint, 
+                            point: points[ix]
+                        })
                         
-                        onEdgePointChanged?.(id, ix, {
-                                    x: points[ix].x,  //- (deltaPoint?.x || 0),
-                                    y: points[ix].y // - (deltaPoint?.y || 0)
-                            })
+                        updateEdge(id, ix, {
+                            x: points[ix].x, // + ((deltaPoint?.x || 0) - (startPoint?.x || 0)),
+                            y: points[ix].y, // + ((deltaPoint?.y || 0) - (startPoint?.y || 0))
+                        })
+
+                        // onEdgePointChanged?.(id, ix, {
+                        //             x: points[ix].x,  //- (deltaPoint?.x || 0),
+                        //             y: points[ix].y // - (deltaPoint?.y || 0)
+                        //     })
 
                         setDraggingPoint(null)
                         setDeltaPoint(null);

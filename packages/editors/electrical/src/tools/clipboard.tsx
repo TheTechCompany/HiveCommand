@@ -1,18 +1,27 @@
-import { MouseEvent, forwardRef, useImperativeHandle } from "react";
-import { nodeTypes } from "@hive-command/electrical-nodes";
+import { MouseEvent, forwardRef, useEffect, useImperativeHandle, useMemo, useState } from "react";
+import { nodeTypes, edgeTypes } from "@hive-command/electrical-nodes";
 import { OverlayProps, ToolFactory, ToolFactoryProps, ToolInstance } from "./shared";
-import { useReactFlow, useViewport } from "reactflow";
+import { useReactFlow, useStoreApi, useViewport } from "reactflow";
 import { nanoid } from "nanoid";
+import { isEqual } from 'lodash';
 
-export const ClipboardTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
-    
-    const {surface, page, onUpdate} = props;
+export const ClipboardTool: ToolFactory<{}> = forwardRef<ToolInstance, ToolFactoryProps>((props, ref) => {
+
+    const { surface, page, onUpdate } = props;
 
     const { zoom } = useViewport();
 
     const { project } = useReactFlow();
 
-    const clipboard = surface?.state?.activeTool?.data || {};
+    const [clipboard, setClipboard] = useState<any>({})
+
+    const store = useStoreApi()
+
+    useEffect(() => {
+        if (!isEqual(clipboard, surface?.state?.activeTool?.data)) {
+            setClipboard(surface?.state?.activeTool?.data || {})
+        }
+    }, [surface?.state?.activeTool?.data])
 
     const onClick = (e: MouseEvent) => {
 
@@ -41,9 +50,9 @@ export const ClipboardTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFact
 
         edges = edges.concat(clipboard?.items?.edges?.map((item: any) => ({
             id: nanoid(),
-            type: 'wire', 
-            source: 'canvas', 
-            target: 'canvas', 
+            type: 'wire',
+            source: 'canvas',
+            target: 'canvas',
             data: {
                 points: item.data?.points?.map((point: any) => ({
                     x: position.x + (point.x - minX),
@@ -52,59 +61,117 @@ export const ClipboardTool : ToolFactory<{}> = forwardRef<ToolInstance, ToolFact
             }
         })))
 
-        if(clipboard.cut){
+        if (clipboard.cut) {
             nodes = nodes.filter((a: any) => clipboard.items?.nodes?.findIndex((b: any) => a.id == b.id) < 0)
             edges = edges.filter((a: any) => clipboard.items?.edges?.findIndex((b: any) => a.id == b.id) < 0)
         }
-   
+
         onUpdate?.({
             ...page,
             nodes,
             edges
         })
-
-
-
     }
 
     useImperativeHandle(ref, () => ({
         onClick,
     }));
 
-    const { nodes, edges } = clipboard?.items || {nodes: [], edges: []};
+    const { nodes: _nodes = [], edges = [] } = clipboard?.items || { nodes: [], edges: [] };
 
-    const minX = Math.min(...nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
-    const minY = Math.min(...nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y
-
-    const width = Math.max(...nodes.map((n: any) => n.position.x + n.width)) - minX;
-    const height = Math.max(...nodes.map((n: any) => n.position.y + n.height)) - minY;
-  
-
-    const renderedNodes = nodes?.map((x: any) => {
-           
-        return (<div style={{position: 'absolute', left: (x.position.x - minX), top: (x.position.y - minY) }}>
-            {(nodeTypes as any)[x.type]({ ...x, id: `tmp-${nanoid()}` })}
-            </div>
-        )
-        // switch(x.type){
-        //     case 'box':
-        //         return (<BoxNode)
-        // }
+    const nodes = store.getState().getNodes()?.filter((a) => {
+        return _nodes.findIndex((b: any) => b.id == a.id) > -1
     });
+
+    let xPositions = nodes.map((x: any) => x.position.x)?.concat(
+        edges?.filter?.((a: any) => {
+            return isFinite(Math.min(...a?.data?.points?.map((y: any) => y.x)))
+        })?.map((x: any) => {
+            let min = Math.min(...x?.data?.points?.map((y: any) => y.x))
+            return min;
+        })
+    )
+
+    let yPositions = nodes.map((x: any) => x.position.y)?.concat(
+        edges?.filter?.((a: any) => {
+            return isFinite(Math.min(...a?.data?.points?.map((y: any) => y.y)))
+        })?.map((x: any) => {
+            let min = Math.min(...x?.data?.points?.map((y: any) => y.y))
+            return min;
+        })
+    )
+
+    let xWidthPositions = nodes.map((x: any) => x.position.x + x.width)?.concat(
+        edges?.filter?.((a: any) => {
+            return isFinite(Math.max(...a?.data?.points?.map((y: any) => y.x)))
+        })?.map((x: any) => {
+            let min = Math.max(...x?.data?.points?.map((y: any) => y.x))
+            return min;
+        })
+    )
+
+    let yHeightPositions = nodes.map((x: any) => x.position.y + x.height)?.concat(
+        edges?.filter?.((a: any) => {
+            return isFinite(Math.max(...a?.data?.points?.map((y: any) => y.y)))
+        })?.map((x: any) => {
+            let min = Math.max(...x?.data?.points?.map((y: any) => y.y))
+            return min;
+        })
+    )
+
+
+    let minX = Math.min(...xPositions)
+    let minY = Math.min(...yPositions)
+
+    let maxX = Math.max(...xWidthPositions)
+    let maxY = Math.max(...yHeightPositions)
+
+    const width = (maxX - minX) * 1.5;
+    const height = (maxY - minY) * 1.5;
+
+    const renderedNodes = useMemo(() => {
+        return nodes?.map((x: any) => {
+
+            const NodeComponent = (nodeTypes as any)[x.type];
+            return (<div style={{ position: 'absolute', left: (x.position.x - minX), top: (x.position.y - minY) }}>
+                <NodeComponent {...x} id={`tmp-${nanoid()}`} />
+            </div>
+            )
+        })
+    }, [nodes, nodeTypes]);
+
+    const renderedEdges = useMemo(() => {
+        return edges?.map((x: any) => {
+            let points = x?.data?.points?.map((p: any) => {
+                return {
+                    x: p.x - minX,
+                    y: p.y - minY
+                }
+            });
+
+            const EdgeComponent = (edgeTypes as any)[x.type];
+
+            return <EdgeComponent {...x} data={{ ...x.data, points }} id={`tmp-${nanoid()}`} />
+        })
+    }, [edges, edgeTypes])
 
     return (
         <div style={{
-            position: 'absolute', 
-            width: Math.abs(width), 
-            height: Math.abs(height), 
-            transformBox: 'fill-box', 
-            transformOrigin: 'top left', 
-            transform: `scale(${zoom})`, 
-            left: (props.cursorPosition?.x  ||0 ),
-            top: (props.cursorPosition?.y  || 0)
+            position: 'absolute',
+            width: Math.abs(width),
+            height: Math.abs(height),
+            transformBox: 'fill-box',
+            transformOrigin: 'top left',
+            transform: `scale(${zoom})`,
+            pointerEvents: 'none',
+            left: (props.cursorPosition?.x || 0),
+            top: (props.cursorPosition?.y || 0)
         }}>
-            <div style={{position: 'relative'}}>
-            {renderedNodes}
+            <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+                {renderedNodes}
+                <svg style={{ width: '100%', height: '100%' }}>
+                    {renderedEdges}
+                </svg>
             </div>
         </div>
     )

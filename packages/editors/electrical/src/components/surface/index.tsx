@@ -40,7 +40,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     // useEffect(() => {
     //     const node = myRef.current;
     //     const listen = (): void => console.log("foo");
-    
+
     //     if (node) {
     //       node.addEventListener("mouseover", listen);
     //       return () => {
@@ -68,12 +68,12 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     const surfaceRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLDivElement>(null);
 
-    const [ cursorPosition, setCursorPosition, editorActive, setEditorActive ] = useEditorPosition();
+    const [cursorPosition, setCursorPosition, editorActive, setEditorActive] = useEditorPosition();
 
     const realCursorPosition = useMemo(() => {
         let b = surfaceRef?.current?.getBoundingClientRect?.();
 
-        return cursorPosition ?  {
+        return cursorPosition ? {
             x: (cursorPosition?.x || 0) - (b?.x || 0),
             y: (cursorPosition?.y || 0) - (b?.y || 0)
         } : null;
@@ -128,7 +128,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
 
     useEffect(() => {
         let listener = (ev: MouseEvent) => {
-            ev.stopPropagation();
+            // ev.stopPropagation();
 
             // cursorPosition.current = {x: ev.clientX, y: ev.clientY};
             setCursorPosition({ x: ev.clientX, y: ev.clientY })
@@ -209,6 +209,13 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
         })
     }, [JSON.stringify(props.page)])
 
+    const onEdgesChange = useCallback((edges: Edge[]) => {
+        props.onUpdate?.({
+            ...props.page,
+            edges
+        })
+    }, [JSON.stringify(props.page)])
+
     const canvas = useMemo(() => {
         const ratio = 210 / 297 //A4;
 
@@ -227,7 +234,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                 wrapper={surfaceRef.current}
                 selection={props.selection}
                 onSelect={props.onSelect}
-                nodes={[
+                defaultNodes={[
                     {
                         id: 'page',
                         type: 'page',
@@ -249,8 +256,9 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                         }
                     } as any,
                     { id: 'canvas', type: 'canvasNode', draggable: false, selectable: false, position: { x: 0, y: 0 }, data: {} }
-                ].concat(props?.page?.nodes || [])}
-                edges={props?.page?.edges}
+                ]}
+                nodes={props?.page?.nodes || []}
+                edges={props?.page?.edges || []}
                 onPageChanged={(newPage) => {
                     props.onUpdate?.({
                         ...page,
@@ -258,12 +266,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                     })
                 }}
                 onNodesChanged={onNodesChange}
-                onEdgesChanged={(edges) => {
-                    props.onUpdate?.({
-                        ...page,
-                        edges
-                    })
-                }}
+                onEdgesChanged={onEdgesChange}
                 onNodeDoubleClick={(node) => {
                     const { props }: any = ToolProps.find((a) => a.id == node.type) || {}
 
@@ -398,7 +401,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
                                 ...page
                             })
                         }}
-                        cursorPosition={realCursorPosition} 
+                        cursorPosition={realCursorPosition}
                         activeTool={props.activeTool}
                     />
                 </EditorProvider>
