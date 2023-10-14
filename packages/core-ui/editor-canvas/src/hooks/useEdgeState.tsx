@@ -35,6 +35,15 @@ export const useEdgeState = (initialEdges: Edge[], current: any, onChange?: (edg
 
     const onEdgesChanged = (changes: EdgeChanged[]) => {
 
+        let realChanges = (changes as any[])?.filter((a) => {
+            return a.type != 'select' && a.type != 'points-changed' && a.type != 'points-create' && a.type != 'remove'
+        });
+
+        let totalChanges = (changes as any[])?.filter((a) => {
+            return a.type != 'select' && a.type != 'remove'
+        });
+
+
         let bounds = current?.getBoundingClientRect?.();
 
         let selectionEvents : any[] = changes?.filter((a) => a.type == 'select');
@@ -142,11 +151,13 @@ export const useEdgeState = (initialEdges: Edge[], current: any, onChange?: (edg
 
         }
 
-        onEdgesChange?.((changes as any[])?.filter((a) => {
-            return a.type != 'select' && a.type != 'points-changed' && a.type != 'points-create'
-        }))
+        onEdgesChange?.(realChanges)
 
-        onChange?.(edges)
+        console.log("Changes", edges, changes)
+
+        if(totalChanges?.length > 0){
+            onChange?.(edges)
+        }
     }
 
     const addSelect = (edge: Edge) => {

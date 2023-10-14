@@ -14,6 +14,11 @@ export const useNodeState = (initialNodes: Node[], onChange?: (nodes: Node[]) =>
 
     const onNodesChanged = (changes: NodeChange[]) => {
 
+        let realChanges = changes?.filter((a) => a.type !== 'remove');
+        
+        if(realChanges?.length <= 0) return;
+
+        console.log(changes);
 
         // onNodesChange?.(changes)
         onChange?.(nodes)
