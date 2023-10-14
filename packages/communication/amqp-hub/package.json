@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/amqp-hub",
-  "version": "1.4.15-alpha.274",
+  "version": "1.4.15-alpha.275",
   "description": "",
   "main": "dist/index.js",
   "files": [
@@ -14,14 +14,14 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@hive-command/data": "^1.4.15-alpha.274",
+    "@hive-command/data": "^1.4.15-alpha.275",
     "@types/amqplib": "^0.10.1",
     "dotenv": "^16.0.3",
     "jest": "27.x",
     "typescript": "^4.3.5"
   },
   "dependencies": {
-    "@hive-command/amqp-client": "^1.4.15-alpha.274",
+    "@hive-command/amqp-client": "^1.4.15-alpha.275",
     "amqplib": "^0.10.3",
     "mqtt": "^4.3.7"
   },
