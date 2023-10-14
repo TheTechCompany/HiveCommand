@@ -74,6 +74,8 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
 
     const onDelete = () => {
    
+        console.log("Delete", selection);
+        
         const updatedPage = {
             ...activePage,
             nodes: activePage?.nodes?.filter((a) => {
