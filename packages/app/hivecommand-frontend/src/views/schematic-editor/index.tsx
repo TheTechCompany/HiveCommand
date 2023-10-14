@@ -268,8 +268,6 @@ export const SchematicEditor = () => {
                     setExporting(true);
                     exportSchematic({variables: {id: schematic.id}}).then(async (response) => {
 
-                        console.log(response.data)
-
                         const resp = await fetch(response.data?.exportCommandSchematic);
 
                         const data = await resp.blob()
