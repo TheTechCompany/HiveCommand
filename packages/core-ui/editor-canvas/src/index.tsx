@@ -1,4 +1,4 @@
-import React, {MouseEvent, useEffect, useState} from 'react';
+import React, {MouseEvent, useEffect, useMemo, useRef, useState} from 'react';
 import { Box } from '@mui/material';
 import { ReactFlow, MiniMap, Controls, Background, Node, Edge, NodeTypes, EdgeTypes, useOnSelectionChange, useNodesState, useEdgesState, CoordinateExtent, ConnectionMode, useViewport, useReactFlow, SelectionMode, useStore, Rect, Transform, getNodePositionWithOrigin, useStoreApi } from 'reactflow';
 import { isEqual } from 'lodash';
@@ -10,6 +10,10 @@ export interface EditorCanvasSelection {
 }
 
 export interface EditorCanvasProps {
+
+    defaultNodes?: Node[];
+    defaultEdges?: Edge[];
+
     nodes?: Node[],
     edges?: Edge[],
 
@@ -34,6 +38,8 @@ export interface EditorCanvasProps {
 
 export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
+    const containerRef = useRef<any>(null);
+
     const storeApi = useStoreApi();
     // const { selectActive, nodeOrigin, nodeInternals, selectRect } = useStore((state) => ({
     //     selectRect: state.userSelectionRect, 
@@ -44,13 +50,14 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     // console.log(selectActive, selectRect)
 
-    const [nodes, setNodes, selectedNodes, setSelectedNodes, onNodesChange] = useNodeState(props.nodes || [])
-    const [edges, setEdges, selectedEdges, setSelectedEdges, onEdgesChange] = useEdgeState(props.edges || [])
+    const [nodes, setNodes, selectedNodes, setSelectedNodes, onNodesChange] = useNodeState(props.nodes || [], props.onNodesChanged)
+    const [edges, setEdges, selectedEdges, setSelectedEdges, onEdgesChange] = useEdgeState(props.edges || [], containerRef?.current, props.onEdgesChanged)
 
     // const [ nodes, setNodes, onNodesChange ] = useNodesState(props.nodes || [])
     // const [ edges, setEdges, onEdgesChange ] = useEdgesState(props.edges || [])
 
     const [ lastDrag, setLastDrag ] = useState<{x: number, y: number}>()
+    const [ selectionLastDrag, setSelectionLastDrag ] = useState<{x: number, y: number}>()
 
     const [ selectionZone, setSelectionZone ] = useState<{start?: {x: number, y: number}} | null>(null);
 
@@ -152,16 +159,16 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
 
     const onSelectionDragStart = (e: MouseEvent) => {
         console.log("Start Drag")
-        setLastDrag(project({
+        setSelectionLastDrag(project({
             x: e.clientX,
             y: e.clientY
         }))
     }
 
-    const onSelectionDrag = (e: MouseEvent) => {
-        console.log("Drag")
+    const onSelectionDrag = (e: MouseEvent, nodes: Node[]) => {
+        console.log("Drag", nodes)
 
-        if(!lastDrag) return;
+        if(!selectionLastDrag) return;
 
         let currentPoint = project({
             x: e.clientX,
@@ -169,18 +176,18 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         })
 
         let delta = {
-            x: currentPoint.x - lastDrag?.x,
-            y: currentPoint.y - lastDrag?.y
+            x: currentPoint.x - selectionLastDrag?.x,
+            y: currentPoint.y - selectionLastDrag?.y
         }
 
         moveSelection(delta.x, delta.y)
 
-        setLastDrag(currentPoint)
+        setSelectionLastDrag(currentPoint)
     }
 
     const onSelectionDragStop = (e: MouseEvent) => {
         console.log("Stop drag")
-        setLastDrag(undefined)
+        setSelectionLastDrag(undefined)
     }
 
     useEffect(() => {
@@ -254,58 +261,34 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         }
     }
 
-    // useEffect(() => {
-    //     const listener = (e: KeyboardEvent) => {
-    //         const mod = e.shiftKey ? 2 : 1;
-    //         const amt = 1 * mod;
 
-    //         switch(e.key){
-    //             case 'ArrowLeft':
-    //                 moveSelection(amt * -1, amt * 0);
-    //                 break;
-    //             case 'ArrowRight':
-    //                 moveSelection(amt * 1, amt * 0)
-    //                 break;
-    //             case 'ArrowDown':
-    //                 moveSelection(amt * 0, amt * 1)
-    //                 break;
-    //             case 'ArrowUp':
-    //                 moveSelection(amt * 0, amt * -1)
-    //                 break;
-    //         }
-    //     }
-
-    //     document.addEventListener('keydown', listener)
-
-    //     return () => {
-    //         document.removeEventListener('keydown', listener)
-    //     }
-    // }, [])
 
     const onNodeClick = (e: MouseEvent, node: Node) => {
-        let multiple = e.ctrlKey || e.metaKey;
-        let exists = selectedNodes?.indexOf(node.id) > -1;
+        console.log("onNodeClick");
+        
+        // let multiple = e.ctrlKey || e.metaKey;
+        // let exists = selectedNodes?.indexOf(node.id) > -1;
 
-        let nodesSelection : string[] = [];
+        // let nodesSelection : string[] = [];
 
-        if(multiple){
-            if(exists){
-                nodesSelection = selectedNodes.filter((a) => a != node.id);
-            }else{
-                nodesSelection = [...selectedNodes, node.id]
-            }
-        }else{
-            if(exists){
-                nodesSelection = [];
-            }else{
-                nodesSelection = [node.id]
-            }
-        }
+        // if(multiple){
+        //     if(exists){
+        //         nodesSelection = selectedNodes.filter((a) => a != node.id);
+        //     }else{
+        //         nodesSelection = [...selectedNodes, node.id]
+        //     }
+        // }else{
+        //     if(exists){
+        //         nodesSelection = [];
+        //     }else{
+        //         nodesSelection = [node.id]
+        //     }
+        // }
 
-        setSelectedNodes(nodesSelection)
-        props.onSelect?.({...props.selection, nodes: nodesSelection})
+        // setSelectedNodes(nodesSelection)
+        // props.onSelect?.({...props.selection, nodes: nodesSelection})
 
-        console.log(props.selection)
+        // console.log(props.selection)
     }
 
     const onEdgeClick = (e: MouseEvent, edge: Edge) => {
@@ -323,8 +306,10 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
         }else{
             if(exists){
                 edgesSelection = [];
+                setSelectedNodes([])
             }else{
                 edgesSelection = [edge.id];
+                setSelectedNodes([])
             }
         }
 
@@ -335,12 +320,16 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
     const onPaneClick = () => {
         setSelectedEdges([]);
         setSelectedNodes([]);
-        
+
         props.onSelect?.({nodes: [], edges: []})
     }
 
+    const finalNodes = useMemo(() => nodes.concat(props.defaultNodes || []), [nodes, props.defaultNodes])
+    const finalEdges = useMemo(() => edges.concat(props.defaultEdges || []), [edges, props.defaultEdges])
+
     return (
         <Box
+            ref={containerRef}
             tabIndex={0}
             onKeyDown={(e) => {
                 const mod = e.shiftKey ? 5 : 1;
@@ -365,12 +354,11 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
             <ReactFlow
                 nodeTypes={props.nodeTypes}
                 edgeTypes={props.edgeTypes}
-                nodes={nodes.map((x) => ({...x, selectable: false})) || []}
-                edges={edges.map((x) => ({...x, selectable: false})) || []}
+                nodes={finalNodes.map((x) => ({...x, selectable: false})) || []}
+                edges={finalEdges.map((x) => ({...x, selectable: false})) || []}
                 onPaneClick={onPaneClick}
                 onNodesChange={(changes) => {
-                    // console.log("Node", changes)
-                    // onNodesChange(changes);
+                    onNodesChange(changes);
 
                     // if (!isEqual((props.nodes || []).map(nodeMap), (nodes || []).map(nodeMap))) {
                     //     props.onNodesChanged?.(nodes)
@@ -383,7 +371,7 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                     
                     // console.log("Edge", changes)
 
-                    // onEdgesChange(changes);
+                    onEdgesChange(changes);
                     // console.log("Edge", edges)
 
                     // if(!isEqual((props.edges || []), (edges || []))){
@@ -392,6 +380,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 }}
                 onEdgeClick={onEdgeClick}
                 onNodeClick={onNodeClick}
+                selectNodesOnDrag={true}
+                
                 // nodesDraggable={false}
                 // nodesConnectable={false}
                 // elementsSelectable={false}
@@ -404,6 +394,75 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 minZoom={0.8}
                 translateExtent={props.translateExtent}
                 nodeExtent={props.nodeExtent}
+                onEdgeUpdateStart={(ev, edge) => {
+                    console.log("EdGE UPDATe", ev, edge)
+                }}
+                onNodeDragStart={(ev, node, nodes) => {
+                    // console.log("Start", node, nodes)
+
+                    setLastDrag(project({
+                        x: ev.clientX,
+                        y: ev.clientY
+                    }));
+
+                    if(ev.ctrlKey || ev.metaKey){
+                        if(selectedNodes.indexOf(node.id) > -1){
+                            setSelectedNodes(selectedNodes?.filter((a) => a != node.id));
+                        }else{
+                            setSelectedNodes([...new Set([...selectedNodes, node.id])])
+                        }
+                    }else{
+                        if(selectedNodes.indexOf(node.id) < 0){
+                            setSelectedNodes([node.id])
+                        }
+                        setSelectedEdges([])
+                    }
+                }}
+                onNodeDrag={(ev, node, nodes) => {
+                    // console.log("node drag", ev, node, nodes);
+                    // if(ev.ctrlKey || ev.metaKey){
+                    //     setSelectedNodes([...selectedNodes, node.id])
+                    // }else{
+                    //     setSelectedNodes([node.id])
+                    // }
+
+                    let nextDrag =  project({
+                        x: ev.clientX,
+                        y: ev.clientY
+                    })
+
+                    const delta = {
+                        x: nextDrag.x - (lastDrag?.x || 0),
+                        y: nextDrag.y - (lastDrag?.y || 0)
+                    }
+
+                    moveSelection(delta.x, delta.y);
+
+                    // console.log("Delta", delta)
+                    // setNodes((n) => {
+                    //     let nodes = n.slice();
+
+                    //     moveSelection(delta.x, delta.y)
+
+                    //     // let ixList = selection?.map((node) => nodes?.findIndex((a) => a.id == node.id));
+
+                    //     // ixList.forEach((ix) => {
+
+                    //     // })
+                    //     // nodes[ix].position = {
+                    //     //     x: nodes[ix].position?.x + delta.x,
+                    //     //     y: nodes[ix].position?.y + delta.y
+                    //     // }
+                    //     return nodes;
+                    // })
+
+                    setLastDrag(nextDrag);
+                }}
+                onNodeDragStop={(ev, node) => {
+                    // console.log("End", node)
+
+                    setLastDrag(undefined);
+                }}
                 onSelectionDragStart={onSelectionDragStart}
                 onSelectionDrag={onSelectionDrag}
                 onSelectionDragStop={onSelectionDragStop}

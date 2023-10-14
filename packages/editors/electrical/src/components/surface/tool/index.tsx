@@ -42,7 +42,7 @@ export const EditorTool = forwardRef<any, EditorToolProps>((props, ref) => {
 
     //?.({container: surface, state: { activeTool: props.activeTool, clipboard: props.clipboard }}, props.page, props.onUpdate)
 
-    const Tool = surface && props.activeTool && (Tools as any)[props.activeTool?.type] || (() => <div />)
+    const Tool = surface && props.activeTool && (Tools as any)[props.activeTool?.type] || forwardRef(() => <div />)
 
     // useImperativeHandle(ref, () => {
     //     return activeTool ? {
@@ -58,7 +58,7 @@ export const EditorTool = forwardRef<any, EditorToolProps>((props, ref) => {
         page={props.page}
         onUpdate={props.onUpdate}
         cursorPosition={props.cursorPosition}
-        flowWrapper={{
+        surface={{
             container: surface,
             state: {
                 activeTool: props.activeTool,

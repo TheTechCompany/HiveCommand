@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import { NodeChange, Node } from 'reactflow';
+import { NodeChange,useNodesState, Node } from 'reactflow';
 
-export const useNodeState = (initialNodes: Node[]): [
+export const useNodeState = (initialNodes: Node[], onChange?: (nodes: Node[]) => void): [
     Node[], 
     React.Dispatch<React.SetStateAction<Node<any>[]>>,
     string[], 
@@ -10,9 +10,13 @@ export const useNodeState = (initialNodes: Node[]): [
 ] => {
 
     const [ selectedNodes, setSelectedNodes ] = useState<string[]>([])
-    const [ nodes, setNodes ] = useState<Node[]>(initialNodes || []);
+    const [ nodes, setNodes, onNodesChange ] = useNodesState<Node[]>(initialNodes || []);
 
     const onNodesChanged = (changes: NodeChange[]) => {
+
+
+        // onNodesChange?.(changes)
+        onChange?.(nodes)
 
     }
 
