@@ -13,7 +13,8 @@ export const PageNode = (props: NodeProps) => {
             borderRadius: 0,
             width: props.data?.width || 1080, 
             height: props.data?.height || 1080*ratio,
-            opacity: 0.4
+            opacity: 0.4,
+            // border: '1px solid black'
         }}>
             {/* <Handle type="target" id={"canvas-target"} position={Position.Left}  />
             <Handle type="source" id={"canvas-source"} position={Position.Left}  /> */}
