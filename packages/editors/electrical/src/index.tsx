@@ -73,11 +73,7 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
     const { editorActive, onEditorEnter, onEditorLeave } = useEditorFocus();
 
     const onDelete = () => {
-        console.log("Deleting ", selection, activePage?.edges?.filter((a) => {
-            return (selection.edges || []).indexOf(a.id) < 0;
-        }))
-        const sel = Object.assign({}, selection);
-        
+   
         const updatedPage = {
             ...activePage,
             nodes: activePage?.nodes?.filter((a) => {
@@ -87,7 +83,6 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
                 return (selection.edges || []).indexOf(a.id) < 0;
             })
         }
-        console.log({updatedPage});
 
         props.onUpdatePage?.(updatedPage)
 
@@ -160,7 +155,6 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
     }
 
     const onPaste = () => {
-        console.log("CLIPBOARD", clipboard)
         setActiveTool({ type: 'clipboard', data: clipboard })
         setSelection({})//TODO Change to the temp ids of anything in clipboard
     }
