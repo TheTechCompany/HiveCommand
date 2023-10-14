@@ -73,16 +73,20 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
     const { editorActive, onEditorEnter, onEditorLeave } = useEditorFocus();
 
     const onDelete = () => {
+
+        const nodes = activePage?.nodes?.slice()?.filter((a) => {
+            return (selection.nodes || []).indexOf(a.id) < 0;
+        });
+
+        const edges = activePage?.edges?.slice()?.filter((a) => {
+            return (selection.edges || []).indexOf(a.id) < 0;
+        });
    
         
         const updatedPage = {
             ...activePage,
-            nodes: activePage?.nodes?.filter((a) => {
-                return (selection.nodes || []).indexOf(a.id) < 0;
-            }),
-            edges: activePage?.edges?.filter((a) => {
-                return (selection.edges || []).indexOf(a.id) < 0;
-            })
+            nodes,
+            edges
         }
 
         console.log("Delete", selection, activePage, updatedPage);
