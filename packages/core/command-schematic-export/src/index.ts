@@ -97,7 +97,7 @@ export const export_schematic = async (schematic: {
 
                         const pdfData = await browserPage.pdf({format: 'A4', landscape: true});
 
-                        await new Promise((resolve) => setTimeout(() => resolve(true), 1 *1000))
+                        // await new Promise((resolve) => setTimeout(() => resolve(true), 1 *1000))
                         
                         pdfPages.push(pdfData);
                         
