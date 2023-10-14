@@ -74,7 +74,6 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
 
     const onDelete = () => {
    
-        console.log("Delete", selection);
         
         const updatedPage = {
             ...activePage,
@@ -85,6 +84,8 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
                 return (selection.edges || []).indexOf(a.id) < 0;
             })
         }
+
+        console.log("Delete", selection, activePage, updatedPage);
 
         props.onUpdatePage?.(updatedPage)
 
@@ -167,7 +168,7 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
         return () => {
             window.removeEventListener('keydown', onKeyDown)
         }
-    }, [editorActive, selection, activePage, clipboard])
+    }, [editorActive, selection, activePage, selectedPage, clipboard])
 
 
     return (
