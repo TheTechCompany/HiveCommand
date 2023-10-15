@@ -72,8 +72,10 @@ console.log(props.edges)
                             }}
 
                             // maxZoom={0.5}
-                            maxZoom={1.1}
-                            minZoom={0.9}
+                            
+                            maxZoom={1}
+                            minZoom={1}
+
                             // defaultViewport={{x: 0, y: 0, zoom: 0.8}}
                             // fitView
                             // fitViewOptions={{

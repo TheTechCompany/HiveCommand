@@ -90,7 +90,7 @@ export const export_schematic = async (schematic: {
 
                         console.log("Loading pages", i)
 
-                        browserPage.goto(`http://localhost:${address?.port}#ix=${i}&width=${1080}&height=${(1080 * (210/297))?.toFixed(0)}`)
+                        browserPage.goto(`http://localhost:${address?.port}#ix=${i}&width=${1120}&height=${(1120 * (210/297))?.toFixed(0)}`)
                         
                         // //@ts-ignore
                         // await browserPage.waitForSelector<any>('.loading');
