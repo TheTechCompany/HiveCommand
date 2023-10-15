@@ -308,6 +308,8 @@ export const EditorCanvas : React.FC<EditorCanvasProps> = (props) => {
                 edgeTypes={props.edgeTypes}
                 nodes={finalNodes.map((x) => ({...x, selectable: false})) || []}
                 edges={finalEdges.map((x) => ({...x, selectable: false})) || []}
+                snapGrid={[5, 5]}
+                snapToGrid
                 onPaneClick={onPaneClick}
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
