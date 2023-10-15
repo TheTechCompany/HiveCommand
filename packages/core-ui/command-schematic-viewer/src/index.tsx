@@ -28,8 +28,8 @@ console.log(props.edges)
     console.log({x, y, zoom})
 
     const ratio = 210/297;
-    const width = 1080;
-    const height = 1080 * ratio;
+    const width = 1120;
+    const height = 1120 * ratio;
 
     const nodeTypes = useMemo(() => _nodeTypes, []);
     const edgeTypes = useMemo(() => _edgeTypes, []);
