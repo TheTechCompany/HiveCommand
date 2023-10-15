@@ -27,7 +27,7 @@ export const PageModal : React.FC<PageModalProps> = (props) => {
 
     return (
         <Dialog fullWidth onClose={props.onClose} open={props.open}>
-            <DialogTitle>{props.selected ? "Update" : "Create"} {title}</DialogTitle>
+            <DialogTitle>{props.selected?.id ? "Update" : "Create"} {title}</DialogTitle>
             <DialogContent>
                 <Box sx={{padding: '6px'}}>
                     <TextField 
