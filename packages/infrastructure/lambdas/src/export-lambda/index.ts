@@ -78,7 +78,7 @@ export const ExportLambda = async () => {
     const fn = new Function(`hivecommand-export-schematic-fn`, {
         code: new pulumi.asset.FileArchive(zipPath),
         role: iamForLambda.arn,
-        timeout: 30,
+        timeout: 60,
         memorySize: 1024,
         handler: "index.handler",
         runtime: "nodejs18.x",

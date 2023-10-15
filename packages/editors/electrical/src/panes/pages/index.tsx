@@ -212,7 +212,7 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                                 setSelected(null);
                             }}
                             onSubmit={(page: any) => {
-                                if (selected) {
+                                if (selected?.id) {
                                     if(view == 'pages'){
                                         props.onUpdatePage?.({id: page?.id, name: page?.name});
                                     }else{
