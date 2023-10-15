@@ -30,8 +30,39 @@ export const ClipboardTool: ToolFactory<{}> = forwardRef<ToolInstance, ToolFacto
             y: (e.clientY || 0)
         })
 
-        const minX = Math.min(...clipboard?.items?.nodes.map((n: any) => n.position.x)) //+ wrapperBounds.x 
-        const minY = Math.min(...clipboard?.items?.nodes.map((n: any) => n.position.y)) //+ wrapperBounds.y=
+        const { nodes: _nodes = [], edges: clipboardEdges = [] } = clipboard?.items || { nodes: [], edges: [] };
+
+        const clipboardNodes = store.getState().getNodes()?.filter((a) => {
+            return _nodes.findIndex((b: any) => b.id == a.id) > -1
+        });
+    
+   
+        let xPositions = clipboardNodes.map((x: any) => x.position.x)?.concat(
+            clipboardEdges?.filter?.((a: any) => {
+                return isFinite(Math.min(...a?.data?.points?.map((y: any) => y.x)))
+            })?.map((x: any) => {
+                let min = Math.min(...x?.data?.points?.map((y: any) => y.x))
+                return min;
+            })
+        )
+    
+        let yPositions = clipboardNodes.map((x: any) => x.position.y)?.concat(
+            clipboardEdges?.filter?.((a: any) => {
+                return isFinite(Math.min(...a?.data?.points?.map((y: any) => y.y)))
+            })?.map((x: any) => {
+                let min = Math.min(...x?.data?.points?.map((y: any) => y.y))
+                return min;
+            })
+        )
+    
+    
+        let minX = Math.min(...xPositions)
+        let minY = Math.min(...yPositions)
+    
+        const width = (maxX - minX) * 1.5;
+        const height = (maxY - minY) * 1.5;
+
+        console.log(minX, minY);
 
         let nodes = (page?.nodes || []).slice();
         let edges = (page?.edges || []).slice();
