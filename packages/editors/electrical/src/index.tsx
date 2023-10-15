@@ -112,6 +112,12 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
         if(editorActive){
             if (e.ctrlKey || e.metaKey) {
                 switch (e.key) {
+                    case "a":
+                        setSelection({
+                            nodes: activePage?.nodes?.map((x) => x.id),
+                            edges: activePage?.edges?.map((x) => x.id)
+                        })
+                        break;
                     case "c":
                         // dispatch({type: 'onCopy'})
                         onCopy?.();
@@ -141,8 +147,6 @@ export const ElectricalEditor: React.FC<ElectricalEditorProps> = (props) => {
             setKeyRng((k) => (k + 1) % 10)
 
         }
-
-        
         
     }
 
