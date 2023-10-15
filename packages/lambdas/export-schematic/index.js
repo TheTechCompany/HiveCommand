@@ -29,8 +29,6 @@ exports.handler = async function (event, context) {
 
     console.log("Exported Schematic!")
 
-
-    
     const id = nanoid();
 
     const putCommand = new PutObjectCommand({

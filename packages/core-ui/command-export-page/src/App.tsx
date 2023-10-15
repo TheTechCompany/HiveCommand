@@ -96,7 +96,7 @@ function App() {
   return (
     <Box sx={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '100%', display: 'flex' }}>
       {resizeListener}
-      {/* <div>{width}x{height}</div> */}
+      {/* <div>{sizes?.width}x{sizes?.height}</div> */}
       {packReady && <div className='pre-loaded' style={{ display: 'none' }} />}
       {(nodesInitialized || info?.page?.nodes?.length == 0) && pageReady && !loading && packReady && items?.length > 0 && <div className='loaded' style={{ display: 'none' }} />}
 
