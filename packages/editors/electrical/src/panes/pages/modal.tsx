@@ -50,8 +50,8 @@ export const PageModal : React.FC<PageModalProps> = (props) => {
                     )}
                 </Box>
             </DialogContent>
-            <DialogActions sx={{display: 'flex', justifyContent: props.selected ? 'space-between': 'flex-end'}}>
-                {props.selected && <Button onClick={props.onDelete} color="error">Delete</Button>}
+            <DialogActions sx={{display: 'flex', justifyContent: props.selected?.id ? 'space-between': 'flex-end'}}>
+                {props.selected?.id && <Button onClick={props.onDelete} color="error">Delete</Button>}
                 <Box sx={{display: 'flex'}}>
                     <Button onClick={props.onClose}>Cancel</Button>
                     <Button onClick={() => props.onSubmit?.(page)} color="primary" variant="contained">{props.selected ? "Save" : "Create"}</Button>    

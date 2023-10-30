@@ -6,16 +6,18 @@ import { IconButton, Typography } from '@mui/material';
 import clsx from 'clsx';
 import { MoreVert, Add } from '@mui/icons-material';
 import { TreeViewContext } from './context'
+import { useMatch, useResolvedPath } from 'react-router-dom';
 
 export interface MenuItemProps extends TreeItemContentProps {
     decoration: any;
+    parentId: string;
 }  
 
-export const MenuItem : React.FC<MenuItemProps> = forwardRef<HTMLDivElement, MenuItemProps>((props, ref) => {
+export const MenuItem = forwardRef<HTMLDivElement, MenuItemProps>((props, ref) => {
     const {
         disabled,
         expanded,
-        selected,
+        // selected,
         focused,
         handleExpansion,
         handleSelection,
@@ -29,6 +31,7 @@ export const MenuItem : React.FC<MenuItemProps> = forwardRef<HTMLDivElement, Men
         className,
         label,
         nodeId,
+        parentId,
         icon: iconProp,
         expandIcon,
         collapseIcon,
@@ -37,10 +40,18 @@ export const MenuItem : React.FC<MenuItemProps> = forwardRef<HTMLDivElement, Men
         dontAdd,
         dontEdit
       } = props as any;
-      
+
+
+      const isRoot = parentId == null || parentId == undefined;
+
+      const path = useResolvedPath(
+        isRoot ? nodeId?.split('-root')?.[0] : parentId + '/' + nodeId
+      );
+
+      const selected = useMatch(path.pathname) != null;
+
 
       const icon = iconProp || expansionIcon || displayIcon;
-
 
       const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         preventSelection(event);
@@ -125,17 +136,24 @@ export interface MenuItemGroupProps {
 }
 
 export const CustomTreeItem = (props: any) => {
-    // console.log({props})
+    console.log("CTI", {props})
     return (<TreeItem
-                ContentProps={{style: {width: 'unset'}, decoration: props.decoration, dontAdd: props.dontAdd, dontEdit: props.dontEdit}}
+                ContentProps={{
+                    style: {width: 'unset'}, 
+                    decoration: props.decoration, 
+                    dontAdd: props.dontAdd, 
+                    dontEdit: props.dontEdit,
+                    parentId: props.parentId
+                }}
                 ContentComponent={MenuItem} 
                 {...props} />)
 }
 
 export const MenuItemGroup = (props) => {
+    console.log("MIG", props);
     return (
-        <CustomTreeItem nodeId={props.id} label={props.label}>
-            {props.items?.map((item) => <MenuItemGroup id={item.id} label={item.name} items={item.children} />)}
+        <CustomTreeItem parentId={props.parentId} nodeId={props.id} label={props.label}>
+            {props.items?.map((item) => <MenuItemGroup parentId={props.id} id={item.id} label={item.name} items={item.children} />)}
         </CustomTreeItem>
     )
 }

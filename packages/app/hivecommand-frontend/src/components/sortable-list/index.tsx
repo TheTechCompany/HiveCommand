@@ -49,7 +49,7 @@ export const SortableList : React.FC<SortableListProps> = (props) => {
             const oldIndex = props.items?.findIndex((a) => a.id == active.id);
             const newIndex = props.items?.findIndex((a) => a.id == over.id);
 
-            props?.onReorderItems?.(oldIndex, newIndex)
+            if(oldIndex != null && newIndex != null) props?.onReorderItems?.(oldIndex, newIndex)
 
         }
 

@@ -11,18 +11,18 @@ datasource db {
 }
 
 model Device {
-  id String @id
+  id   String @id
   name String
 
   online Boolean?
 
   network_name String @unique
 
-  provisionCode String? @unique
-  provisioned Boolean?
+  provisionCode String?  @unique
+  provisioned   Boolean?
 
   maintenanceWindows MaintenanceWindow[] @relation(name: "hasMaintenanceWindow")
-  
+
   dataLayout Json?
 
   deviceMapping DeviceMapping[] @relation(name: "hasDeviceMapping")
@@ -30,7 +30,7 @@ model Device {
   alarms Alarm[] @relation(name: "hasAlarmed")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
-  
+
   screens DeviceScreen[] @relation(name: "hasScreen")
   // values DeviceValue[] @relation(name: "hasSnapshots")
 
@@ -39,29 +39,28 @@ model Device {
   reports ReportPage[] @relation(name: "hasReportPages")
 
   createdAt DateTime @default(now())
-  
+
   lastSeen DateTime?
 
   organisation String
 }
 
 model DeviceMapping {
-  id String @id
+  id   String @id
   path String
 
-
-  deviceState IOTemplateState @relation(name: "mapsDeviceState", references: [id], fields: [deviceStateId])
+  deviceState   IOTemplateState @relation(name: "mapsDeviceState", references: [id], fields: [deviceStateId])
   deviceStateId String
 
-  owner Device @relation(name: "hasDeviceMapping", fields: [ownerId], references: [id])
+  owner   Device @relation(name: "hasDeviceMapping", fields: [ownerId], references: [id])
   ownerId String
 }
 
 model DeviceScreen {
-  id String @id
+  id   String @id
   name String
 
-  device Device @relation(name: "hasScreen", fields: [deviceId], references: [id])
+  device   Device @relation(name: "hasScreen", fields: [deviceId], references: [id])
   deviceId String
 
   createdAt DateTime @default(now())
@@ -75,13 +74,13 @@ model Alarm {
   id String @id
 
   message String
-  cause String
+  cause   String
 
   seen Boolean
 
   createdAt DateTime @default(now())
 
-  device Device @relation(name: "hasAlarmed", fields: [deviceId], references: [id])
+  device   Device @relation(name: "hasAlarmed", fields: [deviceId], references: [id])
   deviceId String
 }
 
@@ -89,11 +88,11 @@ model MaintenanceWindow {
   id String @id
 
   startTime DateTime
-  endTime DateTime
+  endTime   DateTime
 
   owner String
 
-  device Device @relation(name: "hasMaintenanceWindow", fields: [deviceId], references: [id])
+  device   Device @relation(name: "hasMaintenanceWindow", fields: [deviceId], references: [id])
   deviceId String
 }
 
@@ -108,34 +107,32 @@ model ReportPage {
 
   owner String
 
-  device Device @relation(name: "hasReportPages", fields: [deviceId], references: [id])
+  device   Device @relation(name: "hasReportPages", fields: [deviceId], references: [id])
   deviceId String
 }
-
 
 model DeviceValue {
   id Int @default(autoincrement())
 
   placeholder String
-  key String?
-  value String
+  key         String?
+  value       String
 
   lastUpdated DateTime @default(now())
 
   // device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
-  deviceId String 
+  deviceId String
 
   @@id([id, lastUpdated])
   @@unique([deviceId, placeholder, key, lastUpdated])
 }
 
-
 model DeviceValueChange {
   id Int @default(autoincrement())
 
   placeholder String
-  key String?
-  value String
+  key         String?
+  value       String
 
   userId String
 
@@ -145,7 +142,6 @@ model DeviceValueChange {
 
   @@id([id, lastUpdated])
   @@unique([deviceId, placeholder, key, userId, lastUpdated])
-  
 }
 
 model DeviceReport {
@@ -153,38 +149,37 @@ model DeviceReport {
 
   type String
 
-  x Float
-  y Float
-  width Float
+  x      Float
+  y      Float
+  width  Float
   height Float
 
   total Boolean
 
-  tag ProgramTag? @relation(name: "reportsOnTag", fields: [tagId], references: [id])
+  tag   ProgramTag? @relation(name: "reportsOnTag", fields: [tagId], references: [id])
   tagId String?
 
-  subkey ProgramTypeField? @relation(name: "reportsOnTagField", fields: [subkeyId], references: [id])
+  subkey   ProgramTypeField? @relation(name: "reportsOnTagField", fields: [subkeyId], references: [id])
   subkeyId String?
 
   unit String?
 
   timeBucket String?
 
-  page ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
+  page   ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
   pageId String
 }
 
-
 //TODO allow IOTemplate to be added by user/org
 model IOTemplate {
-  id String @id
+  id   String @id
   name String
 
   type String?
 
   tagPrefix String?
 
-  state IOTemplateState[] @relation(name: "hasState")
+  state   IOTemplateState[]  @relation(name: "hasState")
   actions IOTemplateAction[] @relation(name: "hasAction")
 
   // config IOTemplateConfig[] @relation(name: "hasIOConfig")
@@ -192,7 +187,6 @@ model IOTemplate {
   // programId String?
 
   createdAt DateTime @default(now())
-  
 }
 
 // model IOTemplateConfig {
@@ -205,36 +199,36 @@ model IOTemplate {
 // }
 
 model IOTemplateAction {
-  id String @id 
+  id  String @id
   key String
 
   func String?
 
-  device IOTemplate @relation(name: "hasAction", references: [id], fields: [deviceId], onDelete: Cascade)
+  device   IOTemplate @relation(name: "hasAction", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
 }
 
 model IOTemplateState {
-  id String @id 
-  
-  key String
+  id String @id
+
+  key  String
   type String
-            
+
   inputUnits String?
-  units String?
-  writable Boolean
+  units      String?
+  writable   Boolean
 
   min String?
   max String?
-  
+
   mappedBy DeviceMapping[] @relation(name: "mapsDeviceState")
 
-  device IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
+  device   IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
   deviceId String
 }
 
 model FunctionalDescription {
-  id String @id
+  id   String @id
   name String
 
   pages FunctionalDescriptionPage[] @relation(name: "hasFDPage")
@@ -245,7 +239,7 @@ model FunctionalDescription {
 }
 
 model FunctionalDescriptionPage {
-  id String @id
+  id   String @id
   name String
 
   rank String
@@ -253,12 +247,12 @@ model FunctionalDescriptionPage {
   nodes Json?
   edges Json?
 
-  parent FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
+  parent   FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
   parentId String?
-  
+
   children FunctionalDescriptionPage[] @relation(name: "hasFDParent")
 
-  functionalDescription FunctionalDescription @relation(name: "hasFDPage", references: [id], fields: [functionalDescriptionId])
+  functionalDescription   FunctionalDescription @relation(name: "hasFDPage", references: [id], fields: [functionalDescriptionId])
   functionalDescriptionId String
 }
 
@@ -277,7 +271,7 @@ model ElectricalSchematic {
 
   organisation String
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime  @default(now())
   lastUpdated DateTime?
 }
 
@@ -294,7 +288,7 @@ model ElectricalSchematicVersion {
 
   createdBy String
 
-  schematic ElectricalSchematic @relation(name: "hasSchematicVersion", references: [id], fields: [schematicId])
+  schematic   ElectricalSchematic @relation(name: "hasSchematicVersion", references: [id], fields: [schematicId])
   schematicId String
 }
 
@@ -303,7 +297,7 @@ model ElectricalSchematicPage {
 
   name String
 
-  template ElectricalSchematicPageTemplate? @relation(name: "usesPageTemplate", references: [id], fields: [templateId])
+  template   ElectricalSchematicPageTemplate? @relation(name: "usesPageTemplate", references: [id], fields: [templateId])
   templateId String?
 
   nodes Json?
@@ -311,12 +305,11 @@ model ElectricalSchematicPage {
 
   rank String?
 
-  schematic ElectricalSchematic @relation(name: "hasPages", fields: [schematicId], references: [id])
+  schematic   ElectricalSchematic @relation(name: "hasPages", fields: [schematicId], references: [id])
   schematicId String
 
   createdAt DateTime @default(now())
 }
-
 
 model ElectricalSchematicPageTemplate {
   id String @id
@@ -327,7 +320,7 @@ model ElectricalSchematicPageTemplate {
 
   pages ElectricalSchematicPage[] @relation(name: "usesPageTemplate")
 
-  schematic ElectricalSchematic @relation(name: "hasPageTemplates", fields: [schematicId], references: [id])
+  schematic   ElectricalSchematic @relation(name: "hasPageTemplates", fields: [schematicId], references: [id])
   schematicId String
 }
 
@@ -336,16 +329,16 @@ model Program {
 
   name String
 
-  dataScopes ProgramDataScope[] @relation(name: "hasDataScopes")
+  dataScopes    ProgramDataScope[]       @relation(name: "hasDataScopes")
   templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
   components ProgramComponent[] @relation(name: "hasProgramComponents")
-  
+
   interface ProgramHMI[] @relation(name: "hasInterface")
 
-  localHomepage ProgramHMI? @relation(name: "localHomepage", fields: [localHomepageId], references: [id])
-  localHomepageId String? 
-  remoteHomepage ProgramHMI? @relation(name: "remoteHomepage", fields: [remoteHomepageId], references: [id])
+  localHomepage    ProgramHMI? @relation(name: "localHomepage", fields: [localHomepageId], references: [id])
+  localHomepageId  String?
+  remoteHomepage   ProgramHMI? @relation(name: "remoteHomepage", fields: [remoteHomepageId], references: [id])
   remoteHomepageId String?
 
   templates CanvasDataTemplate[] @relation(name: "hasTemplates")
@@ -356,9 +349,9 @@ model Program {
 
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
+  alarmSeverity ProgramAlarmSeverity[] @relation(name: "hasAlarmSeverity")
 
   usedBy Device[] @relation(name: "useProgram")
-
 
   createdAt DateTime @default(now())
 
@@ -366,30 +359,30 @@ model Program {
 }
 
 model ProgramComponent {
-  id String @id
-  name String
+  id          String  @id
+  name        String
   description String?
 
   properties ProgramComponentProperty[] @relation(name: "hasProgramComponentProperty")
-  files ProgramComponentFile[] @relation(name: "hasProgramComponentFile")
+  files      ProgramComponentFile[]     @relation(name: "hasProgramComponentFile")
 
-  main ProgramComponentFile? @relation(name: "hasMainComponentFile", references: [id], fields: [mainId])
+  main   ProgramComponentFile? @relation(name: "hasMainComponentFile", references: [id], fields: [mainId])
   mainId String?
 
-  program Program @relation(name: "hasProgramComponents", references: [id], fields: [programId])
+  program   Program @relation(name: "hasProgramComponents", references: [id], fields: [programId])
   programId String
 }
 
 model ProgramComponentProperty {
-  id String @id
+  id  String @id
   key String
 
   scalar String?
 
-  type ProgramType? @relation(name: "hasProgramComponentPropertyType", fields: [typeId], references: [id])
+  type   ProgramType? @relation(name: "hasProgramComponentPropertyType", fields: [typeId], references: [id])
   typeId String?
 
-  component ProgramComponent @relation(name: "hasProgramComponentProperty", fields: [componentId], references: [id], onDelete: Cascade)
+  component   ProgramComponent @relation(name: "hasProgramComponentProperty", fields: [componentId], references: [id], onDelete: Cascade)
   componentId String
 
   @@unique([key, componentId])
@@ -398,10 +391,10 @@ model ProgramComponentProperty {
 model ProgramComponentFile {
   id String @id
 
-  path String
+  path    String
   content String?
 
-  component ProgramComponent @relation(name: "hasProgramComponentFile", fields: [componentId], references: [id], onDelete: Cascade)
+  component   ProgramComponent @relation(name: "hasProgramComponentFile", fields: [componentId], references: [id], onDelete: Cascade)
   componentId String
 
   mainFor ProgramComponent[] @relation(name: "hasMainComponentFile")
@@ -410,18 +403,18 @@ model ProgramComponentFile {
 }
 
 model ProgramDataScope {
-  id String @id
-  name String
+  id          String  @id
+  name        String
   description String?
 
-  plugin DataScopePlugin @relation(name: "usesDataScopePlugin", references: [id], fields: [pluginId])
+  plugin   DataScopePlugin @relation(name: "usesDataScopePlugin", references: [id], fields: [pluginId])
   pluginId String
 
   configuration Json?
 
   createdAt DateTime @default(now())
 
-  program Program @relation(name: "hasDataScopes", references: [id], fields: [programId])
+  program   Program @relation(name: "hasDataScopes", references: [id], fields: [programId])
   programId String
 
   usedByTag ProgramTag[] @relation(name: "tagScope")
@@ -429,111 +422,80 @@ model ProgramDataScope {
 
 model ProgramAlarm {
   id String @id
-  name String
 
-  description String?
+  title   String?
+  message String?
+
+  severity   ProgramAlarmSeverity? @relation(name: "usesSeverity", fields: [severityId], references: [id])
+  severityId String?
+
+  rank String?
 
   conditions Json?
 
-  nodes ProgramAlarmAction[] @relation(name: "useAlarmAction")
-  edges ProgramAlarmEdge[] @relation(name: "useAlarmEdge")
-
-  program Program @relation(name: "useAlarm", fields: [programId], references: [id])
+  program   Program @relation(name: "useAlarm", fields: [programId], references: [id])
   programId String
+
+  createdAt DateTime @default(now())
 }
 
-model ProgramAlarmEdge {
-  id String @id
-  
-  source ProgramAlarmAction @relation(name: "sourceAlarmAction", references: [id], fields: [sourceId])
-  sourceId String
-
-  target ProgramAlarmAction @relation(name: "targetAlarmAction", references: [id], fields: [targetId])
-  targetId String
-
-  conditions ProgramAlarmCondition[] @relation(name: "useCondition")
-
-  alarm ProgramAlarm @relation(name: "useAlarmEdge", references: [id], fields: [alarmId])
-  alarmId String
-}
-
-model ProgramAlarmCondition {
-  id String @id
-  name String?
-
-  input String
-
-  value String
-
-  edge ProgramAlarmEdge @relation(name: "useCondition", fields: [edgeId], references: [id])
-  edgeId String
-}
-
-model ProgramAlarmAction {
-  id String @id
-  name String?
-
-  type ProgramAlarmActionType @relation(name: "useAlarmActionType", fields: [typeId], references: [id])
-  typeId String
-
-  sourcedBy ProgramAlarmEdge[] @relation(name: "sourceAlarmAction")
-  targetedBy ProgramAlarmEdge[] @relation(name: "targetAlarmAction")
-
-  alarm ProgramAlarm @relation(name: "useAlarmAction", fields: [alarmId], references: [id])
-  alarmId String
-}
-
-model ProgramAlarmActionType {
+model ProgramAlarmSeverity {
   id String @id
 
-  name String
-  func String
+  title String
 
-  usedByAction ProgramAlarmAction[] @relation(name: "useAlarmActionType")
+  rank String?
+
+  nodes Json?
+  edges Json?
+
+  usedByAlarm  ProgramAlarm[] @relation(name: "usesSeverity")
+
+  proram    Program @relation(name: "hasAlarmSeverity", fields: [programId], references: [id])
+  programId String
 }
 
 model ProgramHMI {
   id String @id
 
-  name String? 
+  name String?
 
   nodes CanvasNode[] @relation(name: "useNode")
 
   edges CanvasEdge[] @relation(name: "useEdge")
 
-  program Program @relation(name: "hasInterface", fields: [programId], references: [id])
+  program   Program @relation(name: "hasInterface", fields: [programId], references: [id])
   programId String
 
-  localHomepage Program[] @relation(name: "localHomepage", map: "localHomepage")
+  localHomepage  Program[] @relation(name: "localHomepage", map: "localHomepage")
   remoteHomepage Program[] @relation(name: "remoteHomepage", map: "remoteHomepage")
 }
-
 
 model CanvasEdge {
   id String @id
 
-  from CanvasNode @relation(name: "fromNode", fields: [fromId], references: [id], onDelete: Cascade)
+  from   CanvasNode @relation(name: "fromNode", fields: [fromId], references: [id], onDelete: Cascade)
   fromId String
 
   fromHandle String?
-  fromPoint Json?
+  fromPoint  Json?
 
-  to CanvasNode @relation(name: "toNode", fields: [toId], references: [id], onDelete: Cascade)
+  to   CanvasNode @relation(name: "toNode", fields: [toId], references: [id], onDelete: Cascade)
   toId String
 
   toHandle String?
-  toPoint Json?
+  toPoint  Json?
 
   points Json?
 
-  hmi ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
+  hmi   ProgramHMI @relation(name: "useEdge", fields: [hmiId], references: [id])
   hmiId String
 }
 
 model DataScopePlugin {
   id String @id
 
-  name String
+  name   String
   module String
 
   configuration Json?
@@ -548,9 +510,9 @@ model CanvasNodeTemplatePack {
   type String?
 
   provider String?
-  url String?
-  
-  version String?
+  url      String?
+
+  version     String?
   description String?
 
   public Boolean?
@@ -574,13 +536,12 @@ model CanvasNodeTemplate {
 
   name String
 
-  width Float?
-	height Float?
+  width  Float?
+  height Float?
 
   ports Json?
-  
 
-  pack CanvasNodeTemplatePack? @relation(name: "inPack", fields: [packId], references: [id])
+  pack   CanvasNodeTemplatePack? @relation(name: "inPack", fields: [packId], references: [id])
   packId String?
 }
 
@@ -589,20 +550,20 @@ model CanvasNode {
 
   x Float
   y Float
-  
+
   scaleX Float?
   scaleY Float?
 
   rotation Float
 
-	width Float?
-	height Float?
+  width  Float?
+  height Float?
 
-	zIndex Float @default(1)
+  zIndex Float @default(1)
 
-	showTotalizer Boolean
+  showTotalizer Boolean
 
-	type String?
+  type String?
 
   dataTransformer CanvasDataTransformer? @relation(name: "transformsCanvasNodeData")
 
@@ -610,43 +571,42 @@ model CanvasNode {
 
   children CanvasNode[] @relation(name: "hasNode")
 
-  parent CanvasNode? @relation(name: "hasNode", fields: [parentId], references: [id])
+  parent   CanvasNode? @relation(name: "hasNode", fields: [parentId], references: [id])
   parentId String?
 
-  inputs CanvasEdge[] @relation(name: "fromNode")
+  inputs  CanvasEdge[] @relation(name: "fromNode")
   outputs CanvasEdge[] @relation(name: "toNode")
 
   ports CanvasPort[] @relation(name: "hasPort")
 
-  hmi ProgramHMI? @relation(name: "useNode", fields: [hmiId], references: [id])
+  hmi   ProgramHMI? @relation(name: "useNode", fields: [hmiId], references: [id])
   hmiId String?
 }
 
 model CanvasDataTransformer {
   id String @id
-  
-  node CanvasNode @relation(name: "transformsCanvasNodeData", fields: [nodeId], references: [id], onDelete: Cascade)
-  nodeId String @unique
 
-  template CanvasDataTemplate @relation(name: "transformsCanvasData", fields: [templateId], references: [id])
+  node   CanvasNode @relation(name: "transformsCanvasNodeData", fields: [nodeId], references: [id], onDelete: Cascade)
+  nodeId String     @unique
+
+  template   CanvasDataTemplate @relation(name: "transformsCanvasData", fields: [templateId], references: [id])
   templateId String
 
-  configuration CanvasDataTransformerConfiguration[]  @relation(name: "configuresTransformer")
-  
+  configuration CanvasDataTransformerConfiguration[] @relation(name: "configuresTransformer")
 }
 
 model CanvasDataTransformerConfiguration {
   id String @id
 
-  field CanvasDataTemplateIO @relation(name: "configuresTransformerIO", fields: [fieldId], references: [id])
+  field   CanvasDataTemplateIO @relation(name: "configuresTransformerIO", fields: [fieldId], references: [id])
   fieldId String
 
-  transformer CanvasDataTransformer @relation(name: "configuresTransformer", fields: [transformerId], references: [id], onDelete: Cascade)
+  transformer   CanvasDataTransformer @relation(name: "configuresTransformer", fields: [transformerId], references: [id], onDelete: Cascade)
   transformerId String
 
-  @@unique([fieldId, transformerId])
-
   value String?
+
+  @@unique([fieldId, transformerId])
 }
 
 model CanvasDataTemplate {
@@ -654,14 +614,14 @@ model CanvasDataTemplate {
 
   name String
 
-  inputs CanvasDataTemplateIO[] @relation(name: "inputForTransformer")
+  inputs  CanvasDataTemplateIO[] @relation(name: "inputForTransformer")
   outputs CanvasDataTemplateIO[] @relation(name: "outputForTransformer")
 
   edges CanvasDataTemplateEdge[] @relation(name: "transformsAlongEdge")
 
   transforms CanvasDataTransformer[] @relation(name: "transformsCanvasData")
 
-  program Program @relation(name: "hasTemplates", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTemplates", fields: [programId], references: [id])
   programId String
 }
 
@@ -672,14 +632,12 @@ model CanvasDataTemplateIO {
 
   type String
 
-
   sourcedBy CanvasDataTemplateEdge[] @relation(name: "fromDataIO")
-  
+
   //Use this as transformers
   targetedBy CanvasDataTemplateEdge[] @relation(name: "toDataIO")
 
-
-  inputFor CanvasDataTemplate[] @relation(name: "inputForTransformer")
+  inputFor  CanvasDataTemplate[] @relation(name: "inputForTransformer")
   outputFor CanvasDataTemplate[] @relation(name: "outputForTransformer")
 
   configuredBy CanvasDataTransformerConfiguration[] @relation(name: "configuresTransformerIO")
@@ -689,18 +647,16 @@ model CanvasDataTemplateEdge {
   id String @id
 
   //From->To relationship deals with 1:1 mapping
-  from CanvasDataTemplateIO? @relation(name: "fromDataIO", fields: [fromId], references: [id])
+  from   CanvasDataTemplateIO? @relation(name: "fromDataIO", fields: [fromId], references: [id])
   fromId String?
-
 
   //Script->To relationship deals with data aggregation
   script String?
 
-  to CanvasDataTemplateIO? @relation(name: "toDataIO", fields: [toId], references: [id])
+  to   CanvasDataTemplateIO? @relation(name: "toDataIO", fields: [toId], references: [id])
   toId String?
 
-
-  template CanvasDataTemplate @relation(name: "transformsAlongEdge", fields: [templateId], references: [id])
+  template   CanvasDataTemplate @relation(name: "transformsAlongEdge", fields: [templateId], references: [id])
   templateId String
 }
 
@@ -709,15 +665,14 @@ model ProgramTag {
 
   name String
 
-  scope ProgramDataScope? @relation(name: "tagScope", references: [id], fields: [scopeId])
+  scope   ProgramDataScope? @relation(name: "tagScope", references: [id], fields: [scopeId])
   scopeId String?
 
   type ProgramTagType? @relation(name: "tagType") //String | Valve | String[]
   // typeId String @unique
 
-  program Program @relation(name: "hasTags", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTags", fields: [programId], references: [id])
   programId String
-
 
   reports DeviceReport[] @relation(name: "reportsOnTag")
 
@@ -729,26 +684,25 @@ model ProgramTagType {
 
   scalar String?
 
-  type ProgramType? @relation(name: "tagUsesType", fields: [typeId], references: [id])
+  type   ProgramType? @relation(name: "tagUsesType", fields: [typeId], references: [id])
   typeId String?
 
-  tag ProgramTag @relation(name: "tagType", fields: [tagId], references: [id], onDelete: Cascade) //, onDelete: Cascade)
-  tagId String @unique
-
+  tag   ProgramTag @relation(name: "tagType", fields: [tagId], references: [id], onDelete: Cascade) //, onDelete: Cascade)
+  tagId String     @unique
 }
 
 model ProgramType {
   id String @id
 
   name String
-  
+
   fields ProgramTypeField[] @relation(name: "hasTypeField")
 
-  program Program @relation(name: "hasTypes", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTypes", fields: [programId], references: [id])
   programId String
 
-  usedByTagType ProgramTagType[] @relation(name: "tagUsesType")
-  usedByType ProgramTypeField[] @relation(name: "typeUsesType")
+  usedByTagType           ProgramTagType[]           @relation(name: "tagUsesType")
+  usedByType              ProgramTypeField[]         @relation(name: "typeUsesType")
   usedByComponentProperty ProgramComponentProperty[] @relation(name: "hasProgramComponentPropertyType")
 
   @@unique([name, programId])
@@ -760,12 +714,11 @@ model ProgramTypeField {
   name String
 
   scalar String?
-  
-  type ProgramType? @relation(name: "typeUsesType", fields: [typeId], references: [id])
+
+  type   ProgramType? @relation(name: "typeUsesType", fields: [typeId], references: [id])
   typeId String?
 
-
-  parent ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id], onDelete: Cascade)
+  parent   ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String
 
   reports DeviceReport[] @relation(name: "reportsOnTagField")
@@ -774,15 +727,15 @@ model ProgramTypeField {
 }
 
 model CanvasPort {
-		id String @id
-		key String
-		
-    x Float
-		y Float
+  id  String @id
+  key String
 
-		length Float
-		rotation Float
+  x Float
+  y Float
 
-    node CanvasNode @relation(name: "hasPort", fields: [nodeId], references: [id], onDelete: Cascade)
-    nodeId String
+  length   Float
+  rotation Float
+
+  node   CanvasNode @relation(name: "hasPort", fields: [nodeId], references: [id], onDelete: Cascade)
+  nodeId String
 }

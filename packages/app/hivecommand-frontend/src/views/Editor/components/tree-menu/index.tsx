@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { TreeView, TreeItem, TreeItemProps } from '@mui/lab'
 import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
@@ -6,6 +6,7 @@ import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
 import { HexHiveTheme } from '@hexhive/styles';
+import { useMatch, useResolvedPath } from 'react-router-dom';
 
 export interface TreeMenuItem {
     id: string;
@@ -20,7 +21,7 @@ export interface TreeMenuProps {
     onNodeSelect?: (nodeId: string) => void;
     onEdit?: (nodeId: string) => void;
     onAdd?: (nodeId?: string) => void;
-    selected?: string;
+    // selected?: string;
 
     items?: TreeMenuItem[]
 
@@ -29,13 +30,24 @@ export interface TreeMenuProps {
 
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
 
-    const renderItems = (items: any[]) => {
+    const [ expanded, setExpanded ] = useState<string[]>([]);
+
+    const topLevel = props.items?.filter((item) => {
+        return useMatch(useResolvedPath(item.id?.split('-root')?.[0] + '/*').pathname) != null
+    })
+
+    console.log({topLevel})
+
+    const renderItems = (items: any[], parentId?: string) => {
         return items.map((item) => (
-            <CustomTreeItem decoration={item.icon} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
-                {renderItems(item.children ||[])}
+            <CustomTreeItem decoration={item.icon} parentId={parentId} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>
+                {renderItems(item.children ||[], item.id?.split('-root')?.[0])}
             </CustomTreeItem>
         ))
     }
+
+    const expandedNodeIds = [...new Set(expanded.concat((topLevel || []).map((x) => x.id)))]
+
 
     return (
     <Box sx={{display: 'flex', overflowY: 'auto', flex: 1}}>
@@ -46,7 +58,11 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
                     console.log({nodeId})
                     props.onNodeSelect?.(nodeId);
                 }}
-                selected={props.selected}
+                expanded={expandedNodeIds}
+                onNodeToggle={(ev, nodeIds) => {
+                    setExpanded(nodeIds);
+                }}
+                selected={undefined}
                 sx={{ flex: 1, userSelect: 'none', maxWidth: `100%` }}
                 defaultCollapseIcon={<ExpandMore />}
                 defaultExpandIcon={<ChevronRight />}

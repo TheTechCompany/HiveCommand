@@ -10,7 +10,7 @@
     "rootDir": "src/"
   },
   "include": ["src/**/*", "node_modules/@types"],
-  "exclude": ["src/**/*.test*"],
+  "exclude": ["src/**/*.test*", "../**/*"],
   "references": [
     {"path": "../../editors/electrical"},
     {"path": "../hivecommand-api"},

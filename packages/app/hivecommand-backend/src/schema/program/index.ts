@@ -48,23 +48,10 @@ export default (prisma: PrismaClient) => {
 						localHomepage: true,
 						alarms: {
 							include: {
-								edges: {
-									include: {
-										conditions: true
-									}
-								},
-								nodes: {
-									include: {
-										type: true,
-										targetedBy: {
-											include: {
-												source: true
-											}
-										}
-									}
-								}
+								severity: true
 							}
 						},
+						alarmSeverity: true,
 						components: {
 							include: {
 								main: true,
@@ -307,6 +294,7 @@ export default (prisma: PrismaClient) => {
 		remoteHomepage: CommandProgramHMI
 
 		alarms: [CommandProgramAlarm] 
+		alarmSeverity: [CommandProgramAlarmSeverity]
 
 		tags: [CommandProgramTag]
 		types: [CommandProgramType]
