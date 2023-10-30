@@ -45,11 +45,11 @@ export const TagEditor = (props: any) => {
 
     // const av101 = Object.entries(AV101['name'])
 
-    const { program: {dataScopes}, refetch } = useCommandEditor()
+    const { program: {dataScopes} = {}, refetch } = useCommandEditor()
 
     const dataTypes = useMemo(() => {
         let entries = Object.entries(DataTypes);
-        let types = [];
+        let types : any[] = [];
         for(const [propertyKey, propertyValue] of entries){
             types.push({name: propertyKey, id: propertyKey})
             types.push({name: `${propertyKey}[]`, id: `${propertyKey}[]`})
@@ -128,7 +128,7 @@ export const TagEditor = (props: any) => {
                             }
                         }).then(() => {
                             openImportModal(false);
-                            refetch()
+                            refetch?.()
                         })
                     })
                 }}
@@ -227,9 +227,9 @@ export const TagEditor = (props: any) => {
                                         size="small"
                                         onChange={(evt, value) => {
                                             console.log(value)
-                                            updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value.id})
+                                            updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value?.id})
                                         }}
-                                        value={dataScopes.find((a) => a.id === tag.scope?.id)}
+                                        value={dataScopes?.find((a) => a.id === tag.scope?.id)}
                                         renderInput={(params) => <TextField {...params} variant='standard' />}
                                         options={dataScopes || []}
                                         getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
@@ -259,7 +259,7 @@ export const TagEditor = (props: any) => {
                                                         id: tag.id
                                                     }
                                                 }).then(() => {
-                                                    refetch()
+                                                    refetch?.()
                                                 });
                                             }}
                                             size="small" color="error" >
@@ -279,7 +279,7 @@ export const TagEditor = (props: any) => {
                                 program: program,
                                 input: {name: ''}
                             }
-                        }).then(() => refetch())
+                        }).then(() => refetch?.())
                     }}
                     fullWidth>Add tag</Button>
             </Box>

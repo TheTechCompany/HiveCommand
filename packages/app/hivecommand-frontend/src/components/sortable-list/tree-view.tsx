@@ -68,7 +68,7 @@ export const TreeViewSortableList: React.FC<SortableListProps> = (props) => {
 
     const [offsetLeft, setOffsetLeft] = useState(0)
 
-    const [activeId, setActiveId] = useState(null);
+    const [activeId, setActiveId] = useState<{id: string} | null>(null);
 
 
     const flattenedTree = useMemo(() => reduceItems(props.items || [], 0), [props.items])
@@ -280,7 +280,7 @@ const SortableTreeItem = React.forwardRef(function CustomContent(
     // } = props;
 
 
-    const { offsetLeft, expanded, toggleExpanded, addItem, defaultCollapseIcon, defaultExpandIcon } = useContext(TreeViewContext)
+    const { offsetLeft, expanded = [], toggleExpanded, addItem, defaultCollapseIcon, defaultExpandIcon } = useContext(TreeViewContext)
 
     const { transform, transition, setNodeRef, listeners, attributes, isOver, isDragging } = useSortable({ id: props?.nodeId, animateLayoutChanges: ({ wasDragging, isDragging }) => wasDragging || isDragging ? false : true });
 
@@ -321,7 +321,7 @@ const SortableTreeItem = React.forwardRef(function CustomContent(
 
     const handleExpansionClick = (
     ) => {
-        toggleExpanded(props.nodeId)
+        toggleExpanded?.(props.nodeId)
         // handleExpansion(event);
     };
 
@@ -387,13 +387,13 @@ const SortableTreeItem = React.forwardRef(function CustomContent(
                             </Typography>
                         </ListItemButton>
 
-                        <IconButton onClick={() => addItem(props.nodeId)} className='add-icon' size='small'>
+                        <IconButton onClick={() => addItem?.(props.nodeId)} className='add-icon' size='small'>
                             <Add fontSize='inherit' />
                         </IconButton>
                     </Paper>
                 </Box>
 
-                <div style={{ transform: `translateX(${Math.floor(offsetLeft / indentationWidth) * indentationWidth}px)` }} className="indicator" />
+                <div style={{ transform: `translateX(${Math.floor((offsetLeft || 0) / indentationWidth) * indentationWidth}px)` }} className="indicator" />
 
             </Box>
             <Collapse sx={{

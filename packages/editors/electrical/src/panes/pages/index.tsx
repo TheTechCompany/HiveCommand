@@ -231,7 +231,7 @@ export const PagesPane : React.FC<PagePaneProps> = (props) => {
                         />
         
                         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
-                            <List>
+                            <List style={{height: 0}}>
                                 {items}
                             </List>
                         </Box>

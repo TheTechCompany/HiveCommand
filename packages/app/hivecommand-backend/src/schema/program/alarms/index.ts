@@ -1,6 +1,7 @@
 import { PrismaClient, ProgramTag, ProgramTagType } from "@hive-command/data";
 import { nanoid } from "nanoid";
 import { isStringType } from "../types/util";
+import { LexoRank } from "lexorank";
 
 export default (prisma: PrismaClient) => {
 
@@ -12,15 +13,18 @@ export default (prisma: PrismaClient) => {
             updateCommandProgramAlarm(program: ID, id: ID!, input: CommandProgramAlarmInput): CommandProgramAlarm
             deleteCommandProgramAlarm(program: ID, id: ID!): CommandProgramAlarm
 
-            createCommandProgramAlarmAction(program: ID, alarm: ID, input: CommandProgramAlarmActionInput): CommandProgramAlarmAction
-            updateCommandProgramAlarmAction(program: ID, alarm: ID, id: ID!, input: CommandProgramAlarmActionInput): CommandProgramAlarmAction
-            deleteCommandProgramAlarmAction(program: ID, alarm: ID, id: ID!): CommandProgramAlarmAction
+            createCommandProgramAlarmSeverity(program: ID, input: CommandProgramAlarmSeverityInput): CommandProgramAlarmSeverity
+            updateCommandProgramAlarmSeverity(program: ID, id: ID!, input: CommandProgramAlarmSeverityInput): CommandProgramAlarmSeverity
+            updateCommandProgramAlarmSeverityOrder(program: ID, id: ID!, above: ID, below: ID): CommandProgramAlarmSeverity
+            deleteCommandProgramAlarmSeverity(program: ID, id: ID!): CommandProgramAlarmSeverity
         }
 
         input CommandProgramAlarmInput {
-            name: String
+            title: String
 
-            description: String
+            message: String
+
+            severityId: String
 
             conditions: JSON
         }
@@ -28,52 +32,36 @@ export default (prisma: PrismaClient) => {
         type CommandProgramAlarm {
             id: ID
 
-            name: String
-            description: String
+            title: String
+            message: String
+
+            severity: CommandProgramAlarmSeverity
+
+            rank: String
 
             conditions: JSON
 
-            edges: [CommandProgramAlarmEdge]
-            nodes: [CommandProgramAlarmAction]
+            createdAt: DateTime
+
         }
 
-        type CommandProgramAlarmType {
+        input CommandProgramAlarmSeverityInput {
+            title: String
+            nodes: JSON
+            edges: JSON
+        }
+
+        type CommandProgramAlarmSeverity {
             id: ID
-            name: String
+            title: String
+            rank: String
+
+            nodes: JSON
+            edges: JSON
+
+            usedByAlarm: [CommandProgramAlarm]
         }
 
-
-        type CommandProgramAlarmAction {
-            id: ID
-            name: String
-
-            type: CommandProgramAlarmType
-
-            sourcedBy: [CommandProgramAlarmEdge]
-            targetedBy: [CommandProgramAlarmEdge]
-        }
-
-        type CommandProgramAlarmEdge {
-            id: ID
-
-            source: CommandProgramAlarmAction
-            target: CommandProgramAlarmAction
-            
-        }
-
-        input CommandProgramAlarmActionInput {
-            type: String
-
-            targetedBy: String
-        }
-
-        type CommandProgramAlarmAction {
-            id: ID
-
-            type: CommandProgramAlarmType
-
-        }
-       
 
     `
 
@@ -91,14 +79,18 @@ export default (prisma: PrismaClient) => {
 
                 if (!program) throw new Error("Program access not allowed");
                
+                const last = await prisma.programAlarm?.findFirst({where: {programId: args.program}, orderBy: {rank: 'desc'}})
                 
+                const rank = LexoRank.parse(last?.rank || LexoRank.min().toString()).between(LexoRank.max()).toString()
+
                 return await prisma.programAlarm.create({
 
                     data: {
                         id: nanoid(),
-                        name: args.input.name,
-                        description: args.input.description,
+                        title: args.input.title,
+                        message: args.input.message,
                         conditions: args.input.conditions,
+                        rank,
                         program: { 
                             connect: { 
                                 id: args.program 
@@ -122,8 +114,8 @@ export default (prisma: PrismaClient) => {
                         id: args.id
                     },
                     data: {
-                        name: args.input.name,
-                        description: args.input.description,
+                        title: args.input.title,
+                        message: args.input.message,
                         conditions: args.input.conditions
                     }
                 })
@@ -131,7 +123,7 @@ export default (prisma: PrismaClient) => {
             deleteCommandProgramAlarm: async (root: any, args: { program: string, id: string }, context: any) => {
                 const program = await prisma.program.findFirst({
                     where: {
-                        id: args.id,
+                        id: args.program,
                         organisation: context?.jwt?.organisation
                     }
                 })
@@ -142,7 +134,7 @@ export default (prisma: PrismaClient) => {
                     where: { id: args.id }
                 })
             },
-            createCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
+            createCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
                 let parentUpdate = {};
                 if(args.input.targetedBy){
                     parentUpdate['targetedBy'] = {
@@ -162,58 +154,87 @@ export default (prisma: PrismaClient) => {
                     }
                 }
 
-                await prisma.programAlarm.update({
+                const currentSeverity = await prisma.programAlarmSeverity.findFirst({where: {programId: args.program}, orderBy: {rank: 'desc'}})
+
+                let above = LexoRank.parse(currentSeverity?.rank || LexoRank.min().toString())
+                let below = LexoRank.parse(LexoRank.max().toString())
+
+                let rank = above.between(below).toString()
+
+                await prisma.program.update({
                     where: {
-                        id: args.alarm,
+                        id: args.program,
                     },
                     data: {
-                        nodes: {
-                            create: {
-                                id: nanoid(),
-                                name: '',
-                                type: {
-                                    connect: {
-                                        id: args.input.type
-                                    }
-                                },
-                                ...parentUpdate
-                            }
+                        alarmSeverity: {
+                            create: [
+                                {
+                                    id: nanoid(),
+                                    title: args.input.title,
+                                    rank,
+                                    nodes: [],
+                                    edges: []
+                                }
+                            ]
                         }
                     }
                 })
             },
-            updateCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
-                await prisma.programAlarm.update({
+            updateCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
+                await prisma.program.update({
                     where: {
-                        id: args.alarm
+                        id: args.program
                     },
                     data: {
-                        nodes: {
+                        alarmSeverity: {
                             update: {
-                                where: {
-                                    id: args.id,
-                                },
+                                where: {id: args.id},
                                 data: {
-                                    type: {
-                                        connect: {
-                                            id: args.input.type
-                                        }
-                                    }
+                                    title: args.input.title,
+                                    
                                 }
                             }
                         }
                     }
                 })
             },
-            deleteCommandProgramAlarmAction: async (root: any, args: any, context: any) => {
-                await prisma.programAlarm.update({
+            deleteCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
+                await prisma.program.update({
                     where: {
-                        id: args.alarm
+                        id: args.program
                     },
                     data: {
-                        nodes: {
-                            delete: {
-                                id: args.id
+                        alarmSeverity: {delete: {id: args.id}}
+                    }
+                })
+            },
+            updateCommandProgramAlarmSeverityOrder: async (root: any, args: any, context: any) => {
+                let above = await prisma.programAlarmSeverity.findFirst({
+                    where: {
+                        programId: args.program, 
+                        id: args.above
+                    }
+                })
+                let below = await prisma.programAlarmSeverity.findFirst({
+                    where: {
+                        programId: args.program, 
+                        id: args.below
+                    }
+                })
+
+                let rank = LexoRank.parse(above?.rank || LexoRank.min().toString()).between(LexoRank.parse(below?.rank || LexoRank.max().toString()))?.toString()
+                
+                await prisma.program.update({
+                    where: {
+                        id: args.program
+                    },
+                    data: {
+                        alarmSeverity: {
+                            update: {
+                                where: {id: args.id},
+                                data: {
+                                    rank
+                                }
                             }
                         }
                     }

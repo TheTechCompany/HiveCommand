@@ -24,6 +24,9 @@ import { TypeEditor } from './pages/types';
 import { useCreateProgramType, useDeleteProgramType, useUpdateProgramType, useCreateProgramComponent, useUpdateProgramComponent, useDeleteProgramComponent } from './api';
 import { AlarmEditor } from './pages/alarms';
 import { ComponentList, Components } from './pages/components';
+import { AlarmList } from './pages/alarms/list';
+import { AlarmSubitems } from './pages/alarms/subitems';
+import { AlarmRoot } from './pages/alarms/root';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
@@ -31,20 +34,22 @@ export interface EditorProps {
 
 export const EditorPage: React.FC<EditorProps> = (props) => {
     const { id } = useParams()
+
     const navigate = useNavigate()
     const location = useLocation()
 
+    const pathname = useResolvedPath(':root/:id').pathname;
 
-    const match = useMatch(`*/:path`)
+    const {root, id: selectedId} = useMatch(pathname)?.params || {}
 
     const [ menuOpen, setMenuOpen ] = useState<any>();
     const [ editItem, setEditItem ] = useState<any>();
 
-    const [ selected, setSelected ] = useState<{
-        id: string,
-        parent?: string,
-        type: 'root' | 'editor'
-    } | null>()
+    // const [ selected, setSelected ] = useState<{
+    //     id: string,
+    //     parent?: string,
+    //     type: 'root' | 'editor'
+    // } | null>()
 
     const client = useApolloClient()
 
@@ -94,25 +99,25 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
                 alarms {
                     id
-                    name
-
-                    nodes {
-                        id
-                        type {
-                            id
-                            name
-                        }
-
-                        targetedBy {
-                            source {
-                                id
-                            }
-                        }
-
+                    title
+                    message
                     
+                    rank
+
+                    severity {
+                        id
                     }
+                
 
                     conditions
+                }
+
+                alarmSeverity { 
+                    id
+                    title
+
+                    rank
+
                 }
 
                 types {
@@ -200,6 +205,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         }
     })
 
+    if(!id) return null;
 
     const createProgramAlarm = useCreateProgramAlarm(id)
     const createProgramHMI = useCreateProgramHMI(id)
@@ -314,7 +320,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     ]
 
 
-    const treeMenu = [
+    const treeMenu : any[] = [
         {
             id: 'system-root',
             name: 'System',
@@ -332,13 +338,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             name: 'Types',
             // element: <TypeEditor />,
             children: program.types || [], //[{id: 'valve', name: 'Valve'}],
-            editor: <TypeEditor active={selected?.id} types={program.types || []} />
+            editor: <TypeEditor active={selectedId} types={program.types || []} />
         },
         {
             id: 'templates-root',
             name: 'Templates',
             children: program?.templates?.slice(),
-            editor: <TemplateEditor active={selected?.id} />
+            editor: <TemplateEditor active={selectedId} />
         },
         // {
         //     id: 'program-root',
@@ -366,7 +372,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'components-root',
             name: 'Components',
-            editor: <Components activeProgram={id} component={selected?.id} />,
+            editor: <Components activeProgram={id} component={selectedId} />,
             element: <ComponentList />,
             children: program?.components?.map((x) => ({
                 id: x.id,
@@ -386,7 +392,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 })),
             })),
             element: <div>HMI</div>,
-            editor: <Controls activeProgram={selected?.id} />
+            editor: <Controls activeProgram={selectedId} />
         },
         // {
         //     id: 'devices-root',
@@ -407,24 +413,30 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'alarms-root',
             name: 'Alarms',
-            children: program?.alarms?.slice(),
-            editor: <AlarmEditor active={selected?.id} />
-            // element: <Alarms />
+            children: [
+                {
+                    id: 'levels',
+                    name: 'Levels'
+                }
+            ],
+            //program?.alarms?.slice(),
+            editor: <AlarmSubitems severities={program?.alarmSeverity || []} program={program.id} />, // <AlarmEditor active={selected?.id} />
+            element: <AlarmRoot severities={program?.alarmSeverity || []}  alarms={program?.alarms || []} program={program.id} />
 
         }
     ];
 
-    const renderRootPage = () => {
-        let page = treeMenu?.find((a) => a.id == `${selected?.id}-root`)
-        return page.element
-    }
+    // const renderRootPage = () => {
+    //     let page = treeMenu?.find((a) => a.id == `${selectedId}-root`)
+    //     return page.element
+    // }
 
-    const renderEditorPage = () => {
-        let root = treeMenu?.find((a) => a.id == selected?.parent);
-        let page = root?.children?.find((a) => a.id == selected?.id);
+    // const renderEditorPage = () => {
+    //     let root = treeMenu?.find((a) => a.id == selected?.parent);
+    //     let page = root?.children?.find((a) => a.id == selected?.id);
 
-        return root?.editor
-    }
+    //     return root?.editor
+    // }
 
 
     return (
@@ -549,15 +561,18 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                 setMenuOpen(type)
                             }}
                             onAdd={(parent) => {
-                                setMenuOpen(parent.replace(/-root/, ''))
+                                setMenuOpen(parent?.replace(/-root/, ''))
                             }}
                             onNodeSelect={(node) => {
                                 let isRoot = node.match(/(.+)-root/);
                                 if(isRoot){
-                                    setSelected({
-                                        id: isRoot[1],
-                                        type: 'root'
-                                    })
+                                    // setSelected({
+                                    //     id: isRoot[1],
+                                    //     type: 'root'
+                                    // })
+                                    if(treeMenu?.find((a) => a.id == node)?.element){
+                                        navigate(isRoot[1])
+                                    }
                                     // setView(node.match(/(.+)-root/)?.[1] as any)
                                 }else{
 
@@ -569,18 +584,30 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
                                     let element = elements.find((a) => a?.id == node);
 
-                                    setSelected({
-                                        id: node,
-                                        parent: element?.parent,
-                                        type: 'editor',
-                                    })
+                                    let root = element?.parent?.match(/(.+)-root/)?.[1];
+
+                                    // setSelected({
+                                    //     id: node,
+                                    //     parent: element?.parent,
+                                    //     type: 'editor',
+                                    // })
+
+                                    navigate(root + '/'+ node)
                                 }
                             }}
                             items={treeMenu}
                             />
                     </Paper>
                     <Box sx={{flex: 1, display: 'flex'}}>
-                        {selected?.type == 'root' ? renderRootPage() : renderEditorPage()}
+                        <Routes>
+                            {treeMenu?.map((treeItem) => (
+                                <Route path={treeItem?.id?.split('-root')?.[0]} element={<Outlet />}>
+                                    <Route path={""} element={treeItem.element} />
+                                    {treeItem?.editor && <Route path={":id"} element={treeItem.editor} />}
+                                </Route>
+                            ))}
+                        </Routes>
+                        {/* {selected?.type == 'root' ? renderRootPage() : renderEditorPage()} */}
                     </Box>
                     
                 </Box>

@@ -169,21 +169,7 @@ export default (prisma: PrismaClient) => {
 								templatePacks: true,
 								alarms: {
 									include: {
-										edges: {
-											include: {
-												conditions: true
-											}
-										},
-										nodes: {
-											include: {
-												type: true,
-												targetedBy: {
-													include: {
-														source: true
-													}
-												}
-											}
-										}
+										
 									}
 								},
 								components: {

@@ -2,7 +2,7 @@ import { EditorCanvas, EditorCanvasSelection } from "@hive-command/editor-canvas
 import { Box } from "@mui/material";
 import React, { useCallback, KeyboardEvent, useEffect, useMemo, useRef, useState, RefObject, forwardRef, MutableRefObject } from "react";
 import { EditorOverlay } from "./overlay";
-import { Node, Edge } from 'reactflow';
+import { Node, Edge, useNodesInitialized } from 'reactflow';
 import { nodeTypes, edgeTypes } from "@hive-command/electrical-nodes";
 import { EditorTool } from "./tool";
 import { EditorProvider } from "./context";
@@ -36,6 +36,8 @@ export interface ElectricalSurfaceProps {
 
 export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props, ref) => {
     const toolRef = useRef<ToolInstance | null>(null);
+
+    const nodesInitialized = useNodesInitialized()
 
     // useEffect(() => {
     //     const node = myRef.current;
@@ -203,18 +205,22 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     }, [])
 
     const onNodesChange = useCallback((nodes: Node[]) => {
-        props.onUpdate?.({
-            ...props.page,
-            nodes
-        })
-    }, [JSON.stringify(props.page)])
+        if(props.page && nodesInitialized){
+            props.onUpdate?.({
+                ...props.page,
+                nodes
+            })
+        }   
+    }, [JSON.stringify(props.page), nodesInitialized])
 
     const onEdgesChange = useCallback((edges: Edge[]) => {
-        props.onUpdate?.({
-            ...props.page,
-            edges
-        })
-    }, [JSON.stringify(props.page)])
+        if(props.page && nodesInitialized){
+            props.onUpdate?.({
+                ...props.page,
+                edges
+            })
+        }
+    }, [JSON.stringify(props.page), nodesInitialized])
 
     const canvas = useMemo(() => {
         const ratio = 210 / 297 //A4;
@@ -283,7 +289,7 @@ export const ElectricalSurface = forwardRef<any, ElectricalSurfaceProps>((props,
     const onSubmitNodeProps = (options: any[]) => {
         let values = options.reduce((prev, curr) => {
             return {
-                ...prev,
+                ...prev, 
                 [curr.key]: curr.value
             }
         }, {})

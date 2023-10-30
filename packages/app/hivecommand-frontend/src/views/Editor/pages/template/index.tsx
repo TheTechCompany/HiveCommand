@@ -17,7 +17,7 @@ export const TemplateEditor = (props: any) => {
 
     const [ selected, setSelected ] = useState<any>();
 
-    const { refetch, program: {templates, components, types} } = useCommandEditor()
+    const { refetch, program: {templates, components, types} = {} } = useCommandEditor()
 
     const [ defaultSrc, setDefaultSrc ] = useState<{src: string, srcId?: string, id: string} | null>()
 
@@ -97,7 +97,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
 
         //Parse device types early
 
-        const activeInputs = activeTemplate.inputs.map((input) => {
+        const activeInputs = (activeTemplate?.inputs || []).map((input) => {
             if(input.type.indexOf('Tag') > -1){
                 const typeParts = input.type?.split(':')
                 // let deviceInterface = ().concat([{key: 'tag', type: 'String'}]).map((stateItem) => `${stateItem.key}: ${getOPCType(stateItem.type)}`).join(';\n')
@@ -133,7 +133,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
 
         */
 
-        const componentsInterface = components.map((x) => {
+        const componentsInterface = (components || []).map((x) => {
             return x.files.map((file) => {
                 return {
                     path: `file:///node_modules/@module/components/${x.name}/${file.path}`,
@@ -143,7 +143,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
         }).reduce((prev, curr) => prev.concat(curr), []).concat([
             {
                 path: `file:///node_modules/@module/components/index.tsx`,
-                content: components.map((x) => `
+                content: (components || []).map((x) => `
                     export * from './${x.name}'
                 `).join('\n')
             }
@@ -191,7 +191,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     setDefaultSrc(null)
                 }}
                 onSubmit={(codeValue) => {
-                    if(defaultSrc.srcId){
+                    if(defaultSrc?.srcId){
                         updateTemplateEdge({
                             variables: {
                                 template: id,
@@ -210,7 +210,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                             variables: {
                                 template: id,
                                 input: {
-                                    to: defaultSrc.id,
+                                    to: defaultSrc?.id,
                                     script: codeValue
                                 }
                             }
@@ -221,7 +221,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     }
                 }}
                 defaultValue={defaultSrc?.src}
-                extraLib={extraLib}
+                extraLib={extraLib || []}
                 
                 />
             <TemplateModal 
@@ -234,7 +234,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                             id: selected?.id
                         }
                     }).then(() => {
-                        refetch();
+                        refetch?.();
                         setSelected(null);
                         setDirection(null);
                     })
@@ -252,7 +252,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                                 }   
                             }
                         }).then(() => {
-                            refetch();
+                            refetch?.();
     
                             setSelected(null);
     
@@ -269,7 +269,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                                 }
                             }
                         }).then(() => {
-                            refetch();
+                            refetch?.();
     
                             setSelected(null);
     
@@ -298,7 +298,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     </Box>
                     <Divider />
                     <List sx={{flex: 1}}>
-                        {activeTemplate?.inputs?.map((input) => (
+                        {(activeTemplate?.inputs || []).map((input) => (
                             <ListItem 
                                 secondaryAction={
                                     <>
@@ -333,13 +333,13 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     </Box>
                     <Divider />
                     <List sx={{flex: 1}}>
-                        {activeTemplate?.outputs?.map((output) => (
+                        {(activeTemplate?.outputs || []).map((output) => (
                             <ListItem 
                                 secondaryAction={
                                     <>
                                         <IconButton 
                                             onClick={() => {
-                                                let activeScript = activeTemplate?.edges?.find((a) => a.to?.id === output?.id);
+                                                let activeScript = (activeTemplate?.edges || []).find((a) => a.to?.id === output?.id);
 
                                                 if(activeScript){
                                                     setDefaultSrc({src: activeScript.script, srcId: activeScript.id, id: output.id});
@@ -368,7 +368,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                                  sx={{display: 'flex', position: 'relative', padding: '6px'}}>
                                 <ListItemButton>
                                     <ListItemText>
-                                        {output.name} : {output.type} - {activeTemplate?.edges?.filter((a) => a.to?.id === output.id)?.length}
+                                        {output.name} : {output.type} - {(activeTemplate?.edges || []).filter((a) => a.to?.id === output.id)?.length}
                                     </ListItemText>
                                 </ListItemButton>
                                 
