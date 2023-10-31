@@ -21,7 +21,10 @@ export interface EditorToolbarProps {
     onExport?: () => void;
 }
 
+
 export const EditorToolbar: React.FC<EditorToolbarProps> = (props) => {
+
+    const sortedVersions = (props.versions || []).slice()?.sort((a, b) => a.rank - b.rank);
 
     return (
         <Box sx={{
@@ -71,7 +74,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = (props) => {
                     }}
                     value={props.activeVersion || 'draft'}>
                         <StyledOption value={'draft'}>Draft</StyledOption>
-                    {props.versions?.sort((a, b) => a.rank - b.rank)?.map((version) => (
+                    {sortedVersions?.map((version) => (
                         <StyledOption value={version.id}>v{version.rank}</StyledOption>
                     ))}
                 </VersionSelector>
