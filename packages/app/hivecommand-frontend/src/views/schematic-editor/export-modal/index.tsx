@@ -29,7 +29,7 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
     })
 
     useEffect(() => {
-        const defaultVersion = props.versions?.sort((a, b) => a.rank - b.rank)?.[props.versions?.length - 1]?.id;
+        const defaultVersion = props.versions?.slice()?.sort((a, b) => a.rank - b.rank)?.[props.versions?.length - 1]?.id;
         setActiveVersion(defaultVersion)
     }, [props.versions])
 
