@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-client",
-  "version": "1.4.15-alpha.277",
+  "version": "1.4.15-alpha.278",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
@@ -27,12 +27,12 @@
     "url": "https://github.com/TheTechCompany/sudbuster/issues"
   },
   "dependencies": {
-    "@hive-command/opcua-utils": "^1.4.15-alpha.277",
+    "@hive-command/opcua-utils": "^1.4.15-alpha.278",
     "commander": "^7.2.0",
     "node-opcua": "^2.68.1"
   },
   "devDependencies": {
-    "@hive-command/opcua-server": "^1.4.15-alpha.277",
+    "@hive-command/opcua-server": "^1.4.15-alpha.278",
     "@sinonjs/fake-timers": "^10.0.2",
     "@types/jest": "^27.0.3",
     "@types/sinon": "^10.0.13",
