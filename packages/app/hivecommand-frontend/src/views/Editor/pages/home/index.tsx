@@ -9,7 +9,7 @@ import { DataScopeModal } from '../../../../components/modals/data-scope';
 
 export const Home = () => {
 
-    const { refetch, program, plugins: {dataScope: dataScopePlugins} } = useContext(CommandEditorContext)
+    const { refetch, program, plugins: {dataScope: dataScopePlugins} = {dataScope: []} } = useContext(CommandEditorContext)
 
     const { data } = useQuery(gql`
         query Plugins {
@@ -72,20 +72,20 @@ export const Home = () => {
                 onDelete={() => {
                     deleteProgramDataScope({
                         variables: {
-                            program: program.id,
+                            program: program?.id,
                             id: selectedDataScope.id,
                         }
                     }).then(() => {
                         openDataScopeModal(false);
                         setSelectedDataScope(null);
-                        refetch()
+                        refetch?.()
                     })
                 }}
                 onSubmit={(dataScope) => {
                     if(dataScope.id){
                         updateProgramDataScope({
                             variables: {
-                                program: program.id,
+                                program: program?.id,
                                 id: dataScope.id,
                                 input: {
                                     name: dataScope.name,
@@ -95,14 +95,14 @@ export const Home = () => {
                                 }
                             }
                         }).then((() => {
-                            refetch()
+                            refetch?.()
                             openDataScopeModal(false);
                             setSelectedDataScope(null);
                         }))
                     }else{
                         createProgramDataScope({
                             variables: {
-                                program: program.id,
+                                program: program?.id,
                                 input: {
                                     name: dataScope.name,
                                     description: dataScope.description,
@@ -111,7 +111,7 @@ export const Home = () => {
                                 }
                             }
                         }).then(() => {
-                            refetch()
+                            refetch?.()
                             openDataScopeModal( false )
                         })
                     }
@@ -132,7 +132,7 @@ export const Home = () => {
                     </Box>
                     <Box sx={{flex: 1}}>
                         <List>
-                            {program.dataScopes?.map((dataScope) => (
+                            {program?.dataScopes?.map((dataScope) => (
                                 <ListItem secondaryAction={(
                                     <IconButton onClick={() => {
                                         openDataScopeModal(true);
@@ -160,11 +160,11 @@ export const Home = () => {
                     console.log(packList)
                     updateProgramTemplatePacks({
                         variables: {
-                            id: program.id,
+                            id: program?.id,
                             templatePacks: packList
                         }
                     }).then(() => {
-                        refetch()
+                        refetch?.()
                         openPackModal(false);
                     })
 

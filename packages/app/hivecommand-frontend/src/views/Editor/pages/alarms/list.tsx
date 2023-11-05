@@ -90,6 +90,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
             <Box sx={{display: 'flex', padding: '6px'}}>
                 <TextField size="small" fullWidth label="Search" />
             </Box>
+            {/* <DragContext></DragContext> */}
             <TableContainer>
                 <Table size="small" stickyHeader>
                     <TableHead sx={{color: 'white', bgcolor: 'secondary.main'}}>

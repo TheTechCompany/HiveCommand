@@ -29,7 +29,7 @@
   "dependencies": {
     "@hive-command/opcua-utils": "^1.4.15-alpha.278",
     "commander": "^7.2.0",
-    "node-opcua": "^2.68.1"
+    "node-opcua": "2.116.0"
   },
   "devDependencies": {
     "@hive-command/opcua-server": "^1.4.15-alpha.278",

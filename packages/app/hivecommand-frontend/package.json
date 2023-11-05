@@ -25,6 +25,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
     "@types/dagre": "^0.7.49",
+    "@types/file-saver": "^2.0.6",
     "@types/papaparse": "^5.3.7",
     "@types/requirejs": "^2.1.34",
     "@types/scriptjs": "^0.0.2",
