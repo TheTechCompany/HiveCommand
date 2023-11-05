@@ -330,7 +330,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'variables-root',
             name: 'Tags',
-            element: <TagEditor types={program.types || []} tags={program.tags || []} program={program.id}  />,
+            element: <TagEditor types={program.types || []} tags={program.tags || []}   />,
             // children: program?.variables?.slice()
         },
         {
@@ -338,13 +338,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             name: 'Types',
             // element: <TypeEditor />,
             children: program.types || [], //[{id: 'valve', name: 'Valve'}],
-            editor: <TypeEditor active={selectedId} types={program.types || []} />
+            editor: <TypeEditor types={program.types || []} />
         },
         {
             id: 'templates-root',
             name: 'Templates',
             children: program?.templates?.slice(),
-            editor: <TemplateEditor active={selectedId} />
+            editor: <TemplateEditor  />
         },
         // {
         //     id: 'program-root',
@@ -372,7 +372,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'components-root',
             name: 'Components',
-            editor: <Components activeProgram={id} component={selectedId} />,
+            editor: <Components />,
             element: <ComponentList />,
             children: program?.components?.map((x) => ({
                 id: x.id,
@@ -392,7 +392,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 })),
             })),
             element: <div>HMI</div>,
-            editor: <Controls activeProgram={selectedId} />
+            editor: <Controls  />
         },
         // {
         //     id: 'devices-root',
@@ -603,7 +603,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                             {treeMenu?.map((treeItem) => (
                                 <Route path={treeItem?.id?.split('-root')?.[0]} element={<Outlet />}>
                                     <Route path={""} element={treeItem.element} />
-                                    {treeItem?.editor && <Route path={":id"} element={treeItem.editor} />}
+                                    {treeItem?.editor && <Route path={":activeId"} element={treeItem.editor} />}
                                 </Route>
                             ))}
                         </Routes>

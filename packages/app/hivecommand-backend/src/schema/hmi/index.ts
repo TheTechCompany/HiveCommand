@@ -46,7 +46,6 @@ export default (prisma: PrismaClient) => {
 
 				const _initialRequire = (name: string) => {
 					if(!(name in baseRequirements)){
-						console.log({name, base_url})
 						// console.log("Init Loader")
 
 						let isPath = name.indexOf('./') == 0
@@ -74,14 +73,12 @@ export default (prisma: PrismaClient) => {
 									// if(data.data.indexOf("Couldn't find the requested file") == 0){
 									// 	}
 
-									console.log({data: data.data})
 
 									// console.log({url})
 									// url = base_url + name.substring(2, name.length) + '.js';
 								}else{
 									// url = `https://cdn.jsdelivr.net/npm/${name}`
 
-									console.log({isSubNpm, name})
 
 									if(!isSubNpm){
 										let pkg = await axios.get(`https://cdn.jsdelivr.net/npm/${name}/package.json`)
@@ -126,7 +123,6 @@ export default (prisma: PrismaClient) => {
 									// let func = new Function('require', 'module', 'exports', m.data)
 									// func(_initialRequire(base_url), module, exports)
 									baseRequirements[m_name] = await load_exports(_initialRequire, url)// module.exports;
-									console.log({exports: JSON.stringify(module.exports)})
 								}catch(e){
 									console.log({e, name})
 								}
@@ -141,7 +137,6 @@ export default (prisma: PrismaClient) => {
 
 
 				const _requires = (name: string) => {
-					console.log({name})
 			
 					if(!(name in baseRequirements)){
 						console.log("Loader", name)
@@ -158,7 +153,6 @@ export default (prisma: PrismaClient) => {
 
 				const module = await load_exports(_requires, root.url)
 
-				console.log({ module })
 				return Object.keys(module).map((key, ix) => ({
 					id: ix,
 					name: key
@@ -263,8 +257,6 @@ export default (prisma: PrismaClient) => {
 					}
 				}
 
-				console.log({input: args, homepageUpdates})
-
 				return await prisma.program.update({
 					where: {
 						id: args.program
@@ -343,7 +335,6 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 			updateCommandInterfaceDevice: async (root: any, args: any) => {
-				console.log("UPDATE", args.input)
 				return await prisma.canvasNodeTemplate.update({
 					where: {
 						id: args.id
@@ -466,7 +457,6 @@ export default (prisma: PrismaClient) => {
 
 					let deleteIds = createChildren.map((x: any) => x.id).concat(updateChildren.map((x: any) => x.id))
 
-					console.log({updateChildren: JSON.stringify(updateChildren)})
 					if(createChildren.length > 0){
 						create = {
 							createMany: {
@@ -559,7 +549,6 @@ export default (prisma: PrismaClient) => {
 							}))
 						}
 					}
-					console.log({update: JSON.stringify(update), create: JSON.stringify(create)})
 
 					deviceUpdate['ports'] = {
 						...create,

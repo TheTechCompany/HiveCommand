@@ -11,9 +11,8 @@ import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-comma
 
 export const TemplateEditor = (props: any) => {
 
-    const { id: activeProgram } = useParams()
+    const { activeId } = useParams()
 
-    const id = props.active
 
     const [ selected, setSelected ] = useState<any>();
 
@@ -70,7 +69,7 @@ export const TemplateEditor = (props: any) => {
 
 
 
-    const activeTemplate = templates?.find((a) => a.id === id);
+    const activeTemplate = templates?.find((a) => a.id === activeId);
     
 
     const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
@@ -194,7 +193,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     if(defaultSrc?.srcId){
                         updateTemplateEdge({
                             variables: {
-                                template: id,
+                                template: activeId,
                                 id: defaultSrc.srcId,
                                 input: {
                                     to: defaultSrc.id,
@@ -208,7 +207,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     }else{
                         createTemplateEdge({
                             variables: {
-                                template: id,
+                                template: activeId,
                                 input: {
                                     to: defaultSrc?.id,
                                     script: codeValue
@@ -230,7 +229,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                 onDelete={() => {
                     deleteTemplateIO({
                         variables: {
-                            template: id,
+                            template: activeId,
                             id: selected?.id
                         }
                     }).then(() => {
@@ -243,7 +242,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     if(selected?.id){
                         updateTemplateIO({
                             variables: {
-                                template: id,
+                                template: activeId,
                                 id: selected?.id,
                                 input: {
                                     direction: direction,
@@ -261,7 +260,7 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     }else{
                         createTemplateIO({
                             variables: {
-                                template: id,
+                                template: activeId,
                                 input: {
                                     direction: direction,
                                     name: templateIO.name,

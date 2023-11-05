@@ -14,9 +14,12 @@ import { useMutation } from '@apollo/client';
 import { debounce } from 'lodash';
 import { Preview } from './views/preview';
 import path from 'path';
+import { useParams } from 'react-router-dom';
 export * from './list';
 
 export const Components = (props: any) => {
+
+    const { id, activeId } = useParams();
 
     const [ modalOpen, openModal ] = useState(false);
 
@@ -61,14 +64,14 @@ export const Components = (props: any) => {
         }
     `, {
         variables: {
-            program: props.activeProgram,
-            component: props.component
+            program: id,
+            component: activeId
         }
     })
 
     console.log({
-        activeProgram: props.activeProgram,
-        component: props.component
+        activeProgram: id,
+        component: activeId
     })
 
     const [ createComponentFile ] = useMutation(gql`
@@ -140,8 +143,8 @@ export const Components = (props: any) => {
 
             slowUpdate({
                 variables: {
-                    program: props.activeProgram,
-                    component: props.component,
+                    program: id,
+                    component: activeId,
                     content: code.content,
                     id: file?.id
                 }
@@ -203,15 +206,15 @@ export const Components = (props: any) => {
                 return (
                     <ComponentProperties
                         mainId={component?.main?.id}
-                        component={props.component} 
-                        activeProgram={props.activeProgram}
+                        component={activeId} 
+                        activeProgram={id}
                         properties={component?.properties || []}
                         files={component?.files || []}/>
                 )
             case 'code':
                 return (<Code 
-                            activeProgram={props.activeProgram}
-                            component={props.component}
+                            activeProgram={id}
+                            component={activeId}
                             files={component?.files || []}
                             code={code} 
                             onChange={(e) => {
@@ -256,8 +259,8 @@ export const Components = (props: any) => {
                     deleteComponentFile({
                         variables: {
                             id: file.id,
-                            program: props.activeProgram,
-                            component: props.component
+                            program: id,
+                            component: activeId
                         }
                     }).then(() => {
                         openModal(false);
@@ -272,8 +275,8 @@ export const Components = (props: any) => {
                             variables: {
                                 id: file.id,
                                 path: file.path,
-                                program: props.activeProgram,
-                                component: props.component,
+                                program: id,
+                                component: activeId
                                 
                             }
                         }).then(() =>{ setSelectedFile(null); openModal(false)});
@@ -281,8 +284,8 @@ export const Components = (props: any) => {
                         createComponentFile({
                             variables: {
                                 path: file.path,
-                                program: props.activeProgram,
-                                component: props.component
+                                program: id,
+                                component: activeId
                             }
                         }).then(() => {
                             setSelectedFile(null)
