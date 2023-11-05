@@ -4553,7 +4553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/amqp-client@^1.4.15-alpha.278, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
+"@hive-command/amqp-client@^1.4.15-alpha.279, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-client@workspace:packages/communication/amqp-client"
   dependencies:
@@ -4564,12 +4564,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/amqp-hub@^1.4.15-alpha.278, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
+"@hive-command/amqp-hub@^1.4.15-alpha.279, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-hub@workspace:packages/communication/amqp-hub"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.278
-    "@hive-command/data": ^1.4.15-alpha.278
+    "@hive-command/amqp-client": ^1.4.15-alpha.279
+    "@hive-command/data": ^1.4.15-alpha.279
     "@types/amqplib": ^0.10.1
     amqplib: ^0.10.3
     dotenv: ^16.0.3
@@ -4579,7 +4579,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/api@^1.4.15-alpha.278, @hive-command/api@workspace:packages/app/hivecommand-api":
+"@hive-command/api@^1.4.15-alpha.279, @hive-command/api@workspace:packages/app/hivecommand-api":
   version: 0.0.0-use.local
   resolution: "@hive-command/api@workspace:packages/app/hivecommand-api"
   dependencies:
@@ -4605,9 +4605,9 @@ __metadata:
     "@aws-sdk/client-lambda": ^3.410.0
     "@casl/ability": ^6.5.0
     "@hexhive/graphql-server": 1.0.2-beta.62
-    "@hive-command/amqp-client": ^1.4.15-alpha.278
-    "@hive-command/data": ^1.4.15-alpha.278
-    "@hive-command/scripting": ^1.4.15-alpha.278
+    "@hive-command/amqp-client": ^1.4.15-alpha.279
+    "@hive-command/data": ^1.4.15-alpha.279
+    "@hive-command/scripting": ^1.4.15-alpha.279
     "@prisma/client": ^3.12.0
     "@types/amqplib": ^0.8.2
     "@types/cors": ^2.8.12
@@ -4637,7 +4637,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/canvas-nodes@^1.4.15-alpha.278, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
+"@hive-command/canvas-nodes@^1.4.15-alpha.279, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
   version: 0.0.0-use.local
   resolution: "@hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes"
   dependencies:
@@ -4659,7 +4659,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/command-surface@^1.4.15-alpha.278, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
+"@hive-command/command-surface@^1.4.15-alpha.279, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
   version: 0.0.0-use.local
   resolution: "@hive-command/command-surface@workspace:packages/core-ui/command-surface"
   dependencies:
@@ -4669,9 +4669,9 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.45
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.278
-    "@hive-command/remote-components": ^1.4.15-alpha.278
-    "@hive-command/scripting": ^1.4.15-alpha.278
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.279
+    "@hive-command/remote-components": ^1.4.15-alpha.279
+    "@hive-command/scripting": ^1.4.15-alpha.279
     "@mui/material": 5.10.11
     "@mui/system": ^5.13.6
     "@testing-library/react": 12.0.0
@@ -4706,7 +4706,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/data@^1.4.15-alpha.278, @hive-command/data@workspace:packages/core/command-data":
+"@hive-command/data@^1.4.15-alpha.279, @hive-command/data@workspace:packages/core/command-data":
   version: 0.0.0-use.local
   resolution: "@hive-command/data@workspace:packages/core/command-data"
   dependencies:
@@ -4716,7 +4716,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/drivers-base@^1.4.15-alpha.278, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
+"@hive-command/drivers-base@^1.4.15-alpha.279, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-base@workspace:packages/drivers/command-driver"
   dependencies:
@@ -4730,7 +4730,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-ethernet-ip@workspace:packages/drivers/command-ethernet-ip"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.278
+    "@hive-command/drivers-base": ^1.4.15-alpha.279
     "@hive-command/ethernet-ip": ^2.5.6-alpha.37
     jest: ^27.x
     observable-fns: ^0.6.1
@@ -4742,8 +4742,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-opcua@workspace:packages/drivers/command-opcua"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.278
-    "@hive-command/opcua-client": ^1.4.15-alpha.278
+    "@hive-command/drivers-base": ^1.4.15-alpha.279
+    "@hive-command/opcua-client": ^1.4.15-alpha.279
     typescript: ^4.3.5
   languageName: unknown
   linkType: soft
@@ -4791,12 +4791,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/electrical-editor@^1.4.15-alpha.278, @hive-command/electrical-editor@workspace:^, @hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor":
+"@hive-command/electrical-editor@^1.4.15-alpha.279, @hive-command/electrical-editor@workspace:^, @hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor":
   version: 0.0.0-use.local
   resolution: "@hive-command/electrical-editor@workspace:packages/core-ui/command-electrical-editor"
   dependencies:
     "@hive-command/electrical-nodes": "workspace:^"
-    "@hive-command/remote-components": ^1.4.15-alpha.278
+    "@hive-command/remote-components": ^1.4.15-alpha.279
     typescript: ^5.1.6
   peerDependencies:
     "@mui/material": "*"
@@ -4821,7 +4821,7 @@ __metadata:
   resolution: "@hive-command/enip-bridge@workspace:packages/communication/opc-ethernet-ip-bridge"
   dependencies:
     "@hive-command/ethernet-ip": ^2.5.6-alpha.31
-    "@hive-command/opcua-server": ^1.4.15-alpha.278
+    "@hive-command/opcua-server": ^1.4.15-alpha.279
     "@types/express": ^4.17.14
     express: ^4.18.2
     jest: ^29.4.2
@@ -4846,7 +4846,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/evented-values@^1.4.15-alpha.278, @hive-command/evented-values@workspace:packages/core/evented-values":
+"@hive-command/evented-values@^1.4.15-alpha.279, @hive-command/evented-values@workspace:packages/core/evented-values":
   version: 0.0.0-use.local
   resolution: "@hive-command/evented-values@workspace:packages/core/evented-values"
   dependencies:
@@ -4901,14 +4901,14 @@ __metadata:
     "@hexhive/auth-ui": 1.0.2-beta.44
     "@hexhive/styles": 1.0.1-alpha.84
     "@hexhive/ui": 1.0.1-alpha.119
-    "@hive-command/api": ^1.4.15-alpha.278
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.278
-    "@hive-command/command-surface": ^1.4.15-alpha.278
+    "@hive-command/api": ^1.4.15-alpha.279
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.279
+    "@hive-command/command-surface": ^1.4.15-alpha.279
     "@hive-command/data-types": ^1.4.15-alpha.52
-    "@hive-command/electrical-editor": ^1.4.15-alpha.278
+    "@hive-command/electrical-editor": ^1.4.15-alpha.279
     "@hive-command/electrical-editor-v2": "workspace:^"
-    "@hive-command/remote-components": ^1.4.15-alpha.278
-    "@hive-command/scripting": ^1.4.15-alpha.278
+    "@hive-command/remote-components": ^1.4.15-alpha.279
+    "@hive-command/scripting": ^1.4.15-alpha.279
     "@monaco-editor/react": ^4.4.6
     "@mui/base": ^5.0.0-beta.18
     "@mui/icons-material": ^5.6.2
@@ -4920,6 +4920,7 @@ __metadata:
     "@testing-library/jest-dom": ^5.14.1
     "@testing-library/react": ^12.0.0
     "@types/dagre": ^0.7.49
+    "@types/file-saver": ^2.0.6
     "@types/jest": ^27.0.3
     "@types/papaparse": ^5.3.7
     "@types/react": ^17.0.11
@@ -4990,9 +4991,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/gds@workspace:packages/network/global-discovery-network"
   dependencies:
-    "@hive-command/amqp-hub": ^1.4.15-alpha.278
-    "@hive-command/data": ^1.4.15-alpha.278
-    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.278
+    "@hive-command/amqp-hub": ^1.4.15-alpha.279
+    "@hive-command/data": ^1.4.15-alpha.279
+    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.279
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.14
     "@types/jsonwebtoken": ^8.5.9
@@ -5016,7 +5017,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/iot-cli@workspace:packages/clients/iot-cli"
   dependencies:
-    "@hive-command/local-sidecar": ^1.4.15-alpha.278
+    "@hive-command/local-sidecar": ^1.4.15-alpha.279
     axios: ^1.3.3
     loglevel: ^1.8.1
     typescript: ^4.3.5
@@ -5025,13 +5026,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/local-sidecar@^1.4.15-alpha.278, @hive-command/local-sidecar@workspace:packages/core/command-local-sidecar":
+"@hive-command/local-sidecar@^1.4.15-alpha.279, @hive-command/local-sidecar@workspace:packages/core/command-local-sidecar":
   version: 0.0.0-use.local
   resolution: "@hive-command/local-sidecar@workspace:packages/core/command-local-sidecar"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.278
-    "@hive-command/drivers-base": ^1.4.15-alpha.278
-    "@hive-command/evented-values": ^1.4.15-alpha.278
+    "@hive-command/amqp-client": ^1.4.15-alpha.279
+    "@hive-command/drivers-base": ^1.4.15-alpha.279
+    "@hive-command/evented-values": ^1.4.15-alpha.279
     "@hive-command/threads": ^1.7.0
     "@types/express": ^4.17.14
     "@types/pg": ^8.6.5
@@ -5062,8 +5063,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/mqtt-auth-server@workspace:packages/network/mqtt-auth-server"
   dependencies:
-    "@hive-command/data": ^1.4.15-alpha.278
-    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.278
+    "@hive-command/data": ^1.4.15-alpha.279
+    "@hive-command/rabbitmq-auth": ^1.4.15-alpha.279
     "@types/body-parser": ^1.19.2
     "@types/cors": ^2.8.13
     "@types/express": ^4.17.17
@@ -5085,11 +5086,11 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.77
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/api": ^1.4.15-alpha.278
-    "@hive-command/command-surface": ^1.4.15-alpha.278
-    "@hive-command/local-sidecar": ^1.4.15-alpha.278
-    "@hive-command/remote-components": ^1.4.15-alpha.278
-    "@hive-command/scripting": ^1.4.15-alpha.278
+    "@hive-command/api": ^1.4.15-alpha.279
+    "@hive-command/command-surface": ^1.4.15-alpha.279
+    "@hive-command/local-sidecar": ^1.4.15-alpha.279
+    "@hive-command/remote-components": ^1.4.15-alpha.279
+    "@hive-command/scripting": ^1.4.15-alpha.279
     "@monaco-editor/react": ^4.4.6
     "@mui/icons-material": ^5.11.16
     "@mui/lab": 5.0.0-alpha.102
@@ -5125,31 +5126,31 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-amqp-bridge@workspace:packages/communication/opc-amqp-bridge"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.278
-    "@hive-command/opcua-client": ^1.4.15-alpha.278
-    "@hive-command/scripting": ^1.4.15-alpha.278
+    "@hive-command/amqp-client": ^1.4.15-alpha.279
+    "@hive-command/opcua-client": ^1.4.15-alpha.279
+    "@hive-command/scripting": ^1.4.15-alpha.279
     jest: 27.x
     lodash: ^4.17.21
     loglevel: ^1.8.1
-    node-opcua: ^2.91.0
+    node-opcua: 2.116.0
     typescript: ^4.3.5
     yargs: ^17.7.1
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-client@^1.4.15-alpha.278, @hive-command/opcua-client@workspace:packages/communication/opc-client":
+"@hive-command/opcua-client@^1.4.15-alpha.279, @hive-command/opcua-client@workspace:packages/communication/opc-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-client@workspace:packages/communication/opc-client"
   dependencies:
-    "@hive-command/opcua-server": ^1.4.15-alpha.278
-    "@hive-command/opcua-utils": ^1.4.15-alpha.278
+    "@hive-command/opcua-server": ^1.4.15-alpha.279
+    "@hive-command/opcua-utils": ^1.4.15-alpha.279
     "@sinonjs/fake-timers": ^10.0.2
     "@types/jest": ^27.0.3
     "@types/sinon": ^10.0.13
     "@types/sinonjs__fake-timers": ^8.1.2
     commander: ^7.2.0
     jest: ^26.6.3
-    node-opcua: ^2.68.1
+    node-opcua: 2.116.0
     sinon: ^15.0.1
     ts-jest: ^26.5.6
     ts-node: ^9.1.1
@@ -5159,15 +5160,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-server@^1.4.15-alpha.278, @hive-command/opcua-server@workspace:packages/communication/opc-server":
+"@hive-command/opcua-server@^1.4.15-alpha.279, @hive-command/opcua-server@workspace:packages/communication/opc-server":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-server@workspace:packages/communication/opc-server"
   dependencies:
-    "@hive-command/opcua-client": ^1.4.15-alpha.278
-    "@hive-command/opcua-utils": ^1.4.15-alpha.278
+    "@hive-command/opcua-client": ^1.4.15-alpha.279
+    "@hive-command/opcua-utils": ^1.4.15-alpha.279
     "@types/jest": ^27.0.3
     jest: ^26.6.3
-    node-opcua: 2.68.1
+    node-opcua: 2.116.0
     ts-jest: ^26.5.6
     ts-node: ^9.1.1
     tsconfig-paths: ^3.11.0
@@ -5175,7 +5176,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-utils@^1.4.15-alpha.278, @hive-command/opcua-utils@workspace:packages/communication/opc-utils":
+"@hive-command/opcua-utils@^1.4.15-alpha.279, @hive-command/opcua-utils@workspace:packages/communication/opc-utils":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-utils@workspace:packages/communication/opc-utils"
   dependencies:
@@ -5186,7 +5187,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/rabbitmq-auth@^1.4.15-alpha.278, @hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth":
+"@hive-command/rabbitmq-auth@^1.4.15-alpha.279, @hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth":
   version: 0.0.0-use.local
   resolution: "@hive-command/rabbitmq-auth@workspace:packages/communication/rabbitmq-auth"
   dependencies:
@@ -5196,7 +5197,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/remote-components@^1.4.15-alpha.278, @hive-command/remote-components@workspace:^, @hive-command/remote-components@workspace:packages/core-ui/command-remote-components":
+"@hive-command/remote-components@^1.4.15-alpha.279, @hive-command/remote-components@workspace:^, @hive-command/remote-components@workspace:packages/core-ui/command-remote-components":
   version: 0.0.0-use.local
   resolution: "@hive-command/remote-components@workspace:packages/core-ui/command-remote-components"
   dependencies:
@@ -5232,7 +5233,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scripting@^1.4.15-alpha.278, @hive-command/scripting@workspace:packages/core/command-scripting":
+"@hive-command/scripting@^1.4.15-alpha.279, @hive-command/scripting@workspace:packages/core/command-scripting":
   version: 0.0.0-use.local
   resolution: "@hive-command/scripting@workspace:packages/core/command-scripting"
   dependencies:
@@ -5342,7 +5343,7 @@ __metadata:
     lerna: 7.0.2
     loglevel: ^1.8.0
     nanoid: ^3.1.30
-    node-opcua: ^2.68.1
+    node-opcua: 2.116.0
     process: ^0.11.10
     react: 17.0.2
     react-dom: 17.0.2
@@ -7474,7 +7475,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@peculiar/x509@npm:^1.9.3":
+"@peculiar/x509@npm:^1.9.5":
   version: 1.9.5
   resolution: "@peculiar/x509@npm:1.9.5"
   dependencies:
@@ -9452,13 +9453,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ster5/global-mutex@npm:^1.2.0":
-  version: 1.3.0
-  resolution: "@ster5/global-mutex@npm:1.3.0"
-  checksum: 87f21b35f0d7f5f76b5a9a2eb63d315b91c3d8b15446e83c5c8c54a810d31f3a40f533fb48a754cd3d629e84a2ca82804e8fbc02637daed73080e9dda6a53538
-  languageName: node
-  linkType: hard
-
 "@ster5/global-mutex@npm:^2.0.0":
   version: 2.0.0
   resolution: "@ster5/global-mutex@npm:2.0.0"
@@ -11248,10 +11242,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/async@npm:^3.2.12, @types/async@npm:^3.2.20":
-  version: 3.2.20
-  resolution: "@types/async@npm:3.2.20"
-  checksum: 880ac312f097d3ef98da175b23dc6d29dd0014af55789b3f534dacd0fcd0fb202fdefc732d9b10e4bc93e40823cfe279bb19033cb863f4e27c032e50cd7d9a8e
+"@types/asn1@npm:*":
+  version: 0.2.2
+  resolution: "@types/asn1@npm:0.2.2"
+  dependencies:
+    "@types/node": "*"
+  checksum: cd64dab0a214a88360995adf86f307565bf13f14d27552590cbb8cefea30585d65385be831b644fee790654bf7d29eae6ed07ba1db0bed59075aac4fb0b8b63d
+  languageName: node
+  linkType: hard
+
+"@types/async@npm:^3.2.21":
+  version: 3.2.22
+  resolution: "@types/async@npm:3.2.22"
+  checksum: 2b3371563b1a87ec8c3d3b79c20e114260440460ead8636d5e937d1e670464229d9a73ff22c2c3c5077e842ae5bf4102b33c90853cde159961f5705bc9b3accb
   languageName: node
   linkType: hard
 
@@ -11327,7 +11330,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bonjour@npm:^3.5.10, @types/bonjour@npm:^3.5.9":
+"@types/bonjour@npm:^3.5.9":
   version: 3.5.10
   resolution: "@types/bonjour@npm:3.5.10"
   dependencies:
@@ -11796,6 +11799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/file-saver@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "@types/file-saver@npm:2.0.6"
+  checksum: 4be4bc301bfbd8a173c7ed760594d73120c71ec9a0a74a6e7b4a2c8295397826a976cda3ee490fa1adf97f6a072d01bc9409343e07af3c9ffad218aad1746896
+  languageName: node
+  linkType: hard
+
 "@types/find-cache-dir@npm:^3.2.1":
   version: 3.2.1
   resolution: "@types/find-cache-dir@npm:3.2.1"
@@ -11962,17 +11972,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:4.14.180":
-  version: 4.14.180
-  resolution: "@types/lodash@npm:4.14.180"
-  checksum: fc42ae3473695cac6e91553f832fef8eb51a31c1c0381cafa81b00dc3efe18e279786bdda77caf0b90a8340ba2ba7aa46ae6541d69870565f775d04c89128bc1
-  languageName: node
-  linkType: hard
-
-"@types/lodash@npm:4.14.197":
-  version: 4.14.197
-  resolution: "@types/lodash@npm:4.14.197"
-  checksum: 53d7567d1704de76cf33266c78062e0fd722d4b846e5b1417d0b6ef0ee41c0d9c451b92bc34f73d5f1fcc45c7d36511e92f6f47a9279b48157ba60a92ddaa078
+"@types/lodash@npm:4.14.199":
+  version: 4.14.199
+  resolution: "@types/lodash@npm:4.14.199"
+  checksum: e68d1fcbbfce953ed87b296a628573f62939227bcda0c934954e862b421e8a34c5e71cad6fea27b9980567909e6a4698f09025692958e36d64ea9ed99ec6fb2e
   languageName: node
   linkType: hard
 
@@ -12038,15 +12041,6 @@ __metadata:
   version: 1.2.2
   resolution: "@types/minimist@npm:1.2.2"
   checksum: b8da83c66eb4aac0440e64674b19564d9d86c80ae273144db9681e5eeff66f238ade9515f5006ffbfa955ceff8b89ad2bd8ec577d7caee74ba101431fb07045d
-  languageName: node
-  linkType: hard
-
-"@types/mkdirp@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@types/mkdirp@npm:1.0.1"
-  dependencies:
-    "@types/node": "*"
-  checksum: 6dff86cf40c6e03781de06bf75a6b5998eee7650a232d9e2206bc41381cd59378ae9dfea8df30c751cc5748c51b77ebfe5077b4d1219b0c97e6cebb04a1475c3
   languageName: node
   linkType: hard
 
@@ -12135,13 +12129,6 @@ __metadata:
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
   checksum: e87bccbf11f95035c89a132b52b79ce69a1e3652fe55962363063c9c0dae0fe2477ebc585e03a9652adc6f381d24ba5589cc5e51849df4ced3d3e004a7d40ed5
-  languageName: node
-  linkType: hard
-
-"@types/once@npm:^1.4.0":
-  version: 1.4.0
-  resolution: "@types/once@npm:1.4.0"
-  checksum: d00ca4a2acca3e3782edaf522d0fcddc393a5599f33331adb729b5eba3baa96bacf8aa66c4c9462644337082256587a15f7d254647c85147cfbb458dc6f54e89
   languageName: node
   linkType: hard
 
@@ -12369,7 +12356,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/semver@npm:^7.1.0, @types/semver@npm:^7.3.12, @types/semver@npm:^7.5.0":
+"@types/semver@npm:^7.1.0, @types/semver@npm:^7.3.12":
   version: 7.5.0
   resolution: "@types/semver@npm:7.5.0"
   checksum: 0a64b9b9c7424d9a467658b18dd70d1d781c2d6f033096a6e05762d20ebbad23c1b69b0083b0484722aabf35640b78ccc3de26368bcae1129c87e9df028a22e2
@@ -12380,6 +12367,13 @@ __metadata:
   version: 7.5.2
   resolution: "@types/semver@npm:7.5.2"
   checksum: 743aa8a2b58e20b329c19bd2459152cb049d12fafab7279b90ac11e0f268c97efbcb606ea0c681cca03f79015381b40d9b1244349b354270bec3f939ed49f6e9
+  languageName: node
+  linkType: hard
+
+"@types/semver@npm:^7.5.3":
+  version: 7.5.4
+  resolution: "@types/semver@npm:7.5.4"
+  checksum: 120c0189f6fec5f2d12d0d71ac8a4cfa952dc17fa3d842e8afddb82bba8828a4052f8799c1653e2b47ae1977435f38e8985658fde971905ce5afb8e23ee97ecf
   languageName: node
   linkType: hard
 
@@ -12442,6 +12436,16 @@ __metadata:
   version: 0.1.2
   resolution: "@types/source-list-map@npm:0.1.2"
   checksum: fda8f37537aca9d3ed860d559289ab1dddb6897e642e6f53e909bbd18a7ac3129a8faa2a7d093847c91346cf09c86ef36e350c715406fba1f2271759b449adf6
+  languageName: node
+  linkType: hard
+
+"@types/sshpk@npm:^1.17.1":
+  version: 1.17.3
+  resolution: "@types/sshpk@npm:1.17.3"
+  dependencies:
+    "@types/asn1": "*"
+    "@types/node": "*"
+  checksum: 4d15d536b1167effc9560ef88516007cd6743d7d5d06281274b0dee9446636066e30ba9db1e6a5d2181ca9ca30d2346d2200505696f662787586591a430e5622
   languageName: node
   linkType: hard
 
@@ -12513,20 +12517,6 @@ __metadata:
   dependencies:
     source-map: ^0.6.1
   checksum: 76b9aa6b5c19690bee1fba29835ca580ec92db2b43cb8e2acd0278086138372a66e55bbd785c90d032bc890069f0cfde9c763f2d2860bb1a747b581a04d0999b
-  languageName: node
-  linkType: hard
-
-"@types/underscore@npm:1.11.4":
-  version: 1.11.4
-  resolution: "@types/underscore@npm:1.11.4"
-  checksum: db9f8486bc851b732259e51f42d62aad1ae2158be5724612dc125ece5f5d61c51447f9dea28284c2a0f79cb95e788d01cb5ce97709880019213e69fab0dd1696
-  languageName: node
-  linkType: hard
-
-"@types/underscore@npm:^1.11.4":
-  version: 1.11.7
-  resolution: "@types/underscore@npm:1.11.7"
-  checksum: 6e60e22e509687a9b15668c08db9fd27fe61e26564f0c74466d80a8501bcbdca80247f722a4aadc503f62cfdc9a8dfa5f7a0f30f3e61946c88e8088eef5b61f5
   languageName: node
   linkType: hard
 
@@ -14156,7 +14146,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"array-flatten@npm:^2.1.0, array-flatten@npm:^2.1.2":
+"array-flatten@npm:^2.1.2":
   version: 2.1.2
   resolution: "array-flatten@npm:2.1.2"
   checksum: e8988aac1fbfcdaae343d08c9a06a6fddd2c6141721eeeea45c3cf523bf4431d29a46602929455ed548c7a3e0769928cdc630405427297e7081bd118fdec9262
@@ -15111,13 +15101,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bomstrip@npm:^0.1.4":
-  version: 0.1.4
-  resolution: "bomstrip@npm:0.1.4"
-  checksum: 461df57bd2893e657de827e260573559e3343eec4b92161a20401562a065c9bdac9149c6325bf345a27f81958d1ce7606950e0eed774bd89d401f786760f3d50
-  languageName: node
-  linkType: hard
-
 "bonjour-service@npm:^1.0.11":
   version: 1.1.1
   resolution: "bonjour-service@npm:1.1.1"
@@ -15127,20 +15110,6 @@ __metadata:
     fast-deep-equal: ^3.1.3
     multicast-dns: ^7.2.5
   checksum: 832d0cf78b91368fac8bb11fd7a714e46f4c4fb1bb14d7283bce614a6fb3aae2f3fe209aba5b4fa051811c1cab6921d073a83db8432fb23292f27dd4161fb0f1
-  languageName: node
-  linkType: hard
-
-"bonjour@npm:^3.5.0":
-  version: 3.5.0
-  resolution: "bonjour@npm:3.5.0"
-  dependencies:
-    array-flatten: ^2.1.0
-    deep-equal: ^1.0.1
-    dns-equal: ^1.0.0
-    dns-txt: ^2.0.2
-    multicast-dns: ^6.0.1
-    multicast-dns-service-types: ^1.1.0
-  checksum: 2cfbe9fa861f4507b5ff3853eeae3ef03a231ede2b7363efedd80880ea3c0576f64416f98056c96e429ed68ff38dc4a70c0583d1eb4dab72e491ca44a0f03444
   languageName: node
   linkType: hard
 
@@ -15367,13 +15336,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"buffer-indexof@npm:^1.0.0":
-  version: 1.1.1
-  resolution: "buffer-indexof@npm:1.1.1"
-  checksum: 0967abc2981a8e7d776324c6b84811e4d84a7ead89b54a3bb8791437f0c4751afd060406b06db90a436f1cf771867331b5ecf5c4aca95b4ccb9f6cb146c22ebc
-  languageName: node
-  linkType: hard
-
 "buffer-more-ints@npm:~1.0.0":
   version: 1.0.0
   resolution: "buffer-more-ints@npm:1.0.0"
@@ -15581,13 +15543,6 @@ __metadata:
     function-bind: ^1.1.1
     get-intrinsic: ^1.0.2
   checksum: f8e31de9d19988a4b80f3e704788c4a2d6b6f3d17cfec4f57dc29ced450c53a49270dc66bf0fbd693329ee948dd33e6c90a329519aef17474a4d961e8d6426b0
-  languageName: node
-  linkType: hard
-
-"callbackify@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "callbackify@npm:1.1.0"
-  checksum: 037cbd5844a73e83d3a6642dee1db9121066043483c481f0715a638f5ef93f1fe8595978bd264a22c43d15cdb17f895c3dd0e59d2695ebf3d2a596cab4f54f42
   languageName: node
   linkType: hard
 
@@ -16802,13 +16757,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"crypto@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "crypto@npm:1.0.1"
-  checksum: 087fe3165bd94c333a49e6ed66a0193911f63eac38a24f379b3001a5fe260a59c413646e53a0f67875ba13902b2686d81dc703cb2c147a4ec727dcdc04e5645e
-  languageName: node
-  linkType: hard
-
 "css-blank-pseudo@npm:^3.0.3":
   version: 3.0.3
   resolution: "css-blank-pseudo@npm:3.0.3"
@@ -17738,7 +17686,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"deep-equal@npm:^1.0.1, deep-equal@npm:^1.1.1":
+"deep-equal@npm:^1.1.1":
   version: 1.1.1
   resolution: "deep-equal@npm:1.1.1"
   dependencies:
@@ -17926,13 +17874,6 @@ __metadata:
   version: 1.0.0
   resolution: "delayed-stream@npm:1.0.0"
   checksum: 46fe6e83e2cb1d85ba50bd52803c68be9bd953282fa7096f51fc29edd5d67ff84ff753c51966061e5ba7cb5e47ef6d36a91924eddb7f3f3483b1c560f77a0020
-  languageName: node
-  linkType: hard
-
-"delayed@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "delayed@npm:2.0.0"
-  checksum: 8969ed72e552db9667f44d7e422abc7e2f1b367dd8ebcec8b6528a66281facd409586e02009f0180bb1f26e43f87079c2487576614e71a07e84dab041f44cac7
   languageName: node
   linkType: hard
 
@@ -18195,31 +18136,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dns-packet@npm:^1.3.1":
-  version: 1.3.4
-  resolution: "dns-packet@npm:1.3.4"
-  dependencies:
-    ip: ^1.1.0
-    safe-buffer: ^5.0.1
-  checksum: 7dd87f85cb4f9d1a99c03470730e3d9385e67dc94f6c13868c4034424a5378631e492f9f1fbc43d3c42f319fbbfe18b6488bb9527c32d34692c52bf1f5eedf69
-  languageName: node
-  linkType: hard
-
 "dns-packet@npm:^5.2.2":
   version: 5.6.0
   resolution: "dns-packet@npm:5.6.0"
   dependencies:
     "@leichtgewicht/ip-codec": ^2.0.1
   checksum: 1b643814e5947a87620f8a906287079347492282964ce1c236d52c414e3e3941126b96581376b180ba6e66899e70b86b587bc1aa23e3acd9957765be952d83fc
-  languageName: node
-  linkType: hard
-
-"dns-txt@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "dns-txt@npm:2.0.2"
-  dependencies:
-    buffer-indexof: ^1.0.0
-  checksum: 80130b665379ecd991687ae079fbee25d091e03e4c4cef41e7643b977849ac48c2f56bfcb3727e53594d29029b833749811110d9f3fbee1b26a6e6f8096a5cef
   languageName: node
   linkType: hard
 
@@ -21625,15 +21547,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hexy@npm:0.3.4":
-  version: 0.3.4
-  resolution: "hexy@npm:0.3.4"
-  bin:
-    hexy: bin/hexy_cmd.js
-  checksum: dd25b74da4b38fbf6e0ffc16d741486e5b32114d4b19a882c112a534d4482b981be7332d751a72477d15198251a6f7c196cac892660a4ea2b34c008b80fb290f
-  languageName: node
-  linkType: hard
-
 "hexy@npm:0.3.5":
   version: 0.3.5
   resolution: "hexy@npm:0.3.5"
@@ -22420,7 +22333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip@npm:^1.1.0, ip@npm:^1.1.8":
+"ip@npm:^1.1.8":
   version: 1.1.8
   resolution: "ip@npm:1.1.8"
   checksum: a2ade53eb339fb0cbe9e69a44caab10d6e3784662285eb5d2677117ee4facc33a64679051c35e0dfdb1a3983a51ce2f5d2cb36446d52e10d01881789b76e28fb
@@ -25021,7 +24934,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jsrsasign@npm:^10.5.27, jsrsasign@npm:^10.8.6":
+"jsrsasign@npm:^10.8.6":
   version: 10.8.6
   resolution: "jsrsasign@npm:10.8.6"
   checksum: 726e6a46af802a17845348962261924b6b2c1138858cfd1a56c5e2918c8c7ebc50e7ae794bfabe12e47edec661a794fd0631ad8c78b83de4fb4d6aea53c144cf
@@ -26549,7 +26462,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimist@npm:^1.1.0, minimist@npm:^1.1.1, minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.5, minimist@npm:^1.2.6, minimist@npm:^1.2.7, minimist@npm:^1.2.8":
+"minimist@npm:^1.1.0, minimist@npm:^1.1.1, minimist@npm:^1.2.0, minimist@npm:^1.2.3, minimist@npm:^1.2.5, minimist@npm:^1.2.6, minimist@npm:^1.2.8":
   version: 1.2.8
   resolution: "minimist@npm:1.2.8"
   checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0
@@ -26845,25 +26758,6 @@ __metadata:
   version: 2.1.3
   resolution: "ms@npm:2.1.3"
   checksum: aa92de608021b242401676e35cfa5aa42dd70cbdc082b916da7fb925c542173e36bce97ea3e804923fe92c0ad991434e4a38327e15a1b5b5f945d66df615ae6d
-  languageName: node
-  linkType: hard
-
-"multicast-dns-service-types@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "multicast-dns-service-types@npm:1.1.0"
-  checksum: 0979fca1cce85484d256e4db3af591d941b41a61f134da3607213d2624c12ed5b8a246565cb19a9b3cb542819e8fbc71a90b07e77023ee6a9515540fe1d371f7
-  languageName: node
-  linkType: hard
-
-"multicast-dns@npm:^6.0.1":
-  version: 6.2.3
-  resolution: "multicast-dns@npm:6.2.3"
-  dependencies:
-    dns-packet: ^1.3.1
-    thunky: ^1.0.2
-  bin:
-    multicast-dns: cli.js
-  checksum: f515b49ca964429ab48a4ac8041fcf969c927aeb49ab65288bd982e52c849a870fc3b03565780b0d194a1a02da8821f28b6425e48e95b8107bc9fcc92f571a6f
   languageName: node
   linkType: hard
 
@@ -27199,241 +27093,114 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-opcua-address-space-base@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-address-space-base@npm:2.110.0"
+"node-opcua-address-space-base@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-address-space-base@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-crypto: 4.2.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-date-time: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-schemas: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: cdc77f218694f03c245ed498e30f320059b728d0c11b717a9b10d2200a065e9acba7245b4c94460b1ae9ce452daf8696285963e5cf8d2f18906ce0da7cfd4b1e
+    node-opcua-basic-types: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-date-time: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-schemas: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 946ee24a0beaf47c419ee85327e3d4dd9f733034d51db2b7768eccb834cf0bf59d06a37737656c13765a4e2d92eff8751a11ed8ec59f7f535a41dfedd7bb1811
   languageName: node
   linkType: hard
 
-"node-opcua-address-space-base@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-address-space-base@npm:2.68.1"
+"node-opcua-address-space-for-conformance-testing@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-address-space-for-conformance-testing@npm:2.116.0"
   dependencies:
-    "@types/lodash": 4.14.180
-    async: ^3.2.3
-    chalk: 4.1.2
-    dequeue: ^1.0.5
-    lodash: 4.17.21
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-client-dynamic-extension-object: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pseudo-session: 2.68.1
-    node-opcua-schemas: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-history: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    node-opcua-xml2json: 2.68.0
-    set-prototype-of: ^1.0.0
-    thenify: ^3.3.1
-    xml-writer: ^1.7.0
-  checksum: 82ae4ef969235d907ac58795229641b5a21adc8a0bcffe134a892344781b3c1dcbb61e7bf1c16c6b184aaa9a1177b85143b0c15a9915391ed1f5f9718180a1f6
-  languageName: node
-  linkType: hard
-
-"node-opcua-address-space-for-conformance-testing@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-address-space-for-conformance-testing@npm:2.110.0"
-  dependencies:
-    node-opcua-address-space: 2.110.0
+    node-opcua-address-space: 2.116.0
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-data-access: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 7d7d42489a2ed2bc86ca6ccbe672e5f29025cde80b0de8d25b07f5a996187465ca23b4591f2c48ad44c0f1cbe7a71a98bf85acbcc4201adb501ab0c0f2509029
+    node-opcua-basic-types: 2.114.0
+    node-opcua-data-access: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 3f57b881eb07c2302ca8ecfa239a1628c891d6e7b82eff5fa0ad5013adf19ca9fdcd8d4e1267c079862c56c5784e6bf62617e9a4785b6ca95bf26b83ccaa7bd4
   languageName: node
   linkType: hard
 
-"node-opcua-address-space-for-conformance-testing@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-address-space-for-conformance-testing@npm:2.68.1"
+"node-opcua-address-space@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-address-space@npm:2.116.0"
   dependencies:
-    node-opcua-address-space: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: f14189a922007737202336173a10dc9eedc51a3b64437176fd5b9262ac197a30874adc6d9892e0829211ec5297dc6870022dde209842a21f5cb8eff943603cf5
-  languageName: node
-  linkType: hard
-
-"node-opcua-address-space@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-address-space@npm:2.110.0"
-  dependencies:
-    "@types/lodash": 4.14.197
-    "@types/semver": ^7.5.0
+    "@types/lodash": 4.14.199
+    "@types/semver": ^7.5.3
     async: ^3.2.4
     chalk: 4.1.2
     dequeue: ^1.0.5
     lodash: 4.17.21
-    node-opcua-address-space-base: 2.110.0
+    node-opcua-address-space-base: 2.114.0
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-client-dynamic-extension-object: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-crypto: 4.2.0
-    node-opcua-data-access: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-date-time: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-nodeset-ua: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-pseudo-session: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-history: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
-    node-opcua-xml2json: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-client-dynamic-extension-object: 2.116.0
+    node-opcua-constants: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-data-access: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-date-time: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-nodeset-ua: 2.114.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-pseudo-session: 2.116.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-history: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
+    node-opcua-xml2json: 2.114.0
     semver: ^7.5.4
     set-prototype-of: ^1.0.0
     thenify: ^3.3.1
     xml-writer: ^1.7.0
-  checksum: 1ad9ff5831a7c4f79032bdd28011e0d6b854ba781f137ae5afbbaccf74b415cf751f8d858b5d3da9466de4b22012612b1fe711b032548fadd4e67a9b5e803873
+  checksum: dfb7ecfa33d138ac08ec6823f9d8209416519eccf56d9ca3701647ea3af21936f995659d77f5e0532227861b18a29136576123ca319045614fabf02c2b700503
   languageName: node
   linkType: hard
 
-"node-opcua-address-space@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-address-space@npm:2.68.1"
+"node-opcua-aggregates@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-aggregates@npm:2.116.0"
   dependencies:
-    "@types/lodash": 4.14.180
-    async: ^3.2.3
-    chalk: 4.1.2
-    dequeue: ^1.0.5
-    lodash: 4.17.21
-    node-opcua-address-space-base: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-client-dynamic-extension-object: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-nodeset-ua: 2.68.1
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pseudo-session: 2.68.1
-    node-opcua-schemas: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-history: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    node-opcua-xml2json: 2.68.0
-    semver: 7.3.5
-    set-prototype-of: ^1.0.0
-    thenify: ^3.3.1
-    xml-writer: ^1.7.0
-  checksum: 4def414f2a8d363318e9a92ac0512ec272996459877f8607fb5cdfbb81e6d56d398852605e686bee883d86e5efc9bbf55f8413a265c2e8134d0b86c2e4997ad3
-  languageName: node
-  linkType: hard
-
-"node-opcua-aggregates@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-aggregates@npm:2.110.0"
-  dependencies:
-    node-opcua-address-space: 2.110.0
+    node-opcua-address-space: 2.116.0
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-server: 2.110.0
-    node-opcua-service-history: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: a54bb0566fa154bbb23bbf860245094cd04042a89e079fbce9b9a777e77b91f0c825b463063a2ec3405f5d69e9af0974d654d3c33d30141fc67c9e9cb822f9a8
-  languageName: node
-  linkType: hard
-
-"node-opcua-aggregates@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-aggregates@npm:2.68.1"
-  dependencies:
-    "@types/async": ^3.2.12
-    node-opcua-address-space: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-nodesets: 2.66.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-service-history: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: 53ba3f65d0e2fc045fd9e676bfb1d5c26f3fb99fcf8963c4b6daf5527d16249164f86251e3d473aa1f8e280ccf92c6f24499eee21df89381039370f0072f7a14
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-server: 2.116.0
+    node-opcua-service-history: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 428905d40bde16c43cdb27c94fe8489890f627f4d5ef769cdd69343a498dc4b5081e0a2aefa3057072e80e10a9fd361ae9bcbb4ad2d5bd3639f13d5c416fa187
   languageName: node
   linkType: hard
 
@@ -27446,753 +27213,349 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-opcua-assert@npm:2.66.0":
-  version: 2.66.0
-  resolution: "node-opcua-assert@npm:2.66.0"
-  dependencies:
-    better-assert: ^1.0.2
-    chalk: 4.1.2
-  checksum: b3fcbd3a633dafb0eacea84816454d67a16aa77678329e176ef2be86ae5c5b6083d147898d7d4f83bbcdb6f9d2d63cf6a0d5ce01985802cc92cffafe656c6fb0
-  languageName: node
-  linkType: hard
-
-"node-opcua-basic-types@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-basic-types@npm:2.110.0"
+"node-opcua-basic-types@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-basic-types@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-buffer-utils: 2.110.0
-    node-opcua-date-time: 2.110.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-buffer-utils: 2.114.0
+    node-opcua-date-time: 2.114.0
     node-opcua-guid: 2.98.1
-    node-opcua-nodeid: 2.110.0
-    node-opcua-status-code: 2.110.0
-  checksum: f7dc05ab6149c6242ec7e1a7c4b00f6da828b3e55fba76b10a00f21b8b5a0ad8d8691fce967207236a5604771a2cd15341c492a1ec1c9598ea2bb7d3eb0de10a
+    node-opcua-nodeid: 2.114.0
+    node-opcua-status-code: 2.114.0
+  checksum: 6acbf59dbf6acf016f4d448bb399752e419adc5f759f68ac37b3995b917e449a33130577600699adb6c64ed42bceef139691f447bf92fcb13223c2f27f5fe894
   languageName: node
   linkType: hard
 
-"node-opcua-basic-types@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-basic-types@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-guid: 2.66.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-  checksum: d2093ec5ee6264da43580032dd6a1bb3fd4ab41a2072d6747d196237e79a6ca7eaf953c225050fe386115079308d90efd714453805dfcbe974600b63c4925e7e
-  languageName: node
-  linkType: hard
-
-"node-opcua-binary-stream@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-binary-stream@npm:2.110.0"
+"node-opcua-binary-stream@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-binary-stream@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-buffer-utils: 2.110.0
-  checksum: 65aae67a82c4ea4914f10538437ad81b0771e716505643c6999b4bb7beaacd7d9a90777f155c1364d9a28515fcdf42c2a3bea355cc270ac511aa8e47d4426a6e
+    node-opcua-buffer-utils: 2.114.0
+  checksum: 4b149609e73d6e467dfde7245e36213fbad3799b88417930b4e2f085932d5185323cb9272237be7a681fbf0e8339cf3b26d6adc3347e47ce2d3816e81bb9c5ba
   languageName: node
   linkType: hard
 
-"node-opcua-binary-stream@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-binary-stream@npm:2.67.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-buffer-utils: 2.67.0
-  checksum: 6cc4237c8061ba83241cf1d61c4d8e8be931c0277c5be8b182432597dd564897a883c25f3fbe27cc29d3d6d004a0c5b22153704dead881386f4d7883ada8dc0b
+"node-opcua-buffer-utils@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-buffer-utils@npm:2.114.0"
+  checksum: 1626572ebc99f3c35d3d5749303622ab4d443f942e5acfe1074c4f9cf01472e3687f7fbe52d7c6b6eedebffc9e4e14f336d1021bd80613297b8fb3c5e8ab147e
   languageName: node
   linkType: hard
 
-"node-opcua-buffer-utils@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-buffer-utils@npm:2.110.0"
-  checksum: 64d47eba995a2ccf51541b8d5fee71dc95a69f66b9c0716e460a7e0d2b208b61bce8e5ae26574890650a7fa16b6e7a32e2a990ff2cd1291d4eef35608df51fee
-  languageName: node
-  linkType: hard
-
-"node-opcua-buffer-utils@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-buffer-utils@npm:2.67.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-  checksum: 038e6157189b121224a67d798f8658669aad73089c9f0aba2ee0320ca63b0a5c013045ef9d2e79028f298cb9cbdfcfcf4daf2a0a792220f604ff64852569fd17
-  languageName: node
-  linkType: hard
-
-"node-opcua-certificate-manager@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-certificate-manager@npm:2.110.0"
+"node-opcua-certificate-manager@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-certificate-manager@npm:2.114.0"
   dependencies:
     "@types/mkdirp": 1.0.2
     env-paths: 2.2.1
     mkdirp: 1.0.4
     node-opcua-assert: 2.105.0
-    node-opcua-crypto: 4.2.0
-    node-opcua-debug: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-pki: 4.4.0
-    node-opcua-status-code: 2.110.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-debug: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-pki: 4.7.0
+    node-opcua-status-code: 2.114.0
     thenify: ^3.3.1
-  checksum: a1a02a41c3bbcc4d76eac2a30645ba436b086ec4a690e13d9c24da8a0aa31269723d709a20af04277e3778f98850132a265a08d5423f7e58a531b80c3f5fed4c
+  checksum: 02a7a25a218e3dfa9cbadea435ec1746ca77009c1dacad00d390bc04625d052cc528320827c6b48c57b5221d909e85aca543b4cc06e3d53cf4d2deb6aa9540d9
   languageName: node
   linkType: hard
 
-"node-opcua-certificate-manager@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-certificate-manager@npm:2.68.0"
-  dependencies:
-    "@types/mkdirp": 1.0.1
-    chalk: 4.1.2
-    delayed: ^2.0.0
-    env-paths: 2.2.1
-    mkdirp: 1.0.4
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-constants: 2.67.0
-    node-opcua-crypto: ^1.10.0
-    node-opcua-debug: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pki: ^2.15.4
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    once: ^1.4.0
-    thenify: ^3.3.1
-  checksum: 5988b65678e4e49e5d7ce41d0d7af0d388bc02715a2b37c0be46a0d6e304bd601e4395f4b61d011ee60c6f25caf96745f6fd4d3527d24280e9fbf559de9ffa05
-  languageName: node
-  linkType: hard
-
-"node-opcua-chunkmanager@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-chunkmanager@npm:2.110.0"
+"node-opcua-chunkmanager@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-chunkmanager@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-buffer-utils: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-packet-assembler: 2.110.0
-  checksum: 5cce42d92dbdbac16a757c1288041ba5bd38103cc59688d1f487d37655a61928a9b8127853865517549844aec102e015b00d89681ea5852f768bbf983f1504a1
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-buffer-utils: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-packet-assembler: 2.114.0
+  checksum: ee8f346cd9e35c1a362e69ccb80e9fed3aa6e15a57f8d1d701a0f3ad7b6cdcc5b8c7845d088280ea911c4ce568c24f1ff83320d27b8d717d20343a39aec69f07
   languageName: node
   linkType: hard
 
-"node-opcua-chunkmanager@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-chunkmanager@npm:2.68.0"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-packet-assembler: 2.66.0
-  checksum: 68ead30546486fa769451425fa2f6cff92f4bbab6b1b2202a84e5b673db218127b7e31a079df2efe61678285819da7ef8b15ba43c8d3c24ae23502a2637fa76e
-  languageName: node
-  linkType: hard
-
-"node-opcua-client-crawler@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-client-crawler@npm:2.110.0"
+"node-opcua-client-crawler@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-client-crawler@npm:2.116.0"
   dependencies:
     async: ^3.2.4
     chalk: 4.1.2
-    node-opcua-address-space: 2.110.0
+    node-opcua-address-space: 2.116.0
     node-opcua-assert: 2.105.0
-    node-opcua-client: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
+    node-opcua-client: 2.116.0
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
     thenify: ^3.3.1
-  checksum: e2998da6217fbf4a362d2b67381f15e45c7179fa79c6c04a5356e154d68ac8a8188c94eebf3fe35c28c3f82f37a7c842b01f0aa0ca45523e04e1f1b291248f5b
+  checksum: f4c12a433d863664f69959f0619786f32241c3b22a694a78f980911048e168d9fc9b6c3c655c90b73db1d7e873b49265fb21fbf87f0857783e5acf7894523624
   languageName: node
   linkType: hard
 
-"node-opcua-client-crawler@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-client-crawler@npm:2.68.1"
-  dependencies:
-    "@types/underscore": ^1.11.4
-    async: ^3.2.3
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-browse: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    underscore: ^1.13.2
-  checksum: 557041642198d05b5695fe6a695e71b18b1e66e454823ec3cefd0fa8f094339729d091726f1ff1e07e80eaff3f7fb5357bb4cff1e35e5adc95d05243a19fcf23
-  languageName: node
-  linkType: hard
-
-"node-opcua-client-dynamic-extension-object@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-client-dynamic-extension-object@npm:2.110.0"
+"node-opcua-client-dynamic-extension-object@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-client-dynamic-extension-object@npm:2.116.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-pseudo-session: 2.110.0
-    node-opcua-schemas: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 387fae267521790ce990f038239c3715b95eadc2b1b9524530ff6d6e579c76912893733958f76108c11113a98a56180dc2ecff192ec150fee873ad2eaf73032d
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-pseudo-session: 2.116.0
+    node-opcua-schemas: 2.114.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: d136c22c0365e88fcacfedd480fb3f121e39e54f25bba090fb5e9d0029a34ab633455652f83297cdd1e8b901ec4116c5d9d01fbc973dbacd6f5677e2047234ca
   languageName: node
   linkType: hard
 
-"node-opcua-client-dynamic-extension-object@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-client-dynamic-extension-object@npm:2.68.1"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-pseudo-session: 2.68.1
-    node-opcua-schemas: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-variant: 2.68.0
-  checksum: 32f0f7224aa5143acf2e3c4b1de6bacdd12d02504bcbc9daca0481421f3c9a05f21a1b1cb4409d7d9f01d68d523eec87f4a2a218ab10b89816f02451602408f4
-  languageName: node
-  linkType: hard
-
-"node-opcua-client-proxy@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-client-proxy@npm:2.110.0"
+"node-opcua-client-proxy@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-client-proxy@npm:2.116.0"
   dependencies:
     async: ^3.2.4
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-pseudo-session: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-read: 2.110.0
-    node-opcua-service-subscription: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-pseudo-session: 2.116.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-read: 2.114.0
+    node-opcua-service-subscription: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
     thenify: ^3.3.1
-  checksum: 02d0bd9cb0cc703186d83106d17fee015cdbd5e4a380eac4d1e244b50a110f9fdd940663a839a8544ce35f3a695b81c869e1a9c4320a1da73d7bef6eac7bd54e
+  checksum: 5fb3a776a4848d17841fc34ebe8fb24bbd3516f1b90cf335cad30176da5226665bc1dbee46ea051d46784c489d3b0e7ef38fd0d7cea073e7fc320a2f82c97f74
   languageName: node
   linkType: hard
 
-"node-opcua-client-proxy@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-client-proxy@npm:2.68.1"
-  dependencies:
-    async: ^3.2.3
-    node-opcua-address-space: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-pseudo-session: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: f8eaeea4614fc436847f701f075e4f45b0fca5fbb6bcaa54407f0c34ea2ba3b526dace5e56f65e53628c5526af276778bd2c5fdeef675f08dc74c4238aae14c5
-  languageName: node
-  linkType: hard
-
-"node-opcua-client@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-client@npm:2.110.0"
+"node-opcua-client@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-client@npm:2.116.0"
   dependencies:
     "@ster5/global-mutex": ^2.0.0
-    "@types/async": ^3.2.20
+    "@types/async": ^3.2.21
     async: ^3.2.4
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-buffer-utils: 2.110.0
-    node-opcua-certificate-manager: 2.110.0
-    node-opcua-client-dynamic-extension-object: 2.110.0
-    node-opcua-common: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-crypto: 4.2.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-date-time: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-buffer-utils: 2.114.0
+    node-opcua-certificate-manager: 2.114.0
+    node-opcua-client-dynamic-extension-object: 2.116.0
+    node-opcua-common: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-date-time: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
     node-opcua-hostname: 2.105.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-pki: 4.4.0
-    node-opcua-pseudo-session: 2.110.0
-    node-opcua-schemas: 2.110.0
-    node-opcua-secure-channel: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-discovery: 2.110.0
-    node-opcua-service-endpoints: 2.110.0
-    node-opcua-service-filter: 2.110.0
-    node-opcua-service-history: 2.110.0
-    node-opcua-service-query: 2.110.0
-    node-opcua-service-read: 2.110.0
-    node-opcua-service-register-node: 2.110.0
-    node-opcua-service-secure-channel: 2.110.0
-    node-opcua-service-session: 2.110.0
-    node-opcua-service-subscription: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-pki: 4.7.0
+    node-opcua-pseudo-session: 2.116.0
+    node-opcua-schemas: 2.114.0
+    node-opcua-secure-channel: 2.114.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-discovery: 2.114.0
+    node-opcua-service-endpoints: 2.114.0
+    node-opcua-service-filter: 2.114.0
+    node-opcua-service-history: 2.114.0
+    node-opcua-service-query: 2.114.0
+    node-opcua-service-read: 2.114.0
+    node-opcua-service-register-node: 2.114.0
+    node-opcua-service-secure-channel: 2.114.0
+    node-opcua-service-session: 2.114.0
+    node-opcua-service-subscription: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
     thenify: ^3.3.1
-  checksum: 270de9b33aff3396b6302e04b85df50c4f7a1c1c93489b435c02d193584111031f2a6588872635f38c04e13a79d4b288eee4bb7c3023cb96fdbfcecc0a68f3d8
+  checksum: f2f59dba63b0d3ce782613e667760ebdc56657188ca1b4532ed208e3c6b21adddd5d22b2dbb7ab9576f687d121926a36234d6c5dab6f69e41cbe16048c1e74a6
   languageName: node
   linkType: hard
 
-"node-opcua-client@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-client@npm:2.68.1"
-  dependencies:
-    "@ster5/global-mutex": ^1.2.0
-    "@types/async": ^3.2.12
-    "@types/once": ^1.4.0
-    "@types/underscore": ^1.11.4
-    async: ^3.2.3
-    callbackify: ^1.1.0
-    chalk: 4.1.2
-    delayed: ^2.0.0
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-certificate-manager: 2.68.0
-    node-opcua-client-dynamic-extension-object: 2.68.1
-    node-opcua-common: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-crypto: ^1.10.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-hostname: 2.67.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pki: ^2.15.4
-    node-opcua-pseudo-session: 2.68.1
-    node-opcua-schemas: 2.68.1
-    node-opcua-secure-channel: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-discovery: 2.68.1
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-history: 2.68.1
-    node-opcua-service-query: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-register-node: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-service-session: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    once: ^1.4.0
-    thenify: ^3.3.1
-    underscore: ^1.13.2
-  checksum: eff9f5a0205bd7d9298bbebcd6982f2429070796d65a1ea3705581d80496aecd506f36d9f8e2d15755ea1b3fe6a5c192cfcc99f3c838d7fafa56261178c7ba37
-  languageName: node
-  linkType: hard
-
-"node-opcua-common@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-common@npm:2.110.0"
+"node-opcua-common@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-common@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-crypto: 4.2.0
-    node-opcua-types: 2.110.0
-  checksum: 49e6c74fb81fe914bf314c9657f81d61f9cd1b3c488e718e65f24714dfd01504a1c14e79e947599e11d3fb3aef3ac0d467f197cb322ded46297385432b420bfd
+    node-opcua-crypto: 4.5.0
+    node-opcua-types: 2.114.0
+  checksum: 652747998fa44335192415a5486516b100d214cb277a35c8493e9d475e9b95fe61cb6e9ff0f1b60274e6745b18177877c319ec90e91d78b94566b80343681207
   languageName: node
   linkType: hard
 
-"node-opcua-common@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-common@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-crypto: ^1.10.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 1ad2bc3bcac402c68aa51624769a18fe5b4a94f12f98dd0d1b31734e1a507fd61fa08d73fd6082f28f3d42d0abbbbe88f004d4246c765714193fbfa43673d19d
+"node-opcua-constants@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-constants@npm:2.114.0"
+  checksum: 090b0900e1bac5c205f9074415ced2874ee859dadaab1e7458ce08f066d7b1d066781bdbfaba838aa80b7fda4f56e556cd57b15c76c0324dacb438e29391949e
   languageName: node
   linkType: hard
 
-"node-opcua-constants@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-constants@npm:2.67.0"
-  checksum: 72ec4594db29a0e28561b130a0ed2de421efe617550618a9498e9d215cad0d42cb868e92911d8b3909716c797c5f45f966603af2e641d4b325c5df7aba1b3371
-  languageName: node
-  linkType: hard
-
-"node-opcua-constants@npm:2.98.1":
-  version: 2.98.1
-  resolution: "node-opcua-constants@npm:2.98.1"
-  checksum: a7303c4e2714c332d08fd29a0362352938c7f9175608e3a019b58b90fc3a83ef2c337442d8873fc93e08e7f5cea3c848f22016decf20278b877c6d1a03784941
-  languageName: node
-  linkType: hard
-
-"node-opcua-crypto@npm:4.2.0":
-  version: 4.2.0
-  resolution: "node-opcua-crypto@npm:4.2.0"
+"node-opcua-crypto@npm:4.5.0":
+  version: 4.5.0
+  resolution: "node-opcua-crypto@npm:4.5.0"
   dependencies:
     "@peculiar/webcrypto": ^1.4.3
-    "@peculiar/x509": ^1.9.3
+    "@peculiar/x509": ^1.9.5
     "@types/jsrsasign": ^10.5.8
+    "@types/sshpk": ^1.17.1
     assert: ^2.0.0
     better-assert: ^1.0.2
     chalk: ^4.1.2
-    crypto: ^1.0.1
     hexy: 0.3.5
     jsrsasign: ^10.8.6
     sshpk: ^1.17.0
-  checksum: 22bcfb13818ae0f79ab7f06bce781789391c599e00983fc2693299a425ef847710b04d372a7884776c26665da4391e076773c7b6bd4ff9525736e50061cf9dc2
+  checksum: 20a68642876b620757b7ec114528711a6fd4f404870066ce15892cc39743c00d19305acbcb292d8ccba692cfdceed0de233f5b93f665e12437ebeb9eef722eb5
   languageName: node
   linkType: hard
 
-"node-opcua-crypto@npm:^1.10.0, node-opcua-crypto@npm:^1.12.0":
-  version: 1.12.0
-  resolution: "node-opcua-crypto@npm:1.12.0"
+"node-opcua-data-access@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-data-access@npm:2.114.0"
   dependencies:
-    better-assert: ^1.0.2
-    chalk: ^4.1.2
-    hexy: 0.3.4
-    jsrsasign: ^10.5.27
-    sshpk: ^1.17.0
-  checksum: 1724b833151e42c26a08fbb7bd4a285c4394dd2ec617e8fc06672b2f40aa84b15f51bd5e6b91b76627e99d19b2b64c019fe3725ec117f12fa54d53f88299fcbc
+    node-opcua-data-model: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: fba056c1432695a6bd7f2171c85059f54762b4f65fe8e8a471ac34e560d658841d8b60f5df16428ff37469d74f2cbd5357c22e91910879c55feb91025fcd0c4d
   languageName: node
   linkType: hard
 
-"node-opcua-data-access@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-data-access@npm:2.110.0"
-  dependencies:
-    node-opcua-data-model: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: 2b5d26e7d761076c67b860583079f1968812ab1fd30d01730043ee9e2d7306a69036054d2c922370ecefed8ab8c4b64da41105b69d685d0116cc1d8e978d0b3c
-  languageName: node
-  linkType: hard
-
-"node-opcua-data-access@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-data-access@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-types: 2.68.1
-  checksum: dc84ec7734e058d63e6c5412d2c3842560375b66c57b8882d4379676fe48261f4c0818834a3d62819251b7c4828f4c3441a0b42055020d6db91b10e96615a921
-  languageName: node
-  linkType: hard
-
-"node-opcua-data-model@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-data-model@npm:2.110.0"
+"node-opcua-data-model@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-data-model@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-status-code: 2.110.0
-  checksum: 838337e33e0aa1146b2882976e0a71084c1bd23b22f76273ef262a13007e9ae439811a73d7fdd7cfcdeef60dbce854861480579799601b754fba402410acb18e
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-status-code: 2.114.0
+  checksum: 660c2ce665e181bdd95c87509d3f47049e121763cedc865f84c3eb3a665267c33ecd34766e77e8ed867d7bf9dd219346e111a793487a27ae8553a51797499216
   languageName: node
   linkType: hard
 
-"node-opcua-data-model@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-data-model@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-  checksum: 53381fb79d8094a736e871dddde1ff0119169d3b2e3687340bf8692d7c73255800328e264fc4ce1482f7936bada925a16602954190037d3ec5e8a23ccb9dbed4
-  languageName: node
-  linkType: hard
-
-"node-opcua-data-value@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-data-value@npm:2.110.0"
+"node-opcua-data-value@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-data-value@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-date-time: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 389a4e13942e9bde617684751257c2fed50427528b2df643922420df43bcec612cb31334c048f6a3994cc902be0d4b6202c993c54c8b71b51299978c9bb49dee
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-date-time: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 55038c51324b8ab7157b0d31ae8b2cf3dfda76bfa8f9febb4df89ed553eb0c7a553e8f9bfbcfb447975a31d03027e471d442a5d7d152cbbb5f4c1f7c50a17ca4
   languageName: node
   linkType: hard
 
-"node-opcua-data-value@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-data-value@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: 670bb75545c7c459f2ffcea04b8e7e5aa6b7f92c290062dab1ec5d605bee0212215a6e58f77cfc34ee24d7ec63ecf9e5a8fcfb8895d92303f6fc2bda9c6f2fca
-  languageName: node
-  linkType: hard
-
-"node-opcua-date-time@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-date-time@npm:2.110.0"
+"node-opcua-date-time@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-date-time@npm:2.114.0"
   dependencies:
     long: ^4.0.0
     node-opcua-assert: 2.105.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: b744dfdaab8070b6f5226d681dbcfcdad37ae21c80d577c1d6887ab436f5d6602bc982a7337aeef4c8236cfe1a68e2bb731256f7777054d98a6195b787b2af99
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: 8da3b896215b5a3152e18b8c218f3bbedbadf21f05ce5a9621bca0650aa076b33875dd244a66243e896eb14e8ab9e91513e7c325eec43448b8f794684844c942
   languageName: node
   linkType: hard
 
-"node-opcua-date-time@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-date-time@npm:2.68.0"
-  dependencies:
-    long: ^4.0.0
-    node-opcua-assert: 2.66.0
-    node-opcua-utils: 2.67.0
-  checksum: 95d15e20e137e489a4eb2b83bd4208582eeec3c1fea67f1ab81417dee2d7aa2f2b25b06d87e629526110954d698c9faeb0d9aa643d8b52bffc158b51e42e252f
-  languageName: node
-  linkType: hard
-
-"node-opcua-debug@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-debug@npm:2.110.0"
+"node-opcua-debug@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-debug@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     hexy: 0.3.5
     node-opcua-assert: 2.105.0
-    node-opcua-buffer-utils: 2.110.0
-  checksum: 6eb78140aa0abb119fc99230b5f8ed868f674135c4a0b92ba0d50409d739df35ffb7a0f43300e1e3478a704cc3fabd57ef09cdb8f9348511eb464cfede98ce61
+    node-opcua-buffer-utils: 2.114.0
+  checksum: b2b19a43eded642a669e6e8782421dfcaef9e4484ce13f6363a1a8b7adfcb385ef30d99f388a4d5375c639639577d7bf55858ad965991ca0bb900af77fc46363
   languageName: node
   linkType: hard
 
-"node-opcua-debug@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-debug@npm:2.68.0"
-  dependencies:
-    hexy: 0.3.4
-    node-opcua-assert: 2.66.0
-    node-opcua-buffer-utils: 2.67.0
-  checksum: ded42b35c8cd19b1a41d707e7a449d2ad63a90338ea340ad8af48216c14acf04e8b210fa50f2035f89828d6b3b197c54247a6fa58280a0d7fc66ce634faaa775
+"node-opcua-enum@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-enum@npm:2.114.0"
+  checksum: 2c1ebe2301aee408370ac76bd6fcb926c46fbd7bd390237075fa436fcbabac1b4c4762042fc9fb6d7c44b5d9ac2fad341d518e368a58f36ae2f850748dc89b6f
   languageName: node
   linkType: hard
 
-"node-opcua-enum@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-enum@npm:2.110.0"
-  checksum: 97b2c9dfd8ebd9d84b887cd26186f7ed7b991c7a6b4ee4000740a107daceb9bd1d055121814efe51a385d637c3e877b3ce986cef4d361c307a83c4944d923b7f
-  languageName: node
-  linkType: hard
-
-"node-opcua-enum@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-enum@npm:2.67.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-  checksum: 6af59da6465d4c4de4ef010d5b6b83cf38d064011492238634e57092f1ce8cebf2fa88ff7c8fd95994b350ba90f96e1d13485ecb8153d616336290259acffcce
-  languageName: node
-  linkType: hard
-
-"node-opcua-extension-object@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-extension-object@npm:2.110.0"
+"node-opcua-extension-object@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-extension-object@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-  checksum: 637befbbeedaa35c202de8ca1ebc1114fcc2dc7da4233bc80160f554049e485473d8611dd7693b4cfa274152653038414291aaa133807ff066578a4800ddedfe
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+  checksum: fda896ce4b9597fe669f1d497ccba476e2386e28e0b9a31472c00cfa0762f14db326055c5ce0c178197ac3d21a64e4402a34d225e174652cf0578fe9b24a6754
   languageName: node
   linkType: hard
 
-"node-opcua-extension-object@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-extension-object@npm:2.68.0"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-  checksum: d016d259284743888b2fb30a7d9bd8dadb417f9dcbc47d9a17af4da693ff5073902ce8982c20e722e6861a387de36ce82cdb344d21eb98dc54e5231611bae72f
-  languageName: node
-  linkType: hard
-
-"node-opcua-factory@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-factory@npm:2.110.0"
+"node-opcua-factory@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-factory@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-debug: 2.110.0
-    node-opcua-enum: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-enum: 2.114.0
     node-opcua-guid: 2.98.1
-    node-opcua-nodeid: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: 7ff8c75ba5fd9c400f7453feb50d304922cc667eb5167279264b1d34767a2d7d258013f97189f1aed9a1434070708c34de3fb3f0f5b35540a32322c9e6a62e3e
+    node-opcua-nodeid: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: dd37fdc74e65adb2bf73bbdeeb9ba97d9a1ed0776f8f6a8fd843b4df40de0f77203cfb21fba9decbe93b756de46e8b2a0e578ccc40e31650ed009e0e3e8cfc19
   languageName: node
   linkType: hard
 
-"node-opcua-factory@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-factory@npm:2.68.0"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-guid: 2.66.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-  checksum: cbfd42e843529cd62669962391f00d64ff1c4787b4171eaa8f599f2d004aa1aa27ab0fc3328fcde3d7d61ac36cfca195ad67c619b966a9bc94ba010b3abf0263
-  languageName: node
-  linkType: hard
-
-"node-opcua-generator@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-generator@npm:2.110.0"
+"node-opcua-generator@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-generator@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
-    node-opcua-debug: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-schemas: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: 9daedfec6f18f04d70803ae2f23eb783be1bd6f2f0f3a7055febc682dfaeea9e15a40558986a586ea99fb0f4481e8fa64db9a74bed7aecf921e88ac89631bcd1
-  languageName: node
-  linkType: hard
-
-"node-opcua-generator@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-generator@npm:2.68.1"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-guid: 2.66.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-schemas: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    node-opcua-xml2json: 2.68.0
-  checksum: a8e9920310ef0bf3ac7f7c2c929ce2f68f54a1f24f6d01655fea711fb9149d1b914ff197f7c763254734db8beac262456a06385322036bb68fe23b84b1ce964c
-  languageName: node
-  linkType: hard
-
-"node-opcua-guid@npm:2.66.0":
-  version: 2.66.0
-  resolution: "node-opcua-guid@npm:2.66.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-  checksum: 0e4c6f6f3b07fe3375600c2892a4191c145e6ca169039c1db146cafe08abec16320c3ad9a98fbc881521ee391875587a3aa4f58daaf591db7abc928562e121d1
+    node-opcua-constants: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-schemas: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: d5f845a7005c1bffbbff1fcefe83508908ae825f131d174cbf6b01e9da197cc032be99f7723d322d528c6629f1d6347c6f410bc6be44d2c5d775997c4f4c6713
   languageName: node
   linkType: hard
 
@@ -28210,71 +27573,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-opcua-hostname@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-hostname@npm:2.67.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-  checksum: afd6210aa2653c87a36ff2f2403a09e9e8f75fa3e22bdbb2c99b1fd13e0082b61ebf561795b19b7f85313f12a562c47fda115c65001ba64c933fc2a3481b7b9f
-  languageName: node
-  linkType: hard
-
-"node-opcua-nodeid@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-nodeid@npm:2.110.0"
+"node-opcua-nodeid@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-nodeid@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
+    node-opcua-constants: 2.114.0
     node-opcua-guid: 2.98.1
-  checksum: 49f5fba106f8b86d5736794201abdd8918d913962aab9507e1cd2fc828d95ac357fbfbd7941727049dc47cfaf3ff0a2c3f4bea21792aa7984ad5e5a1eca4c4b7
+  checksum: 6b6d441344075657fe3b033dbe7fd5d7191909f41e62589c974022fc53a83ea0bc3c309bb2a2b0f6c82c2a7ab5df4fb725f68609e554d490836545d313216ce5
   languageName: node
   linkType: hard
 
-"node-opcua-nodeid@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-nodeid@npm:2.68.0"
+"node-opcua-nodeset-ua@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-nodeset-ua@npm:2.114.0"
   dependencies:
-    "@types/lodash": 4.14.180
-    chalk: 4.1.2
-    lodash: 4.17.21
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-    node-opcua-enum: 2.67.0
-    node-opcua-guid: 2.66.0
-  checksum: dd90de3947289d57328c348adb8e490865cd4123b33ed70b6531530c35b744764cd4984fc9235109f38e838d6e07bf5f5dae9e1c8363e79fafc608a2f2b80c03
-  languageName: node
-  linkType: hard
-
-"node-opcua-nodeset-ua@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-nodeset-ua@npm:2.110.0"
-  dependencies:
-    node-opcua-address-space-base: 2.110.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-data-access: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 73eb6b766d78c43f90ce6c6d1f0e5db8ed402f6f22441f28bb3b02cc71a6b82fc1a2c209ec519703658e2a04e2e90f99acd4d3867564071cef83da61016c2dfc
-  languageName: node
-  linkType: hard
-
-"node-opcua-nodeset-ua@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-nodeset-ua@npm:2.68.1"
-  dependencies:
-    node-opcua-address-space-base: 2.68.1
-    node-opcua-basic-types: 2.68.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: 979f06cc6193cfc3ef4bb54bb0b2f55fe99ea97435cfea2e557dff36a490d103aaebb86d17ee6d55796e3977a8793c8ce2cc63302f0800385f174d9a33007fe6
+    node-opcua-address-space-base: 2.114.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-data-access: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: b0f1efa55f2f2b6c630a60a4fd7d01d5fa4e70252eb1382802b66dfd25c9e4f78fac1ed6b87cec8561e5c046eb73fc8e60db73f8c094e2c4fb8d010371838b14
   languageName: node
   linkType: hard
 
@@ -28285,112 +27608,57 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-opcua-nodesets@npm:2.66.0":
-  version: 2.66.0
-  resolution: "node-opcua-nodesets@npm:2.66.0"
-  checksum: 4d7ffe96fa29403b6706b4be32ce704dd3b19115e1428ddd39800a9cb490f82ffbc8534edf37909a92a543f176ba8a6eeb21e79909ffcfdf40c25f5b5696b594
-  languageName: node
-  linkType: hard
-
-"node-opcua-numeric-range@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-numeric-range@npm:2.110.0"
+"node-opcua-numeric-range@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-numeric-range@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-status-code: 2.110.0
-  checksum: e07627310f7a5437d7f3d181ac1ad89e3103829e0969425542ee037d03cc64759e7002a8774076af4df973d7e6dc4e34b5f3883eb572d054e0274f1b5b67912d
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-status-code: 2.114.0
+  checksum: 4c1180c8fc1ab36a40a04fbaddf898b0a75dc2214b206d89a2726732555c783c726b16345f2b3ff6e9db31f46ea840d29d87917f8b6a53fa8b383c3639a6260c
   languageName: node
   linkType: hard
 
-"node-opcua-numeric-range@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-numeric-range@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-status-code: 2.67.0
-  checksum: f91efbc1c6de1f6012f7fe39a0a1a244e15d95d18081d0d31ab438535507fd50620959d1fe49236b6e548f0dfc9aea5d83859b0f6d0403480e6d7ef283977bb0
-  languageName: node
-  linkType: hard
-
-"node-opcua-object-registry@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-object-registry@npm:2.110.0"
+"node-opcua-object-registry@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-object-registry@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-debug: 2.110.0
-  checksum: 0108bd70aa04660b1c90944a01ca74c53341cca2373696247c82722e56180b940c0bab339783d3f89a45b0eafaabf6b215bc44aa295d2d1102d92236292fbaa1
+    node-opcua-debug: 2.114.0
+  checksum: 7cf06ae56f8b5bb000ff4951f9873999cd3a50c010b990592f19ac87558e9a75e77ee13abbc08b9c1e473f01e87568023bd17733c1f63e00ec86f1fcccec7b68
   languageName: node
   linkType: hard
 
-"node-opcua-object-registry@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-object-registry@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-debug: 2.68.0
-  checksum: fefdadfdcf6e0bf7cb317d81680c1ad9cf997eace7ccffcb3d8d05c36bb5620766d793dba6e23c5a53d5e1a92c1332a9c1700019dc524fc7ac74ebcf205044ae
-  languageName: node
-  linkType: hard
-
-"node-opcua-packet-analyzer@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-packet-analyzer@npm:2.110.0"
+"node-opcua-packet-analyzer@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-packet-analyzer@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: f3db38d96d24c14690badcc755e1a63d3a5e369264ad29b41961e94986f4d77b6f1b33fc6e832010d7ce3f929947a8338a479ade2a3711377a9fe70f3fd7b1be
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: 80ecbcb021ce12a1969fed8258c18d96e2ace762a0d0969862da8bc07e8afb3e2aec706920ee917d7b699104b1cf0eacea35eeded9f9ece1fecd1c3f7d21bb3e
   languageName: node
   linkType: hard
 
-"node-opcua-packet-analyzer@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-packet-analyzer@npm:2.68.0"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-utils: 2.67.0
-  checksum: 4ce1f86a1a675f9945419b0fc21e9b38040dab6f9c205a1f649268ae4d62adff2257dce733025601edcd0fe153e2090620828de3d7c3060be6027780665cd4ca
-  languageName: node
-  linkType: hard
-
-"node-opcua-packet-assembler@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-packet-assembler@npm:2.110.0"
+"node-opcua-packet-assembler@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-packet-assembler@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-debug: 2.110.0
-  checksum: 3cddd8a4ca558f462419d3354b133c300a17abf35bcf4d2bac307f2dbaf6cac2ce1728dcd227f83a0da63058eacc4a44ad48051356e82236f744e68e1a511bb8
+    node-opcua-debug: 2.114.0
+  checksum: 2585aae6d9786faebaff3f1acd7c3c924cd14e24abc06dba0a53979d6541e8c97d4c6e64210c91127972ea5d9eac784dc24a3239fb685e1273bfb3793eb00a46
   languageName: node
   linkType: hard
 
-"node-opcua-packet-assembler@npm:2.66.0":
-  version: 2.66.0
-  resolution: "node-opcua-packet-assembler@npm:2.66.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-  checksum: 3c183688cfca9a32475d7693769bcc1a03c2b6ad421563cc9be6b0b10099b6f726913acff53071da9728786661cbda4e6608d942db19ccae6d4c26fb89a827d8
-  languageName: node
-  linkType: hard
-
-"node-opcua-pki@npm:4.4.0":
-  version: 4.4.0
-  resolution: "node-opcua-pki@npm:4.4.0"
+"node-opcua-pki@npm:4.7.0":
+  version: 4.7.0
+  resolution: "node-opcua-pki@npm:4.7.0"
   dependencies:
     "@ster5/global-mutex": ^2.0.0
     async: ^3.2.4
@@ -28399,7 +27667,7 @@ __metadata:
     chokidar: ^3.5.3
     cli-table: ^0.3.11
     minimist: ^1.2.8
-    node-opcua-crypto: 4.2.0
+    node-opcua-crypto: 4.5.0
     progress: ^2.0.3
     rimraf: 3.0.2
     thenify: ^3.3.1
@@ -28408,1116 +27676,497 @@ __metadata:
     yauzl: ^2.10.0
   bin:
     pki: bin/crypto_create_CA.js
-  checksum: c0b5914e3d03eed4e5f9a7fe39bd1170b4fea67392b185ad96893306c3cde0346d8c0941fd1fe97b82ad574114b582f6b8e86a5095f510364e5fd1a91b319466
+  checksum: 218721f4f45863dc5518acd0c1ef70351cedb63ea8659a5609c08df744da23d77be9b190ed630e066bb79117078bdb546f66d943ceb2596df9e3410da4ef3088
   languageName: node
   linkType: hard
 
-"node-opcua-pki@npm:^2.15.4":
-  version: 2.19.1
-  resolution: "node-opcua-pki@npm:2.19.1"
-  dependencies:
-    "@ster5/global-mutex": ^1.2.0
-    async: ^3.2.4
-    byline: ^5.0.0
-    chalk: 4.1.2
-    chokidar: ^3.5.3
-    cli-table: ^0.3.11
-    minimist: ^1.2.7
-    node-opcua-crypto: ^1.12.0
-    progress: ^2.0.3
-    rimraf: ^3.0.2
-    thenify: ^3.3.1
-    wget-improved-2: ^3.3.0
-    yargs: 17.5.1
-    yauzl: ^2.10.0
-  bin:
-    pki: bin/crypto_create_CA.js
-  checksum: a4edb189f33a33dd29190940a6ce5acb676e16157a40d542bd62314c50f4ff395015209274196a42a5a7a264a31cf2ca4b5beac9d4f14212782ec4ab177178f7
-  languageName: node
-  linkType: hard
-
-"node-opcua-pseudo-session@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-pseudo-session@npm:2.110.0"
+"node-opcua-pseudo-session@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-pseudo-session@npm:2.116.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-read: 2.110.0
-    node-opcua-service-subscription: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-read: 2.114.0
+    node-opcua-service-subscription: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
     thenify: ^3.3.1
-  checksum: 3394acf2b43bee1040e52e3f265d7202ec0ecefd20a99e8beee818a160e694ec34b1a57519176cbef954e9ec2119f850e553d3d91b183047cea9722d5d332ca7
+  checksum: 6d926ede2d84a26483b1829dfc417bb95d09c82ce27680f14e5151f46c39c94e587a7d3bf9e43a983ed3386aa0fbb92c2317fcbe3796e8c47ce017a1e7dbd1b7
   languageName: node
   linkType: hard
 
-"node-opcua-pseudo-session@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-pseudo-session@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: 8a431ad031bd7bad1d0cdac8889f1139920a158022cdf0ef08b37df016986f4c8d478e7d5b8347d756194a7c5ec9e3f7811984871074718bfd2b80706141fcc8
-  languageName: node
-  linkType: hard
-
-"node-opcua-schemas@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-schemas@npm:2.110.0"
+"node-opcua-schemas@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-schemas@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-variant: 2.110.0
-    node-opcua-xml2json: 2.110.0
-  checksum: d6c045d29a4ccea30d0d578f0116cfeda892660c6d42e56462f1056497aea92aeeee15be1fd27aafd94c6ac1d649926f6b370354524d8aaa2e61f06cfd646ee4
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-variant: 2.114.0
+    node-opcua-xml2json: 2.114.0
+  checksum: 60721aa91fc4fe58a9b7e85eaab079f380bfd46677bb75ebef6ad6bb2f7f7d9eb49fdfd29ec156232c088a02a77bf5c12aa6a5a5766143c30948b39944200174
   languageName: node
   linkType: hard
 
-"node-opcua-schemas@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-schemas@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    node-opcua-xml2json: 2.68.0
-    thenify: ^3.3.1
-  checksum: 60d9f6d1055f31d02a02a647c3c415f275985b60172ca04d567e468d85a106bfced07d76a9daf4d00de7a0e63fa2367370a6da8eeca0c619876fdad48972cd95
-  languageName: node
-  linkType: hard
-
-"node-opcua-secure-channel@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-secure-channel@npm:2.110.0"
+"node-opcua-secure-channel@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-secure-channel@npm:2.114.0"
   dependencies:
     async: ^3.2.4
     backoff: ^2.5.0
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-certificate-manager: 2.110.0
-    node-opcua-chunkmanager: 2.110.0
-    node-opcua-common: 2.110.0
-    node-opcua-crypto: 4.2.0
-    node-opcua-debug: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-packet-analyzer: 2.110.0
-    node-opcua-service-endpoints: 2.110.0
-    node-opcua-service-secure-channel: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-transport: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: e25aacdcdd81f6069ba9444e875f82182ba48981516931fbff2edf0ae40a20766974ca801ad91184c8670ceb007e31f53c00a2c0b8617474c8940cc7e2a3407c
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-certificate-manager: 2.114.0
+    node-opcua-chunkmanager: 2.114.0
+    node-opcua-common: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-packet-analyzer: 2.114.0
+    node-opcua-service-endpoints: 2.114.0
+    node-opcua-service-secure-channel: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-transport: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: 725fc38857597c0a66e3c0ceb4fa81cfb123aeace8386ab6574eba5f8276ded72d94cea53c28eee4d25fe437837f9d32b2482753020afa3d45c99ba963df12fc
   languageName: node
   linkType: hard
 
-"node-opcua-secure-channel@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-secure-channel@npm:2.68.1"
-  dependencies:
-    "@types/underscore": 1.11.4
-    async: ^3.2.3
-    backoff: ^2.5.0
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-certificate-manager: 2.68.0
-    node-opcua-chunkmanager: 2.68.0
-    node-opcua-common: 2.68.1
-    node-opcua-crypto: ^1.10.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-packet-analyzer: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-transport: 2.68.1
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-  checksum: bfe6b089b556d1b4d9f9bb30b433f750dc7c09a130c3193862e561d5c909e665b6beeb261bf82a462c98bd1d312dbf23adf9e918954254a93aa1d50323525d61
-  languageName: node
-  linkType: hard
-
-"node-opcua-server-discovery@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-server-discovery@npm:2.110.0"
+"node-opcua-server-discovery@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-server-discovery@npm:2.116.0"
   dependencies:
     chalk: 4.1.2
     env-paths: 2.2.1
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-certificate-manager: 2.110.0
-    node-opcua-common: 2.110.0
-    node-opcua-debug: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-certificate-manager: 2.114.0
+    node-opcua-common: 2.114.0
+    node-opcua-debug: 2.114.0
     node-opcua-hostname: 2.105.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-secure-channel: 2.110.0
-    node-opcua-server: 2.110.0
-    node-opcua-service-discovery: 2.110.0
-    node-opcua-service-endpoints: 2.110.0
-    node-opcua-status-code: 2.110.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-secure-channel: 2.114.0
+    node-opcua-server: 2.116.0
+    node-opcua-service-discovery: 2.114.0
+    node-opcua-service-endpoints: 2.114.0
+    node-opcua-status-code: 2.114.0
     sterfive-bonjour-service: 1.1.4
     thenify: ^3.3.1
-  checksum: 535f2fbe195091ce09c78089ffd645fdc4e285356d89a685ae8ea1af2230ac4b062ab9cc34094a6a9c9a2ef86ebabef52b1ef2a31e7e095b31b9e35dc2280c7a
+  checksum: dbc28151210e88f8dd242f8199aa8c55c6c4bc285371315cbe5292ce5333193b9dd83633ca6da34f301498e6810b53b8a073f440a6b5c01f01fb14e3b8d02d87
   languageName: node
   linkType: hard
 
-"node-opcua-server-discovery@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-server-discovery@npm:2.68.1"
-  dependencies:
-    "@types/bonjour": ^3.5.10
-    bonjour: ^3.5.0
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-certificate-manager: 2.68.0
-    node-opcua-common: 2.68.1
-    node-opcua-debug: 2.68.0
-    node-opcua-hostname: 2.67.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pki: ^2.15.4
-    node-opcua-secure-channel: 2.68.1
-    node-opcua-server: 2.68.1
-    node-opcua-service-discovery: 2.68.1
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-status-code: 2.67.0
-  checksum: 8da587e34273c82231b6359def5559c6c35539eba9e009a7e45a53fed4f979bea5cc93d518d700665c21e9e05608a9919a4b4dd7f5f50e42bda275ba655cd068
-  languageName: node
-  linkType: hard
-
-"node-opcua-server@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-server@npm:2.110.0"
+"node-opcua-server@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-server@npm:2.116.0"
   dependencies:
     "@ster5/global-mutex": ^2.0.0
     async: ^3.2.4
     chalk: 4.1.2
     dequeue: ^1.0.5
     lodash: 4.17.21
-    node-opcua-address-space: 2.110.0
-    node-opcua-address-space-base: 2.110.0
+    node-opcua-address-space: 2.116.0
+    node-opcua-address-space-base: 2.114.0
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-certificate-manager: 2.110.0
-    node-opcua-client: 2.110.0
-    node-opcua-client-dynamic-extension-object: 2.110.0
-    node-opcua-common: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-crypto: 4.2.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-date-time: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-factory: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-certificate-manager: 2.114.0
+    node-opcua-client: 2.116.0
+    node-opcua-client-dynamic-extension-object: 2.116.0
+    node-opcua-common: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-date-time: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-factory: 2.114.0
     node-opcua-hostname: 2.105.0
-    node-opcua-nodeid: 2.110.0
+    node-opcua-nodeid: 2.114.0
     node-opcua-nodesets: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-secure-channel: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-discovery: 2.110.0
-    node-opcua-service-endpoints: 2.110.0
-    node-opcua-service-filter: 2.110.0
-    node-opcua-service-history: 2.110.0
-    node-opcua-service-node-management: 2.110.0
-    node-opcua-service-query: 2.110.0
-    node-opcua-service-read: 2.110.0
-    node-opcua-service-register-node: 2.110.0
-    node-opcua-service-secure-channel: 2.110.0
-    node-opcua-service-session: 2.110.0
-    node-opcua-service-subscription: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-secure-channel: 2.114.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-discovery: 2.114.0
+    node-opcua-service-endpoints: 2.114.0
+    node-opcua-service-filter: 2.114.0
+    node-opcua-service-history: 2.114.0
+    node-opcua-service-node-management: 2.114.0
+    node-opcua-service-query: 2.114.0
+    node-opcua-service-read: 2.114.0
+    node-opcua-service-register-node: 2.114.0
+    node-opcua-service-secure-channel: 2.114.0
+    node-opcua-service-session: 2.114.0
+    node-opcua-service-subscription: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
     thenify: ^3.3.1
-  checksum: aaf2a9065e75fa1291f6bf83534b5346d4565e6d54582cc3c7a8545bad9a5b51d0b419062493af9fb0e18399fc614751117433cc980bd90389bbb0658face65b
+  checksum: 2c83122da3e5420211a198182bd952dd1d2f6bb3aebf43a6093069056e17164b8b620f6c04a020b4d85840fa68f811a8589a2cb9714087da8374fe5250ccabe9
   languageName: node
   linkType: hard
 
-"node-opcua-server@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-server@npm:2.68.1"
+"node-opcua-service-browse@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-browse@npm:2.114.0"
   dependencies:
-    "@ster5/global-mutex": ^1.2.0
-    "@types/underscore": ^1.11.4
-    async: ^3.2.3
-    bonjour: ^3.5.0
-    dequeue: ^1.0.5
-    lodash: 4.17.21
-    node-opcua-address-space: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-certificate-manager: 2.68.0
-    node-opcua-client: 2.68.1
-    node-opcua-client-dynamic-extension-object: 2.68.1
-    node-opcua-common: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-crypto: ^1.10.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-hostname: 2.67.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-nodeset-ua: 2.68.1
-    node-opcua-nodesets: 2.66.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-pki: ^2.15.4
-    node-opcua-secure-channel: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-discovery: 2.68.1
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-history: 2.68.1
-    node-opcua-service-node-management: 2.68.1
-    node-opcua-service-query: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-register-node: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-service-session: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-transport: 2.68.1
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: eb5f7936068cce7c83802c652fd5ee17c71871a1f27f8cad31af256acb8e4a4677bc0af0c7b51de3071787ebc8e8e8e60676c83cb66e2ae635ccaccfcc82a8a5
+    node-opcua-data-model: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: dccb841ebb32a7b47707e0cafea3bd9ce08f7686afb7cee9ef79d184f589c7fda3f350f1a6f75d75f29bba49726f3c622920ec5dca44e7df0e70d0e115604cc2
   languageName: node
   linkType: hard
 
-"node-opcua-service-browse@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-browse@npm:2.110.0"
-  dependencies:
-    node-opcua-data-model: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: 668cd85279e6d2c61ca1281598ce2a4873c175e6bb31acd5f02e354013690017224e9d900da85d911e4242567c74ca53a82144fa7ba9d4d54ecb2ec247029347
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-browse@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-browse@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 57474843c2f5a30fd0f2b22ceaec71cc9cc905738a5ff85443e708d3710021d98c6e9643015a44121072555406f0854432a50502548dff3a1773ed621b01af64
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-call@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-call@npm:2.110.0"
+"node-opcua-service-call@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-call@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 905f3f065705bd7e5608a44c9b055f217ca9ff642503189e2829485f38b476db5d59d09fdf1081af9d8e4487161c42dbfcb836b510c8fdda58e57a27778581b5
+    node-opcua-nodeid: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 9d2e1b37f619634ed63ee563d2ab548ab07a44831b3bf5323a21812c4244babf8aeaf2412d9181b532ae8c160cac33227a63abb7479c303de33ed36b38039b5a
   languageName: node
   linkType: hard
 
-"node-opcua-service-call@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-call@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-    node-opcua-variant: 2.68.0
-  checksum: 7d68a2ee644c2a3a07c2c621654b39c187ee593ace2e35ac14cc2850e89f5ffd3630cad60114d913a5dd240cc155dc80f6724c1c9b20155292e468417e4e29a8
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-discovery@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-discovery@npm:2.110.0"
+"node-opcua-service-discovery@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-discovery@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-debug: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-types: 2.110.0
+    node-opcua-debug: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-types: 2.114.0
     sterfive-bonjour-service: 1.1.4
-  checksum: 8b6b1d07136b10be503c71118259673faca54246c256fbfeb31fe5c5efaa878a97b2319bc248966ddd809854a3a1f1fdaada7007e865350c8708ed5a9a1a648e
+  checksum: 29b240216c7fbc7f327c955d36c7c3db4f40c431aed4ea27c6c43c0b7d6856027d08c606ca47fc3b4ac4c8f9f3b119ffcd845982bb85b12ed8ccefb75254df03
   languageName: node
   linkType: hard
 
-"node-opcua-service-discovery@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-discovery@npm:2.68.1"
+"node-opcua-service-endpoints@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-endpoints@npm:2.114.0"
   dependencies:
-    "@types/bonjour": ^3.5.10
-    bonjour: ^3.5.0
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: eeb684ff6f6c466cb11da25262ef9407795d576d3a641ddf706323e057c7afde1902084ea81073e494690e567dee8384c31a9f579fbf5d58ad279a3ee8ec56fc
+    node-opcua-types: 2.114.0
+  checksum: 8765a949d48af92c02db933319eaa5f63808a48ff053ac827be6032a47467550095a9218b913b77a2ba89bcff5e7e3ce546f282e92cb1e8ae1dabea3b9e7d304
   languageName: node
   linkType: hard
 
-"node-opcua-service-endpoints@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-endpoints@npm:2.110.0"
+"node-opcua-service-filter@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-filter@npm:2.114.0"
   dependencies:
-    node-opcua-types: 2.110.0
-  checksum: cd091a90172190f55c29f2779289295b0fc54cf3572f90e7981ff5048269c5014176872d7a3be708a3a42afc20551fcc5d1005de830179dfe3c1dda0897e08ea
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-endpoints@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-endpoints@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 664e932db5cf82345cdb0c6764d39192386695a9104856213430b1484f784e31440c2adb6f8ec43b09c3f0c9262b3c562c07104939061bdd407cca8f58840453
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-filter@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-filter@npm:2.110.0"
-  dependencies:
-    node-opcua-address-space-base: 2.110.0
+    node-opcua-address-space-base: 2.114.0
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 23f73a32643949d2278d5c0cd4332d1e249a7ba5afdc3f89571cb6fda1846ca9ddbea563653f1743657e98272be4d4ad902c79c464ba3cafa73258e1c9dd4686
+    node-opcua-basic-types: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 0bbc424b70a08bfa0418507c173ebdc0c6d7c5bb01ec451aca3686a3a71c6d3ef7dd5c5c65c6053a649f1d26175dd848de2ae4c764fd5561a3dd054f9284f322
   languageName: node
   linkType: hard
 
-"node-opcua-service-filter@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-filter@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-variant: 2.68.0
-  checksum: d6f63c457d957057c1cfd1a46f780cfcba3981dbd93da1ff6a41f5b21a959b50de82269644aa64a706a595dd4ebf406353759ab7ed37c0bde0382873f17c6fd8
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-history@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-history@npm:2.110.0"
+"node-opcua-service-history@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-history@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: 0adfae3076378245170777432103099c7432b0489011588a44caa6699969b6a84e72b944ee73d8efa8962e602fbb1e7fd623816bf0397a05dcfed411dfbf6898
+    node-opcua-data-value: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: 5e90bb28e8ab3ca4107fe5bdec70a183d4b107e7177f08c8906392b27e0b356b30ead42e0cc30800741fbdb6aac31e7c0dabe90b24ac2bf650849f92dc73a219
   languageName: node
   linkType: hard
 
-"node-opcua-service-history@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-history@npm:2.68.1"
+"node-opcua-service-node-management@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-node-management@npm:2.114.0"
   dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: e2ead20735ab7f184969f161987dd2bf32238577598606adff4cb9873ad304b4d372d585bd99587749b5e2747d13bc06b0ca42c6b19aabf7d225ef1b6f7c7031
+    node-opcua-types: 2.114.0
+  checksum: 3e2efbf4dc04a569b220699ffd6c36bd8c3b90d3962d5de3f3602eaac40045a032ff9c5987db4a7826b4c5cddd50888621af844902094ee3a9b652c8b72eba79
   languageName: node
   linkType: hard
 
-"node-opcua-service-node-management@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-node-management@npm:2.110.0"
+"node-opcua-service-query@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-query@npm:2.114.0"
   dependencies:
-    node-opcua-types: 2.110.0
-  checksum: d9be8dee1f75842ffe84d7f7d8f6ea74f14907f1cb2f462e81ade0047a62b8db3c2a755fbc88969410f8ebd8eec79f5e9267235a378f4f29cf4b3f2510237bfd
+    node-opcua-types: 2.114.0
+  checksum: 6e0bad4c52c361d92cec88e87e33e46886a1175ba247030c90cbf2b3148a058343025493a15b59ea7de5b1714e960a19665d55f09fb1087ef6f326fc4d50895d
   languageName: node
   linkType: hard
 
-"node-opcua-service-node-management@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-node-management@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: b59c011c85c9c3e538341c8bbfa31ee8e56678ee2242571e13586996cbe20028474c749482f1a3707ce67e874bea69ab0e06d7232572f7b674f981e06cb4f922
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-query@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-query@npm:2.110.0"
-  dependencies:
-    node-opcua-types: 2.110.0
-  checksum: d0d656f6f4ede8d51657999c736874045a5ac61d9ecfe61ae1bde5156a482160dc6bce87421326c8f0b629f19f813293d7697a364e6d31ca411f1a5642433bad
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-query@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-query@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 0d048f375b769aea0367cf24cf2ddc09b065f7d18c9fff91aa37b9b83a9da47d8afe2a23fec5ed1af1888c8ddc9d4e55784d27320c285c6ecd08ed9e94e26e65
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-read@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-read@npm:2.110.0"
+"node-opcua-service-read@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-read@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-service-secure-channel: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: afc0e4f4b64b2ff98996989741c3c4f1d16f7ad84b7eb2cd10a48b7264f5fa5e61b12c1918167fc094c32f423672f4514ea5caa6de25a6c5c39b5dd2a1af9f3a
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-service-secure-channel: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: e15219272008b056c5485a9ccab3dd5bed3db1907e4a866bbe2e06da8dccae6c55eb4a04d27a205ec5c6f0a2f9a7da812c71e64460f9253c08a298a752e98960
   languageName: node
   linkType: hard
 
-"node-opcua-service-read@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-read@npm:2.68.1"
+"node-opcua-service-register-node@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-register-node@npm:2.114.0"
   dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 75af7d274ec570d498ab53c78d774bf08d944848567c1fa5e293b66b8d9787ab7ee3f0a674292d9731bad1a920709d23f9af6adf8724f8c08b800157dc459620
+    node-opcua-types: 2.114.0
+  checksum: 7e29c0d10903ecbd00de10433f5b7adae6fb3382e4f575323dc6ad23ffb7b3a7845485c728f58bb7dfd8b3ab4d9f33ae7e8d8eff84f7380a5275fe590c9db26b
   languageName: node
   linkType: hard
 
-"node-opcua-service-register-node@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-register-node@npm:2.110.0"
-  dependencies:
-    node-opcua-types: 2.110.0
-  checksum: 28d2c28851174f04572fd0d5ff6d62771b2a1b7056792d4be5c070efd46e08adacfdf244ad81190ff77cbf9f2280bca6abbb6ac4bb29db8e4e276a0b8cf3826b
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-register-node@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-register-node@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 9a665330efdbb679a0b07873dc5f6868449934e6cae177b9733aff2f0d289127ee2660e4cb3c384d30c34007ffae686e4474e6183cec41263f642907a5afd8fc
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-secure-channel@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-secure-channel@npm:2.110.0"
+"node-opcua-service-secure-channel@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-secure-channel@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: dbc367f90c5fdd9adde191bfcb333e9adbc51c9d682b7c9c9f3b77c85dd1332143d844637eb4ea71ea79a2c8517a254d407496f8b0e78a36bc32cccf6b36f07a
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: a7bb4dd55c739ea51d5cfe0da9330e307d38a64ca0ed2b620f799ee8bdea55678d1c21452599caca063e45b6a37dc656c0e976190fe6a774e9472057b1b66351
   languageName: node
   linkType: hard
 
-"node-opcua-service-secure-channel@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-secure-channel@npm:2.68.1"
+"node-opcua-service-session@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-session@npm:2.114.0"
   dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-  checksum: 735aab5da749610e92245eb6bd336290bcfb25e0a6fee28f71fffe78a1444a779156926286569b34042ce3ae4e626d0a6caaca4a635d3c409b765d2d2f58c4b1
+    node-opcua-factory: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: d45a3d943ead953356e0190bd7e069e8afbd7ef3afd1c9244ea8094517c5acb2c686d5605efd3ebcefc9aa591b3189316cb58b15356478c46e9fc29916f7c645
   languageName: node
   linkType: hard
 
-"node-opcua-service-session@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-session@npm:2.110.0"
-  dependencies:
-    node-opcua-factory: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: 79121342086e55810a33c1e9be3e306d6516a6461163a4e6ee28ce4c9d21f0716c66e9131902ddff5fe1ea687d78542063bf546bb63de6b93b5e2153b6caf9a5
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-session@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-session@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: eece2d35ea44e0224113a9c952743f9a3f937dc97419843c0d478918a7f2bb290a23747de9afde97488a043c83b3365cc40a4cb4f4d9099ad11b7c56a1d8a415
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-subscription@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-subscription@npm:2.110.0"
+"node-opcua-service-subscription@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-subscription@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-types: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 1d81b6ad72406be148a2dd8e465824551e6a0d1ccb582af16e8b3034b907dc0c1b8812536373bbdbfe586a42debb7a70f35b067aec5d16c44679ec44e8b39e94
+    node-opcua-types: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 61d166f32fc7f44903a03d3eb3393f5ca653dcfd3a45144a1f05ccda3444c4e643994793617d9fa55fd4706eea14cdc3878f1ed71b3222452424f412dfb81093
   languageName: node
   linkType: hard
 
-"node-opcua-service-subscription@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-subscription@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-    node-opcua-variant: 2.68.0
-  checksum: e585cb5767882df601993d6f488ce87a94a822be812d988b90712aa9bbfa935cdc85f7ddd9da0289c4b230da20a4657004859db59080700a1c97f13e6d23dfbf
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-translate-browse-path@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-translate-browse-path@npm:2.110.0"
+"node-opcua-service-translate-browse-path@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-translate-browse-path@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
-    node-opcua-data-model: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-types: 2.110.0
-  checksum: 6cf96f72ea185b10f072ede05c385f291adff76896351450d91dcff12e42022f67ad43e93a712c87cd24514b208a29d7a463e0555529f4b13872bb328e05eeb1
+    node-opcua-constants: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-types: 2.114.0
+  checksum: f7f1ca3f07d66dfb6fec28d1f4b171e8371a614020b6cf006b05ab555ee5e03224706ee291fecf16ad770a8b62403a7ca295f4ab32515e5884baa525321df023
   languageName: node
   linkType: hard
 
-"node-opcua-service-translate-browse-path@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-translate-browse-path@npm:2.68.1"
+"node-opcua-service-write@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-service-write@npm:2.114.0"
   dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-constants: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: 20bacde0c20a2a45e9a3e52680521de30ab8ba4d149b3f3d99ff7407793b9dcbff2750e46c67fea02aeb49dfd9b22f785f98dcb57a92633a4ebcb3e55850c198
+    node-opcua-types: 2.114.0
+  checksum: 359ca5826b0f0cff4220d87a087a874b95a018d0864c64ad8ee32bd65ec22eb28cf3971b7b44d47b39373af037ff449444c49f3642aa2855c88f765e8ae23a92
   languageName: node
   linkType: hard
 
-"node-opcua-service-write@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-service-write@npm:2.110.0"
-  dependencies:
-    node-opcua-types: 2.110.0
-  checksum: 467942d9e5abd11b702b9636da0584bb5527166d444d7a6485ef64c05a24b7f0c0f55de75980cc63713ba5b3f86dc6cc0f30a382ac7fc73709979c4730ff501b
-  languageName: node
-  linkType: hard
-
-"node-opcua-service-write@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-service-write@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-types: 2.68.1
-  checksum: b673a2ce4428f3f94ca7f9cf1be44751cfdce8703b86e7df2362e02883d7d5f98df9e7cfc0924cc49370e052973e00f910d234260ba6f69ae94142ee14cb06e4
-  languageName: node
-  linkType: hard
-
-"node-opcua-status-code@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-status-code@npm:2.110.0"
+"node-opcua-status-code@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-status-code@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-binary-stream: 2.110.0
-  checksum: f943a0c4d3144cf9fff6263a82b93d7fe431a13e4f58257975a0d2f3bea69379e432d88a45451b86beb8046b7d5fe9b2c9d6fc33d6672f2f126894f1dffee5ae
+    node-opcua-binary-stream: 2.114.0
+  checksum: ca2ca39930f06e03475d3f0180afe0d20f0f2830e138fd253c827fe6d83826f1ad98511d21c63445edcde611271c3705c8b0150ccdcff52bec1ded9e35d14b9d
   languageName: node
   linkType: hard
 
-"node-opcua-status-code@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-status-code@npm:2.67.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-  checksum: 75aac4d03a580ab527158c7bfd6aca4e17c9e1bbb976045a189d69651701cdc67dd461bada068501ca6e0cf5b19e433703e07da43135ba7b2c8d36a3fd034a4d
-  languageName: node
-  linkType: hard
-
-"node-opcua-transport@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-transport@npm:2.110.0"
+"node-opcua-transport@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-transport@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-buffer-utils: 2.110.0
-    node-opcua-chunkmanager: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-object-registry: 2.110.0
-    node-opcua-packet-assembler: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: 0d3139ac456955b53d2bea0c74d5a472364079bc903a6504c47e9792304d2a643c090374a760cf1d1b66f7eab88bef40dc85569248506cc735d277d87c84ef31
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-buffer-utils: 2.114.0
+    node-opcua-chunkmanager: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-object-registry: 2.114.0
+    node-opcua-packet-assembler: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: 8f526992fabed1641cf076e6872c6af8a619edea9eb43cfa609c2e4179c312d2329bd323983c7de67a37cd74f7f17d36cc767bc06169f82cd3d3edfe861f4f10
   languageName: node
   linkType: hard
 
-"node-opcua-transport@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-transport@npm:2.68.1"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-chunkmanager: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-object-registry: 2.68.0
-    node-opcua-packet-assembler: 2.66.0
-    node-opcua-status-code: 2.67.0
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-  checksum: 56a6518ae601bc3d4c5cb1d44ec40d8739a2f31c77e96fcbbb315f02f464655f237f5ad98cdcf84329ee1df3a5437721203367e3f0bbea67ec81fb56eba6129a
-  languageName: node
-  linkType: hard
-
-"node-opcua-types@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-types@npm:2.110.0"
+"node-opcua-types@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-types@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-extension-object: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-generator: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: d9327636d9ded0c0a4c4440833e7c35d6246f665c69fd3f470265fc0f184c5217bfe2f5f64119095279f9cb42dc8659dd82bcd2a5103b561aeda261586dad941
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-extension-object: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-generator: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 4fe2e0535a368c68d9bc3975f22f7e832be35e512a8f8f9fb92155cdd958faab9379da4a597a67c99ec85aad4a68939661302ec7963add262ba5b5c07a3d8525
   languageName: node
   linkType: hard
 
-"node-opcua-types@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-types@npm:2.68.1"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-buffer-utils: 2.67.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-date-time: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-generator: 2.68.1
-    node-opcua-guid: 2.66.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-packet-analyzer: 2.68.0
-    node-opcua-schemas: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: e630e48491f6d43cfc277a7d0fd58a6e9f72f5eeafa1168b304f1616b028dfaae76107cacc945e6d93f0628433ff4032dbd4952c56ac9cab26b9157c321a54a3
-  languageName: node
-  linkType: hard
-
-"node-opcua-utils@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-utils@npm:2.110.0"
+"node-opcua-utils@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-utils@npm:2.114.0"
   dependencies:
     chalk: 4.1.2
     node-opcua-assert: 2.105.0
-  checksum: fd40208e480b00b3b1d9f78096df475522158ee025a287d0fa76a67bb7311fc257ae413b45d7e2aab53663f0fd5dd4b3eec7a018011d9e136d7446f4b9880267
+  checksum: 29cabc888b20bc34696b3bd46e605f5cc0bbfb0a0e3d92a5d78ab44a495383034be592f12ccc61bc3f8a62a49ccf972e39378cfe610d4ab990bf05f5dc96c4a4
   languageName: node
   linkType: hard
 
-"node-opcua-utils@npm:2.67.0":
-  version: 2.67.0
-  resolution: "node-opcua-utils@npm:2.67.0"
-  dependencies:
-    chalk: 4.1.2
-    node-opcua-assert: 2.66.0
-  checksum: 821fe9e107b51c7fafda635d2594961bc59d0ff6c0cd8fec8a14cb46856f97130272a79604de1d5149f6829211b8a618ed33a2cf31537c1a8a92112a8c259c8f
-  languageName: node
-  linkType: hard
-
-"node-opcua-variant@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-variant@npm:2.110.0"
+"node-opcua-variant@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-variant@npm:2.114.0"
   dependencies:
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-factory: 2.110.0
-    node-opcua-nodeid: 2.110.0
-    node-opcua-utils: 2.110.0
-  checksum: efd58999f92c152ecc1d6ddfb0c899d56f39c629b6fb65219c488a50e7afd683645a194218e3fd81fff2b40ee98efaf3f47fe5202544314fe16c852d78c7f124
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-factory: 2.114.0
+    node-opcua-nodeid: 2.114.0
+    node-opcua-utils: 2.114.0
+  checksum: 16b9d9481a161dedf608febdf909e3bbc0bf79593d76d261f3a43cbfdefe495dae36a8f43782490ba080b69104850a6872d5f07b9d06b80923a6119c1d22cdc7
   languageName: node
   linkType: hard
 
-"node-opcua-variant@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-variant@npm:2.68.0"
-  dependencies:
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-data-model: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-extension-object: 2.68.0
-    node-opcua-factory: 2.68.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-utils: 2.67.0
-  checksum: fe63c7d8a67f79bb63157373ef43816ed0ee838fd0829a2cb39603eeaee1caebba345e43c4452ba386fbae4c46cddd5571c08d94bf24ecbdfd04a534f135ebda
-  languageName: node
-  linkType: hard
-
-"node-opcua-vendor-diagnostic@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-vendor-diagnostic@npm:2.110.0"
+"node-opcua-vendor-diagnostic@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua-vendor-diagnostic@npm:2.116.0"
   dependencies:
     humanize: 0.0.9
-    node-opcua-address-space: 2.110.0
+    node-opcua-address-space: 2.116.0
     node-opcua-assert: 2.105.0
-    node-opcua-constants: 2.98.1
-    node-opcua-debug: 2.110.0
-    node-opcua-server: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-variant: 2.110.0
-  checksum: 364cb026fc659dc36635743bacdb0653beae4f884af0adff0f112acab924864f38df7fb2888a53d508fa2b1b3ba00f40fc44e15845035790319081f60f3dab45
+    node-opcua-constants: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-server: 2.116.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-variant: 2.114.0
+  checksum: 8f4edf69da22b5fbebb56852a6bf6dbc87c32995534e1de54b29c87a98e0e6a031c435bd74668b601f292d84fdf7cc34af3854ad9222322c1f4162a8801a9925
   languageName: node
   linkType: hard
 
-"node-opcua-vendor-diagnostic@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua-vendor-diagnostic@npm:2.68.1"
-  dependencies:
-    humanize: 0.0.9
-    node-opcua-address-space: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-constants: 2.67.0
-    node-opcua-server: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-variant: 2.68.0
-  checksum: cd72dfa6569c7a049454b7deb18685561e2abdd5b4e0a4fa964f5cfba54e2bf789224ec5645dbd22f70cd14d67799bf2f7ad622b6216c666c151645134ccad15
-  languageName: node
-  linkType: hard
-
-"node-opcua-xml2json@npm:2.110.0":
-  version: 2.110.0
-  resolution: "node-opcua-xml2json@npm:2.110.0"
+"node-opcua-xml2json@npm:2.114.0":
+  version: 2.114.0
+  resolution: "node-opcua-xml2json@npm:2.114.0"
   dependencies:
     ltx: ^3.0.0
     node-opcua-assert: 2.105.0
-    node-opcua-utils: 2.110.0
+    node-opcua-utils: 2.114.0
     thenify: ^3.3.1
     xml-writer: ^1.7.0
-  checksum: e1e097f5599737642109ba45625cf5d64ad869d7039dc4f3b0fa2d7a0f85f5b63bd46bf35d71bcab8bb7f97d4f80fb9b1c9a67940e91088388ee88e29e1b85aa
+  checksum: 3660c3d6505d3c3d0e4a46b196534527c417d5a3e39bbe5f22c519ee369e9418dddfe8bb178ad0ab32c51029736d71493fe881b13c1f8088fdea3788e83a05ae
   languageName: node
   linkType: hard
 
-"node-opcua-xml2json@npm:2.68.0":
-  version: 2.68.0
-  resolution: "node-opcua-xml2json@npm:2.68.0"
+"node-opcua@npm:2.116.0":
+  version: 2.116.0
+  resolution: "node-opcua@npm:2.116.0"
   dependencies:
-    bomstrip: ^0.1.4
-    ltx: ^3.0.0
-    node-opcua-assert: 2.66.0
-    node-opcua-debug: 2.68.0
-    node-opcua-utils: 2.67.0
-    xml-writer: ^1.7.0
-  checksum: 42c3ce4ae42c63e10c92dcaf0dc94237b8c6f9dd6fef0ecb61db9f3a7954ec5dd3a45125506a0e172f7d214277efab4588e8b94082f85712332f792a299726a5
-  languageName: node
-  linkType: hard
-
-"node-opcua@npm:2.68.1":
-  version: 2.68.1
-  resolution: "node-opcua@npm:2.68.1"
-  dependencies:
+    "@types/semver": ^7.5.3
     chalk: 4.1.2
-    node-opcua-address-space: 2.68.1
-    node-opcua-address-space-for-conformance-testing: 2.68.1
-    node-opcua-aggregates: 2.68.1
-    node-opcua-assert: 2.66.0
-    node-opcua-basic-types: 2.68.0
-    node-opcua-binary-stream: 2.67.0
-    node-opcua-certificate-manager: 2.68.0
-    node-opcua-client: 2.68.1
-    node-opcua-client-crawler: 2.68.1
-    node-opcua-client-proxy: 2.68.1
-    node-opcua-common: 2.68.1
-    node-opcua-constants: 2.67.0
-    node-opcua-crypto: ^1.10.0
-    node-opcua-data-access: 2.68.1
-    node-opcua-data-model: 2.68.0
-    node-opcua-data-value: 2.68.0
-    node-opcua-debug: 2.68.0
-    node-opcua-enum: 2.67.0
-    node-opcua-factory: 2.68.0
-    node-opcua-hostname: 2.67.0
-    node-opcua-nodeid: 2.68.0
-    node-opcua-nodesets: 2.66.0
-    node-opcua-numeric-range: 2.68.0
-    node-opcua-packet-analyzer: 2.68.0
-    node-opcua-secure-channel: 2.68.1
-    node-opcua-server: 2.68.1
-    node-opcua-server-discovery: 2.68.1
-    node-opcua-service-browse: 2.68.1
-    node-opcua-service-call: 2.68.1
-    node-opcua-service-discovery: 2.68.1
-    node-opcua-service-endpoints: 2.68.1
-    node-opcua-service-filter: 2.68.1
-    node-opcua-service-history: 2.68.1
-    node-opcua-service-node-management: 2.68.1
-    node-opcua-service-query: 2.68.1
-    node-opcua-service-read: 2.68.1
-    node-opcua-service-register-node: 2.68.1
-    node-opcua-service-secure-channel: 2.68.1
-    node-opcua-service-session: 2.68.1
-    node-opcua-service-subscription: 2.68.1
-    node-opcua-service-translate-browse-path: 2.68.1
-    node-opcua-service-write: 2.68.1
-    node-opcua-status-code: 2.67.0
-    node-opcua-transport: 2.68.1
-    node-opcua-types: 2.68.1
-    node-opcua-utils: 2.67.0
-    node-opcua-variant: 2.68.0
-    node-opcua-vendor-diagnostic: 2.68.1
-    semver: ^7.3.5
-  checksum: cd58e7a0009831440d5d3520c3485635874c7ec1d4afdaade3fad5f1cdca25cb65500224a36a96416cdc90681e141d02d42b87e669b848a8fdc698fa8a9cf7b4
-  languageName: node
-  linkType: hard
-
-"node-opcua@npm:^2.68.1, node-opcua@npm:^2.91.0":
-  version: 2.110.0
-  resolution: "node-opcua@npm:2.110.0"
-  dependencies:
-    "@types/semver": ^7.5.0
-    chalk: 4.1.2
-    node-opcua-address-space: 2.110.0
-    node-opcua-address-space-for-conformance-testing: 2.110.0
-    node-opcua-aggregates: 2.110.0
+    node-opcua-address-space: 2.116.0
+    node-opcua-address-space-for-conformance-testing: 2.116.0
+    node-opcua-aggregates: 2.116.0
     node-opcua-assert: 2.105.0
-    node-opcua-basic-types: 2.110.0
-    node-opcua-binary-stream: 2.110.0
-    node-opcua-certificate-manager: 2.110.0
-    node-opcua-client: 2.110.0
-    node-opcua-client-crawler: 2.110.0
-    node-opcua-client-proxy: 2.110.0
-    node-opcua-common: 2.110.0
-    node-opcua-constants: 2.98.1
-    node-opcua-crypto: 4.2.0
-    node-opcua-data-access: 2.110.0
-    node-opcua-data-model: 2.110.0
-    node-opcua-data-value: 2.110.0
-    node-opcua-debug: 2.110.0
-    node-opcua-enum: 2.110.0
-    node-opcua-factory: 2.110.0
+    node-opcua-basic-types: 2.114.0
+    node-opcua-binary-stream: 2.114.0
+    node-opcua-certificate-manager: 2.114.0
+    node-opcua-client: 2.116.0
+    node-opcua-client-crawler: 2.116.0
+    node-opcua-client-proxy: 2.116.0
+    node-opcua-common: 2.114.0
+    node-opcua-constants: 2.114.0
+    node-opcua-crypto: 4.5.0
+    node-opcua-data-access: 2.114.0
+    node-opcua-data-model: 2.114.0
+    node-opcua-data-value: 2.114.0
+    node-opcua-debug: 2.114.0
+    node-opcua-enum: 2.114.0
+    node-opcua-factory: 2.114.0
     node-opcua-hostname: 2.105.0
-    node-opcua-nodeid: 2.110.0
+    node-opcua-nodeid: 2.114.0
     node-opcua-nodesets: 2.110.0
-    node-opcua-numeric-range: 2.110.0
-    node-opcua-packet-analyzer: 2.110.0
-    node-opcua-secure-channel: 2.110.0
-    node-opcua-server: 2.110.0
-    node-opcua-server-discovery: 2.110.0
-    node-opcua-service-browse: 2.110.0
-    node-opcua-service-call: 2.110.0
-    node-opcua-service-discovery: 2.110.0
-    node-opcua-service-endpoints: 2.110.0
-    node-opcua-service-filter: 2.110.0
-    node-opcua-service-history: 2.110.0
-    node-opcua-service-node-management: 2.110.0
-    node-opcua-service-query: 2.110.0
-    node-opcua-service-read: 2.110.0
-    node-opcua-service-register-node: 2.110.0
-    node-opcua-service-secure-channel: 2.110.0
-    node-opcua-service-session: 2.110.0
-    node-opcua-service-subscription: 2.110.0
-    node-opcua-service-translate-browse-path: 2.110.0
-    node-opcua-service-write: 2.110.0
-    node-opcua-status-code: 2.110.0
-    node-opcua-transport: 2.110.0
-    node-opcua-types: 2.110.0
-    node-opcua-utils: 2.110.0
-    node-opcua-variant: 2.110.0
-    node-opcua-vendor-diagnostic: 2.110.0
+    node-opcua-numeric-range: 2.114.0
+    node-opcua-packet-analyzer: 2.114.0
+    node-opcua-secure-channel: 2.114.0
+    node-opcua-server: 2.116.0
+    node-opcua-server-discovery: 2.116.0
+    node-opcua-service-browse: 2.114.0
+    node-opcua-service-call: 2.114.0
+    node-opcua-service-discovery: 2.114.0
+    node-opcua-service-endpoints: 2.114.0
+    node-opcua-service-filter: 2.114.0
+    node-opcua-service-history: 2.114.0
+    node-opcua-service-node-management: 2.114.0
+    node-opcua-service-query: 2.114.0
+    node-opcua-service-read: 2.114.0
+    node-opcua-service-register-node: 2.114.0
+    node-opcua-service-secure-channel: 2.114.0
+    node-opcua-service-session: 2.114.0
+    node-opcua-service-subscription: 2.114.0
+    node-opcua-service-translate-browse-path: 2.114.0
+    node-opcua-service-write: 2.114.0
+    node-opcua-status-code: 2.114.0
+    node-opcua-transport: 2.114.0
+    node-opcua-types: 2.114.0
+    node-opcua-utils: 2.114.0
+    node-opcua-variant: 2.114.0
+    node-opcua-vendor-diagnostic: 2.116.0
     semver: ^7.5.4
-  checksum: 71d14d26e3ddc486f390544e63d9b516c28ffb645058b63ac396015adfeca8b0da3b140229c136e77b201a0cd47fbae9918bc5f644ff5071ce1b1d7a85060c66
+  checksum: b14a2af3d4a31e7192cd91d365c06166d4e5c0ae780bd9030eddf76dec82d2d1bfadf44529866427f90e45dddc96b917fcd02903e11ff04fbd6e644990b087fb
   languageName: node
   linkType: hard
 
@@ -34406,17 +33055,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.3.5":
-  version: 7.3.5
-  resolution: "semver@npm:7.3.5"
-  dependencies:
-    lru-cache: ^6.0.0
-  bin:
-    semver: bin/semver.js
-  checksum: 5eafe6102bea2a7439897c1856362e31cc348ccf96efd455c8b5bc2c61e6f7e7b8250dc26b8828c1d76a56f818a7ee907a36ae9fb37a599d3d24609207001d60
-  languageName: node
-  linkType: hard
-
 "semver@npm:7.5.3":
   version: 7.5.3
   resolution: "semver@npm:7.5.3"
@@ -36969,13 +35607,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"underscore@npm:^1.13.2":
-  version: 1.13.6
-  resolution: "underscore@npm:1.13.6"
-  checksum: d5cedd14a9d0d91dd38c1ce6169e4455bb931f0aaf354108e47bd46d3f2da7464d49b2171a5cf786d61963204a42d01ea1332a903b7342ad428deaafaf70ec36
-  languageName: node
-  linkType: hard
-
 "unicode-canonical-property-names-ecmascript@npm:^2.0.0":
   version: 2.0.0
   resolution: "unicode-canonical-property-names-ecmascript@npm:2.0.0"
@@ -38737,7 +37368,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"yargs-parser@npm:21.1.1, yargs-parser@npm:^21.0.0, yargs-parser@npm:^21.0.1, yargs-parser@npm:^21.1.1":
+"yargs-parser@npm:21.1.1, yargs-parser@npm:^21.0.1, yargs-parser@npm:^21.1.1":
   version: 21.1.1
   resolution: "yargs-parser@npm:21.1.1"
   checksum: ed2d96a616a9e3e1cc7d204c62ecc61f7aaab633dcbfab2c6df50f7f87b393993fe6640d017759fe112d0cb1e0119f2b4150a87305cc873fd90831c6a58ccf1c
@@ -38766,21 +37397,6 @@ __metadata:
     y18n: ^5.0.5
     yargs-parser: ^20.2.2
   checksum: b14afbb51e3251a204d81937c86a7e9d4bdbf9a2bcee38226c900d00f522969ab675703bee2a6f99f8e20103f608382936034e64d921b74df82b63c07c5e8f59
-  languageName: node
-  linkType: hard
-
-"yargs@npm:17.5.1":
-  version: 17.5.1
-  resolution: "yargs@npm:17.5.1"
-  dependencies:
-    cliui: ^7.0.2
-    escalade: ^3.1.1
-    get-caller-file: ^2.0.5
-    require-directory: ^2.1.1
-    string-width: ^4.2.3
-    y18n: ^5.0.5
-    yargs-parser: ^21.0.0
-  checksum: 00d58a2c052937fa044834313f07910fd0a115dec5ee35919e857eeee3736b21a4eafa8264535800ba8bac312991ce785ecb8a51f4d2cc8c4676d865af1cfbde
   languageName: node
   linkType: hard
 

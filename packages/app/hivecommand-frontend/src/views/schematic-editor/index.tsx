@@ -11,7 +11,7 @@ import { ExportModal } from './export-modal';
 
 export const SchematicEditor = () => {
 
-    const [ pages, setPages ] = useState<any[]>([])
+    const [pages, setPages] = useState<any[]>([])
 
     const { id } = useParams();
 
@@ -73,18 +73,18 @@ export const SchematicEditor = () => {
         }
     `, {
 
-            // refetchQueries: ['GetSchematic'],
-            // awaitRefetchQueries: true
-        })
+        // refetchQueries: ['GetSchematic'],
+        // awaitRefetchQueries: true
+    })
 
     const [deletePage] = useMutation(gql`
         mutation DeletePage($schematic: ID, $id: ID) {
             deleteCommandSchematicPage(schematic: $schematic, id: $id)
         }
     `, {
-            refetchQueries: ['GetSchematic'],
-            awaitRefetchQueries: true
-        })
+        refetchQueries: ['GetSchematic'],
+        awaitRefetchQueries: true
+    })
 
 
     const [createPageTemplate] = useMutation(gql`
@@ -106,20 +106,20 @@ export const SchematicEditor = () => {
         }
     `, {
 
-            // refetchQueries: ['GetSchematic'],
-            // awaitRefetchQueries: true
-        })
+        // refetchQueries: ['GetSchematic'],
+        // awaitRefetchQueries: true
+    })
 
     const [deletePageTemplate] = useMutation(gql`
         mutation DeletePageTemplate($schematic: ID, $id: ID) {
             deleteCommandSchematicPageTemplate(schematic: $schematic, id: $id)
         }
     `, {
-            refetchQueries: ['GetSchematic'],
-            awaitRefetchQueries: true
-        })
+        refetchQueries: ['GetSchematic'],
+        awaitRefetchQueries: true
+    })
 
-    const [ updatePageOrder ] = useMutation(gql`
+    const [updatePageOrder] = useMutation(gql`
         mutation UpdatePageOrder($schematic: ID, $id: String, $above: String, $below: String){
             updateCommandSchematicPageOrder(schematic: $schematic, id: $id, below: $below, above: $above)
         }
@@ -127,9 +127,8 @@ export const SchematicEditor = () => {
         refetchQueries: ['GetSchematic']
     })
 
-    const [ exporting, setExporting ] = useState(false);
 
-    const [ exportSchematic ] = useMutation(gql`
+    const [exportSchematic] = useMutation(gql`
         mutation ExportSchematic ($id: ID!){
             exportCommandSchematic(id: $id)
         }
@@ -158,25 +157,25 @@ export const SchematicEditor = () => {
 
     const onUpdatePage = (page: any) => {
 
-        let input : any = {};
+        let input: any = {};
 
-        if(page.nodes){
+        if (page.nodes) {
             input.nodes = page.nodes?.filter((a) => a.id != 'page' && a.id != 'canvas')?.map(nodeMap);
         }
 
-        if(page.edges){
-        
+        if (page.edges) {
+
             input.edges = page.edges;
         }
-        
-        if(page.name){
+
+        if (page.name) {
             input.name = page.name;
         }
 
         console.log("UPDATING", page);
-        
+
         debouncedUpdate({
-            variables:{
+            variables: {
                 schematic: id,
                 id: page.id,
                 input
@@ -189,7 +188,7 @@ export const SchematicEditor = () => {
 
             let ix = p.findIndex((a) => a.id == page.id);
 
-            p[ix] = {...p[ix], ...page}
+            p[ix] = { ...p[ix], ...page }
             return p;
         })
     }
@@ -250,25 +249,25 @@ export const SchematicEditor = () => {
     useEffect(() => {
         setPages(schematic?.pages || []);
     }, [schematic]);
-    
-    const sortedPages = useMemo(() => pages?.slice()?.sort((a,b) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
 
-    const [ exportModalOpen, openExportModal ] = useState(false);
+    const sortedPages = useMemo(() => pages?.slice()?.sort((a, b) => (a.rank || '').localeCompare(b.rank || '')), [pages]);
+
+    const [exportModalOpen, openExportModal] = useState(false);
 
     return (
         <Box sx={{
             flex: 1,
             height: 'calc(100% - 36px)',
             padding: '6px',
-            display: 'flex', 
+            display: 'flex',
             flexDirection: 'column'
         }}>
             <ExportModal
                 open={exportModalOpen}
                 versions={schematic?.versions || []}
-                onDownload={(version) => {
-                    setExporting(true);
-                    exportSchematic({variables: {id: schematic.id}}).then(async (response) => {
+                onDownload={async (version) => {
+                    try {
+                        const response = await exportSchematic({ variables: { id: schematic.id } })
 
                         const resp = await fetch(response.data?.exportCommandSchematic);
 
@@ -277,15 +276,13 @@ export const SchematicEditor = () => {
                             data,
                             `${schematic?.name}.pdf`
                         );
-    
-                        setExporting(false);
-                        
-                    }).catch((e) => {
-                        setExporting(false);
-                    })
+
+                    } catch (e) {
+                        console.log("Downloading failed", e)
+                    }
                 }}
                 onClose={() => openExportModal(false)}
-                />
+            />
             <ElectricalEditor
                 title={schematic?.name}
                 versions={schematic?.versions || []}
@@ -302,8 +299,8 @@ export const SchematicEditor = () => {
                 onExport={() => {
                     openExportModal(true)
                 }}
-             />
-{/*              
+            />
+            {/*              
             <ECadEditor
                 exporting={exporting}
                 pages={sortedPages || []}
@@ -393,6 +390,6 @@ export const SchematicEditor = () => {
                 }}
             /> */}
         </Box>
-        
+
     )
 }

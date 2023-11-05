@@ -55,9 +55,10 @@ export default class Client {
     constructor(discoveryServer?: string){
         // super();
 
+        console.log("Construct")
         this.client = OPCUAClient.create({
             endpointMustExist: false,
-            discoveryUrl: discoveryServer,
+            // discoveryUrl: discoveryServer,
             requestedSessionTimeout: 5 * 60 * 1000, //1 minutes
             keepSessionAlive: true,
             connectionStrategy: {

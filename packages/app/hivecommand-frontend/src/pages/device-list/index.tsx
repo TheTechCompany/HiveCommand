@@ -44,6 +44,8 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                     id
                     name
                 }
+
+                createdAt
             }
 
       
@@ -64,7 +66,7 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
         client.refetchQueries({include: ['DeviceList']})
     }
 
-    const devices = data?.commandDevices || [];
+    const devices = (data?.commandDevices || [])?.slice()?.sort((a, b) => a.createdAt?.getTime() - b.createdAt?.getTime());
     const programs = programData?.commandPrograms || []
 
     const createDevice = useCreateDevice()

@@ -61,7 +61,7 @@
 		"@hive-command/sms": ["./communication/sms-utils"],
 
 		"@hive-command/opcua-server": ["./communication/opc-server"],
-		"@hive-command/opcua-client": ["./communication/opc-client"],
+		"@hive-command/opcua-client": ["./communication/opc-client/src"],
 		"@hive-command/opcua-utils": ["./communication/opc-utils"]
 
 	  }
