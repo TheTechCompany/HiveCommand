@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@hive-command/opcua-utils": "^1.4.15-alpha.278",
-    "node-opcua": "2.68.1"
+    "node-opcua": "2.116.0"
   },
   "devDependencies": {
     "@hive-command/opcua-client": "^1.4.15-alpha.278",
