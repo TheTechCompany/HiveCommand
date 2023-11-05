@@ -89,6 +89,7 @@ export class DriverRegistry {
 
         this.yarnConfiguration.use(`<compat>`, { 
             nodeLinker: `node-modules`,
+            checksumBehavior: "update"
             // enableTransparentWorkspaces: true,
             // nmMode: 'hardlinks-local',
         }, this.yarnPath, {
@@ -164,6 +165,7 @@ export class DriverRegistry {
             if(driver.pkg && !this.hasDriver(driver.pkg, driver.range)){
                 console.log("Installing " + driver.pkg)
                 await this.installDriver(driver.pkg, driver.range)
+                console.log("Installed " + driver.pkg + "!")
             }
 
         }))

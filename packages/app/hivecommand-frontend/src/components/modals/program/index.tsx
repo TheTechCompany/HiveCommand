@@ -11,6 +11,7 @@ export interface ProgramModalProps {
   selected?: any;
   onSubmit?: Function;
   onClose?: Function;
+  onDelete?: () => void;
 }
 
 export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
@@ -26,6 +27,10 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
     }
   }
 
+  const onDelete = () => {
+    props.onDelete?.();
+  }
+
   const onSubmit = () => {
     if(props.onSubmit){
       props.onSubmit({
@@ -37,6 +42,8 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
   useEffect(() => {
     if(props.selected){
       setProgram({...props.selected})
+    }else{
+      setProgram({name: ''})
     }
   }, [props.selected])
 
@@ -56,9 +63,12 @@ export const ProgramModal : React.FC<ProgramModalProps> = (props) => {
                 onChange={(e) => setProgram({...program, name: e.target.value}) } />
             </Box>
           </DialogContent>
-          <DialogActions>
-            <Button onClick={onClose}>Cancel</Button>
-            <Button onClick={onSubmit} variant="contained" color="primary">{program.id ? "Save": "Create"}</Button>
+          <DialogActions sx={{display: 'flex', alignItems: 'center', justifyContent: props.selected?.id ? 'space-between' : "flex-end"}}>
+            {props.selected?.id && <Button color="error" onClick={onDelete}>Delete</Button>}
+            <Box sx={{display: 'flex'}}>
+              <Button onClick={onClose}>Cancel</Button>
+              <Button onClick={onSubmit} variant="contained" color="primary">{program.id ? "Save": "Create"}</Button>
+            </Box>
           </DialogActions>
      </Dialog>
   );

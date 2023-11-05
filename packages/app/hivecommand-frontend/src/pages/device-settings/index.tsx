@@ -9,7 +9,7 @@ import { Box } from '@mui/material'
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ScreenProvisionModal } from '../../components/modals/screen-provision'
-import { gql, useQuery } from '@apollo/client'
+import { gql, useApolloClient, useQuery } from '@apollo/client'
 import { ListItemButton } from '@mui/material'
 import { ListItemSecondaryAction } from '@mui/material'
 
@@ -21,6 +21,8 @@ export const DeviceSettings = () => {
     const [ selected, setSelected ] = useState<any>(null)
 
     const { id } = useParams();
+
+    const client = useApolloClient();
 
     const { data } = useQuery(gql`
         query GetDeviceScreens ($device: ID) {
@@ -43,6 +45,7 @@ export const DeviceSettings = () => {
         }
     })
 
+
     const screens = data?.commandDevices?.[0]?.screens || [];
 
     return (
@@ -55,6 +58,8 @@ export const DeviceSettings = () => {
                 onClose={() => {
                     openProvisioner(false);
                     setSelected(null)
+                    
+                    client.refetchQueries({include: ['GetDeviceScreens']})
                 }} />
             <Box sx={{padding: '6px', bgcolor: 'secondary.main'}}>
                 <Typography sx={{color: 'navigation.main'}}>Name</Typography>

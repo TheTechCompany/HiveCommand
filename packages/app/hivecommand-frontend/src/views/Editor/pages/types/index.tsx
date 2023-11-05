@@ -5,10 +5,12 @@ import { useCreateTypeField, useDeleteTypeField, useUpdateTypeField } from './ap
 import { useCommandEditor } from '../../context';
 import { debounce } from 'lodash'
 import { DataTypes } from '@hive-command/scripting';
-import { Route, Routes, useLocation, useMatch, useNavigate, useResolvedPath } from 'react-router-dom'
+import { Route, Routes, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom'
 import { Alarms, CrossReference, Properties } from './views';
 
 export const TypeEditor = (props: any) => {
+
+    const { activeId } = useParams()
 
     const navigate = useNavigate();
     const items = ['', 'cross-reference', 'alarms'].map((x) => {
@@ -18,9 +20,9 @@ export const TypeEditor = (props: any) => {
         }
     })
 
-    const { types, active } = props;
+    const { types } = props;
 
-    const activeType = types?.find((a) => a.id === active);
+    const activeType = types?.find((a) => a.id === activeId);
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
@@ -41,8 +43,8 @@ export const TypeEditor = (props: any) => {
                 </Box>
             </Paper>
             <Routes>
-                <Route path="" element={<Properties active={active} types={types} />} />
-                <Route path="cross-reference" element={<CrossReference active={active} types={types} />} />
+                <Route path="" element={<Properties active={activeId} types={types} />} />
+                <Route path="cross-reference" element={<CrossReference active={activeId} types={types} />} />
                 <Route path="alarms" element={<Alarms />} />
             </Routes>
   

@@ -91,7 +91,8 @@ export const SchematicList = () => {
 
                 }} />
             <Paper sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                <Box sx={{ bgcolor: 'secondary.main', flexDirection: 'row', display: 'flex', justifyContent: 'flex-end' }}>
+                <Box sx={{ bgcolor: 'secondary.main', paddingLeft: '6px', flexDirection: 'row', display: 'flex', alignItems: 'center',  justifyContent: 'space-between' }}>
+                    <Typography sx={{color: "navigation.main"}}>Schematics</Typography>
                     <IconButton
                         sx={{ color: 'navigation.main' }}
                         onClick={() => openModal(true)}>
