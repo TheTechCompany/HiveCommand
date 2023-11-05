@@ -616,6 +616,8 @@ export default (prisma: PrismaClient) => {
 		reports(where: CommandReportPageWhere): [CommandReportPage] 
 
 		organisation: HiveOrganisation 
+
+		createdAt: DateTime
 	}
 
 	

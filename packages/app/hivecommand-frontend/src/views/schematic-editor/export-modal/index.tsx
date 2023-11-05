@@ -1,5 +1,5 @@
 import { gql, useMutation } from '@apollo/client';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import { Box, CircularProgress, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -7,12 +7,14 @@ import { useParams } from 'react-router-dom';
 export interface ExportModalProps {
     open: boolean;
     onClose?: () => void;
-    onDownload?: (version: string) => void;
+    onDownload?: (version: string) => Promise<void>;
 
     versions: { id: string, rank: number, createdAt: Date, createdBy: any }[]
 }
 
 export const ExportModal : React.FC<ExportModalProps> = (props) => {
+
+    const [ downloading, setDownloading ] = useState(false);
 
     const { id } = useParams();
 
@@ -81,7 +83,17 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Cancel</Button>
-                <Button onClick={() => props.onDownload?.(activeVersion)} color="primary" variant="contained">Download PDF</Button>
+                <Button onClick={async () => {
+                    setDownloading(true)
+                    await props.onDownload?.(activeVersion)
+                    setDownloading(false)
+                }} 
+                sx={{display: 'flex', alignItems: 'center'}}
+                color="primary" 
+                disabled={downloading}
+                variant="contained">
+                    {downloading ? <CircularProgress size={'small'} /> : null} Download PDF
+                </Button>
             </DialogActions>
         </Dialog>
     )
