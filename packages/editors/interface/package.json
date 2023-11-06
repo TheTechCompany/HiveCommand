@@ -1,0 +1,21 @@
+{
+  "name": "@hive-command/interface-editor",
+  "packageManager": "yarn@3.6.4",
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -b"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "peerDependencies": {
+    "@mui/material": "*",
+    "reactflow": "*"
+  },
+  "dependencies": {
+    "@hive-command/canvas-nodes": "workspace:^"
+  }
+}

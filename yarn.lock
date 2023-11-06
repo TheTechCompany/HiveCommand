@@ -4637,7 +4637,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/canvas-nodes@^1.4.15-alpha.279, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
+"@hive-command/canvas-nodes@^1.4.15-alpha.279, @hive-command/canvas-nodes@workspace:^, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
   version: 0.0.0-use.local
   resolution: "@hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes"
   dependencies:
@@ -4907,6 +4907,7 @@ __metadata:
     "@hive-command/data-types": ^1.4.15-alpha.52
     "@hive-command/electrical-editor": ^1.4.15-alpha.279
     "@hive-command/electrical-editor-v2": "workspace:^"
+    "@hive-command/interface-editor": "workspace:^"
     "@hive-command/remote-components": ^1.4.15-alpha.279
     "@hive-command/scripting": ^1.4.15-alpha.279
     "@monaco-editor/react": ^4.4.6
@@ -5010,6 +5011,18 @@ __metadata:
 "@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert":
   version: 0.0.0-use.local
   resolution: "@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert"
+  languageName: unknown
+  linkType: soft
+
+"@hive-command/interface-editor@workspace:^, @hive-command/interface-editor@workspace:packages/editors/interface":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/interface-editor@workspace:packages/editors/interface"
+  dependencies:
+    "@hive-command/canvas-nodes": "workspace:^"
+    typescript: ^5.2.2
+  peerDependencies:
+    "@mui/material": "*"
+    reactflow: "*"
   languageName: unknown
   linkType: soft
 

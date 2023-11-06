@@ -14,6 +14,9 @@ import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';
 import { CanvasStyle } from '../../../../style';
 
+import { Node, Edge } from 'reactflow';
+import { InterfaceEditor } from '@hive-command/interface-editor';
+
 import { useRemoteComponents } from '@hive-command/remote-components';
 
 import { getOptionValues } from '@hive-command/command-surface/dist/utils';
@@ -37,8 +40,8 @@ export const Controls = (props) => {
 
     const [menuOpen, openMenu] = useState<string | undefined>(undefined);
 
-    const [nodes, setNodes] = useState<InfiniteCanvasNode[]>([])
-    const [paths, setPaths] = useState<InfiniteCanvasPath[]>([])
+    const [nodes, setNodes] = useState<Node[]>([])
+    const [edges, setEdges] = useState<Edge[]>([])
 
 
     const client = useApolloClient()
@@ -292,35 +295,40 @@ export const Controls = (props) => {
 
                     let node = {
                         id: x.id,
-                        x: x.x,
-                        y: x.y,
-                        width, 
-                        height,
-                        zIndex: x.zIndex != undefined ? x.zIndex : 1,
-                        scaleX: x.scaleX != undefined ? x.scaleX : 1,
-                        scaleY: x.scaleY != undefined ? x.scaleY : 1,
-                        rotation: x.rotation || 0,
-                        options: x.options,
-                        templateOptions: x.dataTransformer?.configuration || [],
-
-                        //  width: `${x?.type?.width || 50}px`,
-                        // height: `${x?.type?.height || 50}px`,
-                        extras: {
-                            template: x.dataTransformer?.template?.id,
-                            options: x.icon?.metadata?.options || {},
-                            devicePlaceholder: {
-                                ...x.devicePlaceholder,
-                                tag: x?.devicePlaceholder?.tag ? `${x?.devicePlaceholder?.type?.tagPrefix || ''}${x?.devicePlaceholder?.tag}` : ''
-                            },
-                            rotation: x.rotation || 0,
+                        position: {
+                            x: x.x,
+                            y: x.y,
+                        },
+                        data: {
+                            width, 
+                            height,
                             zIndex: x.zIndex != undefined ? x.zIndex : 1,
                             scaleX: x.scaleX != undefined ? x.scaleX : 1,
                             scaleY: x.scaleY != undefined ? x.scaleY : 1,
-                            showTotalizer: x.showTotalizer || false,
-                            metadata: x.metadata,
-                            icon: x.icon, //HMIIcons[x.type?.name],
-                            ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
+                            rotation: x.rotation || 0,
+                            options: x.options,
+                            templateOptions: x.dataTransformer?.configuration || [],
+    
+                            //  width: `${x?.type?.width || 50}px`,
+                            // height: `${x?.type?.height || 50}px`,
+                            extras: {
+                                template: x.dataTransformer?.template?.id,
+                                options: x.icon?.metadata?.options || {},
+                                devicePlaceholder: {
+                                    ...x.devicePlaceholder,
+                                    tag: x?.devicePlaceholder?.tag ? `${x?.devicePlaceholder?.type?.tagPrefix || ''}${x?.devicePlaceholder?.tag}` : ''
+                                },
+                                rotation: x.rotation || 0,
+                                zIndex: x.zIndex != undefined ? x.zIndex : 1,
+                                scaleX: x.scaleX != undefined ? x.scaleX : 1,
+                                scaleY: x.scaleY != undefined ? x.scaleY : 1,
+                                showTotalizer: x.showTotalizer || false,
+                                metadata: x.metadata,
+                                icon: x.icon, //HMIIcons[x.type?.name],
+                                ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
+                            },
                         },
+             
                         type: 'hmi-node',
         
                     }
@@ -344,7 +352,7 @@ export const Controls = (props) => {
                         [curr.key]: curr.value
                     }), {});
 
-                    (node.extras as any).dataValue = values;
+                    (node.data?.extras as any).dataValue = values;
 
                     
                     return node;
@@ -352,7 +360,7 @@ export const Controls = (props) => {
                 // setNodes(nodes);
             })
             
-            setPaths(((activeProgram)?.edges || []).map((x) => {
+            setEdges(((activeProgram)?.edges || []).map((x) => {
                 return {
                     id: x.id,
                     type: 'line',
@@ -403,8 +411,8 @@ export const Controls = (props) => {
             let ix = n.map(x => x.id).indexOf(id)
 
             let nodeData : HMINodeData = {
-                position: {x: n[ix].x, y: n[ix].y},
-                rotation: n[ix].rotation,
+                position: {x: n[ix].position?.x, y: n[ix].position?.y},
+                rotation: n[ix].data?.rotation,
                 size: {width: n[ix].width || 0, height: n[ix].height || 0}
             };
 
@@ -415,19 +423,24 @@ export const Controls = (props) => {
 
             n[ix] = {
                 ...n[ix],
-                x: newData.position?.x || 0,
-                y: newData.position?.y || 0,
-                rotation: newData.rotation,
-                width: newData.size?.width,
-                height: newData.size?.height
+                position: {
+                    x: newData.position?.x || 0,
+                    y: newData.position?.y || 0,
+                },
+                data: {
+                    ...n[ix].data,
+                    rotation: newData.rotation,
+                    width: newData.size?.width,
+                    height: newData.size?.height
+                }
             }
 
             updateHMINode(id, {
-                x: n[ix].x,
-                y: n[ix].y,
-                rotation: n[ix].rotation,
-                width: n[ix].width,
-                height: n[ix].height
+                x: n[ix].position.x,
+                y: n[ix].position.y,
+                rotation: n[ix].data.rotation,
+                width: n[ix].data.width,
+                height: n[ix].data.height
             })
 
             return n
@@ -458,6 +471,11 @@ export const Controls = (props) => {
                     position: 'relative',
                 }}>
 
+                <InterfaceEditor
+                    nodes={nodes}
+                    edges={edges}
+                    />
+{/*                 
                 {(<InfiniteCanvas
                     style={CanvasStyle}
                     // snapToGrid={true}
@@ -471,19 +489,7 @@ export const Controls = (props) => {
                             id
                         })
                     }}
-                    menu={ (<Collapse
-                        in={Boolean(menuOpen)}
-                        orientation="horizontal"
-                        sx={{
-                            display: 'flex',
-                            height: '100%',
-                            flexDirection: 'column'
-                        }}>
-                        <HMIDrawer
-                            menu={menuOpen}
-                            nodes={hmiTemplatePacks || []}
-                        />
-                    </Collapse>)}
+                    menu={ }
                     editable={true}
                     nodes={nodes}
                     paths={paths}
@@ -615,8 +621,20 @@ export const Controls = (props) => {
                 >
 
                     <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
-                </InfiniteCanvas>)}
-
+                </InfiniteCanvas>)} */}
+                    <Collapse
+                        in={Boolean(menuOpen)}
+                        orientation="horizontal"
+                        sx={{
+                            display: 'flex',
+                            height: '100%',
+                            flexDirection: 'column'
+                        }}>
+                        <HMIDrawer
+                            menu={menuOpen}
+                            nodes={hmiTemplatePacks || []}
+                        />
+                    </Collapse>
                 <Box sx={{
                     display: 'flex',
                     flexDirection: 'column',
