@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { ProgramModal } from '../../components/modals/program';
 import { useNavigate } from 'react-router-dom';
-import { useCreateProgram } from '@hive-command/api';
+import { useCreateProgram, useDeleteProgram, useUpdateProgram } from '@hive-command/api';
 import { gql, useQuery, useApolloClient } from '@apollo/client';
-import { Box, IconButton, List, ListItem, Paper, Typography } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Box, IconButton, List, ListItem, ListItemButton, Paper, Typography } from '@mui/material';
+import { Add, MoreVert } from '@mui/icons-material';
 
 export interface ProgramListProps  {
 }
@@ -15,7 +15,9 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
     const navigate = useNavigate()
 
 
-    const createProgram = useCreateProgram()//(activeUser as any)?._json?.organisation)
+    const createProgram = useCreateProgram()
+    const updateProgram = useUpdateProgram()
+    const deleteProgram = useDeleteProgram()
     
     const [ modalOpen, openModal ] = useState(false)
     const [ selectedProgram, setSelectedProgram ] = useState<any>()
@@ -44,27 +46,39 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
                 setSelectedProgram(null)
                 openModal(false)
             }}
-            onSubmit={(program: {name: string, item: any}) => {
-                if(program.name){
+            onDelete={async () => {
+                await deleteProgram(selectedProgram?.id)
+                client.refetchQueries({include: ['Programs']})
 
-                    // alert(program.name)
-                    createProgram(
+                setSelectedProgram(null)
+                openModal(false)
+            }}
+            onSubmit={async (program: {id: string, name: string, item: any}) => {
+
+                if(program.id){
+                    await updateProgram(
+                        program.id,
                         program.name
-                    ).then((program) => {
-                        openModal(false)
+                    )
+                }else{
+                    if(program.name){
 
-                        client.refetchQueries({include: ['Programs']})
-                        // if(program?.item){
-                        //     let p : any[] = programs.slice()
-                        //     p.push(program?.item)
-                        //     setPrograms(p)
-                        // }
-                    });
+                        // alert(program.name)
+                        await createProgram(
+                            program.name
+                        )
+                  
+                    }
                 }
+                openModal(false)
+                setSelectedProgram(null)
+
+                client.refetchQueries({include: ['Programs']})
 
             }}/>
             <Paper sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-                <Box sx={{bgcolor: 'secondary.main', flexDirection: 'row', display: 'flex', justifyContent: 'flex-end'}}>
+                <Box sx={{bgcolor: 'secondary.main', paddingLeft: '6px', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Typography sx={{color: 'navigation.main'}}>Programs</Typography>
                     <IconButton
                         sx={{color: 'navigation.main'}}
                         onClick={() => openModal(true)}>
@@ -76,8 +90,19 @@ export const ProgramList: React.FC<ProgramListProps> = (props) => {
                 ) : (
                     <List>
                         {programs?.map((program) => (
-                            <ListItem button onClick={() => navigate(`${program.id}`)}>
-                                {program.name}
+                            <ListItem 
+                            disablePadding
+                            secondaryAction={(
+                                <IconButton onClick={() => {
+                                    openModal(true);
+                                    setSelectedProgram(program);
+                                }} size="small">
+                                    <MoreVert fontSize="inherit" />
+                                </IconButton>
+                            )}>
+                                <ListItemButton onClick={() => navigate(`${program.id}`)}>
+                                    {program.name}
+                                </ListItemButton>
                             </ListItem>
                         ))}
                     </List>

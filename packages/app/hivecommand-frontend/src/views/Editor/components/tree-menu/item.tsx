@@ -136,7 +136,7 @@ export interface MenuItemGroupProps {
 }
 
 export const CustomTreeItem = (props: any) => {
-    console.log("CTI", {props})
+
     return (<TreeItem
                 ContentProps={{
                     style: {width: 'unset'}, 
@@ -150,7 +150,7 @@ export const CustomTreeItem = (props: any) => {
 }
 
 export const MenuItemGroup = (props) => {
-    console.log("MIG", props);
+
     return (
         <CustomTreeItem parentId={props.parentId} nodeId={props.id} label={props.label}>
             {props.items?.map((item) => <MenuItemGroup parentId={props.id} id={item.id} label={item.name} items={item.children} />)}

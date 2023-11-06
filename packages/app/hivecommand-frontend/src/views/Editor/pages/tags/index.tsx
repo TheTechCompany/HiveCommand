@@ -13,6 +13,7 @@ import { debounce } from 'lodash';
 import { ExportModal } from './importexport';
 import { ImportModal } from './import-modal'
 import { gql, useMutation } from '@apollo/client';
+import { useParams } from 'react-router-dom';
 // interface AV101 {
 //     name: string[];
 // }
@@ -21,11 +22,13 @@ const filter = createFilterOptions();
 
 export const TagEditor = (props: any) => {
 
+    const { id } = useParams()
+
     const [ search, setSearch ] = useState('');
 
     const [ importModalOpen, openImportModal ] = useState(false);
 
-    const { program, tags, types: extraTypes } = props;
+    const { tags, types: extraTypes } = props;
 
     const createTag = useCreateTag();
     const updateTag = useUpdateTag();
@@ -76,7 +79,7 @@ export const TagEditor = (props: any) => {
 
         debounceUpdateTag({
             variables: {
-                program,
+                program: id,
                 id: tagId,
                 input: row
             }
@@ -115,14 +118,14 @@ export const TagEditor = (props: any) => {
                 onSubmit={(tags, types, scope) => {
                     importTypes({
                         variables: {
-                            program: program,
+                            program: id,
                             input: types,
                             scope
                         }
                     }).then(() => {
                         importTags({
                             variables: {
-                                program,
+                                program: id,
                                 input: tags,
                                 scope
                             }
@@ -255,7 +258,7 @@ export const TagEditor = (props: any) => {
                                             onClick={() => {
                                                 deleteTag({
                                                     variables: {
-                                                        program,
+                                                        program: id,
                                                         id: tag.id
                                                     }
                                                 }).then(() => {
@@ -276,7 +279,7 @@ export const TagEditor = (props: any) => {
                     onClick={() => {
                         createTag({
                             variables: {
-                                program: program,
+                                program: id,
                                 input: {name: ''}
                             }
                         }).then(() => refetch?.())

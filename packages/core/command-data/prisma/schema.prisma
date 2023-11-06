@@ -369,7 +369,7 @@ model ProgramComponent {
   main   ProgramComponentFile? @relation(name: "hasMainComponentFile", references: [id], fields: [mainId])
   mainId String?
 
-  program   Program @relation(name: "hasProgramComponents", references: [id], fields: [programId])
+  program   Program @relation(name: "hasProgramComponents", references: [id], fields: [programId], onDelete: Cascade)
   programId String
 }
 
@@ -414,7 +414,7 @@ model ProgramDataScope {
 
   createdAt DateTime @default(now())
 
-  program   Program @relation(name: "hasDataScopes", references: [id], fields: [programId])
+  program   Program @relation(name: "hasDataScopes", references: [id], fields: [programId], onDelete: Cascade)
   programId String
 
   usedByTag ProgramTag[] @relation(name: "tagScope")
@@ -433,7 +433,7 @@ model ProgramAlarm {
 
   conditions Json?
 
-  program   Program @relation(name: "useAlarm", fields: [programId], references: [id])
+  program   Program @relation(name: "useAlarm", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
   createdAt DateTime @default(now())
@@ -451,7 +451,7 @@ model ProgramAlarmSeverity {
 
   usedByAlarm  ProgramAlarm[] @relation(name: "usesSeverity")
 
-  proram    Program @relation(name: "hasAlarmSeverity", fields: [programId], references: [id])
+  proram    Program @relation(name: "hasAlarmSeverity", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 }
 
@@ -464,7 +464,7 @@ model ProgramHMI {
 
   edges CanvasEdge[] @relation(name: "useEdge")
 
-  program   Program @relation(name: "hasInterface", fields: [programId], references: [id])
+  program   Program @relation(name: "hasInterface", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
   localHomepage  Program[] @relation(name: "localHomepage", map: "localHomepage")
@@ -621,7 +621,7 @@ model CanvasDataTemplate {
 
   transforms CanvasDataTransformer[] @relation(name: "transformsCanvasData")
 
-  program   Program @relation(name: "hasTemplates", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTemplates", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 }
 
@@ -671,7 +671,7 @@ model ProgramTag {
   type ProgramTagType? @relation(name: "tagType") //String | Valve | String[]
   // typeId String @unique
 
-  program   Program @relation(name: "hasTags", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTags", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
   reports DeviceReport[] @relation(name: "reportsOnTag")
@@ -698,7 +698,7 @@ model ProgramType {
 
   fields ProgramTypeField[] @relation(name: "hasTypeField")
 
-  program   Program @relation(name: "hasTypes", fields: [programId], references: [id])
+  program   Program @relation(name: "hasTypes", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
   usedByTagType           ProgramTagType[]           @relation(name: "tagUsesType")

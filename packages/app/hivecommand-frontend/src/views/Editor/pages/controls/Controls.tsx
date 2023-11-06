@@ -20,11 +20,11 @@ import { getOptionValues } from '@hive-command/command-surface/dist/utils';
 
 export const Controls = (props) => {
 
-    const { id } = useParams()
+    const { id = '', activeId = '' } = useParams()
 
     const { getPack } = useRemoteComponents()
 
-    const { program: { templatePacks, tags, types, components } } = useCommandEditor()
+    const { program: { templatePacks, tags, types, components } = {}} = useCommandEditor()
 
     const [selected, _setSelected] = useState<{ key?: "node" | "path", id?: string }>({})
 
@@ -202,13 +202,13 @@ export const Controls = (props) => {
         client.refetchQueries({ include: ['Q'] })
     }
 
-    const createHMINode = useCreateHMINode(id, props.activeProgram)
+    const createHMINode = useCreateHMINode(id, activeId)
     const updateHMINode = useUpdateHMINode(id)
     const deleteHMINode = useDeleteHMINode(id)
 
 
     const deleteHMIEdge = useDeleteHMIPath(id)
-    const createHMIEdge = useCreateHMIPath(id, props.activeProgram)
+    const createHMIEdge = useCreateHMIPath(id, activeId)
     const updateHMIEdge = useUpdateHMIPath(id)
 
     // const updateHMIGroup = useUpdateHMIGroup()
@@ -222,7 +222,7 @@ export const Controls = (props) => {
 
     let hmiTemplatePacks = program?.templatePacks || [];
 
-    let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == props.activeProgram), [props.activeProgram, program]);
+    let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == activeId), [activeId, program]);
 
 
 
@@ -251,7 +251,7 @@ export const Controls = (props) => {
             Promise.all(nodes.map(async (node) => {
 
                 const [packId, templateName ] = (node.type || '').split(':')
-                const url = templatePacks.find((a) => a.id == packId)?.url;
+                const url = templatePacks?.find((a) => a.id == packId)?.url;
 
                 if(url){
                     let base = url.split('/');
@@ -260,7 +260,7 @@ export const Controls = (props) => {
 
                     const pack = await getPack(packId, `${base}/`, url_slug)
 
-                    const item = pack.find((a) => a.name == templateName);
+                    const item = pack?.find((a) => a.name == templateName);
 
                     return {
                         ...node,
@@ -332,7 +332,7 @@ export const Controls = (props) => {
 
                         try{
                             // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            parsedValue = getOptionValues(node, tags, components, {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
+                            parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
                         }catch(e){
                             console.log({e, node, optionKey});
                         }
@@ -405,7 +405,7 @@ export const Controls = (props) => {
             let nodeData : HMINodeData = {
                 position: {x: n[ix].x, y: n[ix].y},
                 rotation: n[ix].rotation,
-                size: {width: n[ix].width, height: n[ix].height}
+                size: {width: n[ix].width || 0, height: n[ix].height || 0}
             };
 
             let newData = {
@@ -415,11 +415,11 @@ export const Controls = (props) => {
 
             n[ix] = {
                 ...n[ix],
-                x: newData.position.x,
-                y: newData.position.y,
+                x: newData.position?.x || 0,
+                y: newData.position?.y || 0,
                 rotation: newData.rotation,
-                width: newData.size.width,
-                height: newData.size.height
+                width: newData.size?.width,
+                height: newData.size?.height
             }
 
             updateHMINode(id, {

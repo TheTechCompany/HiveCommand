@@ -23,8 +23,6 @@ export const useCreateProgram = () => {
 					...item
 				}
 			}
-	}, {
-		refetchQueries: ['commandPrograms']
 	})
 
 
@@ -125,12 +123,53 @@ export const useUpdateProgramHMI = (programId: string) => {
 	}
 }
 
-export const updateProgram = () => {
-	// const [ mutateFn, info ] = useMutation(gql`
-	// 	mutation updateProgram {
+export const useUpdateProgram = () => {
 
-	// 	}
-	// `)
+	const [ mutateFn ] = useMutation((mutation, args: {
+		id: string,
+		name: string
+	}) => {
+
+		const item = mutation.updateCommandProgram({
+			id: args.id,
+			input: {
+				name: args.name,
+			}
+		})
+
+			return {
+				item: {
+					...item
+				}
+			}
+	})
+
+
+	return (id: string, name: string) => {
+		return mutateFn({args: {id, name}})
+	}
+}
+
+
+export const useDeleteProgram = () => {
+
+	const [ mutateFn ] = useMutation((mutation, args: {
+		id: string,
+	}) => {
+
+		const item = mutation.deleteCommandProgram({
+			id: args.id
+		})
+
+			return {
+				item: item
+			}
+	})
+
+
+	return (id: string) => {
+		return mutateFn({args: {id}})
+	}
 }
 
 export const getProgramSelector = (query: any, flow: string, parent?: string) => {

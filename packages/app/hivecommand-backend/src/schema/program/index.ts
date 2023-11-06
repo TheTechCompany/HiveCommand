@@ -30,7 +30,6 @@ export default (prisma: PrismaClient) => {
 					}else{
 						c=  root.components;
 					}
-					console.log("COMPONENTS", args, c, root.components)
 
 					return c;
 				}
@@ -212,13 +211,20 @@ export default (prisma: PrismaClient) => {
 					if(!currentProgram) throw new Error('Program not found');
 					if(!context?.jwt?.acl.can('update', subject('CommandProgram', currentProgram) )) throw new Error('Cannot update CommandProgram');
 					
+					let templatePackUpdate: any = {};
+					if(args.input.templatePacks){
+						templatePackUpdate = {
+							templatePacks: {
+								set: args.input.templatePacks.map((x) => ({id: x}))
+							}
+						}
+					}
+
 					const program = await prisma.program.update({
 						where: {id: args.id},
 						data: {
 							name: args.input.name,
-							templatePacks: {
-								set: args.input.templatePacks.map((x) => ({id: x}))
-							}
+							...templatePackUpdate
 						}
 					})
 

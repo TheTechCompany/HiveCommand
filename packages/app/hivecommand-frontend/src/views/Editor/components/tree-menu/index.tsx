@@ -36,8 +36,6 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
         return useMatch(useResolvedPath(item.id?.split('-root')?.[0] + '/*').pathname) != null
     })
 
-    console.log({topLevel})
-
     const renderItems = (items: any[], parentId?: string) => {
         return items.map((item) => (
             <CustomTreeItem decoration={item.icon} parentId={parentId} nodeId={item.id} dontAdd={item.dontAdd} dontEdit={item.dontEdit} label={item.name}>

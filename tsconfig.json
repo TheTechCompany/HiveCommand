@@ -27,7 +27,7 @@
 
 		"@hexhive/ui": ["../node_modules/@hexhive/ui"],
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
-		"@hive-command/api": ["./app/hivecommand-api"],
+		"@hive-command/api": ["./app/hivecommand-api/src"],
 
 		// "@hive-command/export-page": ["./core-ui/command-export-page/src"],
 
