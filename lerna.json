@@ -9,7 +9,8 @@
     "packages/infrastructure/*",
     "packages/app/*",
     "packages/lambdas/*",
-    "packages/editors/*"
+    "packages/editors/*",
+    "packages/types/*"
   ],
   "npmClient": "yarn",
   "version": "1.4.15-alpha.279"

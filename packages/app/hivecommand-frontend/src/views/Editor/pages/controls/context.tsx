@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-
+import { HMITag, HMIType, HMITemplate } from '@hive-command/interface-types'
 export interface HMIPack {
     id: string;
     name: string;
@@ -14,28 +14,6 @@ export interface HMINodeData {
     rotation?: number;
 }
 
-export interface HMITag {
-    id: string;
-    name: string;
-    type: string;
-}
-
-export interface HMIType {
-    id: string;
-    name: string;
-    fields: {id: string, name: string, type: string}[];
-}
-
-export interface HMITemplate {
-    id: string;
-    name: string;
-
-    inputs?: any[];
-    outputs?: {id: string, name: string, type: string}[];
-
-    edges?: any[];
-
-}
 
 export const HMIContext = React.createContext<{
     programId?: string;

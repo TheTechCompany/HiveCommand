@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { HMINode, HMITag, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit, ScriptTarget } from 'typescript'
 import { template } from 'dot';
-import { Node } from 'reactflow';
 // import { baseRequirements } from '@hive-command/remote-components';
 import { isEqual } from 'lodash';
 import path from 'path';
@@ -319,7 +318,7 @@ export const useNodesWithValues = (
 
 
 export const getOptionValues = (
-	node: Node,
+	node: HMINode,
 	tags: HMITag[],
 	components: {
 		id: string,
@@ -337,14 +336,14 @@ export const getOptionValues = (
 ) => {
 
 
-	const templatedKeys = node.data?.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
+	const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
 
 	if (templatedKeys.indexOf(optionKey) > -1) {
 		//Has templated override
-		let templateOutput = node.data?.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
+		let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
 
-		let templateOverride = node?.data?.dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
+		let templateOverride = node?.dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
 
 		// if(typeof(templateOverride) === 'string'){
 		//     //Override is either literal or template
@@ -375,9 +374,9 @@ export const getOptionValues = (
 
 		func(module, exports, (elem, data) => {
 			return functions.showWindow(elem, (state: any) => {
-				let templateInputs = node.data?.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+				let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
-					let value = node.data?.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
 
 
 					if (inputTemplate.type?.split(':')[0] === 'Tag') {
@@ -413,7 +412,7 @@ export const getOptionValues = (
 
 		if ('handler' in exports) {
 			//onClick uses a handler to setup showWindow, the values are bound to templateValues at that point in time
-			returnValue = (...args: any[]) => exports?.handler?.({ x: node.position.x, y: node.position.y, width: node.width, height: node.height }, templateValues.values[node.id] || {}, (state: any) => {
+			returnValue = (...args: any[]) => exports?.handler?.({ x: node.x, y: node.y, width: node.width, height: node.height }, templateValues.values[node.id] || {}, (state: any) => {
 
 				let rectifiedState: any = {};
 
@@ -471,7 +470,7 @@ export const getOptionValues = (
 			}
 
 			if ('handler' in exports) {
-				return (...args: any[]) => exports?.handler?.({ x: node.position.x, y: node.position.y, width: node.width, height: node.height }, normalisedValues || {}, (state: any) => { console.log("setState", state); setValues(state); }, args)
+				return (...args: any[]) => exports?.handler?.({ x: node.x, y: node.y, width: node.width, height: node.height }, normalisedValues || {}, (state: any) => { console.log("setState", state); setValues(state); }, args)
 			}
 
 		} else if (typeof (optionValue) === 'string' && optionValue?.match(/{{.*}}/) !== null) {

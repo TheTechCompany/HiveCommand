@@ -4,10 +4,13 @@ import { GridView as Nodes, Assignment } from '@mui/icons-material';
 import Settings from '../icons/Settings';
 import { ElementPane } from "./panes/elements";
 import { useInterfaceEditor } from "../context";
+import { TransformPane } from "./panes/transform";
+import { ConfigurationPane } from "./panes/configuration";
+import { Node } from 'reactflow';
 
 
 export interface SidebarProps {
- 
+    selectedNode?: Node;
 }
 
 
@@ -22,11 +25,13 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         },
         {
             icon: <Assignment style={{ fill: 'white' }} width="24px" />,
-            path: 'template'
+            path: 'template',
+            pane: <ConfigurationPane nodes={[]} />
         },
         {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,
-            path: 'config'
+            path: 'transform',
+            pane: <TransformPane selectedNode={props.selectedNode} />
         }
     ];
 

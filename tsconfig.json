@@ -29,6 +29,8 @@
 		"@hexhive/utils": ["../node_modules/@hexhive/utils"],
 		"@hive-command/api": ["./app/hivecommand-api/src"],
 
+		"@hive-command/ui": ["./core-ui/command-ui/src"],
+
 		// "@hive-command/export-page": ["./core-ui/command-export-page/src"],
 
 		"@hive-command/electrical-editor-v2": ["./editors/electrical/src"],

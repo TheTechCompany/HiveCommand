@@ -18,7 +18,6 @@ import { InterfaceEditor } from '@hive-command/interface-editor';
 
 import { useRemoteComponents } from '@hive-command/remote-components';
 
-import { getOptionValues } from '@hive-command/command-surface/dist/utils';
 import { e } from 'mathjs';
 
 export const Controls = (props) => {
@@ -354,7 +353,7 @@ export const Controls = (props) => {
 
                         try {
                             // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, { values: {} }, { values: {} }, { values: {} }, (values: any) => { }, optionKey, optionValue);
+                            // parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, { values: {} }, { values: {} }, { values: {} }, (values: any) => { }, optionKey, optionValue);
                         } catch (e) {
                             console.log({ e, node, optionKey });
                         }

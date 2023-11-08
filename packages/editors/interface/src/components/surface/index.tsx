@@ -10,6 +10,9 @@ export interface InterfaceEditorSurfaceProps {
     nodes: Node[],
     edges: Edge[]
 
+    selected?: {nodes: Node[], edges: Edge[]};
+    onSelectionChange?: (selection: {nodes: Node[], edges: Edge[]} | undefined) => void;
+
     onEdgeCreate?: (connection: Connection) => void
     onEdgeUpdate?: (edge: Partial<Edge>) => void;
     onEdgeDelete?: (edges: Edge[] | Edge) => void;
@@ -39,6 +42,10 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
     useEffect(() => {
         setEdges(props.edges || [])
     }, [props.edges])
+
+    useEffect(() => {
+        setSelected(props.selected)
+    }, [props.selected])
 
     const _nodeTypes = useMemo(() => nodeTypes(true), [])
     const _edgeTypes = useMemo(() => edgeTypes(true), [])
@@ -123,7 +130,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                                 }
 
                                 props.onNodeUpdate?.(on[ix])
-                                
+
                                 return on;
                             })
                             
@@ -145,16 +152,22 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                         }
                     })
 
+                    let s = Object.assign({}, selected);
+
                     changes.filter((x) => x.type == 'select').forEach((select: any) => {
                         if(select.selected){
-                            setSelected((s) => {
+                            // setSelected((s) => {
                                 let n = props.nodes?.find((a) => a.id == select.id);
-                                return {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
-                             })
+                                s = {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
+                            //  })
                         }else{
-                            setSelected((s) => ({edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }) )
+                            // setSelected((s) => (
+                                s = {edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }
+                                // ) )
                         }
                     })
+                    setSelected(s)
+                    props.onSelectionChange?.(s)
                     onNodesChange(changes.filter((a: any) => a.type !== 'dimensions' && !a.resizing))
                 }}
                 onPaneClick={(ev) => {
