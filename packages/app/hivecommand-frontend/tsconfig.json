@@ -18,6 +18,7 @@
     {"path": "../../core/command-scripting"},
     {"path": "../../core-ui/command-electrical-editor"},
     {"path": "../../core-ui/command-remote-components"},
-    {"path": "../../core-ui/command-surface"}
+    {"path": "../../core-ui/command-surface"},
+    {"path": "../../types/interface-types"}
   ]
 }

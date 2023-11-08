@@ -26,7 +26,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         {
             icon: <Assignment style={{ fill: 'white' }} width="24px" />,
             path: 'template',
-            pane: <ConfigurationPane />
+            pane: <ConfigurationPane nodes={[]} />
         },
         {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,

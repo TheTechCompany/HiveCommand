@@ -1,7 +1,7 @@
 // import { HMIType } from "@hive-command/command-surface";
 import React from "react";
-import { HMITag, HMITemplate, HMIPack, HMIType } from "../pages/controls/context";
-
+import { HMIPack } from "../pages/controls/context";
+import { HMITag, HMITemplate, HMIType } from '@hive-command/interface-types'
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
 	refetch?: () => void;

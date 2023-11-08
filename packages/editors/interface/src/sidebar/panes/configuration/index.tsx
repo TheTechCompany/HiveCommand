@@ -18,6 +18,9 @@ export interface ConfigurationPaneProps {
     types?: HMIType[];
 
     nodes: Node[];
+
+    onNodeUpdate?: () => void;
+    // assignNode
 }
 
 export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
@@ -114,23 +117,23 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
     const _updateState = (key: string, value: any) => {
-        setState((state) => {
-            let ix = state.map((x) => x.key).indexOf(key)
-            state[ix].value = value;
-            return state;
-        })
+        // setState((state) => {
+        //     let ix = state.map((x) => x.key).indexOf(key)
+        //     state[ix].value = value;
+        //     return state;
+        // })
 
-        if(updateBouncer){
-            clearTimeout(updateBouncer)
-            setUpdateBouncer(null)
-        }
-        setUpdateBouncer(
-            setTimeout(() => {
-                updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
-                    refetch?.()
-                })
-            }, 500)
-        )
+        // if(updateBouncer){
+        //     clearTimeout(updateBouncer)
+        //     setUpdateBouncer(null)
+        // }
+        // setUpdateBouncer(
+        //     setTimeout(() => {
+        //         updateHMINode(selected.id, {options: state.reduce((prev, curr) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
+        //             refetch?.()
+        //         })
+        //     }, 500)
+        // )
 
     }
 
@@ -305,10 +308,12 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
                         onKeyDown={(e) => {
                             if(e.key === "Enter"){
                                 updateState(id || label, [ ...new Set((value || []).concat(ws?.[label])) ])
-                                setWs((ws) => { ws[label] = ''; return ws })
+                                // setWs((ws) => { ws[label] = ''; return ws })
                             }
                         }}
-                        renderInput={(params) => <TextField {...params} onChange={(e) => setWs((ws) => {ws[label] = e.target.value; return ws} )} label={label} />}
+                        renderInput={(params) => <TextField {...params} onChange={(e) => {
+                            // setWs((ws) => {ws[label] = e.target.value; return ws} )
+                        }} label={label} />}
                         freeSolo
                         />)
                 })();
@@ -364,20 +369,20 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
                 <Typography sx={{marginBottom: '6px'}} fontSize={'small'}>Template Options</Typography>
                 {activeTemplate?.inputs?.map((input) => (
                     <Box sx={{marginBottom: '6px'}}>
-                        {renderConfigInput(
+                        {/* {renderConfigInput(
                             { id: input.id, type: input.type, value: templateState?.find((a) => input.id === a.field?.id)?.value || null, label: input.name },
                             (key, value) => {
-                                updateNodeTemplateConfig({
-                                    variables: {
-                                        nodeId: selected?.id,
-                                        fieldId: key,
-                                        value
-                                    }
-                                }).then(() => {
-                                    refetch();
-                                })
+                                // updateNodeTemplateConfig({
+                                //     variables: {
+                                //         nodeId: selected?.id,
+                                //         fieldId: key,
+                                //         value
+                                //     }
+                                // }).then(() => {
+                                //     refetch();
+                                // })
                             }
-                        )}
+                        )} */}
                     </Box>
                 ))}
             </Card>
@@ -430,15 +435,15 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
                     disablePortal
                     onChange={(e, newVal) => {
                         if(typeof(newVal) === 'string') return;
-                        if(!selected?.id) return
-                        assignNodeTemplate({
-                            variables: {
-                                nodeId: selected?.id,
-                                input: {
-                                    template: newVal?.id || null
-                                }
-                            }
-                        }).then(() => refetch?.());
+                        // if(!selected?.id) return
+                        // assignNodeTemplate({
+                        //     variables: {
+                        //         nodeId: selected?.id,
+                        //         input: {
+                        //             template: newVal?.id || null
+                        //         }
+                        //     }
+                        // }).then(() => refetch?.());
                     }}
                     getOptionLabel={(option) => typeof(option) === 'string' ? option : option?.name}
                     renderInput={(params) => <TextField  {...params} size="small" label="Template" />}
@@ -450,7 +455,7 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
             <Divider sx={{marginTop: '12px', marginBottom: '12px'}} />
             <Typography fontSize="small">Node Options</Typography>
             <FormGroup>
-                    {Object.keys(options).map((optionKey) => {
+                    {/* {Object.keys(options).map((optionKey) => {
                         const type = options[optionKey];
                         const value = state?.find((a) => a.key == optionKey)?.value;
                         const label = optionKey
@@ -506,11 +511,12 @@ export const setter = (value: ${toJSType(lookupType(type))}, setValues: (values:
                                     <Javascript fontSize="inherit" />
                                 </IconButton>}
                                 </>
-                            )}
+                            )
+                            }
                            
                         </Box>)
 
-                    })}
+                    })} */}
                 </FormGroup>
         </Box>
     )
