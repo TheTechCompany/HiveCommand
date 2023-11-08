@@ -25,6 +25,7 @@ export interface InterfaceEditorProps {
 
 export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
+    const [ selected, setSelected ] = useState<{nodes: Node[], edges: Edge[]} | undefined>(undefined)
 
     const [ activeTool, setActiveTool ] = useState<ComponentTool | null>(null)
 
@@ -46,6 +47,8 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
                     <InterfaceEditorSurface 
                         nodes={props.nodes}
                         edges={props.edges}
+                        selected={selected}
+                        onSelectionChange={(selected) => setSelected(selected)}
                         onNodeCreate={props.onNodeCreate}
                         onNodeUpdate={props.onNodeUpdate}
                         onNodeDelete={props.onNodeDelete}
@@ -53,7 +56,8 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
                         onEdgeUpdate={props.onEdgeUpdate}
                         onEdgeDelete={props.onEdgeDelete} />
                 </ReactFlowProvider>
-                <Sidebar  />
+                {/* Check for paths/multiples */}
+                <Sidebar selectedNode={selected?.nodes?.[0]}  />
             </Box>
         </InterfaceEditorProvider>
     )

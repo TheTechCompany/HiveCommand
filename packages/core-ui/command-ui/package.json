@@ -4,6 +4,10 @@
   "publishConfig": {
     "access": "public"
   },
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.js",
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-react": "^7.22.15",
@@ -24,6 +28,7 @@
     "typescript": "^5.2.2"
   },
   "scripts": {
+    "build": "tsc -b",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },

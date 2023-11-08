@@ -5021,11 +5021,21 @@ __metadata:
   resolution: "@hive-command/interface-editor@workspace:packages/editors/interface"
   dependencies:
     "@hive-command/canvas-nodes": "workspace:^"
+    "@hive-command/interface-types": "workspace:^"
+    "@hive-command/ui": "workspace:^"
     nanoid: ^5.0.3
     typescript: ^5.2.2
   peerDependencies:
     "@mui/material": "*"
     reactflow: "*"
+  languageName: unknown
+  linkType: soft
+
+"@hive-command/interface-types@workspace:^, @hive-command/interface-types@workspace:packages/types/interface-types":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/interface-types@workspace:packages/types/interface-types"
+  dependencies:
+    typescript: ^5.2.2
   languageName: unknown
   linkType: soft
 
@@ -5299,7 +5309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/ui@workspace:packages/core-ui/command-ui":
+"@hive-command/ui@workspace:^, @hive-command/ui@workspace:packages/core-ui/command-ui":
   version: 0.0.0-use.local
   resolution: "@hive-command/ui@workspace:packages/core-ui/command-ui"
   dependencies:

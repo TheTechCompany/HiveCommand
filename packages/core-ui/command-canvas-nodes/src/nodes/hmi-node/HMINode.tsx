@@ -58,8 +58,8 @@ export const HMINode = (editor: boolean) =>
         return (
             <Box sx={{
                 transform: `rotate(${rotation}deg)`,
-                minWidth: props.data?.width || '72px',
-                minHeight: props.data?.height || '72px',
+                width: props.data?.width || '72px',
+                height: props.data?.height || '72px',
                 background: props.selected ? 'rgba(0, 89, 220, 0.08)' : undefined,
                 border: props.selected ? '1px dotted rgba(0, 89, 220, 0.8)' : undefined,
             }}>
