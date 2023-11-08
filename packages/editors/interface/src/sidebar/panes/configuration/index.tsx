@@ -6,18 +6,12 @@ import { TemplateInput, ScriptEditorModal } from '@hive-command/ui';
 import { DataTypes, formatInterface, fromOPCType, lookupType, toJSType } from '@hive-command/scripting';
 import { Node } from 'reactflow';
 import { HMITag, HMITemplate, HMIType } from '@hive-command/interface-types'
+import { useInterfaceEditor } from '../../../context';
 
 export type ConfigInputType = 'Function' | 'Tag' | 'String' | '[String]' | 'Number' | 'Boolean'
 
 
 export interface ConfigurationPaneProps {
-    selectedNode?: Node;    
-
-    tags?: HMITag[];
-    templates?: HMITemplate[];
-    types?: HMIType[];
-
-    nodes: Node[];
 
     onNodeUpdate?: () => void;
     // assignNode
@@ -25,12 +19,14 @@ export interface ConfigurationPaneProps {
 
 export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
 
-    const { tags = [], templates = [], types = [] } = props;
+    const { selected, tags = [], templates = [], types = [] } = useInterfaceEditor()
+
+    const selectedNode = selected?.nodes?.[0];
 
 
-    const options = props.selectedNode?.data?.options || {};
+    const options = selectedNode?.data?.options || {};
 
-    const templateOptions = props.selectedNode?.data?.templateOptions || [];
+    const templateOptions = selectedNode?.data?.templateOptions || [];
 
     const [ templateState, setTemplateState ] = useState<any>([])
 
@@ -104,7 +100,7 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
 
         setState(newState)
 
-    }, [props.selectedNode, options])
+    }, [selectedNode, options])
 
     useEffect(() => {
         if(templateOptions){
@@ -359,11 +355,9 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
         }
     }
 
-    const activeTemplate = useMemo(() => templates?.find((a) => a.id === props.selectedNode?.data?.template), [props.selectedNode?.data?.template]);
+    const activeTemplate = useMemo(() => templates?.find((a) => a.id === selectedNode?.data?.template), [selectedNode?.data?.template]);
 
     const templateInputs = useMemo(() => {
-        
-
         return  activeTemplate ? (
             <Card elevation={5} sx={{padding: '6px'}}>
                 <Typography sx={{marginBottom: '6px'}} fontSize={'small'}>Template Options</Typography>
@@ -391,8 +385,7 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
 
 
     return (
-        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column', paddingLeft: '6px', paddingTop: '6px', paddingRight: '6px'}}>
-           
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
            <ScriptEditorModal
                 open={Boolean(functionOpt)}
                 onClose={() => {
@@ -431,7 +424,7 @@ export const ConfigurationPane : React.FC<ConfigurationPaneProps> = (props) => {
                 <Autocomplete
                     fullWidth
                     options={templates || []}
-                    value={templates?.find((a) => a.id === props.selectedNode?.data?.template) || null}
+                    value={templates?.find((a) => a.id === selectedNode?.data?.template) || null}
                     disablePortal
                     onChange={(e, newVal) => {
                         if(typeof(newVal) === 'string') return;

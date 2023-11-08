@@ -26,12 +26,12 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         {
             icon: <Assignment style={{ fill: 'white' }} width="24px" />,
             path: 'template',
-            pane: <ConfigurationPane nodes={[]} />
+            pane: <ConfigurationPane  />
         },
         {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,
             path: 'transform',
-            pane: <TransformPane selectedNode={props.selectedNode} />
+            pane: <TransformPane />
         }
     ];
 
@@ -42,21 +42,23 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     };
 
 
+
     return (
         <>
             <Collapse
                 in={Boolean(menuOpen)}
                 orientation="horizontal"
                 sx={{
+
                     display: 'flex',
                     height: '100%',
-                    width: '250px',
+                    maxWidth: '242px',
                     flexDirection: 'column',
                     '& .MuiCollapse-wrapperInner': {
                         display: 'flex'
                     }
                 }}>
-                <Paper sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px'}}>
+                <Paper sx={{minWidth: '230px', display: 'flex', paddingTop: '6px', paddingLeft: '6px', paddingRight: '6px'}}>
                     {menuOptions.find((a) => a.path == menuOpen)?.pane}
                 </Paper>
             </Collapse>

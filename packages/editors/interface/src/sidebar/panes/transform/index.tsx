@@ -3,14 +3,19 @@ import { Box, TextField, Typography } from "@mui/material";
 import { RotateLeft, RotateRight, Remove as Subtract, Add, Javascript } from '@mui/icons-material';
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Node } from 'reactflow';
+import { useInterfaceEditor } from "../../../context";
 // import { HMICanvasContext } from "../context";
 
 export interface TransformPaneProps {
-    selectedNode?: Node
+
 }
 
 export const TransformPane : React.FC<TransformPaneProps> = (props) => {
 
+
+    const { selected } = useInterfaceEditor()
+
+    const selectedNode = selected?.nodes?.[0]
 
     const [ aggregate, setAggregate ] = useState<any>()
     const [ modalOpen, openModal ] = useState<boolean>(false);
@@ -22,7 +27,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
     // const updateHMINode = useUpdateHMINode(programId)
 
 
-    const options = props.selectedNode?.data?.options || {};
+    const options = selectedNode?.data?.options || {};
 
     const [ state, setState ] = useState<any>([])
 
@@ -30,7 +35,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
         let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: options?.[optionKey]}));
 
         setState(newState)
-    }, [props.selectedNode, options])
+    }, [selectedNode, options])
 
     const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
 
@@ -73,7 +78,6 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
     return (
 
         <Box
-            sx={{padding: '6px'}}
             >
 
           
@@ -187,7 +191,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="X"
-                value={props.selectedNode?.position?.x || ''}
+                value={selectedNode?.position?.x || ''}
                 onChange={(e) => {
                     updateState({ x: parseFloat(e.target.value) })
                 }}
@@ -197,7 +201,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Y"
-                value={props.selectedNode?.position?.y || ''}
+                value={selectedNode?.position?.y || ''}
                 onChange={(e) => {
                     updateState({ y: parseFloat(e.target.value) })
                 }}
@@ -207,7 +211,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Width" 
-                value={props.selectedNode?.data?.width || ''} 
+                value={selectedNode?.data?.width || ''} 
                 onChange={(e) => {
                     updateState({ width: parseInt(e.target.value) })
                 }}
@@ -217,7 +221,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Height" 
-                value={props.selectedNode?.data?.height || ''} 
+                value={selectedNode?.data?.height || ''} 
                 onChange={(e) => {
                     updateState({ height: parseInt(e.target.value) })
                 }}
@@ -228,7 +232,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Scale X" 
-                value={props.selectedNode?.data?.scaleX || ''} 
+                value={selectedNode?.data?.scaleX || ''} 
                 onChange={(e) => {
                     updateState({ scaleX: parseFloat(e.target.value) })
                 }}
@@ -239,7 +243,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 fullWidth
                 size="small"
                 label="Scale Y" 
-                value={props.selectedNode?.data?.scaleY || ''} 
+                value={selectedNode?.data?.scaleY || ''} 
                 onChange={(e) => {
                     updateState({ scaleY: parseFloat(e.target.value) })
                 }}
@@ -251,7 +255,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 type="number"
                 size="small"
                 label="Z Index"
-                value={props.selectedNode?.data?.zIndex || ''}
+                value={selectedNode?.data?.zIndex || ''}
                 onChange={(e) => {
                     updateState({ zIndex: parseFloat(e.target.value)})
                 }} />
@@ -260,13 +264,13 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 type="number"
                 leftIcon={<RotateLeft  fontSize="small"  />}
                 rightIcon={<RotateRight  fontSize="small" />}
-                value={props.selectedNode?.data?.rotation || ''}
+                value={selectedNode?.data?.rotation || 0}
                 onLeftClick={() => {
-                    updateState({ rotation: (props.selectedNode?.data?.rotation || 0) - 90 })
+                    updateState({ rotation: (selectedNode?.data?.rotation || 0) - 90 })
                 }}
                 onRightClick={() => {
                     updateState(
-                        { rotation: (props.selectedNode?.data?.rotation || 0) + 90 }
+                        { rotation: (selectedNode?.data?.rotation || 0) + 90 }
                     )
                 }}
                 onChange={(e) => {

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { HMINode, HMITag, HMITemplatePack } from ".";
+import { HMITag } from "@hive-command/interface-types";
+import { HMINode, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit, ScriptTarget } from 'typescript'
 import { template } from 'dot';
 // import { baseRequirements } from '@hive-command/remote-components';

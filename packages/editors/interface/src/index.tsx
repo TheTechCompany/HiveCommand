@@ -7,10 +7,15 @@ import { useMemo, useState, KeyboardEvent } from 'react';
 import { Sidebar } from "./sidebar";
 import { ComponentPack, ComponentTool, InterfaceEditorProvider } from './context';
 import { InterfaceEditorSurface } from './components/surface';
+import { HMIType, HMITag, HMITemplate } from '@hive-command/interface-types';
 
 export interface InterfaceEditorProps {
     nodes: Node[],
     edges: Edge[],
+
+    tags: HMITag[];
+    types: HMIType[];
+    templates: HMITemplate[];
 
     packs: ComponentPack[]
 
@@ -35,7 +40,16 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
     return (
         <InterfaceEditorProvider value={{
+            tags: props.tags || [],
+            types: props.types || [],
+            templates: props.templates || [],
+            
             packs: props.packs || [],
+
+            nodes: props.nodes || [],
+            edges: props.edges || [],
+            selected,
+
             activeTool,
             changeTool: (tool: ComponentTool | null) => setActiveTool(tool)
         }}>

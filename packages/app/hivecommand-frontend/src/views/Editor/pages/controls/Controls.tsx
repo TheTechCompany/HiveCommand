@@ -219,7 +219,7 @@ export const Controls = (props) => {
 
     const { program: flows, devices } = data?.commandPrograms?.[0] || {};
 
-    let program = data?.commandPrograms?.[0]
+    let program = data?.commandPrograms?.[0] || {}
 
     let hmiTemplatePacks = program?.templatePacks || [];
 
@@ -485,6 +485,10 @@ export const Controls = (props) => {
                 <InterfaceEditor
                     nodes={nodes}
                     edges={edges}
+                    tags={program.tags}
+                    templates={program.templates}
+                    types={program.types}
+
                     packs={loadedPacks}
                     onNodeCreate={(node) => {
                         if(node.type)

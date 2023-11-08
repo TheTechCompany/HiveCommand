@@ -1,5 +1,5 @@
 import { FormControl } from "@hexhive/ui"
-import { HMITag, HMIType } from "../../../";
+import { HMITag, HMIType } from "@hive-command/interface-types";
 import { Checkbox, Dialog, DialogTitle, Box, FormControlLabel, DialogContent, Button, DialogActions, Autocomplete, TextField, Divider } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { unit as mathUnit } from 'mathjs';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { CommandSurfaceClient, HMIDevice, HMINode, HMIProgram, HMITag, HMIType, HMIView } from '.';
+import { CommandSurfaceClient, HMIProgram } from '.';
 import { RemoteComponentCache } from '@hive-command/remote-components';
 import { ReportChart } from './views/reports';
 
