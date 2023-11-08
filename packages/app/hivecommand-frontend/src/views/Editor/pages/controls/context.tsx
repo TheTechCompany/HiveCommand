@@ -1,5 +1,13 @@
 import React, { useContext } from 'react';
 
+export interface HMIPack {
+    id: string;
+    name: string;
+    url: string;
+
+    elements?: {id: string, name: string}[]
+}
+
 export interface HMINodeData {
     position?: {x: number, y: number};
     size?: {width: number, height: number};

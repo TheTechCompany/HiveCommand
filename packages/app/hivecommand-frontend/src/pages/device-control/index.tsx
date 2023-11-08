@@ -10,7 +10,7 @@ import { useWebClient } from './utils/client';
 
 export const DeviceControlView = () => {
 
-    const { id } = useParams();
+    const { id = '' } = useParams();
 
     const client = useWebClient(id);
 
@@ -21,6 +21,8 @@ export const DeviceControlView = () => {
     const program = useMemo(() => results?.[0]?.activeProgram || {}, [results])
 
     const defaultPage = useMemo(() => program?.remoteHomepage?.id, [program]);
+
+    // const inactive = client.lastUpdate / lastHeartbeat > 5 minutes;
 
     // const daysHorizon = 14;
     // const [lastDate, setLastDate] = useState(null)

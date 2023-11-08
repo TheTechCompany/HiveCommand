@@ -1,6 +1,6 @@
 // import { HMIType } from "@hive-command/command-surface";
 import React from "react";
-import { HMITag, HMITemplate, HMIType } from "../pages/controls/context";
+import { HMITag, HMITemplate, HMIPack, HMIType } from "../pages/controls/context";
 
 export interface ICommandEditorContext {
 	sidebarOpen?: boolean;
@@ -19,7 +19,7 @@ export interface ICommandEditorContext {
 			}[]
 		}[]
 		dataScopes?: {id: string, name: string, plugin: {id: string, name: string}, configuration: any}[]
-		templatePacks?: any[];
+		templatePacks?: HMIPack[];
 		templates?: HMITemplate[];
 		tags?: HMITag[];
 		types?: HMIType[]

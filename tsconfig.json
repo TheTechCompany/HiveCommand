@@ -32,6 +32,8 @@
 		// "@hive-command/export-page": ["./core-ui/command-export-page/src"],
 
 		"@hive-command/electrical-editor-v2": ["./editors/electrical/src"],
+		"@hive-command/interface-editor": ["./editors/interface/src"],
+
 		"@hive-command/editor-toolbar": ["./core-ui/editor-toolbar/src"],
 		"@hive-command/editor-panes": ["./core-ui/editor-panes/src"],
 		"@hive-command/editor-canvas": ["./core-ui/editor-canvas/src"],
@@ -48,7 +50,7 @@
 		"@hive-command/schematic-viewer": ["./core-ui/command-schematic-viewer"],
 		"@hive-command/export-page": ["./core-ui/command-export-page"],
 
-		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes"],
+		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
 		"@hive-command/data": ["./core/command-data"],
 

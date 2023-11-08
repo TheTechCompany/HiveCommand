@@ -13,6 +13,7 @@
   "exclude": ["src/**/*.test*", "../**/*"],
   "references": [
     {"path": "../../editors/electrical"},
+    {"path": "../../editors/interface"},
     {"path": "../hivecommand-api"},
     {"path": "../../core/command-scripting"},
     {"path": "../../core-ui/command-electrical-editor"},
