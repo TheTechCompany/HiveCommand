@@ -79,7 +79,16 @@ export const BaseInput = (props: any) => {
     )
 }
 
-export const BaseTemplateInput = (props: any) => {
+export interface BaseTemplateInputProps {
+  options: any;
+  
+  value?: string;
+
+  onFocus?: (focus: boolean) => void;
+  onChange?: (e: string) => void;
+}
+
+export const BaseTemplateInput : React.FC<BaseTemplateInputProps> = (props) => {
     const editor = useRef<HTMLDivElement>();
 
     return (
