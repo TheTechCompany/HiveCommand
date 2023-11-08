@@ -16,6 +16,7 @@
     "reactflow": "*"
   },
   "dependencies": {
-    "@hive-command/canvas-nodes": "workspace:^"
+    "@hive-command/canvas-nodes": "workspace:^",
+    "nanoid": "^5.0.3"
   }
 }

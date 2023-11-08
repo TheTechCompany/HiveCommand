@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton, Paper } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber, LinePathFactory } from '@hexhive/ui';
-import { HMINodeFactory } from '@hive-command/canvas-nodes';
 import { gql, useApolloClient, useQuery } from '@apollo/client';
 import * as HMIIcons from '../../../../assets/hmi-elements'
 import { GridView as Nodes, Construction as Action, Assignment } from '@mui/icons-material'
@@ -20,6 +19,7 @@ import { InterfaceEditor } from '@hive-command/interface-editor';
 import { useRemoteComponents } from '@hive-command/remote-components';
 
 import { getOptionValues } from '@hive-command/command-surface/dist/utils';
+import { e } from 'mathjs';
 
 export const Controls = (props) => {
 
@@ -27,7 +27,7 @@ export const Controls = (props) => {
 
     const { getPack } = useRemoteComponents()
 
-    const { program: { templatePacks, tags, types, components } = {}} = useCommandEditor()
+    const { program: { templatePacks, tags, types, components } = {} } = useCommandEditor()
 
     const [selected, _setSelected] = useState<{ key?: "node" | "path", id?: string }>({})
 
@@ -38,7 +38,6 @@ export const Controls = (props) => {
         selectedRef.current.selected = s;
     }
 
-    const [menuOpen, openMenu] = useState<string | undefined>(undefined);
 
     const [nodes, setNodes] = useState<Node[]>([])
     const [edges, setEdges] = useState<Edge[]>([])
@@ -219,7 +218,7 @@ export const Controls = (props) => {
 
     const canvasTemplates = data?.commandInterfaceDevices || [];
 
-    const { program: flows, devices} = data?.commandPrograms?.[0] || {};
+    const { program: flows, devices } = data?.commandPrograms?.[0] || {};
 
     let program = data?.commandPrograms?.[0]
 
@@ -228,6 +227,29 @@ export const Controls = (props) => {
     let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == activeId), [activeId, program]);
 
 
+    const [loadedPacks, setLoadedPacks] = useState<any[]>([]);
+
+    useEffect(() => {
+        (async () => {
+            let outputPacks: any[] = [];
+            let packs = templatePacks || [];
+
+            for (var i = 0; i < packs.length; i++) {
+                let url = packs[i]?.url;
+                if (url) {
+                    let base: string | string[] = url.split('/');
+                    let [url_slug] = base.splice(base.length - 1, 1)
+                    base = base.join('/');
+
+                    const pack = await getPack(packs[i].id, `${base}/`, url_slug)
+
+                    outputPacks.push({id: packs[i].id, pack});
+                }
+            }
+            setLoadedPacks(outputPacks);
+        })();
+
+    }, [templatePacks])
 
     const nodeMenu = useMemo(() => NodeMenu.map((x) => {
         let item = canvasTemplates.find((a) => a.name == x.extras.icon)
@@ -253,26 +275,18 @@ export const Controls = (props) => {
             // console.log({nodes})
             Promise.all(nodes.map(async (node) => {
 
-                const [packId, templateName ] = (node.type || '').split(':')
-                const url = templatePacks?.find((a) => a.id == packId)?.url;
+                const [packId, templateName] = (node.type || '').split(':')
 
-                if(url){
-                    let base = url.split('/');
-                    let [url_slug] = base.splice(base.length -1, 1)
-                    base = base.join('/');
+                const pack = loadedPacks.find((a) => a.id == packId)?.pack;
 
-                    const pack = await getPack(packId, `${base}/`, url_slug)
+                const item = pack?.find((a) => a.name == templateName);
 
-                    const item = pack?.find((a) => a.name == templateName);
-
-                    return {
-                        ...node,
-                        metadata: item?.component?.metadata,
-                        icon: item?.component
-                    }
+                return {
+                    ...node,
+                    metadata: item?.component?.metadata,
+                    icon: item?.component
                 }
-                
-                return node;
+
                 // return pack
 
             })).then((nodes) => {
@@ -280,14 +294,14 @@ export const Controls = (props) => {
 
 
                 setNodes(nodes.map((x: any) => {
-                    let width =  x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+                    let width = x.width || x?.icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
                     let height = x.height || x?.icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
-    //x.width ||
-    //x.height || 
+                    //x.width ||
+                    //x.height || 
                     let scaleX = x.width / width;
                     let scaleY = x.height / height;
 
-                    if(x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
+                    if (x?.icon?.metadata?.maintainAspect) scaleY = scaleX;
 
 
                     let extraOptions = x.icon?.metadata?.options || {};
@@ -300,7 +314,7 @@ export const Controls = (props) => {
                             y: x.y,
                         },
                         data: {
-                            width, 
+                            width,
                             height,
                             zIndex: x.zIndex != undefined ? x.zIndex : 1,
                             scaleX: x.scaleX != undefined ? x.scaleX : 1,
@@ -308,7 +322,7 @@ export const Controls = (props) => {
                             rotation: x.rotation || 0,
                             options: x.options,
                             templateOptions: x.dataTransformer?.configuration || [],
-    
+
                             //  width: `${x?.type?.width || 50}px`,
                             // height: `${x?.type?.height || 50}px`,
                             extras: {
@@ -328,24 +342,24 @@ export const Controls = (props) => {
                                 ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
                             },
                         },
-             
+
                         type: 'hmi-node',
-        
+
                     }
 
                     let values = Object.keys(extraOptions).map((optionKey) => {
                         let optionValue = nodeOptions?.[optionKey]
-                        
-                        let parsedValue : any;
 
-                        try{
+                        let parsedValue: any;
+
+                        try {
                             // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, {values: {}}, {values: {}}, {values: {}}, (values: any) => {}, optionKey, optionValue);
-                        }catch(e){
-                            console.log({e, node, optionKey});
+                            parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, { values: {} }, { values: {} }, { values: {} }, (values: any) => { }, optionKey, optionValue);
+                        } catch (e) {
+                            console.log({ e, node, optionKey });
                         }
 
-                        return {key: optionKey, value: parsedValue}
+                        return { key: optionKey, value: parsedValue }
 
                     }).reduce((prev, curr) => ({
                         ...prev,
@@ -354,33 +368,31 @@ export const Controls = (props) => {
 
                     (node.data?.extras as any).dataValue = values;
 
-                    
+
                     return node;
                 }))
                 // setNodes(nodes);
             })
-            
+
             setEdges(((activeProgram)?.edges || []).map((x) => {
                 return {
                     id: x.id,
                     type: 'line',
 
                     source: x?.from?.id,
-                    sourceHandle: x.fromPoint || x.fromHandle,
+                    sourceHandle: x.fromHandle,// x.fromPoint ||
                     target: x?.to?.id,
-                    targetHandle: x.toPoint || x.toHandle,
-                    points: x.points
+                    targetHandle:  x.toHandle,//x.toPoint ||
+                    data: {
+                        points: x.points
+                    }
                 }
             }).reduce((prev, curr) => {
                 return prev.concat(curr)
             }, []))
         }
-    }, [data?.commandPrograms?.[0], activeProgram])
+    }, [data?.commandPrograms?.[0], activeProgram, loadedPacks])
 
-
-    const changeMenu = (view: string) => {
-        openMenu(view == menuOpen ? undefined : view)
-    }
 
 
 
@@ -405,15 +417,15 @@ export const Controls = (props) => {
 
     const updateNode = (id: string, data: ((node: HMINodeData) => HMINodeData)) => {
 
-    
+
         setNodes((nodes) => {
             let n = nodes.slice();
             let ix = n.map(x => x.id).indexOf(id)
 
-            let nodeData : HMINodeData = {
-                position: {x: n[ix].position?.x, y: n[ix].position?.y},
+            let nodeData: HMINodeData = {
+                position: { x: n[ix].position?.x, y: n[ix].position?.y },
                 rotation: n[ix].data?.rotation,
-                size: {width: n[ix].width || 0, height: n[ix].height || 0}
+                size: { width: n[ix].width || 0, height: n[ix].height || 0 }
             };
 
             let newData = {
@@ -446,7 +458,7 @@ export const Controls = (props) => {
             return n
         })
 
-      
+
     }
 
 
@@ -474,8 +486,81 @@ export const Controls = (props) => {
                 <InterfaceEditor
                     nodes={nodes}
                     edges={edges}
-                    />
-{/*                 
+                    packs={loadedPacks}
+                    onNodeCreate={(node) => {
+                        if(node.type)
+                            createHMINode(node.type, node.position.x, node.position.y).then(() => {
+                                refetch()
+                            })
+
+                    }}
+                    onNodeUpdate={(node) => {
+
+                        updateHMINode(
+                            node.id,
+                            {
+                                x: node.position.x,
+                                y: node.position.y,
+                                width: node.data?.width,
+                                height: node.data?.height,
+                                rotation: node.data?.rotation
+                            }
+                        ).then(() => {
+                            refetch()
+                        })
+            
+                    }}
+                    onNodeDelete={(nodes) => {
+                        if(Array.isArray(nodes)){
+                            Promise.all(nodes.map(async (n) => {
+                                await deleteHMINode(n.id)
+                            })).then(() => refetch());
+                        }else{
+                            deleteHMINode(nodes.id).then(() => refetch());
+                        }
+                    }}
+                    onEdgeCreate={(connection) => {
+                        if(connection.source && connection.sourceHandle && connection.target && connection.targetHandle){
+                            createHMIEdge(
+                                connection.source,
+                                connection.sourceHandle,
+                                {x: 0, y: 0}, //sourcePoint,
+                                connection.target,
+                                connection.targetHandle,
+                                {x: 0, y: 0}, //targetPoint,
+                                []
+                                // path.points
+                            ).then(() => {
+                                refetch()
+                            })
+                        }
+                    }}
+                    onEdgeUpdate={(edge) => {
+                        if(edge.id && edge.source && edge.sourceHandle &&  edge.target && edge.targetHandle)
+                            updateHMIEdge(
+                                edge.id,
+                                edge.source,
+                                edge.sourceHandle,
+                                {x: 0, y: 0},
+                                edge.target,
+                                edge.targetHandle,
+                                {x: 0, y: 0}, 
+                                edge.data?.points || []
+                            ).then(() => refetch())
+                    }}
+                    onEdgeDelete={(edges) => {
+                        if(Array.isArray(edges)){
+                            Promise.all(edges.map(async (e) => {
+                                await deleteHMIEdge(e.id)
+                            })).then(() => {
+                                refetch()
+                            })
+                        }else{
+                            deleteHMIEdge(edges.id).then(() => refetch())
+                        }
+                    }}
+                />
+                {/*                 
                 {(<InfiniteCanvas
                     style={CanvasStyle}
                     // snapToGrid={true}
@@ -622,50 +707,7 @@ export const Controls = (props) => {
 
                     <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
                 </InfiniteCanvas>)} */}
-                    <Collapse
-                        in={Boolean(menuOpen)}
-                        orientation="horizontal"
-                        sx={{
-                            display: 'flex',
-                            height: '100%',
-                            flexDirection: 'column'
-                        }}>
-                        <HMIDrawer
-                            menu={menuOpen}
-                            nodes={hmiTemplatePacks || []}
-                        />
-                    </Collapse>
-                <Box sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    bgcolor: 'secondary.main',
-                    color: 'white'
-                }}>
-                    <div style={{background: menuOpen == 'nodes' ? '#dfdfdfdf' : undefined}}>
-                    <IconButton
-                        sx={{color: 'white'}}
-                        onClick={() => changeMenu('nodes')}>
-                        <Nodes />
-                    </IconButton>
-                    </div>
-                    <div style={{background: menuOpen === 'template' ? '#dfdfdfdf' :undefined}}>
-                        <IconButton 
-                            sx={{color: 'white'}}
-                            onClick={() => changeMenu('template')}>
-                                <Assignment style={{fill: 'white'}} width="24px" />
-                        </IconButton>
-                    </div>
-                    <div style={{background: menuOpen == 'config' ? '#dfdfdfdf' : undefined}}>
-                    <IconButton
-                        sx={{color: 'white'}}
-                        onClick={() => changeMenu('config')}
-                    >
-                        <Settings style={{fill: 'white'}} width="24px" />
 
-                    </IconButton>
-                    </div>
-           
-                </Box>
             </Box>
         </HMIContext.Provider>
     )

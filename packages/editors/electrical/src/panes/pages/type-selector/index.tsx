@@ -1,6 +1,6 @@
-import { Select, SelectProps, SelectProvider, useSelect } from "@mui/base";
+import { SelectProvider, useSelect } from "@mui/base";
 import React from "react";
-import { CustomOption, StyledButton, StyledListbox, StyledOption, StyledPopper } from "./components";
+import { CustomOption, StyledButton, StyledListbox } from "./components";
 import { ExpandMore, ExpandLess } from '@mui/icons-material'
 
 export interface TypeSelectorProps {
