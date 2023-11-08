@@ -160,7 +160,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
 }
 
 
-export const HMINode = styled(UnstyledIconNode)`
+export const OldHMINode = styled(UnstyledIconNode)`
     .port{
         border-radius: 7px;
         height: 12px;

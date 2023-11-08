@@ -76,6 +76,7 @@
     "@hive-command/data-types": "^1.4.15-alpha.52",
     "@hive-command/electrical-editor": "^1.4.15-alpha.279",
     "@hive-command/electrical-editor-v2": "workspace:^",
+    "@hive-command/interface-editor": "workspace:^",
     "@hive-command/remote-components": "^1.4.15-alpha.279",
     "@hive-command/scripting": "^1.4.15-alpha.279",
     "@monaco-editor/react": "^4.4.6",

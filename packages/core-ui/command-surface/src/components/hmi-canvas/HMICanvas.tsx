@@ -1,14 +1,9 @@
 import React, { useEffect, useState, useRef, useMemo, useContext } from 'react';
 import { Box } from '@mui/material'
 import { InfiniteCanvas, IconNodeFactory, InfiniteCanvasPath, ZoomControls, LinePathFactory } from '@hexhive/ui';
-import { HMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
+import { OldHMINodeFactory } from '@hive-command/canvas-nodes' //'../hmi-node/HMINodeFactory';
 // import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { CanvasStyle } from '../../style';
-import { registerNodes } from './utils';
-import { useRemoteComponents } from '@hive-command/remote-components';
-import { PipePathFactory } from "@hexhive/ui";
-import { DeviceControlContext } from '../../context';
-
 export interface HMICanvasProps {
 	id: string;
     
@@ -271,7 +266,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                     editable={false}
                     nodes={dataNodes}
                     paths={paths}
-                    factories={[IconNodeFactory, HMINodeFactory(false), LinePathFactory(true) ]}
+                    factories={[IconNodeFactory, OldHMINodeFactory(false), LinePathFactory(true) ]}
                     onPathCreate={(path) => {
                         updateRef.current?.addPath?.(path);
                     }}

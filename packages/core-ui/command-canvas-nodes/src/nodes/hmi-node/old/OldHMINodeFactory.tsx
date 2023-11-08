@@ -1,9 +1,9 @@
 import React, { cloneElement, useContext } from "react";
 import { AbstractNodeFactory } from "@hexhive/ui";
-import { HMINode } from "./HMINode";
+import { OldHMINode } from "./OldHMINode";
 import { EditorHandles } from "./EditorHandles";
 
-export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (building: boolean = false) => {
+export const OldHMINodeFactory : (building: boolean) => AbstractNodeFactory = (building: boolean = false) => {
 
     return (context) => {
 
@@ -38,7 +38,7 @@ export const HMINodeFactory : (building: boolean) => AbstractNodeFactory = (buil
             },
             renderNode: (event: any) => {
                 // console.log(event)
-                return (<HMINode  {...event} building={building} />)
+                return (<OldHMINode  {...event} building={building} />)
             },
             parseModel: (model: any) => {
                 return {
