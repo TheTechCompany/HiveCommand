@@ -2,6 +2,7 @@ import React, {MouseEvent} from 'react'
 
 export interface LineSegmentProps {
     d : string;
+    selected?: boolean;
     onMouseDown?: (e: MouseEvent) => void;
 }
 export const LineSegment : React.FC<LineSegmentProps> = (props: any) => {
@@ -24,7 +25,7 @@ export const LineSegment : React.FC<LineSegmentProps> = (props: any) => {
                 strokeLinejoin: 'round',
                 strokeWidth: '6px',
                 strokeOpacity: '0.8',
-                stroke: style?.pathBorderColor || 'rgb(98, 98, 98)'
+                stroke: props.selected ? 'cyan' : (style?.pathBorderColor || 'rgb(98, 98, 98)')
             }} className={"flow-path__pipe-border"}  />
 
             <path 

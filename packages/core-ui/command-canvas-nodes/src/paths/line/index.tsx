@@ -30,6 +30,7 @@ export const LinePath = (editor: boolean) =>
                 let d = `M ${point.x} ${point.y} L ${points[ix + 1].x} ${points[ix + 1].y}`
                 return (<>
                     <LineSegment 
+                        selected={props.selected}
                             onMouseDown={(e) => {
                                 if(e.ctrlKey || e.metaKey){
                                     onEdgesChange([{ id: props.id, type: 'points-created', ix: ix, point: { x: e.clientX, y: e.clientY } }])
@@ -67,40 +68,6 @@ export const LinePath = (editor: boolean) =>
                            })
                        }
 
-                       // if (deltaPoint && draggingPoint != null) {
-                       //     let delta = { x: nextPoint.x - deltaPoint.x, y: nextPoint.y - deltaPoint.y };
-
-                       //     // let e = (page?.edges || []).slice();
-
-                       //     // let edgeIx = (page?.edges || []).findIndex((a: any) => a.id == id)
-
-                       //     // const points = (e[edgeIx].data.points || []).slice();
-
-                       //     // points[ix] = {
-                       //     //     ...points[ix],
-                       //     //     x: e[edgeIx].data.points[draggingPoint].x + delta.x,
-                       //     //     y: e[edgeIx].data.points[draggingPoint].y + delta.y
-                       //     // }
-
-                       //     // e[edgeIx] = {
-                       //     //     ...e[edgeIx],
-                       //     //     data: {
-                       //     //         ...e[edgeIx].data,
-                       //     //         points
-                       //     //     }
-                       //     // }
-
-                       //     // onUpdatePage?.({
-                       //     //     ...page,
-                       //     //     edges: e
-                       //     // }, "mouseMove")
-
-                       //     onEdgePointChanged?.(id, ix, {
-                       //         x: delta.x,
-                       //         y: delta.y
-                       //     })
-                       // }
-
                        if (draggingPoint != null) {
                            setDeltaPoint(nextPoint)
                        }
@@ -108,22 +75,7 @@ export const LinePath = (editor: boolean) =>
                    onPointerUp={(e) => {
                        (e.currentTarget as any).releasePointerCapture((e as any).pointerId)
 
-                       // let nextPoint = project({ x: e.clientX, y: e.clientY });
-
-                       console.log({
-                           xDelta: ((startPoint?.x || 0) - (deltaPoint?.x || 0)), 
-                           yDelta: ((startPoint?.y || 0) - (deltaPoint?.y || 0)), 
-                           startPoint,
-                           deltaPoint, 
-                           point: points[ix]
-                       })
                        onEdgesChange([{ id: props.id, type: 'points-changed', ix: ix - 1, point: points[ix] }])
-                       
-
-                       // onEdgePointChanged?.(id, ix, {
-                       //             x: points[ix].x,  //- (deltaPoint?.x || 0),
-                       //             y: points[ix].y // - (deltaPoint?.y || 0)
-                       //     })
 
                        setDraggingPoint(null)
                        setDeltaPoint(null);
@@ -139,6 +91,7 @@ export const LinePath = (editor: boolean) =>
         }else{
             const d = 'M ' + points.map((point) => `${point.x} ${point.y}`).join(' L ')
             return (<LineSegment 
+                        selected={props.selected}
                              d={d} />)
         }
 
