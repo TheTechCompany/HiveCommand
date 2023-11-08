@@ -29,6 +29,7 @@ export const HMINode = (editor: boolean) =>
             }
         
             const selection = select(rotateControlRef.current);
+            let rot = rotation;
             const dragHandler = drag().on('drag', (evt) => {
               const dx = evt.x - 100;
               const dy = evt.y - 100;
@@ -37,12 +38,12 @@ export const HMINode = (editor: boolean) =>
               
 
             //   onNodesChange([{type: 'dimensions', id: props.id, rotating: true, dimensions: { rotation: 180 - deg } }])
-
+                rot = 180 -deg;
               setRotation(180 - deg);
               updateNodeInternals(props.id);
             }).on('end', () => {
 
-              onNodesChange([{type: 'dimensions', id: props.id, rotating: true, dimensions: { rotation } }])
+              onNodesChange([{type: 'dimensions', id: props.id, rotating: true, dimensions: { rotation : rot } }])
 
             });
         
