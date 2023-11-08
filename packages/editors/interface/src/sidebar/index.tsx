@@ -50,7 +50,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 sx={{
                     display: 'flex',
                     height: '100%',
-                    maxWidth: '250px',
+                    width: '250px',
                     flexDirection: 'column',
                     '& .MuiCollapse-wrapperInner': {
                         display: 'flex'

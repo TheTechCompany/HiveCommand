@@ -60,24 +60,13 @@ export const TemplateInput: React.FC<TemplateInputProps> = (props) => {
                             top: 0,
                             left: 0
                         }}>
-                        {/* <Editor
-                            value=""
-                            extraLib='declare type Device = string | {};' 
-                             /> */}
+                   
                         <BaseTemplateInput
                             value={props.value}
                             options={props.options}
                             onFocus={(focus) => !focus && handleBlur()}
                             onChange={(e) => setValue(e)} />
-                        {/* <TextField 
-                            onBlur={handleBlur}
-                            multiline 
-                            minRows={4}
-                            autoFocus
-                            value={value}
-                            onChange={(e) => setValue(e.target.value)}
-                            label={props.label}
-                            variant='standard'/> */}
+                 
 
                         <IconButton
                             onClick={handleBlur}
