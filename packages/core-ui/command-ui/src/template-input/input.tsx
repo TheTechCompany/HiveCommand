@@ -1,3 +1,4 @@
+import React from 'react'
 import { Box, styled } from "@mui/material";
 import { forwardRef, MutableRefObject, useRef } from "react";
 
@@ -49,7 +50,7 @@ const CodeEditorPanelContainer = styled(forwardRef<HTMLDivElement>(({ children }
 //     editor: 
 // }
 
-export const BaseInput = (props) => {
+export const BaseInput = (props: any) => {
     const { editor, editorProps = {}, cardStyle, disabled, children, onClick } = props;
 
     const { view, isFocus } = useCodeMirror({
