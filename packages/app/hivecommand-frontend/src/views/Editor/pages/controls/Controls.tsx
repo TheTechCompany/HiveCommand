@@ -230,6 +230,8 @@ export const Controls = (props) => {
             y: node.position.y,
             width: node.data?.width,
             height: node.data?.height,
+            scaleX: node.data?.scaleX,
+            scaleY: node.data?.scaleY,
             rotation: node.data?.rotation,
             options: node.data.configuredOptions,
             template: node.data.template,
