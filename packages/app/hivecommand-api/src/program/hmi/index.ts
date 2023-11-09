@@ -211,11 +211,11 @@ export const useUpdateHMIPath = (programId: string) => {
     args: {
       id?: string;
       source: string;
-      sourceHandle: string;
-      sourcePoint: {x: number, y: number},
+      sourceHandle?: string;
+      sourcePoint?: {x: number, y: number},
       target: string;
-      targetHandle: string;
-      targetPoint: {x: number, y: number},
+      targetHandle?: string;
+      targetPoint?: {x: number, y: number},
       points: { x: number; y: number }[];
     }
   ) => {
@@ -246,26 +246,19 @@ export const useUpdateHMIPath = (programId: string) => {
   })
 
   return async (
-    node_id: string,
-    source: string,
-    sourceHandle: string,
-    sourcePoint: {x: number, y: number},
-    target: string,
-    targetHandle: string,
-    targetPoint: {x: number, y: number},
-    points: { x: number; y: number }[]
+    args: {
+      id: string,
+      source: string,
+      sourceHandle?: string,
+      sourcePoint?: {x: number, y: number},
+      target: string,
+      targetHandle?: string,
+      targetPoint?: {x: number, y: number},
+      points: { x: number; y: number }[]
+    }
   ) => {
     return await mutateFn({
-      args: {
-        id: node_id,
-        source,
-        sourceHandle,
-        sourcePoint,
-        target,
-        targetHandle,
-        targetPoint,
-        points,
-      }
+      args
     })
   }
 }
@@ -276,11 +269,11 @@ export const useCreateHMIPath = (programId: string, hmiId: string) => {
       mutation,
       args: {
         source: string;
-        sourceHandle: string;
-        sourcePoint: {x: number, y: number},
+        sourceHandle?: string;
+        sourcePoint?: {x: number, y: number},
         target: string;
-        targetHandle: string;
-        targetPoint: {x: number, y: number},
+        targetHandle?: string;
+        targetPoint?: {x: number, y: number},
         points: { x: number; y: number }[];
       }
     ) => {
@@ -307,25 +300,17 @@ export const useCreateHMIPath = (programId: string, hmiId: string) => {
     }
   );
 
-  return async (
+  return async (args: {
     source: string,
-    sourceHandle: string,
-    sourcePoint: {x: number, y: number},
+    sourceHandle?: string,
+    sourcePoint?: {x: number, y: number},
     target: string,
-    targetHandle: string,
-    targetPoint: {x: number, y: number},
+    targetHandle?: string,
+    targetPoint?: {x: number, y: number},
     points: { x: number; y: number }[]
-  ) => {
+  }) => {
     return await mutateFn({
-      args: {
-        source,
-        sourceHandle,
-        sourcePoint,
-        target,
-        targetHandle,
-        targetPoint,
-        points,
-      },
+      args: args,
     });
   };
 };

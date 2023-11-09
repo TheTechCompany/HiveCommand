@@ -15,7 +15,10 @@ export const LinePath = (editor: boolean) =>
 
         const onEdgesChange : any = useStore((s) => s.onEdgesChange)
 
-        const all_points = [{x: props.sourceX, y: props.sourceY +( width / 2)}, ...(props.data?.points || []), {x: props.targetX, y: props.targetY + (width /2)}];
+        const sourcePoint = props.data?.sourcePoint || {x: props.sourceX, y: props.sourceY + (width / 2)}
+        const targetPoint = props.data?.targetPoint || {x: props.targetX, y: props.targetY + (width / 2)}
+
+        const all_points = [sourcePoint, ...(props.data?.points || []), targetPoint];
 
         const [ points, setPoints ] = useState<any[]>(all_points || []);
 

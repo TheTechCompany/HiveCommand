@@ -401,6 +401,8 @@ export const Controls = (props) => {
             })
 
             setEdges(((activeProgram)?.edges || []).map((x) => {
+
+
                 return {
                     id: x.id,
                     type: 'line',
@@ -410,14 +412,16 @@ export const Controls = (props) => {
                     target: x?.to?.id,
                     targetHandle:  x.toHandle,//x.toPoint ||
                     data: {
-                        points: x.points
+                        points: x.points,
+                        sourcePoint: x.fromPoint,
+                        targetPoint: x.toPoint
                     }
                 }
             }).reduce((prev, curr) => {
                 return prev.concat(curr)
             }, []))
         }
-    }, [data?.commandPrograms?.[0], activeProgram, loadedPacks])
+    }, [data?.commandPrograms?.[0], JSON.stringify(activeProgram), loadedPacks])
 
 
 
@@ -476,36 +480,35 @@ export const Controls = (props) => {
                         }
                     }}
                     onEdgeCreate={(connection) => {
-                        if(connection.source && connection.sourceHandle && connection.target && connection.targetHandle){
-                            createHMIEdge(
-                                connection.source,
-                                connection.sourceHandle,
-                                {x: 0, y: 0}, //sourcePoint,
-                                connection.target,
-                                connection.targetHandle,
-                                {x: 0, y: 0}, //targetPoint,
-                                []
-                                // path.points
-                            ).then(() => {
+                        if(connection.source && connection.target){
+                            createHMIEdge({
+                                source: connection.source,
+                                sourceHandle: connection.sourceHandle || undefined,
+                                sourcePoint: connection.sourcePoint, //sourcePoint,
+                                target: connection.target,
+                                targetHandle: connection.targetHandle || undefined,
+                                targetPoint: connection.targetPoint, //targetPoint,
+                                points: []
+                            }).then(() => {
                                 refetch()
                             })
                         }
                     }}
                     onEdgeUpdate={(edge) => {
-                        if(edge.id && edge.source && edge.sourceHandle &&  edge.target && edge.targetHandle)
-                            updateHMIEdge(
-                                edge.id,
-                                edge.source,
-                                edge.sourceHandle,
-                                {x: 0, y: 0},
-                                edge.target,
-                                edge.targetHandle,
-                                {x: 0, y: 0}, 
-                                edge.data?.points || []
-                            ).then(() => refetch())
+                        if(edge.id && edge.source && edge.target)
+                            updateHMIEdge({
+                                id: edge.id,
+                                source: edge.source,
+                                sourceHandle: edge.sourceHandle || undefined,
+                                sourcePoint: edge.sourcePoint,
+                                target: edge.target,
+                                targetHandle: edge.targetHandle || undefined,
+                                targetPoint: edge.targetPoint, 
+                                points: edge.points || []
+                            }).then(() => refetch())
                     }}
                     onEdgeDelete={(edges) => {
-                        if(Array.isArray(edges)){
+                        if(Array.isArray(edges)){   
                             Promise.all(edges.map(async (e) => {
                                 await deleteHMIEdge(e.id)
                             })).then(() => {
