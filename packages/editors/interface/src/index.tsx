@@ -6,7 +6,7 @@ import 'reactflow/dist/style.css';
 import { useMemo, useState, KeyboardEvent } from 'react';
 import { Sidebar } from "./sidebar";
 import { ComponentPack, ComponentTool, InterfaceEditorProvider } from './context';
-import { InterfaceEditorSurface } from './components/surface';
+import { InterfaceConnection, InterfaceEditorSurface } from './components/surface';
 import { HMIType, HMITag, HMITemplate } from '@hive-command/interface-types';
 
 export interface InterfaceEditorProps {
@@ -23,8 +23,8 @@ export interface InterfaceEditorProps {
     onNodeUpdate?: (node: Node) => void;
     onNodeDelete?: (node: Node | Node[]) => void;
 
-    onEdgeCreate?: (connection: Connection) => void;
-    onEdgeUpdate?: (edge: Partial<Edge>) => void;
+    onEdgeCreate?: (connection: InterfaceConnection) => void;
+    onEdgeUpdate?: (edge: Partial<InterfaceConnection>) => void;
     onEdgeDelete?: (edge: Edge | Edge[]) => void;
 }
 

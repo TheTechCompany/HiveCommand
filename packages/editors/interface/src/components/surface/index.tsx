@@ -6,6 +6,16 @@ import {nanoid} from 'nanoid';
 import { Box } from '@mui/material';
 import { ToolOverlay } from "./overlay";
 
+
+export interface InterfaceConnection extends Partial<Connection> {
+    id?: string;
+
+    sourcePoint?: {x: number, y: number};
+    targetPoint?: {x: number, y: number};
+
+    points?: any[];
+}
+
 export interface InterfaceEditorSurfaceProps {
     nodes: Node[],
     edges: Edge[]
@@ -13,8 +23,8 @@ export interface InterfaceEditorSurfaceProps {
     selected?: {nodes: Node[], edges: Edge[]};
     onSelectionChange?: (selection: {nodes: Node[], edges: Edge[]} | undefined) => void;
 
-    onEdgeCreate?: (connection: Connection) => void
-    onEdgeUpdate?: (edge: Partial<Edge>) => void;
+    onEdgeCreate?: (connection: InterfaceConnection) => void
+    onEdgeUpdate?: (edge: Partial<InterfaceConnection>) => void;
     onEdgeDelete?: (edges: Edge[] | Edge) => void;
 
     onNodeCreate?: (node: Node) => void;
@@ -35,13 +45,34 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
 
     const [ pointer, setPointer ] = useState<{x: number, y: number} | null>(null)
 
-    useEffect(() => {
-        setNodes(props.nodes || [])
-    }, [props.nodes])
+    const [ connecting, setConnecting ] = useState<any>(null);
 
     useEffect(() => {
-        setEdges(props.edges || [])
-    }, [props.edges])
+        setNodes(props.nodes || [])
+    }, [JSON.stringify(props.nodes)])
+
+    useEffect(() => {
+        setEdges((props.edges || []).map((edge) => {
+
+            let sourceNode = nodes?.find((a) => a.id == edge.source)
+            let targetNode = nodes?.find((a) => a.id == edge.target)
+
+            return {
+                ...edge,
+                data: {
+                    sourcePoint: edge.data?.sourcePoint ? {
+                        x: edge.data?.sourcePoint.x + sourceNode?.position?.x,
+                        y: edge.data?.sourcePoint.y + sourceNode?.position?.y
+                    } : undefined,
+                    targetPoint: edge.data?.targetPoint ? {
+                        x: edge.data?.targetPoint.x + targetNode?.position?.x,
+                        y: edge.data?.targetPoint.y + targetNode?.position?.y
+                    } : undefined,
+                }
+            }
+        }))
+    }, [JSON.stringify(props.edges), nodes])
+
 
     useEffect(() => {
         setSelected(props.selected)
@@ -50,12 +81,6 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
     const _nodeTypes = useMemo(() => nodeTypes(true), [])
     const _edgeTypes = useMemo(() => edgeTypes(true), [])
 
-    useOnSelectionChange({
-        onChange: (selection) => {
-            console.log({selection})
-            // setSelected(selection)
-        }
-    })
 
     const { project: _project } = useReactFlow()
 
@@ -68,24 +93,10 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
         })
     }
 
-    // useEffect(() => {
-
-    //     const onPointerMove = (e: PointerEvent) => {
-    //         console.log(e.clientX)
-    //     }
-
-    //     containerRef.current?.addEventListener('pointermove', onPointerMove);
-
-    //     return () => {
-    //         containerRef.current?.removeEventListener('pointermove', onPointerMove)
-    //     }
-
-    // }, [containerRef.current])
 
     return (
         <Box
             onPointerMove={(e) => {
-                // console.log(e.clientX)
                 const bounds = containerRef?.current?.getBoundingClientRect();
                 setPointer({x: e.clientX - ( bounds?.x || 0 ), y: e.clientY - ( bounds?.y || 0 )})
             }}
@@ -110,11 +121,9 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                     selected: x.selected || selected?.edges?.find((a) => a.id == x.id) != null
                 }))}
                 onNodesChange={(changes) => {
-                    console.log(changes)
 
                     changes.filter((a) => a.type == 'dimensions').forEach((dim: any) => {
                         if(dim.resizing || dim.rotating){
-                            console.log(dim)
                             setNodes((n) => {
                                 let on = n.slice();
                                 let ix = on.findIndex((a) => a.id == dim.id)
@@ -152,23 +161,29 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                         }
                     })
 
-                    let s = Object.assign({}, selected);
+                    setSelected((selected) => {
+                        let s = Object.assign({}, selected);
 
-                    changes.filter((x) => x.type == 'select').forEach((select: any) => {
-                        if(select.selected){
-                            // setSelected((s) => {
-                                let n = props.nodes?.find((a) => a.id == select.id);
-                                s = {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
-                            //  })
-                        }else{
-                            // setSelected((s) => (
-                                s = {edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }
-                                // ) )
-                        }
+                        changes.filter((x) => x.type == 'select').forEach((select: any) => {
+                            if(select.selected){
+                                // setSelected((s) => {
+                                    let n = props.nodes?.find((a) => a.id == select.id);
+                                    s = {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
+                                //  })
+                            }else{
+                                // setSelected((s) => (
+                                    s = {edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }
+                                    // ) )
+                            }
+                        })
+                        props.onSelectionChange?.(s)
+
+                        return s;
                     })
-                    setSelected(s)
-                    props.onSelectionChange?.(s)
-                    onNodesChange(changes.filter((a: any) => a.type !== 'dimensions' && !a.resizing))
+
+                   
+                    // setSelected(s)
+                    onNodesChange(changes.filter((a: any) => (a.type !== 'dimensions' && !a.resizing) && a.type !== 'select'))
                 }}
                 onPaneClick={(ev) => {
                     const bounds = containerRef.current?.getBoundingClientRect();
@@ -181,19 +196,45 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                     }
                 }}
                 onEdgesChange={(changes) => {
-                    let leftover_changes = changes.filter((a: any) => a.type !== 'points-created' && a.type !== 'points-changed');
+
+
+                    let leftover_changes = changes.filter((a: any) => a.type !== 'points-created' && a.type !== 'points-changed' && a.type !== 'select');
                     let points_created = changes.filter((a: any) => a.type == 'points-created')
                     let points_moved = changes.filter((a: any) => a.type == 'points-changed');
+
+                    let selected_events = changes?.filter((a) => a.type == 'select');
+
+
+                    setSelected((selected) => {
+                        let s = Object.assign({}, selected);
+
+                        selected_events?.forEach((event: any) => {
+                            if(event.selected){
+                                // setSelected((s) => {
+                                    let n = props.edges?.find((a) => a.id == event.id);
+                                    s = {edges: (s?.edges || []).concat(n ? [n] : []), nodes: (s?.nodes || []) }
+                                //  })
+                            }else{
+                                // setSelected((s) => (
+                                    s = {edges: (s?.edges || []).filter((a) => a.id !== event.id), nodes: (s?.nodes || []) }
+                                    // ) )
+                            }
+                        })
+
+                        props.onSelectionChange?.(s)
+
+                        return s;
+                    })
 
                     points_created.map((value: any) => {
                         const point = project({x: value.point.x, y: value.point.y})
 
                         let edge =  props.edges?.find((a) => a.id == value.id)
                         let e_points = (edge?.data?.points || []).slice();
-                        console.log("IX", value.ix)
+
                         e_points.splice(value.ix, 0, point)
 
-                        props.onEdgeUpdate?.({ ...edge, data: { points: e_points }, })
+                        props.onEdgeUpdate?.({ ...edge, points: e_points  })
 
                     })
 
@@ -202,16 +243,44 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                         let edge =  props.edges?.find((a) => a.id == value.id)
                         let e_points = (edge?.data?.points || []).slice();
 
-                        console.log("IX", value.ix)
                         e_points[value.ix] = value.point //(value.ix, 0, point)
 
-                        props.onEdgeUpdate?.({ ...edge, data: { points: e_points }, })
+                        props.onEdgeUpdate?.({ ...edge, points: e_points })
                     })
 
                     onEdgesChange(leftover_changes)
                 }}
                 onNodesDelete={props.onNodeDelete}
-                onConnect={props.onEdgeCreate}
+                onConnect={(connection) => {
+                    setConnecting(null);
+                    props.onEdgeCreate?.(connection)
+                }}
+                onConnectStart={(event, params) => {
+                    setConnecting(params);
+                }}
+                onConnectEnd={(event: any) => {
+
+                    if(connecting != null){
+
+                        const node = (event.target as HTMLElement).closest('.react-flow__node')
+                        const point = project({x: event.clientX, y: event.clientY})
+
+                        const nodeId = node?.getAttribute('data-id');
+
+                        const nodeXY = nodes?.find((a) => a.id == nodeId);
+
+                        if(nodeId){
+
+                            props.onEdgeCreate?.({
+                                source: connecting?.nodeId,
+                                sourceHandle: connecting?.handleId,
+                                target: nodeId,
+                                targetPoint: { x: point.x - (nodeXY?.position.x || 0), y: point.y - (nodeXY?.position.y || 0) }
+                            })
+                        }
+                    }
+
+                }}
                 onEdgesDelete={props.onEdgeDelete}
                 nodeTypes={_nodeTypes}
                 edgeTypes={_edgeTypes}>

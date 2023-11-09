@@ -87,9 +87,12 @@ export const HMINode = (editor: boolean) =>
                     }}
                     className={`nodrag`}
                     />
+                    <Box sx={{
+                        transform: `scale(${props.data?.scaleX != undefined ? props.data?.scaleX : 1}, ${props.data?.scaleY  != undefined ? props.data?.scaleY : 1})`
+                    }}>
                     <Icon
                         // editing={props.building}
-                
+                        
                         options={props.data?.dataValue}
                         width={props?.data?.width}
                         height={props?.data?.height}
@@ -116,11 +119,12 @@ export const HMINode = (editor: boolean) =>
                                             id="in"
                                             {...port}
                                             // hidden={!props.building}
-                                            scaleX={props.data?.extras?.scaleX}
-                                            scaleY={props.data?.extras?.scaleY}
+                                            scaleX={props.data?.scaleX}
+                                            scaleY={props.data?.scaleY}
                                             direction="center" />
                                     // </Box>
                         ))}
+                        </Box>
             </Box>
         )
     }
