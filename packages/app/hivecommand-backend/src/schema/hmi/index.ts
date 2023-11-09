@@ -369,38 +369,7 @@ export default (prisma: PrismaClient) => {
 				})
 			},
 
-			updateCommandProgramInterfaceNodeTemplateConfiguration: async (root: any, args: any, context: any) => {
-				const transformer = await prisma.canvasDataTransformer.findFirst({where: {nodeId: args.node}});
-				
-				if(!transformer) throw new Error("No transformer found");
-				
-				const res = await prisma.canvasDataTransformer.update({
-					where: {
-						nodeId: args.node
-					},
-					data: {
-						configuration: {
-							upsert: [{
-								where: {
-									fieldId_transformerId: {
-										fieldId: args.field,
-										transformerId: transformer?.id
-									}
-								},
-								create: {
-									id: nanoid(),
-									fieldId: args.field,
-									value: args.value
-								},
-								update: {
-									value: args.value || null
-								}
-							}]
-						}
-					}
-				})
-				return res != null;
-			},
+		
 			updateCommandProgramInterfaceNode: async (root: any, args: any, context: any) => {
 				let deviceUpdate: any = {};
 			
@@ -804,8 +773,6 @@ export default (prisma: PrismaClient) => {
 		deleteCommandProgramInterfaceNode (program: ID, hmi: ID, id: ID!): CommandHMINode
 
 		
-		updateCommandProgramInterfaceNodeTemplateConfiguration (node: ID, field: ID, value: String): Boolean
-
 		createCommandProgramInterfaceEdge (program: ID, hmi: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
 		updateCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
 		deleteCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID!): CommandHMIEdge

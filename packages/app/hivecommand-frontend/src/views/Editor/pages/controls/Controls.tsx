@@ -2,16 +2,12 @@ import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton, Paper } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber, LinePathFactory } from '@hexhive/ui';
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
-import * as HMIIcons from '../../../../assets/hmi-elements'
-import { GridView as Nodes, Construction as Action, Assignment } from '@mui/icons-material'
 import Settings from './Settings'
 import { useParams } from 'react-router-dom';
 import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
-import { HMIDrawer } from './Drawer';
 import { HMIContext, HMINodeData } from './context';
 import NodeMenu from './NodeMenu';
-import { CanvasStyle } from '../../../../style';
 
 import { Node, Edge } from 'reactflow';
 import { InterfaceEditor } from '@hive-command/interface-editor';
@@ -210,11 +206,6 @@ export const Controls = (props) => {
     const _updateHMINode = useUpdateHMINode(id)
     const deleteHMINode = useDeleteHMINode(id)
 
-    const [ updateNodeTemplateConfig ] = useMutation(gql`
-        mutation UpdateNodeTemplateConfig ($nodeId: ID, $fieldId: ID, $value: String){
-            updateCommandProgramInterfaceNodeTemplateConfiguration(node: $nodeId, field: $fieldId, value: $value)
-        }
-    `)
 
     const deleteHMIEdge = useDeleteHMIPath(id)
     const createHMIEdge = useCreateHMIPath(id, activeId)

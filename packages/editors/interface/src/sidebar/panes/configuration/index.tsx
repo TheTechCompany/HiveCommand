@@ -47,19 +47,6 @@ export const ConfigurationPane: React.FC<ConfigurationPaneProps> = (props) => {
 
     }
 
-    const [assignNodeTemplate] = useMutation(gql`
-        mutation AssignNode ($nodeId: ID, $input: ComandProgramInterfaceNodeInput!){
-            updateCommandProgramInterfaceNode(id: $nodeId, input: $input){
-                id
-            }
-        }
-    `)
-
-    const [updateNodeTemplateConfig] = useMutation(gql`
-        mutation UpdateNodeTemplateConfig ($nodeId: ID, $fieldId: ID, $value: String){
-            updateCommandProgramInterfaceNodeTemplateConfiguration(node: $nodeId, field: $fieldId, value: $value)
-        }
-    `)
 
     const typeSchema = useMemo(() => {
         let typeSchema = types?.map((type) => {
