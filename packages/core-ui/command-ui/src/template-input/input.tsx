@@ -54,7 +54,7 @@ export const BaseInput = (props: any) => {
     const { editor, editorProps = {}, cardStyle, disabled, children, onClick } = props;
 
     const { view, isFocus } = useCodeMirror({
-        ...editorProps,
+        ...editorProps
     }, editor);
 
     return (

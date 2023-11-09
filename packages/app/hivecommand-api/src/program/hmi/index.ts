@@ -54,6 +54,8 @@ export const useUpdateHMINode = (programId: string) => {
         height?: number,
         options?: any;
         rotation?: number;
+        template?: string;
+        templateOptions?: any;
       }
     ) => {
       let hmiUpdate: any = {};
@@ -69,6 +71,9 @@ export const useUpdateHMINode = (programId: string) => {
       if(args.options) hmiUpdate.options = args.options;
 
       if(args.rotation != undefined) hmiUpdate.rotation = args.rotation;
+
+      if(args.template != undefined) hmiUpdate.template = args.template;
+      if(args.templateOptions != undefined) hmiUpdate.templateOptions = args.templateOptions;
 
       const item = mutation.updateCommandProgramInterfaceNode({
         id: args.nodeId,
@@ -94,6 +99,8 @@ export const useUpdateHMINode = (programId: string) => {
     height?: number,
     options?: any;
 		rotation?: number;
+    template?: string;
+    templateOptions?: any;
 	}) => {
     return await mutateFn({
       args: {
@@ -107,6 +114,8 @@ export const useUpdateHMINode = (programId: string) => {
         height: update.height,
         options: update.options,
         rotation: update.rotation,
+        template: update.template,
+        templateOptions: update.templateOptions
       },
     });
   };

@@ -11,8 +11,6 @@ export default (prisma: PrismaClient) => {
 		
 		const data = resp.data;
 
-		console.log({data})
-
 		const exports : any = {};
 		const module = { exports };
 		const func = new Function("require", "module", "exports", data);
@@ -427,18 +425,26 @@ export default (prisma: PrismaClient) => {
 							delete: true
 						}
 					}else{
+						let update : any = {};
+						if(args.input.templateOptions){
+							update = {
+								options: args.input.templateOptions
+							}
+						}
 					 	deviceUpdate['dataTransformer'] = {
 							upsert: {
 								update: {
 									template: {
 										connect: {id: args.input.template}
-									}
+									},
+									...update
 								},
 								create: {
 									id: nanoid(),
 									template: {
 										connect: {id: args.input.template}
-									}
+									},
+									...update
 								}
 							}
 						};
@@ -895,6 +901,7 @@ export default (prisma: PrismaClient) => {
 		type: String
 
 		template: String
+		templateOptions: JSON
 
 		children: [ComandProgramInterfaceNodeInput]
 		ports: [CommandHMIPortInput]

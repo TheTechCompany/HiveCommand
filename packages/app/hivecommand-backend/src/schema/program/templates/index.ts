@@ -54,6 +54,9 @@ export default (prisma: PrismaClient) => {
             id: ID
 
             template: CommandTemplateTransformer
+
+            options: JSON
+            
             configuration: [CommandDataTransformerConfiguration]
         }
 

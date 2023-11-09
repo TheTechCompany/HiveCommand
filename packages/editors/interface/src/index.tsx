@@ -43,7 +43,7 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
             tags: props.tags || [],
             types: props.types || [],
             templates: props.templates || [],
-            
+
             packs: props.packs || [],
 
             nodes: props.nodes || [],
@@ -71,7 +71,8 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
                         onEdgeDelete={props.onEdgeDelete} />
                 </ReactFlowProvider>
                 {/* Check for paths/multiples */}
-                <Sidebar selectedNode={selected?.nodes?.[0]}  />
+                <Sidebar    
+                    onNodeUpdate={props.onNodeUpdate} />
             </Box>
         </InterfaceEditorProvider>
     )

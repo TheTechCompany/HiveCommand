@@ -7,15 +7,26 @@ import { useInterfaceEditor } from "../context";
 import { TransformPane } from "./panes/transform";
 import { ConfigurationPane } from "./panes/configuration";
 import { Node } from 'reactflow';
-
+import { merge } from 'lodash';
 
 export interface SidebarProps {
-    selectedNode?: Node;
+
+    onNodeUpdate?: (node: Node) => void;
 }
 
 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
 
+    const { nodes, selected } = useInterfaceEditor()
+
+    const onNodeUpdate = (update: any) => {
+        let activeNode = Object.assign({}, nodes?.find((a) => a.id == selected?.nodes?.[0]?.id) );
+
+        activeNode = merge({}, activeNode, update)
+
+        if(activeNode)
+        props.onNodeUpdate?.(activeNode)
+    }
 
     const menuOptions = [
         {
@@ -26,12 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         {
             icon: <Assignment style={{ fill: 'white' }} width="24px" />,
             path: 'template',
-            pane: <ConfigurationPane  />
+            pane: <ConfigurationPane
+                    onNodeUpdate={onNodeUpdate}
+                />
         },
         {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,
             path: 'transform',
-            pane: <TransformPane />
+            pane: <TransformPane onNodeUpdate={onNodeUpdate} />
         }
     ];
 

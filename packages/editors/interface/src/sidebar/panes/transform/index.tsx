@@ -5,66 +5,64 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import { Node } from 'reactflow';
 import { useInterfaceEditor } from "../../../context";
 // import { HMICanvasContext } from "../context";
+import { merge } from 'lodash';
 
 export interface TransformPaneProps {
 
+    onNodeUpdate?: (update: any) => void;
 }
 
 export const TransformPane : React.FC<TransformPaneProps> = (props) => {
 
+    const { selected, nodes } = useInterfaceEditor()
 
-    const { selected } = useInterfaceEditor()
+    const [ selectedNode, setSelectedNode ] = useState<Node | undefined>(nodes?.find((a) => a.id == selected?.nodes?.[0]?.id));
 
-    const selectedNode = selected?.nodes?.[0]
+    
+    useEffect(() => {
+        
+        console.log({nodes, selected});
 
-    const [ aggregate, setAggregate ] = useState<any>()
-    const [ modalOpen, openModal ] = useState<boolean>(false);
+        setSelectedNode(nodes?.find((a) => a.id == selected?.nodes?.[0]?.id))
 
-    // const { interfaces } = useContext(HMICanvasContext)
-
-    // const { programId, interfaces, refetch, selected } = useHMIContext();
-
-    // const updateHMINode = useUpdateHMINode(programId)
-
+    }, [ JSON.stringify(nodes), JSON.stringify(selected) ])
+    // const selectedNode = nodes?.find((a) => a.id == selected?.nodes?.[0]?.id)
+    
 
     const options = selectedNode?.data?.options || {};
+
+    const configuredOptions = selectedNode?.data?.configuredOptions || {};
 
     const [ state, setState ] = useState<any>([])
 
     useEffect(() => {
-        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: options?.[optionKey]}));
+        let  newState = Object.keys(options).map((optionKey) => ({key: optionKey, value: configuredOptions?.[optionKey]}));
 
         setState(newState)
-    }, [selectedNode, options])
-
-    const [ updateBouncer, setUpdateBouncer ] = useState<any>(null);
+    }, [ JSON.stringify(options), JSON.stringify(configuredOptions) ])
 
 
     const updateState = (kv: any) => {
-        setState((state: any[]) => {
+        // setState((state: any[]) => {
 
-            Object.keys(kv).map((key) => {
-                let value = kv[key];
+        //     Object.keys(kv).map((key) => {
+        //         let value = kv[key];
 
-                let ix = state.map((x) => x.key).indexOf(key)
-                state[ix].value = value;
-            })
+        //         let ix = state.map((x) => x.key).indexOf(key)
+        //         state[ix].value = value;
+        //     })
 
-            return state;
+        //     return state;
+        // })
+        setSelectedNode(merge({}, selectedNode, kv))
+
+        props.onNodeUpdate?.({
+            ...kv,
+            // data: {
+            //     options: state.reduce((prev: any, curr: any) => ({...prev, [curr.key]: curr.value}), {})
+            // }
         })
 
-        if(updateBouncer){
-            clearTimeout(updateBouncer)
-            setUpdateBouncer(null)
-        }
-
-        setUpdateBouncer(
-            setTimeout(() => {
-                // updateHMINode(selected.id, {options: state.reduce((prev: any, curr: any) => ({...prev, [curr.key]: curr.value}), {})}).then((r) => {
-                //     refetch?.()
-                // })
-            }, 500)
-        )
 
     }
 
@@ -193,7 +191,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="X"
                 value={selectedNode?.position?.x || ''}
                 onChange={(e) => {
-                    updateState({ x: parseFloat(e.target.value) })
+                    updateState({ position: { x: parseFloat(e.target.value) } })
                 }}
                 type="number" />
             <TextField
@@ -203,7 +201,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Y"
                 value={selectedNode?.position?.y || ''}
                 onChange={(e) => {
-                    updateState({ y: parseFloat(e.target.value) })
+                    updateState({ position: { y: parseFloat(e.target.value) } })
                 }}
                 type="number" />
             <TextField 
@@ -213,7 +211,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Width" 
                 value={selectedNode?.data?.width || ''} 
                 onChange={(e) => {
-                    updateState({ width: parseInt(e.target.value) })
+                    updateState({ data: { width: parseInt(e.target.value) } })
                 }}
                 type="number"  />
             <TextField 
@@ -223,7 +221,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Height" 
                 value={selectedNode?.data?.height || ''} 
                 onChange={(e) => {
-                    updateState({ height: parseInt(e.target.value) })
+                    updateState({ data: { height: parseInt(e.target.value) } })
                 }}
                 type="number" />
 
@@ -234,7 +232,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Scale X" 
                 value={selectedNode?.data?.scaleX || ''} 
                 onChange={(e) => {
-                    updateState({ scaleX: parseFloat(e.target.value) })
+                    updateState({ data: { scaleX: parseFloat(e.target.value) } })
                 }}
                 type="number" />
 
@@ -245,7 +243,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Scale Y" 
                 value={selectedNode?.data?.scaleY || ''} 
                 onChange={(e) => {
-                    updateState({ scaleY: parseFloat(e.target.value) })
+                    updateState({ data: { scaleY: parseFloat(e.target.value) } })
                 }}
                 type="number" />
 
@@ -257,7 +255,7 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 label="Z Index"
                 value={selectedNode?.data?.zIndex || ''}
                 onChange={(e) => {
-                    updateState({ zIndex: parseFloat(e.target.value)})
+                    updateState({ data: { zIndex: parseFloat(e.target.value) } })
                 }} />
             <BumpInput
                 placeholder="Rotation"
@@ -266,16 +264,22 @@ export const TransformPane : React.FC<TransformPaneProps> = (props) => {
                 rightIcon={<RotateRight  fontSize="small" />}
                 value={selectedNode?.data?.rotation || 0}
                 onLeftClick={() => {
-                    updateState({ rotation: (selectedNode?.data?.rotation || 0) - 90 })
+                    updateState({ data: { rotation: (selectedNode?.data?.rotation || 0) - 90 } })
                 }}
                 onRightClick={() => {
                     updateState(
-                        { rotation: (selectedNode?.data?.rotation || 0) + 90 }
+                        { data: {
+                             rotation: (selectedNode?.data?.rotation || 0) + 90 
+                            }
+                        }
                     )
                 }}
                 onChange={(e) => {
                     updateState(
-                        { rotation: parseFloat(e) }
+                        { data: {
+                                rotation: parseFloat(e)
+                            }
+                        }
                     )
 
                 }}
