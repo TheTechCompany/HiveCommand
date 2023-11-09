@@ -1,19 +1,18 @@
-import { AvatarList } from '@hexhive/ui';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
-import { Route, Routes, matchPath, useNavigate } from 'react-router-dom'
+import { Route, Routes, matchPath } from 'react-router-dom'
 // import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { DeviceHub as Services, Autorenew as Cycle, Analytics, Dashboard, Info, SettingsInputComposite as System, ChevronLeft, KeyboardArrowLeft, Menu, Home, KeyboardArrowRight, AccessAlarm, Timelapse, Engineering, Settings, Save, ArrowLeft, Lock, RestartAlt } from '@mui/icons-material';
+import { KeyboardArrowLeft, Timelapse, Engineering, Settings } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, ReportView } from './views/reports'
 
 
-import { Paper, Box, Button, Typography, IconButton, Popover, List, ListItem, Divider, TextField, InputAdornment, Switch, FormControlLabel } from '@mui/material';
+import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormControlLabel } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
 // import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
@@ -25,12 +24,9 @@ import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
 import { RemoteComponentCache, useRemoteComponents } from '@hive-command/remote-components';
 import { Header } from './components/Header';
-import { merge } from 'lodash'
-import { getNodePack, getOptionValues, useNodesWithValues } from './utils';
 import { getDeviceFunction } from './components/action-menu';
-import { DataTypes, parseValue } from '@hive-command/scripting';
 import { FieldValue } from './components/field-value';
-
+import { HMIType, HMITag, HMITemplate } from "@hive-command/interface-types"
 
 export interface CommandSurfaceClient {
     reports?: {
@@ -60,14 +56,14 @@ export interface CommandSurfaceClient {
 
 }
 
-export interface HMITemplate {
-    id: string;
+// export interface HMITemplate {
+//     id: string;
 
-    inputs?: { id: string, name: string, type: string }[]
-    outputs?: { id: string, name: string, type: string }[]
+//     inputs?: { id: string, name: string, type: string }[]
+//     outputs?: { id: string, name: string, type: string }[]
 
-    edges?: { id: string, from: { id: string }, to: { id: string }, script: string }[]
-}
+//     edges?: { id: string, from: { id: string }, to: { id: string }, script: string }[]
+// }
 
 export interface HMIView {
     id: string,
@@ -129,21 +125,21 @@ export interface HMIDevice {
 }
 
 
-export interface HMITag {
-    id: string;
-    name: string;
-    type: string;
-}
+// export interface HMITag {
+//     id: string;
+//     name: string;
+//     type: string;
+// }
 
-export interface HMIType {
-    id: string;
-    name: string;
-    fields: {
-        id: string;
-        name: string
-        type: string;
-    }[]
-}
+// export interface HMIType {
+//     id: string;
+//     name: string;
+//     fields: {
+//         id: string;
+//         name: string
+//         type: string;
+//     }[]
+// }
 
 export interface HMITemplatePack {
     id: string

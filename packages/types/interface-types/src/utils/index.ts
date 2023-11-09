@@ -1,40 +1,15 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { HMITag } from "@hive-command/interface-types";
-import { HMINode, HMITemplatePack } from ".";
-import { transpile, ModuleKind, JsxEmit, ScriptTarget } from 'typescript'
+
+import React from 'react'
+import { HMITag } from '../HMITag'
 import { template } from 'dot';
-// import { baseRequirements } from '@hive-command/remote-components';
-import { isEqual } from 'lodash';
+import { 
+    ModuleKind,
+    ScriptTarget,
+    JsxEmit,
+    transpile
+} from 'typescript'
 import path from 'path';
 
-export interface DevicePlaceholder {
-	tag: string,
-
-	setpoints?: {
-		id: string;
-		name: string;
-		type: string;
-
-	}[]
-	type?: {
-		tagPrefix?: string
-		state?: {
-			key: string;
-		}[]
-		actions?: {
-			key: string;
-			func?: string;
-		}[]
-	}
-}
-
-export const getDevicesForNode = (node: any): DevicePlaceholder[] => {
-	if (node.children && node.children.length > 0) {
-		return node.children?.map((x: any) => ({ ...x.devicePlaceholder }))
-	} else {
-		return [node?.devicePlaceholder];
-	}
-}
 
 const baseRequirements: any = {
     react: require('react'),
@@ -62,7 +37,7 @@ const _require = (components: any[], parent?: string) => {
 				let files = components.find((a) => a.name == component)?.files || [];
 
 
-				const content = files.find((file) => {
+				const content = files.find((file: any) => {
 					console.log(path.join(parent || '', '../', path.normalize(name), path.extname(file.path)))
 					return path.normalize(file.path) == path.normalize(name) ||
 						path.normalize(file.path) == (path.normalize(name) + path.extname(file.path)) ||
@@ -92,7 +67,7 @@ const _require = (components: any[], parent?: string) => {
 			}
 
 
-			const fileObj = components.find((a) => a.name == component)?.files?.find((a) => a.path == (file || components.find((a) => a.name == component).main?.path));
+			const fileObj = components.find((a) => a.name == component)?.files?.find((a: any) => a.path == (file || components.find((a) => a.name == component).main?.path));
 
 			const exports: {} = {};
 
@@ -116,210 +91,15 @@ const _require = (components: any[], parent?: string) => {
 	}
 }
 
-export const useNodesWithValues = (
-	nodes: any[],
-	tags: HMITag[],
-	components: {
-		id: string,
-		name: string,
-		files: { path: string, content: string }[]
-	}[],
-	functions: { showTagWindow: any, showWindow: any },
-	values: any,
-	updateValues: (values: any) => void
-) => {
-
-	const valueRef = useRef<{ values: any }>({ values })
-
-	const [valueState, setValues] = useState<any>(values || {})
-
-	useEffect(() => {
-		if (values && !isEqual(values, valueRef.current.values)) {
-			valueRef.current.values = values;
-			setValues(values)
-		}
-	}, [JSON.stringify(values)])
-
-
-	//Playground example
-	const ref = useRef<{ abc: boolean }>({ abc: false });
-	const [state, setState] = useState<any>({ abc: false });
-
-	const nodeInputValues = useRef<{ values: any }>({ values: {} });
-	const nodeOutputValues = useRef<{ values: any }>({ values: {} });
-	const nodeTransformers = useRef<{ values: any }>({ values: {} });
-
-	// console.log({nodeInputValues: nodeInputValues.current.values})
-
-	useEffect(() => {
-
-		nodes.forEach((node) => {
-
-			let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
-
-				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
-
-
-				if (inputTemplate.type?.split(':')[0] === 'Tag') {
-					let tag = tags?.find((a) => a.id === value)?.name
-					if (!tag) return;
-
-					let tagValue = values[tag];
-
-					value = {
-						tag,
-						...(typeof (tagValue) === "object" && !Array.isArray(tagValue) ? tagValue : { value: tagValue })
-
-						// ...values[ tag ]
-					}
-				}
-
-				return {
-					key: inputTemplate.name,
-					value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
-				}
-
-			}).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
-
-			let templateTransformers = (state: any) => {
-				return node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
-
-					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
-
-
-					if (inputTemplate.type?.split(':')[0] === 'Tag') {
-						let tag = tags?.find((a) => a.id === value)?.name
-						if (!tag) return;
-
-						let tagValue = state[tag];
-
-						value = {
-							tag,
-							...(typeof (tagValue) === "object" && !Array.isArray(tagValue) ? tagValue : { value: tagValue })
-
-							// ...values[ tag ]
-						}
-					}
-
-					return {
-						key: inputTemplate.name,
-						value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
-					}
-
-				}).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
-			}
-
-
-			let templateOutputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
-
-				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
-
-
-				if (inputTemplate.type?.split(':')[0] === 'Tag') {
-					let tag = tags?.find((a) => a.id === value)?.name
-
-					return {
-						key: inputTemplate.name,
-						value: tag
-					};
-				}
-
-				return null;
-
-			}).filter((a) => a).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
-
-
-
-
-			if (templateInputs) {
-				nodeInputValues.current.values[node.id] = { ...templateInputs }
-
-			}
-
-			if (templateTransformers) {
-				nodeTransformers.current.values[node.id] = templateTransformers
-			}
-
-			if (templateOutputs) {
-				nodeOutputValues.current.values[node.id] = { ...templateOutputs }
-			}
-		})
-
-	}, [values, nodes])
-
-
-
-	// useEffect(() => {
-	// 	const exports : { handler?: (values: any) => void }= {};
-
-	// 	const module = { exports };
-
-	// 	console.log({trans: transpile(`export const handler = (values: any) => {
-	// 		setInterval(() => {
-	// 			showWindow(() => ({asdf: values}))
-	// 		}, 2000)
-	// 	}`, {kind: ModuleKind.CommonJS})})
-
-	// 	const fn = new Function("module", "exports", "showWindow", transpile(`export const handler = (values: any) => {
-	// 		showWindow(() => ({asdf: values}))
-	// 	}`, {kind: ModuleKind.CommonJS}))
-
-	// 	fn(module, exports, (fn) => {
-	// 		setInterval(() => {
-	// 			console.log({fnFun: fn()})
-	// 		}, 2000)
-	// 	})
-
-	// 	exports?.handler?.(ref.current)
-
-	// 	setInterval(() => { 
-	// 		ref.current.abc = !ref.current.abc;
-
-	// 		// setState((s) => ({abc: !s.abc}) )
-	// 		console.log({fnFun2: ref.current})
-	// 	}, 5000)
-	// }, [])
-
-
-	return useMemo(() => nodes.map((node) => {
-
-
-		let values = Object.keys(node.extras?.options).map((optionKey) => {
-			let optionValue = node?.options?.[optionKey]
-
-			let parsedValue: any;
-
-			try {
-				// console.log({nodeValue: nodeInputValues.current.values[node.id]})
-				parsedValue = getOptionValues(node, tags, components, functions, valueRef.current.values || {}, nodeInputValues.current, nodeTransformers.current, nodeOutputValues.current, updateValues, optionKey, optionValue)
-			} catch (e) {
-				console.error("error parsing value", { e, node, optionKey });
-			}
-
-
-
-			return { key: optionKey, value: parsedValue }
-
-		}).reduce((prev, curr) => ({
-			...prev,
-			[curr.key]: curr.value
-		}), {})
-
-		return {
-			...node,
-			// options: values
-			extras: {
-				...node.extras,
-				dataValue: values
-			}
-		}
-
-	}), [JSON.stringify(valueRef.current.values), nodes, JSON.stringify(nodeInputValues.current.values), components])
-}
-
-
 export const getOptionValues = (
-	node: HMINode,
+	node: {
+        id: string,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        dataTransformer?: any,
+    },
 	tags: HMITag[],
 	components: {
 		id: string,
@@ -337,14 +117,14 @@ export const getOptionValues = (
 ) => {
 
 
-	const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
+	const templatedKeys = node.dataTransformer?.template?.outputs?.map((x: any) => x.name) || [];
 
 	if (templatedKeys.indexOf(optionKey) > -1) {
 		//Has templated override
 		let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
 
-		let templateOverride = node?.dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
+		let templateOverride = node?.dataTransformer?.template?.edges?.find((a: any) => a.to.id == templateOutput?.id)?.script;
 
 		// if(typeof(templateOverride) === 'string'){
 		//     //Override is either literal or template
@@ -364,20 +144,30 @@ export const getOptionValues = (
 
 		const module = { exports };
 
-		const func = new Function(
+		const func : (
+            module: {exports: any}, 
+            exports : {getter?: any, setter?: any} | {handler?: ((elem: any, values: any, setValues: any, args: any, transformer: any) => void) },
+            showWindow: (elem : any, data: any) => void,
+            showTagWindow: any,
+            React: any,
+            require: any
+        ) => void = new Function(
 			"module",
 			"exports",
 			"showWindow",
 			"showTagWindow",
 			"React",
 			"require",
-			transpile(templateOverride, { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React }));
+			transpile(templateOverride, { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React })) as any;
 
 		func(module, exports, (elem, data) => {
 			return functions.showWindow(elem, (state: any) => {
-				let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
-					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+				let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate : {id: string, type: string, name: string}) => {
+
+                    console.log({options: node.dataTransformer?.options, inputTemplate})
+
+					let value = node.dataTransformer?.options?.find((a: any) => a.field.id === inputTemplate.id)?.value
 
 
 					if (inputTemplate.type?.split(':')[0] === 'Tag') {
@@ -398,7 +188,7 @@ export const getOptionValues = (
 						value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
 					}
 
-				}).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
+				}).reduce((prev : {key: string, value: any}, curr : {key: string, value: any}) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
 
 				// console.log({ templateInputs, dataTransformer: node.dataTransformer, state })
 
@@ -518,25 +308,4 @@ export const getOptionValues = (
 		// }
 	}
 
-}
-
-
-export const getNodePack = async (type: string, templatePacks: HMITemplatePack[], getPack?: any) => {
-	const [packId, templateName] = (type || '').split(':')
-	const url = templatePacks?.find((a) => a.id == packId)?.url;
-
-
-	if (url) {
-		let base: any = url.split('/');
-		let [url_slug] = base.splice(base.length - 1, 1)
-		base = base.join('/');
-
-		const pack = await getPack(packId, `${base}/`, url_slug)
-
-		return pack.find((a: any) => a.name == templateName)?.component
-
-	}
-
-	return (<div>no icon found</ div >);
-	// return pack
 }

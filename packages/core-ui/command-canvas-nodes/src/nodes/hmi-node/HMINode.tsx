@@ -47,13 +47,10 @@ export const HMINode = (editor: boolean) =>
 
             });
         
-            console.log("Rotatipon handler");
 
             selection.call(dragHandler as any);
 
           }, [props.id, updateNodeInternals]);
-
-          console.log("NOde props", props);
 
         return (
             <Box sx={{
@@ -93,7 +90,7 @@ export const HMINode = (editor: boolean) =>
                     <Icon
                         // editing={props.building}
                 
-                        options={props.data?.extras?.dataValue}
+                        options={props.data?.dataValue}
                         width={props?.data?.width}
                         height={props?.data?.height}
                         // {...props.options}

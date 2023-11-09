@@ -592,6 +592,8 @@ model CanvasDataTransformer {
   template   CanvasDataTemplate @relation(name: "transformsCanvasData", fields: [templateId], references: [id])
   templateId String
 
+  options Json?
+
   configuration CanvasDataTransformerConfiguration[] @relation(name: "configuresTransformer")
 }
 

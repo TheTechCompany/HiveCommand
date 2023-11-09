@@ -7,15 +7,26 @@ import { useInterfaceEditor } from "../context";
 import { TransformPane } from "./panes/transform";
 import { ConfigurationPane } from "./panes/configuration";
 import { Node } from 'reactflow';
-
+import { merge } from 'lodash';
 
 export interface SidebarProps {
-    selectedNode?: Node;
+
+    onNodeUpdate?: (node: Node) => void;
 }
 
 
 export const Sidebar: React.FC<SidebarProps> = (props) => {
 
+    const { nodes, selected } = useInterfaceEditor()
+
+    const onNodeUpdate = (update: any) => {
+        let activeNode = Object.assign({}, nodes?.find((a) => a.id == selected?.nodes?.[0]?.id) );
+
+        activeNode = merge({}, activeNode, update)
+
+        if(activeNode)
+        props.onNodeUpdate?.(activeNode)
+    }
 
     const menuOptions = [
         {
@@ -26,12 +37,14 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
         {
             icon: <Assignment style={{ fill: 'white' }} width="24px" />,
             path: 'template',
-            pane: <ConfigurationPane nodes={[]} />
+            pane: <ConfigurationPane
+                    onNodeUpdate={onNodeUpdate}
+                />
         },
         {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,
             path: 'transform',
-            pane: <TransformPane selectedNode={props.selectedNode} />
+            pane: <TransformPane onNodeUpdate={onNodeUpdate} />
         }
     ];
 
@@ -42,21 +55,23 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
     };
 
 
+
     return (
         <>
             <Collapse
                 in={Boolean(menuOpen)}
                 orientation="horizontal"
                 sx={{
+
                     display: 'flex',
                     height: '100%',
-                    width: '250px',
+                    maxWidth: '242px',
                     flexDirection: 'column',
                     '& .MuiCollapse-wrapperInner': {
                         display: 'flex'
                     }
                 }}>
-                <Paper sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px'}}>
+                <Paper sx={{minWidth: '230px', display: 'flex', paddingTop: '6px', paddingLeft: '6px', paddingRight: '6px'}}>
                     {menuOptions.find((a) => a.path == menuOpen)?.pane}
                 </Paper>
             </Collapse>

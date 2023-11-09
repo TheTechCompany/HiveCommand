@@ -55,6 +55,7 @@
 	"dependencies": {
 		"@babel/core": "^7.22.5",
 		"@hive-command/canvas-nodes": "^1.4.15-alpha.279",
+		"@hive-command/interface-types": "workspace:^",
 		"@hive-command/remote-components": "^1.4.15-alpha.279",
 		"@hive-command/scripting": "^1.4.15-alpha.279",
 		"@mui/system": "^5.13.6",

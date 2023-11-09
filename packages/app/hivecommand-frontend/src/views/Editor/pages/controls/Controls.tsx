@@ -1,24 +1,20 @@
 import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { Box, Button, Collapse, IconButton, Paper } from '@mui/material'
 import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomControls, InfiniteCanvasPath, BumpInput, HyperTree, InfiniteScrubber, LinePathFactory } from '@hexhive/ui';
-import { gql, useApolloClient, useQuery } from '@apollo/client';
-import * as HMIIcons from '../../../../assets/hmi-elements'
-import { GridView as Nodes, Construction as Action, Assignment } from '@mui/icons-material'
+import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
 import Settings from './Settings'
 import { useParams } from 'react-router-dom';
 import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
-import { HMIDrawer } from './Drawer';
 import { HMIContext, HMINodeData } from './context';
-import NodeMenu from './NodeMenu';
-import { CanvasStyle } from '../../../../style';
 
 import { Node, Edge } from 'reactflow';
 import { InterfaceEditor } from '@hive-command/interface-editor';
 
 import { useRemoteComponents } from '@hive-command/remote-components';
 
-import { e } from 'mathjs';
+import { debounce, throttle, merge } from 'lodash';
+import { getOptionValues } from '@hive-command/interface-types';
 
 export const Controls = (props) => {
 
@@ -148,6 +144,8 @@ export const Controls = (props) => {
                                 id
                             }
 
+                            options
+
                             configuration {
                                 id
                                 field {
@@ -204,7 +202,7 @@ export const Controls = (props) => {
     }
 
     const createHMINode = useCreateHMINode(id, activeId)
-    const updateHMINode = useUpdateHMINode(id)
+    const _updateHMINode = useUpdateHMINode(id)
     const deleteHMINode = useDeleteHMINode(id)
 
 
@@ -212,19 +210,37 @@ export const Controls = (props) => {
     const createHMIEdge = useCreateHMIPath(id, activeId)
     const updateHMIEdge = useUpdateHMIPath(id)
 
-    // const updateHMIGroup = useUpdateHMIGroup()
+    const debounceUpdateHMINode = useMemo(() => {
+        return debounce(_updateHMINode, 500)
+    }, [_updateHMINode])
 
+    const updateHMINode = (id: string, update: any) => {
+        let n = nodes.slice();
 
-    const canvasTemplates = data?.commandInterfaceDevices || [];
+            let ix = n.findIndex((a) => a.id == id)
+            n[ix] = merge({}, nodes[ix], update)
+        
 
-    const { program: flows, devices } = data?.commandPrograms?.[0] || {};
+        let node = n[ix]
 
-    let program = data?.commandPrograms?.[0]
+        setNodes(n);
 
-    let hmiTemplatePacks = program?.templatePacks || [];
+        debounceUpdateHMINode(id, {
+            x: node.position.x,
+            y: node.position.y,
+            width: node.data?.width,
+            height: node.data?.height,
+            rotation: node.data?.rotation,
+            options: node.data.configuredOptions,
+            template: node.data.template,
+            templateOptions: node.data.templateOptions
+
+        })
+    }
+
+    let program = data?.commandPrograms?.[0] || {}
 
     let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == activeId), [activeId, program]);
-
 
     const [loadedPacks, setLoadedPacks] = useState<any[]>([]);
 
@@ -249,20 +265,6 @@ export const Controls = (props) => {
         })();
 
     }, [templatePacks])
-
-    const nodeMenu = useMemo(() => NodeMenu.map((x) => {
-        let item = canvasTemplates.find((a) => a.name == x.extras.icon)
-        return {
-            id: item?.id,
-            ...x,
-            extras: {
-                ...x.extras,
-                id: item?.id,
-                width: item?.width,
-                height: item?.height
-            }
-        }
-    }).filter((a) => a.id), [canvasTemplates])
 
     useEffect(() => {
         let program = data?.commandPrograms?.[0]
@@ -319,8 +321,12 @@ export const Controls = (props) => {
                             scaleX: x.scaleX != undefined ? x.scaleX : 1,
                             scaleY: x.scaleY != undefined ? x.scaleY : 1,
                             rotation: x.rotation || 0,
-                            options: x.options,
-                            templateOptions: x.dataTransformer?.configuration || [],
+
+                            options: x.icon?.metadata?.options || {},
+                            configuredOptions: x.options,
+
+                            template: x.dataTransformer?.template?.id,
+                            templateOptions: x.dataTransformer?.options || [],
 
                             //  width: `${x?.type?.width || 50}px`,
                             // height: `${x?.type?.height || 50}px`,
@@ -352,8 +358,26 @@ export const Controls = (props) => {
                         let parsedValue: any;
 
                         try {
-                            // console.log({nodeValue: nodeInputValues.current.values[node.id]})
-                            // parsedValue = getOptionValues(node, tags || [], components || [], {} as any, {}, { values: {} }, { values: {} }, { values: {} }, (values: any) => { }, optionKey, optionValue);
+                            console.log({optionKey, optionValue})
+                            parsedValue = getOptionValues(
+                                {
+                                    id: node.id,
+                                    x: node.position.x,
+                                    y: node.position.y,
+                                    width: node.data.width,
+                                    height: node.data.height,
+                                    dataTransformer: x.dataTransformer
+                                }, 
+                                tags || [], 
+                                components || [], 
+                                {} as any, {}, 
+                                { values: {} }, 
+                                { values: {} }, 
+                                { values: {} }, 
+                                (values: any) => { }, 
+                                optionKey, 
+                                optionValue
+                            );
                         } catch (e) {
                             console.log({ e, node, optionKey });
                         }
@@ -365,8 +389,9 @@ export const Controls = (props) => {
                         [curr.key]: curr.value
                     }), {});
 
-                    (node.data?.extras as any).dataValue = values;
+                    (node.data as any).dataValue = values;
 
+                    console.log({values})
 
                     return node;
                 }))
@@ -395,71 +420,6 @@ export const Controls = (props) => {
 
 
 
-    const watchEditorKeys = () => {
-
-        if (selectedRef.current?.selected?.id) {
-            if (selected.key == "node") {
-                deleteHMINode(selectedRef.current?.selected?.id).then(() => {
-                    refetch()
-                })
-            } else {
-                deleteHMIEdge(selectedRef.current?.selected?.id).then(() => {
-                    refetch()
-                })
-            }
-
-
-        }
-
-    }
-
-
-    const updateNode = (id: string, data: ((node: HMINodeData) => HMINodeData)) => {
-
-
-        setNodes((nodes) => {
-            let n = nodes.slice();
-            let ix = n.map(x => x.id).indexOf(id)
-
-            let nodeData: HMINodeData = {
-                position: { x: n[ix].position?.x, y: n[ix].position?.y },
-                rotation: n[ix].data?.rotation,
-                size: { width: n[ix].width || 0, height: n[ix].height || 0 }
-            };
-
-            let newData = {
-                ...nodeData,
-                ...data(nodeData)
-            };
-
-            n[ix] = {
-                ...n[ix],
-                position: {
-                    x: newData.position?.x || 0,
-                    y: newData.position?.y || 0,
-                },
-                data: {
-                    ...n[ix].data,
-                    rotation: newData.rotation,
-                    width: newData.size?.width,
-                    height: newData.size?.height
-                }
-            }
-
-            updateHMINode(id, {
-                x: n[ix].position.x,
-                y: n[ix].position.y,
-                rotation: n[ix].data.rotation,
-                width: n[ix].data.width,
-                height: n[ix].data.height
-            })
-
-            return n
-        })
-
-
-    }
-
 
     return (
         <HMIContext.Provider
@@ -473,7 +433,6 @@ export const Controls = (props) => {
                 types: program?.types || [],
                 templates: program?.templates || [],
                 nodes: nodes,
-                updateNode
             }}>
             <Box
                 sx={{
@@ -485,6 +444,10 @@ export const Controls = (props) => {
                 <InterfaceEditor
                     nodes={nodes}
                     edges={edges}
+                    tags={program.tags}
+                    templates={program.templates}
+                    types={program.types}
+
                     packs={loadedPacks}
                     onNodeCreate={(node) => {
                         if(node.type)
@@ -494,19 +457,11 @@ export const Controls = (props) => {
 
                     }}
                     onNodeUpdate={(node) => {
-
+                        console.log("Update niode", node)
                         updateHMINode(
                             node.id,
-                            {
-                                x: node.position.x,
-                                y: node.position.y,
-                                width: node.data?.width,
-                                height: node.data?.height,
-                                rotation: node.data?.rotation
-                            }
-                        ).then(() => {
-                            refetch()
-                        })
+                            node
+                        )
             
                     }}
                     onNodeDelete={(nodes) => {
@@ -559,153 +514,7 @@ export const Controls = (props) => {
                         }
                     }}
                 />
-                {/*                 
-                {(<InfiniteCanvas
-                    style={CanvasStyle}
-                    // snapToGrid={true}
-                    showGuides
-                    grid={{divisions: 20, width: 100, height: 100}}
-                    onDelete={watchEditorKeys}
-                    selected={(selected ? [selected] : undefined) as any}
-                    onSelect={(key, id) => {
-                        setSelected({
-                            key,
-                            id
-                        })
-                    }}
-                    menu={ }
-                    editable={true}
-                    nodes={nodes}
-                    paths={paths}
-                    factories={[HMINodeFactory(true), LinePathFactory(false)]}
-                    onPathCreate={(path: any) => {
-
-                        setPaths((paths) => {
-                            let p = paths.slice();
-                            path.type = 'line';
-                            path.draft = true;
-                            p.push(path)
-                            return p;
-                        })
-                        // updateRef.current?.addPath(path);
-                    }}
-                    onPathUpdate={(path: any) => {
-
-                        console.log("Path Update", {path})
-
-                        if (path.source && path.target && path.targetHandle) {
-
-                            let p = paths.slice()
-                            let ix = p.map((x) => x.id).indexOf(path.id)
-                            if (ix > -1) { 
-                                (p[ix] as any).draft = false;
-                                setPaths(p)
-                            }
-
-                            let sourceHandle = typeof(path.sourceHandle) == 'string' ? path.sourceHandle : undefined;
-                            let targetHandle = typeof(path.targetHandle) == 'string' ? path.targetHandle : undefined;
-                            let sourcePoint = typeof(path.sourceHandle) == 'string' ? undefined : path.sourceHandle;
-                            let targetPoint = typeof(path.targetHandle) == 'string' ? undefined : path.targetHandle;
-
-                            let node = nodes.find((a) => a.id == path.target);
-
-                            if(targetPoint && (node?.extras?.ports?.length > 0)) return;
-
-                                if (!path.draft) {
-                                    updateHMIEdge(
-                                        path.id,
-                                        path.source,
-                                        sourceHandle,
-                                        sourcePoint,
-                                        path.target,
-                                        targetHandle,
-                                        targetPoint,
-                                        path.points
-                                    ).then(() => {
-                                        refetch()
-                                    })
-                                } else {
-                                    createHMIEdge(
-                                        path.source,
-                                        sourceHandle,
-                                        sourcePoint,
-                                        path.target,
-                                        targetHandle,
-                                        targetPoint,
-                                        path.points
-                                    ).then(() => {
-                                        refetch()
-                                    })
-                                }
-                                // connectHMINode(
-                                //     (path as any).draft ? undefined : path.id,
-                                //     path.source,
-                                //     path.sourceHandle,
-                                //     path.target,
-                                //     path.targetHandle,
-                                //     path.points
-                                // ).then(() => {
-
-                                //     refetch()
-                                // })
-
-                        }else{
-                            console.log({path})
-                        }
-
-                        setPaths((paths) => {
-                            let p = paths.slice();
-                            let ix = p.map((x) => x.id).indexOf(path.id)
-                            path.type = 'line';
-                            p[ix] = path;
-                            return p;
-                        })
-
-
-                        // updateRef.current?.updatePath(path)
-                    }}
-                    onNodeUpdate={(node) => {
-                        let n = nodes.slice()
-                        let ix = n.map((x) => x.id).indexOf(node.id)
-                        n[ix] = node;
-                        setNodes(n)
-
-                        console.log({node});
-
-                        setSelected({
-                            key: 'node',
-                            id: node.id
-                        })
-
-                            updateHMINode(
-                                node.id,
-                                {
-                                    x: node.x,
-                                    y: node.y,
-                                    width: node.width,
-                                    height: node.height,
-                                    rotation: node.rotation
-                                }
-                            ).then(() => {
-                                refetch()
-                            })
-                
-                    }}
-                    onNodeCreate={(position, data) => {
-
-                        createHMINode(
-                            `${data.extras.pack}:${data.extras?.name}`,
-                            position.x,
-                            position.y,
-                        ).then(() => {
-                            refetch()
-                        })
-
-                    }}
-                >
-
-                    <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
-                </InfiniteCanvas>)} */}
+               
 
             </Box>
         </HMIContext.Provider>

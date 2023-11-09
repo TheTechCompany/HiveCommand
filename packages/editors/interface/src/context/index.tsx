@@ -1,4 +1,7 @@
+import { HMITag, HMITemplate, HMIType } from "@hive-command/interface-types";
 import React from "react"
+
+import { Node, Edge } from 'reactflow';
 
 export interface ComponentPack {
         id: string,  
@@ -10,7 +13,17 @@ export interface ComponentTool {
     name: string
 }
 export const InterfaceEditorContext = React.createContext<{
+    tags?: HMITag[];
+    types?: HMIType[];
+    templates?: HMITemplate[];
+
     packs?: ComponentPack[],
+
+    nodes?: Node[];
+    edges?: Edge[];
+
+    selected?: {nodes: Node[], edges: Edge[]};
+
     activeTool?: ComponentTool | null,
     changeTool?: (tool: ComponentTool | null) => void,
 }>({

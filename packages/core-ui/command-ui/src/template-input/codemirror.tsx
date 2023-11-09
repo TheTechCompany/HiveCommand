@@ -73,6 +73,7 @@ export const useCodeMirror = (props: CodeMirrorProps, container: MutableRefObjec
     //   useClickCompNameEffect(viewRef.current, value, props.codeType, props.exposingData);
     
       useEffect(() => {
+        viewRef?.current?.focus()
         return () => {
           viewRef.current?.destroy();
         };

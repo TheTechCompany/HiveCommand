@@ -36,6 +36,9 @@
     },
     {
       "path": "../../core/command-scripting"
+    },
+    {
+      "path": "../../types/interface-types"
     }
   ]
 }
