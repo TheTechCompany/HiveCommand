@@ -7,7 +7,6 @@ import { useParams } from 'react-router-dom';
 import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { HMIContext, HMINodeData } from './context';
-import NodeMenu from './NodeMenu';
 
 import { Node, Edge } from 'reactflow';
 import { InterfaceEditor } from '@hive-command/interface-editor';
@@ -239,13 +238,7 @@ export const Controls = (props) => {
         })
     }
 
-    const canvasTemplates = data?.commandInterfaceDevices || [];
-
-    const { program: flows, devices } = data?.commandPrograms?.[0] || {};
-
     let program = data?.commandPrograms?.[0] || {}
-
-    let hmiTemplatePacks = program?.templatePacks || [];
 
     let activeProgram = useMemo(() => (program?.interface)?.find((a) => a.id == activeId), [activeId, program]);
 
@@ -272,20 +265,6 @@ export const Controls = (props) => {
         })();
 
     }, [templatePacks])
-
-    const nodeMenu = useMemo(() => NodeMenu.map((x) => {
-        let item = canvasTemplates.find((a) => a.name == x.extras.icon)
-        return {
-            id: item?.id,
-            ...x,
-            extras: {
-                ...x.extras,
-                id: item?.id,
-                width: item?.width,
-                height: item?.height
-            }
-        }
-    }).filter((a) => a.id), [canvasTemplates])
 
     useEffect(() => {
         let program = data?.commandPrograms?.[0]
@@ -440,61 +419,6 @@ export const Controls = (props) => {
 
 
 
-    // const updateNode = (id: string, data: ((node: HMINodeData) => HMINodeData)) => {
-
-    //     let n = nodes.slice();
-    //     let ix = n.map(x => x.id).indexOf(id)
-
-    //     updateHMINode(id, {
-    //         x: n[ix].position.x,
-    //         y: n[ix].position.y,
-    //         rotation: n[ix].data.rotation,
-    //         width: n[ix].data.width,
-    //         height: n[ix].data.height
-    //     })
-
-    //     // setNodes((nodes) => {
-    //     //     let n = nodes.slice();
-    //     //     let ix = n.map(x => x.id).indexOf(id)
-
-    //     //     let nodeData: HMINodeData = {
-    //     //         position: { x: n[ix].position?.x, y: n[ix].position?.y },
-    //     //         rotation: n[ix].data?.rotation,
-    //     //         size: { width: n[ix].width || 0, height: n[ix].height || 0 }
-    //     //     };
-
-    //     //     let newData = {
-    //     //         ...nodeData,
-    //     //         ...data(nodeData)
-    //     //     };
-
-    //     //     n[ix] = {
-    //     //         ...n[ix],
-    //     //         position: {
-    //     //             x: newData.position?.x || 0,
-    //     //             y: newData.position?.y || 0,
-    //     //         },
-    //     //         data: {
-    //     //             ...n[ix].data,
-    //     //             rotation: newData.rotation,
-    //     //             width: newData.size?.width,
-    //     //             height: newData.size?.height
-    //     //         }
-    //     //     }
-
-    //     //     updateHMINode(id, {
-    //     //         x: n[ix].position.x,
-    //     //         y: n[ix].position.y,
-    //     //         rotation: n[ix].data.rotation,
-    //     //         width: n[ix].data.width,
-    //     //         height: n[ix].data.height
-    //     //     })
-
-    //     //     return n
-    //     // })
-
-
-    // }
 
 
     return (
@@ -509,7 +433,6 @@ export const Controls = (props) => {
                 types: program?.types || [],
                 templates: program?.templates || [],
                 nodes: nodes,
-                // updateNode
             }}>
             <Box
                 sx={{
@@ -591,153 +514,7 @@ export const Controls = (props) => {
                         }
                     }}
                 />
-                {/*                 
-                {(<InfiniteCanvas
-                    style={CanvasStyle}
-                    // snapToGrid={true}
-                    showGuides
-                    grid={{divisions: 20, width: 100, height: 100}}
-                    onDelete={watchEditorKeys}
-                    selected={(selected ? [selected] : undefined) as any}
-                    onSelect={(key, id) => {
-                        setSelected({
-                            key,
-                            id
-                        })
-                    }}
-                    menu={ }
-                    editable={true}
-                    nodes={nodes}
-                    paths={paths}
-                    factories={[HMINodeFactory(true), LinePathFactory(false)]}
-                    onPathCreate={(path: any) => {
-
-                        setPaths((paths) => {
-                            let p = paths.slice();
-                            path.type = 'line';
-                            path.draft = true;
-                            p.push(path)
-                            return p;
-                        })
-                        // updateRef.current?.addPath(path);
-                    }}
-                    onPathUpdate={(path: any) => {
-
-                        console.log("Path Update", {path})
-
-                        if (path.source && path.target && path.targetHandle) {
-
-                            let p = paths.slice()
-                            let ix = p.map((x) => x.id).indexOf(path.id)
-                            if (ix > -1) { 
-                                (p[ix] as any).draft = false;
-                                setPaths(p)
-                            }
-
-                            let sourceHandle = typeof(path.sourceHandle) == 'string' ? path.sourceHandle : undefined;
-                            let targetHandle = typeof(path.targetHandle) == 'string' ? path.targetHandle : undefined;
-                            let sourcePoint = typeof(path.sourceHandle) == 'string' ? undefined : path.sourceHandle;
-                            let targetPoint = typeof(path.targetHandle) == 'string' ? undefined : path.targetHandle;
-
-                            let node = nodes.find((a) => a.id == path.target);
-
-                            if(targetPoint && (node?.extras?.ports?.length > 0)) return;
-
-                                if (!path.draft) {
-                                    updateHMIEdge(
-                                        path.id,
-                                        path.source,
-                                        sourceHandle,
-                                        sourcePoint,
-                                        path.target,
-                                        targetHandle,
-                                        targetPoint,
-                                        path.points
-                                    ).then(() => {
-                                        refetch()
-                                    })
-                                } else {
-                                    createHMIEdge(
-                                        path.source,
-                                        sourceHandle,
-                                        sourcePoint,
-                                        path.target,
-                                        targetHandle,
-                                        targetPoint,
-                                        path.points
-                                    ).then(() => {
-                                        refetch()
-                                    })
-                                }
-                                // connectHMINode(
-                                //     (path as any).draft ? undefined : path.id,
-                                //     path.source,
-                                //     path.sourceHandle,
-                                //     path.target,
-                                //     path.targetHandle,
-                                //     path.points
-                                // ).then(() => {
-
-                                //     refetch()
-                                // })
-
-                        }else{
-                            console.log({path})
-                        }
-
-                        setPaths((paths) => {
-                            let p = paths.slice();
-                            let ix = p.map((x) => x.id).indexOf(path.id)
-                            path.type = 'line';
-                            p[ix] = path;
-                            return p;
-                        })
-
-
-                        // updateRef.current?.updatePath(path)
-                    }}
-                    onNodeUpdate={(node) => {
-                        let n = nodes.slice()
-                        let ix = n.map((x) => x.id).indexOf(node.id)
-                        n[ix] = node;
-                        setNodes(n)
-
-                        console.log({node});
-
-                        setSelected({
-                            key: 'node',
-                            id: node.id
-                        })
-
-                            updateHMINode(
-                                node.id,
-                                {
-                                    x: node.x,
-                                    y: node.y,
-                                    width: node.width,
-                                    height: node.height,
-                                    rotation: node.rotation
-                                }
-                            ).then(() => {
-                                refetch()
-                            })
-                
-                    }}
-                    onNodeCreate={(position, data) => {
-
-                        createHMINode(
-                            `${data.extras.pack}:${data.extras?.name}`,
-                            position.x,
-                            position.y,
-                        ).then(() => {
-                            refetch()
-                        })
-
-                    }}
-                >
-
-                    <ZoomControls anchor={{ vertical: 'bottom', horizontal: 'right' }} />
-                </InfiniteCanvas>)} */}
+               
 
             </Box>
         </HMIContext.Provider>
