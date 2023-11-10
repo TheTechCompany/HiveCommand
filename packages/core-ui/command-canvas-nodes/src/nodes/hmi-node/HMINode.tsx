@@ -126,6 +126,7 @@ export const HMINode = (editor: boolean) =>
                                             direction="center" />
                                     // </Box>
                         ))}
+                        <Handle style={{opacity: 0, pointerEvents: 'none'}} id="mandatory" />
                         </Box>
             </Box>
         )
