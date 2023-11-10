@@ -4663,7 +4663,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/cli-client@workspace:packages/clients/cli-client"
   dependencies:
-    "@hive-command/scada": ^1.4.15-alpha.280
+    "@hive-command/scada": ^1.4.15-alpha.282
     axios: ^1.3.3
     loglevel: ^1.8.1
     typescript: ^4.3.5
@@ -5207,7 +5207,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scada@^1.4.15-alpha.280, @hive-command/scada@workspace:packages/core/command-scada":
+"@hive-command/scada@^1.4.15-alpha.282, @hive-command/scada@workspace:packages/core/command-scada":
   version: 0.0.0-use.local
   resolution: "@hive-command/scada@workspace:packages/core/command-scada"
   dependencies:
