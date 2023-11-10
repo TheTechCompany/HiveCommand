@@ -104,6 +104,6 @@
   "references": [
     {"path": "../../communication/rabbitmq-auth"},
     {"path": "../../communication/amqp-hub"},
-    {"path": "../../core/command-data"}
+    {"path": "../../app/hivecommand-db"}
   ]
 }

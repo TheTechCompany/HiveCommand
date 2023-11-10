@@ -102,7 +102,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../../core/command-data"},
+    {"path": "../../app/hivecommand-db"},
     {"path": "../../communication/rabbitmq-auth"}
   ]
 }

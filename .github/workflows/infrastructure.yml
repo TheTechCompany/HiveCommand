@@ -276,4 +276,4 @@ jobs:
       - run: npx prisma migrate deploy
         env:
           DATABASE_URL: postgresql://postgres:${{ steps.postgres_pass.outputs.pass }}@localhost:5432/hivecommand
-        working-directory: ./packages/core/command-data/
+        working-directory: ./packages/app/hivecommand-db/

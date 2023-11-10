@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import {NodeProps, Handle, NodeResizer, useStore, useUpdateNodeInternals } from 'reactflow';
+import {NodeProps, Position, Handle, NodeResizer, useStore, useUpdateNodeInternals } from 'reactflow';
 import { drag } from 'd3-drag';
 import { select } from 'd3-selection';
 
@@ -126,6 +126,7 @@ export const HMINode = (editor: boolean) =>
                                             direction="center" />
                                     // </Box>
                         ))}
+                        <Handle type="target" position={Position.Top} style={{opacity: 0, pointerEvents: 'none'}} id="mandatory" />
                         </Box>
             </Box>
         )

@@ -15,7 +15,7 @@ export const LinePath = (editor: boolean) =>
 
         const onEdgesChange : any = useStore((s) => s.onEdgesChange)
 
-        console.log("POINTS", props.data)
+        console.log("POINTS", props, props.data)
 
         const sourcePoint = props.data?.sourcePoint || {x: props.sourceX, y: props.sourceY + (width / 2)}
         const targetPoint = props.data?.targetPoint || {x: props.targetX, y: props.targetY + (width / 2)}
@@ -45,7 +45,7 @@ export const LinePath = (editor: boolean) =>
             });
 
             const handles = points.map((point, ix) => {
-                return ix > 0 && <circle 
+                return ix > 0 && ix < points.length -1 && <circle 
                     onPointerDown={(e) => {
                         console.log("Handle pointerdown");
                        (e.target as any).setPointerCapture((e as any).pointerId)
