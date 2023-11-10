@@ -45,7 +45,7 @@ export const LinePath = (editor: boolean) =>
             });
 
             const handles = points.map((point, ix) => {
-                return ix > 0 && <circle 
+                return ix > 0 && ix < points.length -1 && <circle 
                     onPointerDown={(e) => {
                         console.log("Handle pointerdown");
                        (e.target as any).setPointerCapture((e as any).pointerId)
