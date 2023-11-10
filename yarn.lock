@@ -4553,7 +4553,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/amqp-client@^1.4.15-alpha.279, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
+"@hive-command/amqp-client@^1.4.15-alpha.279, @hive-command/amqp-client@workspace:^, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-client@workspace:packages/communication/amqp-client"
   dependencies:
@@ -4733,7 +4733,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/drivers-base@^1.4.15-alpha.279, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
+"@hive-command/drivers-base@^1.4.15-alpha.279, @hive-command/drivers-base@workspace:^, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-base@workspace:packages/drivers/command-driver"
   dependencies:
@@ -5211,7 +5211,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/scada@workspace:packages/core/command-scada"
   dependencies:
+    "@hive-command/amqp-client": "workspace:^"
+    "@hive-command/drivers-base": "workspace:^"
     "@hive-command/evented-values": "workspace:^"
+    "@hive-command/threads": ^1.7.0
     typescript: ^5.2.2
   languageName: unknown
   linkType: soft
