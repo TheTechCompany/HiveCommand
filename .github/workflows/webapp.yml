@@ -73,3 +73,8 @@ jobs:
       - name: Upload new web-build
         run: |
           aws s3 sync packages/app/hivecommand-${{ matrix.apps }}/dist/ s3://${{ env.BUCKET_URL }}/hivecommand-${{matrix.apps}} --delete
+
+      - name: Clear cache
+        run: |
+          aws cloudfront create-invalidation --distribution-id=${{ secrets.CLOUDFRONT_DISTRO }} --paths /hivecommand-${{matrix.apps}}/*
+        if: ${{ github.ref == 'refs/heads/master' }}
