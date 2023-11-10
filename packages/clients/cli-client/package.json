@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/cli-client",
-  "version": "1.4.15-alpha.280",
+  "version": "1.4.15-alpha.281",
   "description": "",
   "files": [
     "dist/"
