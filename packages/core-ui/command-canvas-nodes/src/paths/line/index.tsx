@@ -15,6 +15,8 @@ export const LinePath = (editor: boolean) =>
 
         const onEdgesChange : any = useStore((s) => s.onEdgesChange)
 
+        console.log("POINTS", props.data)
+
         const sourcePoint = props.data?.sourcePoint || {x: props.sourceX, y: props.sourceY + (width / 2)}
         const targetPoint = props.data?.targetPoint || {x: props.targetX, y: props.targetY + (width / 2)}
 

@@ -5,7 +5,7 @@ import { useInterfaceEditor } from "../../context";
 import {nanoid} from 'nanoid';
 import { Box } from '@mui/material';
 import { ToolOverlay } from "./overlay";
-
+import { merge } from 'lodash'
 
 export interface InterfaceConnection extends Partial<Connection> {
     id?: string;
@@ -57,20 +57,22 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
             let sourceNode = nodes?.find((a) => a.id == edge.source)
             let targetNode = nodes?.find((a) => a.id == edge.target)
 
-            return {
-                ...edge,
-                data: {
-                    sourcePoint: edge.data?.sourcePoint ? {
-                        x: edge.data?.sourcePoint.x + sourceNode?.position?.x,
-                        y: edge.data?.sourcePoint.y + sourceNode?.position?.y
-                    } : undefined,
-                    targetPoint: edge.data?.targetPoint ? {
-                        x: edge.data?.targetPoint.x + targetNode?.position?.x,
-                        y: edge.data?.targetPoint.y + targetNode?.position?.y
-                    } : undefined,
-                }
+            return merge({}, edge,
+                {
+                    data: {
+                    
+                        sourcePoint: edge.data?.sourcePoint ? {
+                            x: edge.data?.sourcePoint.x + sourceNode?.position?.x,
+                            y: edge.data?.sourcePoint.y + sourceNode?.position?.y
+                        } : undefined,
+                        targetPoint: edge.data?.targetPoint ? {
+                            x: edge.data?.targetPoint.x + targetNode?.position?.x,
+                            y: edge.data?.targetPoint.y + targetNode?.position?.y
+                        } : undefined,
+                    }
+                })
             }
-        }))
+        ))
     }, [JSON.stringify(props.edges), nodes])
 
 
