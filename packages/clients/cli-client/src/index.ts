@@ -47,6 +47,9 @@ export class IOTCLI {
                 pass: networkLayout?.iotToken,
                 exchange: networkLayout?.iotSubject
             },
+
+
+            
             // subscriptionMap: this.subscriptionMap,
             // deviceMap: this.deviceMap
         })
