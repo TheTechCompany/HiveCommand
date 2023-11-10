@@ -2,7 +2,9 @@
 	"compilerOptions": {
 	  "baseUrl": "./packages",
 	  "paths": {
-		"@hive-command/local-sidecar": ["./core/command-local-sidecar"],
+		"@hive-command/sidecar-client": ["./clients/sidecar-client"],
+		"@hive-command/scada": ["./core/command-scada"],
+
 		// "@mui/styled-engine": ["../node_modules/@mui/styled-engine"],
 
 		"@emotion/react": ["../node_modules/@emotion/react"],
@@ -54,7 +56,7 @@
 
 		"@hive-command/canvas-nodes": ["./core-ui/command-canvas-nodes/src"],
 
-		"@hive-command/data": ["./core/command-data"],
+		"@hive-command/data": ["./app/hivecommand-db"],
 
 		"@hive-command/evented-values": ["./core/evented-values"],
 		"@hive-command/drivers-base": ["./drivers/command-driver"],
