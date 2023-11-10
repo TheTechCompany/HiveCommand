@@ -33,7 +33,7 @@
     "@types/react": "17",
     "@types/react-dom": "^17.0.11",
     "jest": "^27.3.1",
-    "lerna": "7.0.2",
+    "lerna": "7.4.2",
     "process": "^0.11.10",
     "storybook": "^7.4.3",
     "ts-jest": "^27.0.7"
