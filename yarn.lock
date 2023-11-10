@@ -4668,7 +4668,7 @@ __metadata:
     loglevel: ^1.8.1
     typescript: ^4.3.5
   bin:
-    cli-client: dist/cli.js
+    hive-scada: dist/cli.js
   languageName: unknown
   linkType: soft
 
