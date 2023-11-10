@@ -16,7 +16,14 @@
     "@hive-command/amqp-client": "workspace:^",
     "@hive-command/drivers-base": "workspace:^",
     "@hive-command/evented-values": "workspace:^",
-    "@hive-command/threads": "^1.7.0"
+    "@hive-command/threads": "^1.7.0",
+    "@yarnpkg/core": "^4.0.1",
+    "@yarnpkg/fslib": "^3.0.1",
+    "@yarnpkg/plugin-nm": "^4.0.0",
+    "@yarnpkg/plugin-npm": "^3.0.0",
+    "@yarnpkg/plugin-pnp": "^4.0.1",
+    "lodash": "^4.17.21",
+    "observable-fns": "^0.6.1"
   },
   "devDependencies": {
     "typescript": "^5.2.2"
