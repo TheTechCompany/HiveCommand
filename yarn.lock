@@ -4564,7 +4564,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/amqp-hub@^1.4.15-alpha.280, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
+"@hive-command/amqp-hub@^1.4.15-alpha.284, @hive-command/amqp-hub@workspace:packages/communication/amqp-hub":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-hub@workspace:packages/communication/amqp-hub"
   dependencies:
@@ -5012,7 +5012,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/gds@workspace:packages/network/global-discovery-network"
   dependencies:
-    "@hive-command/amqp-hub": ^1.4.15-alpha.280
+    "@hive-command/amqp-hub": ^1.4.15-alpha.284
     "@hive-command/data": ^1.4.15-alpha.280
     "@hive-command/rabbitmq-auth": ^1.4.15-alpha.279
     "@types/cors": ^2.8.12
