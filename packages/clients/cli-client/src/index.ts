@@ -39,7 +39,7 @@ export class IOTCLI {
         this.scada = new ScadaCommand({
             tags: controlLayout?.tags,
             types: controlLayout?.types,
-            dataScopes: controlLayout?.dataScopes,
+            dataScopes: networkLayout?.dataScopes,
             // opcuaServer: this.opcuaServer,
             iot: {
                 host: networkLayout?.iotEndpoint,
@@ -49,7 +49,7 @@ export class IOTCLI {
             },
 
 
-            
+
             // subscriptionMap: this.subscriptionMap,
             // deviceMap: this.deviceMap
         })
