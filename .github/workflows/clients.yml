@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       # - master
-    paths: ["packages/app/hivecommand-native/**", "packages/app/hivecommand-native-designer/**", "packages/core/command-local-sidecar/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
+    paths: ["packages/app/hivecommand-native/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
 
 jobs:
   build:
@@ -65,13 +65,13 @@ jobs:
         env:
           CI: false
           NODE_OPTIONS: "--max-old-space-size=8192"
-        run: npx lerna run build --scope @hive-command/local-sidecar --include-dependencies
+        run: npx lerna run build --scope @hive-command/sidecar-client --include-dependencies
 
-      - name: Package local-sidecar
+      - name: Package sidecar client
         env:
           CI: false
           NODE_OPTIONS: "--max-old-space-size=8192"
-        run: npx lerna run package --scope @hive-command/local-sidecar
+        run: npx lerna run package --scope @hive-command/sidecar-client
         
       - name: Build
         env:

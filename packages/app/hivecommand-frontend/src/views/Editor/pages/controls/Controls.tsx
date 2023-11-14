@@ -14,7 +14,7 @@ import { InterfaceEditor } from '@hive-command/interface-editor';
 import { useRemoteComponents } from '@hive-command/remote-components';
 
 import { debounce, throttle, merge } from 'lodash';
-import { getOptionValues, useNodesWithValues } from '@hive-command/interface-types';
+import { useNodesWithValues } from '@hive-command/interface-types';
 
 export const Controls = (props) => {
 
@@ -241,14 +241,10 @@ export const Controls = (props) => {
 
     const updateHMINode = (id: string, update: any) => {
 
-        console.log(id, update)
-
         let n = nodes.slice();
 
             let ix = n.findIndex((a) => a.id == id)
             n[ix] = merge({}, nodes[ix], update)
-
-        console.log("NEW NODE", n[ix])
 
         let node = n[ix]
 
@@ -468,9 +464,6 @@ export const Controls = (props) => {
         }
     )
 
-    console.log({fullHMIElements, nodes})
-
-
     return (
         <HMIContext.Provider
             value={{
@@ -507,7 +500,6 @@ export const Controls = (props) => {
 
                     }}
                     onNodeUpdate={(node) => {
-                        console.log("Update niode", node)
                         updateHMINode(
                             node.id,
                             node
