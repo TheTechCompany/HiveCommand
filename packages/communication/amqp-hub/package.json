@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/amqp-hub",
-  "version": "1.4.15-alpha.280",
+  "version": "1.4.15-alpha.284",
   "description": "",
   "main": "dist/index.js",
   "files": [
