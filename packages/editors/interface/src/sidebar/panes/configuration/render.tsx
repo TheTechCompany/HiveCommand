@@ -85,7 +85,7 @@ export const ConfigInput : React.FC<ConfigInputProps> = (props) => {
         realType = type_parts[0] as ConfigInputType;
     }
 
-    switch (type) {
+    switch (realType) {
         case 'Tag':
 
             let options = tags?.slice()?.sort((a, b) => `${a.name}`.localeCompare(`${b.name}`));
@@ -274,7 +274,7 @@ export const ConfigInput : React.FC<ConfigInputProps> = (props) => {
             );
 
         default:
-            return (<span>{type} not found in renderConfigInput</span>)
+            return (<span>{realType} not found in renderConfigInput</span>)
     }
 }
 

@@ -155,7 +155,7 @@ export const useNodesWithValues = (
 
 
 
-	return useMemo(() => nodes.map((node) => {
+	const nodeValues = useMemo(() => nodes.map((node) => {
 
 		//node.extras.options
 		let values = Object.keys(node?.data?.options).map((optionKey) => {
@@ -208,5 +208,14 @@ export const useNodesWithValues = (
 		})
 
 
-	}), [ JSON.stringify(transformers), JSON.stringify(outputValues), nodes, JSON.stringify(valueState),  JSON.stringify(inputValues) , components])
+
+	}), [ 
+		JSON.stringify(transformers), 
+		JSON.stringify(outputValues), 
+		JSON.stringify(nodes), 
+		JSON.stringify(valueState),  
+		JSON.stringify(inputValues), 
+		components])
+
+	return nodeValues;
 }
