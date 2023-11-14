@@ -4,5 +4,8 @@ export const cleanTree = (nodes: any[]) => {
 		children: cleanTree(node.children)
 	}))
 
+
+
+	
 	return response
 }
