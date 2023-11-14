@@ -5207,7 +5207,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scada@^1.4.15-alpha.283, @hive-command/scada@workspace:packages/core/command-scada":
+"@hive-command/scada@^1.4.15-alpha.283, @hive-command/scada@workspace:^, @hive-command/scada@workspace:packages/core/command-scada":
   version: 0.0.0-use.local
   resolution: "@hive-command/scada@workspace:packages/core/command-scada"
   dependencies:
@@ -5270,6 +5270,7 @@ __metadata:
     "@hive-command/amqp-client": ^1.4.15-alpha.279
     "@hive-command/drivers-base": ^1.4.15-alpha.279
     "@hive-command/evented-values": ^1.4.15-alpha.280
+    "@hive-command/scada": "workspace:^"
     "@hive-command/threads": ^1.7.0
     "@types/express": ^4.17.14
     "@types/pg": ^8.6.5

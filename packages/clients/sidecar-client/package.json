@@ -28,6 +28,7 @@
 		"@hive-command/amqp-client": "^1.4.15-alpha.279",
 		"@hive-command/drivers-base": "^1.4.15-alpha.279",
 		"@hive-command/evented-values": "^1.4.15-alpha.280",
+		"@hive-command/scada": "workspace:^",
 		"@hive-command/threads": "^1.7.0",
 		"@yarnpkg/cli": "^4.0.0-rc.44",
 		"@yarnpkg/core": "^4.0.0-rc.44",
