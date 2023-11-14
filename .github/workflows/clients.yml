@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       # - master
-    paths: ["packages/app/hivecommand-native/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
+    paths: [".github/workflows/clients.yml", "packages/app/hivecommand-native/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
 
 jobs:
   build:
