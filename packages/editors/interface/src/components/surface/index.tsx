@@ -54,6 +54,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
     }, [JSON.stringify(props.nodes)])
 
     useEffect(() => {
+        console.log("Set Edges", props.edges)
         setEdges((props.edges || []).map((edge) => {
 
             let sourceNode = nodes?.find((a) => a.id == edge.source)
@@ -75,7 +76,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                 })
             }
         ))
-    }, [JSON.stringify(props.edges), nodes])
+    }, [ JSON.stringify(props.edges), JSON.stringify(nodes) ])
 
 
     useEffect(() => {
