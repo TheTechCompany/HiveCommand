@@ -1,6 +1,6 @@
 import { nodeTypes, edgeTypes } from "@hive-command/canvas-nodes";
 import React, { useEffect, useMemo, useState } from "react";
-import ReactFlow, { Node, Edge, Background, ConnectionMode, Controls, useOnSelectionChange, useNodesState, useEdgesState, Connection, NodePositionChange, useReactFlow } from "reactflow";
+import ReactFlow, { Node, Edge, Background, ConnectionMode, Controls, useOnSelectionChange, useNodesState, useEdgesState, Connection, NodePositionChange, useReactFlow, useNodesInitialized } from "reactflow";
 import { useInterfaceEditor } from "../../context";
 import {nanoid} from 'nanoid';
 import { Box } from '@mui/material';
@@ -46,6 +46,8 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
     const [ pointer, setPointer ] = useState<{x: number, y: number} | null>(null)
 
     const [ connecting, setConnecting ] = useState<any>(null);
+
+    const nodesInitialized = useNodesInitialized()
 
     useEffect(() => {
         setNodes(props.nodes || [])
@@ -178,7 +180,8 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                                     // ) )
                             }
                         })
-                        props.onSelectionChange?.(s)
+                       
+                     if(nodesInitialized) props.onSelectionChange?.(s)
 
                         return s;
                     })
@@ -223,7 +226,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                             }
                         })
 
-                        props.onSelectionChange?.(s)
+                        if(nodesInitialized) props.onSelectionChange?.(s)
 
                         return s;
                     })

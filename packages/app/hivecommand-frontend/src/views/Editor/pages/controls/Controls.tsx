@@ -14,7 +14,7 @@ import { InterfaceEditor } from '@hive-command/interface-editor';
 import { useRemoteComponents } from '@hive-command/remote-components';
 
 import { debounce, throttle, merge } from 'lodash';
-import { getOptionValues } from '@hive-command/interface-types';
+import { getOptionValues, useNodesWithValues } from '@hive-command/interface-types';
 
 export const Controls = (props) => {
 
@@ -142,6 +142,31 @@ export const Controls = (props) => {
 
                             template {
                                 id
+
+                                inputs {
+                                    id
+                                    name
+                                    type
+                                }
+
+                                outputs {
+                                    id
+                                    name
+                                    type
+                                }
+
+                                edges{
+                                    id
+                                    from{
+                                        id
+                                        name
+                                    }
+                                    to {
+                                        id
+                                        name
+                                    }
+                                    script
+                                }
                             }
 
                             options
@@ -215,11 +240,15 @@ export const Controls = (props) => {
     }, [_updateHMINode])
 
     const updateHMINode = (id: string, update: any) => {
+
+        console.log(id, update)
+
         let n = nodes.slice();
 
             let ix = n.findIndex((a) => a.id == id)
             n[ix] = merge({}, nodes[ix], update)
-        
+
+        console.log("NEW NODE", n[ix])
 
         let node = n[ix]
 
@@ -327,8 +356,10 @@ export const Controls = (props) => {
                             options: x.icon?.metadata?.options || {},
                             configuredOptions: x.options,
 
+                            dataTransformer: x.dataTransformer,
+
                             template: x.dataTransformer?.template?.id,
-                            templateOptions: x.dataTransformer?.options || [],
+                            templateOptions: x.dataTransformer?.options || {},
 
                             //  width: `${x?.type?.width || 50}px`,
                             // height: `${x?.type?.height || 50}px`,
@@ -354,46 +385,47 @@ export const Controls = (props) => {
 
                     }
 
-                    let values = Object.keys(extraOptions).map((optionKey) => {
-                        let optionValue = nodeOptions?.[optionKey]
+                    // let values = Object.keys(extraOptions).map((optionKey) => {
+                    //     let optionValue = nodeOptions?.[optionKey]
 
-                        let parsedValue: any;
+                    //     let parsedValue: any;
 
-                        try {
-                            console.log({optionKey, optionValue})
-                            parsedValue = getOptionValues(
-                                {
-                                    id: node.id,
-                                    x: node.position.x,
-                                    y: node.position.y,
-                                    width: node.data.width,
-                                    height: node.data.height,
-                                    dataTransformer: x.dataTransformer
-                                }, 
-                                tags || [], 
-                                components || [], 
-                                {} as any, {}, 
-                                { values: {} }, 
-                                { values: {} }, 
-                                { values: {} }, 
-                                (values: any) => { }, 
-                                optionKey, 
-                                optionValue
-                            );
-                        } catch (e) {
-                            console.log({ e, node, optionKey });
-                        }
+                    //     try {
+                    //         console.log({optionKey, optionValue})
+                    //         parsedValue = getOptionValues(
+                    //             {
+                    //                 id: node.id,
+                    //                 x: node.position.x,
+                    //                 y: node.position.y,
+                    //                 width: node.data.width,
+                    //                 height: node.data.height,
+                    //                 dataTransformer: x.dataTransformer
+                    //             }, 
+                    //             tags || [], 
+                    //             components || [], 
+                    //             {} as any, 
+                    //             {}, 
+                    //             { values: { } }, 
+                    //             { values: {} }, 
+                    //             { values: {} }, 
+                    //             (values: any) => { }, 
+                    //             optionKey, 
+                    //             optionValue
+                    //         );
+                    //     } catch (e) {
+                    //         console.log({ e, node, optionKey });
+                    //     }
 
-                        return { key: optionKey, value: parsedValue }
+                    //     return { key: optionKey, value: parsedValue }
 
-                    }).reduce((prev, curr) => ({
-                        ...prev,
-                        [curr.key]: curr.value
-                    }), {});
+                    // }).reduce((prev, curr) => ({
+                    //     ...prev,
+                    //     [curr.key]: curr.value
+                    // }), {});
 
-                    (node.data as any).dataValue = values;
+                    // (node.data as any).dataValue = values;
 
-                    console.log({values})
+                    // console.log({values})
 
                     return node;
                 }))
@@ -425,6 +457,18 @@ export const Controls = (props) => {
 
 
 
+    const fullHMIElements = useNodesWithValues(
+        nodes,
+        tags || [],
+        components || [],
+        {showTagWindow: () => {}, showWindow: () => {}},
+        {},
+        (values) => {
+
+        }
+    )
+
+    console.log({fullHMIElements, nodes})
 
 
     return (
@@ -438,7 +482,7 @@ export const Controls = (props) => {
                 tags: program?.tags || [],
                 types: program?.types || [],
                 templates: program?.templates || [],
-                nodes: nodes,
+                nodes: fullHMIElements,
             }}>
             <Box
                 sx={{
@@ -448,7 +492,7 @@ export const Controls = (props) => {
                 }}>
 
                 <InterfaceEditor
-                    nodes={nodes}
+                    nodes={fullHMIElements}
                     edges={edges}
                     tags={program.tags}
                     templates={program.templates}

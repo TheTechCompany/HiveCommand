@@ -44,8 +44,7 @@ export const LineSegment : React.FC<LineSegmentProps> = (props: any) => {
             style={{
                 stroke: style?.pathColor || 'rgb(147,147,147)',
 
-             }} className={"flow-path"} 
-             {...{"marker-end": "url(#head)"}} />
+             }} className={"flow-path"}  />
 
             <path d={d} className={"flow-path__highlight"} /> 
           
