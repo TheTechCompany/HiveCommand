@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useMemo, useEffect, useRef, useState } from 'react'
 import { HMITag } from '../HMITag'
 import { template } from 'dot';
 import { 
@@ -9,7 +9,11 @@ import {
     transpile
 } from 'typescript'
 import path from 'path';
+import { Node } from 'reactflow';
+import { isEqual, merge } from 'lodash'
+import { DataTransformer } from '../DataTransformer';
 
+export * from './useNodesWithValues'
 
 const baseRequirements: any = {
     react: require('react'),
@@ -39,6 +43,7 @@ const _require = (components: any[], parent?: string) => {
 
 				const content = files.find((file: any) => {
 					console.log(path.join(parent || '', '../', path.normalize(name), path.extname(file.path)))
+
 					return path.normalize(file.path) == path.normalize(name) ||
 						path.normalize(file.path) == (path.normalize(name) + path.extname(file.path)) ||
 						path.normalize(file.path) == path.join(parent || '', '../', path.normalize(name)) ||
@@ -98,7 +103,7 @@ export const getOptionValues = (
         y: number,
         width: number,
         height: number,
-        dataTransformer?: any,
+        dataTransformer?: DataTransformer,
     },
 	tags: HMITag[],
 	components: {
@@ -117,14 +122,15 @@ export const getOptionValues = (
 ) => {
 
 
+
 	const templatedKeys = node.dataTransformer?.template?.outputs?.map((x: any) => x.name) || [];
 
 	if (templatedKeys.indexOf(optionKey) > -1) {
 		//Has templated override
 		let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
+		let templateOverride = node?.dataTransformer?.template?.edges?.find((a: any) => a?.to?.id == templateOutput?.id)?.script;
 
-		let templateOverride = node?.dataTransformer?.template?.edges?.find((a: any) => a.to.id == templateOutput?.id)?.script;
 
 		// if(typeof(templateOverride) === 'string'){
 		//     //Override is either literal or template
@@ -165,10 +171,8 @@ export const getOptionValues = (
 
 				let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate : {id: string, type: string, name: string}) => {
 
-                    console.log({options: node.dataTransformer?.options, inputTemplate})
-
-					let value = node.dataTransformer?.options?.find((a: any) => a.field.id === inputTemplate.id)?.value
-
+					// const configuration = node.
+					let value = (node.dataTransformer?.configuration || []).length > 0 ? node.dataTransformer?.configuration?.find((a: any) => a.field.id === inputTemplate.id)?.value : node.dataTransformer?.options?.[inputTemplate.id]
 
 					if (inputTemplate.type?.split(':')[0] === 'Tag') {
 						let tag = tags?.find((a) => a.id === value)?.name
@@ -188,18 +192,19 @@ export const getOptionValues = (
 						value: value // node.dataTransformer?.configuration?.find((a) => a.field.id == inputTemplate.id)?.value
 					}
 
-				}).reduce((prev : {key: string, value: any}, curr : {key: string, value: any}) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
+				})
+				
+				let input = (templateInputs || [] as any).reduce((prev : {key: string, value: any}, curr : {key: string, value: any}) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
 
 				// console.log({ templateInputs, dataTransformer: node.dataTransformer, state })
 
-				return data(templateInputs)
+				return data(input)
 			})
 		}, functions.showTagWindow, baseRequirements['react'], _require(components));
 
 		// console.log({templateInputs})
 
 		let returnValue: any;
-
 
 		if ('handler' in exports) {
 			//onClick uses a handler to setup showWindow, the values are bound to templateValues at that point in time
@@ -309,3 +314,5 @@ export const getOptionValues = (
 	}
 
 }
+
+

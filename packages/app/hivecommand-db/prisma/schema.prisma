@@ -649,16 +649,16 @@ model CanvasDataTemplateEdge {
   id String @id
 
   //From->To relationship deals with 1:1 mapping
-  from   CanvasDataTemplateIO? @relation(name: "fromDataIO", fields: [fromId], references: [id])
+  from   CanvasDataTemplateIO? @relation(name: "fromDataIO", fields: [fromId], references: [id], onDelete: Cascade)
   fromId String?
 
   //Script->To relationship deals with data aggregation
   script String?
 
-  to   CanvasDataTemplateIO? @relation(name: "toDataIO", fields: [toId], references: [id])
+  to   CanvasDataTemplateIO? @relation(name: "toDataIO", fields: [toId], references: [id], onDelete: Cascade)
   toId String?
 
-  template   CanvasDataTemplate @relation(name: "transformsAlongEdge", fields: [templateId], references: [id])
+  template   CanvasDataTemplate @relation(name: "transformsAlongEdge", fields: [templateId], references: [id], onDelete: Cascade)
   templateId String
 }
 

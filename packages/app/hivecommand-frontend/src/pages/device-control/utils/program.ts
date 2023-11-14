@@ -141,6 +141,8 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
                                             script
                                         }
                                     }
+
+                                    options
         
                                     configuration {
                                         id

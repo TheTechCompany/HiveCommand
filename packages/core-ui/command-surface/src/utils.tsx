@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { HMITag } from "@hive-command/interface-types";
+import { DataTransformer, HMITag } from "@hive-command/interface-types";
 import { HMINode, HMITemplatePack } from ".";
 import { transpile, ModuleKind, JsxEmit, ScriptTarget } from 'typescript'
 import { template } from 'dot';
@@ -155,9 +155,11 @@ export const useNodesWithValues = (
 
 		nodes.forEach((node) => {
 
-			let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+			const dataTransformer = node.dataTransformer;
 
-				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+			let templateInputs = dataTransformer?.template?.inputs?.map((inputTemplate) => {
+
+				let value = (dataTransformer?.configuration || []).length > 0 ? dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value : dataTransformer?.options?.[inputTemplate.id]
 
 
 				if (inputTemplate.type?.split(':')[0] === 'Tag') {
@@ -182,9 +184,9 @@ export const useNodesWithValues = (
 			}).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
 
 			let templateTransformers = (state: any) => {
-				return node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+				return dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
-					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+					let value = (dataTransformer?.configuration || []).length > 0 ? dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value : dataTransformer?.options?.[inputTemplate.id];
 
 
 					if (inputTemplate.type?.split(':')[0] === 'Tag') {
@@ -210,9 +212,9 @@ export const useNodesWithValues = (
 			}
 
 
-			let templateOutputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+			let templateOutputs = dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
-				let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+				let value = (dataTransformer?.configuration || []).length > 0 ? dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value : dataTransformer?.options?.[inputTemplate.id];
 
 
 				if (inputTemplate.type?.split(':')[0] === 'Tag') {
@@ -227,8 +229,6 @@ export const useNodesWithValues = (
 				return null;
 
 			}).filter((a) => a).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
-
-
 
 
 			if (templateInputs) {
@@ -337,14 +337,16 @@ export const getOptionValues = (
 ) => {
 
 
-	const templatedKeys = node.dataTransformer?.template?.outputs?.map((x) => x.name) || [];
+	const dataTransformer : DataTransformer | undefined = node.dataTransformer;
+
+	const templatedKeys = dataTransformer?.template?.outputs?.map((x) => x.name) || [];
 
 	if (templatedKeys.indexOf(optionKey) > -1) {
 		//Has templated override
-		let templateOutput = node.dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
+		let templateOutput = dataTransformer?.template?.outputs?.[templatedKeys.indexOf(optionKey)];
 
 
-		let templateOverride = node?.dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
+		let templateOverride = dataTransformer?.template?.edges?.find((a) => a.to.id == templateOutput?.id)?.script;
 
 		// if(typeof(templateOverride) === 'string'){
 		//     //Override is either literal or template
@@ -375,9 +377,9 @@ export const getOptionValues = (
 
 		func(module, exports, (elem, data) => {
 			return functions.showWindow(elem, (state: any) => {
-				let templateInputs = node.dataTransformer?.template?.inputs?.map((inputTemplate) => {
+				let templateInputs = dataTransformer?.template?.inputs?.map((inputTemplate) => {
 
-					let value = node.dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value
+					let value = (dataTransformer?.configuration || []).length > 0 ? dataTransformer?.configuration?.find((a) => a.field.id === inputTemplate.id)?.value : dataTransformer?.options?.[inputTemplate.id]
 
 
 					if (inputTemplate.type?.split(':')[0] === 'Tag') {

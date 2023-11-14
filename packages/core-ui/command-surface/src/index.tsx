@@ -100,6 +100,9 @@ export interface HMINode {
             }
             value: any
         }[]
+        options?: {
+            [id: string]: any
+        }
     };
 
     // template?: HMITemplate;

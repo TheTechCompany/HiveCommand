@@ -15,8 +15,6 @@ export const LinePath = (editor: boolean) =>
 
         const onEdgesChange : any = useStore((s) => s.onEdgesChange)
 
-        console.log("POINTS", props, props.data)
-
         const sourcePoint = props.data?.sourcePoint || {x: props.sourceX, y: props.sourceY + (width / 2)}
         const targetPoint = props.data?.targetPoint || {x: props.targetX, y: props.targetY + (width / 2)}
 
@@ -34,7 +32,8 @@ export const LinePath = (editor: boolean) =>
                 
                 let d = `M ${point.x} ${point.y} L ${points[ix + 1].x} ${points[ix + 1].y}`
                 return (<>
-                    <LineSegment 
+                    <LineSegment    
+                        key={`seg-${props.id}-${ix}`}
                         selected={props.selected}
                             onMouseDown={(e) => {
                                 if(e.ctrlKey || e.metaKey){
@@ -45,7 +44,9 @@ export const LinePath = (editor: boolean) =>
             });
 
             const handles = points.map((point, ix) => {
-                return ix > 0 && ix < points.length -1 && <circle 
+                return ix > 0 && ix < points.length -1 && <circle
+                    key={`handle-${props.id}-${ix}`}
+
                     onPointerDown={(e) => {
                         console.log("Handle pointerdown");
                        (e.target as any).setPointerCapture((e as any).pointerId)
@@ -92,10 +93,11 @@ export const LinePath = (editor: boolean) =>
                        r={3}
                         />
             })
-            return (<>{line}{handles} </>)
+            return [ line, handles ] as any
         }else{
             const d = 'M ' + points.map((point) => `${point.x} ${point.y}`).join(' L ')
             return (<LineSegment 
+                    key={`line-${props.id}`}
                         selected={props.selected}
                              d={d} />)
         }

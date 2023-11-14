@@ -4,12 +4,14 @@
     "paths": {
       "@hive-command/amqp-client": ["../../communication/amqp-client/src"],
       "@hive-command/drivers-base": ["../../drivers/command-driver/src"],
-      "@hive-command/scripting": ["../../core/command-scripting/src"]
+      "@hive-command/scripting": ["../../core/command-scripting/src"],
+      "@hive-command/scada": ["../../core/command-scada/src"]
     }
   },
   "references": [
     {"path": "../../communication/amqp-client"},
     {"path": "../../drivers/command-driver"},
-    {"path": "../../core/command-scripting"}
+    {"path": "../../core/command-scripting"},
+    {"path": "../../core/command-scada"}
   ]
 }

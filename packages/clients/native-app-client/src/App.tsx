@@ -45,7 +45,6 @@ function App() {
     return () => {
       unlisten();
     }
-
   }, [])
 
   useEffect(() => {

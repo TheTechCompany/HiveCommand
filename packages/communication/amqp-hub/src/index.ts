@@ -86,6 +86,8 @@ export class MQTTHub {
                 let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
 
                 const online_id = topic.match(regex)?.[1];
+
+                console.log("LWAT ", online_id, messageContent, topic)
                 if(online_id && messageContent.offline != null){
                     this.options.onStatus?.(online_id, messageContent.offline ? 'OFFLINE' : 'ONLINE')
                 }

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.285](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.284...v1.4.15-alpha.285) (2023-11-14)
+
+**Note:** Version bump only for package @hive-command/amqp-hub
+
+
+
+
+
+## [1.4.15-alpha.284](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.283...v1.4.15-alpha.284) (2023-11-13)
+
+**Note:** Version bump only for package @hive-command/amqp-hub
+
+
+
+
+
 ## [1.4.15-alpha.280](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.279...v1.4.15-alpha.280) (2023-11-10)
 
 **Note:** Version bump only for package @hive-command/amqp-hub
