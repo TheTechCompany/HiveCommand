@@ -103,6 +103,7 @@
     {"path": "../../core/evented-values"},
     {"path": "../../communication/amqp-client"},
     {"path": "../../drivers/command-driver"},
-    {"path": "../../core/command-scripting"}
+    {"path": "../../core/command-scripting"},
+    {"path": "../../core/command-scada"}
   ]
 }
