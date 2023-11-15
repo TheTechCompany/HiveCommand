@@ -4,6 +4,7 @@ import React from "react";
 export interface ToolOverlayProps {
     activeTool?: ComponentTool | null;
     pointer: { x: number; y : number} | null;
+    rotation?: number;
 }
 
 export const ToolOverlay : React.FC<ToolOverlayProps> = (props) => {
@@ -22,7 +23,14 @@ export const ToolOverlay : React.FC<ToolOverlayProps> = (props) => {
             pointerEvents: 'none'
         }}>
             {props.activeTool && props.pointer && (
-                <div style={{position: 'absolute', width: (PackComponent as any).metadata.width, height: (PackComponent as any).metadata.height, left: props.pointer?.x, top: props.pointer?.y}}>
+                <div style={{
+                    position: 'absolute', 
+                    width: (PackComponent as any).metadata.width, 
+                    height: (PackComponent as any).metadata.height, 
+                    left: props.pointer?.x, 
+                    top: props.pointer?.y,
+                    transform: props.rotation ? `rotate(${props.rotation}deg)` : undefined
+                }}>
                     <PackComponent />
                 </div>)}
         </div>

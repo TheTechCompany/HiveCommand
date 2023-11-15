@@ -267,12 +267,12 @@ export const Controls = (props) => {
         })
     }
 
-    const createHMINode = (type: string, x: number, y: number) => {
+    const createHMINode = (node: Node) => {
 
         let n = nodes.slice();
         let tmpid = nanoid();
 
-        const [packId, templateName] = (type || '').split(':')
+        const [packId, templateName] = (node.type || '').split(':')
 
         const pack = loadedPacks.find((a) => a.id == packId)?.pack;
 
@@ -287,8 +287,8 @@ export const Controls = (props) => {
         n.push({
             id: tmpid,
             position: {
-                x,
-                y
+                x: node.position.x,
+                y: node.position.y
             },
             data: {
                 width,
@@ -296,7 +296,7 @@ export const Controls = (props) => {
                 zIndex: 1,
                 scaleX: 1,
                 scaleY: 1,
-                rotation: 0,
+                rotation: node.data?.rotation || 0,
                 // rotation: x.rotation || 0,
 
                 options: metadata?.options || {},
@@ -319,7 +319,7 @@ export const Controls = (props) => {
 
         setNodes(n);
 
-        _createHMINode(type, x, y).then((r) => {
+        _createHMINode(node).then((r) => {
             console.log("NEW ID", r.item.id)
             setTimeout(() => {
                 setNodes((n) => {
@@ -564,7 +564,7 @@ export const Controls = (props) => {
                     packs={loadedPacks}
                     onNodeCreate={(node) => {
                         if(node.type)
-                            createHMINode(node.type, node.position.x, node.position.y)
+                            createHMINode(node)
                         // .then(() => {
                         //         refetch()
                         //     })
