@@ -15,7 +15,7 @@ export const HMINode = (editor: boolean) =>
 
         const updateNodeInternals = useUpdateNodeInternals();
 
-        const Icon = props?.data?.extras?.icon || (() => <div>no component found</div>)
+        const Icon = props?.data?.icon || (() => <div>no component found</div>)
 
         const onNodesChange: any = useStore((s) => s.onNodesChange)
 

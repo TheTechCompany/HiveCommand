@@ -15,6 +15,7 @@ import { useRemoteComponents } from '@hive-command/remote-components';
 
 import { debounce, throttle, merge } from 'lodash';
 import { useNodesWithValues } from '@hive-command/interface-types';
+import { nanoid } from 'nanoid';
 
 export const Controls = (props) => {
 
@@ -226,7 +227,7 @@ export const Controls = (props) => {
         client.refetchQueries({ include: ['Q'] })
     }
 
-    const createHMINode = useCreateHMINode(id, activeId)
+    const _createHMINode = useCreateHMINode(id, activeId)
     const _updateHMINode = useUpdateHMINode(id)
     const deleteHMINode = useDeleteHMINode(id)
 
@@ -263,6 +264,73 @@ export const Controls = (props) => {
             template: node.data.template,
             templateOptions: node.data.templateOptions
 
+        })
+    }
+
+    const createHMINode = (type: string, x: number, y: number) => {
+
+        let n = nodes.slice();
+        let tmpid = nanoid();
+
+        const [packId, templateName] = (type || '').split(':')
+
+        const pack = loadedPacks.find((a) => a.id == packId)?.pack;
+
+        const item = pack?.find((a) => a.name == templateName);
+
+            let metadata = item?.component?.metadata;
+            let icon = item?.component
+
+            let width = icon?.metadata?.width //|| x.type.width ? x.type.width : 50;
+            let height = icon?.metadata?.height //|| x.type.height ? x.type.height : 50;
+            
+        n.push({
+            id: tmpid,
+            position: {
+                x,
+                y
+            },
+            data: {
+                width,
+                height,
+                zIndex: 1,
+                scaleX: 1,
+                scaleY: 1,
+                rotation: 0,
+                // rotation: x.rotation || 0,
+
+                options: metadata?.options || {},
+                
+                icon,
+                // configuredOptions: x.options,
+
+                // dataTransformer: x.dataTransformer,
+
+                // template: x.dataTransformer?.template?.id,
+                // templateOptions: x.dataTransformer?.options || {},
+
+                //  width: `${x?.type?.width || 50}px`,
+                // height: `${x?.type?.height || 50}px`,
+            
+            },
+
+            type: 'hmi-node',
+        })
+
+        setNodes(n);
+
+        _createHMINode(type, x, y).then((r) => {
+            console.log("NEW ID", r.item.id)
+            setTimeout(() => {
+                setNodes((n) => {
+                    let _nodes = n.slice();
+                    let ix = _nodes.findIndex((a) => a.id == tmpid);
+                    if(r.item.id)
+                        _nodes[ix].id = r.item.id;
+                    return _nodes;
+                })
+            }, 0)
+            
         })
     }
 
@@ -358,6 +426,8 @@ export const Controls = (props) => {
                             template: x.dataTransformer?.template?.id,
                             templateOptions: x.dataTransformer?.options || {},
 
+                            icon: x.icon, //HMIIcons[x.type?.name],
+
                             //  width: `${x?.type?.width || 50}px`,
                             // height: `${x?.type?.height || 50}px`,
                             extras: {
@@ -373,7 +443,6 @@ export const Controls = (props) => {
                                 scaleY: x.scaleY != undefined ? x.scaleY : 1,
                                 showTotalizer: x.showTotalizer || false,
                                 metadata: x.metadata,
-                                icon: x.icon, //HMIIcons[x.type?.name],
                                 ports: x?.icon?.metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
                             },
                         },
@@ -495,9 +564,10 @@ export const Controls = (props) => {
                     packs={loadedPacks}
                     onNodeCreate={(node) => {
                         if(node.type)
-                            createHMINode(node.type, node.position.x, node.position.y).then(() => {
-                                refetch()
-                            })
+                            createHMINode(node.type, node.position.x, node.position.y)
+                        // .then(() => {
+                        //         refetch()
+                        //     })
 
                     }}
                     onNodeUpdate={(node) => {
