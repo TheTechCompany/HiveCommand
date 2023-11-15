@@ -36,9 +36,8 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
    
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    const { activeTool } = useInterfaceEditor();
+    const { activeTool, toolRotation } = useInterfaceEditor();
 
-    const [ rotation, setRotation ] = useState(0);
 
     const [ selected, setSelected ] = useState<{nodes: Node[], edges: Edge[]}>()
 
@@ -51,9 +50,6 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
 
     const nodesInitialized = useNodesInitialized()
 
-    useEffect(() => {
-        setRotation(0)
-    }, [activeTool]);
 
     useEffect(() => {
         setNodes(props.nodes || [])
@@ -105,15 +101,10 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
         })
     }
 
-    const onKeyDown = (e: KeyboardEvent) => {
-        if(e.key == 'Tab'){
-            setRotation((r) => (r + 90) % 360)
-        }
-    }
-
     return (
         <Box
-            onKeyDown={onKeyDown}
+            // tabIndex={-1}
+            // onKeyDown={onKeyDown}
             onPointerMove={(e) => {
                 const bounds = containerRef?.current?.getBoundingClientRect();
                 setPointer({x: e.clientX - ( bounds?.x || 0 ), y: e.clientY - ( bounds?.y || 0 )})
@@ -126,7 +117,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                 <ToolOverlay
                     pointer={pointer}
                     activeTool={activeTool}
-                    rotation={rotation}
+                    rotation={toolRotation}
                     />
             <ReactFlow
                 snapToGrid
@@ -215,7 +206,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                             id: nanoid(), 
                             position: coords, 
                             data: {
-                                rotation
+                                rotation: toolRotation
                             }, 
                             type: `${activeTool.pack}:${activeTool.name}`
                         })
