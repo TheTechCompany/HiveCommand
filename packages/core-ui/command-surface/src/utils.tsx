@@ -47,7 +47,6 @@ const baseRequirements: any = {
 const _require = (components: any[], parent?: string) => {
 	return (name: string) => {
 
-
 		if (name.indexOf('@module/components') > -1) {
 
 			const component = name.split('@module/components/')?.[1]?.split('/')?.[0];

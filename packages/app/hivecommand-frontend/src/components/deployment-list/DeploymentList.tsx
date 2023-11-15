@@ -10,7 +10,6 @@ export interface DeploymentListProps {
     onClickRow?: (row: any) => void;
     onEditRow?: (row: any) => void;
 
-    onMapRow?: (row: any) => void;
 
     programs?: any[];
     devices?: any[];
@@ -122,18 +121,11 @@ export const DeploymentList : React.FC<DeploymentListProps> = (props) => {
                 }}>
                     Edit
                 </MenuItem>
-                <MenuItem onClick={() => {
-                    setEditElem(null);
-                    setEditAnchor(null)
-                    props.onMapRow?.(editElem)
-                }}>
-                    Change mapping
-                </MenuItem>
+              
                 <MenuItem 
                     onClick={() => {
                         navigate(`${editElem.id}/settings`)
-                    }}
-                    >
+                    }}>
                     Settings
                 </MenuItem>
             </Menu>

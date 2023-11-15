@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { TreeView, TreeItem, TreeItemProps } from '@mui/lab'
+import { TreeView, TreeItem, TreeItemProps } from '@mui/x-tree-view'
 import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
@@ -30,7 +30,7 @@ export interface TreeMenuProps {
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
 
 
-    const defaultExpanded = props.items.reduce((prev, curr) => [...prev, curr, ...curr.children], []).filter((a) => a.expanded).map((x) => x.id)
+    const defaultExpanded = (props.items || [] as any[]).reduce((prev, curr) => [...prev, curr, ...curr.children], []).filter((a) => a.expanded).map((x) => x.id)
 
     const [ expanded, setExpanded ] = useState(defaultExpanded);
 

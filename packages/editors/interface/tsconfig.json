@@ -74,6 +74,7 @@
   "references": [
     {"path": "../../core-ui/command-canvas-nodes"},
     {"path": "../../core-ui/command-ui"},
-    {"path": "../../types/interface-types"}
+    {"path": "../../types/interface-types"},
+    {"path": "../../core/command-scripting"}
   ]
 }

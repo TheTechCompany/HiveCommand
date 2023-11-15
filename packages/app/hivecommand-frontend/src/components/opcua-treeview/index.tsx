@@ -1,5 +1,5 @@
 import { ChevronRight, ExpandMore, Explore } from "@mui/icons-material";
-import { TreeItem, TreeItemContentProps, TreeView, useTreeItem } from "@mui/lab";
+import { TreeItem, TreeItemContentProps, TreeView, useTreeItem } from "@mui/x-tree-view";
 import { Box, TextField, Typography } from "@mui/material";
 import React, { forwardRef } from "react";
 import { render } from "react-dom";
@@ -87,7 +87,7 @@ const OPCUATreeItem = forwardRef((props: OPCUATreeItemProps, ref) => {
                {editable ? (
                 <Box sx={{display: 'flex', alignItems: 'center', marginRight: '6px'}}>
                     <TextField value={value} size="small" />
-                    <IconButton onClick={() => onMap(nodeId, props.parentId)} size="small">
+                    <IconButton onClick={() => onMap?.(nodeId, props.parentId)} size="small">
                         <Explore fontSize="inherit" />
                     </IconButton>
                 </Box>

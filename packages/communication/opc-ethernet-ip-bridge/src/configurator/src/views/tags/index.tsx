@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useMemo, useContext } from 'react';
-import { TreeItem, TreeView, useTreeItem } from '@mui/lab'
+import { TreeItem, TreeView, useTreeItem } from '@mui/x-tree-view'
 import { Box, Checkbox, TextField } from '@mui/material';
 import { ConfiguratorContext } from '../../context';
 import { ExpandMore, ChevronRight } from '@mui/icons-material'

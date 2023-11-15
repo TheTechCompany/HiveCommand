@@ -1,6 +1,6 @@
 import React, { useContext, forwardRef } from 'react';
 
-import { TreeItem, TreeItemContentProps, TreeItemProps, useTreeItem } from '@mui/lab';
+import { TreeItem, TreeItemContentProps, TreeItemProps, useTreeItem } from '@mui/x-tree-view';
 import { Box } from '@mui/material';
 import { IconButton, Typography } from '@mui/material';
 import clsx from 'clsx';

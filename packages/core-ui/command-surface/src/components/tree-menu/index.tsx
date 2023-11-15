@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { TreeView, TreeItem, TreeItemProps } from '@mui/lab'
+import { TreeView, TreeItem, TreeItemProps } from '@mui/x-tree-view'
 import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';

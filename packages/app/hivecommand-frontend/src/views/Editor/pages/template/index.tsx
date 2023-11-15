@@ -5,7 +5,8 @@ import { TemplateModal } from './modal';
 import { useMutation, gql } from '@apollo/client'
 import { useCommandEditor } from '../../context';
 import { useParams } from 'react-router-dom';
-import { ScriptEditorModal } from '../../../../components/script-editor';
+// import { ScriptEditorModal } from '../../../../components/script-editor';
+import { ScriptEditorModal } from '@hive-command/ui'
 
 import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-command/scripting'
 

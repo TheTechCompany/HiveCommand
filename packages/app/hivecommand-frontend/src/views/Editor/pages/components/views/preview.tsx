@@ -25,11 +25,11 @@ const PreviewComponent = (props: any) => {
 export const Preview = (props: any) => {
     const { mainId, files } = props;
 
-    const ref = useRef<ErrorBoundary>();
+    const ref = useRef<ErrorBoundary>(null);
 
     useEffect(() => {
         
-        ref.current.resetErrorBoundary()
+        ref.current?.resetErrorBoundary()
 
     }, [files, mainId])
 
@@ -75,30 +75,39 @@ const Loader = (files: { id: string, path: string, content: string }[], mainId: 
     //     }
     // }
 
+    const file = files.find((a) => a.id == mainId);
+
     const _requires = (name: string) => {
 
         if (!(name in baseRequirements)) {
-            console.log("Missing", name,  path.join(files.find((a) => a.id == mainId).path, '../', name))
-            return Loader(files, files.find((file) => file.path.split('.')?.[0] == path.join(files.find((a) => a.id == mainId).path, '../', name).split('.')?.[0]).id)
+            const filePath = file?.path;
+            if(filePath){
+                console.log("Missing", name,  path.join(filePath, '../', name))
+                const fileId = files.find((file) => file.path.split('.')?.[0] == path.join(filePath, '../', name).split('.')?.[0])?.id;
+                if(fileId)
+                return Loader(files, fileId)
+            }
         }
         return baseRequirements[name]
     }
 
-    // const data = await fetch(url)
-    const stringFunc = transpile(files.find((a) => a.id == mainId).content, { kind: ModuleKind.CommonJS, jsx: JsxEmit.React, target: ScriptTarget.ES5 })
+    if(file?.content){
+        // const data = await fetch(url)
+        const stringFunc = transpile(file?.content, { kind: ModuleKind.CommonJS, jsx: JsxEmit.React, target: ScriptTarget.ES5 })
 
-    console.log(stringFunc, files, mainId)
+        console.log(stringFunc, files, mainId)
 
-    const exports = {};
-    const module = { exports };
-    const func = new Function("require", "module", "exports", stringFunc);
-    // func(_initialRequire, module, exports);
+        const exports = {};
+        const module = { exports };
+        const func = new Function("require", "module", "exports", stringFunc);
+        // func(_initialRequire, module, exports);
 
-    // await Promise.all(requirementFetch);
+        // await Promise.all(requirementFetch);
 
-    func(_requires, module, exports);
+        func(_requires, module, exports);
 
-    console.log(module.exports)
+        console.log(module.exports)
 
-    return module.exports;
+        return module.exports;
+    }
 }

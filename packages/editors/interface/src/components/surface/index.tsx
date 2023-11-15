@@ -54,7 +54,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
     }, [JSON.stringify(props.nodes)])
 
     useEffect(() => {
-        console.log("Set Edges", props.edges)
+
         setEdges((props.edges || []).map((edge) => {
 
             let sourceNode = nodes?.find((a) => a.id == edge.source)
@@ -76,6 +76,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                 })
             }
         ))
+
     }, [ JSON.stringify(props.edges), JSON.stringify(nodes) ])
 
 
@@ -116,8 +117,9 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                     />
             <ReactFlow
                 snapToGrid
+                snapGrid={[5, 5]}
                 connectionMode={ConnectionMode.Loose}
-                nodes={nodes.map((x) => ({
+                nodes={nodes.slice()?.sort((a, b) => (a.data?.zIndex || 0) - (b.data?.zIndex || 0))?.map((x) => ({
                     ...x,
                     selected: x.selected || selected?.nodes?.find((a) => a.id == x.id) != null
                 }))}

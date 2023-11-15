@@ -67,6 +67,8 @@ export const TagEditor = (props: any) => {
 
     const updateRow = ( tagId: string, row: any ) => {
 
+        console.log("updateRow", tagId, row);
+
         setTagState((tags) => {
             let newTags = tags.slice();
             let ix = newTags.findIndex((a) => a.id === tagId);
@@ -229,8 +231,8 @@ export const TagEditor = (props: any) => {
                                         fullWidth
                                         size="small"
                                         onChange={(evt, value) => {
-                                            console.log(value)
-                                            updateRow(tag.id, {scope: typeof(value) === 'string' ? value : value?.id})
+                                            console.log("CHANGE SCOPE", value)
+                                            updateRow(tag.id, { scope: (typeof(value) === 'string' ? value : value?.id) || null })
                                         }}
                                         value={dataScopes?.find((a) => a.id === tag.scope?.id)}
                                         renderInput={(params) => <TextField {...params} variant='standard' />}
