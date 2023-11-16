@@ -108,6 +108,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../evented-values"}
+    {"path": "../evented-values"},
+    {"path": "../../communication/amqp-client"},
+    {"path": "../../drivers/command-driver"},
   ]
 }
