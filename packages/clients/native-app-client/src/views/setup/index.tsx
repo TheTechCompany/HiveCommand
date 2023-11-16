@@ -11,13 +11,7 @@ export const SetupView = (props: any) => {
 
     const { authState, updateAuthState, setAuthState, globalState, updateGlobalState } = useContext(DataContext);
 
-    // const [ state, setState ] = useState<any>({
-    //     discoveryServer: 'https://discovery.hexhive.io'
-    // });
-
     const [activeIndex, setActiveIndex] = useState(0);
-
-    console.log({ globalState })
 
     const steps = [
         {
