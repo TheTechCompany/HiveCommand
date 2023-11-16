@@ -226,6 +226,4 @@ export class ScadaCommand extends EventEmitter {
         return this.conf?.getConf();
     }
 
-
-
 }
