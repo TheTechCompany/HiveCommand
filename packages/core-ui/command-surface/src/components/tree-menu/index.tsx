@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
-import { TreeView, TreeItem, TreeItemProps } from '@mui/lab'
+import { TreeView, TreeItem, TreeItemProps } from '@mui/x-tree-view'
 import { Add, ChevronRight, ExpandMore } from '@mui/icons-material';
 import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
+import { useMatch, useResolvedPath } from 'react-router-dom';
 
 export interface TreeMenuItem {
     id: string, 
@@ -14,6 +15,8 @@ export interface TreeMenuItem {
     dontAdd?: boolean, 
     dontEdit?: boolean, 
     children?: TreeMenuItem[]
+
+    pathRoot?: string;
 }
 export interface TreeMenuProps {
     onNodeSelect?: (nodeId: string) => void;
@@ -27,7 +30,6 @@ export interface TreeMenuProps {
 }
 
 export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
-
 
     const defaultExpanded : any[] = (props.items || []).reduce((prev, curr) => [...prev, curr, ...(curr.children || [])], [] as any[]).filter((a: any) => a.expanded).map((x: any) => x.id)
 

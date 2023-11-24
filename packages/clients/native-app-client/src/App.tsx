@@ -7,7 +7,6 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { SetupView } from './views/setup';
 import { useEffect } from 'react';
 import { DataContext } from './data';
-import { BaseDirectory } from '@tauri-apps/api/fs';
 
 import { Controller } from './views/controller';
 

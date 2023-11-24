@@ -85,18 +85,19 @@ const splitLink = split(
       }).then((r) => {
         return r.body
       }).then(async (body) => {
-        let reader = body.getReader()
+        let reader = body?.getReader()
 
         let done, value;
         while (!done) {
-          ({ done, value } = await reader.read());
+          ({ done, value } = await reader?.read() || {});
 
           let strValue = new TextDecoder().decode(value)
           // console.log({strValue})
           let parsed = strValue.toString()?.match(/data: (.+)/)?.[1];
 
           // console.log({parsed})
-          observer.next(JSON.parse(parsed));
+          if(parsed)
+            observer.next(JSON.parse(parsed));
         }
       })
 
@@ -157,7 +158,7 @@ function App(props: any) {
                     <Route path={`schematics/:id/*`} element={<SchematicEditor />} />
                     <Route path={`functions/:id/*`} element={<FunctionEditor />} />
                     <Route path={'*'} element={<Dashboard />} />
-                    <Route path={`:id/controls`} element={<DeviceControlView />} />
+                    <Route path={`deployments/:id/*`} element={<DeviceControlView />} />
                   </Routes>
                 </Box>
               </Router>

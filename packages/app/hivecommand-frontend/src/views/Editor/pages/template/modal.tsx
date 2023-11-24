@@ -9,11 +9,13 @@ import { Autocomplete, Box } from '@mui/material'
 import React, { useEffect, useState } from 'react';
 import { useCommandEditor } from '../../context';
 import { DataTypes } from '@hive-command/scripting';
-import { Editor } from '../../../../components/script-editor/editor';
+// import { Editor } from '../../../../components/script-editor/editor';
+
+import { Editor } from '@hive-command/ui/dist/script-editor/editor'
 
 export const TemplateModal= (props) => {
 
-    const { program: {types} } = useCommandEditor();
+    const { program: {types = []} = {}} = useCommandEditor();
 
     const [ io, setIO ] = useState<{name?: string, type?: string}>({});
 
@@ -28,6 +30,8 @@ export const TemplateModal= (props) => {
     }, [props.selected])
 
     console.log({io})
+
+    const ioType : string = (io.type || '')
 
     return (
         <Dialog 
@@ -66,7 +70,7 @@ export const TemplateModal= (props) => {
                         renderInput={(params) => <TextField {...params} label={`${props.direction} Type`} size="small" />}
                         />
                     
-                    {io.type?.indexOf("Tag") > -1 && (
+                    {(ioType).indexOf("Tag") > -1 && (
                         <Autocomplete
                             sx={{marginTop: '12px'}}
                             onChange={(e, newVal) => {
@@ -81,7 +85,7 @@ export const TemplateModal= (props) => {
                             renderInput={(params) => <TextField {...params} label="Tag Type" size="small" />}
                             options={types || []} />
                     )}
-                    {(io.type?.indexOf('Structure') > -1) && (
+                    {((ioType).indexOf('Structure') > -1) && (
                         <Box sx={{minHeight: '200px', position: 'relative', display: 'flex'}}>
                             <Editor
                                 extraLib={`

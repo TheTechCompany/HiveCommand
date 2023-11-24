@@ -75,6 +75,7 @@
     {"path": "../../core-ui/editor-toolbar"},
     {"path": "../../core-ui/editor-panes"},
     {"path": "../../core-ui/editor-canvas"},
-    {"path": "../../core-ui/command-electrical-nodes"}
+    {"path": "../../core-ui/command-electrical-nodes"},
+    {"path": "../../core-ui/command-remote-components"}
   ]
 }

@@ -21,6 +21,8 @@ export interface HeaderProps {
     }[]
 
     fullscreenHandler?: () => void;
+
+    onHome?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = (props) => {
@@ -58,7 +60,7 @@ export const Header: React.FC<HeaderProps> = (props) => {
                 display: 'flex'
             }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <IconButton
+                {/* <IconButton
                     size="small"
                     // onClick={() => navigate("../../")}
                     sx={{ color: 'navigation.main' }}>
@@ -66,8 +68,9 @@ export const Header: React.FC<HeaderProps> = (props) => {
                         fontSize="inherit"
 
                     />
-                </IconButton>
+                </IconButton> */}
                 <IconButton
+                    onClick={props.onHome}
                     size="small"
                     sx={{ color: 'navigation.main' }}>
                     <Home
@@ -75,13 +78,13 @@ export const Header: React.FC<HeaderProps> = (props) => {
 
                     />
                 </IconButton>
-                <IconButton
+                {/* <IconButton
                     size="small"
                     sx={{ color: 'navigation.main' }}>
                     <KeyboardArrowRight
                         fontSize="inherit"
                     />
-                </IconButton>
+                </IconButton> */}
 
 
 

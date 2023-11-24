@@ -1,5 +1,5 @@
 import { nodeTypes, edgeTypes } from "@hive-command/canvas-nodes";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { KeyboardEvent, useEffect, useMemo, useState } from "react";
 import ReactFlow, { Node, Edge, Background, ConnectionMode, Controls, useOnSelectionChange, useNodesState, useEdgesState, Connection, NodePositionChange, useReactFlow, useNodesInitialized } from "reactflow";
 import { useInterfaceEditor } from "../../context";
 import {nanoid} from 'nanoid';
@@ -36,7 +36,8 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
    
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    const { activeTool } = useInterfaceEditor();
+    const { activeTool, toolRotation } = useInterfaceEditor();
+
 
     const [ selected, setSelected ] = useState<{nodes: Node[], edges: Edge[]}>()
 
@@ -49,12 +50,13 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
 
     const nodesInitialized = useNodesInitialized()
 
+
     useEffect(() => {
         setNodes(props.nodes || [])
     }, [JSON.stringify(props.nodes)])
 
     useEffect(() => {
-        console.log("Set Edges", props.edges)
+
         setEdges((props.edges || []).map((edge) => {
 
             let sourceNode = nodes?.find((a) => a.id == edge.source)
@@ -76,6 +78,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                 })
             }
         ))
+
     }, [ JSON.stringify(props.edges), JSON.stringify(nodes) ])
 
 
@@ -98,9 +101,10 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
         })
     }
 
-
     return (
         <Box
+            // tabIndex={-1}
+            // onKeyDown={onKeyDown}
             onPointerMove={(e) => {
                 const bounds = containerRef?.current?.getBoundingClientRect();
                 setPointer({x: e.clientX - ( bounds?.x || 0 ), y: e.clientY - ( bounds?.y || 0 )})
@@ -113,11 +117,13 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                 <ToolOverlay
                     pointer={pointer}
                     activeTool={activeTool}
+                    rotation={toolRotation}
                     />
             <ReactFlow
                 snapToGrid
+                snapGrid={[5, 5]}
                 connectionMode={ConnectionMode.Loose}
-                nodes={nodes.map((x) => ({
+                nodes={nodes.slice()?.sort((a, b) => (a.data?.zIndex || 0) - (b.data?.zIndex || 0))?.map((x) => ({
                     ...x,
                     selected: x.selected || selected?.nodes?.find((a) => a.id == x.id) != null
                 }))}
@@ -196,7 +202,14 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                     const coords = project({x: ev.clientX, y: ev.clientY});
 
                     if(activeTool){
-                        props.onNodeCreate?.({id: nanoid(), position: coords, data:{}, type: `${activeTool.pack}:${activeTool.name}`})
+                        props.onNodeCreate?.({
+                            id: nanoid(), 
+                            position: coords, 
+                            data: {
+                                rotation: toolRotation
+                            }, 
+                            type: `${activeTool.pack}:${activeTool.name}`
+                        })
                     }else{
                         setSelected(undefined)
                     }

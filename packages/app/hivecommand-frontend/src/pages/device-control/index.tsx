@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Box } from '@mui/material';
 import { CommandSurface } from '@hive-command/command-surface';
 import { useWatchers } from './utils/watchers';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useDevice } from './utils/program';
 import moment from 'moment';
 import { useDeviceReports } from './utils/report';
@@ -10,6 +10,8 @@ import { useWebClient } from './utils/client';
 
 export const DeviceControlView = () => {
 
+    const navigate = useNavigate();
+    
     const { id = '' } = useParams();
 
     const client = useWebClient(id);
@@ -39,6 +41,9 @@ export const DeviceControlView = () => {
                 defaultPage={defaultPage}
              
                 watching={watchers}
+                onHome={() => {
+                    navigate('../')
+                }}
             >
             </CommandSurface>
         </Box>

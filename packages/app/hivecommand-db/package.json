@@ -1,24 +1,27 @@
 {
   "name": "@hive-command/data",
-  "version": "1.4.15-alpha.285",
+  "version": "1.4.15-alpha.287",
   "description": "",
   "main": "dist/index.js",
   "private": true,
   "files": [
     "dist/"
   ],
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "prisma": {
-    "seed": "ts-node prisma/seed",
-    "postinstall": "prisma generate"
+    "seed": "ts-node prisma/seed"
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "postinstall": "prisma generate"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "prisma": "^5.0.0",
-    "typescript": "^4.3.5"
+    "typescript": "4.9.5"
   },
   "dependencies": {
     "@prisma/client": "^5.0.0"

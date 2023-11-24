@@ -1,6 +1,6 @@
 import React, { useContext, forwardRef } from 'react';
 
-import { TreeItem, TreeItemContentProps, TreeItemProps, useTreeItem } from '@mui/lab';
+import { TreeItem, TreeItemContentProps, TreeItemProps, useTreeItem } from '@mui/x-tree-view';
 import { Box } from '@mui/material';
 import { IconButton, Typography } from '@mui/material';
 import clsx from 'clsx';
@@ -8,7 +8,7 @@ import { MoreVert, Add } from '@mui/icons-material';
 import { TreeViewContext } from './context'
 
 export interface MenuItemProps extends TreeItemContentProps {
-    decoration: any;
+    decoration?: any;
 }  
 
 export const MenuItem : React.FC<MenuItemProps> = forwardRef<HTMLDivElement, MenuItemProps>((props, ref) => {

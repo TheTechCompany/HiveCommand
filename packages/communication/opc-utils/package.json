@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-utils",
-  "version": "1.4.15-alpha.279",
+  "version": "1.4.15-alpha.287",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
@@ -28,7 +28,7 @@
     "@types/jest": "^27.0.3",
     "@types/react-loadable": "^5.5.5",
     "jest": "^27.4.5",
-    "typescript": "^4.3.5"
+    "typescript": "4.9.5"
   },
   "gitHead": "d7469c9ac95fd786685431b711e95e9b0858733b"
 }

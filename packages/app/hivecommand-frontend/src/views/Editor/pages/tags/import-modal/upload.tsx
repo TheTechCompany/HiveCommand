@@ -20,7 +20,7 @@ export const UploadView = (props: {
             name: string
         }
     }[]
-    onChange: (patch: {file?: any, scope?: string}) => void
+    onChange: (patch: {file?: any, scope?: string | null} | null) => void
 }) => {
 
     const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -33,7 +33,7 @@ export const UploadView = (props: {
         reader.onerror = () => console.log('file reading has failed')
         reader.onload = () => {
         // Do whatever you want with the file contents
-            const binaryStr = reader.result.toString()
+            const binaryStr = reader.result?.toString()
 
             props.onChange({
                 file: {
@@ -59,7 +59,7 @@ export const UploadView = (props: {
                 <Paper elevation={4} sx={{display: 'flex', paddingLeft: '6px', paddingRight: '6px', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Box>
                         <Typography>{props.file.name}</Typography>
-                        <Typography fontSize={'small'}>{(props.file?.size / 1024 / 1024).toFixed(2)}MB</Typography>
+                        <Typography fontSize={'small'}>{((props.file?.size || 0) / 1024 / 1024).toFixed(2)}MB</Typography>
                     </Box>
                     <IconButton 
                         onClick={() => {
@@ -88,7 +88,7 @@ export const UploadView = (props: {
             }}
             value={props.dataScopes.find((a) => a.id == props.scope) || null}
             onChange={(e, value) => {
-                props.onChange({scope: typeof(value) == 'string' ? value : value.id})
+                props.onChange({scope: (typeof(value) == 'string' ? value : value?.id) || null})
             }}
             options={props.dataScopes || []}
             getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}

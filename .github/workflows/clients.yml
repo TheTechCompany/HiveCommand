@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       # - master
-    paths: [".github/workflows/clients.yml", "packages/app/hivecommand-native/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
+    paths: [".github/workflows/clients.yml", "packages/clients/native-app-client/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
         with:
           shared-key: ${{ runner.os }}-buildrs-${{ env.cache-name }}
           workspaces: |
-            packages/app/hivecommand-native/src-tauri
+            packages/clients/native-app-client/src-tauri
           
       # - name: Rust cache
       #   uses: actions/cache@v2
@@ -46,7 +46,7 @@ jobs:
       #     path: 
       #       - ~/.cargo
       #       - ./packages/app/hivecommand-native/src-tauri/target
-      #     key: ${{ runner.os }}-buildrs-${{ env.cache-name }}-${{ hashFiles('./packages/app/hivecommand-native/src-tauri/Cargo.lock') }}
+      #     key: ${{ runner.os }}-buildrs-${{ env.cache-name }}-${{ hashFiles('./packages/clients/native-app-client/src-tauri/Cargo.lock') }}
       #     restore-keys: |
       #       ${{ runner.os }}-buildrs-${{ env.cache-name }}
       #       ${{ runner.os }}-buildrs-
@@ -100,7 +100,7 @@ jobs:
           TAURI_PRIVATE_KEY: ${{secrets.TAURI_PRIVATE_KEY}}
           NODE_OPTIONS: "--max-old-space-size=8192"
         with:
-          projectPath: ./packages/app/hivecommand-native
+          projectPath: ./packages/clients/native-app-client
           tagName: v__VERSION__ # tauri-action replaces \_\_VERSION\_\_ with the app version
           releaseName: 'v__VERSION__'
           releaseBody: 'See the assets to download this version and install.'

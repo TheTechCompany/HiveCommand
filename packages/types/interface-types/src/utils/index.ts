@@ -71,8 +71,17 @@ const _require = (components: any[], parent?: string) => {
 				return module.exports
 			}
 
+			const fileComponent = components.find((a) => a.name == component);
 
-			const fileObj = components.find((a) => a.name == component)?.files?.find((a: any) => a.path == (file || components.find((a) => a.name == component).main?.path));
+			const defaultFile = fileComponent?.files?.find((a: any) => a.path == 'index.tsx') || 
+				fileComponent?.files?.find((a: any) => a.path == 'index.ts') ||
+				fileComponent?.files?.find((a: any) => a.path == 'index.js')
+
+			const fileObj = fileComponent?.files?.find((a: any) => {
+				if(file || fileComponent?.main?.path)
+					return a.path == (file || fileComponent?.main?.path)
+				return a.path == defaultFile?.path
+			});
 
 			const exports: {} = {};
 

@@ -32,12 +32,27 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
     const [ selected, setSelected ] = useState<{nodes: Node[], edges: Edge[]} | undefined>(undefined)
 
-    const [ activeTool, setActiveTool ] = useState<ComponentTool | null>(null)
+    const [ toolRotation, setRotation ] = useState(0)
+    const [ activeTool, _setActiveTool ] = useState<ComponentTool | null>(null)
+
+    const setActiveTool = (tool: ComponentTool | null) => {
+        _setActiveTool(tool);
+        setRotation(0)
+    }   
 
     const onKeyDown = (e: KeyboardEvent) => {
-        if(e.key == 'Escape') setActiveTool(null);
+        if(e.key == 'Escape') {
+            e.preventDefault();
+            setActiveTool(null);
+        }
+
+        if(e.key == 'Tab'){
+            setRotation((r) => (r + 90) % 360)
+        }
     }
 
+
+    
     return (
         <InterfaceEditorProvider value={{
             tags: props.tags || [],
@@ -51,6 +66,7 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
             selected,
 
             activeTool,
+            toolRotation,
             changeTool: (tool: ComponentTool | null) => setActiveTool(tool)
         }}>
             <Box 

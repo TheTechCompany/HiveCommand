@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/interface-editor",
-  "version": "1.4.15-alpha.285",
+  "version": "1.4.15-alpha.287",
   "packageManager": "yarn@3.6.4",
   "private": true,
   "files": [
@@ -11,7 +11,7 @@
     "build": "tsc -b"
   },
   "devDependencies": {
-    "typescript": "^5.2.2"
+    "typescript": "4.9.5"
   },
   "peerDependencies": {
     "@mui/material": "*",

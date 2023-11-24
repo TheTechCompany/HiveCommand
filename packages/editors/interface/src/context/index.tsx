@@ -25,6 +25,7 @@ export const InterfaceEditorContext = React.createContext<{
     selected?: {nodes: Node[], edges: Edge[]};
 
     activeTool?: ComponentTool | null,
+    toolRotation?: number,
     changeTool?: (tool: ComponentTool | null) => void,
 }>({
 

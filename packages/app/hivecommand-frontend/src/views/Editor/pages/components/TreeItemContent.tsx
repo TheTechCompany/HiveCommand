@@ -1,4 +1,4 @@
-import { TreeItem, useTreeItem } from '@mui/lab';
+import { TreeItem, useTreeItem } from '@mui/x-tree-view';
 import {Typography, Box, IconButton} from '@mui/material';
 import clsx from 'clsx';
 import React, {forwardRef} from 'react';

@@ -1,4 +1,4 @@
-import MQTT from 'mqtt';
+import MQTT, {MqttClient} from 'mqtt';
 
 export interface MQTTHubMessage {
     userId?: string;
@@ -20,7 +20,7 @@ export interface MQTTHubOptions {
 
 export class MQTTHub {
 
-    private client? : MQTT.Client;
+    private client? : MqttClient;
 
     private options : MQTTHubOptions;
 
@@ -37,6 +37,8 @@ export class MQTTHub {
 
     async setup(){
         // let authSection = this.options.user ? `${this.options.user}:${this.options.pass}` : undefined;
+
+        // new MqttClient();
 
         this.client = MQTT.connect(this.options.host, {
             username: this.options.user,

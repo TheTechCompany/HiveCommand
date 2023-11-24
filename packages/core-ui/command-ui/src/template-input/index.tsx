@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import { Cancel } from '@mui/icons-material'
 
 import React, { useEffect, useState } from 'react';
-import { Editor } from '../script-editor/editor';
 import { BaseTemplateInput } from './input';
 
 export interface TemplateInputProps {

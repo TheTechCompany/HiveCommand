@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
-import { Route, Routes, matchPath } from 'react-router-dom'
+import { Outlet, Route, Routes, matchPath, useNavigate } from 'react-router-dom'
 // import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
@@ -27,6 +27,8 @@ import { Header } from './components/Header';
 import { getDeviceFunction } from './components/action-menu';
 import { FieldValue } from './components/field-value';
 import { HMIType, HMITag, HMITemplate } from "@hive-command/interface-types"
+
+import { useMatch, useResolvedPath } from 'react-router-dom'
 
 export interface CommandSurfaceClient {
     reports?: {
@@ -203,6 +205,8 @@ export interface CommandSurfaceProps {
     watching?: { id: string, name: string, color: string }[];
 
     cache?: RemoteComponentCache
+
+    onHome?: () => void;
 }
 
 export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
@@ -214,6 +218,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const { reports = [] } = client || {};
 
     const { tags, types } = activeProgram || {};
+
+
+    const navigate = useNavigate()
     /*
         Parse the values blob internally and represent it as a clean tag system
         {
@@ -580,14 +587,19 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 if (!page) page = node.id;
 
+                const pathRoot = drawerMenu.find((a) => a.id == page)?.pathRoot || '';
+
                 if (nodeId != 'controls' && nodeId != 'analytics') {
                     setView(page);
+
+                    navigate(pathRoot)
                 } else {
                     break;
                 }
 
                 if (page == 'controls' || page == 'analytics') {
                     setActivePage(nodeId)
+                    navigate(`${pathRoot?.length > 0 ? pathRoot + '/' : ''}${nodeId}`)
                 }
                 break;
         }
@@ -657,10 +669,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     //     }
     // }
 
-    const drawerMenu: (TreeMenuItem & { component?: JSX.Element })[] = [
+    const drawerMenu: (TreeMenuItem & {  pathRoot: string, component?: JSX.Element })[] = [
         {
             id: 'controls',
             name: 'Controls',
+            pathRoot: 'controls',
             dontAdd: true,
             dontEdit: true,
             expanded: true,
@@ -670,6 +683,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         {
             id: 'alarms',
             name: 'Alarms',
+            pathRoot: 'alarms',
             dontAdd: true,
             dontEdit: true,
             component: <AlarmList />
@@ -678,17 +692,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         {
             id: 'analytics',
             name: 'Analytics',
+            pathRoot: 'analytics',
             dontEdit: true,
             children: reports?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
             component: <ReportView />
-        },
-        {
-            id: 'devices-root',
-            name: 'Devices',
-            dontAdd: true,
-            dontEdit: true,
-            children: []
-        },
+        }
     ];
 
     const renderActiveView = () => {
@@ -710,6 +718,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         }
     }
 
+    const topLevel = drawerMenu?.filter((item) => {
+        return useMatch(useResolvedPath(item.pathRoot + '/*').pathname) != null
+    })
+
+    const routes = drawerMenu?.map((item) => {
+        return useResolvedPath(item.pathRoot + '/*').pathname
+    })
+
+    console.log({topLevel, routes});
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -801,13 +818,14 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         }}
                         activeUsers={watching}
                         menuItems={toolbarMenu}
+                        onHome={props.onHome}
                     />
 
                     <Box
                         sx={{ flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row' }}>
                         <Routes>
                             <Route path={`alarms`} element={<AlarmList />} />
-                            <Route path={''} element={<React.Fragment>
+                            <Route element={<React.Fragment>
                                 <Paper sx={{
                                     width: '200px',
                                     borderRadius: 0
@@ -820,10 +838,20 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                     />
                                 </Paper>
                                 <Box sx={{ flex: 1, display: 'flex' }}>
-                                    {renderActiveView()}
-
+                                    <Outlet />
+                                    {/* {renderActiveView()} */}
+                                    
                                 </Box>
                             </React.Fragment>}>
+                                            <Route path={''} element={<HomeView />} />
+                                            {drawerMenu.filter((a) => a.component).map((menuItem) => (
+                                                <Route path={menuItem.pathRoot} element={<Outlet />}>
+                                                    {(menuItem.children || []).length > 0 && 
+                                                        <Route path={':activePage'} element={menuItem.component} />}
+                                                    {(menuItem.children || []).length == 0 && 
+                                                        <Route path={''} element={menuItem.component} />}
+                                                </Route>
+                                            ))}
 
                             </Route>
                         </Routes>

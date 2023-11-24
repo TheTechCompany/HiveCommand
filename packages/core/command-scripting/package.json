@@ -1,10 +1,13 @@
 {
   "name": "@hive-command/scripting",
-  "version": "1.4.15-alpha.279",
+  "version": "1.4.15-alpha.287",
   "description": "",
   "main": "dist/index.js",
   "publishConfig": {
     "access": "public"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
   },
   "files": [
     "dist/"
@@ -19,7 +22,7 @@
     "@types/uglify-js": "^3.17.1",
     "jest": "27.x",
     "prettier": "^2.8.3",
-    "typescript": "^4.3.5",
+    "typescript": "4.9.5",
     "uglify-js": "^3.17.4"
   }
 }

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.287](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.286...v1.4.15-alpha.287) (2023-11-24)
+
+**Note:** Version bump only for package @hive-command/rabbitmq-auth
+
+
+
+
+
+## [1.4.15-alpha.286](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.285...v1.4.15-alpha.286) (2023-11-16)
+
+**Note:** Version bump only for package @hive-command/rabbitmq-auth
+
+
+
+
+
 ## [1.4.15-alpha.279](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.278...v1.4.15-alpha.279) (2023-11-05)
 
 **Note:** Version bump only for package @hive-command/rabbitmq-auth

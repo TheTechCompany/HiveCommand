@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/electrical-editor",
-  "version": "1.4.15-alpha.279",
+  "version": "1.4.15-alpha.287",
   "files": [
     "dist/"
   ],
@@ -10,7 +10,7 @@
     "build": "tsc -b"
   },
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "typescript": "4.9.5"
   },
   "peerDependencies": {
     "@mui/material": "*",
@@ -19,6 +19,6 @@
   },
   "dependencies": {
     "@hive-command/electrical-nodes": "workspace:^",
-    "@hive-command/remote-components": "^1.4.15-alpha.279"
+    "@hive-command/remote-components": "^1.4.15-alpha.287"
   }
 }

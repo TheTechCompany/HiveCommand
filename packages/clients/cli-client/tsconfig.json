@@ -102,6 +102,6 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../../communication/opc-amqp-bridge"}
+    {"path": "../../core/command-scada"}
   ]
 }

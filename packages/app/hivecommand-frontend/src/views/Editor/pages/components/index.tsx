@@ -2,7 +2,7 @@ import { Box, IconButton, Paper, Tabs, TextField, Typography } from '@mui/materi
 import React, { forwardRef, useEffect, useMemo, useState } from 'react';
 import { useQuery, gql} from '@apollo/client';
 import { Editor } from '../../../../components/script-editor/editor'
-import { TreeItem, TreeView, useTreeItem } from '@mui/lab';
+import { TreeItem, TreeView, useTreeItem } from '@mui/x-tree-view';
 import { resolveTree } from './utils';
 import { ChevronRight, ExpandMore, MenuOpen, MoreVert } from '@mui/icons-material'
 import { ComponentProperties } from './views/properties';

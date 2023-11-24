@@ -13,6 +13,7 @@ import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, N
 import { ButtonGroup, Menu, Paper } from "@mui/material";
 import { unit as mathUnit } from 'mathjs';
 import { Box, Typography, IconButton, Button } from '@mui/material'
+import { useParams } from "react-router-dom";
 
 export type ReportHorizon = { start: Date, end: Date };
 
@@ -46,7 +47,10 @@ export interface ReportViewProps {
 
 export const ReportView: React.FC<ReportViewProps> = (props) => {
 
-  const { reports, client, activePage, refresh, activeProgram } = useContext(DeviceControlContext);
+	const { activePage } = useParams();
+
+
+  const { reports, client, refresh, activeProgram } = useContext(DeviceControlContext);
 
   const [selected, setSelected] = useState();
 

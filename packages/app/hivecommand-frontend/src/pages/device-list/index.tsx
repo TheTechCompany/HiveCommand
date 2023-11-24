@@ -196,13 +196,11 @@ export const Devices : React.FC<DevicePageProps> = (props) => {
                 selected={[selectedDevice?.id]}
                 
                 onCreate={() => openModal(true)}
-                onMapRow={(datum) => {
-                    navigate(`/device-map/${datum.id}`)
-                }}
+           
                 onClickRow={({datum}) => {
                     console.log(datum)
                    
-                    navigate(`${datum.id}/controls`)
+                    navigate(`/deployments/${datum.id}`)
                     // if(isEqual(selectedDevice, datum)){
                     //     setSelectedDevice(undefined)
                     // }else{

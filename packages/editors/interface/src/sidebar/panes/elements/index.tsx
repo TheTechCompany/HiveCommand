@@ -9,8 +9,6 @@ export interface ElementPaneProps {
 export const ElementPane : React.FC<ElementPaneProps> = (props) => {
     const { packs, changeTool, activeTool } = useInterfaceEditor();
 
-    console.log({activeTool})
-
     return (
         <Box sx={{display: 'flex', overflow: 'auto',}}>
             <List style={{height: 0, display: 'flex', gap: '6px', flexWrap: 'wrap'}}>

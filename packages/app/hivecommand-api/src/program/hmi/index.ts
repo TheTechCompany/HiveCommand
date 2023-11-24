@@ -1,13 +1,15 @@
 import { mutate, mutation, useMutation } from "../../gqty";
+import { Node } from 'reactflow';
 
 export const useCreateHMINode = (programId: string, hmiId: string) => {
   const [mutateFn] = useMutation(
     (
       mutation,
       args: {
-        type: string;
+        type?: string;
         x: number;
         y: number;
+        rotation?: number;
       }
     ) => {
 
@@ -17,7 +19,8 @@ export const useCreateHMINode = (programId: string, hmiId: string) => {
         input: {
           type: args.type,
           x: args.x,
-          y: args.y
+          y: args.y,
+          rotation: args.rotation
         }
       })
 
@@ -28,12 +31,13 @@ export const useCreateHMINode = (programId: string, hmiId: string) => {
       }
     }
   );
-  return async (type: string, x: number, y: number) => {
+  return async (node: Node) => {
     return await mutateFn({
       args: {
-        type,
-        x,
-        y,
+        type: node.type,
+        x: node.position.x,
+        y: node.position.y,
+        rotation: node.data?.rotation
       },
     });
   };

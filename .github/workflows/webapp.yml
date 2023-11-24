@@ -5,7 +5,7 @@ on:
     branches:
       - staging
       - master
-    paths: [ ".github/workflows/webapp.yml", "packages/core-ui/**", "packages/app/hivecommand-api/**", "packages/app/hivecommand-frontend/**" ]
+    paths: [ ".github/workflows/webapp.yml", "packages/core-ui/**", "packages/editors/**", "packages/types/**", "packages/app/hivecommand-api/**", "packages/app/hivecommand-frontend/**" ]
 
 concurrency: hivecommand-webapp-${{ github.ref }}
 
