@@ -439,9 +439,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     // }
 
 
+
+
     return (
-        <Routes>
-            <Route element={(
 
         <CommandEditorProvider value={{
             program,
@@ -450,6 +450,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             },
             refetch: refetch
         }}>
+
             <EditorMenuDialog 
                 type={menuOpen}
                 selected={editItem}
@@ -464,6 +465,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     handleMenuSubmit(menuOpen, item)
                 }}
                 open={Boolean(menuOpen)} />
+        <Routes>
+            <Route path={''} element={(
+            
             <Suspense fallback={(
                 <Box 
                     sx={{
@@ -608,8 +612,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     
                 </Box>
             </Paper>
-            </Suspense>
-        </CommandEditorProvider>)}>
+            </Suspense>)}>
 
                 {treeMenu?.map((treeItem) => (
                                 <Route path={treeItem?.id?.split('-root')?.[0]} element={<Outlet />}>
@@ -620,6 +623,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
         </Route>
         </Routes>
+
+        </CommandEditorProvider>
 
     )
 }
