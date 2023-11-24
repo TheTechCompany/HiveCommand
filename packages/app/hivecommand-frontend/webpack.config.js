@@ -53,6 +53,7 @@ module.exports = (webpackConfigEnv, argv) => {
         '@mui/material': path.resolve(__dirname, '../../../node_modules/@mui/material'),
         'styled-components': path.resolve(__dirname, '../../../node_modules/styled-components'),
         'react-router-dom': path.resolve(__dirname, '../../../node_modules/react-router-dom'),
+        'react-router': path.resolve(__dirname, '../../../node_modules/react-router'),
         '@emotion/react': path.resolve(__dirname, '../../../node_modules/@emotion/react')
       },
       plugins: [

@@ -1,5 +1,5 @@
 import React, { lazy } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Outlet, useLocation, useNavigate, Routes } from "react-router-dom";
 import Dashboard from "./views/Dashboard";
 import { HexHiveTheme } from "@hexhive/styles";
 import { ApolloClient, ApolloProvider, fallbackHttpConfig, InMemoryCache, selectHttpOptionsAndBody, serializeFetchParameter, split } from "@apollo/client";
@@ -12,11 +12,14 @@ import { Observable } from "@apollo/client/utilities";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 // import { DeviceControlView } from "./pages/device-control";
+import { pages } from './views/Dashboard'
+import { Sidebar } from './components/sidebar'
+import { DeviceSettings } from './pages/device-settings';
 
-const SchematicEditor = lazy(() => import('./views/schematic-editor').then((r) => ({default: r.SchematicEditor})) )
-const FunctionEditor = lazy(() => import('./views/function-editor').then((r) => ({default: r.FunctionEditor})) )
-const DeviceControlView = lazy(() => import('./pages/device-control').then((r) => ({default: r.DeviceControlView}) ))
-const EditorPage = lazy(() => import('./views/Editor').then((r) => ({default: r.EditorPage }) ))
+const SchematicEditor = lazy(() => import('./views/schematic-editor').then((r) => ({ default: r.SchematicEditor })))
+const FunctionEditor = lazy(() => import('./views/function-editor').then((r) => ({ default: r.FunctionEditor })))
+const DeviceControlView = lazy(() => import('./pages/device-control').then((r) => ({ default: r.DeviceControlView })))
+const EditorPage = lazy(() => import('./views/Editor').then((r) => ({ default: r.EditorPage })))
 
 const API_URL = localStorage.getItem('HEXHIVE_API');
 
@@ -96,7 +99,7 @@ const splitLink = split(
           let parsed = strValue.toString()?.match(/data: (.+)/)?.[1];
 
           // console.log({parsed})
-          if(parsed)
+          if (parsed)
             observer.next(JSON.parse(parsed));
         }
       })
@@ -139,6 +142,12 @@ const client = new ApolloClient({
 
 
 function App(props: any) {
+  const navigate = useNavigate()
+
+
+  const path = useLocation()
+
+  console.log({path})
 
   return (
     <LocalizationProvider
@@ -151,17 +160,43 @@ function App(props: any) {
         <ThemeProvider theme={HexHiveTheme}>
           <AuthProvider authorizationServer={authServer}>
             <ApolloProvider client={client}>
-              <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
-                <Box sx={{ height: '100%', color: 'white', flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'primary.dark' }}>
-                  <Routes>
-                    <Route path={`programs/:id/*`} element={<EditorPage />} />
-                    <Route path={`schematics/:id/*`} element={<SchematicEditor />} />
-                    <Route path={`functions/:id/*`} element={<FunctionEditor />} />
-                    <Route path={'*'} element={<Dashboard />} />
-                    <Route path={`deployments/:id/*`} element={<DeviceControlView />} />
-                  </Routes>
-                </Box>
-              </Router>
+              <Box sx={{ height: '100%', color: 'white', flex: 1, display: 'flex', flexDirection: 'column', bgcolor: 'primary.dark' }}>
+                <Routes>
+                  <Route path={`programs/:id/*`} element={<EditorPage />} />
+                  <Route path={`schematics/:id/*`} element={<SchematicEditor />} />
+                  <Route path={`functions/:id/*`} element={<FunctionEditor />} />
+                  <Route path={`deployments/:id/*`} element={<DeviceControlView />}>
+                  </Route>
+                  <Route element={(
+                    <Box sx={{ display: 'flex', flex: 1 }}>
+                      <Sidebar
+                        active={path.pathname}
+                        // active={path.pathname?.slice(1, path.pathname?.length) || window.location.pathname.replace((process.env.REACT_APP_URL || '/dashboard/command'), '')}
+                        onSelect={(item) => {
+                          navigate(item.path)
+                        }}
+                        items={pages}
+                      />
+                      <Box sx={{padding: '6px', flex: 1, display: 'flex'}}>
+                        <Outlet />
+                      </Box>
+
+                    </Box>
+                  )}>
+
+                    {pages.map((x, ix) => (
+                      <Route path={`${x.path}`} element={x.component}>
+                        {x.children && x.children.map((y, iy) => (
+                          <Route path={`${y.path}`} element={y.component} />
+                        ))}
+                      </Route>
+                    ))}
+                    <Route path={':id/settings'} element={<DeviceSettings />} />
+
+
+                  </Route>
+                </Routes>
+              </Box>
             </ApolloProvider>
           </AuthProvider>
         </ThemeProvider>

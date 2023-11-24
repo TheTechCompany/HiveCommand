@@ -15,7 +15,7 @@ const Devices = React.lazy(() => import('../../pages/device-list').then((r) => (
 
 const ProgramList = React.lazy(() => import('../../pages/program-list').then((r) => ({ default: r.ProgramList })));
 
-const pages = [
+export const pages = [
     {
         icon: <Map />,
         label: "Deployments",
@@ -112,15 +112,18 @@ const Dashboard : React.FC<any> = (props) => {
                         </Box>)}>
 
                         <Routes>
-                            {pages.map((x, ix) => (
-                                <Route path={`${x.path}`} element={x.component}>
-                                    {x.children && x.children.map((y, iy) => (
-                                        <Route path={`${y.path}`} element={y.component} />
-                                    ))}
-                                </Route>
-                            ))}
+                            <Route element={<Outlet />}>
+                                {pages.map((x, ix) => (
+                                    <Route path={`${x.path}`} element={x.component}>
+                                        {x.children && x.children.map((y, iy) => (
+                                            <Route path={`${y.path}`} element={y.component} />
+                                        ))}
+                                    </Route>
+                                ))}
+                                <Route path={':id/settings'} element={<DeviceSettings/>} />
+
+                            </Route>
                          
-                            <Route path={':id/settings'} element={<DeviceSettings/>} />
                             {/* <Route path={`device-map/:id`} element={<DeviceMapper />} /> */}
                         </Routes>
                     </React.Suspense>

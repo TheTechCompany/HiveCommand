@@ -440,6 +440,9 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
 
     return (
+        <Routes>
+            <Route element={(
+
         <CommandEditorProvider value={{
             program,
             plugins: {
@@ -599,20 +602,24 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                             />
                     </Paper>
                     <Box sx={{flex: 1, display: 'flex'}}>
-                        <Routes>
-                            {treeMenu?.map((treeItem) => (
-                                <Route path={treeItem?.id?.split('-root')?.[0]} element={<Outlet />}>
-                                    <Route path={""} element={treeItem.element} />
-                                    {treeItem?.editor && <Route path={":activeId"} element={treeItem.editor} />}
-                                </Route>
-                            ))}
-                        </Routes>
+                           <Outlet />
                         {/* {selected?.type == 'root' ? renderRootPage() : renderEditorPage()} */}
                     </Box>
                     
                 </Box>
             </Paper>
             </Suspense>
-        </CommandEditorProvider>
+        </CommandEditorProvider>)}>
+
+                {treeMenu?.map((treeItem) => (
+                                <Route path={treeItem?.id?.split('-root')?.[0]} element={<Outlet />}>
+                                    <Route path={""} element={treeItem.element} />
+                                    {treeItem?.editor && <Route path={":activeId"} element={treeItem.editor} />}
+                                </Route>
+                            ))}
+
+        </Route>
+        </Routes>
+
     )
 }

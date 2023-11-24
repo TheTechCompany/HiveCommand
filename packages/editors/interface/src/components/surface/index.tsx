@@ -50,6 +50,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
 
     const nodesInitialized = useNodesInitialized()
 
+    console.log({nodes: props.nodes, edges: props.edges})
 
     useEffect(() => {
         setNodes(props.nodes || [])
@@ -79,7 +80,7 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
             }
         ))
 
-    }, [ JSON.stringify(props.edges), JSON.stringify(nodes) ])
+    }, [ JSON.stringify(props.edges), JSON.stringify(props.nodes) ])
 
 
     useEffect(() => {
@@ -172,26 +173,28 @@ export const InterfaceEditorSurface : React.FC<InterfaceEditorSurfaceProps> = (p
                         }
                     })
 
-                    setSelected((selected) => {
-                        let s = Object.assign({}, selected);
+                    if(nodesInitialized){
+                        setSelected((selected) => {
+                            let s = Object.assign({}, selected);
 
-                        changes.filter((x) => x.type == 'select').forEach((select: any) => {
-                            if(select.selected){
-                                // setSelected((s) => {
-                                    let n = props.nodes?.find((a) => a.id == select.id);
-                                    s = {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
-                                //  })
-                            }else{
-                                // setSelected((s) => (
-                                    s = {edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }
-                                    // ) )
-                            }
+                            changes.filter((x) => x.type == 'select').forEach((select: any) => {
+                                if(select.selected){
+                                    // setSelected((s) => {
+                                        let n = props.nodes?.find((a) => a.id == select.id);
+                                        s = {edges: (s?.edges || []), nodes: (s?.nodes || []).concat(n ? [n] : []) }
+                                    //  })
+                                }else{
+                                    // setSelected((s) => (
+                                        s = {edges: (s?.edges || []), nodes: (s?.nodes || []).filter((a) => a.id !== select.id) }
+                                        // ) )
+                                }
+                            })
+                        
+                        if(nodesInitialized) props.onSelectionChange?.(s)
+
+                            return s;
                         })
-                       
-                     if(nodesInitialized) props.onSelectionChange?.(s)
-
-                        return s;
-                    })
+                }
 
                    
                     // setSelected(s)

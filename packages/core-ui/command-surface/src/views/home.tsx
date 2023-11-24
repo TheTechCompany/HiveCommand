@@ -2,7 +2,12 @@ import { Box, Button, Paper, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import { ArrowForward } from '@mui/icons-material'
 import { DeviceControlContext } from '../context'
+import { useLocation } from 'react-router-dom'
+
 export const HomeView = () => {
+
+    const loc = useLocation();
+    console.log("Home lic", loc)
 
     const { setView } = useContext(DeviceControlContext);
 

@@ -6,7 +6,7 @@ import { CustomTreeItem, MenuItem, MenuItemGroup } from './item';
 import { TreeViewProvider } from './context';
 import { Box, IconButton, Typography } from '@mui/material';
 import { HexHiveTheme } from '@hexhive/styles';
-import { useMatch, useResolvedPath } from 'react-router-dom';
+import { useMatch, useNavigate, useResolvedPath } from 'react-router-dom';
 
 export interface TreeMenuItem {
     id: string;
@@ -15,6 +15,8 @@ export interface TreeMenuItem {
     dontAdd?: boolean;
     dontEdit?: boolean;
     children?: TreeMenuItem[];
+
+    element?: any;
 }
 
 export interface TreeMenuProps {
@@ -46,15 +48,49 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
 
     const expandedNodeIds = [...new Set(expanded.concat((topLevel || []).map((x) => x.id)))]
 
+    const navigate = useNavigate();
+
 
     return (
     <Box sx={{display: 'flex', overflowY: 'auto', flex: 1}}>
         <TreeViewProvider value={{onEdit: props.onEdit, onAdd: props.onAdd}}>
         
             <TreeView
-                onNodeSelect={(event, nodeId) => {
-                    console.log({nodeId})
-                    props.onNodeSelect?.(nodeId);
+                onNodeSelect={(event, node) => {
+                    // console.log({nodeId})
+                    // props.onNodeSelect?.(nodeId);
+                    // navigate()
+
+                    let isRoot = node.match(/(.+)-root/);
+                    if(isRoot){
+                        // setSelected({
+                        //     id: isRoot[1],
+                        //     type: 'root'
+                        // })
+                        if((props.items || []).find((a) => a.id == node)?.element){
+                            navigate(isRoot[1])
+                        }
+                        // setView(node.match(/(.+)-root/)?.[1] as any)
+                    }else{
+
+                        console.log("SELECTING NEW ITEM")
+
+                        let elements = ((props.items || []) as any[]).reduce((prev, curr) => {
+                            return [...prev, ...(curr.children || []).map((x) => ({...x, parent: curr.id}))]
+                        }, [])
+
+                        let element = elements.find((a) => a?.id == node);
+
+                        let root = element?.parent?.match(/(.+)-root/)?.[1];
+
+                        // setSelected({
+                        //     id: node,
+                        //     parent: element?.parent,
+                        //     type: 'editor',
+                        // })
+
+                        navigate(root + '/'+ node)
+                    }
                 }}
                 expanded={expandedNodeIds}
                 onNodeToggle={(ev, nodeIds) => {

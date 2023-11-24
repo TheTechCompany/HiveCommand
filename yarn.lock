@@ -4113,7 +4113,7 @@ __metadata:
     moment: ^2.29.4
     react: 17.x
     react-dom: 17.x
-    react-router-dom: 6.4.2
+    react-router-dom: 6.20.0
     reactflow: 11.7.2
     typescript: 4.9.5
   peerDependencies:
@@ -4303,7 +4303,7 @@ __metadata:
     react-app-rewired: ^2.2.1
     react-dom: ^17.x
     react-resize-aware: 3.1.1
-    react-router-dom: ^6.16.0
+    react-router-dom: ^6.20.0
     react-scripts: 5.0.1
     tsconfig-paths-webpack-plugin: ^4.1.0
     typescript: 4.9.5
@@ -4400,7 +4400,7 @@ __metadata:
     react-grid-layout: ^1.3.3
     react-querybuilder: ^6.5.1
     react-resize-aware: 3.1.1
-    react-router-dom: ^6.2.1
+    react-router-dom: ^6.20.0
     reactflow: 11.7.2
     single-spa-react: ^4.2.0
     stream: ^0.0.2
@@ -4526,7 +4526,7 @@ __metadata:
     react-app-rewired: ^2.2.1
     react-dom: 17.0.2
     react-resize-aware: 3.1.1
-    react-router-dom: ^6.14.0
+    react-router-dom: ^6.20.0
     react-scripts: 5.0.1
     socket.io-client: ^4.5.4
     styled-components: ^5.3.6
@@ -4806,7 +4806,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     react-resize-aware: 3.1.1
-    react-router-dom: ^6.4.2
+    react-router-dom: ^6.20.0
     storybook: ^7.4.3
     styled-components: ^5.3.6
     ts-jest: ^27.0.7
@@ -8258,13 +8258,6 @@ __metadata:
   peerDependencies:
     "@redis/client": ^1.0.0
   checksum: 6bbdb0b793dcbd13518aa60a09a980f953554e4c745bfacc1611baa8098f360e0378e8ee6b7faf600a67f1de83f4b68bbec6f95a0740faee6164c14be3a30752
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@remix-run/router@npm:1.0.2"
-  checksum: bf410f9cbb31308fc306bc8c5e3a732b9ad81ddb84281e37804bdd196b6db7ddd86abc29e15c5b21883e01b37f250d0b8db7bee5f5a9af6c7c532b68280676c9
   languageName: node
   linkType: hard
 
@@ -15922,7 +15915,7 @@ __metadata:
     "@vitejs/plugin-react": ^2.2.0
     react: ^18.2.0
     react-dom: ^18.2.0
-    react-router-dom: ^6.4.4
+    react-router-dom: ^6.20.0
     typescript: 4.9.5
     vite: ^3.2.3
   languageName: unknown
@@ -31447,20 +31440,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-router-dom@npm:6.4.2":
-  version: 6.4.2
-  resolution: "react-router-dom@npm:6.4.2"
-  dependencies:
-    "@remix-run/router": 1.0.2
-    react-router: 6.4.2
-  peerDependencies:
-    react: ">=16.8"
-    react-dom: ">=16.8"
-  checksum: 858e6a5c4c5da56615dbf53118d576d61851157f077805dfe476b10c332329f8b1494062d75a8de6f1bdd35fbcb8a510f8e23beb2306440d2452b9f2fe4b079d
-  languageName: node
-  linkType: hard
-
-"react-router-dom@npm:^6.14.0, react-router-dom@npm:^6.16.0, react-router-dom@npm:^6.2.1, react-router-dom@npm:^6.2.2, react-router-dom@npm:^6.4.2, react-router-dom@npm:^6.4.4":
+"react-router-dom@npm:6.20.0":
   version: 6.20.0
   resolution: "react-router-dom@npm:6.20.0"
   dependencies:
@@ -31481,17 +31461,6 @@ __metadata:
   peerDependencies:
     react: ">=16.8"
   checksum: 38bd986cb14355d5dc648e704190aa4d29935eee44423d93f13245472cf857a71a59b330c1f57395c9dffe8f243c846ebc8cc4149a44d520c96e99af90d6382b
-  languageName: node
-  linkType: hard
-
-"react-router@npm:6.4.2":
-  version: 6.4.2
-  resolution: "react-router@npm:6.4.2"
-  dependencies:
-    "@remix-run/router": 1.0.2
-  peerDependencies:
-    react: ">=16.8"
-  checksum: c229d65d9b0df88dd4e8c57bd59793e371f2c84b4cb200b77ead9f601c8fd7758f72acfffc9a2fc5cb31877af3a0e08ae24aeb75ab2b20681f3b1d33ca671552
   languageName: node
   linkType: hard
 

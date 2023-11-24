@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 // import { useQuery, gql, useApolloClient } from '@apollo/client';
 
-import { Outlet, Route, Routes, matchPath, useNavigate } from 'react-router-dom'
+import { Outlet, Route, Routes, matchPath, useLocation, useMatches, useNavigate } from 'react-router-dom'
 // import { matchPath, Navigate, Outlet, Route, Routes, useNavigate, useParams } from 'react-router-dom';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
@@ -10,7 +10,6 @@ import { KeyboardArrowLeft, Timelapse, Engineering, Settings } from '@mui/icons-
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, ReportView } from './views/reports'
-
 
 import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormControlLabel } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
@@ -44,7 +43,7 @@ export interface CommandSurfaceClient {
     useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any });
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
-    updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string,  x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
+    updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChartGrid?: (pageId: string, layout: { id: string, x: number, y: number, w: number, h: number }[]) => Promise<any>;
     removeChart?: (pageId: string, id: string) => Promise<any>;
 
@@ -158,7 +157,7 @@ export interface HMIProgram {
     types: HMIType[],
 
     dataScopes?: { id: string, name: string, plugin: { id: string, name: string, module: string } }[]
-    components?: {id: string, name: string, main?: {id: string, path: string, content: string}, files: {path: string, content: string}[]}[]
+    components?: { id: string, name: string, main?: { id: string, path: string, content: string }, files: { path: string, content: string }[] }[]
 
     interface: HMIView[]
     // {
@@ -304,12 +303,12 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                 // let values = workingState[deviceTag] || workingState || {};
 
                 const state = transformer ? transformer(_state) : _state[deviceTag];
-                
+
                 let values = _state[deviceTag]
 
                 console.log("SHOW WINDOW", values, state, deviceTag)
 
-                if(values == undefined || values == null) values = {};
+                if (values == undefined || values == null) values = {};
 
                 let tag = tags?.find((a) => a.name === deviceTag);
 
@@ -549,14 +548,14 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const onTreeEdit = (nodeId?: string) => {
-        console.log({nodeId})
+        console.log({ nodeId })
 
         let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
 
         let node = nodes.find((a) => a.id == nodeId)
         let page = node?.parent;
 
-        switch(page){
+        switch (page) {
             case 'analytics':
                 setSelectedReport(node)
                 setEditReportPage(true)
@@ -669,7 +668,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     //     }
     // }
 
-    const drawerMenu: (TreeMenuItem & {  pathRoot: string, component?: JSX.Element })[] = [
+    const drawerMenu: (TreeMenuItem & { pathRoot: string, component?: JSX.Element })[] = [
         {
             id: 'controls',
             name: 'Controls',
@@ -726,139 +725,147 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         return useResolvedPath(item.pathRoot + '/*').pathname
     })
 
-    console.log({topLevel, routes});
+    const loc = useLocation();
+    const path = useResolvedPath('analytics')
+
+    console.log({ topLevel, routes, path, loc });
 
     return (
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DeviceControlProvider value={{
-                historize,
-                alarms,
-                client,
-                // sendAction: props.onCommand,
-                setView,
+        <Routes>
+            <Route element={(
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                    <DeviceControlProvider value={{
+                        historize,
+                        alarms,
+                        client,
+                        // sendAction: props.onCommand,
+                        setView,
 
-                infoTarget,
-                setInfoTarget,
-                // seekValue: props.seekValue,
-                // waitingForActions,
+                        infoTarget,
+                        setInfoTarget,
+                        // seekValue: props.seekValue,
+                        // waitingForActions,
 
-                changeOperationMode: (mode) => {
-                    client?.changeMode?.(mode);
-                    // props.onCommand?.('CHANGE-MODE', { mode })
-                },
-                // values: deviceValues,
-                watching: watching || [],
-                // values,
-                activeProgram,
+                        changeOperationMode: (mode) => {
+                            client?.changeMode?.(mode);
+                            // props.onCommand?.('CHANGE-MODE', { mode })
+                        },
+                        // values: deviceValues,
+                        watching: watching || [],
+                        // values,
+                        activeProgram,
 
-                cache: props.cache,
+                        cache: props.cache,
 
-                reports: reports,
-                hmis: memoisedHmi,
+                        reports: reports,
+                        hmis: memoisedHmi,
 
-                defaultPage,
-                activePage,
-                functions,
-                templatePacks,
-            }}>
-                <MaintenanceWindow
-                    open={maintenanceWindow}
-                    onSubmit={(period) => {
-                        if (!period.startTime || !period.endTime) return;
-                        // createMaintenanceWindow(period.startTime, period.endTime).then(() => {
-                        //     setMaintenanceWindow(false)
-                        //     // refetch();
-                        // })
-                    }}
-                    onClose={() => {
-                        setMaintenanceWindow(false)
-                    }} />
-                <DeviceReportModal
-                    selected={selectedReport}
-                    onSubmit={(page) => {
+                        defaultPage,
+                        activePage,
+                        functions,
+                        templatePacks,
+                    }}>
+                        <MaintenanceWindow
+                            open={maintenanceWindow}
+                            onSubmit={(period) => {
+                                if (!period.startTime || !period.endTime) return;
+                                // createMaintenanceWindow(period.startTime, period.endTime).then(() => {
+                                //     setMaintenanceWindow(false)
+                                //     // refetch();
+                                // })
+                            }}
+                            onClose={() => {
+                                setMaintenanceWindow(false)
+                            }} />
+                        <DeviceReportModal
+                            selected={selectedReport}
+                            onSubmit={(page) => {
 
-                        if(page.id){
-                            client?.updateReportPage?.(page.id, page.name).then(() => {
-                                setEditReportPage(null);
+                                if (page.id) {
+                                    client?.updateReportPage?.(page.id, page.name).then(() => {
+                                        setEditReportPage(null);
+                                        setSelectedReport(null)
+                                    })
+
+                                } else {
+                                    client?.createReportPage?.(page.name).then(() => {
+                                        setEditReportPage(null);
+                                        setSelectedReport(null)
+                                    });
+                                }
+
+
+                            }}
+                            onDelete={() => {
+                                client?.removeReportPage?.(selectedReport.id).then(() => {
+                                    setEditReportPage(null);
+                                    setSelectedReport(null)
+                                })
+                            }}
+                            onClose={() => {
+                                setEditReportPage(null)
                                 setSelectedReport(null)
-                            })
-                            
-                        }else{
-                            client?.createReportPage?.(page.name).then(() => {
-                                setEditReportPage(null);
-                                setSelectedReport(null)
-                            });
-                        }
-                    
-                
-                    }}
-                    onDelete={() => {
-                        client?.removeReportPage?.(selectedReport.id).then(() => {
-                            setEditReportPage(null);
-                            setSelectedReport(null)
-                        })
-                    }}
-                    onClose={() => {
-                        setEditReportPage(null)
-                        setSelectedReport(null)
-                    }}
-                    open={Boolean(editReportPage)} />
-                <Paper
-                    ref={surfaceRef}
-                    sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                            }}
+                            open={Boolean(editReportPage)} />
+                        <Paper
+                            ref={surfaceRef}
+                            sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
 
-                    <Header
-                        title={props.title}
-                        fullscreenHandler={() => {
-                            if (document.fullscreenElement) {
-                                document.exitFullscreen();
-                            } else {
-                                surfaceRef.current?.requestFullscreen();
-                            }
-                        }}
-                        activeUsers={watching}
-                        menuItems={toolbarMenu}
-                        onHome={props.onHome}
-                    />
+                            <Header
+                                title={props.title}
+                                fullscreenHandler={() => {
+                                    if (document.fullscreenElement) {
+                                        document.exitFullscreen();
+                                    } else {
+                                        surfaceRef.current?.requestFullscreen();
+                                    }
+                                }}
+                                activeUsers={watching}
+                                menuItems={toolbarMenu}
+                                onHome={props.onHome}
+                            />
 
-                    <Box
-                        sx={{ flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row' }}>
-                        <Routes>
-                            <Route path={`alarms`} element={<AlarmList />} />
-                            <Route element={<React.Fragment>
-                                <Paper sx={{
-                                    width: '200px',
-                                    borderRadius: 0
-                                }}>
-                                    <TreeMenu
-                                        items={drawerMenu}
-                                        onAdd={onTreeAdd}
-                                        onEdit={onTreeEdit}
-                                        onNodeSelect={onTreeSelect}
-                                    />
-                                </Paper>
-                                <Box sx={{ flex: 1, display: 'flex' }}>
-                                    <Outlet />
-                                    {/* {renderActiveView()} */}
-                                    
-                                </Box>
-                            </React.Fragment>}>
-                                            <Route path={''} element={<HomeView />} />
-                                            {drawerMenu.filter((a) => a.component).map((menuItem) => (
-                                                <Route path={menuItem.pathRoot} element={<Outlet />}>
-                                                    {(menuItem.children || []).length > 0 && 
-                                                        <Route path={':activePage'} element={menuItem.component} />}
-                                                    {(menuItem.children || []).length == 0 && 
-                                                        <Route path={''} element={menuItem.component} />}
-                                                </Route>
-                                            ))}
+                            <Box
+                                sx={{ flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row' }}>
+                                <Outlet />
 
-                            </Route>
-                        </Routes>
+                            </Box>
+
+                        </Paper>
+                    </DeviceControlProvider>
+                </LocalizationProvider>
+            )}>
+                <Route path={`alarms`} element={<AlarmList />} />
+                <Route element={<React.Fragment>
+                    <Paper sx={{
+                        width: '200px',
+                        borderRadius: 0
+                    }}>
+                        <TreeMenu
+                            items={drawerMenu}
+                            onAdd={onTreeAdd}
+                            onEdit={onTreeEdit}
+                        // onNodeSelect={onTreeSelect}
+                        />
+                    </Paper>
+                    <Box sx={{ flex: 1, display: 'flex' }}>
+                        <Outlet />
+                        {/* {renderActiveView()} */}
+
                     </Box>
+                </React.Fragment>}>
+                    <Route path={''} element={<HomeView />} />
+                    {drawerMenu.filter((a) => a.component).map((menuItem) => (
+                        <Route path={menuItem.pathRoot} element={<Outlet />}>
+                            {(menuItem.children || []).length > 0 &&
+                                <Route path={':activePage'} element={menuItem.component} />}
+                            {(menuItem.children || []).length == 0 &&
+                                <Route path={''} element={menuItem.component} />}
+                        </Route>
+                    ))}
 
-                </Paper>
-            </DeviceControlProvider>
-        </LocalizationProvider>
+                </Route>
+            </Route>
+        </Routes>
     )
 }

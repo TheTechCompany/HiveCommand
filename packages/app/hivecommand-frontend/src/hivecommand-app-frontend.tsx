@@ -1,12 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter as Router } from 'react-router-dom'
 import singleSpaReact from "single-spa-react";
 import App from "./App";
 
 const lifecycles = singleSpaReact({
   React,
   ReactDOM,
-  rootComponent: App,
+  rootComponent: () => (
+    <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
+      <App />
+    </Router>),
   errorBoundary(err, info, props) {
     // Customize the root error boundary for your microfrontend here.
     return null;
