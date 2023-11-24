@@ -94,7 +94,11 @@ export const HMINode = (editor: boolean) =>
                     sx={{
                         transform: `scale(${props.data?.scaleX != undefined ? props.data?.scaleX : 1}, ${props.data?.scaleY != undefined ? props.data?.scaleY : 1})`,
                         height: '100%',
-                        width: '100%'
+                        width: '100%',
+                        '& svg': {
+                            height: '100%',
+                            // width: '100%'
+                        }
                     }}>
                     <Icon
                         // editing={props.building}
