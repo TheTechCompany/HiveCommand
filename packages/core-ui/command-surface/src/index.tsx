@@ -28,6 +28,8 @@ import { getDeviceFunction } from './components/action-menu';
 import { FieldValue } from './components/field-value';
 import { HMIType, HMITag, HMITemplate } from "@hive-command/interface-types"
 
+import { useMatch, useResolvedPath } from 'react-router-dom'
+
 export interface CommandSurfaceClient {
     reports?: {
         id: string;
@@ -716,6 +718,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         }
     }
 
+    const topLevel = drawerMenu?.filter((item) => {
+        return useMatch(useResolvedPath(item.pathRoot + '/*').pathname) != null
+    })
+
+    const routes = drawerMenu?.map((item) => {
+        return useResolvedPath(item.pathRoot + '/*').pathname
+    })
+
+    console.log({topLevel, routes});
 
     return (
         <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -814,7 +825,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         sx={{ flex: 1, display: 'flex', maxHeight: 'calc(100% - 38px)', flexDirection: 'row' }}>
                         <Routes>
                             <Route path={`alarms`} element={<AlarmList />} />
-                            <Route path={'*'} element={<React.Fragment>
+                            <Route element={<React.Fragment>
                                 <Paper sx={{
                                     width: '200px',
                                     borderRadius: 0
@@ -827,23 +838,20 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                     />
                                 </Paper>
                                 <Box sx={{ flex: 1, display: 'flex' }}>
+                                    <Outlet />
                                     {/* {renderActiveView()} */}
-                                    <Routes>
-                                        <Route path={''} element={<Outlet />}>
+                                    
+                                </Box>
+                            </React.Fragment>}>
                                             <Route path={''} element={<HomeView />} />
                                             {drawerMenu.filter((a) => a.component).map((menuItem) => (
                                                 <Route path={menuItem.pathRoot} element={<Outlet />}>
                                                     {(menuItem.children || []).length > 0 && 
-                                                        <Route path={':id'} element={menuItem.component} />}
+                                                        <Route path={':activePage'} element={menuItem.component} />}
                                                     {(menuItem.children || []).length == 0 && 
                                                         <Route path={''} element={menuItem.component} />}
                                                 </Route>
                                             ))}
-                                        </Route>
-                                    </Routes>
-
-                                </Box>
-                            </React.Fragment>}>
 
                             </Route>
                         </Routes>

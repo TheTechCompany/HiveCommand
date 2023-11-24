@@ -7,12 +7,15 @@
   "files": [
     "dist/"
   ],
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "prisma": {
-    "seed": "ts-node prisma/seed",
-    "postinstall": "prisma generate"
+    "seed": "ts-node prisma/seed"
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "postinstall": "prisma generate"
   },
   "author": "",
   "license": "ISC",

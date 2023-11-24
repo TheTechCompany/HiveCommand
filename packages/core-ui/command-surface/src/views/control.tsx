@@ -14,6 +14,7 @@ import moment from 'moment';
 
 import { DataTypes, parseValue } from '@hive-command/scripting'
 import { useRemoteComponents } from '@hive-command/remote-components';
+import { useParams } from 'react-router-dom';
 
 
 const ActionButton = (props: any) => {
@@ -59,12 +60,13 @@ export const ControlView = () => {
 
 	const [ stateValues, setStateValues ] = useState<any>({});
 
+	const { activePage } = useParams();
+
 
 	const {
 		historize,
 		client,
 		functions,
-		activePage,
 		defaultPage,
 		templatePacks = [],
 		infoTarget,

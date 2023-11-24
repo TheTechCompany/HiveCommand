@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 
-import { Route, Routes, useNavigate, Outlet } from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation, Outlet } from 'react-router-dom';
 import { Box, CircularProgress } from '@mui/material';
 import {Map, Handyman, Extension, Schema, Psychology} from '@mui/icons-material';
 
-import { Sidebar } from '@hexhive/ui'
+import { Sidebar } from '../../components/sidebar'
 import { ElementEditor } from '../../pages/element-editor';
 import { ElementList } from '../../pages/element-list';
-import { DeviceMapper } from '../../pages/device-mapper';
 import { DeviceSettings } from '../../pages/device-settings';
 import { SchematicList } from '../../pages/schematic-list';
 import { FunctionList } from '../../pages/function-list';
@@ -15,7 +14,6 @@ import { FunctionList } from '../../pages/function-list';
 const Devices = React.lazy(() => import('../../pages/device-list').then((r) => ({ default: r.Devices })))
 
 const ProgramList = React.lazy(() => import('../../pages/program-list').then((r) => ({ default: r.ProgramList })));
-
 
 const pages = [
     {
@@ -87,6 +85,8 @@ const Dashboard : React.FC<any> = (props) => {
 
      const [drawerOpen, openDrawer] = useState<boolean>(false)
 
+     const path = useLocation()
+     console.log("URL ", process.env.REACT_APP_URL, path)
 
     return (
         <Box sx={{flex: 1, display: 'flex', bgcolor: 'primary.dark'}}>
@@ -96,11 +96,12 @@ const Dashboard : React.FC<any> = (props) => {
                 
                 key={'left'}>
                 <Sidebar 
-                    active={window.location.pathname.replace((process.env.REACT_APP_URL || '/dashboard/command'), '')}
+                    active={path.pathname}
+                    // active={path.pathname?.slice(1, path.pathname?.length) || window.location.pathname.replace((process.env.REACT_APP_URL || '/dashboard/command'), '')}
                     onSelect={(item) => {
                         navigate(item.path)
                     }}
-                    menu={pages}
+                    items={pages}
                     />
                 
                 <Box
