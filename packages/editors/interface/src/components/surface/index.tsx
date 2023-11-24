@@ -286,6 +286,7 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
                 }}
                 onConnectStart={(event, params) => {
                     setConnecting(params);
+                    // params.id
                 }}
                 onConnectEnd={(event: any) => {
 

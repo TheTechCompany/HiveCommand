@@ -41,6 +41,7 @@ export const TagEditor = (props: any) => {
 
     const [tagState, setTagState] = useState<any[]>(tags || []);
 
+    console.log({tagState})
 
     useEffect(() => {
         setTagState(tags)
@@ -65,7 +66,7 @@ export const TagEditor = (props: any) => {
 
     console.log({dataTypes})
 
-    const updateRow = ( tagId: string, row: any ) => {
+    const updateRow = ( tagId: string, row: any, rowUpdate?: any ) => {
 
         console.log("updateRow", tagId, row);
 
@@ -74,7 +75,7 @@ export const TagEditor = (props: any) => {
             let ix = newTags.findIndex((a) => a.id === tagId);
             newTags[ix] = {
                 ...newTags[ix],
-                ...row
+                ...(rowUpdate || row)
             }
             return newTags
         })
@@ -203,9 +204,15 @@ export const TagEditor = (props: any) => {
                                         size="small"
                                         onChange={(evt, value) => {
                                             console.log(value)
-                                            updateRow(tag.id, {type: value.id})
+                                            let rowUpdate: any = undefined;
+                                            if(value?.id?.indexOf('type://') > -1){
+                                                rowUpdate = {
+                                                    type: value.name
+                                                }
+                                            }
+                                            updateRow(tag.id, {type: value?.id || null}, rowUpdate)
                                         }}
-                                        value={dataTypes.find((a) => a.name === tag.type)}
+                                        value={dataTypes.find((a) => a.name === tag.type) || null}
                                         renderInput={(params) => <TextField {...params} variant='standard' />}
                                         options={dataTypes}
                                         getOptionLabel={(option) => option.inputValue ? option.title : option.name}
@@ -234,7 +241,7 @@ export const TagEditor = (props: any) => {
                                             console.log("CHANGE SCOPE", value)
                                             updateRow(tag.id, { scope: (typeof(value) === 'string' ? value : value?.id) || null })
                                         }}
-                                        value={dataScopes?.find((a) => a.id === tag.scope?.id)}
+                                        value={dataScopes?.find((a) => a.id === tag.scope?.id) || null}
                                         renderInput={(params) => <TextField {...params} variant='standard' />}
                                         options={dataScopes || []}
                                         getOptionLabel={(option) => typeof(option) === 'string' ? option : option.name}
