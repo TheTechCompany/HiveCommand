@@ -14,7 +14,7 @@ import moment from 'moment';
 
 import { DataTypes, parseValue } from '@hive-command/scripting'
 import { useRemoteComponents } from '@hive-command/remote-components';
-import { useParams } from 'react-router-dom';
+import { useParams, useResolvedPath } from 'react-router-dom';
 
 
 const ActionButton = (props: any) => {
@@ -82,6 +82,9 @@ export const ControlView = () => {
 	const [hmiWithElems, setHMIWithElems] = useState<any[]>([])
 
     const { getPack } = useRemoteComponents(cache)
+
+	const path = useResolvedPath('control')
+	console.log(path)
 
 	const hmi = useMemo(() => {
         const activeInterface = activeProgram?.interface?.find((a) => activePage ? a.id === activePage : a.id === defaultPage);

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.288](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.287...v1.4.15-alpha.288) (2023-11-24)
+
+**Note:** Version bump only for package @hive-command/interface-editor
+
+
+
+
+
 ## [1.4.15-alpha.287](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.286...v1.4.15-alpha.287) (2023-11-24)
 
 **Note:** Version bump only for package @hive-command/interface-editor

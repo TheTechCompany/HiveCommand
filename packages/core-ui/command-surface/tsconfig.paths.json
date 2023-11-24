@@ -4,6 +4,8 @@
     "paths": {
       "react": ["../../../node_modules/react"],
       "react-dom": ["../../../node_modules/react-dom"],
+      "react-router-dom": ["../../../node_modules/react-router-dom"],
+      "react-router": ["../../../node_modules/react-router"],
       "@mui/material": ["../../../node_modules/@mui/material"],
       "@hive-command/remote-components": ["../command-remote-components/src"],
       "@hive-command/canvas-nodes": ["../command-canvas-nodes/src"],
