@@ -170,22 +170,32 @@ export default (prisma: PrismaClient) => {
                 
                 let typeUpdate = isType ? {type: {connect: {id: type}}} : {scalar: type};
 
-                return await prisma.programTag.update({
+                let rootTypeUpdate =   args.input.type ? { 
+                    type: {
+                        update: {
+                            ...typeUpdate
+                        }
+                    } 
+                } : {
+                    type: {
+                        update: {
+                            // type: {
+                            //     disconnect: true,
+                            // },
+                            typeId: null,
+                            scalar: null
+                        }
+                    }
+                }
+
+                const tag = await prisma.programTag.update({
                     where: {
                         id: program.id
                     },
                     data: {
                         name: args.input.name,
                         scopeId: args.input.scope,
-                        ...(
-                            args.input.type ? { 
-                                type: {
-                                    update: {
-                                        ...typeUpdate
-                                    }
-                                } 
-                            } : {}
-                        )
+                        ...rootTypeUpdate,
                         // type: {
                         //     update: {
                         //         scalar: args.input.type,
@@ -194,8 +204,13 @@ export default (prisma: PrismaClient) => {
                         //         }
                         //     }
                         // }
+                    },
+                    include: {
+                        type: true
                     }
                 })
+
+                return {...tag, type: tag.type || {}};
             },
             deleteCommandProgramTag: async (root: any, args: { program: string, id: string }, context: any) => {
                 console.log(args.id, args.program, context?.jwt)

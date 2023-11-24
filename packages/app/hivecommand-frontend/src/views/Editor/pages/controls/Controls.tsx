@@ -311,6 +311,10 @@ export const Controls = (props) => {
 
                 //  width: `${x?.type?.width || 50}px`,
                 // height: `${x?.type?.height || 50}px`,
+
+                extras: {
+                    ports: metadata?.ports?.map((y) => ({ ...y, id: y.key })) || []
+                }
             
             },
 
