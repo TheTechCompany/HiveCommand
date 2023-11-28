@@ -114,7 +114,6 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
   const { results } = client?.useReportValues?.(activePage || '', horizon) || {}
 
-  console.log("Report values", results)
 
   const prevPeriod = () => {
 
@@ -322,7 +321,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
           display: 'flex',
           overflow: 'auto'
         }}>
-        <Box sx={{ flex: 1, maxHeight: 0 }}>
+        <Box sx={{ flex: 1, maxHeight: 0, '& .rgl': {minWidth: '100%'} }}>
           <GraphGrid
 
             onLayoutChange={(layout: any) => {
