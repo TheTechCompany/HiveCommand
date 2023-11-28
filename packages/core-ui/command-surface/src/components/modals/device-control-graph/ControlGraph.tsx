@@ -15,7 +15,6 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
 
   
   useEffect(() => {
-    console.log(props.selected)
     setGraph({
       ...props.selected,
       deviceID: props.selected?.tag?.id,
@@ -35,7 +34,6 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
 
   }, [graph.deviceID, props.tags, props.types])
 
-  console.log({subkeyOptions, graph, types: props.types, tags: props.tags});
 
   const graphError = useMemo(() => {
     try{

@@ -30,22 +30,10 @@ export const TypeEditor = (props: any) => {
                 <Box sx={{padding: '6px'}}>
                     <Typography>{activeType.name}</Typography>
                 </Box>
-                <Box>
-                    <Tabs 
-                        value={items.find((a) => a.match)?.x} 
-                        onChange={(e, value) => {
-                            navigate(value)
-                        }}>
-                        <Tab value={''} label="Properties" />
-                        <Tab value={'alarms'} label="Alarms" />
-                        <Tab value={'cross-reference'} label="Cross reference" />
-                    </Tabs>
-                </Box>
             </Paper>
             <Routes>
                 <Route path="" element={<Properties active={activeId} types={types} />} />
-                <Route path="cross-reference" element={<CrossReference active={activeId} types={types} />} />
-                <Route path="alarms" element={<Alarms />} />
+                
             </Routes>
   
         </Box>
