@@ -14,9 +14,11 @@ import {
     ClientMonitoredItemGroup,
     ServerOnNetwork,
     OPCUAClientBase,
-    ReferenceDescription
+    ReferenceDescription,
+    MonitoredItemCreateResult
 } from 'node-opcua'
 import { getNodeId } from '@hive-command/opcua-utils'
+import {EventEmitter} from 'events';
 
 export interface SubscriptionParams {
     samplingInterval: number; // in milliseconds
@@ -51,6 +53,8 @@ export default class Client {
     private subscription?: ClientSubscription;
 
     private subscribedTo: (OPCSubscription | OPCSubscription[])[] = [];
+
+    private capabilities? : {maxMonitoredItemsPerCall: number};
 
     constructor(discoveryServer?: string){
         // super();
@@ -125,6 +129,8 @@ export default class Client {
             publishingEnabled: true,
             priority: 10
         })
+
+        this.capabilities = await this.getCapabilities()
     }
 
     async disconnect(){
@@ -137,11 +143,63 @@ export default class Client {
         }
     }
 
+    async getCapabilities(){
+        const maxMonitoredItemsPerCall = await this.getDetails(`/Objects/0:Server/0:ServerCapabilities/0:OperationLimits/0:MaxMonitoredItemsPerCall`)
+        return {
+            maxMonitoredItemsPerCall: maxMonitoredItemsPerCall?.value.value
+        }
+    }
 
     async subscribeMulti(
         targets: OPCSubscription[], 
         samplingInterval: number = 500,
-    ){
+    ) : Promise<{
+        unsubscribe: () => void,
+        monitors: EventEmitter | null,
+        unwrap: (index: number) => any
+    }> {
+        if(this.capabilities?.maxMonitoredItemsPerCall != undefined && targets.length > this.capabilities.maxMonitoredItemsPerCall){
+            console.log("Subscription request exceeds maxMonitoredItemsPerCall")
+
+            let batches = Math.ceil(targets.length / this.capabilities.maxMonitoredItemsPerCall)
+
+            console.log(`Subscribing in ${batches} batches`)
+            let new_targets = [];
+            for(var i = 0; i < batches; i++){
+                let end_ix = (i + 1) * this.capabilities.maxMonitoredItemsPerCall
+                if(end_ix > targets.length) end_ix = targets.length;
+
+                new_targets.push(targets.slice((i * 100), end_ix))
+            }
+            const subscriptions = await Promise.all(new_targets.map(async (tgt) => {
+                return await this.subscribeMulti(tgt, samplingInterval)
+            }))
+
+            const monitor = new EventEmitter();
+            
+            subscriptions.forEach((sub, ix) => {
+                sub.monitors?.on('changed', (monitoredItem, dataValue, index) => {
+                    monitor.emit('changed', monitoredItem, dataValue, index + (ix * 100))
+                })
+                sub.monitors?.on('err', (message) => {
+                    monitor.emit('err', message)
+                })
+            })
+
+            return {
+                unsubscribe: () => {
+                    subscriptions.forEach((sub) => {
+                        sub.unsubscribe?.();
+                    })
+                },
+                monitors: monitor,
+                unwrap: (index: number) => {
+                    let base_ix = Math.floor(index / 100);
+                    return subscriptions?.[base_ix]?.unwrap(index - (base_ix * 100))
+                }
+            }
+        }
+
         let nodes : any[] = [];
         for (const x of targets){
             const path_id = await this.getPathID(x.path) || ''
@@ -165,6 +223,10 @@ export default class Client {
             }, TimestampsToReturn.Both)
             
             this.subscribedTo.push(targets)
+
+            group.on('err', (error) => {
+                console.log("Error making multiSubscription", error)
+            })
 
             return {
                 unsubscribe: () => {
@@ -204,6 +266,7 @@ export default class Client {
                 ...baseSubscriptionParams, 
                 samplingInterval
             }, TimestampsToReturn.Both)
+
 
             this.subscribedTo.push(target)
 

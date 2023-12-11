@@ -1,6 +1,24 @@
 import { MQTTClient } from '../src';
 
 describe('AMQP Publisher', () => {
+
+    it('Fires publish callback with error when not online', () => {
+        const client = new MQTTClient({
+            host: ''
+        });
+
+        client.publish('', '', '');
+
+        client.on('packet-failure', () => {
+            
+        });
+
+    });
+
+    it('Fires publish callback without error when successful', () => {
+
+    });
+
     it('Retries sending when failed', async () => {
         let connectionCount = 0;
 

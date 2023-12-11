@@ -1,5 +1,6 @@
 // import { connect, ConsumeMessage, Connection, Channel } from 'amqplib'
 import MQTT from 'mqtt';
+import {EventEmitter} from 'events';
 
 export interface MQTTClientOptions {
     user?: string;
@@ -12,6 +13,7 @@ export interface MQTTClientOptions {
     lwt?: {
 
     },
+    queue?: boolean;
     reconnectOptions?: {
         maxAttempts?: number,
         maxDelay?: number,
@@ -20,7 +22,7 @@ export interface MQTTClientOptions {
     }
 }
 
-export class MQTTClient {
+export class MQTTClient extends EventEmitter {
 
     private client?: MQTT.Client;
 
@@ -31,11 +33,17 @@ export class MQTTClient {
     private DEVICE_ONLINE_PREFIX: string ;
 
     constructor(options: MQTTClientOptions) {
+        super();
+
         this.options = options;
 
         this.DEVICE_CONTROL_PREFIX = `device_control/${this.options.user}`;
         this.DEVICE_DATA_PREFIX = this.options.exchange || `device_values`
         this.DEVICE_ONLINE_PREFIX = `device_online/${this.options.user}`;
+    }
+
+    get connected(){
+        return this.client?.connected;
     }
 
     disconnect(){
@@ -47,6 +55,7 @@ export class MQTTClient {
         this.client = MQTT.connect(this.options.host, {
             username: this.options.user,
             password: this.options.pass,
+            queueQoSZero: this.options.queue,
             will: {
                 topic: this.DEVICE_ONLINE_PREFIX,
                 payload: Buffer.from(JSON.stringify({offline: true})),
@@ -75,6 +84,10 @@ export class MQTTClient {
                 let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
                 onMessage({ routingKey: topic.split(`${this.DEVICE_CONTROL_PREFIX}/`)?.[1], messageContent })
             }
+        })
+
+        this.client.on('close', () => {
+            console.log("MQTT Connection closed")
         })
 
         this.client.on('error', (err) => {
@@ -132,6 +145,11 @@ export class MQTTClient {
             })),
             {
                 qos: 1
+            },
+            (err, packet) => {
+                if(err){
+                    this.emit('packet-failure', packet);
+                }
             }
         );
 
