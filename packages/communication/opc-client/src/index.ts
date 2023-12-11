@@ -158,7 +158,7 @@ export default class Client {
         monitors: EventEmitter | null,
         unwrap: (index: number) => any
     }> {
-        if(this.capabilities?.maxMonitoredItemsPerCall != undefined && targets.length > this.capabilities.maxMonitoredItemsPerCall){
+        if(this.capabilities?.maxMonitoredItemsPerCall && targets.length > this.capabilities.maxMonitoredItemsPerCall){
             console.log("Subscription request exceeds maxMonitoredItemsPerCall")
 
             let batches = Math.ceil(targets.length / this.capabilities.maxMonitoredItemsPerCall)
