@@ -64,7 +64,6 @@ export const TagEditor = (props: any) => {
         return types;
     }, [DataTypes, extraTypes])
 
-    console.log({dataTypes})
 
     const updateRow = ( tagId: string, row: any, rowUpdate?: any ) => {
 
@@ -239,7 +238,9 @@ export const TagEditor = (props: any) => {
                                         size="small"
                                         onChange={(evt, value) => {
                                             console.log("CHANGE SCOPE", value)
-                                            updateRow(tag.id, { scope: (typeof(value) === 'string' ? value : value?.id) || null })
+                                            const scopeId = typeof(value) === 'string' ? value : value?.id;
+
+                                            updateRow(tag.id, { scope: scopeId || null }, {scope: { id: scopeId || null }})
                                         }}
                                         value={dataScopes?.find((a) => a.id === tag.scope?.id) || null}
                                         renderInput={(params) => <TextField {...params} variant='standard' />}

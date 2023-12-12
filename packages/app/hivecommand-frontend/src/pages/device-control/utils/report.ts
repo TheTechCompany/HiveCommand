@@ -86,6 +86,7 @@ export const useDeviceReportData = (deviceId: string, reportId: string, horizon:
   })
 
   return {
+    loading,
     results: reportData?.commandDevices?.[0]?.reports?.[0]?.charts || []
   }
 

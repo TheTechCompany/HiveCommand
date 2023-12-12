@@ -2,7 +2,7 @@
   "name": "@hive-command/interface-types",
   "packageManager": "yarn@3.6.4",
   "private": true,
-  "version": "1.4.15-alpha.288",
+  "version": "1.4.15-alpha.289",
   "publishConfig": {
     "access": "public"
   },

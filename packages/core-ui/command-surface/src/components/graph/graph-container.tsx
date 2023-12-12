@@ -18,9 +18,11 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -44,7 +46,8 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
           flexDirection: 'row',
           alignItems: 'center',
           display: 'flex',
-          bgcolor: 'secondary.main'
+          bgcolor: 'secondary.main',
+          position: 'relative'
         }}
 
       >
@@ -56,6 +59,7 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
         <IconButton
           size="small"
           color="inherit"
+          onMouseDown={(e) => e.stopPropagation()}
           onClick={handleClick}
         >
           <MoreVert fontSize="small" />

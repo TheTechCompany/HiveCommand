@@ -83,9 +83,6 @@ export const ControlView = () => {
 
     const { getPack } = useRemoteComponents(cache)
 
-	const path = useResolvedPath('control')
-	console.log(path)
-
 	const hmi = useMemo(() => {
         const activeInterface = activeProgram?.interface?.find((a) => activePage ? a.id === activePage : a.id === defaultPage);
 
@@ -162,7 +159,6 @@ export const ControlView = () => {
                 }
 
             }));
-			console.log("SET HMI WItH ELEMS", activeNodes)
 
             setHMIWithElems(nodesWithElems)
         })();

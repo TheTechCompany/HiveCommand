@@ -50,14 +50,6 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
 
     const nodesInitialized = useNodesInitialized()
 
-    console.log({
-        nodes: props.nodes,
-        edges: props.edges,
-        edges2: edges,
-        nodes2: nodes,
-        nodesInitialized
-    })
-
     useEffect(() => {
         setNodes(props.nodes || [])
 

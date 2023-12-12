@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.290](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.289...v1.4.15-alpha.290) (2023-12-12)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
+## [1.4.15-alpha.289](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.288...v1.4.15-alpha.289) (2023-12-11)
+
+**Note:** Version bump only for package @hivecomand-clients/root
+
+
+
+
+
 ## [1.4.15-alpha.288](https://github.com/TheTechCompany/HiveCommandClient/compare/v1.4.15-alpha.287...v1.4.15-alpha.288) (2023-11-24)
 
 **Note:** Version bump only for package @hivecomand-clients/root

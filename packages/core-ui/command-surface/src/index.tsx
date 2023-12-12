@@ -40,7 +40,7 @@ export interface CommandSurfaceClient {
     updateReportPage?: (id: string, name: string) => Promise<any>;
     removeReportPage?: (id: string) => Promise<any>;
 
-    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any });
+    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
@@ -49,7 +49,11 @@ export interface CommandSurfaceClient {
 
     changeMode?: (mode: string) => void;
 
-    useValues?: (program: { tags: HMITag[], types: HMIType[] }) => ({ values: any });
+    useValues?: (program: { tags: HMITag[], types: HMIType[] }) => ({ 
+        values: any
+    });
+
+    useConnectivity?: () => ({ online: boolean, lastSeen: Date });
     // getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
 
     performDeviceAction?: (device: string, action: string) => void;
@@ -220,6 +224,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
 
     const navigate = useNavigate()
+
+    const { online, lastSeen } = client?.useConnectivity?.() || {};
+
+    console.log({online, lastSeen});
+
     /*
         Parse the values blob internally and represent it as a clean tag system
         {
@@ -725,11 +734,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         return useResolvedPath(item.pathRoot + '/*').pathname
     })
 
-    const loc = useLocation();
-    const path = useResolvedPath('analytics')
-
-    console.log({ topLevel, routes, path, loc });
-
     return (
         <Routes>
             <Route element={(
@@ -810,9 +814,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Paper
                             ref={surfaceRef}
                             sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-
+                                
                             <Header
                                 title={props.title}
+                                online={online}
+                                lastSeen={lastSeen}
                                 fullscreenHandler={() => {
                                     if (document.fullscreenElement) {
                                         document.exitFullscreen();

@@ -1,4 +1,5 @@
 import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { useEffect } from "react";
 
  export const useDevice = (id: string) => {
     const client = useApolloClient();
@@ -197,4 +198,43 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
         }
     }
 
+}
+
+
+export const useConnectivity = (deviceId: string) => {
+
+    const client = useApolloClient();
+
+    const refetch = () => {
+        client.refetchQueries({include: ['DeviceConnectivity']})
+    }
+
+    const { data } = useQuery(gql`
+		query DeviceConnectivity($id: ID) {
+		
+			commandDevices (where: {id: $id}){
+                online
+                lastSeen
+			}
+		}
+    `, {
+		variables: {
+			id: deviceId,
+		}
+	})
+
+	useEffect(() => {
+        const interval = setInterval(() => {
+            refetch();
+        }, 2000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
+    return {
+        online: data?.commandDevices?.[0]?.online,
+        lastSeen: data?.commandDevices?.[0]?.lastSeen
+    }
 }

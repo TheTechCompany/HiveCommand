@@ -10,10 +10,11 @@ import moment from "moment";
 import { Graph, GraphContainer } from "../components/graph";
 // import { useApolloClient } from "@apollo/client";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
-import { ButtonGroup, Menu, Paper } from "@mui/material";
+import { ButtonGroup, CircularProgress, Menu, Paper } from "@mui/material";
 import { unit as mathUnit } from 'mathjs';
 import { Box, Typography, IconButton, Button } from '@mui/material'
 import { useParams } from "react-router-dom";
+import { debounce } from 'lodash';
 
 export type ReportHorizon = { start: Date, end: Date };
 
@@ -47,7 +48,7 @@ export interface ReportViewProps {
 
 export const ReportView: React.FC<ReportViewProps> = (props) => {
 
-	const { activePage } = useParams();
+  const { activePage } = useParams();
 
 
   const { reports, client, refresh, activeProgram } = useContext(DeviceControlContext);
@@ -111,8 +112,15 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
     }
   }, [startOfPeriod, endOfPeriod])
 
+  const [fetchHorizon, _setFetchHorizon] = useState<{ start: Date, end: Date }>(horizon)
 
-  const { results } = client?.useReportValues?.(activePage || '', horizon) || {}
+  const setFetchHorizon = useMemo(() => debounce(_setFetchHorizon, 500), [])
+
+  useEffect(() => {
+    setFetchHorizon(horizon)
+  }, [horizon])
+
+  const { results, loading } = client?.useReportValues?.(activePage || '', fetchHorizon) || {}
 
 
   const prevPeriod = () => {
@@ -169,6 +177,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         break;
     }
 
+
     // let startDate = moment(horizon?.start).subtract(1, 'week').toDate();
     // let endDate = moment(horizon?.end).subtract(1, 'week').toDate();
 
@@ -182,6 +191,49 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
     // props.onHorizonChange?.({start: startDate, end: endDate});
     // setDatum(moment(datum).add(1, 'week').toDate());
   }
+
+
+  const canNext = useMemo(() => {
+    let newDatum = new Date(datum);
+    let startOfPeriod : moment.Moment = moment(); 
+
+    switch (period) {
+      case '7d':
+        newDatum = moment(datum).add(1, 'week').toDate();
+        break;
+      case '1d':
+        newDatum = moment(datum).add(1, 'day').toDate();
+        break;
+      case '12hr':
+        newDatum = moment(datum).add(12, 'hours').toDate();
+        break;
+      case '1hr':
+        newDatum = moment(datum).add(1, 'hour').toDate();
+        break;
+      case '30min':
+        newDatum = moment(datum).add(30, 'minutes').toDate();
+        break;
+    }
+
+    switch (period) {
+      case '7d':
+        startOfPeriod = moment(newDatum).startOf('isoWeek');
+      case '1d':
+        startOfPeriod = moment(newDatum).startOf('day');
+      case '12hr':
+        startOfPeriod = moment(newDatum).subtract(12, 'hours')
+      case '1hr':
+        startOfPeriod = moment(newDatum).startOf('hour');
+      case '30min':
+      default:
+        startOfPeriod = moment(newDatum).subtract(30, 'minutes')
+    }
+
+    console.log(startOfPeriod, startOfPeriod.isBefore(moment()))
+
+    return startOfPeriod.add(1, 'minute').isBefore(moment())
+
+  }, [datum, period])
 
   const [deviceList, setDeviceList] = useState([]);
 
@@ -303,6 +355,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
           </IconButton>
           <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
           <IconButton
+            disabled={!canNext}
             onClick={nextPeriod}
           >
             <Next />
@@ -319,9 +372,11 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         sx={{
           flex: 1,
           display: 'flex',
-          overflow: 'auto'
+          overflow: 'auto',
+          position: 'relative'
         }}>
-        <Box sx={{ flex: 1, maxHeight: 0, '& .rgl': {minWidth: '100%'} }}>
+
+        <Box sx={{ flex: 1, maxHeight: 0, '& .rgl': { minWidth: '100%' } }}>
           <GraphGrid
 
             onLayoutChange={(layout: any) => {
@@ -356,6 +411,22 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
             )}
           </GraphGrid>
         </Box>
+        {loading &&
+          <Box sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}>
+            <CircularProgress />
+            <Typography>Fetching data...</Typography>
+          </Box>}
       </Box>
 
     </Box>
