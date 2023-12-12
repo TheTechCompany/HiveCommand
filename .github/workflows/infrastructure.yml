@@ -5,7 +5,7 @@ on:
     branches:
       # - staging
       - master
-    paths: ["packages/app/hivecommand-backend/**", "packages/network/**",  "packages/infrastructure/main/**"]
+    paths: ["packages/app/hivecommand-backend/**", "packages/app/hivecommand-db/**", "packages/network/**",  "packages/infrastructure/main/**"]
 
 concurrency: hivecommand-infra-${{ github.ref }}
 
