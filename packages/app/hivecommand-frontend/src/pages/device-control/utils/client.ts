@@ -3,6 +3,7 @@ import { CommandSurfaceClient } from "@hive-command/command-surface";
 import { useState } from "react";
 import { useDeviceReportActions, useDeviceReports } from "./report";
 import { useValues } from "./value";
+import { useConnectivity } from "./program";
 
 export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
@@ -44,6 +45,9 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         reports,
         useValues: (program: {tags: any[], types: any[]}) => {
             return useValues(deviceId, program)
+        },
+        useConnectivity: () => {
+            return useConnectivity(deviceId);
         },
         useReportValues: (report: string, horizon: {start: Date, end: Date}) => useReportValues(deviceId, report, horizon),
         createReportPage,

@@ -61,7 +61,10 @@ export const useDeviceHistory = (id: string) => {
 
 export const useValues = (deviceId: string, program: {tags: any[], types: any[]} ) => {
     
-	const { results: values, refetch: refetchValues } = useDeviceValues(deviceId);
+	const { 
+        results: values, 
+        refetch: refetchValues 
+    } = useDeviceValues(deviceId);
 
 	useEffect(() => {
         const interval = setInterval(() => {
@@ -164,5 +167,5 @@ export const useValues = (deviceId: string, program: {tags: any[], types: any[]}
         }
     }, [])
 
-	return {values: normalisedValues};
+	return { values: normalisedValues };
 }

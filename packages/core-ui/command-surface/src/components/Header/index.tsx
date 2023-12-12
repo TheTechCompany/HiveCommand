@@ -3,6 +3,7 @@ import { KeyboardArrowLeft, KeyboardArrowRight, Home, Fullscreen, FullscreenExit
 import React, { useEffect, useState } from 'react'
 import Toolbar from '../../toolbar'
 import { AvatarList } from '@hexhive/ui'
+import moment from 'moment'
 
 export interface HeaderProps {
     menuItems?: {
@@ -14,6 +15,8 @@ export interface HeaderProps {
     }[]
 
     title?: string;
+    online?: boolean;
+    lastSeen?: Date;
 
     activeUsers?: {
         id: string;
@@ -97,11 +100,16 @@ export const Header: React.FC<HeaderProps> = (props) => {
                         borderRadius: 7,
                         marginRight: '8px',
                         marginLeft: '8px',
-                        // background: rootDevice?.online ? '#42e239' : '#db001b'
+                        background: props.online ? '#42e239' : '#db001b'
                     }} />
-                <Typography color="#fff">{props.title}</Typography>
+                <Box sx={{flexDirection: 'column', display: 'flex'}}>
+                    <Typography lineHeight={1} color="#fff">{props.title}</Typography>
+                    <Typography lineHeight={1} fontSize={12} color="#fff">Last Seen: {moment(props.lastSeen).fromNow()}</Typography>
+                </Box>
+
             </Box>
 
+            
             <Toolbar
                 // active={toolbar_menu.find((a) => matchPath(window.location.pathname, `${a?.id}`) != null)?.id}
                 onItemClick={(item) => {
