@@ -1,7 +1,7 @@
 {
   "name": "@hive-command/frontend",
   "private": true,
-  "version": "1.4.15-alpha.289",
+  "version": "1.4.15-alpha.290",
   "scripts": {
     "start": "webpack serve --port 8504",
     "start:standalone": "webpack serve --env standalone",
@@ -72,7 +72,7 @@
     "@hexhive/ui": "1.0.1-alpha.119",
     "@hive-command/api": "^1.4.15-alpha.289",
     "@hive-command/canvas-nodes": "^1.4.15-alpha.289",
-    "@hive-command/command-surface": "^1.4.15-alpha.289",
+    "@hive-command/command-surface": "^1.4.15-alpha.290",
     "@hive-command/data-types": "^1.4.15-alpha.52",
     "@hive-command/electrical-editor": "^1.4.15-alpha.289",
     "@hive-command/electrical-editor-v2": "workspace:^",
