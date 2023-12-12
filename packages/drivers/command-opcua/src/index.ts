@@ -78,6 +78,19 @@ export default class OPCUADriver extends BaseCommandDriver {
             path = `${this.basePath}/${this.namespace}:${tag}`
         }
 
-        await this.client.setDetails(path, DataType.Boolean, value);
+        let dataType = DataType.Boolean;
+
+        switch(typeof(value)){
+            case 'number':
+            case 'bigint':
+                //Maybe do check here for Double/Float/Int
+                dataType = DataType.Float
+                break;
+            case 'string':
+                dataType = DataType.String;
+                break;
+        }
+
+        await this.client.setDetails(path, dataType, value);
     }
 }

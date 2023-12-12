@@ -170,13 +170,13 @@ export default (prisma: PrismaClient) => {
                 
                 let typeUpdate = isType ? {type: {connect: {id: type}}} : {scalar: type};
 
-                let rootTypeUpdate =   args.input.type ? { 
+                let rootTypeUpdate = args.input.type ? { 
                     type: {
                         update: {
                             ...typeUpdate
                         }
                     } 
-                } : {
+                } : args.input.type === null ? {
                     type: {
                         update: {
                             // type: {
@@ -185,8 +185,8 @@ export default (prisma: PrismaClient) => {
                             typeId: null,
                             scalar: null
                         }
-                    }
-                }
+                    } 
+                } : {}
 
                 const tag = await prisma.programTag.update({
                     where: {

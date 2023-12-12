@@ -40,7 +40,7 @@ export interface CommandSurfaceClient {
     updateReportPage?: (id: string, name: string) => Promise<any>;
     removeReportPage?: (id: string) => Promise<any>;
 
-    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any });
+    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;

@@ -187,8 +187,6 @@ export const FileEditor: React.FC<EditorProps> = (props) => {
             // const dispose =
 
              editor.current.onDidChangeModelContent((e) => {
-                console.log("DISPOSED")
-            
                 props.onChange?.(editor.current.getModel().getValue())
             })
 
