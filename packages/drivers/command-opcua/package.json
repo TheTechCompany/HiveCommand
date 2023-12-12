@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-opcua",
-  "version": "1.4.15-alpha.289",
+  "version": "1.4.15-alpha.290",
   "description": "",
   "main": "dist/index.js",
   "files": [
