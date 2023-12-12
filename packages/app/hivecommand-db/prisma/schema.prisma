@@ -107,7 +107,7 @@ model ReportPage {
 
   owner String
 
-  device   Device @relation(name: "hasReportPages", fields: [deviceId], references: [id])
+  device   Device @relation(name: "hasReportPages", fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId String
 }
 
@@ -166,7 +166,7 @@ model DeviceReport {
 
   timeBucket String?
 
-  page   ReportPage @relation(name: "hasReports", fields: [pageId], references: [id])
+  page   ReportPage @relation(name: "hasReports", fields: [pageId], references: [id], onDelete: Cascade)
   pageId String
 }
 
