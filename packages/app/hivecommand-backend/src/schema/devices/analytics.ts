@@ -175,7 +175,7 @@ export default (prisma: PrismaClient) => {
 						"deviceId",
 						key,
 						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "lastUpdated") as time, 
-						COALESCE(avg(value::float), 0) as value
+						locf(avg(value::float)) as value
 					FROM "DeviceValue" 
 						WHERE "deviceId"=${root.page?.device?.id} AND placeholder=${root.tag?.name}
 						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
@@ -187,6 +187,7 @@ export default (prisma: PrismaClient) => {
 
 						return (result || []).map((row) => ({
 							...row,
+							value: row.value || 0,
 							timestamp: row.time
 						}));
 				}catch(e){

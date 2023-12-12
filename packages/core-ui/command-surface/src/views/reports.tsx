@@ -193,7 +193,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
   }
 
 
-  const canNext = () => {
+  const canNext = useMemo(() => {
     let newDatum = new Date(datum);
     let startOfPeriod : moment.Moment = moment(); 
 
@@ -229,9 +229,11 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
         startOfPeriod = moment(newDatum).subtract(30, 'minutes')
     }
 
-    return startOfPeriod.isBefore(moment())
+    console.log(startOfPeriod, startOfPeriod.isBefore(moment()))
 
-  }
+    return startOfPeriod.add(1, 'minute').isBefore(moment())
+
+  }, [datum, period])
 
   const [deviceList, setDeviceList] = useState([]);
 
@@ -353,7 +355,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
           </IconButton>
           <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
           <IconButton
-            disabled={canNext()}
+            disabled={!canNext}
             onClick={nextPeriod}
           >
             <Next />
