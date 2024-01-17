@@ -62,7 +62,6 @@ const _require = (components: any[], parent?: string) => {
 
 
 				const content = files.find((file) => {
-					console.log(path.join(parent || '', '../', path.normalize(name), path.extname(file.path)))
 					return path.normalize(file.path) == path.normalize(name) ||
 						path.normalize(file.path) == (path.normalize(name) + path.extname(file.path)) ||
 						path.normalize(file.path) == path.join(parent || '', '../', path.normalize(name)) ||

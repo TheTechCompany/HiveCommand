@@ -379,8 +379,8 @@ export default class Client {
         let [ typeResp, arrayResp ] = resp;
 
         return {
-            type: DataType[typeResp?.value.value?.value],
-            isArray: arrayResp.value.value > 0 //DataType[typeResp?.value.value]
+            type: DataType[typeResp?.value?.value?.value],
+            isArray: arrayResp?.value?.value > 0 //DataType[typeResp?.value.value]
         }
     }
 
