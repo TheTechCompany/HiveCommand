@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/native",
-	"version": "1.4.15-alpha.291",
+	"version": "1.4.15-alpha.292",
 	"private": true,
 	"sideEffects": false,
 	"dependencies": {
@@ -9,7 +9,7 @@
 		"@hexhive/styles": "^1.0.1-alpha.77",
 		"@hexhive/ui": "1.0.1-alpha.119",
 		"@hexhive/utils": "^0.0.6-alpha.13",
-		"@hive-command/api": "^1.4.15-alpha.289",
+		"@hive-command/api": "^1.4.15-alpha.292",
 		"@hive-command/command-surface": "^1.4.15-alpha.291",
 		"@hive-command/remote-components": "^1.4.15-alpha.289",
 		"@hive-command/scripting": "^1.4.15-alpha.289",
