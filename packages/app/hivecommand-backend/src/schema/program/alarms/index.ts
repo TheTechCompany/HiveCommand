@@ -88,8 +88,8 @@ export default (prisma: PrismaClient) => {
                     data: {
                         id: nanoid(),
                         title: args.input.title,
-                        message: args.input.message,
-                        conditions: args.input.conditions,
+                        // message: args.input.message,
+                        // conditions: args.input.conditions,
                         rank,
                         program: { 
                             connect: { 
@@ -115,8 +115,8 @@ export default (prisma: PrismaClient) => {
                     },
                     data: {
                         title: args.input.title,
-                        message: args.input.message,
-                        conditions: args.input.conditions
+                        // message: args.input.message,
+                        // conditions: args.input.conditions
                     }
                 })
             },
@@ -134,112 +134,112 @@ export default (prisma: PrismaClient) => {
                     where: { id: args.id }
                 })
             },
-            createCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
-                let parentUpdate = {};
-                if(args.input.targetedBy){
-                    parentUpdate['targetedBy'] = {
-                        create: {
-                            id: nanoid(),
-                            alarm: {
-                                connect: {
-                                    id: args.alarm
-                                }
-                            },
-                            source: {
-                                connect: {
-                                    id: args.input.parent
-                                }
-                            }
-                        }
-                    }
-                }
+            // createCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
+            //     let parentUpdate = {};
+            //     if(args.input.targetedBy){
+            //         parentUpdate['targetedBy'] = {
+            //             create: {
+            //                 id: nanoid(),
+            //                 alarm: {
+            //                     connect: {
+            //                         id: args.alarm
+            //                     }
+            //                 },
+            //                 source: {
+            //                     connect: {
+            //                         id: args.input.parent
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     }
 
-                const currentSeverity = await prisma.programAlarmSeverity.findFirst({where: {programId: args.program}, orderBy: {rank: 'desc'}})
+            //     const currentSeverity = await prisma.programAlarmSeverity.findFirst({where: {programId: args.program}, orderBy: {rank: 'desc'}})
 
-                let above = LexoRank.parse(currentSeverity?.rank || LexoRank.min().toString())
-                let below = LexoRank.parse(LexoRank.max().toString())
+            //     let above = LexoRank.parse(currentSeverity?.rank || LexoRank.min().toString())
+            //     let below = LexoRank.parse(LexoRank.max().toString())
 
-                let rank = above.between(below).toString()
+            //     let rank = above.between(below).toString()
 
-                await prisma.program.update({
-                    where: {
-                        id: args.program,
-                    },
-                    data: {
-                        alarmSeverity: {
-                            create: [
-                                {
-                                    id: nanoid(),
-                                    title: args.input.title,
-                                    rank,
-                                    nodes: [],
-                                    edges: []
-                                }
-                            ]
-                        }
-                    }
-                })
-            },
-            updateCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
-                await prisma.program.update({
-                    where: {
-                        id: args.program
-                    },
-                    data: {
-                        alarmSeverity: {
-                            update: {
-                                where: {id: args.id},
-                                data: {
-                                    title: args.input.title,
+            //     await prisma.program.update({
+            //         where: {
+            //             id: args.program,
+            //         },
+            //         data: {
+            //             alarmSeverity: {
+            //                 create: [
+            //                     {
+            //                         id: nanoid(),
+            //                         title: args.input.title,
+            //                         rank,
+            //                         nodes: [],
+            //                         edges: []
+            //                     }
+            //                 ]
+            //             }
+            //         }
+            //     })
+            // },
+            // updateCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
+            //     await prisma.program.update({
+            //         where: {
+            //             id: args.program
+            //         },
+            //         data: {
+            //             alarmSeverity: {
+            //                 update: {
+            //                     where: {id: args.id},
+            //                     data: {
+            //                         title: args.input.title,
                                     
-                                }
-                            }
-                        }
-                    }
-                })
-            },
-            deleteCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
-                await prisma.program.update({
-                    where: {
-                        id: args.program
-                    },
-                    data: {
-                        alarmSeverity: {delete: {id: args.id}}
-                    }
-                })
-            },
-            updateCommandProgramAlarmSeverityOrder: async (root: any, args: any, context: any) => {
-                let above = await prisma.programAlarmSeverity.findFirst({
-                    where: {
-                        programId: args.program, 
-                        id: args.above
-                    }
-                })
-                let below = await prisma.programAlarmSeverity.findFirst({
-                    where: {
-                        programId: args.program, 
-                        id: args.below
-                    }
-                })
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     })
+            // },
+            // deleteCommandProgramAlarmSeverity: async (root: any, args: any, context: any) => {
+            //     await prisma.program.update({
+            //         where: {
+            //             id: args.program
+            //         },
+            //         data: {
+            //             alarmSeverity: {delete: {id: args.id}}
+            //         }
+            //     })
+            // },
+            // updateCommandProgramAlarmSeverityOrder: async (root: any, args: any, context: any) => {
+            //     let above = await prisma.programAlarmSeverity.findFirst({
+            //         where: {
+            //             programId: args.program, 
+            //             id: args.above
+            //         }
+            //     })
+            //     let below = await prisma.programAlarmSeverity.findFirst({
+            //         where: {
+            //             programId: args.program, 
+            //             id: args.below
+            //         }
+            //     })
 
-                let rank = LexoRank.parse(above?.rank || LexoRank.min().toString()).between(LexoRank.parse(below?.rank || LexoRank.max().toString()))?.toString()
+            //     let rank = LexoRank.parse(above?.rank || LexoRank.min().toString()).between(LexoRank.parse(below?.rank || LexoRank.max().toString()))?.toString()
                 
-                await prisma.program.update({
-                    where: {
-                        id: args.program
-                    },
-                    data: {
-                        alarmSeverity: {
-                            update: {
-                                where: {id: args.id},
-                                data: {
-                                    rank
-                                }
-                            }
-                        }
-                    }
-                })
-            }
+            //     await prisma.program.update({
+            //         where: {
+            //             id: args.program
+            //         },
+            //         data: {
+            //             // alarmSeverity: {
+            //             //     update: {
+            //             //         where: {id: args.id},
+            //             //         data: {
+            //             //             rank
+            //             //         }
+            //             //     }
+            //             // }
+            //         }
+            //     })
+            // }
 
         }
     };

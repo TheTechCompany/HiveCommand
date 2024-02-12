@@ -11,13 +11,13 @@ export const AlarmView = () => {
             <TextField 
                 sx={{marginBottom: '12px'}}
                 value={item.name}
-                onChange={(e) => setItem({ ...item, name: e.target.value })}
+                onChange={(e) => setItem?.({ ...item, name: e.target.value })}
                 size="small"
                 label="Name" />
 
             <TextField 
                 value={item.description}
-                onChange={(e) => setItem({ ...item, description: e.target.value })}
+                onChange={(e) => setItem?.({ ...item, description: e.target.value })}
                 multiline
                 size="small"
                 minRows={2}

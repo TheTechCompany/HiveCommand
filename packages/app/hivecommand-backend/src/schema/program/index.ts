@@ -47,10 +47,10 @@ export default (prisma: PrismaClient) => {
 						localHomepage: true,
 						alarms: {
 							include: {
-								severity: true
+								// severity: true
 							}
 						},
-						alarmSeverity: true,
+						// alarmSeverity: true,
 						components: {
 							include: {
 								main: true,

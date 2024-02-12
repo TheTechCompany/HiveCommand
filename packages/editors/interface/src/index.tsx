@@ -30,6 +30,8 @@ export interface InterfaceEditorProps {
 
 export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
+    const [ grid, setGrid ] = useState<[number | undefined, number | undefined, boolean]>([5, 5, false])
+
     const [ selected, setSelected ] = useState<{nodes: Node[], edges: Edge[]} | undefined>(undefined)
 
     const [ toolRotation, setRotation ] = useState(0)
@@ -51,8 +53,9 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
         }
     }
 
+    const node_ids = useMemo(() => (props.nodes || []).map((x) => x.id), [props.nodes])
+    const edge_ids = useMemo(() => (props.edges || []).map((x) => x.id), [props.edges])
 
-    
     return (
         <InterfaceEditorProvider value={{
             tags: props.tags || [],
@@ -67,7 +70,11 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
             activeTool,
             toolRotation,
-            changeTool: (tool: ComponentTool | null) => setActiveTool(tool)
+            changeTool: (tool: ComponentTool | null) => setActiveTool(tool),
+            grid,
+            onChangeGrid: (grid) => {
+                setGrid(grid)
+            }
         }}>
             <Box 
                 tabIndex={0} 
@@ -78,10 +85,33 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
                         nodes={props.nodes}
                         edges={props.edges}
                         selected={selected}
-                        onSelectionChange={(selected) => setSelected(selected)}
+                        onSelectionChange={(selected) => {
+
+                            setSelected({
+                                edges: (selected?.edges || []).filter((a) => edge_ids.includes(a.id)),
+                                nodes: (selected?.nodes || []).filter((a) => node_ids.includes(a.id))
+                            })
+
+                        }}
                         onNodeCreate={props.onNodeCreate}
                         onNodeUpdate={props.onNodeUpdate}
-                        onNodeDelete={props.onNodeDelete}
+                        onNodeDelete={(nodes) => {
+                            if(props.onNodeDelete){
+
+                                    let n_ids = Array.isArray(nodes) ? nodes.map((x) => x.id) : [nodes.id];
+
+                                    let newSelection = {
+                                        edges: selected?.edges || [],
+                                        nodes: (selected?.nodes || []).filter((a) => {
+                                            return n_ids.indexOf(a.id) < 0;
+                                        })
+                                    }
+
+                                    setSelected(newSelection);
+
+                                props.onNodeDelete?.(nodes);
+                            }
+                        }}
                         onEdgeCreate={props.onEdgeCreate}
                         onEdgeUpdate={props.onEdgeUpdate}
                         onEdgeDelete={props.onEdgeDelete} />

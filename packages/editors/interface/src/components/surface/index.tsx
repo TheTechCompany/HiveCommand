@@ -36,8 +36,7 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
 
     const containerRef = React.useRef<HTMLDivElement>(null);
 
-    const { activeTool, toolRotation } = useInterfaceEditor();
-
+    const { activeTool, toolRotation, grid } = useInterfaceEditor();
 
     const [selected, setSelected] = useState<{ nodes: Node[], edges: Edge[] }>()
 
@@ -120,8 +119,8 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
                 rotation={toolRotation}
             />
             <ReactFlow
-                snapToGrid
-                snapGrid={[5, 5]}
+                snapToGrid={grid?.[2]}
+                snapGrid={grid?.[0] && grid?.[1] ? [grid?.[0], grid?.[1]] : undefined}
                 connectionMode={ConnectionMode.Loose}
                 nodes={nodes.slice()?.sort((a, b) => (a.data?.zIndex || 0) - (b.data?.zIndex || 0))?.map((x) => ({
                     ...x,

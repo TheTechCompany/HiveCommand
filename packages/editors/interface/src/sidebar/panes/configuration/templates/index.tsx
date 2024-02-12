@@ -13,7 +13,7 @@ export const TemplateConfiguration : React.FC<TemplateConfigurationProps> = (pro
 
     const selectedNode = nodes?.find((a) => a.id == selected?.nodes?.[0]?.id);
 
-    const templateOptions = selectedNode?.data?.templateOptions || [];
+    const templateOptions = selectedNode?.data?.templateOptions || {};
 
     const activeTemplate = useMemo(() => templates?.find((a) => a.id === selectedNode?.data?.template), [selectedNode?.data?.template]);
 
@@ -23,7 +23,7 @@ export const TemplateConfiguration : React.FC<TemplateConfigurationProps> = (pro
         if (templateOptions) {
             setTemplateState(templateOptions);
         }
-    }, [templateOptions])
+    }, [ JSON.stringify(templateOptions) ])
 
     const templateInputs = useMemo(() => {
         return activeTemplate ? (
@@ -37,12 +37,13 @@ export const TemplateConfiguration : React.FC<TemplateConfigurationProps> = (pro
                             value={templateState?.[input.id] || null}
                             label={input.name}
                             onUpdateState={(key, value) => {
-                                console.log("updateState", key, value)
+
                                 props.onNodeUpdate?.({
                                     data: {
                                         templateOptions: { [key]: value }
                                     }
                                 });
+                                
                             }} />
                       
                     </Box>

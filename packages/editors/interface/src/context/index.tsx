@@ -27,6 +27,10 @@ export const InterfaceEditorContext = React.createContext<{
     activeTool?: ComponentTool | null,
     toolRotation?: number,
     changeTool?: (tool: ComponentTool | null) => void,
+
+    grid?: [number | undefined, number | undefined, boolean];
+    onChangeGrid?: (grid: [number | undefined, number | undefined, boolean]) => void;
+
 }>({
 
 })
