@@ -61,6 +61,7 @@ export interface ComandProgramInterfaceNodeInput {
   scaleY?: InputMaybe<Scalars["Float"]>;
   showTotalizer?: InputMaybe<Scalars["Boolean"]>;
   template?: InputMaybe<Scalars["String"]>;
+  templateOptions?: InputMaybe<Scalars["JSON"]>;
   type?: InputMaybe<Scalars["String"]>;
   width?: InputMaybe<Scalars["Float"]>;
   x?: InputMaybe<Scalars["Float"]>;
@@ -113,6 +114,21 @@ export interface CommandDeviceWhere {
   network_name?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandFunctionInput {
+  name?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandFunctionPageInput {
+  edges?: InputMaybe<Scalars["JSON"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  nodes?: InputMaybe<Scalars["JSON"]>;
+  parent?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandFunctionWhere {
+  id?: InputMaybe<Scalars["ID"]>;
+}
+
 export interface CommandHMIDeviceInput {
   height?: InputMaybe<Scalars["Float"]>;
   name?: InputMaybe<Scalars["String"]>;
@@ -144,14 +160,17 @@ export interface CommandHMIPortInput {
   y?: InputMaybe<Scalars["Float"]>;
 }
 
-export interface CommandProgramAlarmActionInput {
-  targetedBy?: InputMaybe<Scalars["String"]>;
-  type?: InputMaybe<Scalars["String"]>;
+export interface CommandProgramAlarmInput {
+  conditions?: InputMaybe<Scalars["JSON"]>;
+  message?: InputMaybe<Scalars["String"]>;
+  severityId?: InputMaybe<Scalars["String"]>;
+  title?: InputMaybe<Scalars["String"]>;
 }
 
-export interface CommandProgramAlarmInput {
-  description?: InputMaybe<Scalars["String"]>;
-  name?: InputMaybe<Scalars["String"]>;
+export interface CommandProgramAlarmSeverityInput {
+  edges?: InputMaybe<Scalars["JSON"]>;
+  nodes?: InputMaybe<Scalars["JSON"]>;
+  title?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandProgramComponentInput {
@@ -231,6 +250,31 @@ export interface CommandReportPageWhere {
   ids?: InputMaybe<Array<InputMaybe<Scalars["ID"]>>>;
 }
 
+export interface CommandSchematicInput {
+  name?: InputMaybe<Scalars["String"]>;
+  templatePacks?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+}
+
+export interface CommandSchematicPageInput {
+  edges?: InputMaybe<Scalars["JSON"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  nodes?: InputMaybe<Scalars["JSON"]>;
+  templateId?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandSchematicPageTemplateInput {
+  name?: InputMaybe<Scalars["String"]>;
+  nodes?: InputMaybe<Scalars["JSON"]>;
+}
+
+export interface CommandSchematicVersionInput {
+  commit?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandSchematicWhere {
+  id?: InputMaybe<Scalars["ID"]>;
+}
+
 export interface CommandTemplateEdgeInput {
   from?: InputMaybe<Scalars["ID"]>;
   script?: InputMaybe<Scalars["String"]>;
@@ -308,6 +352,7 @@ export const generatedSchema = {
     scaleY: { __type: "Float" },
     showTotalizer: { __type: "Boolean" },
     template: { __type: "String" },
+    templateOptions: { __type: "JSON" },
     type: { __type: "String" },
     width: { __type: "Float" },
     x: { __type: "Float" },
@@ -330,6 +375,7 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     configuration: { __type: "[CommandDataTransformerConfiguration]" },
     id: { __type: "ID" },
+    options: { __type: "JSON" },
     template: { __type: "CommandTemplateTransformer" },
   },
   CommandDataTransformerConfiguration: {
@@ -342,6 +388,7 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     activeProgram: { __type: "CommandProgram" },
     alarms: { __type: "[DeviceAlarm]" },
+    createdAt: { __type: "DateTime" },
     dataLayout: { __type: "JSON" },
     deviceSnapshot: {
       __type: "[CommandDeviceSnapshot]",
@@ -457,6 +504,33 @@ export const generatedSchema = {
     id: { __type: "ID" },
     network_name: { __type: "String" },
   },
+  CommandFunction: {
+    __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    organisation: { __type: "HiveOrganisation" },
+    pages: { __type: "[CommandFunctionPage]" },
+  },
+  CommandFunctionInput: { name: { __type: "String" } },
+  CommandFunctionPage: {
+    __typename: { __type: "String!" },
+    children: { __type: "[CommandFunctionPage]" },
+    edges: { __type: "JSON" },
+    id: { __type: "ID!" },
+    label: { __type: "String" },
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+    parent: { __type: "CommandFunctionPage" },
+    rank: { __type: "String" },
+  },
+  CommandFunctionPageInput: {
+    edges: { __type: "JSON" },
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+    parent: { __type: "String" },
+  },
+  CommandFunctionWhere: { id: { __type: "ID" } },
   CommandHMIDevice: {
     __typename: { __type: "String!" },
     height: { __type: "Float" },
@@ -582,6 +656,7 @@ export const generatedSchema = {
   },
   CommandProgram: {
     __typename: { __type: "String!" },
+    alarmSeverity: { __type: "[CommandProgramAlarmSeverity]" },
     alarms: { __type: "[CommandProgramAlarm]" },
     components: {
       __type: "[CommandProgramComponent]",
@@ -603,45 +678,33 @@ export const generatedSchema = {
   },
   CommandProgramAlarm: {
     __typename: { __type: "String!" },
-    description: { __type: "String" },
-    edges: { __type: "[CommandProgramAlarmEdge]" },
+    conditions: { __type: "JSON" },
+    createdAt: { __type: "DateTime" },
     id: { __type: "ID" },
-    name: { __type: "String" },
-    nodes: { __type: "[CommandProgramAlarmAction]" },
-  },
-  CommandProgramAlarmAction: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID" },
-    name: { __type: "String" },
-    sourcedBy: { __type: "[CommandProgramAlarmEdge]" },
-    targetedBy: { __type: "[CommandProgramAlarmEdge]" },
-    type: { __type: "CommandProgramAlarmType" },
-  },
-  CommandProgramAlarmActionInput: {
-    targetedBy: { __type: "String" },
-    type: { __type: "String" },
-  },
-  CommandProgramAlarmCondition: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID" },
-    input: { __type: "String" },
-    name: { __type: "String" },
-    value: { __type: "String" },
-  },
-  CommandProgramAlarmEdge: {
-    __typename: { __type: "String!" },
-    id: { __type: "ID" },
-    source: { __type: "CommandProgramAlarmAction" },
-    target: { __type: "CommandProgramAlarmAction" },
+    message: { __type: "String" },
+    rank: { __type: "String" },
+    severity: { __type: "CommandProgramAlarmSeverity" },
+    title: { __type: "String" },
   },
   CommandProgramAlarmInput: {
-    description: { __type: "String" },
-    name: { __type: "String" },
+    conditions: { __type: "JSON" },
+    message: { __type: "String" },
+    severityId: { __type: "String" },
+    title: { __type: "String" },
   },
-  CommandProgramAlarmType: {
+  CommandProgramAlarmSeverity: {
     __typename: { __type: "String!" },
+    edges: { __type: "JSON" },
     id: { __type: "ID" },
-    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+    rank: { __type: "String" },
+    title: { __type: "String" },
+    usedByAlarm: { __type: "[CommandProgramAlarm]" },
+  },
+  CommandProgramAlarmSeverityInput: {
+    edges: { __type: "JSON" },
+    nodes: { __type: "JSON" },
+    title: { __type: "String" },
   },
   CommandProgramComponent: {
     __typename: { __type: "String!" },
@@ -764,6 +827,57 @@ export const generatedSchema = {
   },
   CommandReportPageInput: { name: { __type: "String" } },
   CommandReportPageWhere: { ids: { __type: "[ID]" } },
+  CommandSchematic: {
+    __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    organisation: { __type: "HiveOrganisation" },
+    pages: { __type: "[CommandSchematicPage]" },
+    templates: { __type: "[CommandSchematicPageTemplate]" },
+    versions: { __type: "[CommandSchematicVersion]" },
+  },
+  CommandSchematicInput: {
+    name: { __type: "String" },
+    templatePacks: { __type: "[String]" },
+  },
+  CommandSchematicPage: {
+    __typename: { __type: "String!" },
+    edges: { __type: "JSON" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+    rank: { __type: "String" },
+    template: { __type: "CommandSchematicPageTemplate" },
+  },
+  CommandSchematicPageInput: {
+    edges: { __type: "JSON" },
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+    templateId: { __type: "String" },
+  },
+  CommandSchematicPageTemplate: {
+    __typename: { __type: "String!" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+  },
+  CommandSchematicPageTemplateInput: {
+    name: { __type: "String" },
+    nodes: { __type: "JSON" },
+  },
+  CommandSchematicVersion: {
+    __typename: { __type: "String!" },
+    commit: { __type: "String" },
+    createdAt: { __type: "DateTime" },
+    createdBy: { __type: "HiveUser" },
+    data: { __type: "JSON" },
+    id: { __type: "ID" },
+    rank: { __type: "Int" },
+    schematic: { __type: "CommandSchematic" },
+  },
+  CommandSchematicVersionInput: { commit: { __type: "String" } },
+  CommandSchematicWhere: { id: { __type: "ID" } },
   CommandTemplateEdge: {
     __typename: { __type: "String!" },
     from: { __type: "CommandTemplateIO" },
@@ -865,6 +979,14 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { input: "CommandDeviceReportInput", page: "ID" },
     },
+    createCommandFunction: {
+      __type: "CommandFunction!",
+      __args: { input: "CommandFunctionInput!" },
+    },
+    createCommandFunctionPage: {
+      __type: "CommandFunctionPage!",
+      __args: { fd: "ID", input: "CommandFunctionPageInput" },
+    },
     createCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { input: "CommandHMIDeviceInput", pack: "ID" },
@@ -881,13 +1003,9 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { input: "CommandProgramAlarmInput", program: "ID" },
     },
-    createCommandProgramAlarmAction: {
-      __type: "CommandProgramAlarmAction",
-      __args: {
-        alarm: "ID",
-        input: "CommandProgramAlarmActionInput",
-        program: "ID",
-      },
+    createCommandProgramAlarmSeverity: {
+      __type: "CommandProgramAlarmSeverity",
+      __args: { input: "CommandProgramAlarmSeverityInput", program: "ID" },
     },
     createCommandProgramComponent: {
       __type: "CommandProgramComponent",
@@ -964,6 +1082,22 @@ export const generatedSchema = {
       __type: "CommandReportPage!",
       __args: { device: "ID", input: "CommandReportPageInput!" },
     },
+    createCommandSchematic: {
+      __type: "CommandSchematic!",
+      __args: { input: "CommandSchematicInput!" },
+    },
+    createCommandSchematicPage: {
+      __type: "CommandSchematicPage!",
+      __args: { input: "CommandSchematicPageInput", schematic: "ID" },
+    },
+    createCommandSchematicPageTemplate: {
+      __type: "CommandSchematicPageTemplate",
+      __args: { input: "CommandSchematicPageTemplateInput", schematic: "ID" },
+    },
+    createCommandSchematicVersion: {
+      __type: "String",
+      __args: { id: "ID!", input: "CommandSchematicVersionInput" },
+    },
     createCommandTemplateEdge: {
       __type: "CommandTemplateEdge",
       __args: { input: "CommandTemplateEdgeInput!", template: "ID!" },
@@ -988,6 +1122,11 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { id: "ID", page: "ID" },
     },
+    deleteCommandFunction: { __type: "Boolean!", __args: { id: "ID!" } },
+    deleteCommandFunctionPage: {
+      __type: "Boolean!",
+      __args: { fd: "ID", id: "ID" },
+    },
     deleteCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { id: "ID!", pack: "ID" },
@@ -1001,9 +1140,9 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { id: "ID!", program: "ID" },
     },
-    deleteCommandProgramAlarmAction: {
-      __type: "CommandProgramAlarmAction",
-      __args: { alarm: "ID", id: "ID!", program: "ID" },
+    deleteCommandProgramAlarmSeverity: {
+      __type: "CommandProgramAlarmSeverity",
+      __args: { id: "ID!", program: "ID" },
     },
     deleteCommandProgramComponent: {
       __type: "CommandProgramComponent",
@@ -1057,6 +1196,15 @@ export const generatedSchema = {
       __type: "CommandReportPage!",
       __args: { device: "ID", id: "ID" },
     },
+    deleteCommandSchematic: { __type: "Boolean!", __args: { id: "ID!" } },
+    deleteCommandSchematicPage: {
+      __type: "Boolean!",
+      __args: { id: "ID", schematic: "ID" },
+    },
+    deleteCommandSchematicPageTemplate: {
+      __type: "Boolean!",
+      __args: { id: "ID", schematic: "ID" },
+    },
     deleteCommandTemplateEdge: {
       __type: "CommandTemplateEdge",
       __args: { id: "ID!", template: "ID!" },
@@ -1069,6 +1217,7 @@ export const generatedSchema = {
       __type: "CommandDeviceScreen",
       __args: { device: "ID", id: "ID!" },
     },
+    exportCommandSchematic: { __type: "String", __args: { id: "ID!" } },
     importCommandProgramTags: {
       __type: "[CommandProgramTag]",
       __args: {
@@ -1105,6 +1254,24 @@ export const generatedSchema = {
       __type: "CommandDevice!",
       __args: { uptime: "DateTime", where: "CommandDeviceWhere!" },
     },
+    updateCommandFunction: {
+      __type: "CommandFunction!",
+      __args: { id: "ID!", input: "CommandFunctionInput!" },
+    },
+    updateCommandFunctionPage: {
+      __type: "CommandFunctionPage!",
+      __args: { fd: "ID", id: "ID", input: "CommandFunctionPageInput" },
+    },
+    updateCommandFunctionPageOrder: {
+      __type: "Boolean",
+      __args: {
+        above: "String",
+        below: "String",
+        fd: "ID",
+        id: "ID",
+        parent: "String",
+      },
+    },
     updateCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { id: "ID!", input: "CommandHMIDeviceInput", pack: "ID" },
@@ -1121,14 +1288,17 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { id: "ID!", input: "CommandProgramAlarmInput", program: "ID" },
     },
-    updateCommandProgramAlarmAction: {
-      __type: "CommandProgramAlarmAction",
+    updateCommandProgramAlarmSeverity: {
+      __type: "CommandProgramAlarmSeverity",
       __args: {
-        alarm: "ID",
         id: "ID!",
-        input: "CommandProgramAlarmActionInput",
+        input: "CommandProgramAlarmSeverityInput",
         program: "ID",
       },
+    },
+    updateCommandProgramAlarmSeverityOrder: {
+      __type: "CommandProgramAlarmSeverity",
+      __args: { above: "ID", below: "ID", id: "ID!", program: "ID" },
     },
     updateCommandProgramComponent: {
       __type: "CommandProgramComponent",
@@ -1202,10 +1372,6 @@ export const generatedSchema = {
         program: "ID",
       },
     },
-    updateCommandProgramInterfaceNodeTemplateConfiguration: {
-      __type: "Boolean",
-      __args: { field: "ID", node: "ID", value: "String" },
-    },
     updateCommandProgramTag: {
       __type: "CommandProgramTag",
       __args: { id: "ID!", input: "CommandProgramTagInput", program: "ID" },
@@ -1229,6 +1395,31 @@ export const generatedSchema = {
     updateCommandReportPage: {
       __type: "CommandReportPage!",
       __args: { device: "ID", id: "ID", input: "CommandReportPageInput!" },
+    },
+    updateCommandSchematic: {
+      __type: "CommandSchematic!",
+      __args: { id: "ID!", input: "CommandSchematicInput!" },
+    },
+    updateCommandSchematicPage: {
+      __type: "CommandSchematicPage!",
+      __args: { id: "ID", input: "CommandSchematicPageInput", schematic: "ID" },
+    },
+    updateCommandSchematicPageOrder: {
+      __type: "Boolean",
+      __args: {
+        above: "String",
+        below: "String",
+        id: "String",
+        schematic: "ID",
+      },
+    },
+    updateCommandSchematicPageTemplate: {
+      __type: "CommandSchematicPageTemplate",
+      __args: {
+        id: "ID",
+        input: "CommandSchematicPageTemplateInput",
+        schematic: "ID",
+      },
     },
     updateCommandTemplateEdge: {
       __type: "CommandTemplateEdge",
@@ -1279,6 +1470,10 @@ export const generatedSchema = {
       __type: "[CommandDevice]!",
       __args: { where: "CommandDeviceWhere" },
     },
+    commandFunctions: {
+      __type: "[CommandFunction]!",
+      __args: { where: "CommandFunctionWhere" },
+    },
     commandInterfaceDevicePacks: {
       __type: "[CommandHMIDevicePack]",
       __args: { id: "ID", registered: "Boolean" },
@@ -1287,6 +1482,10 @@ export const generatedSchema = {
     commandPrograms: {
       __type: "[CommandProgram]!",
       __args: { where: "CommandProgramWhere" },
+    },
+    commandSchematics: {
+      __type: "[CommandSchematic]!",
+      __args: { where: "CommandSchematicWhere" },
     },
     hash: { __type: "Hash", __args: { input: "String!" } },
   },
@@ -1309,6 +1508,7 @@ export interface CommandDataTransformer {
   __typename?: "CommandDataTransformer";
   configuration?: Maybe<Array<Maybe<CommandDataTransformerConfiguration>>>;
   id?: Maybe<ScalarsEnums["ID"]>;
+  options?: Maybe<ScalarsEnums["JSON"]>;
   template?: Maybe<CommandTemplateTransformer>;
 }
 
@@ -1323,6 +1523,7 @@ export interface CommandDevice {
   __typename?: "CommandDevice";
   activeProgram?: Maybe<CommandProgram>;
   alarms?: Maybe<Array<Maybe<DeviceAlarm>>>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   dataLayout?: Maybe<ScalarsEnums["JSON"]>;
   deviceSnapshot: (args?: {
     where?: Maybe<CommandDeviceSnapshotWhere>;
@@ -1407,6 +1608,27 @@ export interface CommandDeviceValue {
   deviceId?: Maybe<ScalarsEnums["String"]>;
   value?: Maybe<ScalarsEnums["String"]>;
   valueKey?: Maybe<ScalarsEnums["String"]>;
+}
+
+export interface CommandFunction {
+  __typename?: "CommandFunction";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  organisation?: Maybe<HiveOrganisation>;
+  pages?: Maybe<Array<Maybe<CommandFunctionPage>>>;
+}
+
+export interface CommandFunctionPage {
+  __typename?: "CommandFunctionPage";
+  children?: Maybe<Array<Maybe<CommandFunctionPage>>>;
+  edges?: Maybe<ScalarsEnums["JSON"]>;
+  id: ScalarsEnums["ID"];
+  label?: Maybe<ScalarsEnums["String"]>;
+  name?: Maybe<ScalarsEnums["String"]>;
+  nodes?: Maybe<ScalarsEnums["JSON"]>;
+  parent?: Maybe<CommandFunctionPage>;
+  rank?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandHMIDevice {
@@ -1517,6 +1739,7 @@ export interface CommandKeyValue {
 
 export interface CommandProgram {
   __typename?: "CommandProgram";
+  alarmSeverity?: Maybe<Array<Maybe<CommandProgramAlarmSeverity>>>;
   alarms?: Maybe<Array<Maybe<CommandProgramAlarm>>>;
   components: (args?: {
     where?: Maybe<CommandProgramComponentWhere>;
@@ -1538,41 +1761,23 @@ export interface CommandProgram {
 
 export interface CommandProgramAlarm {
   __typename?: "CommandProgramAlarm";
-  description?: Maybe<ScalarsEnums["String"]>;
-  edges?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
+  conditions?: Maybe<ScalarsEnums["JSON"]>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   id?: Maybe<ScalarsEnums["ID"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  nodes?: Maybe<Array<Maybe<CommandProgramAlarmAction>>>;
+  message?: Maybe<ScalarsEnums["String"]>;
+  rank?: Maybe<ScalarsEnums["String"]>;
+  severity?: Maybe<CommandProgramAlarmSeverity>;
+  title?: Maybe<ScalarsEnums["String"]>;
 }
 
-export interface CommandProgramAlarmAction {
-  __typename?: "CommandProgramAlarmAction";
+export interface CommandProgramAlarmSeverity {
+  __typename?: "CommandProgramAlarmSeverity";
+  edges?: Maybe<ScalarsEnums["JSON"]>;
   id?: Maybe<ScalarsEnums["ID"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  sourcedBy?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
-  targetedBy?: Maybe<Array<Maybe<CommandProgramAlarmEdge>>>;
-  type?: Maybe<CommandProgramAlarmType>;
-}
-
-export interface CommandProgramAlarmCondition {
-  __typename?: "CommandProgramAlarmCondition";
-  id?: Maybe<ScalarsEnums["ID"]>;
-  input?: Maybe<ScalarsEnums["String"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  value?: Maybe<ScalarsEnums["String"]>;
-}
-
-export interface CommandProgramAlarmEdge {
-  __typename?: "CommandProgramAlarmEdge";
-  id?: Maybe<ScalarsEnums["ID"]>;
-  source?: Maybe<CommandProgramAlarmAction>;
-  target?: Maybe<CommandProgramAlarmAction>;
-}
-
-export interface CommandProgramAlarmType {
-  __typename?: "CommandProgramAlarmType";
-  id?: Maybe<ScalarsEnums["ID"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
+  nodes?: Maybe<ScalarsEnums["JSON"]>;
+  rank?: Maybe<ScalarsEnums["String"]>;
+  title?: Maybe<ScalarsEnums["String"]>;
+  usedByAlarm?: Maybe<Array<Maybe<CommandProgramAlarm>>>;
 }
 
 export interface CommandProgramComponent {
@@ -1652,6 +1857,45 @@ export interface CommandReportPage {
   device?: Maybe<CommandDevice>;
   id?: Maybe<ScalarsEnums["ID"]>;
   name?: Maybe<ScalarsEnums["String"]>;
+}
+
+export interface CommandSchematic {
+  __typename?: "CommandSchematic";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  organisation?: Maybe<HiveOrganisation>;
+  pages?: Maybe<Array<Maybe<CommandSchematicPage>>>;
+  templates?: Maybe<Array<Maybe<CommandSchematicPageTemplate>>>;
+  versions?: Maybe<Array<Maybe<CommandSchematicVersion>>>;
+}
+
+export interface CommandSchematicPage {
+  __typename?: "CommandSchematicPage";
+  edges?: Maybe<ScalarsEnums["JSON"]>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  nodes?: Maybe<ScalarsEnums["JSON"]>;
+  rank?: Maybe<ScalarsEnums["String"]>;
+  template?: Maybe<CommandSchematicPageTemplate>;
+}
+
+export interface CommandSchematicPageTemplate {
+  __typename?: "CommandSchematicPageTemplate";
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  nodes?: Maybe<ScalarsEnums["JSON"]>;
+}
+
+export interface CommandSchematicVersion {
+  __typename?: "CommandSchematicVersion";
+  commit?: Maybe<ScalarsEnums["String"]>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  createdBy?: Maybe<HiveUser>;
+  data?: Maybe<ScalarsEnums["JSON"]>;
+  id?: Maybe<ScalarsEnums["ID"]>;
+  rank?: Maybe<ScalarsEnums["Int"]>;
+  schematic?: Maybe<CommandSchematic>;
 }
 
 export interface CommandTemplateEdge {
@@ -1735,6 +1979,13 @@ export interface Mutation {
     input?: Maybe<CommandDeviceReportInput>;
     page?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
+  createCommandFunction: (args: {
+    input: CommandFunctionInput;
+  }) => CommandFunction;
+  createCommandFunctionPage: (args?: {
+    fd?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandFunctionPageInput>;
+  }) => CommandFunctionPage;
   createCommandInterfaceDevice: (args?: {
     input?: Maybe<CommandHMIDeviceInput>;
     pack?: Maybe<Scalars["ID"]>;
@@ -1749,11 +2000,10 @@ export interface Mutation {
     input?: Maybe<CommandProgramAlarmInput>;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  createCommandProgramAlarmAction: (args?: {
-    alarm?: Maybe<Scalars["ID"]>;
-    input?: Maybe<CommandProgramAlarmActionInput>;
+  createCommandProgramAlarmSeverity: (args?: {
+    input?: Maybe<CommandProgramAlarmSeverityInput>;
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmAction>;
+  }) => Maybe<CommandProgramAlarmSeverity>;
   createCommandProgramComponent: (args?: {
     input?: Maybe<CommandProgramComponentInput>;
     program?: Maybe<Scalars["ID"]>;
@@ -1814,6 +2064,21 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     input: CommandReportPageInput;
   }) => CommandReportPage;
+  createCommandSchematic: (args: {
+    input: CommandSchematicInput;
+  }) => CommandSchematic;
+  createCommandSchematicPage: (args?: {
+    input?: Maybe<CommandSchematicPageInput>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => CommandSchematicPage;
+  createCommandSchematicPageTemplate: (args?: {
+    input?: Maybe<CommandSchematicPageTemplateInput>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandSchematicPageTemplate>;
+  createCommandSchematicVersion: (args: {
+    id: Scalars["ID"];
+    input?: Maybe<CommandSchematicVersionInput>;
+  }) => Maybe<ScalarsEnums["String"]>;
   createCommandTemplateEdge: (args: {
     input: CommandTemplateEdgeInput;
     template: Scalars["ID"];
@@ -1835,6 +2100,13 @@ export interface Mutation {
     id?: Maybe<Scalars["ID"]>;
     page?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
+  deleteCommandFunction: (args: {
+    id: Scalars["ID"];
+  }) => ScalarsEnums["Boolean"];
+  deleteCommandFunctionPage: (args?: {
+    fd?: Maybe<Scalars["ID"]>;
+    id?: Maybe<Scalars["ID"]>;
+  }) => ScalarsEnums["Boolean"];
   deleteCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     pack?: Maybe<Scalars["ID"]>;
@@ -1849,11 +2121,10 @@ export interface Mutation {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  deleteCommandProgramAlarmAction: (args: {
-    alarm?: Maybe<Scalars["ID"]>;
+  deleteCommandProgramAlarmSeverity: (args: {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmAction>;
+  }) => Maybe<CommandProgramAlarmSeverity>;
   deleteCommandProgramComponent: (args: {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
@@ -1911,6 +2182,17 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id?: Maybe<Scalars["ID"]>;
   }) => CommandReportPage;
+  deleteCommandSchematic: (args: {
+    id: Scalars["ID"];
+  }) => ScalarsEnums["Boolean"];
+  deleteCommandSchematicPage: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => ScalarsEnums["Boolean"];
+  deleteCommandSchematicPageTemplate: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => ScalarsEnums["Boolean"];
   deleteCommandTemplateEdge: (args: {
     id: Scalars["ID"];
     template: Scalars["ID"];
@@ -1923,6 +2205,9 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
   }) => Maybe<CommandDeviceScreen>;
+  exportCommandSchematic: (args: {
+    id: Scalars["ID"];
+  }) => Maybe<ScalarsEnums["String"]>;
   importCommandProgramTags: (args?: {
     input?: Maybe<Array<Maybe<CommandProgramTagInput>>>;
     program?: Maybe<Scalars["ID"]>;
@@ -1956,6 +2241,22 @@ export interface Mutation {
     uptime?: Maybe<Scalars["DateTime"]>;
     where: CommandDeviceWhere;
   }) => CommandDevice;
+  updateCommandFunction: (args: {
+    id: Scalars["ID"];
+    input: CommandFunctionInput;
+  }) => CommandFunction;
+  updateCommandFunctionPage: (args?: {
+    fd?: Maybe<Scalars["ID"]>;
+    id?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandFunctionPageInput>;
+  }) => CommandFunctionPage;
+  updateCommandFunctionPageOrder: (args?: {
+    above?: Maybe<Scalars["String"]>;
+    below?: Maybe<Scalars["String"]>;
+    fd?: Maybe<Scalars["ID"]>;
+    id?: Maybe<Scalars["ID"]>;
+    parent?: Maybe<Scalars["String"]>;
+  }) => Maybe<ScalarsEnums["Boolean"]>;
   updateCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandHMIDeviceInput>;
@@ -1974,12 +2275,17 @@ export interface Mutation {
     input?: Maybe<CommandProgramAlarmInput>;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  updateCommandProgramAlarmAction: (args: {
-    alarm?: Maybe<Scalars["ID"]>;
+  updateCommandProgramAlarmSeverity: (args: {
     id: Scalars["ID"];
-    input?: Maybe<CommandProgramAlarmActionInput>;
+    input?: Maybe<CommandProgramAlarmSeverityInput>;
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmAction>;
+  }) => Maybe<CommandProgramAlarmSeverity>;
+  updateCommandProgramAlarmSeverityOrder: (args: {
+    above?: Maybe<Scalars["ID"]>;
+    below?: Maybe<Scalars["ID"]>;
+    id: Scalars["ID"];
+    program?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandProgramAlarmSeverity>;
   updateCommandProgramComponent: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandProgramComponentInput>;
@@ -2028,11 +2334,6 @@ export interface Mutation {
     input: ComandProgramInterfaceNodeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMINode>;
-  updateCommandProgramInterfaceNodeTemplateConfiguration: (args?: {
-    field?: Maybe<Scalars["ID"]>;
-    node?: Maybe<Scalars["ID"]>;
-    value?: Maybe<Scalars["String"]>;
-  }) => Maybe<ScalarsEnums["Boolean"]>;
   updateCommandProgramTag: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandProgramTagInput>;
@@ -2058,6 +2359,26 @@ export interface Mutation {
     id?: Maybe<Scalars["ID"]>;
     input: CommandReportPageInput;
   }) => CommandReportPage;
+  updateCommandSchematic: (args: {
+    id: Scalars["ID"];
+    input: CommandSchematicInput;
+  }) => CommandSchematic;
+  updateCommandSchematicPage: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandSchematicPageInput>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => CommandSchematicPage;
+  updateCommandSchematicPageOrder: (args?: {
+    above?: Maybe<Scalars["String"]>;
+    below?: Maybe<Scalars["String"]>;
+    id?: Maybe<Scalars["String"]>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => Maybe<ScalarsEnums["Boolean"]>;
+  updateCommandSchematicPageTemplate: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandSchematicPageTemplateInput>;
+    schematic?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandSchematicPageTemplate>;
   updateCommandTemplateEdge: (args: {
     id: Scalars["ID"];
     input: CommandTemplateEdgeInput;
@@ -2101,6 +2422,9 @@ export interface Query {
   commandDevices: (args?: {
     where?: Maybe<CommandDeviceWhere>;
   }) => Array<Maybe<CommandDevice>>;
+  commandFunctions: (args?: {
+    where?: Maybe<CommandFunctionWhere>;
+  }) => Array<Maybe<CommandFunction>>;
   commandInterfaceDevicePacks: (args?: {
     id?: Maybe<Scalars["ID"]>;
     registered?: Maybe<Scalars["Boolean"]>;
@@ -2109,6 +2433,9 @@ export interface Query {
   commandPrograms: (args?: {
     where?: Maybe<CommandProgramWhere>;
   }) => Array<Maybe<CommandProgram>>;
+  commandSchematics: (args?: {
+    where?: Maybe<CommandSchematicWhere>;
+  }) => Array<Maybe<CommandSchematic>>;
   hash: (args: { input: Scalars["String"] }) => Maybe<ScalarsEnums["Hash"]>;
 }
 
@@ -2130,6 +2457,8 @@ export interface SchemaObjectTypes {
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
   CommandDeviceTimeseriesTotal: CommandDeviceTimeseriesTotal;
   CommandDeviceValue: CommandDeviceValue;
+  CommandFunction: CommandFunction;
+  CommandFunctionPage: CommandFunctionPage;
   CommandHMIDevice: CommandHMIDevice;
   CommandHMIDevicePack: CommandHMIDevicePack;
   CommandHMIDevicePort: CommandHMIDevicePort;
@@ -2141,10 +2470,7 @@ export interface SchemaObjectTypes {
   CommandKeyValue: CommandKeyValue;
   CommandProgram: CommandProgram;
   CommandProgramAlarm: CommandProgramAlarm;
-  CommandProgramAlarmAction: CommandProgramAlarmAction;
-  CommandProgramAlarmCondition: CommandProgramAlarmCondition;
-  CommandProgramAlarmEdge: CommandProgramAlarmEdge;
-  CommandProgramAlarmType: CommandProgramAlarmType;
+  CommandProgramAlarmSeverity: CommandProgramAlarmSeverity;
   CommandProgramComponent: CommandProgramComponent;
   CommandProgramComponentFile: CommandProgramComponentFile;
   CommandProgramComponentProperty: CommandProgramComponentProperty;
@@ -2154,6 +2480,10 @@ export interface SchemaObjectTypes {
   CommandProgramType: CommandProgramType;
   CommandProgramTypeField: CommandProgramTypeField;
   CommandReportPage: CommandReportPage;
+  CommandSchematic: CommandSchematic;
+  CommandSchematicPage: CommandSchematicPage;
+  CommandSchematicPageTemplate: CommandSchematicPageTemplate;
+  CommandSchematicVersion: CommandSchematicVersion;
   CommandTemplateEdge: CommandTemplateEdge;
   CommandTemplateIO: CommandTemplateIO;
   CommandTemplateTransformer: CommandTemplateTransformer;
@@ -2178,6 +2508,8 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceTimeseriesData"
   | "CommandDeviceTimeseriesTotal"
   | "CommandDeviceValue"
+  | "CommandFunction"
+  | "CommandFunctionPage"
   | "CommandHMIDevice"
   | "CommandHMIDevicePack"
   | "CommandHMIDevicePort"
@@ -2189,10 +2521,7 @@ export type SchemaObjectTypesNames =
   | "CommandKeyValue"
   | "CommandProgram"
   | "CommandProgramAlarm"
-  | "CommandProgramAlarmAction"
-  | "CommandProgramAlarmCondition"
-  | "CommandProgramAlarmEdge"
-  | "CommandProgramAlarmType"
+  | "CommandProgramAlarmSeverity"
   | "CommandProgramComponent"
   | "CommandProgramComponentFile"
   | "CommandProgramComponentProperty"
@@ -2202,6 +2531,10 @@ export type SchemaObjectTypesNames =
   | "CommandProgramType"
   | "CommandProgramTypeField"
   | "CommandReportPage"
+  | "CommandSchematic"
+  | "CommandSchematicPage"
+  | "CommandSchematicPageTemplate"
+  | "CommandSchematicVersion"
   | "CommandTemplateEdge"
   | "CommandTemplateIO"
   | "CommandTemplateTransformer"

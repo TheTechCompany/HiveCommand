@@ -1,12 +1,12 @@
 import { useMutation } from "../../gqty"
 
 export const useCreateProgramAlarm = (program: string) => {
-    const [mutateFn] = useMutation((mutation, args: {name?: string, description: string}) => {
+    const [mutateFn] = useMutation((mutation, args: {title?: string, message: string}) => {
         const item = mutation.createCommandProgramAlarm({
             program: program,
             input: {
-                name: args.name,
-                description: args.description
+                title: args.title,
+                message: args.message
             }
         })
         return {
@@ -16,24 +16,24 @@ export const useCreateProgramAlarm = (program: string) => {
         }
     })
 
-    return (name: string, description: string) => {
+    return (title: string, message: string) => {
         return mutateFn({
             args: {
-                name,
-                description
+                title,
+                message
             }
         })
     }
 }
 
 export const useUpdateProgramAlarm = (program: string) => {
-    const [mutateFn] = useMutation((mutation, args: {name?: string, id: string, description: string}) => {
+    const [mutateFn] = useMutation((mutation, args: {title?: string, id: string, message: string}) => {
         const item = mutation.updateCommandProgramAlarm({
             program: program,
             id: args.id,
             input: {
-                name: args.name,
-                description: args.description
+                title: args.title,
+                message: args.message
             }
         })
         return {
@@ -43,12 +43,12 @@ export const useUpdateProgramAlarm = (program: string) => {
         }
     })
 
-    return (id: string, name: string, description: string) => {
+    return (id: string, title: string, message: string) => {
         return mutateFn({
             args: {
-                name,
+                title,
                 id,
-                description
+                message
             }
         })
     }

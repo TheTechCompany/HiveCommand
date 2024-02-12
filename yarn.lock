@@ -4436,6 +4436,7 @@ __metadata:
     amqplib: ^0.10.3
     cors: ^2.8.5
     express: ^4.18.2
+    jest: 27.x
     jsonwebtoken: ^8.5.1
     mqtt: ^5.2.2
     redis: ^4.6.5

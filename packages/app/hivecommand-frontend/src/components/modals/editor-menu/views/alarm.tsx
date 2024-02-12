@@ -10,18 +10,18 @@ export const AlarmView = () => {
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <TextField 
                 sx={{marginBottom: '12px'}}
-                value={item.name}
-                onChange={(e) => setItem({ ...item, name: e.target.value })}
+                value={item.title}
+                onChange={(e) => setItem?.({ ...item, title: e.target.value })}
                 size="small"
-                label="Name" />
+                label="Title" />
 
-            <TextField 
-                value={item.description}
-                onChange={(e) => setItem({ ...item, description: e.target.value })}
+            {/* <TextField 
+                value={item.message}
+                onChange={(e) => setItem?.({ ...item, message: e.target.value })}
                 multiline
                 size="small"
                 minRows={2}
-                label="Description" />
+                label="Message" /> */}
         </Box>
     )
 }
