@@ -27,6 +27,7 @@ import { ComponentList, Components } from './pages/components';
 import { AlarmList } from './pages/alarms/list';
 import { AlarmSubitems } from './pages/alarms/subitems';
 import { AlarmRoot } from './pages/alarms/root';
+import { CodeEditor } from './pages/alarms/editor/code';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
 export interface EditorProps {
 
@@ -100,26 +101,12 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 alarms {
                     id
                     title
-                    message
+                    script
                     
                     rank
-
-                    severity {
-                        id
-                    }
-                
-
-                    conditions
                 }
 
-                alarmSeverity { 
-                    id
-                    title
-
-                    rank
-
-                }
-
+        
                 types {
                     id
                     name
@@ -413,15 +400,19 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
             id: 'alarms-root',
             name: 'Alarms',
-            children: [
-                {
-                    id: 'levels',
-                    name: 'Levels'
-                }
-            ],
+            children: program?.alarms?.map((alarm) => ({
+                id: alarm.id,
+                name: alarm.title
+            })),
+            // children: [
+            //     {
+            //         id: 'levels',
+            //         name: 'Levels'
+            //     }
+            // ],
             //program?.alarms?.slice(),
-            editor: <AlarmSubitems severities={program?.alarmSeverity || []} program={program.id} />, // <AlarmEditor active={selected?.id} />
-            element: <AlarmRoot severities={program?.alarmSeverity || []}  alarms={program?.alarms || []} program={program.id} />
+            editor: <CodeEditor program={program.id} />, // <AlarmEditor active={selected?.id} />
+            element: <AlarmRoot  alarms={program?.alarms || []} program={program.id} />
 
         }
     ];

@@ -74,9 +74,13 @@ model Alarm {
   id String @id
 
   message String
-  cause   String
 
-  seen Boolean
+  severity String?
+
+  cause ProgramAlarm @relation(name: "causedAlarm", fields: [causeId], references: [id])
+  causeId String
+
+  ack Boolean @default(false)
 
   createdAt DateTime @default(now())
 
@@ -350,8 +354,6 @@ model Program {
 
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
-  alarmSeverity ProgramAlarmSeverity[] @relation(name: "hasAlarmSeverity")
-
   usedBy Device[] @relation(name: "useProgram")
 
   createdAt DateTime @default(now())
@@ -425,35 +427,17 @@ model ProgramAlarm {
   id String @id
 
   title   String?
-  message String?
 
-  severity   ProgramAlarmSeverity? @relation(name: "usesSeverity", fields: [severityId], references: [id])
-  severityId String?
+  script String?
 
   rank String?
 
-  conditions Json?
+  alarm Alarm[] @relation(name: "causedAlarm")
 
   program   Program @relation(name: "useAlarm", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
   createdAt DateTime @default(now())
-}
-
-model ProgramAlarmSeverity {
-  id String @id
-
-  title String
-
-  rank String?
-
-  nodes Json?
-  edges Json?
-
-  usedByAlarm  ProgramAlarm[] @relation(name: "usesSeverity")
-
-  proram    Program @relation(name: "hasAlarmSeverity", fields: [programId], references: [id], onDelete: Cascade)
-  programId String
 }
 
 model ProgramHMI {

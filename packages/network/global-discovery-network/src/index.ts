@@ -11,6 +11,7 @@ import { createClient } from "redis";
 
 import { PrismaClient } from '@hive-command/data';
 import { API } from './api';
+import { formatSnapshot } from './utils/format';
 
 (async () => {
 
@@ -22,7 +23,7 @@ import { API } from './api';
 
     await redisCli.connect();
 
-    const alarmCenter = new AlarmCenter();
+    const alarmCenter = new AlarmCenter(prisma);
 
     const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string ) => {
         await Promise.all([
@@ -60,7 +61,18 @@ import { API } from './api';
             console.log(`Data from ${userId} ${routingKey}`)
             console.log(messageContent?.value);
 
-            const device = await prisma.device.findFirst({ where: { network_name: userId } })
+            const device = await prisma.device.findFirst({ 
+                where: { network_name: userId },  
+                include: {
+                    activeProgram: {
+                        include: {
+                            tags: {include: {type: true}},
+                            types: true,
+                            alarms: true
+                        }
+                    }
+                }
+            })
             //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
 
             if (!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
@@ -87,8 +99,32 @@ import { API } from './api';
             }
             if (!device || !routingKey || !messageContent) return;
 
+            const results = await redisCli.HGETALL(`device:${device.id}:values`);
+
+			const values = Object.keys(results).map((r) => {
+							return {
+								deviceId: device.id,
+								placeholder: r?.split(':')?.[0],
+								key: r?.split(':')?.[1],
+								value: results?.[r]
+							}
+					})
+
+            const snapshot : any = formatSnapshot(device?.activeProgram?.tags || [], device?.activeProgram?.types || [], values)
+
+            const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
+
+                let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
+                if(!typeName) return prev;
+
+                return {
+                    ...prev,
+                    [typeName]: [...(prev[typeName] || []), snapshot[tag.name] ]
+                }
+            }, {} as any)
             //Call alarm center hook to allow for business logic based alarm signals
-            alarmCenter.hook({ routingKey, messageContent, userId })
+            
+            // alarmCenter.hook(device?.activeProgram?.alarms || [], device, snapshot, typedSnapshot)
         } 
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
