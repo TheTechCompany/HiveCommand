@@ -1,6 +1,6 @@
 import { Box, IconButton, Collapse, Paper } from "@mui/material";
 import React, { useState } from "react";
-import { GridView as Nodes, Assignment } from '@mui/icons-material';
+import { GridView as Nodes, Assignment, Public } from '@mui/icons-material';
 import Settings from '../icons/Settings';
 import { ElementPane } from "./panes/elements";
 import { useInterfaceEditor } from "../context";
@@ -8,6 +8,7 @@ import { TransformPane } from "./panes/transform";
 import { ConfigurationPane } from "./panes/configuration";
 import { Node } from 'reactflow';
 import { merge } from 'lodash';
+import { WorldPane } from "./panes/world";
 
 export interface SidebarProps {
 
@@ -45,6 +46,11 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
             icon: <Settings style={{ fill: 'white' }} width="24px" />,
             path: 'transform',
             pane: <TransformPane onNodeUpdate={onNodeUpdate} />
+        },
+        {
+            icon: <Public />,
+            path: 'world',
+            pane: <WorldPane />
         }
     ];
 

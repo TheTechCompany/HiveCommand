@@ -31,7 +31,6 @@ export const ConfigurationPane: React.FC<ConfigurationPaneProps> = (props) => {
 
     const options = selectedNode?.data?.options || {};
 
-
     const [state, setState] = useState<{ key: string, value: any }[]>([])
 
     let scalarTypes = Object.keys(DataTypes).concat(Object.keys(DataTypes).map((x) => `${x}[]`))
@@ -85,7 +84,6 @@ export const ConfigurationPane: React.FC<ConfigurationPaneProps> = (props) => {
     }, [tags, types])
 
     useEffect(() => {
-        console.log("Running newState effect")
         if (options) {
             let newState = Object.keys(options).map((optionKey) => ({ key: optionKey, value: configuredOptions?.[optionKey] }));
 
@@ -98,15 +96,12 @@ export const ConfigurationPane: React.FC<ConfigurationPaneProps> = (props) => {
 
     const _updateState = (key: string, value: any) => {
 
-        
         let _state = state.slice();
 
         let ix = _state.map((x) => x.key).indexOf(key)
         _state[ix].value = value;
 
         setState(_state);
-
-        console.log(_state, key, value)
 
         props.onNodeUpdate?.({
             data: {

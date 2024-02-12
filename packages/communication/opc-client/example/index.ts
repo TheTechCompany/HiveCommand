@@ -11,9 +11,12 @@ const client = new OPCClient();
     // const discovered = await client.discover()
     // console.log(discovered)
 
-    await client.connect("opc.tcp://localhost:8440");
+    await client.connect("opc.tcp://localhost:4840");
 
-    await client.setDetails(`/Objects/1:A`, DataType.Boolean, true);
+    const type =await client.getType(`/Objects/0:Server/4:AC500 PM56xx-2ETH/3:Resources/4:Application/3:GlobalVars/4:GVL/4:STSP_NF_Permeate`);
+    console.log(type) //DataType[type]);
+
+    // await client.setDetails(`/Objects/1:A`, DataType.Boolean, true);
 
     //     console.log("Connected")
 //     let path_id = await client.browse('/Objects')

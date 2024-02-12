@@ -2,15 +2,16 @@ import { BaseCommandDriver, DriverOptions } from '@hive-command/drivers-base';
 import OPCUAClient from '@hive-command/opcua-client'
 import { DataType } from 'node-opcua';
 import { Observable, Subject } from 'observable-fns';
+import { SingleBar } from 'cli-progress'
 
 export default class OPCUADriver extends BaseCommandDriver {
-    
-    private client : OPCUAClient;
 
-    private basePath : string;
+    private client: OPCUAClient;
+
+    private basePath: string;
     private namespace: string;
 
-    constructor(options: DriverOptions){
+    constructor(options: DriverOptions) {
         super(options);
         this.client = new OPCUAClient();
 
@@ -22,22 +23,26 @@ export default class OPCUADriver extends BaseCommandDriver {
         await this.client.connect(this.options.configuration?.endpoint)
     }
 
-    async stop(){
+    async stop() {
         await this.client.disconnect()
     }
 
     async subscribe(tags: { name: string; alias?: string | undefined; }[]): Promise<Observable<{ [key: string]: any; }>> {
-        return await new Promise(async (resolve) => {
 
+
+        return await new Promise(async (resolve) => {
+            const subject = new Subject<{ [key: string]: any }>();
+
+            //Map tags
             const subscribeTags = tags.map((tag) => {
                 let parts = tag.name.split('.');
 
-                if(parts.length > 1){
+                if (parts.length > 1) {
                     return {
                         path: `${this.basePath}/${parts.map((x) => `${this.namespace}:${x}`).join('/')}`,
                         tag: tag.name
                     }
-                }else{
+                } else {
                     return {
                         path: `${this.basePath}/${this.namespace}:${tag.name}`,
                         tag: tag.name
@@ -45,16 +50,39 @@ export default class OPCUADriver extends BaseCommandDriver {
                 }
             });
 
-            const { monitors, unsubscribe, unwrap } = await this.client.subscribeMulti(subscribeTags, 500)
+            const bar1 = new SingleBar({});
 
-            const subject = new Subject<{[key: string]: any}>();
+            bar1.start(subscribeTags.length, 0);
 
-            monitors?.on('changed', (monitoredItem, dv, index) => {
-                const key = unwrap(index);
-                const value = dv.value.value;
+            new Promise(async (resolve) => {
 
-                subject.next({[key]: value});
+                //First read
+                console.log(`Performing first read of ${subscribeTags.length} tags`);
+                for (var i = 0; i < subscribeTags.length; i++) {
+                    const tag = subscribeTags[i];
+                    const dv = await this.client.getDetails(tag.path)
+
+                    subject.next({ [tag.tag]: dv?.value.value })
+
+                    bar1.update(i);
+                }
+
+                bar1.stop();
+
+                //Subscribe
+
+                const { monitors, unsubscribe, unwrap } = await this.client.subscribeMulti(subscribeTags, 500)
+
+
+                monitors?.on('changed', (monitoredItem, dv, index) => {
+                    const key = unwrap(index);
+                    const value = dv.value.value;
+
+                    subject.next({ [key]: value });
+                })
+
             })
+           
 
             resolve(Observable.from(subject));
         })
@@ -70,21 +98,22 @@ export default class OPCUADriver extends BaseCommandDriver {
 
     async write(tag: string, value: any) {
         const tag_parts = tag.split('.');
-        
+
         let path = '';
-        if(tag_parts.length > 1){
+        if (tag_parts.length > 1) {
             path = `${this.basePath}/${tag_parts.map((x) => `${this.namespace}:${x}`).join('/')}`
-        }else{
+        } else {
             path = `${this.basePath}/${this.namespace}:${tag}`
         }
 
         let dataType = DataType.Boolean;
 
-        switch(typeof(value)){
+        switch (typeof (value)) {
             case 'number':
             case 'bigint':
                 //Maybe do check here for Double/Float/Int
-                dataType = DataType.Float
+                const typeInfo = await this.client.getType(path);
+                dataType = (typeInfo.type as any) || DataType.Float
                 break;
             case 'string':
                 dataType = DataType.String;

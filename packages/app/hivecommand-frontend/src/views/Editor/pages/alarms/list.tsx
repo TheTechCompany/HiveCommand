@@ -66,7 +66,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
                 id: update.variables.id,
                 input: {
                     title: _alarms[ix].title,
-                    message: _alarms[ix].message
+                    script: _alarms[ix].script
                 }
             }
         })
@@ -100,9 +100,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
                         <TableCell sx={{color: 'white', padding: '3px', bgcolor: 'secondary.main'}}>
                             Title
                         </TableCell>
-                        <TableCell  sx={{color: 'white', padding: '3px', bgcolor: 'secondary.main'}}>
-                            Severity
-                        </TableCell>
+                       
                         <TableCell size='small'  sx={{width: '40px', bgcolor: 'secondary.main'}}>
 
                         </TableCell>
@@ -134,15 +132,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
                                             }}/>
                                     </TableCell>
                                     
-                                    <TableCell size="small" sx={{padding: 0}}>
-                                        <Select 
-                                            variant='standard'
-                                            size='small' fullWidth>
-                                            {severities?.map((sev) => (
-                                                <MenuItem value={sev.id}>{sev.title}</MenuItem>
-                                            ))}
-                                        </Select>
-                                    </TableCell>
+                                    
                                     <TableCell size='small' sx={{ width: '40px', padding: 0}}>
                                         <IconButton onClick={() => navigate(`${alarm.id}/conditions`)} size="small">
                                             <MoreVert fontSize='inherit' />
