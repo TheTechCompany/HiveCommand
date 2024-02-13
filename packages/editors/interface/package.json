@@ -8,9 +8,19 @@
   ],
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "test": "jest",
+    "jest-preview": "jest-preview"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "12.1.2",
+    "@testing-library/user-event": "^14.5.2",
+    "cypress": "^13.6.4",
+    "jest": "27.x",
+    "jest-environment-jsdom": "27.x",
+    "jest-preview": "^0.3.1",
+    "jest-transform-css": "^6.0.1",
     "typescript": "4.9.5"
   },
   "peerDependencies": {
@@ -21,6 +31,7 @@
     "@hive-command/canvas-nodes": "workspace:^",
     "@hive-command/interface-types": "workspace:^",
     "@hive-command/ui": "workspace:^",
+    "monaco-editor": "^0.46.0",
     "nanoid": "^5.0.3"
   }
 }

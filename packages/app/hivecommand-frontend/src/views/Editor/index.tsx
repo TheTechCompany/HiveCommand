@@ -29,6 +29,9 @@ import { AlarmSubitems } from './pages/alarms/subitems';
 import { AlarmRoot } from './pages/alarms/root';
 import { CodeEditor } from './pages/alarms/editor/code';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
+
+import 'reactflow/dist/style.css';
+
 export interface EditorProps {
 
 }

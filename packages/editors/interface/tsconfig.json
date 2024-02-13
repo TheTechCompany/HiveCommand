@@ -70,7 +70,7 @@
     "skipLibCheck": true,                           /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true        /* Disallow inconsistently-cased references to the same file. */
   },
-  "exclude": ["dist/", "__tests__/"],
+  "exclude": ["dist/", "__tests__/", "__mocks__/", "src/setupTests.ts"],
   "references": [
     {"path": "../../core-ui/command-canvas-nodes"},
     {"path": "../../core-ui/command-ui"},
