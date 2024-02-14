@@ -40,6 +40,8 @@ export class IOTCLI {
             tags: controlLayout?.tags,
             types: controlLayout?.types,
             dataScopes: networkLayout?.dataScopes,
+            alarmPathways: networkLayout?.alarmPathways,
+            alarms: controlLayout?.alarms,
             // opcuaServer: this.opcuaServer,
             iot: {
                 host: networkLayout?.iotEndpoint,

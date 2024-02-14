@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { SetupContext } from '../context';
 import { CheckCircle } from '@mui/icons-material'
 import axios from 'axios';
+import { GDSNetworkLayout, GDSControlLayout } from '@hive-command/discovery-api-types'
 
 export const LayoutDownload = () => {
 
@@ -14,7 +15,8 @@ export const LayoutDownload = () => {
         
         axios.get(`${state.discoveryServer}/control-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("controlLayout", {res})
-            await setGlobalState?.((state) => ({...state, ...res.data.results}))
+            const data : GDSControlLayout = res.data.results;
+            await setGlobalState?.((state) => ({...state, ...data}))
             setLogs((logs) => {
                 let l = logs.slice();
                 let ix = l.findIndex((a) => a.id == 'hmi-download');
@@ -26,7 +28,8 @@ export const LayoutDownload = () => {
 
         axios.get(`${state.discoveryServer}/network-layout?token=${state.authToken}`).then(async (res) => {
             // console.log("networkLayout", {res})
-            await setGlobalState?.((state) => ({...state, ...res.data.results}))
+            const data : GDSNetworkLayout = res.data.results;
+            await setGlobalState?.((state) => ({...state, ...data}))
 
         
             setLogs((logs) => {

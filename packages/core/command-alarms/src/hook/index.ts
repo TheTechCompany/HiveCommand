@@ -1,18 +1,7 @@
 import { nanoid } from "nanoid";
 import { ALARM_LEVEL, makeHook, makeNotification } from "./utils";
 import { AlarmRegister } from "../alarm";
-
-export interface Alarm {
-    id: string;
-    title: string | null;
-    script: string | null;
-}
-
-
-export interface AlarmPathway {
-    name: string
-    script: string;
-}
+import { Alarm, AlarmPathway } from "@hive-command/interface-types";
 
 export class Hook {
 

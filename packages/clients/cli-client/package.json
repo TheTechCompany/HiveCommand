@@ -21,6 +21,7 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
+    "@hive-command/discovery-api-types": "workspace:^",
     "@hive-command/scada": "^1.4.15-alpha.289",
     "axios": "^1.3.3",
     "loglevel": "^1.8.1",

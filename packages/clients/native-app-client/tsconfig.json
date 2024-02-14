@@ -30,6 +30,7 @@
     {"path": "../../core-ui/command-surface"},
     {"path": "../../core-ui/command-remote-components"},
     {"path": "../sidecar-client"},
-    {"path": "../../core/command-scripting"}
+    {"path": "../../core/command-scripting"},
+    {"path": "../../types/discovery-api"}
   ]
 }

@@ -1,0 +1,11 @@
+{
+  "name": "@hive-command/discovery-api-types",
+  "packageManager": "yarn@3.6.0",
+  "main": "dist/index.js",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  },
+  "scripts": {
+    "build": "tsc -b"
+  }
+}

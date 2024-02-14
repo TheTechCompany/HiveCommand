@@ -1,13 +1,20 @@
+import { DataScope, Alarm, AlarmPathway, HMITag, HMIType } from "@hive-command/interface-types";
+
 export interface GDSNetworkLayout {
-    deviceMapping: device?.deviceMapping || [],
-    deviceId: string
+        deviceId: string
 
-    dataScopes: device.activeProgram?.dataScopes || [],
+        dataScopes: DataScope[];
 
-    alarmPathways: (device.activeProgram?.alarmPathways || []).filter((pathway) => pathway.scope?.toLowerCase() == "local"),
+        alarmPathways: AlarmPathway[]
 
-    iotEndpoint: IOT_ENDPOINT,
-    iotSubject: process.env.IOT_EXCHANGE,
-    iotUser: device.network_name,
-    iotToken: token
+        iotEndpoint?: string,
+        iotSubject?: string,
+        iotUser?: string,
+        iotToken?: string,
+}
+
+export interface GDSControlLayout {
+    tags: HMITag[],
+    types: HMIType[],
+    alarms?: Alarm[]
 }

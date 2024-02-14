@@ -107,6 +107,7 @@
     {"path": "../../communication/rabbitmq-auth"},
     {"path": "../../communication/amqp-hub"},
     {"path": "../../app/hivecommand-db"},
-    {"path": "../../types/interface-types"}
+    {"path": "../../types/interface-types"},
+    {"path": "../../types/discovery-api"}
   ]
 }

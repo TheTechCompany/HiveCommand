@@ -1,6 +1,7 @@
 
 import { PrismaClient } from "@hive-command/data";
 import { Router } from "express";
+import { GDSControlLayout, GDSNetworkLayout } from '@hive-command/discovery-api-types'
 import jwt from 'jsonwebtoken'
 
 const IOT_ENDPOINT = process.env.IOT_ENDPOINT 
@@ -67,12 +68,6 @@ export const API = (prisma: PrismaClient) => {
                 }
             },
             include: {
-                deviceMapping: {
-                    include: {
-                        // device: true,
-                        deviceState: true
-                    }
-                },
                 activeProgram: {
                     include: {
                         dataScopes: {
@@ -95,9 +90,7 @@ export const API = (prisma: PrismaClient) => {
             deviceId: device.id
         }, process.env.IOT_SECRET || '');
 
-        res.send({ 
-            results: {
-                deviceMapping: device?.deviceMapping || [],
+        let response : GDSNetworkLayout = { 
                 deviceId: device?.id,
 
                 dataScopes: device.activeProgram?.dataScopes || [],
@@ -108,8 +101,9 @@ export const API = (prisma: PrismaClient) => {
                 iotSubject: process.env.IOT_EXCHANGE,
                 iotUser: device.network_name,
                 iotToken: token
-            }
-        })
+        }
+        
+        res.send({results: response})
 
     })
 
@@ -219,21 +213,22 @@ export const API = (prisma: PrismaClient) => {
 
         if (!device) return res.send({ error: "No device found for token" })
 
-        res.send({ 
-            results: { 
-                ...device.activeProgram,
-                tags: device.activeProgram?.tags.map((tag) => ({
+        const response : GDSControlLayout = {
+            ...device.activeProgram,
+                tags: (device.activeProgram?.tags || []).map((tag) => ({
                     ...tag,
                     type: tag.type?.type?.name || tag.type?.scalar
                 })),
-                types: device.activeProgram?.types.map((type) => ({
+                types: (device.activeProgram?.types || []).map((type) => ({
                     ...type,
                     fields: type.fields.map((typeField) => ({
                         ...typeField,
                         type: typeField.type?.name || typeField.scalar
                     }))
                 }))
-            }
+        }
+        res.send({ 
+            results: response
         })
     })
 

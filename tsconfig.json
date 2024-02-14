@@ -73,6 +73,7 @@
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
 
 		"@hive-command/interface-types": ["./types/interface-types/src"],
+		"@hive-command/discovery-api-types": ["./types/discovery-api/src"],
 		"@hive-command/electrical-types": ["./types/electrical-types/src"],
 
 	  }

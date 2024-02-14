@@ -11,6 +11,7 @@
 		"@hexhive/utils": "^0.0.6-alpha.13",
 		"@hive-command/api": "^1.4.15-alpha.289",
 		"@hive-command/command-surface": "^1.4.15-alpha.291",
+		"@hive-command/discovery-api-types": "workspace:^",
 		"@hive-command/remote-components": "^1.4.15-alpha.289",
 		"@hive-command/scripting": "^1.4.15-alpha.289",
 		"@hive-command/sidecar-client": "^1.4.15-alpha.289",

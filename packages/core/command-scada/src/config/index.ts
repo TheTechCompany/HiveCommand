@@ -1,4 +1,4 @@
-import { HMITag } from '@hive-command/interface-types';
+import { Alarm, AlarmPathway, DataScope, HMITag, HMIType } from '@hive-command/interface-types';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import path from 'path';
 
@@ -6,17 +6,7 @@ import path from 'path';
 export interface LocalOptions {
 
 
-    dataScopes?: {
-        id: string,
-        name: string,
-        configuration: any,
-
-        plugin: {
-            id: string,
-            module: string,
-            configuration: any,
-        }
-    }[]
+    dataScopes?: DataScope[];
 
     iot?: {
         host: string,
@@ -36,25 +26,11 @@ export interface LocalOptions {
     //         }
     //     }
     // // }[]
-    types?: {
-        name: string,
-        fields: {
-            name: string,
-            type: string
-        }[]
-    }[]
+    types?: HMIType[]
     
-    alarms?: {
-        id: string;
-        title: string,
-        script: string
-    }[]
+    alarms?: Alarm[]
 
-    alarmPathways?: {
-        id: string;
-        name: string;
-        script: string;
-    }[]
+    alarmPathways?: AlarmPathway[]
 
 
 }
