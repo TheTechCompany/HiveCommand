@@ -11,7 +11,7 @@ import { createClient } from "redis";
 
 import { PrismaClient } from '@hive-command/data';
 import { API } from './api';
-import { formatSnapshot } from './utils/format';
+import { formatSnapshot, formatTagType } from './utils/format';
 
 (async () => {
 
@@ -66,8 +66,20 @@ import { formatSnapshot } from './utils/format';
                 include: {
                     activeProgram: {
                         include: {
-                            tags: {include: {type: true}},
-                            types: true,
+                            tags: {
+                                include: {
+                                    type: true
+                                }
+                            },
+                            types: {
+                                include: {
+                                    fields: {
+                                        include: {
+                                            type: true
+                                        }
+                                    }
+                                }
+                            },
                             alarms: true
                         }
                     }
@@ -110,7 +122,27 @@ import { formatSnapshot } from './utils/format';
 							}
 					})
 
-            const snapshot : any = formatSnapshot(device?.activeProgram?.tags || [], device?.activeProgram?.types || [], values)
+            const deviceTags = (device?.activeProgram?.tags || []).map((tag) => {
+                if(tag.type)
+                return {
+                    ...tag,
+                    type: tag.type ? formatTagType(tag.type) : null
+                }
+            })
+
+            const deviceTypes = (device?.activeProgram?.types || []).map((type) => {
+                return {
+                    ...type,
+                    fields: type.fields.map((field) => {
+                        return {
+                            ...field,
+                            type: formatTagType(field)
+                        }
+                    })
+                }
+            })
+
+            const snapshot : any = formatSnapshot(deviceTags, deviceTypes, values)
 
             const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
 

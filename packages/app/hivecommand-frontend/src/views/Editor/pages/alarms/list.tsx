@@ -1,10 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Box, Table, TableHead, TableCell, TableBody, TableRow, Button, TextField, TableContainer, Select, IconButton, MenuItem } from '@mui/material';
-import { MoreVert, DragIndicator, Delete } from '@mui/icons-material'
+import { Box, Table, TableHead, TableCell, TableBody, TableRow, Button, TextField, TableContainer, Select, IconButton, MenuItem, Paper, ListItem, List } from '@mui/material';
+import { MoreVert, DragIndicator, Delete, Add } from '@mui/icons-material'
 import { useMutation } from '@apollo/client';
 import { gql } from '@apollo/client';
 import { debounce } from 'lodash';
 import { useNavigate } from 'react-router-dom';
+import { Typography } from '@mui/material';
+import { AlarmPathwayModal } from '../../../../components/modals/alarm-pathway';
+import { useCommandEditor } from '../../context';
 
 export interface AlarmListProps {
     program: string;
@@ -12,21 +15,25 @@ export interface AlarmListProps {
     severities?: any[];
 }
 
-export const AlarmList : React.FC<AlarmListProps> = (props) => {
+export const AlarmList: React.FC<AlarmListProps> = (props) => {
 
     const navigate = useNavigate();
 
     const { alarms, severities } = props;
 
-    const [ localAlarms, setLocalAlarms ] = useState<any[]>([]);
+    const [localAlarms, setLocalAlarms] = useState<any[]>([]);
+
+    const [ modalOpen, openModal ] = useState(false);
+    
+    const { program: {alarmPathways} = {} } = useCommandEditor();
 
     useEffect(() => {
         setLocalAlarms(alarms || []);
     }, [alarms])
 
-    const [ createAlarm ] = useMutation(gql`
-        mutation CreateAlarm ($program: ID, $input: CommandProgramAlarmInput){
-            createCommandProgramAlarm(program: $program, input: $input){
+    const [ createPathway ] = useMutation(gql`
+        mutation CreateAlarmPathway ($program: ID, $input: CommandProgramAlarmPathwayInput){
+            createCommandProgramAlarmPathway(program: $program, input: $input){
                 id
             }
         }
@@ -34,7 +41,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
         refetchQueries: ['EditorCommandProgram']
     })
 
-    const [ updateAlarm ] = useMutation(gql`
+    const [updateAlarm] = useMutation(gql`
         mutation UpdateAlarm ($program: ID, $id: ID!, $input: CommandProgramAlarmInput){
             updateCommandProgramAlarm(program: $program, id: $id, input: $input){
                 id
@@ -46,12 +53,12 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
 
     const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [])
 
-    const debounceUpdate = (update: {variables: {program: string, id: string, input: any}}) => {
+    const debounceUpdate = (update: { variables: { program: string, id: string, input: any } }) => {
         let _alarms = localAlarms.slice();
 
         let ix = _alarms?.findIndex((a) => a.id == update.variables.id);
 
-        if(ix > -1){
+        if (ix > -1) {
             _alarms[ix] = {
                 ..._alarms[ix],
                 ...update.variables.input
@@ -71,7 +78,7 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
             }
         })
     }
-    const [ deleteAlarm ] = useMutation(gql`
+    const [deleteAlarm] = useMutation(gql`
         mutation DeleteAlarm ($program: ID, $id: ID!) {
             deleteCommandProgramAlarm(program: $program, id: $id){
                 id
@@ -86,73 +93,40 @@ export const AlarmList : React.FC<AlarmListProps> = (props) => {
 
 
     return (
-        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            <Box sx={{display: 'flex', padding: '6px'}}>
-                <TextField size="small" fullWidth label="Search" />
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <AlarmPathwayModal
+                open={modalOpen}
+                onSubmit={(pathway) => {
+                    createPathway({
+                        variables: {
+                            program: props.program,
+                            input: pathway
+                        }
+                    }).then(() => {
+                        openModal(false)
+                    })
+                }}
+                onClose={() => {
+                    openModal(false);
+                }}
+                />
+            <Box sx={{ display: 'flex', padding: '3px', bgcolor: 'secondary.main', color: 'white', alignItems: 'center', justifyContent: 'space-between' }} >
+                <Typography>Notification Pathways</Typography>
+                <IconButton
+                    onClick={() => {
+                        // openDataScopeModal(true);
+                        openModal(true)
+                    }}
+                    sx={{ color: "white" }} size="small">
+                    <Add fontSize="inherit" />
+                </IconButton>
             </Box>
-            {/* <DragContext></DragContext> */}
-            <TableContainer>
-                <Table size="small" stickyHeader>
-                    <TableHead sx={{color: 'white', bgcolor: 'secondary.main'}}>
-                        <TableCell sx={{padding: 0, width: '10px', bgcolor: 'secondary.main'}}>
 
-                        </TableCell>
-                        <TableCell sx={{color: 'white', padding: '3px', bgcolor: 'secondary.main'}}>
-                            Title
-                        </TableCell>
-                       
-                        <TableCell size='small'  sx={{width: '40px', bgcolor: 'secondary.main'}}>
-
-                        </TableCell>
-                    </TableHead>
-                    <TableBody>
-                            {sortedAlarms.map((alarm) => (
-                                <TableRow key={alarm.id}>
-                                    <TableCell sx={{padding: 0, display: 'flex', alignItems: 'center'}}>
-                                        <IconButton size="small">
-                                            <DragIndicator fontSize={'inherit'} />
-                                        </IconButton>
-                                    </TableCell>
-                                    <TableCell sx={{padding: 0,}}>
-                                        <TextField 
-                                            variant="standard"
-                                            fullWidth 
-                                            size="small" 
-                                            value={alarm.title}
-                                            onChange={(e) => {
-                                                debounceUpdate(({
-                                                    variables: {
-                                                        program: props.program,
-                                                        id: alarm.id,
-                                                        input: {
-                                                            title: e.target.value
-                                                        }
-                                                    }
-                                                }))
-                                            }}/>
-                                    </TableCell>
-                                    
-                                    
-                                    <TableCell size='small' sx={{ width: '40px', padding: 0}}>
-                                        <IconButton onClick={() => navigate(`${alarm.id}/conditions`)} size="small">
-                                            <MoreVert fontSize='inherit' />
-                                        </IconButton>
-                                        <IconButton size="small">
-                                            <Delete onClick={() => {
-                                                deleteAlarm({variables: { program: props.program, id: alarm.id }})
-                                            }} fontSize='inherit' />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                    
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Button onClick={() => {
-                createAlarm({variables: {program: props.program, input: {title: ''}}})
-            }}>Add</Button>
-
+            <List>
+                {alarmPathways?.map((pathway) => (
+                    <ListItem>{pathway.name}</ListItem>
+                ))}
+            </List>
         </Box>
     )
 }

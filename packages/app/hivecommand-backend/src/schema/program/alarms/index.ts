@@ -12,6 +12,10 @@ export default (prisma: PrismaClient) => {
             createCommandProgramAlarm(program: ID, input: CommandProgramAlarmInput): CommandProgramAlarm
             updateCommandProgramAlarm(program: ID, id: ID!, input: CommandProgramAlarmInput): CommandProgramAlarm
             deleteCommandProgramAlarm(program: ID, id: ID!): CommandProgramAlarm
+
+            createCommandProgramAlarmPathway(program: ID, input: CommandProgramAlarmPathwayInput): CommandProgramAlarmPathway
+            updateCommandProgramAlarmPathway(program: ID, id: ID!, input: CommandProgramAlarmPathwayInput): CommandProgramAlarmPathway
+            deleteCommandProgramAlarmPathway(program: ID, id: ID!): CommandProgramAlarmPathway
         }
 
         input CommandProgramAlarmInput {
@@ -30,6 +34,21 @@ export default (prisma: PrismaClient) => {
 
             createdAt: DateTime
 
+        }
+
+        input CommandProgramAlarmPathwayInput {
+            name: String
+            scope: String
+            script: String
+        }
+
+        type CommandProgramAlarmPathway {
+            id: ID
+
+            name: String
+            scope: String
+            script: String
+            
         }
 
 
@@ -100,6 +119,36 @@ export default (prisma: PrismaClient) => {
 
                 return await prisma.programAlarm.delete({
                     where: { id: args.id }
+                })
+            },
+            createCommandProgramAlarmPathway: async (root: any, args: { program: string, input: any }, context: any) => {
+                return await prisma.programAlarmPathway.create({
+                    data: {
+                        id: nanoid(),
+                        name: args.input.name,
+                        scope: args.input.scope,
+                        program: {
+                            connect: {id: args.program}
+                        }
+                    }
+                })
+            },
+            updateCommandProgramAlarmPathway: async (root: any, args: { program: string, id: string, input: any }, context: any) => {
+                return await prisma.programAlarmPathway.update({
+                    where: {
+                        id: args.id
+                    },
+                    data: {
+                        name: args.input.name,
+                        scope: args.input.scope
+                    }
+                })
+            },
+            deleteCommandProgramAlarmPathway: async (root: any, args: { program: string, id: string }, context: any) => {
+                return await prisma.programAlarmPathway.delete({
+                    where: {
+                        id: args.id
+                    }
                 })
             }
         }

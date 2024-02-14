@@ -354,6 +354,8 @@ model Program {
 
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
+  alarmPathways ProgramAlarmPathway[] @relation(name: "hasAlarmPathway")
+
   usedBy Device[] @relation(name: "useProgram")
 
   createdAt DateTime @default(now())
@@ -438,6 +440,20 @@ model ProgramAlarm {
   programId String
 
   createdAt DateTime @default(now())
+}
+
+model ProgramAlarmPathway {
+  id String @id
+
+  name String
+  scope String @default("REMOTE")
+  script String?
+
+  program Program @relation(name: "hasAlarmPathway", references: [id], fields: [programId])
+  programId String
+
+  @@unique([name, programId])
+
 }
 
 model ProgramHMI {

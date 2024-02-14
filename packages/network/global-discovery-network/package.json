@@ -28,6 +28,7 @@
   "dependencies": {
     "@hive-command/amqp-hub": "workspace:^",
     "@hive-command/data": "workspace:^",
+    "@hive-command/interface-types": "workspace:^",
     "@hive-command/rabbitmq-auth": "workspace:^",
     "amqplib": "^0.10.3",
     "cors": "^2.8.5",

@@ -1,4 +1,38 @@
-export const formatSnapshot = (tags: any[], types: any[], values: any) => {
+import { HMITag, HMIType } from '@hive-command/interface-types'
+
+export const formatTagType = (type: {scalar: string | null, type: {name: string} | null}) => {
+    if (type.type?.name) {
+        // let res = await prisma.programType.findFirst({ where: { id: root.type.typeId, programId: root.programId } });
+        return type.type?.name
+    } else if (type?.scalar) {
+        return type?.scalar
+    }
+}
+
+export const invertSnapshot = (snapshot: any, tags: HMITag[]) => {
+    const typedSnapshot = tags?.reduce((prev, tag) => {
+
+        let typeName = tag.type //types?.find((a) => a.id == tag.type?.typeId)?.name;
+        if(!typeName) return prev;
+
+        return {
+            ...prev,
+            [typeName]: {
+                ...(prev[typeName] || {}), 
+                [tag.name]: snapshot[tag.name]
+            }
+        }
+    }, {} as any)
+
+    return typedSnapshot;
+}
+
+export const formatSnapshot = (tags: HMITag[], types: HMIType[], values: {
+    deviceId:string,
+	placeholder:string,
+	key?: string,
+	value: any
+}[]) => {
     let valueObj = values.reduce((prev: any, curr: any) => {
 
         let key = curr.key;
@@ -24,7 +58,7 @@ export const formatSnapshot = (tags: any[], types: any[], values: any) => {
 
         let type = types?.find((a) => a.name === tag.type) || tag.type;
 
-        let hasFields = (type?.fields || []).length > 0;
+        let hasFields = (typeof type != 'string' && type?.fields || []).length > 0;
 
         let value = valueObj[tag.name];
 
@@ -41,7 +75,7 @@ export const formatSnapshot = (tags: any[], types: any[], values: any) => {
             }else if(typeof(value) === 'string'){
                 value = value.split(',')
             }
-        }else if(hasFields){
+        }else if(typeof type != 'string' && hasFields){
 
             type?.fields?.forEach((field: any) => {
 

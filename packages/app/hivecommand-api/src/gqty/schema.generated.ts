@@ -161,16 +161,14 @@ export interface CommandHMIPortInput {
 }
 
 export interface CommandProgramAlarmInput {
-  conditions?: InputMaybe<Scalars["JSON"]>;
-  message?: InputMaybe<Scalars["String"]>;
-  severityId?: InputMaybe<Scalars["String"]>;
+  script?: InputMaybe<Scalars["String"]>;
   title?: InputMaybe<Scalars["String"]>;
 }
 
-export interface CommandProgramAlarmSeverityInput {
-  edges?: InputMaybe<Scalars["JSON"]>;
-  nodes?: InputMaybe<Scalars["JSON"]>;
-  title?: InputMaybe<Scalars["String"]>;
+export interface CommandProgramAlarmPathwayInput {
+  name?: InputMaybe<Scalars["String"]>;
+  scope?: InputMaybe<Scalars["String"]>;
+  script?: InputMaybe<Scalars["String"]>;
 }
 
 export interface CommandProgramComponentInput {
@@ -656,7 +654,7 @@ export const generatedSchema = {
   },
   CommandProgram: {
     __typename: { __type: "String!" },
-    alarmSeverity: { __type: "[CommandProgramAlarmSeverity]" },
+    alarmPathways: { __type: "[CommandProgramAlarmPathway]" },
     alarms: { __type: "[CommandProgramAlarm]" },
     components: {
       __type: "[CommandProgramComponent]",
@@ -678,33 +676,27 @@ export const generatedSchema = {
   },
   CommandProgramAlarm: {
     __typename: { __type: "String!" },
-    conditions: { __type: "JSON" },
     createdAt: { __type: "DateTime" },
     id: { __type: "ID" },
-    message: { __type: "String" },
     rank: { __type: "String" },
-    severity: { __type: "CommandProgramAlarmSeverity" },
+    script: { __type: "String" },
     title: { __type: "String" },
   },
   CommandProgramAlarmInput: {
-    conditions: { __type: "JSON" },
-    message: { __type: "String" },
-    severityId: { __type: "String" },
+    script: { __type: "String" },
     title: { __type: "String" },
   },
-  CommandProgramAlarmSeverity: {
+  CommandProgramAlarmPathway: {
     __typename: { __type: "String!" },
-    edges: { __type: "JSON" },
     id: { __type: "ID" },
-    nodes: { __type: "JSON" },
-    rank: { __type: "String" },
-    title: { __type: "String" },
-    usedByAlarm: { __type: "[CommandProgramAlarm]" },
+    name: { __type: "String" },
+    scope: { __type: "String" },
+    script: { __type: "String" },
   },
-  CommandProgramAlarmSeverityInput: {
-    edges: { __type: "JSON" },
-    nodes: { __type: "JSON" },
-    title: { __type: "String" },
+  CommandProgramAlarmPathwayInput: {
+    name: { __type: "String" },
+    scope: { __type: "String" },
+    script: { __type: "String" },
   },
   CommandProgramComponent: {
     __typename: { __type: "String!" },
@@ -1003,9 +995,9 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { input: "CommandProgramAlarmInput", program: "ID" },
     },
-    createCommandProgramAlarmSeverity: {
-      __type: "CommandProgramAlarmSeverity",
-      __args: { input: "CommandProgramAlarmSeverityInput", program: "ID" },
+    createCommandProgramAlarmPathway: {
+      __type: "CommandProgramAlarmPathway",
+      __args: { input: "CommandProgramAlarmPathwayInput", program: "ID" },
     },
     createCommandProgramComponent: {
       __type: "CommandProgramComponent",
@@ -1140,8 +1132,8 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { id: "ID!", program: "ID" },
     },
-    deleteCommandProgramAlarmSeverity: {
-      __type: "CommandProgramAlarmSeverity",
+    deleteCommandProgramAlarmPathway: {
+      __type: "CommandProgramAlarmPathway",
       __args: { id: "ID!", program: "ID" },
     },
     deleteCommandProgramComponent: {
@@ -1288,17 +1280,13 @@ export const generatedSchema = {
       __type: "CommandProgramAlarm",
       __args: { id: "ID!", input: "CommandProgramAlarmInput", program: "ID" },
     },
-    updateCommandProgramAlarmSeverity: {
-      __type: "CommandProgramAlarmSeverity",
+    updateCommandProgramAlarmPathway: {
+      __type: "CommandProgramAlarmPathway",
       __args: {
         id: "ID!",
-        input: "CommandProgramAlarmSeverityInput",
+        input: "CommandProgramAlarmPathwayInput",
         program: "ID",
       },
-    },
-    updateCommandProgramAlarmSeverityOrder: {
-      __type: "CommandProgramAlarmSeverity",
-      __args: { above: "ID", below: "ID", id: "ID!", program: "ID" },
     },
     updateCommandProgramComponent: {
       __type: "CommandProgramComponent",
@@ -1739,7 +1727,7 @@ export interface CommandKeyValue {
 
 export interface CommandProgram {
   __typename?: "CommandProgram";
-  alarmSeverity?: Maybe<Array<Maybe<CommandProgramAlarmSeverity>>>;
+  alarmPathways?: Maybe<Array<Maybe<CommandProgramAlarmPathway>>>;
   alarms?: Maybe<Array<Maybe<CommandProgramAlarm>>>;
   components: (args?: {
     where?: Maybe<CommandProgramComponentWhere>;
@@ -1761,23 +1749,19 @@ export interface CommandProgram {
 
 export interface CommandProgramAlarm {
   __typename?: "CommandProgramAlarm";
-  conditions?: Maybe<ScalarsEnums["JSON"]>;
   createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   id?: Maybe<ScalarsEnums["ID"]>;
-  message?: Maybe<ScalarsEnums["String"]>;
   rank?: Maybe<ScalarsEnums["String"]>;
-  severity?: Maybe<CommandProgramAlarmSeverity>;
+  script?: Maybe<ScalarsEnums["String"]>;
   title?: Maybe<ScalarsEnums["String"]>;
 }
 
-export interface CommandProgramAlarmSeverity {
-  __typename?: "CommandProgramAlarmSeverity";
-  edges?: Maybe<ScalarsEnums["JSON"]>;
+export interface CommandProgramAlarmPathway {
+  __typename?: "CommandProgramAlarmPathway";
   id?: Maybe<ScalarsEnums["ID"]>;
-  nodes?: Maybe<ScalarsEnums["JSON"]>;
-  rank?: Maybe<ScalarsEnums["String"]>;
-  title?: Maybe<ScalarsEnums["String"]>;
-  usedByAlarm?: Maybe<Array<Maybe<CommandProgramAlarm>>>;
+  name?: Maybe<ScalarsEnums["String"]>;
+  scope?: Maybe<ScalarsEnums["String"]>;
+  script?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandProgramComponent {
@@ -2000,10 +1984,10 @@ export interface Mutation {
     input?: Maybe<CommandProgramAlarmInput>;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  createCommandProgramAlarmSeverity: (args?: {
-    input?: Maybe<CommandProgramAlarmSeverityInput>;
+  createCommandProgramAlarmPathway: (args?: {
+    input?: Maybe<CommandProgramAlarmPathwayInput>;
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmSeverity>;
+  }) => Maybe<CommandProgramAlarmPathway>;
   createCommandProgramComponent: (args?: {
     input?: Maybe<CommandProgramComponentInput>;
     program?: Maybe<Scalars["ID"]>;
@@ -2121,10 +2105,10 @@ export interface Mutation {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  deleteCommandProgramAlarmSeverity: (args: {
+  deleteCommandProgramAlarmPathway: (args: {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmSeverity>;
+  }) => Maybe<CommandProgramAlarmPathway>;
   deleteCommandProgramComponent: (args: {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
@@ -2275,17 +2259,11 @@ export interface Mutation {
     input?: Maybe<CommandProgramAlarmInput>;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandProgramAlarm>;
-  updateCommandProgramAlarmSeverity: (args: {
+  updateCommandProgramAlarmPathway: (args: {
     id: Scalars["ID"];
-    input?: Maybe<CommandProgramAlarmSeverityInput>;
+    input?: Maybe<CommandProgramAlarmPathwayInput>;
     program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmSeverity>;
-  updateCommandProgramAlarmSeverityOrder: (args: {
-    above?: Maybe<Scalars["ID"]>;
-    below?: Maybe<Scalars["ID"]>;
-    id: Scalars["ID"];
-    program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandProgramAlarmSeverity>;
+  }) => Maybe<CommandProgramAlarmPathway>;
   updateCommandProgramComponent: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandProgramComponentInput>;
@@ -2470,7 +2448,7 @@ export interface SchemaObjectTypes {
   CommandKeyValue: CommandKeyValue;
   CommandProgram: CommandProgram;
   CommandProgramAlarm: CommandProgramAlarm;
-  CommandProgramAlarmSeverity: CommandProgramAlarmSeverity;
+  CommandProgramAlarmPathway: CommandProgramAlarmPathway;
   CommandProgramComponent: CommandProgramComponent;
   CommandProgramComponentFile: CommandProgramComponentFile;
   CommandProgramComponentProperty: CommandProgramComponentProperty;
@@ -2521,7 +2499,7 @@ export type SchemaObjectTypesNames =
   | "CommandKeyValue"
   | "CommandProgram"
   | "CommandProgramAlarm"
-  | "CommandProgramAlarmSeverity"
+  | "CommandProgramAlarmPathway"
   | "CommandProgramComponent"
   | "CommandProgramComponentFile"
   | "CommandProgramComponentProperty"

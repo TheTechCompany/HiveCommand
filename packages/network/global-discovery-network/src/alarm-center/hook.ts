@@ -6,15 +6,41 @@ export enum ALARM_LEVEL {
     WARNING
 }
 
+export const makeNotification = (
+    script: string
+) => {
+
+    const jsCode = transpile(script, {module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React})
+
+    const func = new Function(
+        "module",
+        "exports",
+        jsCode
+    );
+
+    const exports : {sendNotification?: (message: string) => void} = {};
+    const module = {exports};
+
+    func(module, exports) //, microRequire(`${parent ? parent : ''}${name}`))
+
+    return exports
+
+}
+
 export const makeHook = (
     script: string, 
+    pathways: {name: string}[],
     raiseAlarm: (message: string, level?: ALARM_LEVEL, sticky?: boolean) => Promise<boolean>,
     sendNotification: (message: string, pathway?: string) => void
 ) : {
     handler?: (tags: any, typedTags: any) => void
 } => {
     const jsCode = transpile(`
-    
+
+    enum PATHWAYS {
+        ${pathways?.map((pathway) => `${pathway.name} = "${pathway?.name}"`).join(',\n')}
+    }
+
         ${script}
     
     `, { module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React })

@@ -8,6 +8,7 @@ import { TypeView } from "./views/types";
 import { VariableView } from "./views/variable";
 import { ComponentsView } from "./views/components";
 import { SchematicsView } from "./views/schematics";
+import { PathwayView } from "./views/pathways";
 
 export interface EditorMenuDialogProps {
     open: boolean;
@@ -32,6 +33,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getTitle = () => {
         switch(type){
+            case 'pathways':
+                return `${selected ? 'Edit': "Create"} Alarm Pathway`;
             case 'schematics':
                 return `${selected ? 'Edit' : 'Create'} Schematic`;
             case 'components':
@@ -55,6 +58,8 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
 
     const getContent = () => {
         switch(type){
+            case 'pathways':
+                return <PathwayView />
             case 'schematics':
                 return <SchematicsView />;
             case 'components':
@@ -81,6 +86,7 @@ export const EditorMenuDialog : React.FC<EditorMenuDialogProps> = (props) => {
             case 'program':
             case 'hmi':
             case 'devices':
+            case 'pathways':
             case 'alarms':
             case 'variables':
             case 'schematics':

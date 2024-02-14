@@ -46,6 +46,7 @@ export default (prisma: PrismaClient) => {
 						remoteHomepage: true,
 						localHomepage: true,
 						alarms: true,
+						alarmPathways: true,
 						components: {
 							include: {
 								main: true,
@@ -295,6 +296,7 @@ export default (prisma: PrismaClient) => {
 		remoteHomepage: CommandProgramHMI
 
 		alarms: [CommandProgramAlarm] 
+		alarmPathways: [CommandProgramAlarmPathway]
 
 		tags: [CommandProgramTag]
 		types: [CommandProgramType]
