@@ -5,13 +5,14 @@ import cors from 'cors';
 
 import { MQTTAuth } from '@hive-command/rabbitmq-auth'
 import { MQTTHub } from '@hive-command/amqp-hub'
-import { AlarmCenter } from './alarm-center';
+import { AlarmCenter } from '@hive-command/alarm-engine';
 
 import { createClient } from "redis";
 
 import { PrismaClient } from '@hive-command/data';
 import { API } from './api';
 import { formatSnapshot, formatTagType } from './utils/format';
+import { PrismaRegister } from './alarm-center/prisma-register';
 
 (async () => {
 
@@ -23,7 +24,6 @@ import { formatSnapshot, formatTagType } from './utils/format';
 
     await redisCli.connect();
 
-    const alarmCenter = new AlarmCenter(prisma);
 
     const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string ) => {
         await Promise.all([
@@ -80,7 +80,8 @@ import { formatSnapshot, formatTagType } from './utils/format';
                                     }
                                 }
                             },
-                            alarms: true
+                            alarms: true,
+                            alarmPathways: true
                         }
                     }
                 }
@@ -154,6 +155,11 @@ import { formatSnapshot, formatTagType } from './utils/format';
                     [typeName]: [...(prev[typeName] || []), snapshot[tag.name] ]
                 }
             }, {} as any)
+
+            const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
+
+            const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({...pathway, script: pathway.script || ''}))
+            alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
             //Call alarm center hook to allow for business logic based alarm signals
             
             // alarmCenter.hook(device?.activeProgram?.alarms || [], device, snapshot, typedSnapshot)

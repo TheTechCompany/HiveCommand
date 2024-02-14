@@ -26,6 +26,7 @@
     "typescript": "4.9.5"
   },
   "dependencies": {
+    "@hive-command/alarm-engine": "workspace:^",
     "@hive-command/amqp-hub": "workspace:^",
     "@hive-command/data": "workspace:^",
     "@hive-command/interface-types": "workspace:^",

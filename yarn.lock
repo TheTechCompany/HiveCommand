@@ -4005,6 +4005,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hive-command/alarm-engine@workspace:^, @hive-command/alarm-engine@workspace:packages/core/command-alarms":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/alarm-engine@workspace:packages/core/command-alarms"
+  dependencies:
+    "@hive-command/interface-types": "workspace:^"
+    typescript: ^5.3.3
+  languageName: unknown
+  linkType: soft
+
 "@hive-command/amqp-client@^1.4.15-alpha.289, @hive-command/amqp-client@workspace:^, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-client@workspace:packages/communication/amqp-client"
@@ -4470,6 +4479,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/gds@workspace:packages/network/global-discovery-network"
   dependencies:
+    "@hive-command/alarm-engine": "workspace:^"
     "@hive-command/amqp-hub": "workspace:^"
     "@hive-command/data": "workspace:^"
     "@hive-command/interface-types": "workspace:^"
@@ -4684,6 +4694,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/scada@workspace:packages/core/command-scada"
   dependencies:
+    "@hive-command/alarm-engine": "workspace:^"
     "@hive-command/amqp-client": "workspace:^"
     "@hive-command/drivers-base": "workspace:^"
     "@hive-command/evented-values": "workspace:^"
@@ -36281,6 +36292,16 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: d92534dda639eb825db013203404c1fabca8ac630564283c9e7dc9e64fd9c9346c2de95ecebdf3e6e8c1c32941bca1cfe0da37877611feb9daf8feeaea58d230
+  languageName: node
+  linkType: hard
+
+"typescript@npm:^5.3.3":
+  version: 5.3.3
+  resolution: "typescript@npm:5.3.3"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 2007ccb6e51bbbf6fde0a78099efe04dc1c3dfbdff04ca3b6a8bc717991862b39fd6126c0c3ebf2d2d98ac5e960bcaa873826bb2bb241f14277034148f41f6a2
   languageName: node
   linkType: hard
 

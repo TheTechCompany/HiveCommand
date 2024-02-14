@@ -59,6 +59,7 @@
 
 		"@hive-command/data": ["./app/hivecommand-db/src"],
 
+		"@hive-command/alarm-engine": ["./core/command-alarms/src"],
 		"@hive-command/evented-values": ["./core/evented-values/src"],
 		"@hive-command/drivers-base": ["./drivers/command-driver/src"],
 

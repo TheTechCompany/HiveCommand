@@ -79,7 +79,8 @@ export const API = (prisma: PrismaClient) => {
                             include: {
                                 plugin: true
                             }
-                        }
+                        },
+                        alarmPathways: true
                     }
                 }
             }
@@ -100,6 +101,8 @@ export const API = (prisma: PrismaClient) => {
                 deviceId: device?.id,
 
                 dataScopes: device.activeProgram?.dataScopes || [],
+
+                alarmPathways: (device.activeProgram?.alarmPathways || []).filter((pathway) => pathway.scope?.toLowerCase() == "local"),
 
                 iotEndpoint: IOT_ENDPOINT,
                 iotSubject: process.env.IOT_EXCHANGE,
@@ -207,7 +210,8 @@ export const API = (prisma: PrismaClient) => {
                                     }
                                 }
                             }
-                        }
+                        },
+                        alarms: true
                     }
                 }
             }

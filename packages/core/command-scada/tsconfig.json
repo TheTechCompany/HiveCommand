@@ -108,6 +108,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
+    {"path": "../command-alarms"},
     {"path": "../evented-values"},
     {"path": "../../communication/amqp-client"},
     {"path": "../../drivers/command-driver"},

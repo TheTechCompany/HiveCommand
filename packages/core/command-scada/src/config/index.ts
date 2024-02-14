@@ -1,3 +1,4 @@
+import { HMITag } from '@hive-command/interface-types';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import path from 'path';
 
@@ -24,22 +25,35 @@ export interface LocalOptions {
         exchange: string
     }
 
-    tags?: {
-        name: string,
-        type: string,
-        scope?: {
-            id: string,
-            plugin: {
-                module: string
-            }
-        }
-    }[]
+    tags?: HMITag[]
+    // {
+    //     name: string,
+    //     type: string,
+    //     scope?: {
+    //         id: string,
+    //         plugin: {
+    //             module: string
+    //         }
+    //     }
+    // // }[]
     types?: {
         name: string,
         fields: {
             name: string,
             type: string
         }[]
+    }[]
+    
+    alarms?: {
+        id: string;
+        title: string,
+        script: string
+    }[]
+
+    alarmPathways?: {
+        id: string;
+        name: string;
+        script: string;
     }[]
 
 
