@@ -127,6 +127,7 @@ export default (prisma: PrismaClient) => {
                         id: nanoid(),
                         name: args.input.name,
                         scope: args.input.scope,
+                        script: args.input.script,
                         program: {
                             connect: {id: args.program}
                         }
@@ -140,6 +141,7 @@ export default (prisma: PrismaClient) => {
                     },
                     data: {
                         name: args.input.name,
+                        script: args.input.script,
                         scope: args.input.scope
                     }
                 })

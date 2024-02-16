@@ -2,7 +2,13 @@ import { gql, useApolloClient, useQuery } from "@apollo/client";
 import { useEffect } from "react";
 
  export const useDevice = (id: string) => {
+
     const client = useApolloClient();
+
+    const refetch = () => {
+        client.refetchQueries({include: ['BaseDeviceInfo']})
+    }
+
     const { data } = useQuery(gql`
         query BaseDeviceInfo ($id: ID){
      
@@ -191,11 +197,19 @@ import { useEffect } from "react";
         }
     })
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            refetch();
+        }, 30 * 1000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
     return {
         results: data?.commandDevices || [],
-        refetch: () => {
-            client.refetchQueries({include: ['BaseDeviceInfo']})
-        }
+        refetch
     }
 
 }
@@ -220,13 +234,14 @@ export const useConnectivity = (deviceId: string) => {
     `, {
 		variables: {
 			id: deviceId,
-		}
+		},
+        fetchPolicy: 'no-cache'
 	})
 
 	useEffect(() => {
         const interval = setInterval(() => {
             refetch();
-        }, 2000)
+        }, 10 * 1000)
 
         return () => {
             clearInterval(interval)
