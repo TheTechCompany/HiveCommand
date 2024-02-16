@@ -180,13 +180,14 @@ export default (prisma: PrismaClient) => {
 				
 			},
 			Mutation: {
-				createCommandProgram: async (root: any, args: {input: {name: string, templatePacks: string[]}}, context: any) => {
+				createCommandProgram: async (root: any, args: {input: {name: string, worldOptions: any, templatePacks: string[]}}, context: any) => {
 					if(!context?.jwt?.acl.can('create', 'CommandProgram')) throw new Error('Cannot create new CommandProgram');
 
 					const program = await prisma.program.create({
 						data: {
 							id: nanoid(),
 							name: args.input.name,
+							worldOptions: args.input.worldOptions,
 							templatePacks: {
 								connect: (args.input.templatePacks || []).map((x) => ({id: x}))
 							},
@@ -201,7 +202,7 @@ export default (prisma: PrismaClient) => {
 					})
 					return program;
 				},
-				updateCommandProgram: async (root: any, args: {id: string, input: {name: string, templatePacks: string[]}}, context: any) => {
+				updateCommandProgram: async (root: any, args: {id: string, input: {name: string, worldOptions: any, templatePacks: string[]}}, context: any) => {
 					const currentProgram = await prisma.program.findFirst({where: {id: args.id, organisation: context?.jwt?.organisation}});
 
 					if(!currentProgram) throw new Error('Program not found');
@@ -220,7 +221,8 @@ export default (prisma: PrismaClient) => {
 						where: {id: args.id},
 						data: {
 							name: args.input.name,
-							...templatePackUpdate
+							worldOptions: args.input.worldOptions,
+							...templatePackUpdate,
 						}
 					})
 
@@ -266,6 +268,8 @@ export default (prisma: PrismaClient) => {
 	input CommandProgramInput {
 		name: String	
 
+		worldOptions: JSON
+
 		templatePacks: [String]
 	}
 
@@ -284,6 +288,8 @@ export default (prisma: PrismaClient) => {
 	type CommandProgram {
 		id: ID! 
 		name: String
+
+		worldOptions: JSON
 
 		dataScopes: [CommandProgramDataScope]
 		templatePacks: [CommandHMIDevicePack]

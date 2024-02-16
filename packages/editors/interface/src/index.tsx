@@ -16,6 +16,11 @@ export interface InterfaceSelection {
     edges: Edge[];
 }
 
+export interface WorldOptions {
+    grid?: [number, number, boolean];
+}
+
+
 export interface InterfaceEditorProps {
 
     flowProps?: ReactFlowProps;
@@ -32,6 +37,9 @@ export interface InterfaceEditorProps {
 
     packs: ComponentPack[]
 
+    world?: WorldOptions;
+    onWorldChange?: (world: WorldOptions) => void;
+
     onNodeCreate?: (node: Node) => void;
     onNodeUpdate?: (node: Node) => void;
     onNodeDelete?: (node: Node | Node[]) => void;
@@ -43,7 +51,12 @@ export interface InterfaceEditorProps {
 
 export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
 
-    const [ grid, setGrid ] = useState<[number | undefined, number | undefined, boolean]>([5, 5, false])
+    const defaultGrid : [number, number, boolean] = [5, 5, false];
+
+    const [ worldOptions, setWorldOptions ] = useState<WorldOptions>({
+        grid: defaultGrid,
+        ...props.world
+    })
 
     const [ selected, setSelected ] = useState<InterfaceSelection | undefined>(undefined)
 
@@ -73,6 +86,17 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
     const node_ids = useMemo(() => (props.nodes || []).map((x) => x.id), [props.nodes])
     const edge_ids = useMemo(() => (props.edges || []).map((x) => x.id), [props.edges])
 
+    const updateWorld = (key: string, value: any) => {
+        let world = Object.assign({}, props.world);
+        (world as any)[key] = value;
+        setWorldOptions(world);
+        props.onWorldChange?.(world)
+    }
+
+    useEffect(() => {
+        setWorldOptions(props.world || {})
+    }, [props.world])
+
     return (
         <InterfaceEditorProvider value={{
             tags: props.tags || [],
@@ -88,9 +112,9 @@ export const InterfaceEditor : React.FC<InterfaceEditorProps> = (props) => {
             activeTool,
             toolRotation,
             changeTool: (tool: ComponentTool | null) => setActiveTool(tool),
-            grid,
+            grid: worldOptions?.grid,
             onChangeGrid: (grid) => {
-                setGrid(grid)
+                updateWorld('grid', grid)
             }
         }}>
             <Box 

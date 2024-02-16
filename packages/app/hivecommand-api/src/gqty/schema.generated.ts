@@ -114,21 +114,6 @@ export interface CommandDeviceWhere {
   network_name?: InputMaybe<Scalars["String"]>;
 }
 
-export interface CommandFunctionInput {
-  name?: InputMaybe<Scalars["String"]>;
-}
-
-export interface CommandFunctionPageInput {
-  edges?: InputMaybe<Scalars["JSON"]>;
-  name?: InputMaybe<Scalars["String"]>;
-  nodes?: InputMaybe<Scalars["JSON"]>;
-  parent?: InputMaybe<Scalars["String"]>;
-}
-
-export interface CommandFunctionWhere {
-  id?: InputMaybe<Scalars["ID"]>;
-}
-
 export interface CommandHMIDeviceInput {
   height?: InputMaybe<Scalars["Float"]>;
   name?: InputMaybe<Scalars["String"]>;
@@ -212,6 +197,7 @@ export interface CommandProgramDeviceWhere {
 export interface CommandProgramInput {
   name?: InputMaybe<Scalars["String"]>;
   templatePacks?: InputMaybe<Array<InputMaybe<Scalars["String"]>>>;
+  worldOptions?: InputMaybe<Scalars["JSON"]>;
 }
 
 export interface CommandProgramInterfaceInput {
@@ -502,33 +488,6 @@ export const generatedSchema = {
     id: { __type: "ID" },
     network_name: { __type: "String" },
   },
-  CommandFunction: {
-    __typename: { __type: "String!" },
-    createdAt: { __type: "DateTime" },
-    id: { __type: "ID!" },
-    name: { __type: "String" },
-    organisation: { __type: "HiveOrganisation" },
-    pages: { __type: "[CommandFunctionPage]" },
-  },
-  CommandFunctionInput: { name: { __type: "String" } },
-  CommandFunctionPage: {
-    __typename: { __type: "String!" },
-    children: { __type: "[CommandFunctionPage]" },
-    edges: { __type: "JSON" },
-    id: { __type: "ID!" },
-    label: { __type: "String" },
-    name: { __type: "String" },
-    nodes: { __type: "JSON" },
-    parent: { __type: "CommandFunctionPage" },
-    rank: { __type: "String" },
-  },
-  CommandFunctionPageInput: {
-    edges: { __type: "JSON" },
-    name: { __type: "String" },
-    nodes: { __type: "JSON" },
-    parent: { __type: "String" },
-  },
-  CommandFunctionWhere: { id: { __type: "ID" } },
   CommandHMIDevice: {
     __typename: { __type: "String!" },
     height: { __type: "Float" },
@@ -673,6 +632,7 @@ export const generatedSchema = {
     templates: { __type: "[CommandTemplateTransformer]" },
     types: { __type: "[CommandProgramType]" },
     usedOn: { __type: "CommandDevice" },
+    worldOptions: { __type: "JSON" },
   },
   CommandProgramAlarm: {
     __typename: { __type: "String!" },
@@ -769,6 +729,7 @@ export const generatedSchema = {
   CommandProgramInput: {
     name: { __type: "String" },
     templatePacks: { __type: "[String]" },
+    worldOptions: { __type: "JSON" },
   },
   CommandProgramInterfaceInput: {
     localHomepage: { __type: "Boolean" },
@@ -971,14 +932,6 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { input: "CommandDeviceReportInput", page: "ID" },
     },
-    createCommandFunction: {
-      __type: "CommandFunction!",
-      __args: { input: "CommandFunctionInput!" },
-    },
-    createCommandFunctionPage: {
-      __type: "CommandFunctionPage!",
-      __args: { fd: "ID", input: "CommandFunctionPageInput" },
-    },
     createCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { input: "CommandHMIDeviceInput", pack: "ID" },
@@ -1114,11 +1067,6 @@ export const generatedSchema = {
       __type: "CommandDeviceReport",
       __args: { id: "ID", page: "ID" },
     },
-    deleteCommandFunction: { __type: "Boolean!", __args: { id: "ID!" } },
-    deleteCommandFunctionPage: {
-      __type: "Boolean!",
-      __args: { fd: "ID", id: "ID" },
-    },
     deleteCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { id: "ID!", pack: "ID" },
@@ -1245,24 +1193,6 @@ export const generatedSchema = {
     updateCommandDeviceUptime: {
       __type: "CommandDevice!",
       __args: { uptime: "DateTime", where: "CommandDeviceWhere!" },
-    },
-    updateCommandFunction: {
-      __type: "CommandFunction!",
-      __args: { id: "ID!", input: "CommandFunctionInput!" },
-    },
-    updateCommandFunctionPage: {
-      __type: "CommandFunctionPage!",
-      __args: { fd: "ID", id: "ID", input: "CommandFunctionPageInput" },
-    },
-    updateCommandFunctionPageOrder: {
-      __type: "Boolean",
-      __args: {
-        above: "String",
-        below: "String",
-        fd: "ID",
-        id: "ID",
-        parent: "String",
-      },
     },
     updateCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
@@ -1458,10 +1388,6 @@ export const generatedSchema = {
       __type: "[CommandDevice]!",
       __args: { where: "CommandDeviceWhere" },
     },
-    commandFunctions: {
-      __type: "[CommandFunction]!",
-      __args: { where: "CommandFunctionWhere" },
-    },
     commandInterfaceDevicePacks: {
       __type: "[CommandHMIDevicePack]",
       __args: { id: "ID", registered: "Boolean" },
@@ -1598,27 +1524,6 @@ export interface CommandDeviceValue {
   valueKey?: Maybe<ScalarsEnums["String"]>;
 }
 
-export interface CommandFunction {
-  __typename?: "CommandFunction";
-  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
-  id: ScalarsEnums["ID"];
-  name?: Maybe<ScalarsEnums["String"]>;
-  organisation?: Maybe<HiveOrganisation>;
-  pages?: Maybe<Array<Maybe<CommandFunctionPage>>>;
-}
-
-export interface CommandFunctionPage {
-  __typename?: "CommandFunctionPage";
-  children?: Maybe<Array<Maybe<CommandFunctionPage>>>;
-  edges?: Maybe<ScalarsEnums["JSON"]>;
-  id: ScalarsEnums["ID"];
-  label?: Maybe<ScalarsEnums["String"]>;
-  name?: Maybe<ScalarsEnums["String"]>;
-  nodes?: Maybe<ScalarsEnums["JSON"]>;
-  parent?: Maybe<CommandFunctionPage>;
-  rank?: Maybe<ScalarsEnums["String"]>;
-}
-
 export interface CommandHMIDevice {
   __typename?: "CommandHMIDevice";
   height?: Maybe<ScalarsEnums["Float"]>;
@@ -1745,6 +1650,7 @@ export interface CommandProgram {
   templates?: Maybe<Array<Maybe<CommandTemplateTransformer>>>;
   types?: Maybe<Array<Maybe<CommandProgramType>>>;
   usedOn?: Maybe<CommandDevice>;
+  worldOptions?: Maybe<ScalarsEnums["JSON"]>;
 }
 
 export interface CommandProgramAlarm {
@@ -1963,13 +1869,6 @@ export interface Mutation {
     input?: Maybe<CommandDeviceReportInput>;
     page?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
-  createCommandFunction: (args: {
-    input: CommandFunctionInput;
-  }) => CommandFunction;
-  createCommandFunctionPage: (args?: {
-    fd?: Maybe<Scalars["ID"]>;
-    input?: Maybe<CommandFunctionPageInput>;
-  }) => CommandFunctionPage;
   createCommandInterfaceDevice: (args?: {
     input?: Maybe<CommandHMIDeviceInput>;
     pack?: Maybe<Scalars["ID"]>;
@@ -2084,13 +1983,6 @@ export interface Mutation {
     id?: Maybe<Scalars["ID"]>;
     page?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandDeviceReport>;
-  deleteCommandFunction: (args: {
-    id: Scalars["ID"];
-  }) => ScalarsEnums["Boolean"];
-  deleteCommandFunctionPage: (args?: {
-    fd?: Maybe<Scalars["ID"]>;
-    id?: Maybe<Scalars["ID"]>;
-  }) => ScalarsEnums["Boolean"];
   deleteCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     pack?: Maybe<Scalars["ID"]>;
@@ -2225,22 +2117,6 @@ export interface Mutation {
     uptime?: Maybe<Scalars["DateTime"]>;
     where: CommandDeviceWhere;
   }) => CommandDevice;
-  updateCommandFunction: (args: {
-    id: Scalars["ID"];
-    input: CommandFunctionInput;
-  }) => CommandFunction;
-  updateCommandFunctionPage: (args?: {
-    fd?: Maybe<Scalars["ID"]>;
-    id?: Maybe<Scalars["ID"]>;
-    input?: Maybe<CommandFunctionPageInput>;
-  }) => CommandFunctionPage;
-  updateCommandFunctionPageOrder: (args?: {
-    above?: Maybe<Scalars["String"]>;
-    below?: Maybe<Scalars["String"]>;
-    fd?: Maybe<Scalars["ID"]>;
-    id?: Maybe<Scalars["ID"]>;
-    parent?: Maybe<Scalars["String"]>;
-  }) => Maybe<ScalarsEnums["Boolean"]>;
   updateCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     input?: Maybe<CommandHMIDeviceInput>;
@@ -2400,9 +2276,6 @@ export interface Query {
   commandDevices: (args?: {
     where?: Maybe<CommandDeviceWhere>;
   }) => Array<Maybe<CommandDevice>>;
-  commandFunctions: (args?: {
-    where?: Maybe<CommandFunctionWhere>;
-  }) => Array<Maybe<CommandFunction>>;
   commandInterfaceDevicePacks: (args?: {
     id?: Maybe<Scalars["ID"]>;
     registered?: Maybe<Scalars["Boolean"]>;
@@ -2435,8 +2308,6 @@ export interface SchemaObjectTypes {
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
   CommandDeviceTimeseriesTotal: CommandDeviceTimeseriesTotal;
   CommandDeviceValue: CommandDeviceValue;
-  CommandFunction: CommandFunction;
-  CommandFunctionPage: CommandFunctionPage;
   CommandHMIDevice: CommandHMIDevice;
   CommandHMIDevicePack: CommandHMIDevicePack;
   CommandHMIDevicePort: CommandHMIDevicePort;
@@ -2486,8 +2357,6 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceTimeseriesData"
   | "CommandDeviceTimeseriesTotal"
   | "CommandDeviceValue"
-  | "CommandFunction"
-  | "CommandFunctionPage"
   | "CommandHMIDevice"
   | "CommandHMIDevicePack"
   | "CommandHMIDevicePort"

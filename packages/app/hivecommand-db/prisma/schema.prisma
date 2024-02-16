@@ -240,6 +240,8 @@ model Program {
 
   name String
 
+  worldOptions Json?
+
   dataScopes    ProgramDataScope[]       @relation(name: "hasDataScopes")
   templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
