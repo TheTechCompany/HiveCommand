@@ -7,5 +7,8 @@
   },
   "scripts": {
     "build": "tsc -b"
+  },
+  "dependencies": {
+    "@hive-command/interface-types": "workspace:^"
   }
 }

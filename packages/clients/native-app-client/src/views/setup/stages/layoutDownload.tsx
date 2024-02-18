@@ -14,7 +14,7 @@ export const LayoutDownload = () => {
     useEffect(() => {
         
         axios.get(`${state.discoveryServer}/control-layout?token=${state.authToken}`).then(async (res) => {
-            // console.log("controlLayout", {res})
+
             const data : GDSControlLayout = res.data.results;
             await setGlobalState?.((state) => ({...state, ...data}))
             setLogs((logs) => {

@@ -4204,6 +4204,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/discovery-api-types@workspace:packages/types/discovery-api"
   dependencies:
+    "@hive-command/interface-types": "workspace:^"
     typescript: ^5.3.3
   languageName: unknown
   linkType: soft
