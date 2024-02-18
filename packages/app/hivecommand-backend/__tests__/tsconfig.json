@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "ES2017",
+        "module": "CommonJS",
+        "skipLibCheck": true       
+    },
+    // "include": ["./__tests__/module.ts"],
+    // "exclude": ["node_modules/", "src/"],
+    // "files": ["./module.ts"]
+}

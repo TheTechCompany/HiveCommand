@@ -5,7 +5,7 @@ import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { Home } from './pages/home'
-import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
+import { KeyboardArrowLeft as ArrowLeft, Menu, Error } from '@mui/icons-material'
 
 import { Routes, Route } from 'react-router-dom';
 import {Controls} from './pages/controls'
@@ -107,12 +107,17 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     name
                     script
                     scope
+
+                    compileError
+
                 }
 
                 alarms {
                     id
                     title
                     script
+
+                    compileError
                     
                     rank
                 }
@@ -430,6 +435,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
           name: 'Alarm Pathways',
           children: program?.alarmPathways?.map((pathway) => ({
             id: pathway.id,
+            icon: pathway.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
             name: pathway.name
           })),
           editor: <AlarmPathwayEditor />  
@@ -440,6 +446,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             name: 'Alarms',
             children: program?.alarms?.map((alarm) => ({
                 id: alarm.id,
+                icon: alarm.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
                 name: alarm.title
             })),
             // children: [

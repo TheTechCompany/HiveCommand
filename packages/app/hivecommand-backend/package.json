@@ -10,7 +10,8 @@
     "build": "tsc -b",
     "db:update": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "test": "ts-node __tests__/transpile.ts"
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
@@ -56,6 +57,7 @@
     "nanoid": "^3.1.30",
     "pg": "^8.7.1",
     "redis": "4.6.8",
+    "ts-morph": "^21.0.1",
     "typed-graphql-subscriptions": "^0.0.1"
   }
 }

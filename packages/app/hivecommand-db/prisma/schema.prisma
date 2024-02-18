@@ -339,6 +339,7 @@ model ProgramAlarm {
   title   String?
 
   script String?
+  compiledScript String?
 
   rank String?
 
@@ -356,6 +357,7 @@ model ProgramAlarmPathway {
   name String
   scope String @default("REMOTE")
   script String?
+  compiledScript String?
 
   program Program @relation(name: "hasAlarmPathway", references: [id], fields: [programId])
   programId String

@@ -25,7 +25,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
     await redisCli.connect();
 
 
-    const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string ) => {
+    const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string) => {
         await Promise.all([
             prisma.deviceValue.create({
                 data: {
@@ -45,24 +45,24 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                     lastSeen: new Date(timestamp)
                 }
             }),
-            redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}`: ''}`, `${value}`)
+            redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
         ]);
     };
 
 
     try {
 
-        const onMessage =  async ({ routingKey, messageContent, userId } : {
-            routingKey?: string, 
-            messageContent?: {dataType: string, value: any, timestamp: number}, 
+        const onMessage = async ({ routingKey, messageContent, userId }: {
+            routingKey?: string,
+            messageContent?: { dataType: string, value: any, timestamp: number },
             userId?: string
         }) => {
 
             console.log(`Data from ${userId} ${routingKey}`)
             console.log(messageContent?.value);
 
-            const device = await prisma.device.findFirst({ 
-                where: { network_name: userId },  
+            const device = await prisma.device.findFirst({
+                where: { network_name: userId },
                 include: {
                     activeProgram: {
                         include: {
@@ -93,85 +93,89 @@ import { PrismaRegister } from './alarm-center/prisma-register';
             if (typeof (messageContent.value) == "object") {
 
                 await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                    try{
+                    try {
                         await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
-                    }catch(e){
+                    } catch (e) {
                         console.error("publish multi error", e, routingKey, messageContent);
                     }
                 }))
-                
+
             } else {
-                try{
+                try {
                     let mainKey = routingKey?.split('/')?.[0]
                     let subKey = routingKey?.split('/')?.[1]
 
                     await publishValue(device.id, mainKey, messageContent?.value, messageContent.timestamp, subKey)
-                }catch(e){
+                } catch (e) {
                     console.error("publish single error", e, routingKey, messageContent);
                 }
             }
             if (!device || !routingKey || !messageContent) return;
 
-            const results = await redisCli.HGETALL(`device:${device.id}:values`);
+            try {
+                const results = await redisCli.HGETALL(`device:${device.id}:values`);
 
-			const values = Object.keys(results).map((r) => {
-							return {
-								deviceId: device.id,
-								placeholder: r?.split(':')?.[0],
-								key: r?.split(':')?.[1],
-								value: results?.[r]
-							}
-					})
+                const values = Object.keys(results).map((r) => {
+                    return {
+                        deviceId: device.id,
+                        placeholder: r?.split(':')?.[0],
+                        key: r?.split(':')?.[1],
+                        value: results?.[r]
+                    }
+                })
 
-            const deviceTags = (device?.activeProgram?.tags || []).map((tag) => {
-                if(tag.type)
-                return {
-                    ...tag,
-                    type: tag.type ? formatTagType(tag.type) : null
-                }
-            })
-
-            const deviceTypes = (device?.activeProgram?.types || []).map((type) => {
-                return {
-                    ...type,
-                    fields: type.fields.map((field) => {
+                const deviceTags = (device?.activeProgram?.tags || []).map((tag) => {
+                    if (tag.type)
                         return {
-                            ...field,
-                            type: formatTagType(field)
+                            ...tag,
+                            type: tag.type ? formatTagType(tag.type) : null
                         }
-                    })
-                }
-            })
+                })
 
-            const snapshot : any = formatSnapshot(deviceTags, deviceTypes, values)
+                const deviceTypes = (device?.activeProgram?.types || []).map((type) => {
+                    return {
+                        ...type,
+                        fields: type.fields.map((field) => {
+                            return {
+                                ...field,
+                                type: formatTagType(field)
+                            }
+                        })
+                    }
+                })
 
-            const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
+                const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
 
-                let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
-                if(!typeName) return prev;
+                const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
 
-                return {
-                    ...prev,
-                    [typeName]: [...(prev[typeName] || []), snapshot[tag.name] ]
-                }
-            }, {} as any)
+                    let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
+                    if (!typeName) return prev;
 
-            const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
+                    return {
+                        ...prev,
+                        [typeName]: [...(prev[typeName] || []), snapshot[tag.name]]
+                    }
+                }, {} as any)
 
-            const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({...pathway, script: pathway.script || ''}))
-            alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
+                const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
+
+                const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({ ...pathway, script: pathway.script || '' }))
+                alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
+            } catch (err) {
+                console.error("Error with alarmCenter.hook")
+            }
             //Call alarm center hook to allow for business logic based alarm signals
-            
+
             // alarmCenter.hook(device?.activeProgram?.alarms || [], device, snapshot, typedSnapshot)
-        } 
+        }
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
 
             console.log('onStatus: ', id, status);
-            
+
             const device = await prisma.device.findFirst({ where: { network_name: id } })
 
-            if(!device) return;
+            if (!device) return;
 
             await prisma.device.update({
                 where: {
