@@ -8,7 +8,7 @@ export const AlarmList = () => {
 
     const { alarms } = useContext(DeviceControlContext);
     
-    const sortedAlarms = alarms?.slice()?.sort((a,b) => a.createdAt?.getTime() - b.createdAt?.getTime())
+    const sortedAlarms = alarms?.slice()?.sort((a,b) => new Date(a.createdAt)?.getTime() - new Date(b.createdAt)?.getTime())
 
     const [ expanded, setExpanded ] = useState<string[]>([])
 
