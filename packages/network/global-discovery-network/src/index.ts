@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import { MQTTAuth } from '@hive-command/rabbitmq-auth'
 import { MQTTHub } from '@hive-command/amqp-hub'
-import { AlarmCenter } from '@hive-command/alarm-engine';
+import { AlarmCenter, invertSnapshot } from '@hive-command/alarm-engine';
 
 import { createClient } from "redis";
 
@@ -128,7 +128,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                     }
                 })
 
-                const { tags, types } = device?.activeProgram || {};
+                const { tags = [], types = [] } = device?.activeProgram || {};
 
                 const deviceTags = (tags || []).map((tag) => {
                         return {
@@ -151,7 +151,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 
                 const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
 
-                const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
+                const typedSnapshot = tags?.reduce((prev, tag) => {
 
                     let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
                     if (!typeName) return prev;
@@ -161,6 +161,8 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                         [typeName]: [...(prev[typeName] || []), snapshot[tag.name]]
                     }
                 }, {} as any)
+
+                invertSnapshot(snapshot, deviceTags)
 
                 const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
 
