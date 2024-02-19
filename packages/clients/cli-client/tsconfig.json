@@ -102,6 +102,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "references": [
-    {"path": "../../core/command-scada"}
+    {"path": "../../core/command-scada"},
+    {"path": "../../types/discovery-api"}
   ]
 }

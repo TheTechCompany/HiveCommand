@@ -4,7 +4,7 @@ import { InfiniteCanvas, ContextMenu, IconNodeFactory, InfiniteCanvasNode, ZoomC
 import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
 import Settings from './Settings'
 import { useParams } from 'react-router-dom';
-import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath } from '@hive-command/api';
+import { useCreateHMINode, useDeleteHMINode, useDeleteHMIPath, useUpdateHMINode, useCreateHMIPath, useUpdateHMIPath, useUpdateProgram, useUpdateProgramWorld } from '@hive-command/api';
 import { useCommandEditor } from '../../context';
 import { HMIContext, HMINodeData } from './context';
 
@@ -54,6 +54,8 @@ export const Controls = (props) => {
             commandPrograms(where: {id: $id}){
                 id
                 name
+
+                worldOptions
 
                 tags {
                     id
@@ -226,6 +228,8 @@ export const Controls = (props) => {
     const refetch = () => {
         client.refetchQueries({ include: ['Q'] })
     }
+
+    const updateProgram = useUpdateProgramWorld(id);
 
     const _createHMINode = useCreateHMINode(id, activeId)
     const _updateHMINode = useUpdateHMINode(id)
@@ -559,6 +563,10 @@ export const Controls = (props) => {
                 }}>
 
                 <InterfaceEditor
+                    world={program?.worldOptions}
+                    onWorldChange={(world) => {
+                        updateProgram(world)
+                    }}
                     nodes={fullHMIElements}
                     edges={edges}
                     tags={program.tags}

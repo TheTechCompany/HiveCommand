@@ -45,12 +45,14 @@ export const ConfigInput : React.FC<ConfigInputProps> = (props) => {
 
         let tagSchema = tags.reduce((prev, curr) => {
             // console.log({inScalar: curr.type in scalarTypes, index: curr.type.indexOf('[]') > -1, replace: curr.type.replace(/[]/, '')})
+            if(curr.type)
             return {
                 ...prev,
                 [curr.name]: scalarTypes.indexOf(curr.type) > -1 ?
                     (curr.type.indexOf('[]') > -1 ? `${lookupType(curr.type?.replace('[]', '') as keyof typeof DataTypes)}[]` : lookupType(curr.type as keyof typeof DataTypes))
                     : curr.type
             }
+            else return prev;
 
         }, {});
 

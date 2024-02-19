@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { GDSControlLayout, GDSNetworkLayout } from '@hive-command/discovery-api-types'
 
 export const exchangeShortcode = async (discoveryServer: string, provisionCode: string) => {
 
@@ -13,7 +14,7 @@ export const exchangeShortcode = async (discoveryServer: string, provisionCode: 
     }
 }
 
-export const getProgramLayout = async (discoveryServer: string, authToken: string) => {
+export const getProgramLayout = async (discoveryServer: string, authToken: string) : Promise<[GDSControlLayout, GDSNetworkLayout]> => {
     const [ controlLayout, networkLayout ] = await Promise.all([
         axios.get(`${discoveryServer}/control-layout?token=${authToken}`).then(async (res) => {
             // console.log("controlLayout", {res})

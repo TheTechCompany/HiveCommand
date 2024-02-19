@@ -3,5 +3,11 @@
 export interface HMIType {
     id: string;
     name: string;
-    fields: {id: string, name: string, type: string}[];
+    fields: HMITypeField[];
+}
+
+export interface HMITypeField {
+    id: string, 
+    name: string, 
+    type?: string | null
 }

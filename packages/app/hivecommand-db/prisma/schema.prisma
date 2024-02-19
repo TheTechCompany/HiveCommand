@@ -25,8 +25,6 @@ model Device {
 
   dataLayout Json?
 
-  deviceMapping DeviceMapping[] @relation(name: "hasDeviceMapping")
-
   alarms Alarm[] @relation(name: "hasAlarmed")
 
   activeProgram Program? @relation(name: "useProgram", fields: [program], references: [id])
@@ -45,16 +43,6 @@ model Device {
   organisation String
 }
 
-model DeviceMapping {
-  id   String @id
-  path String
-
-  deviceState   IOTemplateState @relation(name: "mapsDeviceState", references: [id], fields: [deviceStateId])
-  deviceStateId String
-
-  owner   Device @relation(name: "hasDeviceMapping", fields: [ownerId], references: [id])
-  ownerId String
-}
 
 model DeviceScreen {
   id   String @id
@@ -174,92 +162,10 @@ model DeviceReport {
   pageId String
 }
 
-//TODO allow IOTemplate to be added by user/org
-model IOTemplate {
-  id   String @id
-  name String
 
-  type String?
 
-  tagPrefix String?
 
-  state   IOTemplateState[]  @relation(name: "hasState")
-  actions IOTemplateAction[] @relation(name: "hasAction")
 
-  // config IOTemplateConfig[] @relation(name: "hasIOConfig")
-  // program Program? @relation(name: "hasTemplates", fields: [programId], references: [id])
-  // programId String?
-  
-
-  createdAt DateTime @default(now())
-}
-
-// model IOTemplateConfig {
-//   id String @id
-//   key String
-//   type String
-
-//   device IOTemplate @relation(name: "hasIOConfig", references: [id], fields: [deviceId], onDelete: Cascade)
-//   deviceId String
-// }
-
-model IOTemplateAction {
-  id  String @id
-  key String
-
-  func String?
-
-  device   IOTemplate @relation(name: "hasAction", references: [id], fields: [deviceId], onDelete: Cascade)
-  deviceId String
-}
-
-model IOTemplateState {
-  id String @id
-
-  key  String
-  type String
-
-  inputUnits String?
-  units      String?
-  writable   Boolean
-
-  min String?
-  max String?
-
-  mappedBy DeviceMapping[] @relation(name: "mapsDeviceState")
-
-  device   IOTemplate @relation(name: "hasState", references: [id], fields: [deviceId], onDelete: Cascade)
-  deviceId String
-}
-
-model FunctionalDescription {
-  id   String @id
-  name String
-
-  pages FunctionalDescriptionPage[] @relation(name: "hasFDPage")
-
-  organisation String
-
-  createdAt DateTime @default(now())
-}
-
-model FunctionalDescriptionPage {
-  id   String @id
-  name String
-
-  rank String
-
-  nodes Json?
-  edges Json?
-
-  parent   FunctionalDescriptionPage? @relation(name: "hasFDParent", references: [id], fields: [parentId])
-  parentId String?
-
-  children FunctionalDescriptionPage[] @relation(name: "hasFDParent")
-
-  functionalDescription   FunctionalDescription @relation(name: "hasFDPage", references: [id], fields: [functionalDescriptionId])
-  functionalDescriptionId String
-}
 
 model ElectricalSchematic {
   id String @id
@@ -334,6 +240,8 @@ model Program {
 
   name String
 
+  worldOptions Json?
+
   dataScopes    ProgramDataScope[]       @relation(name: "hasDataScopes")
   templatePacks CanvasNodeTemplatePack[] @relation(name: "useTemplatePack")
 
@@ -353,6 +261,8 @@ model Program {
   types ProgramType[] @relation(name: "hasTypes")
 
   alarms ProgramAlarm[] @relation(name: "useAlarm")
+
+  alarmPathways ProgramAlarmPathway[] @relation(name: "hasAlarmPathway")
 
   usedBy Device[] @relation(name: "useProgram")
 
@@ -429,6 +339,7 @@ model ProgramAlarm {
   title   String?
 
   script String?
+  compiledScript String?
 
   rank String?
 
@@ -438,6 +349,21 @@ model ProgramAlarm {
   programId String
 
   createdAt DateTime @default(now())
+}
+
+model ProgramAlarmPathway {
+  id String @id
+
+  name String
+  scope String @default("REMOTE")
+  script String?
+  compiledScript String?
+
+  program Program @relation(name: "hasAlarmPathway", references: [id], fields: [programId])
+  programId String
+
+  @@unique([name, programId])
+
 }
 
 model ProgramHMI {

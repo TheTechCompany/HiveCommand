@@ -5,13 +5,14 @@ import cors from 'cors';
 
 import { MQTTAuth } from '@hive-command/rabbitmq-auth'
 import { MQTTHub } from '@hive-command/amqp-hub'
-import { AlarmCenter } from './alarm-center';
+import { AlarmCenter } from '@hive-command/alarm-engine';
 
 import { createClient } from "redis";
 
 import { PrismaClient } from '@hive-command/data';
 import { API } from './api';
-import { formatSnapshot } from './utils/format';
+import { formatSnapshot, formatTagType } from './utils/format';
+import { PrismaRegister } from './alarm-center/prisma-register';
 
 (async () => {
 
@@ -23,9 +24,8 @@ import { formatSnapshot } from './utils/format';
 
     await redisCli.connect();
 
-    const alarmCenter = new AlarmCenter(prisma);
 
-    const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string ) => {
+    const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string) => {
         await Promise.all([
             prisma.deviceValue.create({
                 data: {
@@ -45,30 +45,47 @@ import { formatSnapshot } from './utils/format';
                     lastSeen: new Date(timestamp)
                 }
             }),
-            redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}`: ''}`, `${value}`)
+            redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
         ]);
     };
 
 
     try {
 
-        const onMessage =  async ({ routingKey, messageContent, userId } : {
-            routingKey?: string, 
-            messageContent?: {dataType: string, value: any, timestamp: number}, 
+        const onMessage = async ({ routingKey, messageContent, userId }: {
+            routingKey?: string,
+            messageContent?: { dataType: string, value: any, timestamp: number },
             userId?: string
         }) => {
 
             console.log(`Data from ${userId} ${routingKey}`)
             console.log(messageContent?.value);
 
-            const device = await prisma.device.findFirst({ 
-                where: { network_name: userId },  
+            const device = await prisma.device.findFirst({
+                where: { network_name: userId },
                 include: {
                     activeProgram: {
                         include: {
-                            tags: {include: {type: true}},
-                            types: true,
-                            alarms: true
+                            types: {
+                                include: {
+                                    fields: {
+                                        include: {
+                                            type: true
+                                        }
+                                    }
+                                }
+                            },
+                            tags: {
+                                include: {
+                                    type: {
+                                        include: {
+                                            type: true
+                                        }
+                                    }
+                                }
+                            },
+                            alarms: true,
+                            alarmPathways: true
                         }
                     }
                 }
@@ -80,60 +97,90 @@ import { formatSnapshot } from './utils/format';
             if (typeof (messageContent.value) == "object") {
 
                 await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                    try{
+                    try {
                         await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
-                    }catch(e){
+                    } catch (e) {
                         console.error("publish multi error", e, routingKey, messageContent);
                     }
                 }))
-                
+
             } else {
-                try{
+                try {
                     let mainKey = routingKey?.split('/')?.[0]
                     let subKey = routingKey?.split('/')?.[1]
 
                     await publishValue(device.id, mainKey, messageContent?.value, messageContent.timestamp, subKey)
-                }catch(e){
+                } catch (e) {
                     console.error("publish single error", e, routingKey, messageContent);
                 }
             }
             if (!device || !routingKey || !messageContent) return;
 
-            const results = await redisCli.HGETALL(`device:${device.id}:values`);
+            try {
+                const results = await redisCli.HGETALL(`device:${device.id}:values`);
 
-			const values = Object.keys(results).map((r) => {
-							return {
-								deviceId: device.id,
-								placeholder: r?.split(':')?.[0],
-								key: r?.split(':')?.[1],
-								value: results?.[r]
-							}
-					})
+                const values = Object.keys(results).map((r) => {
+                    return {
+                        deviceId: device.id,
+                        placeholder: r?.split(':')?.[0],
+                        key: r?.split(':')?.[1],
+                        value: results?.[r]
+                    }
+                })
 
-            const snapshot : any = formatSnapshot(device?.activeProgram?.tags || [], device?.activeProgram?.types || [], values)
+                const { tags, types } = device?.activeProgram || {};
 
-            const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
+                const deviceTags = (tags || []).map((tag) => {
+                        return {
+                            ...tag,
+                            type: tag.type ? formatTagType(tag.type) : null
+                        }
+                })
 
-                let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
-                if(!typeName) return prev;
+                const deviceTypes = (types || []).map((type) => {
+                    return {
+                        ...type,
+                        fields: type.fields.map((field) => {
+                            return {
+                                ...field,
+                                type: formatTagType(field)
+                            }
+                        })
+                    }
+                })
 
-                return {
-                    ...prev,
-                    [typeName]: [...(prev[typeName] || []), snapshot[tag.name] ]
-                }
-            }, {} as any)
+                const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
+
+                const typedSnapshot = device?.activeProgram?.tags?.reduce((prev, tag) => {
+
+                    let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
+                    if (!typeName) return prev;
+
+                    return {
+                        ...prev,
+                        [typeName]: [...(prev[typeName] || []), snapshot[tag.name]]
+                    }
+                }, {} as any)
+
+                const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
+
+                const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({ ...pathway, script: pathway.script || '' }))
+                alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
+            } catch (err) {
+                console.error("Error with alarmCenter.hook")
+            }
             //Call alarm center hook to allow for business logic based alarm signals
-            
+
             // alarmCenter.hook(device?.activeProgram?.alarms || [], device, snapshot, typedSnapshot)
-        } 
+        }
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
 
             console.log('onStatus: ', id, status);
-            
+
             const device = await prisma.device.findFirst({ where: { network_name: id } })
 
-            if(!device) return;
+            if (!device) return;
 
             await prisma.device.update({
                 where: {

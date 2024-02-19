@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/scada",
-  "version": "1.4.15-alpha.289",
+  "version": "1.4.15-alpha.293",
   "publishConfig": {
     "access": "public"
   },
@@ -13,6 +13,7 @@
   "main": "dist/index.js",
   "packageManager": "yarn@3.6.4",
   "dependencies": {
+    "@hive-command/alarm-engine": "workspace:^",
     "@hive-command/amqp-client": "workspace:^",
     "@hive-command/drivers-base": "workspace:^",
     "@hive-command/evented-values": "workspace:^",

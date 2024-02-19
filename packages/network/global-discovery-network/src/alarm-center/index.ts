@@ -6,7 +6,7 @@
 */
 
 import { MQTTHubMessage } from "@hive-command/amqp-hub";
-import { ALARM_LEVEL, makeHook } from "./hook";
+import { ALARM_LEVEL, makeHook, makeNotification } from "./hook";
 import { PrismaClient } from "@hive-command/data";
 import { nanoid } from 'nanoid'
 
@@ -68,11 +68,34 @@ export class AlarmCenter {
         return true;
     }
 
-    async sendNotification(message: string, pathway?: string){
+    async sendNotification(deviceId: string, causeId: string, message: string, pathway?: string){
+        const device : any= await this.prisma?.device.findFirst({
+             where: {id: deviceId},  
+            include: {
+                activeProgram: {
+                    include: {
+                        alarmPathways: true
+                    }
+                }
+            }
+        }) 
 
+        if(!device) return null;
+
+        const {activeProgram: {alarmPathways}} = device;
+
+        console.log({alarmPathways, pathway})
+
+        const pathwayObj = alarmPathways?.find((a: any) => a.name == pathway)?.script;
+
+        if(!pathwayObj) return null;
+            
+        const { sendNotification } = makeNotification(pathwayObj)
+        console.log("Sending notification")
+        await sendNotification?.(message)
     }
 
-    async hook (alarms: Alarm[], device: {id: string}, values: any, typedValues: any) {
+    async hook (alarms: Alarm[], alarmPathways: {name: string}[], device: {id: string}, values: any, typedValues: any) {
         //Look up device and routing key in alarms list
         
         const compiledAlarms = alarms.map((x) => {
@@ -80,9 +103,11 @@ export class AlarmCenter {
             const runtimeId = nanoid();
             console.time(`Compiling hook ${runtimeId}`);
 
-            const hook = makeHook(x.script || '', async (message: string, level?: ALARM_LEVEL, sticky?: boolean) => {
-                return  await this.raiseAlarm(device.id, x.id, message, level, sticky)
-            }, this.sendNotification)
+            const hook = makeHook(x.script || '', alarmPathways, async (message: string, level?: ALARM_LEVEL, sticky?: boolean) => {
+                return  await this.raiseAlarm(device.id, x.id, message, level, sticky);
+            }, async (message: string, pathway?: string) => {
+                return await this.sendNotification(device.id, x.id, message, pathway);
+            })
 
             console.timeEnd(`Compiling hook ${runtimeId}`);
 

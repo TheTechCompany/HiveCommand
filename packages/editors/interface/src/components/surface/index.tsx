@@ -1,6 +1,6 @@
 import { nodeTypes, edgeTypes } from "@hive-command/canvas-nodes";
 import React, { KeyboardEvent, useEffect, useMemo, useState } from "react";
-import ReactFlow, { Node, Edge, Background, ConnectionMode, Controls, useOnSelectionChange, useNodesState, useEdgesState, Connection, NodePositionChange, useReactFlow, useNodesInitialized } from "reactflow";
+import ReactFlow, { Node, Edge, Background, ConnectionMode, Controls, useOnSelectionChange, useNodesState, useEdgesState, Connection, NodePositionChange, useReactFlow, useNodesInitialized, ReactFlowProps } from "reactflow";
 import { useInterfaceEditor } from "../../context";
 import { nanoid } from 'nanoid';
 import { Box } from '@mui/material';
@@ -17,6 +17,8 @@ export interface InterfaceConnection extends Partial<Connection> {
 }
 
 export interface InterfaceEditorSurfaceProps {
+
+    flowProps?: ReactFlowProps;
     nodes: Node[],
     edges: Edge[]
 
@@ -119,6 +121,7 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
                 rotation={toolRotation}
             />
             <ReactFlow
+                {...props.flowProps}
                 snapToGrid={grid?.[2]}
                 snapGrid={grid?.[0] && grid?.[1] ? [grid?.[0], grid?.[1]] : undefined}
                 connectionMode={ConnectionMode.Loose}
@@ -188,12 +191,11 @@ export const InterfaceEditorSurface: React.FC<InterfaceEditorSurfaceProps> = (pr
                                 }
                             })
 
-                            if (nodesInitialized) props.onSelectionChange?.(s)
+                            if (nodesInitialized && changes.filter((x) => x.type == 'select').length > 0) props.onSelectionChange?.(s)
 
                             return s;
                         })
                     }
-
 
                     // setSelected(s)
                     onNodesChange(changes.filter((a: any) => (a.type !== 'dimensions' && !a.resizing) && a.type !== 'select'))

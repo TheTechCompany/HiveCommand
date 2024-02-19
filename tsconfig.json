@@ -59,6 +59,7 @@
 
 		"@hive-command/data": ["./app/hivecommand-db/src"],
 
+		"@hive-command/alarm-engine": ["./core/command-alarms/src"],
 		"@hive-command/evented-values": ["./core/evented-values/src"],
 		"@hive-command/drivers-base": ["./drivers/command-driver/src"],
 
@@ -72,6 +73,7 @@
 		"@hive-command/opcua-utils": ["./communication/opc-utils/src"],
 
 		"@hive-command/interface-types": ["./types/interface-types/src"],
+		"@hive-command/discovery-api-types": ["./types/discovery-api/src"],
 		"@hive-command/electrical-types": ["./types/electrical-types/src"],
 
 	  }

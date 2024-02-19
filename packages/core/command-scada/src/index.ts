@@ -6,6 +6,8 @@ import { MQTTClient } from '@hive-command/amqp-client';
 import { mkdirSync, existsSync } from 'fs';
 import path from 'path';
 import { appData, formatValue } from './utils';
+import { AlarmCenter, invertSnapshot } from '@hive-command/alarm-engine'
+import { LocalRegister } from './alarms/local-register';
 
 export class ScadaCommand extends EventEmitter {
 
@@ -18,6 +20,8 @@ export class ScadaCommand extends EventEmitter {
     private eventedValues: EventedValueStore;
 
     private workingDirectory: string;
+
+    private alarmEngine : AlarmCenter;
 
     constructor(config?: LocalOptions) {
         super();
@@ -34,6 +38,8 @@ export class ScadaCommand extends EventEmitter {
         });
 
         this.eventedValues = new EventedValueStore();
+
+        this.alarmEngine = new AlarmCenter(new LocalRegister());
 
         this.driverRegistry = new DriverRegistry({
             pluginDir: path.join(this.workingDirectory, 'hivecommand-plugins'),
@@ -52,6 +58,7 @@ export class ScadaCommand extends EventEmitter {
                 exchange: this.options?.iot?.exchange
             })
         }
+
 
     }
 
@@ -162,6 +169,15 @@ export class ScadaCommand extends EventEmitter {
 
             await this.client?.publish(key, 'Boolean', value, Date.now())
         }))
+
+        const conf = this.getConfig();
+
+        this.alarmEngine.hook(
+            conf?.alarms || [], 
+            conf?.alarmPathways || [], 
+            this.eventedValues.values, 
+            invertSnapshot(this.eventedValues.values, conf?.tags || [])
+        );
     }
 
 

@@ -151,6 +151,33 @@ export const useUpdateProgram = () => {
 }
 
 
+export const useUpdateProgramWorld = (id: string) => {
+
+	const [ mutateFn ] = useMutation((mutation, args: {
+		world: any
+	}) => {
+
+		const item = mutation.updateCommandProgram({
+			id: id,
+			input: {
+				worldOptions: args.world
+			}
+		})
+
+			return {
+				item: {
+					...item
+				}
+			}
+	})
+
+
+	return (world: any) => {
+		return mutateFn({args: {world}})
+	}
+}
+
+
 export const useDeleteProgram = () => {
 
 	const [ mutateFn ] = useMutation((mutation, args: {

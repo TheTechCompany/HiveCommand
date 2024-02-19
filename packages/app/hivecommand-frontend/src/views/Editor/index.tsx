@@ -5,12 +5,12 @@ import qs from 'qs';
 import { matchPath, Outlet, useLocation, useMatch, useNavigate, useParams, useResolvedPath } from 'react-router-dom';
 //const Editor = lazy(() => import('@hive-flow/editor'));
 import { Home } from './pages/home'
-import { KeyboardArrowLeft as ArrowLeft, Menu } from '@mui/icons-material'
+import { KeyboardArrowLeft as ArrowLeft, Menu, Error } from '@mui/icons-material'
 
 import { Routes, Route } from 'react-router-dom';
 import {Controls} from './pages/controls'
 
-import { useCreateProgramHMI, useCreateProgramTemplate, useCreateProgramAlarm, useUpdateProgramAlarm, useDeleteProgramHMI, useUpdateProgramHMI, useUpdateProgramTemplate } from '@hive-command/api';
+import { useCreateProgramHMI, useCreateProgramTemplate, useCreateProgramAlarm, useUpdateProgramAlarm, useDeleteProgramHMI, useUpdateProgramHMI, useUpdateProgramTemplate, useDeleteProgramAlarm, useUpdateProgramAlarmPathway, useCreateProgramAlarmPathway, useDeleteProgramAlarmPathway } from '@hive-command/api';
 import { RoutedTabs } from '../../components/routed-tabs';
 import { CommandEditorProvider } from './context';
 import { IconButton } from '@mui/material';
@@ -29,6 +29,10 @@ import { AlarmSubitems } from './pages/alarms/subitems';
 import { AlarmRoot } from './pages/alarms/root';
 import { CodeEditor } from './pages/alarms/editor/code';
 // import Broadcast from '@mui/icons-material/BroadcastOnHome'
+
+import 'reactflow/dist/style.css';
+import { AlarmPathwayEditor } from './pages/alarm-pathways';
+
 export interface EditorProps {
 
 }
@@ -98,10 +102,22 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     }
                 }
 
+                alarmPathways {
+                    id
+                    name
+                    script
+                    scope
+
+                    compileError
+
+                }
+
                 alarms {
                     id
                     title
                     script
+
+                    compileError
                     
                     rank
                 }
@@ -194,19 +210,23 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
     if(!id) return null;
 
+    const createProgramPathway = useCreateProgramAlarmPathway(id);
     const createProgramAlarm = useCreateProgramAlarm(id)
     const createProgramHMI = useCreateProgramHMI(id)
     const createProgramTemplate = useCreateProgramTemplate(id);
     const createProgramType = useCreateProgramType(id);
     const createProgramComponent = useCreateProgramComponent(id);
 
+    const updateProgramPathway = useUpdateProgramAlarmPathway(id);
     const updateProgramAlarm = useUpdateProgramAlarm(id)
     const updateProgramHMI = useUpdateProgramHMI(id)
     const updateProgramTemplate = useUpdateProgramTemplate(id);
     const updateProgramType = useUpdateProgramType(id);
     const updateProgramComponent = useUpdateProgramComponent(id);
 
-    
+
+    const deleteProgramPathway = useDeleteProgramAlarmPathway(id)
+    const deleteProgramAlarm = useDeleteProgramAlarm(id);
     const deleteProgramHMI = useDeleteProgramHMI(id);
     const deleteProgramType = useDeleteProgramType(id);
     const deleteProgramComponent = useDeleteProgramComponent(id);
@@ -226,9 +246,16 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             case 'types':
                 promise= deleteProgramType(data.id)
                 break;
+            case 'alarms':
+                promise = deleteProgramAlarm(data.id);
+                 break;
+            case 'pathways':
+                promise = deleteProgramPathway(data.id);
+                break;
             default: 
                 promise = Promise.resolve(true)
                 break;
+            
         }
         await promise;
 
@@ -249,7 +276,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     promise = updateProgramComponent(editItem.id, data.name, data.description, data.mainId)
                     break;
                 case 'alarms':
-                    promise = updateProgramAlarm(editItem.id, data.name, data.description)
+                    console.log("Update program alarm", {data})
+                    promise = updateProgramAlarm(editItem.id, data.title, data.script)
+                    break;
+                case 'pathways':
+                    promise = updateProgramPathway(editItem.id, data.name, data.scope);
                     break;
                 case 'types':
                     promise = updateProgramType(editItem.id, data.name);
@@ -270,7 +301,10 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     promise = createProgramComponent(data.name, data.description)
                     break;
                 case 'alarms':
-                    promise = createProgramAlarm(data.name, data.description)
+                    promise = createProgramAlarm(data.title, data.script)
+                    break;
+                case 'pathways':
+                    promise = createProgramPathway(data.name, data.scope);
                     break;
                 case 'types':
                     promise = createProgramType(data.name);
@@ -396,12 +430,23 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         //     })),
         //     // element: <Devices />
         // },
+        {
+          id: 'pathways-root',
+          name: 'Alarm Pathways',
+          children: program?.alarmPathways?.map((pathway) => ({
+            id: pathway.id,
+            icon: pathway.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
+            name: pathway.name
+          })),
+          editor: <AlarmPathwayEditor />  
+        },
      
         {
             id: 'alarms-root',
             name: 'Alarms',
             children: program?.alarms?.map((alarm) => ({
                 id: alarm.id,
+                icon: alarm.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
                 name: alarm.title
             })),
             // children: [
@@ -412,7 +457,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             // ],
             //program?.alarms?.slice(),
             editor: <CodeEditor program={program.id} />, // <AlarmEditor active={selected?.id} />
-            element: <AlarmRoot  alarms={program?.alarms || []} program={program.id} />
+            // element: <AlarmRoot  alarms={program?.alarms || []} program={program.id} />
 
         }
     ];
@@ -553,6 +598,12 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                                         break;
                                     case 'types':
                                         setEditItem(program.types?.find((a) => a.id == nodeId));
+                                        break;
+                                    case 'pathways':
+                                        setEditItem(program?.alarmPathways?.find((a) => a.id == nodeId))
+                                        break;
+                                    case 'alarms':
+                                        setEditItem(program?.alarms?.find((a) => a.id == nodeId));
                                         break;
                                 }
 

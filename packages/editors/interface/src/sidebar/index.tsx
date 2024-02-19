@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = (props) => {
                 color: 'white'
             }}>
                 {menuOptions.map((option) => (
-                    <div style={{ background: menuOpen == option.path ? '#dfdfdfdf' : undefined }}>
+                    <div key={`sidebar-option-${option.path}`} style={{ background: menuOpen == option.path ? '#dfdfdfdf' : undefined }}>
                         <IconButton
                             sx={{ color: 'white', fontSize: '12px' }}
                             onClick={() => changeMenu(option.path)}>

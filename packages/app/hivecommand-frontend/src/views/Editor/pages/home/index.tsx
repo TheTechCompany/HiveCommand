@@ -118,7 +118,7 @@ export const Home = () => {
                 }}
                 />
 
-            <Box sx={{flex: 1, display: 'flex',}}>
+            <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
                 <Paper sx={{flex: 1, marginRight: '12px'}}>
                     <Box sx={{display: 'flex', padding: '3px', bgcolor: 'secondary.main', color: 'white',  alignItems: 'center', justifyContent: 'space-between'}}>
                         <Typography>Data scopes</Typography>

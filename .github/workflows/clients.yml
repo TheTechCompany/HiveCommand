@@ -7,6 +7,7 @@ on:
       # - master
     paths: [".github/workflows/clients.yml", "packages/clients/native-app-client/**", "packages/app/hivecommand-native-designer/**", "packages/clients/sidecar-client/**", "packages/drivers/command-driver/**", "packages/core-ui/**"]
 
+
 jobs:
   build:
     strategy:
@@ -38,6 +39,7 @@ jobs:
           workspaces: |
             packages/clients/native-app-client/src-tauri
           
+            
       # - name: Rust cache
       #   uses: actions/cache@v2
       #   env:
@@ -60,6 +62,12 @@ jobs:
 
       - name: Install
         run: yarn install --network-timeout 100000
+
+      - name: Build Types
+        env:
+          CI: false
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: npx lerna run build --scope @hive-command/discovery-api-types --include-dependencies
 
       - name: Build
         env:

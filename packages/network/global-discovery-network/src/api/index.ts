@@ -1,9 +1,12 @@
 
 import { PrismaClient } from "@hive-command/data";
 import { Router } from "express";
+import { GDSControlLayout, GDSNetworkLayout } from '@hive-command/discovery-api-types'
 import jwt from 'jsonwebtoken'
 
-const IOT_ENDPOINT = process.env.IOT_ENDPOINT 
+const IOT_ENDPOINT = process.env.IOT_ENDPOINT || 'http://discovery.internal'
+
+const IOT_EXCHANGE = process.env.IOT_EXCHANGE || 'device_values';
 
 export const API = (prisma: PrismaClient) => {
     const router = Router();
@@ -67,19 +70,14 @@ export const API = (prisma: PrismaClient) => {
                 }
             },
             include: {
-                deviceMapping: {
-                    include: {
-                        // device: true,
-                        deviceState: true
-                    }
-                },
                 activeProgram: {
                     include: {
                         dataScopes: {
                             include: {
                                 plugin: true
                             }
-                        }
+                        },
+                        alarmPathways: true
                     }
                 }
             }
@@ -94,19 +92,20 @@ export const API = (prisma: PrismaClient) => {
             deviceId: device.id
         }, process.env.IOT_SECRET || '');
 
-        res.send({ 
-            results: {
-                deviceMapping: device?.deviceMapping || [],
+        let response : GDSNetworkLayout = { 
                 deviceId: device?.id,
 
                 dataScopes: device.activeProgram?.dataScopes || [],
 
+                alarmPathways: (device.activeProgram?.alarmPathways || []).filter((pathway) => pathway.scope?.toLowerCase() == "local"),
+
                 iotEndpoint: IOT_ENDPOINT,
-                iotSubject: process.env.IOT_EXCHANGE,
+                iotSubject: IOT_EXCHANGE,
                 iotUser: device.network_name,
                 iotToken: token
-            }
-        })
+        }
+        
+        res.send({results: response})
 
     })
 
@@ -207,7 +206,8 @@ export const API = (prisma: PrismaClient) => {
                                     }
                                 }
                             }
-                        }
+                        },
+                        alarms: true
                     }
                 }
             }
@@ -215,21 +215,22 @@ export const API = (prisma: PrismaClient) => {
 
         if (!device) return res.send({ error: "No device found for token" })
 
-        res.send({ 
-            results: { 
-                ...device.activeProgram,
-                tags: device.activeProgram?.tags.map((tag) => ({
+        const response : GDSControlLayout = {
+            ...device.activeProgram,
+                tags: (device.activeProgram?.tags || []).map((tag) => ({
                     ...tag,
                     type: tag.type?.type?.name || tag.type?.scalar
                 })),
-                types: device.activeProgram?.types.map((type) => ({
+                types: (device.activeProgram?.types || []).map((type) => ({
                     ...type,
                     fields: type.fields.map((typeField) => ({
                         ...typeField,
                         type: typeField.type?.name || typeField.scalar
                     }))
                 }))
-            }
+        }
+        res.send({ 
+            results: response
         })
     })
 

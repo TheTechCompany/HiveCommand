@@ -6,7 +6,7 @@ import { diffKeys } from './utils';
 
 export interface EventedValueField {
     name: string;
-    type?: string;
+    type?: string | null;
     fields?: EventedValueField[];
 }
 

@@ -3,12 +3,15 @@ import { Box } from '@mui/material'
 import { Editor } from '../../../../../components/script-editor/editor';
 import { useCommandEditor } from '../../../context';
 import { DataTypes, formatInterface, lookupType, toJSType } from '@hive-command/scripting';
-
+import { gql, useMutation } from '@apollo/client';
+import { debounce } from 'lodash';
+import { useParams } from 'react-router-dom';
 
 
 export const CodeEditor = (props: any) => {
 
-    const { program : {types, tags} = {} } = useCommandEditor();
+    const { activeId = '' } = useParams();
+    const { program : {id:program_id, types, tags, alarms, alarmPathways} = {} } = useCommandEditor();
 
     const typeDefs = types?.map((x) => {
         return `
@@ -18,10 +21,7 @@ export const CodeEditor = (props: any) => {
         }`
     })
 
-
     let scalarTypes = Object.keys(DataTypes).concat(Object.keys(DataTypes).map((x) => `${x}[]`))
-
-
 
     const typeSchema = useMemo(() => {
         let typeSchema = types?.map((type) => {
@@ -62,10 +62,10 @@ export const CodeEditor = (props: any) => {
 
             return {
                 ...prev,
-                [type]: [
+                [type]: {
                     ...(prev[type] || []),
-                    tagSchema?.[curr.name]
-                ]
+                    [curr.name]: tagSchema?.[curr.name]
+                }
             }
 
         }, {});
@@ -74,13 +74,39 @@ export const CodeEditor = (props: any) => {
 
     }, [tagSchema, tags, types])
 
-    console.log({inverseTagSchema})
     const typeNames = types?.map((x) => x.name)
 
+    const pathwayEnum = `
+    declare enum PATHWAYS {
+        ${alarmPathways?.map((pathway) => `${pathway.name} = "${pathway.name}"`)?.join(',\n')}
+    }`
+
+    const [updateAlarm] = useMutation(gql`
+        mutation UpdateAlarm ($program: ID, $id: ID!, $input: CommandProgramAlarmInput){
+            updateCommandProgramAlarm(program: $program, id: $id, input: $input){
+                id
+            }
+        }
+    `)
+
+    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [])
+
+    const currentAlarm = alarms?.find((a) => a.id == activeId)
 
     return (
         <Box sx={{flex: 1, display: 'flex'}}>
-            <Editor
+            <Editor 
+                onChange={(value) => {
+                    _debounceUpdate({
+                        variables: {
+                            program: program_id,
+                            id: activeId,
+                            input: {
+                                script: value
+                            }
+                        }
+                    })
+                }}
                 extraLib={`
 
                 ${typeSchema}
@@ -93,6 +119,9 @@ export const CodeEditor = (props: any) => {
                     WARNING
                 }
 
+                ${pathwayEnum}
+                
+
                 /*
                     Raise an alarm
                     @param message - Alarm message
@@ -101,18 +130,14 @@ export const CodeEditor = (props: any) => {
                 */
                 declare async function raiseAlarm(message: string, level?: ALARM_LEVEL, sticky?: boolean): Promise<boolean>
 
-                declare async function sendNotification(message: string, pathway?: string)
+                declare async function sendNotification(message: string, pathway?: PATHWAYS)
 
                 ${typeDefs?.join('\n')}
 `}
-                value={`export const handler = async (tags: Tags, types: Types) => {
+                value={currentAlarm?.script}
+                defaultValue={`export const handler = async (tags: Tags, types: Types) => {
 
 }`}
-                defaultValue={`
-                export const handler = () => {
-
-                }
-                `}
                 />
         </Box>
     )
