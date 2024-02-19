@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/sidecar-client",
-	"version": "1.4.15-alpha.289",
+	"version": "1.4.15-alpha.293",
 	"main": "dist/index.js",
 	"publishConfig": {
 		"access": "public"
@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@hive-command/amqp-client": "^1.4.15-alpha.289",
 		"@hive-command/drivers-base": "^1.4.15-alpha.289",
-		"@hive-command/evented-values": "^1.4.15-alpha.289",
+		"@hive-command/evented-values": "^1.4.15-alpha.293",
 		"@hive-command/scada": "workspace:^",
 		"@hive-command/threads": "^1.7.0",
 		"@yarnpkg/cli": "^4.0.0-rc.44",
