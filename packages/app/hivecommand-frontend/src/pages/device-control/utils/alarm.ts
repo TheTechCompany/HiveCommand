@@ -24,7 +24,11 @@ export const useAlarms = (deviceId: string) => {
                 }
             }
         }
-    `)
+    `, {
+        variables: {
+            id: deviceId
+        }
+    })
 
     const refetch = () => {
         client.refetchQueries({include: ['DeviceConnectivity']})
