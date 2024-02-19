@@ -17,13 +17,6 @@ import { useEffect } from "react";
                 operatingMode
                 operatingState
 
-                alarms {
-                    id
-                    cause
-                    message
-                    createdAt
-                }
-
                 online
             
 
