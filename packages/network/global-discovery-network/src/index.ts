@@ -161,9 +161,6 @@ import { PrismaRegister } from './alarm-center/prisma-register';
             } catch (err) {
                 console.error("Error with alarmCenter.hook")
             }
-            //Call alarm center hook to allow for business logic based alarm signals
-
-            // alarmCenter.hook(device?.activeProgram?.alarms || [], device, snapshot, typedSnapshot)
         }
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
