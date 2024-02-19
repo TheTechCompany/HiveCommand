@@ -61,6 +61,12 @@ jobs:
       - name: Install
         run: yarn install --network-timeout 100000
 
+      - name: Build Types
+        env:
+          CI: false
+          NODE_OPTIONS: "--max-old-space-size=8192"
+        run: npx lerna run build --scope @hive-command/discovery-api-types --include-dependencies
+
       - name: Build
         env:
           CI: false
