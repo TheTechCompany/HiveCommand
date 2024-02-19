@@ -1,4 +1,5 @@
 import { HMITag, HMIType } from '@hive-command/interface-types'
+import { merge } from 'lodash';
 
 export const formatTagType = (type: {scalar: string | null, type: {name: string} | null}) => {
     if (type.type?.name) {
@@ -9,7 +10,20 @@ export const formatTagType = (type: {scalar: string | null, type: {name: string}
     }
 }
 
+export const structureSnapshot = (valueStore: any) => {
+    return Object.keys(valueStore).map((valueKey) => {
+        if (valueKey.indexOf('.') > -1) {
+            return valueKey.split('.').reverse().reduce((prev, curr) => ({ [curr]: prev }), valueStore[valueKey])
+        } else {
+            return { [valueKey]: valueStore[valueKey] }
+        }
+    }).reduce((prev, curr) => merge(prev, curr), {})
+}
+
 export const invertSnapshot = (snapshot: any, tags: HMITag[]) => {
+
+    console.log(snapshot, tags);
+
     const typedSnapshot = tags?.reduce((prev, tag) => {
 
         let typeName = tag.type //types?.find((a) => a.id == tag.type?.typeId)?.name;

@@ -6,7 +6,7 @@ import { MQTTClient } from '@hive-command/amqp-client';
 import { mkdirSync, existsSync } from 'fs';
 import path from 'path';
 import { appData, formatValue } from './utils';
-import { AlarmCenter, invertSnapshot } from '@hive-command/alarm-engine'
+import { AlarmCenter, invertSnapshot, structureSnapshot } from '@hive-command/alarm-engine'
 import { LocalRegister } from './alarms/local-register';
 
 export class ScadaCommand extends EventEmitter {
@@ -172,11 +172,13 @@ export class ScadaCommand extends EventEmitter {
 
         const conf = this.getConfig();
 
+        const snapshot = structureSnapshot(this.eventedValues.values)
+        
         this.alarmEngine.hook(
             conf?.alarms || [], 
             conf?.alarmPathways || [], 
-            this.eventedValues.values, 
-            invertSnapshot(this.eventedValues.values, conf?.tags || [])
+            snapshot, 
+            invertSnapshot(snapshot, conf?.tags || [])
         );
     }
 
