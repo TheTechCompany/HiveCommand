@@ -31,7 +31,7 @@ export const useAlarms = (deviceId: string) => {
     })
 
     const refetch = () => {
-        client.refetchQueries({include: ['DeviceConnectivity']})
+        client.refetchQueries({include: ['GetDeviceAlarms']})
     }
 
     useEffect(() => {
