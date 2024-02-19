@@ -7,10 +7,10 @@ export interface GDSNetworkLayout {
 
         alarmPathways: AlarmPathway[]
 
-        iotEndpoint?: string,
-        iotSubject?: string,
-        iotUser?: string,
-        iotToken?: string,
+        iotEndpoint: string,
+        iotSubject: string,
+        iotUser: string,
+        iotToken: string,
 }
 
 export interface GDSControlLayout {

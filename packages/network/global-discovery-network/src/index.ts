@@ -66,14 +66,18 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                 include: {
                     activeProgram: {
                         include: {
-                            tags: {
-                                include: {
-                                    type: true
-                                }
-                            },
                             types: {
                                 include: {
                                     fields: {
+                                        include: {
+                                            type: true
+                                        }
+                                    }
+                                }
+                            },
+                            tags: {
+                                include: {
+                                    type: {
                                         include: {
                                             type: true
                                         }
@@ -124,15 +128,16 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                     }
                 })
 
-                const deviceTags = (device?.activeProgram?.tags || []).map((tag) => {
-                    if (tag.type)
+                const { tags, types } = device?.activeProgram || {};
+
+                const deviceTags = (tags || []).map((tag) => {
                         return {
                             ...tag,
                             type: tag.type ? formatTagType(tag.type) : null
                         }
                 })
 
-                const deviceTypes = (device?.activeProgram?.types || []).map((type) => {
+                const deviceTypes = (types || []).map((type) => {
                     return {
                         ...type,
                         fields: type.fields.map((field) => {

@@ -4,7 +4,9 @@ import { Router } from "express";
 import { GDSControlLayout, GDSNetworkLayout } from '@hive-command/discovery-api-types'
 import jwt from 'jsonwebtoken'
 
-const IOT_ENDPOINT = process.env.IOT_ENDPOINT 
+const IOT_ENDPOINT = process.env.IOT_ENDPOINT || 'http://discovery.internal'
+
+const IOT_EXCHANGE = process.env.IOT_EXCHANGE || 'device_values';
 
 export const API = (prisma: PrismaClient) => {
     const router = Router();
@@ -98,7 +100,7 @@ export const API = (prisma: PrismaClient) => {
                 alarmPathways: (device.activeProgram?.alarmPathways || []).filter((pathway) => pathway.scope?.toLowerCase() == "local"),
 
                 iotEndpoint: IOT_ENDPOINT,
-                iotSubject: process.env.IOT_EXCHANGE,
+                iotSubject: IOT_EXCHANGE,
                 iotUser: device.network_name,
                 iotToken: token
         }
