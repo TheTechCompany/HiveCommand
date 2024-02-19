@@ -151,23 +151,13 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 
                 const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
 
-                const typedSnapshot = tags?.reduce((prev, tag) => {
-
-                    let typeName = device?.activeProgram?.types?.find((a) => a.id == tag.type?.typeId)?.name;
-                    if (!typeName) return prev;
-
-                    return {
-                        ...prev,
-                        [typeName]: [...(prev[typeName] || []), snapshot[tag.name]]
-                    }
-                }, {} as any)
-
-                invertSnapshot(snapshot, deviceTags)
+                const typedSnapshot = invertSnapshot(snapshot, deviceTags)
 
                 const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
 
                 const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({ ...pathway, script: pathway.script || '' }))
                 alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
+
             } catch (err) {
                 console.error("Error with alarmCenter.hook")
             }
