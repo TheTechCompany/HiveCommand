@@ -25,6 +25,8 @@ export class AlarmCenter {
     async hook (alarms: Alarm[], alarmPathways: AlarmPathway[], values: any, typedValues: any) {
         //Look up device and routing key in alarms list
         
+        console.log({values, typedValues})
+
         const hookInst = new Hook(this.register, alarms, alarmPathways);
 
 

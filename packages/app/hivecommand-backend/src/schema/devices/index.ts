@@ -152,7 +152,11 @@ export default (prisma: PrismaClient) => {
 					where: {organisation: context.jwt.organisation, ...whereArg}, 
 					include: {
 						maintenanceWindows: true,
-						alarms: true,
+						alarms: {
+							include: {
+								cause: true
+							}
+						},
 						screens: true,
 			
 						
@@ -167,11 +171,7 @@ export default (prisma: PrismaClient) => {
 								remoteHomepage: true,
 								localHomepage: true,
 								templatePacks: true,
-								alarms: {
-									include: {
-										
-									}
-								},
+								alarms: true,
 								components: {
 									include: {
 										main: true,
@@ -624,10 +624,15 @@ export default (prisma: PrismaClient) => {
 	type DeviceAlarm {
 		id: ID
 
-		message: String
-		cause: String
+		message : String
 
-		createdAt: DateTime
+		severity : String
+	  
+		cause : CommandProgramAlarm
+	  
+		ack : Boolean
+	  
+		createdAt : DateTime
 	}
 
 	input MaintenanceWindowInput {

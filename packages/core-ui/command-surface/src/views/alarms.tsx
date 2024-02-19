@@ -13,7 +13,7 @@ export const AlarmList = () => {
             </Box>
             <List>  
                 {alarms?.map((alarm) => (
-                    <ListItem>{alarm.cause}</ListItem>
+                    <ListItem>{alarm.message} {alarm.severity} {alarm.createdAt} {alarm.cause?.title}</ListItem>
                 ))}
             </List>
         </Box>

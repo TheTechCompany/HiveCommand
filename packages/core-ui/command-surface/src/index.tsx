@@ -53,6 +53,8 @@ export interface CommandSurfaceClient {
         values: any
     });
 
+    useAlarms?: () => ({results: any});
+
     useConnectivity?: () => ({ online: boolean, lastSeen: Date });
     // getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
 
@@ -222,10 +224,11 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { tags, types } = activeProgram || {};
 
-
     const navigate = useNavigate()
 
     const { online, lastSeen } = client?.useConnectivity?.() || {};
+
+    const { results: alarms } = client?.useAlarms?.() || {};
 
     console.log({online, lastSeen});
 
@@ -615,8 +618,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
 
     //Translates id to bus-port value
-
-    const alarms = activeProgram?.alarms || [];
 
     const templatePacks = activeProgram?.templatePacks || [];
 

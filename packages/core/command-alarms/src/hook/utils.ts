@@ -37,8 +37,14 @@ export const makeHook = (
 } => {
     const jsCode = transpile(`
 
+    enum ALARM_LEVEL {
+        CRITICAL,
+        FAULT,
+        WARNING
+    }
+
     enum PATHWAYS {
-        ${pathways?.map((pathway) => `${pathway.name} = "${pathway?.name}"`).join(',\n')}
+        ${pathways?.map((pathway) => `"${pathway.name}" = "${pathway?.name}"`).join(',\n')}
     }
 
         ${script}

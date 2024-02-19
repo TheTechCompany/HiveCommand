@@ -36,6 +36,8 @@ export class Hook {
             return hook;
         })
 
+        console.log({values, typedValues})
+
         await Promise.all(compiledAlarms.map(async (alm) => {
             await alm.handler?.(values, typedValues);
         }));
