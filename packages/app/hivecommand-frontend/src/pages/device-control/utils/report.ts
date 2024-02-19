@@ -54,6 +54,7 @@ export const useDeviceReports = (id: string) => {
   }
 }
 
+
 export const useDeviceReportData = (deviceId: string, reportId: string, horizon: {start: Date, end?: Date}) => {
   const { data: reportData, loading } = useQuery(gql`
     query ReportDataValue($id: ID, $reportId: ID, $startDate: DateTime, $endDate: DateTime){
