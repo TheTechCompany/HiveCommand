@@ -38,9 +38,9 @@ export const makeHook = (
     const jsCode = transpile(`
 
     enum ALARM_LEVEL {
-        CRITICAL,
-        FAULT,
-        WARNING
+        CRITICAL = 'Critical',
+        FAULT = 'Fault',
+        WARNING = 'Warning'
     }
 
     enum PATHWAYS {
