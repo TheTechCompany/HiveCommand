@@ -14,8 +14,8 @@ export class LocalRegister implements AlarmRegister {
     }
 
     async getAll(): Promise<AlarmItem[] | undefined> {
-        
-    }
+        return this.alarms;
+    }  
 
     async create(message: string, causeId: string, level?: string | undefined) {
         const item = {
