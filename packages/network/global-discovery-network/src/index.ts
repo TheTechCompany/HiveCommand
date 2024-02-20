@@ -51,7 +51,6 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 
 
     try {
-
         const onMessage = async ({ routingKey, messageContent, userId }: {
             routingKey?: string,
             messageContent?: { dataType: string, value: any, timestamp: number },
