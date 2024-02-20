@@ -78,7 +78,7 @@ export const CodeEditor = (props: any) => {
 
     const pathwayEnum = `
     declare enum PATHWAYS {
-        ${alarmPathways?.map((pathway) => `${pathway.name} = "${pathway.name}"`)?.join(',\n')}
+        ${alarmPathways?.map((pathway) => `"${pathway.name}" = "${pathway.name}"`)?.join(',\n')}
     }`
 
     const [updateAlarm] = useMutation(gql`

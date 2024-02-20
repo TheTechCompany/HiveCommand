@@ -1,14 +1,14 @@
 import { Box, Collapse, Divider, IconButton, List, ListItem, Typography } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { DeviceControlContext } from '../context';
-import { ChevronRight, KeyboardArrowDown } from '@mui/icons-material';
+import { Check, ChevronRight, KeyboardArrowDown } from '@mui/icons-material';
 import moment from 'moment';
 
 export const AlarmList = () => {
 
-    const { alarms } = useContext(DeviceControlContext);
+    const { alarms, client } = useContext(DeviceControlContext);
     
-    const sortedAlarms = alarms?.slice()?.sort((a,b) => new Date(a.createdAt)?.getTime() - new Date(b.createdAt)?.getTime())
+    const sortedAlarms = alarms?.slice()?.sort((a,b) => new Date(b.createdAt)?.getTime() - new Date(a.createdAt)?.getTime())
 
     const [ expanded, setExpanded ] = useState<string[]>([])
 
@@ -28,7 +28,7 @@ export const AlarmList = () => {
             <Box sx={{display: 'flex', alignItems: 'center', marginBottom: '12px', marginTop: '12px', justifyContent: 'center'}}>
                 <Typography>Alarms</Typography>
             </Box>
-            <List sx={{overflowY: 'auto'}}>  
+            <List sx={{overflowY: 'auto', height: '100%'}}>  
                 {sortedAlarms?.map((alarm) => (
                     <>
                     <ListItem>
@@ -42,7 +42,14 @@ export const AlarmList = () => {
                                 <Typography>{alarm.message}</Typography>
                                 <Box sx={{display: 'flex'}}>
                                     {/* <Divider orientation='vertical'/> */}
-                                    <Typography>{alarm.cause?.title}</Typography>
+                                    {/* <Typography>{alarm.cause?.title}</Typography> */}
+                                    {!alarm?.ack ? (
+                                        <IconButton onClick={() => {
+                                            client?.acknowledgeAlarm?.(alarm?.id);
+                                        }}>
+                                            <Check />
+                                        </IconButton>
+                                    ) : null}
                                 </Box>
                             </Box>
                             <Box>

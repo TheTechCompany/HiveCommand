@@ -49,11 +49,12 @@ export interface CommandSurfaceClient {
 
     changeMode?: (mode: string) => void;
 
-    useValues?: (program: { tags: HMITag[], types: HMIType[] }) => ({ 
+    useValues?: (program: { tags: HMITag[], types: HMIType[] }) => ({
         values: any
     });
 
-    useAlarms?: () => ({results: any});
+    useAlarms?: () => ({ results: any });
+    acknowledgeAlarm?: (alarm: string) => void;
 
     useConnectivity?: () => ({ online: boolean, lastSeen: Date });
     // getValues?: (horizon: { start: Date, end: Date }) => ({ id: string, key: string, value: any }[] | { [key: string]: { [key: string]: any } })[];
@@ -230,7 +231,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { results: alarms } = client?.useAlarms?.() || {};
 
-    console.log({online, lastSeen});
+    console.log({ online, lastSeen });
 
     /*
         Parse the values blob internally and represent it as a clean tag system
@@ -815,7 +816,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         <Paper
                             ref={surfaceRef}
                             sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                                
+
                             <Header
                                 title={props.title}
                                 online={online}

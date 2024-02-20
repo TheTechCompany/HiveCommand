@@ -20,7 +20,9 @@ export class PrismaRegister implements AlarmRegister {
                 causeId,
                 severity: level,
                 message,
-
+            },
+            orderBy: {
+                createdAt: 'desc'
             }
         })  || undefined
     }
