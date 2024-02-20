@@ -58,7 +58,7 @@ export class Hook {
             //     }
             // })
 
-            if(!lastAlarm?.ack){
+            if(lastAlarm && !lastAlarm?.ack){
                 shouldAlarm = false;
             }
         }
