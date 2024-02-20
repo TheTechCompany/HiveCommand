@@ -155,7 +155,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 
                 const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
 
-                const alarmPathways = (device?.activeProgram?.alarmPathways || []).map((pathway) => ({ ...pathway, script: pathway.script || '' }))
+                const alarmPathways = (device?.activeProgram?.alarmPathways || [])?.filter((a) => a.scope?.toLowerCase() == "remote")?.map((pathway) => ({ ...pathway, script: pathway.script || '' }))
                 alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
 
             } catch (err) {
