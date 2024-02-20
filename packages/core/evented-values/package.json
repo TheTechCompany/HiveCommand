@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/evented-values",
-  "version": "1.4.15-alpha.295",
+  "version": "1.4.15-alpha.296",
   "main": "dist/index.js",
   "license": "MIT",
   "publishConfig": {

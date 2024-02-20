@@ -9,6 +9,8 @@ export const useAlarms = (deviceId: string) => {
         query GetDeviceAlarms($id: ID){
 			commandDevices(where: {id: $id}){
                 alarms {
+                    id
+
                     message
 
                     severity
@@ -17,6 +19,11 @@ export const useAlarms = (deviceId: string) => {
                         title
                     } 
                   
+                    ackBy {
+                        name
+                    }
+                    ackAt 
+                    
                     ack
                   
                     createdAt
@@ -53,6 +60,9 @@ export const useAlarms = (deviceId: string) => {
 }
 
 export const useAcknowledgeAlarm = (deviceId: string) => {
+    
+    const client = useApolloClient();
+
     const [ mutateFn ] = useMutation(gql`
         mutation AckAlarm ($deviceId: ID, $alarmId: ID){
             acknowledgeCommandDeviceAlarm(alarm: $alarmId, device: $deviceId)
@@ -60,6 +70,9 @@ export const useAcknowledgeAlarm = (deviceId: string) => {
     `)
 
     return (alarm: string) => {
-        return mutateFn({variables: {deviceId, alarmId: alarm}})
+        return mutateFn({variables: {deviceId, alarmId: alarm}}).then(() => {
+            client.refetchQueries({include: ['GetDeviceAlarms']})
+
+        })
     }
 }

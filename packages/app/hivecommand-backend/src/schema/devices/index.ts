@@ -36,7 +36,8 @@ export default (prisma: PrismaClient) => {
 		{
 			DeviceAlarm: {
 				ack: (root: any) => {
-					return root.ackBy != null
+					console.log({root})
+					return root.ackBy?.id != null && root.ackBy?.id != undefined
 				}
 			},
 			CommandDevice: {
@@ -271,7 +272,7 @@ export default (prisma: PrismaClient) => {
 				})?.map((device) => {
 					return {
 						...device,
-						alarms: device?.alarms?.map((alm) => ({ ...alm, ackBy: {id: alm.ackBy} }))
+						alarms: device?.alarms?.map((alm) => ({ ...alm, ackBy: alm.ackBy ? {id: alm.ackBy} : undefined }))
 					}
 				});
 			}
@@ -381,6 +382,18 @@ export default (prisma: PrismaClient) => {
 				if(!context.jwt.acl.can('control', sub)){
 					throw new Error("Access to alarms not allowed");
 				}
+
+				const alm = await prisma.alarm.findFirst({
+					where: {
+						id: args.alarm,
+						device: {
+							id: args.device,
+							organisation: context?.jwt?.organisation
+						}
+					}
+				})
+
+				if(!alm?.ackBy != null && alm?.ackAt != null) throw new Error("Alarm already acknowledged");
 
 				const alarm = await prisma.alarm.update({
 					where: {
@@ -688,6 +701,7 @@ export default (prisma: PrismaClient) => {
 	  
 		ack : Boolean
 		ackBy : HiveUser
+		ackAt : DateTime
 	  
 		createdAt : DateTime
 	}
