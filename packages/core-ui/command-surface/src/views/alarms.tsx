@@ -24,7 +24,7 @@ export const AlarmList = () => {
     }
 
     return (
-        <Box sx={{flex: 1}}>
+        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
             <Box sx={{display: 'flex', alignItems: 'center', marginBottom: '12px', marginTop: '12px', justifyContent: 'center'}}>
                 <Typography>Alarms</Typography>
             </Box>
@@ -40,17 +40,7 @@ export const AlarmList = () => {
                         <Box sx={{display: 'flex', flex: 1, flexDirection: 'column'}}>
                             <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
                                 <Typography>{alarm.message}</Typography>
-                                <Box sx={{display: 'flex'}}>
-                                    {/* <Divider orientation='vertical'/> */}
-                                    {/* <Typography>{alarm.cause?.title}</Typography> */}
-                                    {!alarm?.ack ? (
-                                        <IconButton onClick={() => {
-                                            client?.acknowledgeAlarm?.(alarm?.id);
-                                        }}>
-                                            <Check />
-                                        </IconButton>
-                                    ) : null}
-                                </Box>
+                                
                             </Box>
                             <Box>
                                 <Typography>Raised at: {moment(alarm.createdAt).format("hh:mma - DD/MM/YYYY")}</Typography>
@@ -59,6 +49,22 @@ export const AlarmList = () => {
                             <Collapse in={expanded.includes(alarm.id)}>
                             </Collapse>
                         </Box>
+                        <Box sx={{display: 'flex'}}>
+                                    {/* <Divider orientation='vertical'/> */}
+                                    {/* <Typography>{alarm.cause?.title}</Typography> */}
+                                    {!alarm?.ack ? (
+                                        <IconButton onClick={() => {
+                                            client?.acknowledgeAlarm?.(alarm?.id);
+                                        }}>
+                                            <Check />
+                                        </IconButton>
+                                    ) : alarm?.ackBy != null ? (
+                                        <Box>
+                                            <Typography>Acknowledged by: {alarm?.ackBy?.name}</Typography>
+                                            <Typography>Acknowledged at: {moment(alarm?.ackAt).format("hh:mma DD/MM/YYYY")}</Typography>
+                                        </Box>
+                                    ) : null}
+                                </Box>
                         
                         {/* {alarm.message} {alarm.severity} {alarm.createdAt} {alarm.cause?.title} */}
                     </ListItem>
