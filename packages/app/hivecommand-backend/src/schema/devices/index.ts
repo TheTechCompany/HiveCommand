@@ -34,6 +34,11 @@ export default (prisma: PrismaClient) => {
 	const resolvers = mergeResolvers([
 		analyticResolvers,
 		{
+			DeviceAlarm: {
+				ack: (root: any) => {
+					return root.ackBy != null
+				}
+			},
 			CommandDevice: {
 				reports: async (root: any, args: any, content: any) => {
 					let reportWhere : any = {};
@@ -263,6 +268,11 @@ export default (prisma: PrismaClient) => {
 				return devices.filter((device) => {
 					const sub = subject('CommandDevice', device);
 					return context.jwt.acl.can('read', sub) || context.jwt.acl.can('control', sub)
+				})?.map((device) => {
+					return {
+						...device,
+						alarms: device?.alarms?.map((alm) => ({ ...alm, ackBy: {id: alm.ackBy} }))
+					}
 				});
 			}
 		},
@@ -365,7 +375,51 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
+			acknowledgeCommandDeviceAlarm: async (root: any, args: any, context: any) => {
+				const sub = subject('CommandDevice', {id: args.device, organisation: context?.jwt?.organisation});
 
+				if(!context.jwt.acl.can('control', sub)){
+					throw new Error("Access to alarms not allowed");
+				}
+
+				const alarm = await prisma.alarm.update({
+					where: {
+						id: args.alarm,
+						device: {
+							id: args.device,
+							organisation: context?.jwt?.organisation
+						}
+					},
+					data: {
+						ackBy: context?.jwt?.id,
+						ackAt: new Date()
+					}
+				})
+				return alarm != null;
+
+			},
+			unacknowledgeCommandDeviceAlarm: async (root: any, args: any, context: any) => {
+				const sub = subject('CommandDevice', {id: args.device, organisation: context?.jwt?.organisation});
+
+				if(!context.jwt.acl.can('control', sub)){
+					throw new Error("Access to alarms not allowed");
+				}
+
+				const alarm = await prisma.alarm.update({
+					where: {
+						id: args.alarm,
+						device: {
+							id: args.device,
+							organisation: context?.jwt?.organisation
+						}
+					},
+					data: {
+						ackBy: null,
+						ackAt: null
+					}
+				})
+				return alarm != null;
+			},
 			createDeviceScreen: async (root: any, args: any, context: any) => {
 				
 				const device = await prisma.device.findFirst({where: {id: args.device, organisation: context?.jwt?.organisation}});
@@ -530,10 +584,12 @@ export default (prisma: PrismaClient) => {
 		updateDeviceScreen(device: ID, id: ID!, input: DeviceScreenInput!): CommandDeviceScreen
 		deleteDeviceScreen(device: ID, id: ID!): CommandDeviceScreen
 
-
 		createCommandDeviceMaintenanceWindow(device: ID, input: MaintenanceWindowInput!): MaintenanceWindow!
 		updateCommandDeviceMaintenanceWindow(device: ID, id: ID!, input: MaintenanceWindowInput!): MaintenanceWindow!
 		deleteCommandDeviceMaintenanceWindow(device: ID, id: ID!): MaintenanceWindow!
+
+		acknowledgeCommandDeviceAlarm(device: ID, alarm: ID): Boolean
+		unacknowledgeCommandDeviceAlarm(device: ID, alarm: ID): Boolean
 	}
 
 	input ConnectDevicesInput {
@@ -631,6 +687,7 @@ export default (prisma: PrismaClient) => {
 		cause : CommandProgramAlarm
 	  
 		ack : Boolean
+		ackBy : HiveUser
 	  
 		createdAt : DateTime
 	}

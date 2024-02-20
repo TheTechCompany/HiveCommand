@@ -8,6 +8,7 @@ import { nanoid } from "nanoid";
 import { merge } from 'lodash'
 import axios from "axios";
 import { io, Socket } from "socket.io-client";
+import { useAlarmEngine } from "./alarms";
 
 export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
@@ -238,6 +239,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
     //     removeReportPage,
     // } = useDeviceReportActions(deviceId);
 
+    const { useAlarms, acknowledgeAlarm } = useAlarmEngine()
 
     return {
         reports: reportPages,
@@ -303,6 +305,8 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
         useValues: (program) => {
             return { values };
         },
+        useAlarms,
+        acknowledgeAlarm,
         // updateChart,
         // updateChartGrid,
         // removeChart

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useDeviceReportActions, useDeviceReports } from "./report";
 import { useValues } from "./value";
 import { useConnectivity } from "./program";
-import { useAlarms } from "./alarm";
+import { useAcknowledgeAlarm, useAlarms } from "./alarm";
 
 export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
@@ -42,8 +42,11 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
     } = useDeviceReportActions(deviceId);
 
 
+    const acknowledgeAlarm = useAcknowledgeAlarm(deviceId);
+
     return {
         reports,
+        acknowledgeAlarm,
         useAlarms: () => {
             return useAlarms(deviceId)
         }, 

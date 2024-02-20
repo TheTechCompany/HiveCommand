@@ -30,7 +30,7 @@ export const DeviceControlView = () => {
     // const [lastDate, setLastDate] = useState(null)
 
     return (
-        <Box sx={{padding: '6px', flex: 1, display: 'flex'}}>
+        <Box sx={{padding: '6px', height: 'calc(100% - 12px)', flex: 1, display: 'flex'}}>
             <CommandSurface
                 // values={normalisedValues}
                 title={`${results?.[0]?.name} - ${program?.name}`}

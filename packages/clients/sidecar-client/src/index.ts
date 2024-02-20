@@ -96,6 +96,16 @@ const OPC_PROXY_PORT = 8484;
             res.send({ config: scada.getConfig() })
         })
 
+    app.route('/controller/alarms')
+        .get(async (req, res) => {
+            res.send({result: scada.getAlarmRegister().getAll?.()})
+        })
+        .post(async (req, res) => {
+            let id = req.body.id;
+
+            res.send({result: scada.getAlarmRegister().acknowledge?.(id)})
+        })
+
     app.route('/controller/set_data')
         .post(async (req, res) => {
             // if(subscriptions[req.params.host]) return res.send({error:})

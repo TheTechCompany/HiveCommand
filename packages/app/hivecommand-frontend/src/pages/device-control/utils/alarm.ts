@@ -1,4 +1,4 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client"
+import { gql, useApolloClient, useMutation, useQuery } from "@apollo/client"
 import { useEffect } from "react";
 
 export const useAlarms = (deviceId: string) => {
@@ -49,5 +49,17 @@ export const useAlarms = (deviceId: string) => {
     return {
         results: alarms,
         refetch
+    }
+}
+
+export const useAcknowledgeAlarm = (deviceId: string) => {
+    const [ mutateFn ] = useMutation(gql`
+        mutation AckAlarm ($deviceId: ID, $alarmId: ID){
+            acknowledgeCommandDeviceAlarm(alarm: $alarmId, device: $deviceId)
+        }
+    `)
+
+    return (alarm: string) => {
+        return mutateFn({variables: {deviceId, alarmId: alarm}})
     }
 }

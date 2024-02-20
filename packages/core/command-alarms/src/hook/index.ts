@@ -36,8 +36,6 @@ export class Hook {
             return hook;
         })
 
-        console.log({values, typedValues})
-
         await Promise.all(compiledAlarms.map(async (alm) => {
             await alm.handler?.(values, typedValues);
         }));
@@ -64,6 +62,8 @@ export class Hook {
                 shouldAlarm = false;
             }
         }
+
+        console.log({shouldAlarm});
 
         if(shouldAlarm){
             await this.register.create?.(message, causeId, level ? ALARM_LEVEL[level] : undefined)

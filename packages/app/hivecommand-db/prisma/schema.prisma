@@ -68,7 +68,8 @@ model Alarm {
   cause ProgramAlarm @relation(name: "causedAlarm", fields: [causeId], references: [id])
   causeId String
 
-  ack Boolean @default(false)
+  ackBy String?
+  ackAt DateTime?
 
   createdAt DateTime @default(now())
 

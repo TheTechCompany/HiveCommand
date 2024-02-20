@@ -10,7 +10,11 @@ export class LocalRegister implements AlarmRegister {
     }
 
    async getLast(message: string, causeId: string, level?: string | undefined) {
-        return this.alarms.find((a) => a.message == message && a.causeId == causeId && a.level == level)
+        return this.alarms?.sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).find((a) => a.message == message && a.causeId == causeId && a.level == level)
+    }
+
+    async getAll(): Promise<AlarmItem[] | undefined> {
+        
     }
 
     async create(message: string, causeId: string, level?: string | undefined) {
@@ -18,10 +22,22 @@ export class LocalRegister implements AlarmRegister {
             id: nanoid(),
             message,
             causeId,
-            level
+            level,
+            createdAt: new Date(),
+            ack: false
         }
         this.alarms.push(item)
         return item;
+    }
+
+    acknowledge(id: string): boolean {
+        let ix = this.alarms?.findIndex((a) => a.id == id);
+        if(ix > -1){
+            this.alarms[ix].ack = true;
+
+            return true;
+        }
+        return false;
     }
 
 }
