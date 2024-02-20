@@ -41,20 +41,11 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
     const { id } = useParams()
 
     const navigate = useNavigate()
-    const location = useLocation()
 
     const pathname = useResolvedPath(':root/:id').pathname;
 
-    const {root, id: selectedId} = useMatch(pathname)?.params || {}
-
     const [ menuOpen, setMenuOpen ] = useState<any>();
     const [ editItem, setEditItem ] = useState<any>();
-
-    // const [ selected, setSelected ] = useState<{
-    //     id: string,
-    //     parent?: string,
-    //     type: 'root' | 'editor'
-    // } | null>()
 
     const client = useApolloClient()
 
@@ -330,15 +321,13 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         client.refetchQueries({include: ['EditorCommandProgram']})
     }
    
-    const program = data?.commandPrograms?.[0] || {};
+    const activeProgram = data?.commandPrograms?.[0] || {};
 
-    const query = qs.parse(location.search, {ignoreQueryPrefix: true})
+    const [ program, setProgram ] = useState<any>(activeProgram)
 
-    const menu = [
-        "Home",
-        "Variables",
-        "Alarms"
-    ]
+    useEffect(() => {
+        setProgram(activeProgram)
+    }, [JSON.stringify(activeProgram)])
 
 
     const treeMenu : any[] = [
@@ -367,29 +356,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             children: program?.templates?.slice(),
             editor: <TemplateEditor  />
         },
-        // {
-        //     id: 'program-root',
-        //     name: 'Program',
-        //     children: program?.program?.map((x) => ({
-        //         id: x.id,
-        //         name: x.name,
-        //         children: x.children?.map((y) => ({
-        //             id: y.id,
-        //             name: y.name
-        //         }))
-        //     })),
-        //     element: <div>Program</div>,
-        //     editor: <Program activeProgram={selected?.id} />
-        // },
-        // {
-        //     id: 'schematics-root',
-        //     name: 'Schematics',
-        //     editor: <Electrical />,
-        //     children: program?.schematics?.map((x) => ({
-        //         id: x.id,
-        //         name: x.name
-        //     }))
-        // },
         {
             id: 'components-root',
             name: 'Components',
@@ -415,21 +381,6 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
             element: <div>HMI</div>,
             editor: <Controls  />
         },
-        // {
-        //     id: 'devices-root',
-        //     name: 'Devices',
-        //     children: program?.devices?.slice()?.sort((a, b) => {
-        //         let aTag = `${a.type?.tagPrefix || ''}${a.tag}`;
-        //         let bTag = `${b.type?.tagPrefix || ''}${b.tag}`;
-                
-        //         return aTag?.localeCompare(bTag);
-                
-        //     }).map((x) => ({    
-        //         id: x.id,
-        //         name: `${x.type?.tagPrefix || ''}${x.tag}`
-        //     })),
-        //     // element: <Devices />
-        // },
         {
           id: 'pathways-root',
           name: 'Alarm Pathways',
@@ -449,38 +400,16 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                 icon: alarm.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
                 name: alarm.title
             })),
-            // children: [
-            //     {
-            //         id: 'levels',
-            //         name: 'Levels'
-            //     }
-            // ],
-            //program?.alarms?.slice(),
-            editor: <CodeEditor program={program.id} />, // <AlarmEditor active={selected?.id} />
-            // element: <AlarmRoot  alarms={program?.alarms || []} program={program.id} />
-
+            editor: <CodeEditor program={program.id} />, 
         }
     ];
-
-    // const renderRootPage = () => {
-    //     let page = treeMenu?.find((a) => a.id == `${selectedId}-root`)
-    //     return page.element
-    // }
-
-    // const renderEditorPage = () => {
-    //     let root = treeMenu?.find((a) => a.id == selected?.parent);
-    //     let page = root?.children?.find((a) => a.id == selected?.id);
-
-    //     return root?.editor
-    // }
-
-
 
 
     return (
 
         <CommandEditorProvider value={{
             program,
+            setProgram,
             plugins: {
                 dataScope: data?.commandDataScopePlugins || []
             },

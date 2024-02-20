@@ -28,6 +28,7 @@ export interface ICommandEditorContext {
 		alarms?: any[];
 		alarmPathways?: any[];
 	}
+	setProgram?: any;
 	plugins?: {
 		dataScope?: {id: string, name: string, module: string, configuration: any}[]
 	}

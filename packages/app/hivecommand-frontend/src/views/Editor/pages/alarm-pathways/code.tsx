@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Box } from '@mui/material'
 import { Editor } from '../../../../components/script-editor/editor';
 import { useCommandEditor } from '../../context';
@@ -12,7 +12,8 @@ export const CodeEditor = (props: any) => {
 
     const { activeId } = useParams();
 
-    const { program : {id: program_id, types, tags, alarmPathways} = {} } = useCommandEditor();
+    const { program, setProgram  } = useCommandEditor();
+    const {id: program_id, types, tags, alarmPathways} = program || {};
 
     const typeDefs = types?.map((x) => {
         return `
@@ -78,13 +79,12 @@ export const CodeEditor = (props: any) => {
 
     }, [tagSchema, tags, types])
 
-    console.log({inverseTagSchema})
     const typeNames = types?.map((x) => x.name)
 
 
     const currentPathway = alarmPathways?.find((a) => a.id == activeId);
 
-    const [updateAlarm] = useMutation(gql`
+    const [_updateAlarm] = useMutation(gql`
         mutation UpdateAlarmPathway ($program: ID, $id: ID!, $input: CommandProgramAlarmPathwayInput){
             updateCommandProgramAlarmPathway(program: $program, id: $id, input: $input){
                 id
@@ -92,23 +92,40 @@ export const CodeEditor = (props: any) => {
         }
     `)
 
-    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [])
 
-    console.log({currentPathway})
+
+    const updateAlarm = useCallback((id: string, script: string) => {
+        let prg = {
+            ...program
+        }
+
+        let alarms = (prg.alarmPathways || [])?.slice();
+        let ix = alarms?.findIndex((a) => a.id == id);
+        
+        alarms[ix] = {
+            ...alarms[ix],
+            script,
+        }
+        prg.alarmPathways = alarms;
+        setProgram(prg);
+
+        return _updateAlarm({variables: {
+            program: program_id,
+            id: activeId,
+            input: {
+                script,
+            }
+        }})
+    }, [JSON.stringify(program), program_id, activeId ])
+    
+    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [JSON.stringify(program), program_id, activeId ])
 
     return (
         <Box sx={{flex: 1, display: 'flex'}}>
             <Editor
                 onChange={(value) => {
-                    _debounceUpdate({
-                        variables: {
-                            program: program_id,
-                            id: activeId,
-                            input: {
-                                script: value
-                            }
-                        }
-                    })
+                    if(activeId) _debounceUpdate(activeId, value)
+                    
                 }}
                 extraLib={`
 
