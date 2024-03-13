@@ -1,7 +1,7 @@
 import { gql, useMutation } from "@apollo/client";
 import { CommandSurfaceClient } from "@hive-command/command-surface";
 import { useState } from "react";
-import { useDeviceReportActions, useDeviceReports } from "./report";
+import { useDeviceAnalytics, useDeviceAnalyticActions } from "./analytics";
 import { useValues } from "./value";
 import { useConnectivity } from "./program";
 import { useAcknowledgeAlarm, useAlarms } from "./alarm";
@@ -10,7 +10,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
     const [ startDate, setDate ] = useState(new Date(Date.now() - (7 * 24 * 60 * 60 * 1000)))
 
-    const { results: reports } = useDeviceReports(deviceId)
+    const { results: analytics } = useDeviceAnalytics(deviceId)
 
     const [ _changeDevValue ] = useMutation(gql`
         mutation ChangeDeviceValue($deviceId: String, $deviceName: String, $key: String, $value: String) {
@@ -39,13 +39,13 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         updateReportPage,
         removeReportPage,
         useReportValues
-    } = useDeviceReportActions(deviceId);
+    } = useDeviceAnalyticActions(deviceId);
 
 
     const acknowledgeAlarm = useAcknowledgeAlarm(deviceId);
 
     return {
-        reports,
+        analytics,
         acknowledgeAlarm,
         useAlarms: () => {
             return useAlarms(deviceId)

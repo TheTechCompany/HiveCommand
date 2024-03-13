@@ -3,6 +3,7 @@ import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
 import { nanoid } from "nanoid";
+import { stringify as csvStringify } from 'csv';
 
 export default (prisma: PrismaClient) => {
 
@@ -80,7 +81,7 @@ export default (prisma: PrismaClient) => {
 			unit: String
 			timeBucket: String
 
-			values(startDate: DateTime, endDate: DateTime): [CommandDeviceTimeseriesData]
+			values(startDate: DateTime, endDate: DateTime, format: String): [CommandDeviceTimeseriesData]
 			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
 
 			device: CommandDevice 
@@ -109,7 +110,10 @@ export default (prisma: PrismaClient) => {
 
     const resolvers = {
 		CommandDeviceReport: {
-			values: async (root: any, args: {startDate: Date, endDate?: Date}) => {
+			values: async (root: any, args: {startDate: Date, endDate?: Date, format?: string}) => {
+
+				const format = args.format || 'json';
+
 				// const client = await pool.connect()
 				// console.log("Analaytics values")
 		
@@ -185,11 +189,37 @@ export default (prisma: PrismaClient) => {
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
-						return (result || []).map((row) => ({
+
+						const jsonResults = (result || []).map((row) => ({
 							...row,
 							value: row.value || 0,
 							timestamp: row.time
 						}));
+
+						if(format == 'csv'){
+							const csv = await new Promise((resolve, reject) => {
+								csvStringify(
+									jsonResults, 
+									{
+										header: true, 
+										columns: {
+											placeholder: 'device', 
+											key: 'subkey', 
+											value: 'value', 
+											timestamp: 'timestamp'
+										}
+									},
+									(err, output) => {
+										if(err) return reject(err);
+										resolve(output)
+									}
+								)
+								
+							}) 
+							return csv;
+						}else{
+							return jsonResults
+						}
 				}catch(e){
 					console.log({e})
 				}

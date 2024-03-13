@@ -1,7 +1,7 @@
 import { useQuery, useApolloClient, gql } from "@apollo/client"
 import { useAddDeviceChart, useCreateReportPage, useRemoveDeviceChart, useRemoveReportPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateReportPage } from "@hive-command/api";
 
-export const useDeviceReports = (id: string) => {
+export const useDeviceAnalytics = (id: string) => {
   const { data } = useQuery(gql`
     query ReportData($id: ID) {
 
@@ -55,7 +55,7 @@ export const useDeviceReports = (id: string) => {
 }
 
 
-export const useDeviceReportData = (deviceId: string, reportId: string, horizon: {start: Date, end?: Date}) => {
+export const useDeviceAnalyticData = (deviceId: string, reportId: string, horizon: {start: Date, end?: Date}) => {
   const { data: reportData, loading } = useQuery(gql`
     query ReportDataValue($id: ID, $reportId: ID, $startDate: DateTime, $endDate: DateTime){
       commandDevices(where: {id: $id}){
@@ -101,7 +101,7 @@ const withRefetch = (fn: any, refetch: any) => {
   }
 }
 
-export const useDeviceReportActions = (id: string) => {
+export const useDeviceAnalyticActions = (id: string) => {
 
   const client = useApolloClient()
 
@@ -119,7 +119,7 @@ export const useDeviceReportActions = (id: string) => {
   const removeReportPage = withRefetch(useRemoveReportPage(id), refetch);
 
   return {
-    useReportValues: useDeviceReportData,
+    useReportValues: useDeviceAnalyticData,
     addChart: addDeviceChart,
     updateChart: updateDeviceChart,
     updateChartGrid,

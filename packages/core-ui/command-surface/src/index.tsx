@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { KeyboardArrowLeft, Timelapse, Engineering, Settings } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
-import { ReportChart, ReportView } from './views/reports'
+import { ReportChart, AnalyticView } from './views/analytics'
 
 import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormControlLabel } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
@@ -28,9 +28,10 @@ import { FieldValue } from './components/field-value';
 import { HMIType, HMITag, HMITemplate } from "@hive-command/interface-types"
 
 import { useMatch, useResolvedPath } from 'react-router-dom'
+import { ReportView } from './views/reports';
 
 export interface CommandSurfaceClient {
-    reports?: {
+    analytics?: {
         id: string;
         name: string;
         charts: ReportChart[];
@@ -221,7 +222,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { program: activeProgram, defaultPage, client, watching } = props;
 
-    const { reports = [] } = client || {};
+    const { analytics = [] } = client || {};
 
     const { tags, types } = activeProgram || {};
 
@@ -704,7 +705,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             name: 'Analytics',
             pathRoot: 'analytics',
             dontEdit: true,
-            children: reports?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
+            children: analytics?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
+            component: <AnalyticView />
+        },
+        {
+            id: 'reports',
+            name: 'Reports',
+            pathRoot: 'reports',
+            dontEdit: true,
+            children: [{id: '1', dontAdd: true, name: 'Taumata Arowai - Monthly'}],
             component: <ReportView />
         }
     ];
@@ -763,7 +772,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                         cache: props.cache,
 
-                        reports: reports,
+                        analytics: analytics,
                         hmis: memoisedHmi,
 
                         defaultPage,

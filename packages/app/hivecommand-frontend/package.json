@@ -85,7 +85,7 @@
     "@mui/icons-material": "^5.6.2",
     "@mui/lab": "^5.0.0-alpha.105",
     "@mui/material": "^5.10.11",
-    "@mui/x-date-pickers": "^5.0.3",
+    "@mui/x-date-pickers": "^6.19.6",
     "@paciolan/remote-component": "^2.12.1",
     "@svgr/core": "^6.1.2",
     "@types/jest": "^27.0.3",
