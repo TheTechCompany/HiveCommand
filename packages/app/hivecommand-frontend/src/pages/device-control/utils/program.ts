@@ -21,7 +21,7 @@ import { useEffect } from "react";
             
 
           
-                reports {
+                analyticPages {
                     id
                     name
                 }

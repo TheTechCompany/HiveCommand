@@ -121,8 +121,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
     setFetchHorizon(horizon)
   }, [horizon])
 
-  const { results, loading } = client?.useReportValues?.(activePage || '', fetchHorizon) || {}
-
+  const { results, loading } = client?.useAnalyticValues?.(activePage || '', fetchHorizon) || {}
 
   const prevPeriod = () => {
 

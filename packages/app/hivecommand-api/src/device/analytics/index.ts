@@ -1,10 +1,10 @@
 import { mutate, useMutation } from '../../gqty'
 
 
-export const useCreateReportPage = (deviceId: string) => {
+export const useCreateAnalyticPage = (deviceId: string) => {
 
-	const [ addReportPage ] = useMutation((mutation, args: {name: string}) => {
-		const item = mutation.createCommandReportPage({
+	const [ addAnalyticPage ] = useMutation((mutation, args: {name: string}) => {
+		const item = mutation.createCommandAnalyticPage({
 			device: deviceId,
 			input: {
 				name: args.name
@@ -17,15 +17,15 @@ export const useCreateReportPage = (deviceId: string) => {
 		}
 	})
 	return (name: string) => {
-		return addReportPage({args: {name}})
+		return addAnalyticPage({args: {name}})
 	}
 }
 
 
-export const useUpdateReportPage = (deviceId: string) => {
+export const useUpdateAnalyticPage = (deviceId: string) => {
 
-	const [ updateReportPage ] = useMutation((mutation, args: {id: string, name: string}) => {
-		const item = mutation.updateCommandReportPage({
+	const [ updateAnalyticPage ] = useMutation((mutation, args: {id: string, name: string}) => {
+		const item = mutation.updateCommandAnalyticPage({
 			device: deviceId,
 			id: args.id,
 			input: {
@@ -39,15 +39,15 @@ export const useUpdateReportPage = (deviceId: string) => {
 		}
 	})
 	return (id: string, name: string) => {
-		return updateReportPage({args: {id: id, name}})
+		return updateAnalyticPage({args: {id: id, name}})
 	}
 }
 
 
-export const useRemoveReportPage = (deviceId: string) => {
+export const useRemoveAnalyticPage = (deviceId: string) => {
 
-	const [ removeReportPage ] = useMutation((mutation, args: {id: string}) => {
-		const item = mutation.deleteCommandReportPage({
+	const [ removeAnalyticPage ] = useMutation((mutation, args: {id: string}) => {
+		const item = mutation.deleteCommandAnalyticPage({
 			device: deviceId,
 			id: args.id
 		})
@@ -58,7 +58,7 @@ export const useRemoveReportPage = (deviceId: string) => {
 		}
 	})
 	return (id: string) => {
-		return removeReportPage({args: {id}})
+		return removeAnalyticPage({args: {id}})
 	}
 }
 
@@ -78,7 +78,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 		h: number,
 		total?: boolean
 	}) => {
-		const item = mutation.createCommandDeviceReport({
+		const item = mutation.createCommandDeviceAnalytic({
 			page: args.page,
 			input: {
 				type: args.type,
@@ -135,7 +135,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 		h: number,
 		total?: boolean
 	}) => {
-		const item = mutation.updateCommandDeviceReport({
+		const item = mutation.updateCommandDeviceAnalytic({
 			id: args.id,
 			page: args.page,
 			input: {
@@ -191,7 +191,7 @@ export const useUpdateDeviceChartGrid = (deviceId: string) => {
 		}[]
 	}) => {
 
-		const item = mutation.updateCommandDeviceReportGrid({
+		const item = mutation.updateCommandDeviceAnalyticGrid({
 			device: deviceId,
 			page: args.page,
 			grid: args.items.map((item) => ({
@@ -228,7 +228,7 @@ export const useRemoveDeviceChart = (deviceId: string) => {
 		page: string
 	}) => {
 
-		const item = mutation.deleteCommandDeviceReport({
+		const item = mutation.deleteCommandDeviceAnalytic({
 			page: args.page,
 			id: args.id
 		})

@@ -37,11 +37,11 @@ export interface CommandSurfaceClient {
         charts: ReportChart[];
     }[]
 
-    createReportPage?: (name: string) => Promise<any>;
-    updateReportPage?: (id: string, name: string) => Promise<any>;
-    removeReportPage?: (id: string) => Promise<any>;
+    createAnalyticPage?: (name: string) => Promise<any>;
+    updateAnalyticPage?: (id: string, name: string) => Promise<any>;
+    removeAnalyticPage?: (id: string) => Promise<any>;
 
-    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
+    useAnalyticValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
@@ -797,13 +797,13 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                             onSubmit={(page) => {
 
                                 if (page.id) {
-                                    client?.updateReportPage?.(page.id, page.name).then(() => {
+                                    client?.updateAnalyticPage?.(page.id, page.name).then(() => {
                                         setEditReportPage(null);
                                         setSelectedReport(null)
                                     })
 
                                 } else {
-                                    client?.createReportPage?.(page.name).then(() => {
+                                    client?.createAnalyticPage?.(page.name).then(() => {
                                         setEditReportPage(null);
                                         setSelectedReport(null)
                                     });
@@ -812,7 +812,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                             }}
                             onDelete={() => {
-                                client?.removeReportPage?.(selectedReport.id).then(() => {
+                                client?.removeAnalyticPage?.(selectedReport.id).then(() => {
                                     setEditReportPage(null);
                                     setSelectedReport(null)
                                 })

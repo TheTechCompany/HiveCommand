@@ -1,4 +1,4 @@
-import { PrismaClient, Prisma, DeviceReport } from "@hive-command/data";
+import { PrismaClient, Prisma } from "@hive-command/data";
 import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
@@ -16,36 +16,36 @@ export default (prisma: PrismaClient) => {
 		
 
 		type Mutation {
-			createCommandDeviceReport(page: ID, input: CommandDeviceReportInput): CommandDeviceReport
-			updateCommandDeviceReportGrid(device: ID, page: ID, grid: [CommandDeviceReportInput]): [CommandDeviceReport]
-			updateCommandDeviceReport(page: ID, id: ID, input: CommandDeviceReportInput): CommandDeviceReport
-			deleteCommandDeviceReport(page: ID, id: ID): CommandDeviceReport
+			createCommandDeviceAnalytic(page: ID, input: CommandDeviceAnalyticInput): CommandDeviceAnalytic
+			updateCommandDeviceAnalyticGrid(device: ID, page: ID, grid: [CommandDeviceAnalyticInput]): [CommandDeviceAnalytic]
+			updateCommandDeviceAnalytic(page: ID, id: ID, input: CommandDeviceAnalyticInput): CommandDeviceAnalytic
+			deleteCommandDeviceAnalytic(page: ID, id: ID): CommandDeviceAnalytic
 
-			createCommandReportPage(device: ID, input: CommandReportPageInput!): CommandReportPage!
-			updateCommandReportPage(device: ID, id: ID, input: CommandReportPageInput!): CommandReportPage!
-			deleteCommandReportPage(device: ID, id: ID): CommandReportPage!
+			createCommandAnalyticPage(device: ID, input: CommandAnalyticPageInput!): CommandAnalyticPage!
+			updateCommandAnalyticPage(device: ID, id: ID, input: CommandAnalyticPageInput!): CommandAnalyticPage!
+			deleteCommandAnalyticPage(device: ID, id: ID): CommandAnalyticPage!
 		}
 
-		input CommandReportPageInput {
+		input CommandAnalyticPageInput {
 			name: String
 		}
 
-		input CommandReportPageWhere{
+		input CommandAnalyticPageWhere{
 			ids: [ID]
 		}
 	
-		type CommandReportPage {
+		type CommandAnalyticPage {
 			id: ID
 	
 			name: String
-			charts: [CommandDeviceReport]
+			charts: [CommandDeviceAnalytic]
 	
 			createdAt: DateTime
 			
 			device: CommandDevice
 		}
 
-		input CommandDeviceReportInput {
+		input CommandDeviceAnalyticInput {
 			id: ID
 
 			x: Int
@@ -65,7 +65,7 @@ export default (prisma: PrismaClient) => {
 			device: String
 		}
 
-		type CommandDeviceReport {
+		type CommandDeviceAnalytic {
 			id: ID! 
 			x: Int
 			y: Int
@@ -109,7 +109,7 @@ export default (prisma: PrismaClient) => {
     `
 
     const resolvers = {
-		CommandDeviceReport: {
+		CommandDeviceAnalytic: {
 			values: async (root: any, args: {startDate: Date, endDate?: Date, format?: string}) => {
 
 				const format = args.format || 'json';
@@ -331,13 +331,13 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
-			createCommandReportPage: async (root: any, args: any, context: any) => {
+			createCommandAnalyticPage: async (root: any, args: any, context: any) => {
 				const id = nanoid();
 
 				const device = await prisma.device.update({
 					where: {id: args.device},
 					data: {
-						reports: {
+						analyticPages: {
 							create: [{
 								id: id,
 								name: args.input.name,
@@ -348,20 +348,20 @@ export default (prisma: PrismaClient) => {
 						}
 					},
 					include: {
-						reports: true
+						analyticPages: true
 					}
 				})
 
-				return device.reports.find((a) => a.id == id)
+				return device.analyticPages.find((a) => a.id == id)
 			},
-			updateCommandReportPage: async (root: any, args: any, context: any) => {
+			updateCommandAnalyticPage: async (root: any, args: any, context: any) => {
 
 				const device = await prisma.device.update({
 					where: {
 						id: args.device
 					},
 					data: {
-						reports: {
+						analyticPages: {
 							update: {
 								where: {id: args.id},
 								data: {
@@ -371,19 +371,19 @@ export default (prisma: PrismaClient) => {
 						}
 					},
 					include: {
-						reports: true
+						analyticPages: true
 					}
 				})
 
-				return device.reports?.find((a) => a.id == args.id);
+				return device.analyticPages?.find((a) => a.id == args.id);
 			},
-			deleteCommandReportPage: async (root: any, args: any, context: any) => {
+			deleteCommandAnalyticPage: async (root: any, args: any, context: any) => {
 				return await prisma.device.update({
 					where: {
 						id: args.device
 					},
 					data: {
-						reports: {
+						analyticPages: {
 							delete: {
 								id: args.id
 							}
@@ -391,14 +391,14 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			createCommandDeviceReport: async (root: any, args: any) => {
+			createCommandDeviceAnalytic: async (root: any, args: any) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
 					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
-				return await prisma.deviceReport.create({
+				return await prisma.analyticPageChart.create({
 					data: {
 						id: nanoid(),
 						type: args.input.type,
@@ -421,14 +421,14 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			updateCommandDeviceReport: async (root: any, args: any) => {
+			updateCommandDeviceAnalytic: async (root: any, args: any) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
 					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
-				return await prisma.deviceReport.update({
+				return await prisma.analyticPageChart.update({
 					where: {id: args.id},
 					data: {
 						type: args.input.type,
@@ -449,7 +449,7 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			updateCommandDeviceReportGrid: async (root: any, args: any) => {
+			updateCommandDeviceAnalyticGrid: async (root: any, args: any) => {
 				const {device, grid} = args;
 
 				return await Promise.all(grid.map(async (grid_item: any) => {
@@ -460,15 +460,15 @@ export default (prisma: PrismaClient) => {
 					if(grid_item.width) updateQuery['width'] = grid_item.width;
 					if(grid_item.height) updateQuery['height'] = grid_item.height;
 
-					const result = await prisma.deviceReport.update({
+					const result = await prisma.analyticPageChart.update({
 						where: {id: grid_item.id},// device: {id: device}
 						data: updateQuery
 					})
 					return result
 				}))
 			},
-			deleteCommandDeviceReport: async (root: any, args: any) => {
-				return await prisma.deviceReport.delete({where: {id: args.id}})
+			deleteCommandDeviceAnalytic: async (root: any, args: any) => {
+				return await prisma.analyticPageChart.delete({where: {id: args.id}})
 			}
 		},
         Query : {

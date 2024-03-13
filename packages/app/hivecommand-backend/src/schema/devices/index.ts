@@ -41,7 +41,7 @@ export default (prisma: PrismaClient) => {
 				}
 			},
 			CommandDevice: {
-				reports: async (root: any, args: any, content: any) => {
+				analyticPages: async (root: any, args: any, content: any) => {
 					let reportWhere : any = {};
 					if(args?.where?.ids){
 						reportWhere = {id: { in: args?.where?.ids }}
@@ -52,7 +52,7 @@ export default (prisma: PrismaClient) => {
 							id: root.id,
 						},
 						include: {
-							reports: {
+							analyticPages: {
 								where: reportWhere,
 								include: {
 									charts: {
@@ -72,7 +72,7 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 					
-					return device?.reports || [];
+					return device?.analyticPages || [];
 				},
 				deviceSnapshot: async (root: any, args: any, context: any) => {
 
@@ -682,7 +682,7 @@ export default (prisma: PrismaClient) => {
 		online: Boolean
 		lastSeen: DateTime
 
-		reports(where: CommandReportPageWhere): [CommandReportPage] 
+		analyticPages(where: CommandAnalyticPageWhere): [CommandAnalyticPage] 
 
 		organisation: HiveOrganisation 
 

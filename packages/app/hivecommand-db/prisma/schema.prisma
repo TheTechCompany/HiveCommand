@@ -34,7 +34,7 @@ model Device {
 
   program String?
 
-  reports ReportPage[] @relation(name: "hasReportPages")
+  analyticPages AnalyticPage[] @relation(name: "hasReportPages")
 
   createdAt DateTime @default(now())
 
@@ -89,12 +89,12 @@ model MaintenanceWindow {
   deviceId String
 }
 
-model ReportPage {
+model AnalyticPage {
   id String @id
 
   name String
 
-  charts DeviceReport[] @relation(name: "hasReports")
+  charts AnalyticPageChart[] @relation(name: "hasReports")
 
   createdAt DateTime? @default(now())
 
@@ -137,7 +137,7 @@ model DeviceValueChange {
   @@unique([deviceId, placeholder, key, userId, lastUpdated])
 }
 
-model DeviceReport {
+model AnalyticPageChart {
   id String @id
 
   type String
@@ -159,7 +159,7 @@ model DeviceReport {
 
   timeBucket String?
 
-  page   ReportPage @relation(name: "hasReports", fields: [pageId], references: [id], onDelete: Cascade)
+  page   AnalyticPage @relation(name: "hasReports", fields: [pageId], references: [id], onDelete: Cascade)
   pageId String
 }
 
@@ -588,7 +588,7 @@ model ProgramTag {
   program   Program @relation(name: "hasTags", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
-  reports DeviceReport[] @relation(name: "reportsOnTag")
+  reports AnalyticPageChart[] @relation(name: "reportsOnTag")
 
   @@unique([name, programId])
 }
@@ -635,7 +635,7 @@ model ProgramTypeField {
   parent   ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String
 
-  reports DeviceReport[] @relation(name: "reportsOnTagField")
+  reports AnalyticPageChart[] @relation(name: "reportsOnTagField")
 
   @@unique([name, parentId])
 }
