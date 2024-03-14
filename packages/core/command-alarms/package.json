@@ -14,6 +14,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@hive-command/interface-types": "workspace:^"
+    "@hive-command/interface-types": "workspace:^",
+    "nanoid": "^5.0.6"
   }
 }
