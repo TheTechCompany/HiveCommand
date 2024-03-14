@@ -18,7 +18,7 @@ export const useDownloadReport = (deviceId: string) => {
 			startDate, 
 			endDate,
 			deviceId,
-			report
+			reportId: report
 		}});
 }
 
