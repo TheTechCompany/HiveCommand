@@ -98,9 +98,18 @@ export default (prisma: PrismaClient) => {
 				})
 
 
+				const id = nanoid();
+
+				console.time(`Creating workbook ${id}`)
+
 				const workbook = xlsx.utils.book_new();
 
-				await Promise.all((report?.fields || []).filter((a) => a.bucket && a.device).map(async (field) => {
+				const fields = (report?.fields || []).filter((a) => a.bucket && a.device);
+
+				for(var i = 0; i < (fields || []).length; i++){
+					const field = fields[i];
+
+					console.time(`Creating worksheet ${i}-${id}`)
 
 					const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
 
@@ -110,7 +119,12 @@ export default (prisma: PrismaClient) => {
 
 					const sheet = xlsx.utils.json_to_sheet(result);
 					xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
-				}))
+
+					console.timeEnd(`Creating worksheet ${i}-${id}`)
+				}
+
+				console.timeEnd(`Creating workbook ${id}`)
+
 
 				return {
 					xlsx: Buffer.from(xlsx.write(workbook, {type: 'buffer', bookType: 'xlsx'})).toString('base64')
