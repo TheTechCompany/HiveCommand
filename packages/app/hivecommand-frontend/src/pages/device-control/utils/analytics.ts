@@ -1,5 +1,5 @@
 import { useQuery, useApolloClient, gql } from "@apollo/client"
-import { useAddDeviceChart, useCreateAnalyticPage, useRemoveDeviceChart, useRemoveAnalyticPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateAnalyticPage } from "@hive-command/api";
+import { useAddDeviceChart, useCreateAnalyticPage, useRemoveDeviceChart, useRemoveAnalyticPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateAnalyticPage, useDownloadAnalytic } from "@hive-command/api";
 
 export const useDeviceAnalytics = (id: string) => {
   const { data } = useQuery(gql`
@@ -24,6 +24,7 @@ export const useDeviceAnalytics = (id: string) => {
             tag {
                 id
                 name
+                type
             }
 
             subkey {
@@ -93,7 +94,7 @@ export const useDeviceAnalyticData = (deviceId: string, analyticId: string, hori
 
 }
 
-const withRefetch = (fn: any, refetch: any) => {
+export const withRefetch = (fn: any, refetch: any) => {
   return async (...args: any[]) => {
     const res = await fn(...args)
     refetch();
@@ -118,6 +119,8 @@ export const useDeviceAnalyticActions = (id: string) => {
   const updateAnalyticPage = withRefetch(useUpdateAnalyticPage(id), refetch);
   const removeAnalyticPage = withRefetch(useRemoveAnalyticPage(id), refetch);
 
+  const downloadAnalytic = useDownloadAnalytic(id)
+
   return {
     useAnalyticValues: useDeviceAnalyticData,
     addChart: addDeviceChart,
@@ -126,6 +129,7 @@ export const useDeviceAnalyticActions = (id: string) => {
     removeChart,
     createAnalyticPage,
     updateAnalyticPage,
-    removeAnalyticPage
+    removeAnalyticPage,
+    downloadAnalytic
   }
 }

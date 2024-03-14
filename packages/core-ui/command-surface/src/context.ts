@@ -55,6 +55,22 @@ export const DeviceControlContext = React.createContext<{
 		id: string;
 		charts: ReportChart[] //{x: number, y: number, width: number, height: number, label: string, values: {timestamp: Date, value: any}[] }[]
 	}[];
+
+	reports?: {
+		id: string,
+		name: string,
+		startDate: Date,
+		endDate?: Date,
+		reportLength?: string,
+		recurring?: boolean,
+		fields?: {
+			id: string,
+			device: any,
+			key: any,
+			bucket: string
+		}[]
+	}[];
+
 	changeDeviceMode?:any
 	actions?: any[],
 	

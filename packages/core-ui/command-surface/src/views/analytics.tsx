@@ -16,6 +16,20 @@ import { Box, Typography, IconButton, Button } from '@mui/material'
 import { useParams } from "react-router-dom";
 import { debounce } from 'lodash';
 import { DeviceGraphExportModal } from "../components/modals/device-graph-export";
+import saveAs from "file-saver";
+
+const baseToBlob = (base64String, contentType = '') => {
+  console.log(base64String)
+  const byteCharacters : any = atob(base64String);
+  const byteArrays: any[]= [];
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+      byteArrays.push(byteCharacters.charCodeAt(i));
+  }
+
+  const byteArray = new Uint8Array(byteArrays);
+  return new Blob([byteArray], { type: contentType });
+}
 
 export type ReportHorizon = { start: Date, end: Date };
 
@@ -51,10 +65,9 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
 
   const { activePage } = useParams();
 
-
   const { analytics, client, refresh, activeProgram } = useContext(DeviceControlContext);
 
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState<any>(null);
 
   const report_periods = ['7d', '1d', '12hr', '1hr', '30min']
 
@@ -309,7 +322,14 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
         selected={selected}
         tags={activeProgram?.tags || []}
         types={activeProgram?.types || []}
-        
+        onSubmit={(startDate, endDate, bucket) => {
+          if(activePage) client?.downloadAnalytic?.(activePage, selected?.id, startDate, endDate, bucket).then((data) => {
+              const string = data?.data?.downloadCommandDeviceAnalytic
+
+            saveAs(new Blob([string]), `${selected?.tag?.name}${selected?.subkey ? `.${selected?.subkey?.name}` : ''}-${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.csv`)
+
+          })
+        }}
         onClose={() => {
           openGraphExport(false)
         }}/>
@@ -415,7 +435,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
                   setSelected(item)
                 }}
                 onExport={() => {
-                  setSelected(item)
+                  setSelected({...item, horizon})
                   openGraphExport(true)
                 }}
                 dataKey={item.subkey?.name}

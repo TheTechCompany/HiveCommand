@@ -42,7 +42,6 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
     const navigate = useNavigate();
 
     const onTreeSelect = (nodeId: string) => {
-        console.log({ nodeId });
 
         switch (nodeId) {
             // case 'analytics-root':
@@ -62,11 +61,13 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
                 let node = nodes.find((a) => a.id == nodeId)
                 let page = node?.parent;
 
+        console.log({ nodeId, page });
+
                 if (!page) page = node.id;
 
                 const pathRoot = props.items?.find((a) => a.id == page)?.pathRoot || '';
 
-                if (nodeId != 'controls' && nodeId != 'analytics') {
+                if (nodeId != 'controls' && nodeId != 'analytics' && nodeId != 'reports') {
                     // setView(page);
 
                     navigate(pathRoot)
@@ -74,7 +75,7 @@ export const TreeMenu : React.FC<TreeMenuProps> = (props) => {
                     break;
                 }
 
-                if (page == 'controls' || page == 'analytics') {
+                if (page == 'controls' || page == 'analytics' || page == 'reports') {
                     // setActivePage(nodeId)
                     navigate(`${pathRoot?.length > 0 ? pathRoot + '/' : ''}${nodeId}`)
                 }

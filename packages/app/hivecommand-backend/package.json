@@ -59,6 +59,7 @@
     "pg": "^8.7.1",
     "redis": "4.6.8",
     "ts-morph": "^21.0.1",
-    "typed-graphql-subscriptions": "^0.0.1"
+    "typed-graphql-subscriptions": "^0.0.1",
+    "xlsx": "^0.18.5"
   }
 }

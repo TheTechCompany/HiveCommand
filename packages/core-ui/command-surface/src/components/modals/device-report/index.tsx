@@ -1,48 +1,98 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, TextField } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
+import React, { useMemo, useState } from 'react';
+import { unit as mathUnit } from 'mathjs';
 
-export const DeviceReportModal = (props: {
-    open: boolean, 
-    selected?: any,
-    onClose: () => void, 
-    onDelete?: () => void,
-    onSubmit?: (report: {id?: string, name: string}) => void
-}) => {
+export interface DeviceReport {
+    id?: string,
 
-    const [ report, setReport ] = useState<{id?: string, name: string}>({name: ''})
+    name?: string,
+    recurring?: boolean,
+    startDate?: Date | null,
+    endDate?: Date | null,
+    reportLength?: string,
+}
 
-    useEffect(() => {
-        setReport({...props.selected})
-    }, [props.selected])
+export interface DeviceReportModalProps {
+    open: boolean;
+    onClose?: () => void;
+    onSubmit?: (report: DeviceReport) => void;
+}
 
-    const onSubmit = () => {
-        props.onSubmit?.(report)
-        setReport({name: ''})
-    }
+export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
+    
+    const [ report, setReport ] = useState<DeviceReport>({})
 
+    const timeBucketError = useMemo(() => {
+        try{
+          if(report.reportLength) return (mathUnit(report.reportLength).to('seconds') == null)
+          return false;
+        }catch(e){
+          console.log({error: e})
+          return true;
+        }
+      }, [report.reportLength])
+      
     return (
         <Dialog 
             fullWidth
             open={props.open} 
             onClose={props.onClose}>
-            <DialogTitle>{props.selected ? "Update": "Create"} Report</DialogTitle>
+            <DialogTitle>
+                Create Report
+            </DialogTitle>
             <DialogContent>
-                <TextField 
-                    value={report.name}
-                    onChange={(e) => setReport({...report, name: e.target.value}) }
-                    sx={{marginTop: "9px"}} 
-                    size="small" 
-                    fullWidth
-                    label="Report Name" />
-            </DialogContent>
-            <DialogActions sx={{display: 'flex', justifyContent: props.selected ? 'space-between' : 'flex-end'}}>
-                {props.selected && props.onDelete && <Button onClick={props.onDelete} color="error">Delete</Button>}
-                <Box sx={{display: 'flex'}}>
-                    <Button onClick={props.onClose}>Close</Button>
-                    <Button color="primary" onClick={onSubmit} variant="contained">{props.selected ? "Save" : "Create"}</Button>
+                <Box sx={{marginTop: '8px', display: 'flex', flexDirection: 'column'}}>
+                    <TextField 
+                        fullWidth
+                        value={report.name}
+                        onChange={(e) => {
+                            setReport({...report, name: e.target.value})
+                        }}
+                        size="small" 
+                        label="Name" />
+
+                    <FormControlLabel 
+                        control={
+                            <Checkbox checked={report.recurring} onChange={(e) => setReport({...report, recurring: e.target.checked})} />
+                        } 
+                        label="Recurring" />
+
+                    <DatePicker 
+                        inputFormat='DD/MM/YYYY'
+                        renderInput={(params) => <TextField {...params} fullWidth size="small" label="Start Date" />}
+                        value={report.startDate}
+                        onChange={(value) => {
+                            setReport({...report, startDate: value})
+                        }} />
+
+                    <Box sx={{marginTop: '8px'}}>
+                    {report.recurring ? 
+                        (<TextField
+                            error={timeBucketError}
+                            value={report.reportLength}
+                            onChange={(e) => setReport({
+                                ...report,
+                                reportLength: e.target.value
+                            })}
+                            fullWidth
+                            size="small" 
+                            label="Report length" />) : 
+                        <DatePicker 
+                            inputFormat='DD/MM/YYYY'
+                            renderInput={(params) => <TextField {...params} fullWidth size="small" label="End Date" />}
+                            value={report.endDate}
+                            onChange={(value) => {
+                                setReport({...report, endDate: value})
+                            }}
+                            />}
+                    </Box>
                 </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={props.onClose}>Close</Button>
+                <Button onClick={() => props.onSubmit?.(report)} variant="contained" color="primary">Save</Button>
             </DialogActions>
         </Dialog>
-
     )
 }

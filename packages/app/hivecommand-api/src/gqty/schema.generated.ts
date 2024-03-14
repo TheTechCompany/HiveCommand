@@ -105,6 +105,20 @@ export interface CommandDeviceInput {
   program?: InputMaybe<Scalars["String"]>;
 }
 
+export interface CommandDeviceReportFieldInput {
+  bucket?: InputMaybe<Scalars["String"]>;
+  device?: InputMaybe<Scalars["String"]>;
+  key?: InputMaybe<Scalars["String"]>;
+}
+
+export interface CommandDeviceReportInput {
+  endDate?: InputMaybe<Scalars["DateTime"]>;
+  name?: InputMaybe<Scalars["String"]>;
+  recurring?: InputMaybe<Scalars["Boolean"]>;
+  reportLength?: InputMaybe<Scalars["String"]>;
+  startDate?: InputMaybe<Scalars["DateTime"]>;
+}
+
 export interface CommandDeviceSnapshotInput {
   key?: InputMaybe<Scalars["String"]>;
   placeholder?: InputMaybe<Scalars["String"]>;
@@ -403,6 +417,7 @@ export const generatedSchema = {
     organisation: { __type: "HiveOrganisation" },
     provisionCode: { __type: "String" },
     provisioned: { __type: "Boolean" },
+    reports: { __type: "[CommandDeviceReport]" },
     screens: { __type: "[CommandDeviceScreen]" },
     watching: { __type: "[HiveUser]" },
   },
@@ -448,6 +463,35 @@ export const generatedSchema = {
     name: { __type: "String" },
     network_name: { __type: "String" },
     program: { __type: "String" },
+  },
+  CommandDeviceReport: {
+    __typename: { __type: "String!" },
+    device: { __type: "CommandDevice" },
+    fields: { __type: "[CommandDeviceReportField]" },
+    id: { __type: "ID!" },
+    name: { __type: "String" },
+    recurring: { __type: "Boolean" },
+    reportLength: { __type: "String" },
+    startDate: { __type: "DateTime" },
+  },
+  CommandDeviceReportField: {
+    __typename: { __type: "String!" },
+    bucket: { __type: "String" },
+    device: { __type: "CommandProgramTag" },
+    id: { __type: "ID!" },
+    key: { __type: "CommandProgramTypeField" },
+  },
+  CommandDeviceReportFieldInput: {
+    bucket: { __type: "String" },
+    device: { __type: "String" },
+    key: { __type: "String" },
+  },
+  CommandDeviceReportInput: {
+    endDate: { __type: "DateTime" },
+    name: { __type: "String" },
+    recurring: { __type: "Boolean" },
+    reportLength: { __type: "String" },
+    startDate: { __type: "DateTime" },
   },
   CommandDeviceScreen: {
     __typename: { __type: "String!" },
@@ -946,6 +990,14 @@ export const generatedSchema = {
       __type: "MaintenanceWindow!",
       __args: { device: "ID", input: "MaintenanceWindowInput!" },
     },
+    createCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { device: "ID", input: "CommandDeviceReportInput" },
+    },
+    createCommandDeviceReportField: {
+      __type: "CommandDeviceReportField!",
+      __args: { input: "CommandDeviceReportFieldInput!", report: "ID" },
+    },
     createCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { input: "CommandHMIDeviceInput", pack: "ID" },
@@ -1081,6 +1133,14 @@ export const generatedSchema = {
       __type: "MaintenanceWindow!",
       __args: { device: "ID", id: "ID!" },
     },
+    deleteCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { device: "ID", id: "ID" },
+    },
+    deleteCommandDeviceReportField: {
+      __type: "CommandDeviceReportField!",
+      __args: { id: "ID", report: "ID" },
+    },
     deleteCommandInterfaceDevice: {
       __type: "CommandHMIDevice",
       __args: { id: "ID!", pack: "ID" },
@@ -1211,6 +1271,18 @@ export const generatedSchema = {
     updateCommandDeviceMaintenanceWindow: {
       __type: "MaintenanceWindow!",
       __args: { device: "ID", id: "ID!", input: "MaintenanceWindowInput!" },
+    },
+    updateCommandDeviceReport: {
+      __type: "CommandDeviceReport",
+      __args: { device: "ID", id: "ID", input: "CommandDeviceReportInput" },
+    },
+    updateCommandDeviceReportField: {
+      __type: "CommandDeviceReportField!",
+      __args: {
+        id: "ID",
+        input: "CommandDeviceReportFieldInput!",
+        report: "ID",
+      },
     },
     updateCommandDeviceUptime: {
       __type: "CommandDevice!",
@@ -1379,29 +1451,6 @@ export const generatedSchema = {
     _resources: { __type: "[GraphResource]" },
     _sdl: { __type: "String!" },
     commandDataScopePlugins: { __type: "[CommandDataScopePlugin]" },
-    commandDeviceTimeseries: {
-      __type: "[CommandDeviceTimeseriesData]",
-      __args: {
-        device: "String",
-        deviceId: "String",
-        startDate: "String",
-        valueKey: "String",
-      },
-    },
-    commandDeviceTimeseriesTotal: {
-      __type: "CommandDeviceTimeseriesTotal",
-      __args: {
-        device: "String",
-        deviceId: "String",
-        endDate: "String",
-        startDate: "String",
-        valueKey: "String",
-      },
-    },
-    commandDeviceValue: {
-      __type: "[CommandDeviceValue]",
-      __args: { bus: "String", device: "String", port: "String" },
-    },
     commandDevices: {
       __type: "[CommandDevice]!",
       __args: { where: "CommandDeviceWhere" },
@@ -1483,6 +1532,7 @@ export interface CommandDevice {
   organisation?: Maybe<HiveOrganisation>;
   provisionCode?: Maybe<ScalarsEnums["String"]>;
   provisioned?: Maybe<ScalarsEnums["Boolean"]>;
+  reports?: Maybe<Array<Maybe<CommandDeviceReport>>>;
   screens?: Maybe<Array<Maybe<CommandDeviceScreen>>>;
   watching?: Maybe<Array<Maybe<HiveUser>>>;
 }
@@ -1510,6 +1560,25 @@ export interface CommandDeviceAnalytic {
   width?: Maybe<ScalarsEnums["Int"]>;
   x?: Maybe<ScalarsEnums["Int"]>;
   y?: Maybe<ScalarsEnums["Int"]>;
+}
+
+export interface CommandDeviceReport {
+  __typename?: "CommandDeviceReport";
+  device?: Maybe<CommandDevice>;
+  fields?: Maybe<Array<Maybe<CommandDeviceReportField>>>;
+  id: ScalarsEnums["ID"];
+  name?: Maybe<ScalarsEnums["String"]>;
+  recurring?: Maybe<ScalarsEnums["Boolean"]>;
+  reportLength?: Maybe<ScalarsEnums["String"]>;
+  startDate?: Maybe<ScalarsEnums["DateTime"]>;
+}
+
+export interface CommandDeviceReportField {
+  __typename?: "CommandDeviceReportField";
+  bucket?: Maybe<ScalarsEnums["String"]>;
+  device?: Maybe<CommandProgramTag>;
+  id: ScalarsEnums["ID"];
+  key?: Maybe<CommandProgramTypeField>;
 }
 
 export interface CommandDeviceScreen {
@@ -1902,6 +1971,14 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     input: MaintenanceWindowInput;
   }) => MaintenanceWindow;
+  createCommandDeviceReport: (args?: {
+    device?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandDeviceReportInput>;
+  }) => Maybe<CommandDeviceReport>;
+  createCommandDeviceReportField: (args: {
+    input: CommandDeviceReportFieldInput;
+    report?: Maybe<Scalars["ID"]>;
+  }) => CommandDeviceReportField;
   createCommandInterfaceDevice: (args?: {
     input?: Maybe<CommandHMIDeviceInput>;
     pack?: Maybe<Scalars["ID"]>;
@@ -2016,6 +2093,14 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
   }) => MaintenanceWindow;
+  deleteCommandDeviceReport: (args?: {
+    device?: Maybe<Scalars["ID"]>;
+    id?: Maybe<Scalars["ID"]>;
+  }) => Maybe<CommandDeviceReport>;
+  deleteCommandDeviceReportField: (args?: {
+    id?: Maybe<Scalars["ID"]>;
+    report?: Maybe<Scalars["ID"]>;
+  }) => CommandDeviceReportField;
   deleteCommandInterfaceDevice: (args: {
     id: Scalars["ID"];
     pack?: Maybe<Scalars["ID"]>;
@@ -2151,6 +2236,16 @@ export interface Mutation {
     id: Scalars["ID"];
     input: MaintenanceWindowInput;
   }) => MaintenanceWindow;
+  updateCommandDeviceReport: (args?: {
+    device?: Maybe<Scalars["ID"]>;
+    id?: Maybe<Scalars["ID"]>;
+    input?: Maybe<CommandDeviceReportInput>;
+  }) => Maybe<CommandDeviceReport>;
+  updateCommandDeviceReportField: (args: {
+    id?: Maybe<Scalars["ID"]>;
+    input: CommandDeviceReportFieldInput;
+    report?: Maybe<Scalars["ID"]>;
+  }) => CommandDeviceReportField;
   updateCommandDeviceUptime: (args: {
     uptime?: Maybe<Scalars["DateTime"]>;
     where: CommandDeviceWhere;
@@ -2288,24 +2383,6 @@ export interface Query {
   _resources?: Maybe<Array<Maybe<GraphResource>>>;
   _sdl: ScalarsEnums["String"];
   commandDataScopePlugins?: Maybe<Array<Maybe<CommandDataScopePlugin>>>;
-  commandDeviceTimeseries: (args?: {
-    device?: Maybe<Scalars["String"]>;
-    deviceId?: Maybe<Scalars["String"]>;
-    startDate?: Maybe<Scalars["String"]>;
-    valueKey?: Maybe<Scalars["String"]>;
-  }) => Maybe<Array<Maybe<CommandDeviceTimeseriesData>>>;
-  commandDeviceTimeseriesTotal: (args?: {
-    device?: Maybe<Scalars["String"]>;
-    deviceId?: Maybe<Scalars["String"]>;
-    endDate?: Maybe<Scalars["String"]>;
-    startDate?: Maybe<Scalars["String"]>;
-    valueKey?: Maybe<Scalars["String"]>;
-  }) => Maybe<CommandDeviceTimeseriesTotal>;
-  commandDeviceValue: (args?: {
-    bus?: Maybe<Scalars["String"]>;
-    device?: Maybe<Scalars["String"]>;
-    port?: Maybe<Scalars["String"]>;
-  }) => Maybe<Array<Maybe<CommandDeviceValue>>>;
   commandDevices: (args?: {
     where?: Maybe<CommandDeviceWhere>;
   }) => Array<Maybe<CommandDevice>>;
@@ -2337,6 +2414,8 @@ export interface SchemaObjectTypes {
   CommandDataTransformerConfiguration: CommandDataTransformerConfiguration;
   CommandDevice: CommandDevice;
   CommandDeviceAnalytic: CommandDeviceAnalytic;
+  CommandDeviceReport: CommandDeviceReport;
+  CommandDeviceReportField: CommandDeviceReportField;
   CommandDeviceScreen: CommandDeviceScreen;
   CommandDeviceSnapshot: CommandDeviceSnapshot;
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
@@ -2386,6 +2465,8 @@ export type SchemaObjectTypesNames =
   | "CommandDataTransformerConfiguration"
   | "CommandDevice"
   | "CommandDeviceAnalytic"
+  | "CommandDeviceReport"
+  | "CommandDeviceReportField"
   | "CommandDeviceScreen"
   | "CommandDeviceSnapshot"
   | "CommandDeviceTimeseriesData"

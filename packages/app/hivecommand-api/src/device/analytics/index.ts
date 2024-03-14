@@ -1,5 +1,25 @@
 import { mutate, useMutation } from '../../gqty'
+import { useMutation as useApolloMutation, gql } from '@apollo/client'
 
+export const useDownloadAnalytic = (deviceId: string) => {
+	const [ download ] = useApolloMutation(gql`
+		mutation Download ($page: ID, $id: ID, $startDate: DateTime, $endDate: DateTime, $bucket: String){
+			downloadCommandDeviceAnalytic(page: $page, id: $id, startDate: $startDate, endDate: $endDate, bucket: $bucket)
+		}
+	`)
+	return async (page: string, id: string, startDate: Date, endDate: Date, bucket: string) => {
+		return await download({
+			variables: {
+				page,
+				id,
+				startDate,
+				endDate,
+				bucket
+			}
+		})
+
+	}
+}
 
 export const useCreateAnalyticPage = (deviceId: string) => {
 

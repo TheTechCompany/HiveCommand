@@ -7,6 +7,7 @@ import { HMITag, HMIType } from "@hive-command/interface-types";
 export interface DeviceGraphExportModalProps {
     open: boolean;
     onClose?: () => void;
+    onSubmit?: (start: Date, end: Date, bucket: string) => void;
 
     selected?: any;
 
@@ -39,7 +40,10 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
         console.log("SEL", props.selected)
         setExport({
             device: props.selected?.tag,
-            key: props.selected?.subkey
+            key: props.selected?.subkey,
+            bucket: props.selected?.timeBucket,
+            start: props.selected?.horizon?.start,
+            end: props.selected?.horizon?.end
         })
     }, [props.selected])
 
@@ -47,9 +51,12 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
         return props.types?.find((a) => a.name == exportGraph?.device?.type)
     }, [exportGraph?.device])
 
-    console.log(props.tags, props.types)
 
     const hasSubkeys = false;
+
+    const submit = () => {
+        if(exportGraph.start && exportGraph.end && exportGraph.bucket) props.onSubmit?.(exportGraph.start, exportGraph.end, exportGraph.bucket)
+    }
 
     return (
         <Dialog fullWidth open={props.open}>
@@ -57,6 +64,7 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
             <DialogContent sx={{display: 'flex'}}> 
                 <Box sx={{marginTop: '8px', flex: 1}}>
                     <Autocomplete 
+                        disabled
                         options={props.tags}
                         getOptionLabel={(option) => option.name}
                         value={exportGraph?.device}
@@ -67,6 +75,8 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
 
                     {tagType != null ? (
                         <Autocomplete 
+                            disabled
+                            sx={{marginTop: '8px'}}
                             options={tagType?.fields}
                             getOptionLabel={(option) => option.name}
                             value={exportGraph?.key}
@@ -79,7 +89,7 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
                     <Box sx={{marginTop: '8px', display: 'flex'}}>
                         <DatePicker 
                             inputFormat="DD/MM/YYYY"
-                            value={exportGraph.start}
+                            value={exportGraph.start || null}
                             onChange={(value) => {
                                 setExport({...exportGraph, start: value})
 
@@ -87,7 +97,7 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
                             renderInput={(params) => <TextField {...params} fullWidth size="small" label="Start date" />}/>
                         <DatePicker
                             inputFormat="DD/MM/YYYY"
-                            value={exportGraph.end}
+                            value={exportGraph.end || null}
                             onChange={(value) => {
                                 setExport({...exportGraph, end: value})
                             }}
@@ -106,7 +116,7 @@ export const DeviceGraphExportModal : React.FC<DeviceGraphExportModalProps> = (p
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Close</Button>
-                <Button variant="contained" color="primary">Download</Button>
+                <Button onClick={submit} variant="contained" color="primary">Download</Button>
             </DialogActions>
         </Dialog>
     )
