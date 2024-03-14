@@ -80,7 +80,7 @@ export const ReportList = () => {
              return Array.from(Array(periods)).map((p, ix) => {
                  return {
                     startDate: moment(startPeriod).add(ix * duration.as('seconds'), 'seconds'),
-                    endDate: moment(startPeriod).add(ix + 1 * duration.as('seconds'), 'seconds')
+                    endDate: moment(startPeriod).add((ix + 1) * duration.as('seconds'), 'seconds')
                  }
             })
         }else{
