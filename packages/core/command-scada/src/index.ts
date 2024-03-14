@@ -201,9 +201,6 @@ export class ScadaCommand extends EventEmitter {
     setConfig(options: LocalOptions) {
         this.conf?.updateConf(options)
 
-        console.log("Options", { options });
-
-        // this.updateConfig(options);
         this.eventedValues.updateFields(
             (options.tags || []).map((tag) => {
                 let type = options.types?.find((a) => a.name == tag.type)

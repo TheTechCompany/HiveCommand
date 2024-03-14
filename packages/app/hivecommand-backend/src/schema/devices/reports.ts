@@ -114,10 +114,17 @@ export default (prisma: PrismaClient) => {
 					const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
 
 					const result : any[] = await prisma.$queryRaw`
-						SELECT placeholder, key, value, time_bucket(${period}::decimal * '1 second'::interval, "lastUpdated") FROM "DeviceValue" WHERE "deviceId" = ${args.device} AND placeholder=${field.device?.name} ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} AND "lastUpdated" > ${args?.startDate} AND "lastUpdated" < ${args.endDate}
+						SELECT placeholder, key, avg(value::float) as value, time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated") as time 
+						FROM "DeviceValue"
+						WHERE "deviceId" = ${args.device} 
+						AND placeholder=${field.device?.name}
+						${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
+						AND "lastUpdated" > ${args?.startDate} 
+						AND "lastUpdated" < ${args.endDate}
+						GROUP BY placeholder, key, time ORDER BY time ASC
 					`
 
-					const sheet = xlsx.utils.json_to_sheet(result);
+					const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({...x, time: new Date(x).getTime() })));
 					xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
 
 					console.timeEnd(`Creating worksheet ${i}-${id}`)
