@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { KeyboardArrowLeft, Timelapse, Engineering, Settings } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
-import { ReportChart, ReportView } from './views/reports'
+import { ReportChart, AnalyticView } from './views/analytics'
 
 import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormControlLabel } from '@mui/material';
 // import { useSubscription } from '@apollo/client';
@@ -17,7 +17,7 @@ import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormContro
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
 import { MaintenanceWindow } from './components/modals/maintenance';
 
-import { DeviceReportModal } from './components/modals/device-report';
+import { DeviceAnalyticModal } from './components/modals/device-analytic';
 import { ControlView } from './views/control';
 import { AlarmList } from './views/alarms';
 import { HomeView } from './views/home';
@@ -28,19 +28,48 @@ import { FieldValue } from './components/field-value';
 import { HMIType, HMITag, HMITemplate } from "@hive-command/interface-types"
 
 import { useMatch, useResolvedPath } from 'react-router-dom'
+import { ReportView } from './views/reports';
+import { DeviceReport, DeviceReportModal } from './components/modals/device-report';
 
 export interface CommandSurfaceClient {
-    reports?: {
+    analytics?: {
         id: string;
         name: string;
         charts: ReportChart[];
     }[]
 
-    createReportPage?: (name: string) => Promise<any>;
-    updateReportPage?: (id: string, name: string) => Promise<any>;
-    removeReportPage?: (id: string) => Promise<any>;
+    reports?: {
+        id: string,
+        name: string,
+        startDate: Date,
+        endDate?: Date,
+        reportLength?: string,
+        recurring?: boolean,
+        fields?: {
+            id: string,
+            device: any,
+            key: any,
+            bucket: string,
+        }[]
+    }[]
 
-    useReportValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
+    createAnalyticPage?: (name: string) => Promise<any>;
+    updateAnalyticPage?: (id: string, name: string) => Promise<any>;
+    removeAnalyticPage?: (id: string) => Promise<any>;
+
+    createReport?: (report: DeviceReport) => Promise<any>;
+    updateReport?: (id: string, report: DeviceReport) => Promise<any>;
+    deleteReport?: (id: string) => Promise<any>;
+
+    createReportField?: (report: string, field?: {device: string, key: string, bucket: string}) => Promise<any>,
+    updateReportField?: (report: string, id: string, field?: {device: string, key: string, bucket: string}) => Promise<any>,
+    deleteReportField?: (report: string, id: string) => Promise<any>,
+
+    downloadReport?: (report: string, startDate: Date, endDate: Date) => Promise<any>;
+
+    downloadAnalytic?: (page: string, id: string, startDate: Date, endDate: Date, bucket: string) => Promise<any>
+
+    useAnalyticValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
 
     addChart?: (pageId: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
     updateChart?: (pageId: string, id: string, type: string, deviceId: string, keyId: string, units: string, timeBucket: string, x: number, y: number, w: number, h: number, totalize: boolean) => Promise<any>;
@@ -221,7 +250,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { program: activeProgram, defaultPage, client, watching } = props;
 
-    const { reports = [] } = client || {};
+    const { analytics = [], reports = [] } = client || {};
 
     const { tags, types } = activeProgram || {};
 
@@ -276,7 +305,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const [maintenanceWindow, setMaintenanceWindow] = useState(false);
 
     const [selectedReport, setSelectedReport] = useState<any>(null);
-    const [editReportPage, setEditReportPage] = useState<any>(null)
+    const [editAnalyticPage, setEditAnalyticPage] = useState<any>(null)
+    
+    const [ editReportPage, setEditReportPage ] = useState(false);
 
     const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
 
@@ -555,6 +586,9 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
         switch (nodeId) {
             case 'analytics':
+                setEditAnalyticPage(true);
+                break;
+            case 'reports':
                 setEditReportPage(true);
                 break;
         }
@@ -571,7 +605,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         switch (page) {
             case 'analytics':
                 setSelectedReport(node)
-                setEditReportPage(true)
+                setEditAnalyticPage(true)
                 break;
         }
     }
@@ -601,7 +635,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                 const pathRoot = drawerMenu.find((a) => a.id == page)?.pathRoot || '';
 
-                if (nodeId != 'controls' && nodeId != 'analytics') {
+                if (nodeId != 'controls' && nodeId != 'analytics' && nodeId != 'reports') {
                     setView(page);
 
                     navigate(pathRoot)
@@ -609,7 +643,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     break;
                 }
 
-                if (page == 'controls' || page == 'analytics') {
+                if (page == 'controls' || page == 'analytics' || page == 'reports') {
                     setActivePage(nodeId)
                     navigate(`${pathRoot?.length > 0 ? pathRoot + '/' : ''}${nodeId}`)
                 }
@@ -704,7 +738,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             name: 'Analytics',
             pathRoot: 'analytics',
             dontEdit: true,
-            children: reports?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
+            children: analytics?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
+            component: <AnalyticView />
+        },
+        {
+            id: 'reports',
+            name: 'Reports',
+            pathRoot: 'reports',
+            dontEdit: true,
+            children: reports?.map((x: any) => ({id: x.id, name: x.name, dontAdd: true})), 
             component: <ReportView />
         }
     ];
@@ -763,7 +805,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                         cache: props.cache,
 
-                        reports: reports,
+                        analytics: analytics,
+                        reports,
                         hmis: memoisedHmi,
 
                         defaultPage,
@@ -783,19 +826,44 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                             onClose={() => {
                                 setMaintenanceWindow(false)
                             }} />
-                        <DeviceReportModal
+                        <DeviceReportModal 
+                            open={editReportPage}
+                            onSubmit={(report) => {
+                                if(report.id){
+                                    client?.updateReport?.(report.id, {
+                                        name: report.name,
+                                        startDate: report.startDate,
+                                        endDate: report.endDate,
+                                        recurring: report.recurring,
+                                        reportLength: report.reportLength
+                                    }).then(() => {
+                                        setEditReportPage(false);
+                                    })
+                                }else{
+                                    client?.createReport?.({
+                                        ...report,
+                                        startDate: report.startDate || new Date(),
+                                        endDate: report.recurring ? (report.endDate || new Date()) : undefined
+                                    }).then(() => {
+                                        setEditReportPage(false);
+                                    })
+                                }
+
+                            }}
+                            />
+                        <DeviceAnalyticModal
                             selected={selectedReport}
                             onSubmit={(page) => {
 
                                 if (page.id) {
-                                    client?.updateReportPage?.(page.id, page.name).then(() => {
-                                        setEditReportPage(null);
+                                    client?.updateAnalyticPage?.(page.id, page.name).then(() => {
+                                        setEditAnalyticPage(null);
                                         setSelectedReport(null)
                                     })
 
                                 } else {
-                                    client?.createReportPage?.(page.name).then(() => {
-                                        setEditReportPage(null);
+                                    client?.createAnalyticPage?.(page.name).then(() => {
+                                        setEditAnalyticPage(null);
                                         setSelectedReport(null)
                                     });
                                 }
@@ -803,16 +871,16 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
                             }}
                             onDelete={() => {
-                                client?.removeReportPage?.(selectedReport.id).then(() => {
-                                    setEditReportPage(null);
+                                client?.removeAnalyticPage?.(selectedReport.id).then(() => {
+                                    setEditAnalyticPage(null);
                                     setSelectedReport(null)
                                 })
                             }}
                             onClose={() => {
-                                setEditReportPage(null)
+                                setEditAnalyticPage(null)
                                 setSelectedReport(null)
                             }}
-                            open={Boolean(editReportPage)} />
+                            open={Boolean(editAnalyticPage)} />
                         <Paper
                             ref={surfaceRef}
                             sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
@@ -866,7 +934,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                     {drawerMenu.filter((a) => a.component).map((menuItem) => (
                         <Route path={menuItem.pathRoot} element={<Outlet />}>
                             {(menuItem.children || []).length > 0 &&
-                                <Route path={':activePage'} element={menuItem.component} />}
+                                <Route path={':activePage/*'} element={menuItem.component} />}
                             {(menuItem.children || []).length == 0 &&
                                 <Route path={''} element={menuItem.component} />}
                         </Route>

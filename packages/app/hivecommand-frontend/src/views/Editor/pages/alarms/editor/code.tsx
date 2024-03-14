@@ -11,8 +11,8 @@ import { useParams } from 'react-router-dom';
 export const CodeEditor = (props: any) => {
 
     const { activeId = '' } = useParams();
-    const { program : {id:program_id, types, tags, alarms, alarmPathways} = {} } = useCommandEditor();
-
+    const { program , setProgram } = useCommandEditor();
+    const { id:program_id, types, tags, alarms, alarmPathways } = program || {}
     const typeDefs = types?.map((x) => {
         return `
         declare interface ${x.name} {
@@ -81,7 +81,7 @@ export const CodeEditor = (props: any) => {
         ${alarmPathways?.map((pathway) => `"${pathway.name}" = "${pathway.name}"`)?.join(',\n')}
     }`
 
-    const [updateAlarm] = useMutation(gql`
+    const [_updateAlarm] = useMutation(gql`
         mutation UpdateAlarm ($program: ID, $id: ID!, $input: CommandProgramAlarmInput){
             updateCommandProgramAlarm(program: $program, id: $id, input: $input){
                 id
@@ -89,7 +89,30 @@ export const CodeEditor = (props: any) => {
         }
     `)
 
-    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [])
+    const updateAlarm = (id: string, script: string) => {
+        let prg = {
+            ...program
+        }
+
+        let alarms = (prg.alarms || [])?.slice();
+        let ix = alarms?.findIndex((a) => a.id == id);
+        alarms[ix] = {
+            ...alarms[ix],
+            script
+        }
+        prg.alarms = alarms;
+        setProgram(prg);
+
+        return _updateAlarm({variables: {
+            program: program_id,
+            id: activeId,
+            input: {
+                script,
+            }
+        }})
+    }
+
+    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [program])
 
     const currentAlarm = alarms?.find((a) => a.id == activeId)
 
@@ -97,15 +120,7 @@ export const CodeEditor = (props: any) => {
         <Box sx={{flex: 1, display: 'flex'}}>
             <Editor 
                 onChange={(value) => {
-                    _debounceUpdate({
-                        variables: {
-                            program: program_id,
-                            id: activeId,
-                            input: {
-                                script: value
-                            }
-                        }
-                    })
+                    _debounceUpdate(activeId, value);
                 }}
                 extraLib={`
 

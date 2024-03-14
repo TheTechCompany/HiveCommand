@@ -1,50 +1,48 @@
-import { PrismaClient, Prisma, DeviceReport } from "@hive-command/data";
+import { PrismaClient, Prisma } from "@hive-command/data";
 import moment from "moment";
 import { Pool } from "pg";
 import {unit as mathUnit} from 'mathjs';
 import { nanoid } from "nanoid";
+import { stringify as csvStringify } from 'csv';
 
 export default (prisma: PrismaClient) => {
 
     const typeDefs = `
-	    type Query {
-			commandDeviceValue(device: String, bus : String, port : String): [CommandDeviceValue]
-			commandDeviceTimeseries(deviceId: String, device: String, valueKey: String, startDate: String): [CommandDeviceTimeseriesData]
-			commandDeviceTimeseriesTotal(deviceId: String, device: String, valueKey: String, startDate: String, endDate: String): CommandDeviceTimeseriesTotal
-		}
-		
+
 
 		type Mutation {
-			createCommandDeviceReport(page: ID, input: CommandDeviceReportInput): CommandDeviceReport
-			updateCommandDeviceReportGrid(device: ID, page: ID, grid: [CommandDeviceReportInput]): [CommandDeviceReport]
-			updateCommandDeviceReport(page: ID, id: ID, input: CommandDeviceReportInput): CommandDeviceReport
-			deleteCommandDeviceReport(page: ID, id: ID): CommandDeviceReport
+			createCommandDeviceAnalytic(page: ID, input: CommandDeviceAnalyticInput): CommandDeviceAnalytic
+			updateCommandDeviceAnalyticGrid(device: ID, page: ID, grid: [CommandDeviceAnalyticInput]): [CommandDeviceAnalytic]
+			updateCommandDeviceAnalytic(page: ID, id: ID, input: CommandDeviceAnalyticInput): CommandDeviceAnalytic
+			deleteCommandDeviceAnalytic(page: ID, id: ID): CommandDeviceAnalytic
 
-			createCommandReportPage(device: ID, input: CommandReportPageInput!): CommandReportPage!
-			updateCommandReportPage(device: ID, id: ID, input: CommandReportPageInput!): CommandReportPage!
-			deleteCommandReportPage(device: ID, id: ID): CommandReportPage!
+			downloadCommandDeviceAnalytic(page: ID, id: ID, startDate: DateTime, endDate: DateTime, bucket: String): String
+
+			createCommandAnalyticPage(device: ID, input: CommandAnalyticPageInput!): CommandAnalyticPage!
+			updateCommandAnalyticPage(device: ID, id: ID, input: CommandAnalyticPageInput!): CommandAnalyticPage!
+			deleteCommandAnalyticPage(device: ID, id: ID): CommandAnalyticPage!
 		}
 
-		input CommandReportPageInput {
+		input CommandAnalyticPageInput {
 			name: String
 		}
 
-		input CommandReportPageWhere{
+		input CommandAnalyticPageWhere{
 			ids: [ID]
 		}
 	
-		type CommandReportPage {
+		type CommandAnalyticPage {
 			id: ID
 	
 			name: String
-			charts: [CommandDeviceReport]
+			charts: [CommandDeviceAnalytic]
 	
 			createdAt: DateTime
 			
 			device: CommandDevice
 		}
 
-		input CommandDeviceReportInput {
+		input CommandDeviceAnalyticInput {
 			id: ID
 
 			x: Int
@@ -64,7 +62,7 @@ export default (prisma: PrismaClient) => {
 			device: String
 		}
 
-		type CommandDeviceReport {
+		type CommandDeviceAnalytic {
 			id: ID! 
 			x: Int
 			y: Int
@@ -108,24 +106,9 @@ export default (prisma: PrismaClient) => {
     `
 
     const resolvers = {
-		CommandDeviceReport: {
-			values: async (root: any, args: {startDate: Date, endDate?: Date}) => {
-				// const client = await pool.connect()
-				// console.log("Analaytics values")
-		
-				/*
+		CommandDeviceAnalytic: {
+			values: async (root: any, args: {startDate: Date, endDate?: Date, format?: string}) => {
 
-  placeholder String
-  key String
-  value String
-
-  lastUpdated DateTime @default(now())
-
-  device Device @relation(name: "hasSnapshots", fields: [deviceId], references: [id])
-  deviceId String 
-				*/
-
-				console.log({root});
 
 				let query = ``;
 
@@ -139,30 +122,6 @@ export default (prisma: PrismaClient) => {
 				if(beforeTime && moment(beforeTime).isAfter(moment())){
 					beforeTime = moment();
 				}
-				
-				// if(args.startDate){
-				// 	// params.push(new Date(args.startDate).toISOString())
-				// 	let beforeTime = moment(args.startDate).add(1, 'week');
-				// 	if(moment(beforeTime).isAfter(moment())){
-				// 		beforeTime = moment();
-				// 	}
-				// 	const afterTime = moment(args.startDate).toISOString();
-					
-				// 	params.push(afterTime)
-				// 	params.push(beforeTime.toISOString());
-
-				// 	query += ` `
-				// }
-				// if(root.dataKey?.key) {
-				// 	params.push(root.dataKey?.key)
-
-				// 	query += ` `
-				// }
-
-				// query += ` `
-				// console.log("Analaytics values", JSON.stringify({pool}))
-
-				// console.log(query, params)
 
 				const timeBucketString = root.timeBucket || '5 minute';
 
@@ -185,11 +144,16 @@ export default (prisma: PrismaClient) => {
 						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
 
 
-						return (result || []).map((row) => ({
+
+						const jsonResults = (result || []).map((row) => ({
 							...row,
 							value: row.value || 0,
 							timestamp: row.time
 						}));
+
+						
+						return jsonResults
+						
 				}catch(e){
 					console.log({e})
 				}
@@ -301,13 +265,91 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
-			createCommandReportPage: async (root: any, args: any, context: any) => {
+			downloadCommandDeviceAnalytic: async (_root: any, args: any, context: any) => {
+
+				const root = await prisma.analyticPageChart.findFirst({
+					where: {
+						page: {
+							id: args.page,
+						},
+						id: args.id
+					},
+					include: {
+						tag: true,
+						subkey: true,
+						page: {
+							include: {
+								device: true
+							}
+						}
+					}
+				})
+				const afterTime = args.startDate ? moment(args.startDate) : undefined;
+
+				let beforeTime = args.endDate ? moment(args.endDate) : args.startDate ? moment(args.startDate).add(1, 'week') : undefined;
+
+				if(beforeTime && moment(beforeTime).isAfter(moment())){
+					beforeTime = moment();
+				}
+
+				const timeBucketString = args.bucket || root?.timeBucket || '5 minute';
+
+				const timeBucket = mathUnit(timeBucketString).toNumber('seconds');
+				
+				try{
+					const result = await prisma.$queryRaw<any[]>`
+					SELECT 
+						placeholder,
+						"deviceId",
+						key,
+						time_bucket_gapfill(${timeBucket}::decimal * '1 second'::interval, "lastUpdated") as time, 
+						locf(avg(value::float)) as value
+					FROM "DeviceValue" 
+						WHERE "deviceId"=${root?.page?.device?.id} AND placeholder=${root?.tag?.name}
+						 ${afterTime ? Prisma.sql`AND "lastUpdated" >= ${afterTime.toDate()}` : Prisma.empty}
+						 ${beforeTime ? Prisma.sql`AND "lastUpdated" < ${beforeTime.toDate()}`: Prisma.empty}
+						 ${root?.subkey ? Prisma.sql`AND key=${root.subkey?.name}` : Prisma.empty}
+						 
+						GROUP BY placeholder, "deviceId", key, time ORDER BY time ASC`
+
+						const jsonResults = (result || []).map((row) => ({
+							...row,
+							value: row.value || 0,
+							timestamp: row.time
+						}));
+
+							const csv = await new Promise((resolve, reject) => {
+								csvStringify(
+									jsonResults, 
+									{
+										header: true, 
+										columns: {
+											placeholder: 'device', 
+											key: 'subkey', 
+											value: 'value', 
+											timestamp: 'timestamp'
+										}
+									},
+									(err, output) => {
+										if(err) return reject(err);
+										resolve(output)
+									}
+								)
+								
+							}) 
+							return csv;
+						
+				}catch(e){
+					console.log({e})
+				}
+			},
+			createCommandAnalyticPage: async (root: any, args: any, context: any) => {
 				const id = nanoid();
 
 				const device = await prisma.device.update({
 					where: {id: args.device},
 					data: {
-						reports: {
+						analyticPages: {
 							create: [{
 								id: id,
 								name: args.input.name,
@@ -318,20 +360,20 @@ export default (prisma: PrismaClient) => {
 						}
 					},
 					include: {
-						reports: true
+						analyticPages: true
 					}
 				})
 
-				return device.reports.find((a) => a.id == id)
+				return device.analyticPages.find((a) => a.id == id)
 			},
-			updateCommandReportPage: async (root: any, args: any, context: any) => {
+			updateCommandAnalyticPage: async (root: any, args: any, context: any) => {
 
 				const device = await prisma.device.update({
 					where: {
 						id: args.device
 					},
 					data: {
-						reports: {
+						analyticPages: {
 							update: {
 								where: {id: args.id},
 								data: {
@@ -341,19 +383,19 @@ export default (prisma: PrismaClient) => {
 						}
 					},
 					include: {
-						reports: true
+						analyticPages: true
 					}
 				})
 
-				return device.reports?.find((a) => a.id == args.id);
+				return device.analyticPages?.find((a) => a.id == args.id);
 			},
-			deleteCommandReportPage: async (root: any, args: any, context: any) => {
+			deleteCommandAnalyticPage: async (root: any, args: any, context: any) => {
 				return await prisma.device.update({
 					where: {
 						id: args.device
 					},
 					data: {
-						reports: {
+						analyticPages: {
 							delete: {
 								id: args.id
 							}
@@ -361,14 +403,14 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			createCommandDeviceReport: async (root: any, args: any) => {
+			createCommandDeviceAnalytic: async (root: any, args: any) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
 					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
-				return await prisma.deviceReport.create({
+				return await prisma.analyticPageChart.create({
 					data: {
 						id: nanoid(),
 						type: args.input.type,
@@ -391,14 +433,14 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			updateCommandDeviceReport: async (root: any, args: any) => {
+			updateCommandDeviceAnalytic: async (root: any, args: any) => {
 
 				let subkey = {};
 				if( args.input.subkeyId ){
 					subkey = { subkey: { connect : {id: args.input.subkeyId } } };
 				}
 
-				return await prisma.deviceReport.update({
+				return await prisma.analyticPageChart.update({
 					where: {id: args.id},
 					data: {
 						type: args.input.type,
@@ -419,7 +461,7 @@ export default (prisma: PrismaClient) => {
 					}
 				})
 			},
-			updateCommandDeviceReportGrid: async (root: any, args: any) => {
+			updateCommandDeviceAnalyticGrid: async (root: any, args: any) => {
 				const {device, grid} = args;
 
 				return await Promise.all(grid.map(async (grid_item: any) => {
@@ -430,190 +472,17 @@ export default (prisma: PrismaClient) => {
 					if(grid_item.width) updateQuery['width'] = grid_item.width;
 					if(grid_item.height) updateQuery['height'] = grid_item.height;
 
-					const result = await prisma.deviceReport.update({
+					const result = await prisma.analyticPageChart.update({
 						where: {id: grid_item.id},// device: {id: device}
 						data: updateQuery
 					})
 					return result
 				}))
 			},
-			deleteCommandDeviceReport: async (root: any, args: any) => {
-				return await prisma.deviceReport.delete({where: {id: args.id}})
+			deleteCommandDeviceAnalytic: async (root: any, args: any) => {
+				return await prisma.analyticPageChart.delete({where: {id: args.id}})
 			}
-		},
-        Query : {
-			commandDeviceTimeseriesTotal: async (root: any, args: {
-				deviceId: string, //device in quest
-				device: string, //deviceId in quest
-				valueKey?: string,
-				startDate?: string,
-			}) => {
-				
-				// // const client = await pool.connect()
-
-				// const { deviceId, device, valueKey, startDate } = args
-
-				// let beforeTime = moment(startDate).add(1, 'week')
-				// const afterTime = moment(startDate).toISOString();
-
-				// if(moment(beforeTime).isAfter(moment())){
-				// 	beforeTime = moment();
-				// }
-
-				// const session = driver.session()
-
-				// const unitResult = await session.run(`
-				// 	MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
-				// 	OPTIONAL MATCH (device)-[:MAPS_UNIT]->(unitConfig:CommandProgramDeviceUnit)-[:MAPS_STATE_UNIT]->(stateItem)
-				// 	RETURN unitConfig{.*}
-				// `, { id: deviceId, name: device, key: valueKey })
-
-				// const unitConfig = unitResult.records?.[0]?.get(0)
-
-				// let timeDimension = 60; //divide value by 60 to go from minutes to seconds, divide by 3,600 to go from hours to seconds
-
-				// console.log({unitConfig})
-				// if(unitConfig && (unitConfig.displayUnit || unitConfig.inputUnit)){
-				// 	let unitRegex = /(.+)\/(.+)/
-				// 	let [ fullText, unit, dimension ] = (unitConfig.displayUnit ? unitConfig.displayUnit.match(unitRegex) : unitConfig.inputUnit.match(unitRegex)) || [];
-					
-
-				// 	if(dimension != undefined){
-				// 		try{
-				// 			let timeUnit = mathUnit(dimension).to('seconds');
-				// 			console.log("Found", {unit, dimension})
-
-				// 			timeDimension = timeUnit.toNumber()
-				// 			console.log({timeDimension})
-				// 		}catch(e) {
-				// 			console.error("Could not parse time unit", {unit, dimension, e})
-				// 		}
-				// 	}
-
-				// }
-
-
-				// const query = `
-				// 	SELECT 			
-				// 		sum(SUB.total) as total
-				// 	FROM 
-				// 		(
-				// 			SELECT (try_cast(value, 0) / ${timeDimension || 60}) * EXTRACT(EPOCH from (LEAD(timestamp) over (order by timestamp) - timestamp)) as total
-				// 			FROM
-				// 				command_device_values
-				// 			WHERE
-				// 				device = $1
-				// 				AND deviceId = $2
-				// 				AND valueKey = $3
-				// 				AND timestamp >= $4
-				// 				AND timestamp < $5
-				// 			GROUP by deviceId, device, valueKey, timestamp, value
-				// 		) as SUB
-				// `//startDate
-				// //date_trunc('week', NOW()) 
-				// const result = await pool.query(query, [deviceId, device, valueKey, afterTime, beforeTime.toISOString() ])
-				// // await client.release()
-
-				// console.log({rows: result.rows})
-				// session.close()
-				// return result.rows?.[0]
-			},
-			commandDeviceTimeseries: async (root: any, args: {
-				deviceId: string, //device in quest
-				device: string, //deviceId in quest
-				valueKey?: string,
-				startDate?: string,
-			}) => {
-				// const client = await pool.connect()
-
-		
-				// let query = `SELECT 
-				// 				device,
-				// 				deviceId,
-				// 				valueKey,
-				// 				time_bucket_gapfill('5 minute', "timestamp") as time, 
-				// 				COALESCE(avg(value::float), 0) as value
-				// 			FROM command_device_values 
-				// 				WHERE deviceId=$1 AND device=$2`;
-				// let params = [args.device, args.deviceId]
-
-				// if(args.startDate){
-				// 	// params.push(new Date(args.startDate).toISOString())
-				// 	let beforeTime = moment(args.startDate).add(1, 'week');
-				// 	if(moment(beforeTime).isAfter(moment())){
-				// 		beforeTime = moment();
-				// 	}
-				// 	const afterTime = moment(args.startDate).toISOString();
-					
-				// 	params.push(afterTime)
-				// 	params.push(beforeTime.toISOString());
-
-				// 	query += ` AND timestamp >= $3 AND timestamp < $4`
-				// }
-				// if(args.valueKey) {
-				// 	params.push(args.valueKey)
-
-				// 	query += ` AND valueKey=$${params.length}`
-				// }
-
-				// query += ` GROUP BY device, deviceId, valueKey, time ORDER BY time ASC`
-
-				// const result = await pool.query(
-				// 	query,
-				// 	params
-				// )
-				// console.log({query, rows: result.rows, params})
-				
-
-				// // await client.release()
-				// return result.rows?.map((row) => ({
-				// 	...row,
-				// 	timestamp: row.time
-				// }));
-			},
-			commandDeviceValue: async (root: any, args: {
-				bus: string,
-				device: string,
-				port: string
-			}) => {
-
-				// const values = await DeviceValue.find({device: args.device});
-
-				// // const client = await pgClient.connect()
-
-				// // let where = ``;
-				// // let whereClause : string[] = []
-				// // let whereArgs : {key: string, value: string}[] = []
-
-				// // if(args.bus) {
-				// // 	// whereClause.push(`bus=$1`)
-				// // 	whereArgs.push({value: args.bus, key: 'bus'})
-				// // }
-
-				// // if(args.device){
-				// // 	whereArgs.push({value: args.device, key: 'device'})
-				// // 	// whereClause.push(`device=$2`)
-				// // }
-
-				// // if(args.port){
-				// // 	whereArgs.push({value: args.port, key: 'bus'})
-				// // }
-
-				// // if(whereClause.length > 0){
-				// // 	where += `WHERE ${whereArgs.map((x, ix) => `${x.key}=$${ix + 1}`).join(' AND ')}`
-				// // }
-
-
-				// // const values = await client.query(
-				// // 	`SELECT * FROM commandDeviceValues ${where} LATEST BY device,deviceId,valueKey`,
-				// // 	[whereArgs.map((x) => x.value)]
-				// // )
-
-				// // await client.release()
-				
-				// return values;
-			}
-		},
+		}
     }
 
     return {

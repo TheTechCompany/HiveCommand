@@ -5,7 +5,6 @@ import { useWatchers } from './utils/watchers';
 import { useNavigate, useLocation, Routes, Route, useParams, Outlet } from 'react-router-dom';
 import { useDevice } from './utils/program';
 import moment from 'moment';
-import { useDeviceReports } from './utils/report';
 import { useWebClient } from './utils/client';
 
 export const DeviceControlView = () => {

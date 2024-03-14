@@ -34,7 +34,9 @@ model Device {
 
   program String?
 
-  reports ReportPage[] @relation(name: "hasReportPages")
+  reports DeviceReport[] @relation(name: "hasDeviceReport")
+
+  analyticPages AnalyticPage[] @relation(name: "hasAnalyticPages")
 
   createdAt DateTime @default(now())
 
@@ -89,18 +91,56 @@ model MaintenanceWindow {
   deviceId String
 }
 
-model ReportPage {
+model DeviceReport {
   id String @id
 
   name String
 
-  charts DeviceReport[] @relation(name: "hasReports")
+  fields DeviceReportField[] @relation(name: "hasReportFields")
+
+  recurring Boolean?
+
+  startDate DateTime
+  endDate DateTime?
+
+  reportLength String?
+
+  program Program? @relation(name: "hasProgramReport", fields: [programId], references: [id], onDelete: Cascade)
+  programId String?
+
+  device Device? @relation(name: "hasDeviceReport", fields: [deviceId], references: [id], onDelete: Cascade)
+  deviceId String?
+
+  createdAt DateTime @default(now())
+}
+
+model DeviceReportField {
+  id String @id
+
+  device ProgramTag? @relation(name: "reportsOnTag", fields: [deviceId], references: [id], onDelete: Cascade)
+  deviceId String?
+
+  key ProgramTypeField? @relation(name: "reportsOnTagField", fields: [keyId], references: [id], onDelete: Cascade)
+  keyId String?
+
+  bucket String?
+
+  report DeviceReport @relation(name: "hasReportFields", fields: [reportId], references: [id], onDelete: Cascade)
+  reportId String
+}
+
+model AnalyticPage {
+  id String @id
+
+  name String
+
+  charts AnalyticPageChart[] @relation(name: "hasAnalyticChart")
 
   createdAt DateTime? @default(now())
 
   owner String
 
-  device   Device @relation(name: "hasReportPages", fields: [deviceId], references: [id], onDelete: Cascade)
+  device   Device @relation(name: "hasAnalyticPages", fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId String
 }
 
@@ -137,7 +177,7 @@ model DeviceValueChange {
   @@unique([deviceId, placeholder, key, userId, lastUpdated])
 }
 
-model DeviceReport {
+model AnalyticPageChart {
   id String @id
 
   type String
@@ -149,17 +189,17 @@ model DeviceReport {
 
   total Boolean
 
-  tag   ProgramTag? @relation(name: "reportsOnTag", fields: [tagId], references: [id])
+  tag   ProgramTag? @relation(name: "analysisOfTag", fields: [tagId], references: [id])
   tagId String?
 
-  subkey   ProgramTypeField? @relation(name: "reportsOnTagField", fields: [subkeyId], references: [id])
+  subkey   ProgramTypeField? @relation(name: "analysisOfTagField", fields: [subkeyId], references: [id])
   subkeyId String?
 
   unit String?
 
   timeBucket String?
 
-  page   ReportPage @relation(name: "hasReports", fields: [pageId], references: [id], onDelete: Cascade)
+  page   AnalyticPage @relation(name: "hasAnalyticChart", fields: [pageId], references: [id], onDelete: Cascade)
   pageId String
 }
 
@@ -264,6 +304,8 @@ model Program {
   alarms ProgramAlarm[] @relation(name: "useAlarm")
 
   alarmPathways ProgramAlarmPathway[] @relation(name: "hasAlarmPathway")
+
+  reports DeviceReport[] @relation(name: "hasProgramReport")
 
   usedBy Device[] @relation(name: "useProgram")
 
@@ -588,7 +630,8 @@ model ProgramTag {
   program   Program @relation(name: "hasTags", fields: [programId], references: [id], onDelete: Cascade)
   programId String
 
-  reports DeviceReport[] @relation(name: "reportsOnTag")
+  analyticCharts AnalyticPageChart[] @relation(name: "analysisOfTag")
+  reportFields DeviceReportField[] @relation(name: "reportsOnTag")
 
   @@unique([name, programId])
 }
@@ -635,7 +678,8 @@ model ProgramTypeField {
   parent   ProgramType @relation(name: "hasTypeField", fields: [parentId], references: [id], onDelete: Cascade)
   parentId String
 
-  reports DeviceReport[] @relation(name: "reportsOnTagField")
+  analyticCharts AnalyticPageChart[] @relation(name: "analysisOfTagField")
+  reportFields DeviceReportField[] @relation(name: "reportsOnTagField")
 
   @@unique([name, parentId])
 }

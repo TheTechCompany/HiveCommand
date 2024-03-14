@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
-import { MoreVert, Close } from "@mui/icons-material";
-import { Typography, Menu, MenuItem, Box, IconButton, Paper } from "@mui/material";
+import { MoreVert, Close, Download, Delete, Edit } from "@mui/icons-material";
+import { Typography, Menu, MenuItem, Box, IconButton, Paper, ListItemText, ListItemIcon } from "@mui/material";
 
 export interface GraphContainerProps {
   dataKey: string;
@@ -8,6 +8,7 @@ export interface GraphContainerProps {
   total: string;
   // onRemove: () => void;
 
+  onExport?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
 
@@ -78,13 +79,39 @@ export const GraphContainer: React.FC<GraphContainerProps> = (props) => {
                horizontal: 'right',
              }}>
               <MenuItem onClick={() => {
+                handleClose?.();
+                props.onExport?.();
+              }}>
+                <ListItemIcon>
+                  <Download fontSize="inherit"/>
+                </ListItemIcon>
+                <ListItemText>
+                Export
+                  
+                </ListItemText>
+              </MenuItem>
+              <MenuItem onClick={() => {
                 handleClose();
                 props.onEdit?.();
-              }}>Edit</MenuItem>
+              }}>
+                <ListItemIcon>
+                  <Edit fontSize="inherit"/>
+                </ListItemIcon>
+                <ListItemText>
+                Edit
+                </ListItemText>
+                </MenuItem>
               <MenuItem style={{color: 'red'}} onClick={() => {
                 handleClose()
                 props.onDelete?.();
-              }}>Delete</MenuItem>
+              }}>
+                <ListItemIcon>
+                  <Delete sx={{color: 'red'}} fontSize="inherit"/>
+                </ListItemIcon>
+                <ListItemText>
+                Delete
+                </ListItemText>
+              </MenuItem>
             </Menu>
       </Box>
       <Box style={{flex: 1, display: 'flex'}}> {props.children}</Box>

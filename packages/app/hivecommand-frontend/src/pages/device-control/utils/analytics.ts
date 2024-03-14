@@ -1,13 +1,13 @@
 import { useQuery, useApolloClient, gql } from "@apollo/client"
-import { useAddDeviceChart, useCreateReportPage, useRemoveDeviceChart, useRemoveReportPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateReportPage } from "@hive-command/api";
+import { useAddDeviceChart, useCreateAnalyticPage, useRemoveDeviceChart, useRemoveAnalyticPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateAnalyticPage, useDownloadAnalytic } from "@hive-command/api";
 
-export const useDeviceReports = (id: string) => {
+export const useDeviceAnalytics = (id: string) => {
   const { data } = useQuery(gql`
-    query ReportData($id: ID) {
+    query AnalyticData($id: ID) {
 
       commandDevices(where: {id: $id}){
 
-        reports {
+        analyticPages {
           id
           name
 
@@ -24,6 +24,7 @@ export const useDeviceReports = (id: string) => {
             tag {
                 id
                 name
+                type
             }
 
             subkey {
@@ -47,20 +48,20 @@ export const useDeviceReports = (id: string) => {
   });
 
   return {
-    results: (data?.commandDevices?.[0]?.reports || [])?.map((report) => ({
-      ...report,
-      label: `${report.tag?.name}`
+    results: (data?.commandDevices?.[0]?.analyticPages || [])?.map((analytic) => ({
+      ...analytic,
+      label: `${analytic.tag?.name}`
     }))
   }
 }
 
 
-export const useDeviceReportData = (deviceId: string, reportId: string, horizon: {start: Date, end?: Date}) => {
-  const { data: reportData, loading } = useQuery(gql`
-    query ReportDataValue($id: ID, $reportId: ID, $startDate: DateTime, $endDate: DateTime){
+export const useDeviceAnalyticData = (deviceId: string, analyticId: string, horizon: {start: Date, end?: Date}) => {
+  const { data: analyticData, loading } = useQuery(gql`
+    query AnalyticDataValue($id: ID, $analyticId: ID, $startDate: DateTime, $endDate: DateTime){
       commandDevices(where: {id: $id}){
         
-        reports (where: { ids: [$reportId] }) {
+        analyticPages (where: { ids: [$analyticId] }) {
           id
 
           charts {
@@ -80,7 +81,7 @@ export const useDeviceReportData = (deviceId: string, reportId: string, horizon:
   `, {
     variables: {
       id: deviceId,
-      reportId,
+      analyticId,
       startDate: horizon.start?.toISOString(),
       endDate: horizon.end?.toISOString()
     }
@@ -88,12 +89,12 @@ export const useDeviceReportData = (deviceId: string, reportId: string, horizon:
 
   return {
     loading,
-    results: reportData?.commandDevices?.[0]?.reports?.[0]?.charts || []
+    results: analyticData?.commandDevices?.[0]?.analyticPages?.[0]?.charts || []
   }
 
 }
 
-const withRefetch = (fn: any, refetch: any) => {
+export const withRefetch = (fn: any, refetch: any) => {
   return async (...args: any[]) => {
     const res = await fn(...args)
     refetch();
@@ -101,12 +102,12 @@ const withRefetch = (fn: any, refetch: any) => {
   }
 }
 
-export const useDeviceReportActions = (id: string) => {
+export const useDeviceAnalyticActions = (id: string) => {
 
   const client = useApolloClient()
 
   const refetch = () => {
-    client.refetchQueries({include: ['ReportData']});
+    client.refetchQueries({include: ['AnalyticData']});
   }
   
   const addDeviceChart = withRefetch(useAddDeviceChart(id), refetch)
@@ -114,18 +115,21 @@ export const useDeviceReportActions = (id: string) => {
   const updateChartGrid = withRefetch(useUpdateDeviceChartGrid(id), refetch);
   const removeChart = withRefetch(useRemoveDeviceChart(id), refetch);
 
-  const createReportPage = withRefetch(useCreateReportPage(id), refetch);
-  const updateReportPage = withRefetch(useUpdateReportPage(id), refetch);
-  const removeReportPage = withRefetch(useRemoveReportPage(id), refetch);
+  const createAnalyticPage = withRefetch(useCreateAnalyticPage(id), refetch);
+  const updateAnalyticPage = withRefetch(useUpdateAnalyticPage(id), refetch);
+  const removeAnalyticPage = withRefetch(useRemoveAnalyticPage(id), refetch);
+
+  const downloadAnalytic = useDownloadAnalytic(id)
 
   return {
-    useReportValues: useDeviceReportData,
+    useAnalyticValues: useDeviceAnalyticData,
     addChart: addDeviceChart,
     updateChart: updateDeviceChart,
     updateChartGrid,
     removeChart,
-    createReportPage,
-    updateReportPage,
-    removeReportPage
+    createAnalyticPage,
+    updateAnalyticPage,
+    removeAnalyticPage,
+    downloadAnalytic
   }
 }

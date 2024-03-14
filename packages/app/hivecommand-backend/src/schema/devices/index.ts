@@ -4,6 +4,8 @@ import { mergeResolvers, mergeTypeDefs } from '@graphql-tools/merge'
 import { nanoid } from "nanoid";
 import { Pool } from "pg";
 import analytics from "./analytics";
+import reports from './reports';
+
 import { Channel } from "amqplib";
 import { GraphQLContext } from "../../context";
 import { PubSubChannels, redis } from "../../context/pubsub";
@@ -30,9 +32,11 @@ const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => 
 export default (prisma: PrismaClient) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
+	const {typeDefs: reportTypeDefs, resolvers: reportResolvers} = reports(prisma);
 	
 	const resolvers = mergeResolvers([
 		analyticResolvers,
+		reportResolvers,
 		{
 			DeviceAlarm: {
 				ack: (root: any) => {
@@ -41,7 +45,7 @@ export default (prisma: PrismaClient) => {
 				}
 			},
 			CommandDevice: {
-				reports: async (root: any, args: any, content: any) => {
+				analyticPages: async (root: any, args: any, content: any) => {
 					let reportWhere : any = {};
 					if(args?.where?.ids){
 						reportWhere = {id: { in: args?.where?.ids }}
@@ -52,12 +56,16 @@ export default (prisma: PrismaClient) => {
 							id: root.id,
 						},
 						include: {
-							reports: {
+							analyticPages: {
 								where: reportWhere,
 								include: {
 									charts: {
 										include: {
-											tag: true,
+											tag: {
+												include: {
+													type: true
+												}
+											},
 											subkey: true,
 											page: {
 												include: {
@@ -72,7 +80,7 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 					
-					return device?.reports || [];
+					return device?.analyticPages || [];
 				},
 				deviceSnapshot: async (root: any, args: any, context: any) => {
 
@@ -164,8 +172,20 @@ export default (prisma: PrismaClient) => {
 							}
 						},
 						screens: true,
-			
-						
+						reports: {
+							include: {
+								fields: {
+									include: {
+										device: {
+											include: {
+												type: true
+											}
+										},
+										key: true
+									}
+								}
+							}
+						},
 						// values: {
 						// 	where: {lastUpdated: {gt: new Date()}},
 						// 	orderBy: {lastUpdated: 'desc'},
@@ -580,6 +600,7 @@ export default (prisma: PrismaClient) => {
 	*/
 	const typeDefs = mergeTypeDefs([
 		analyticTypeDefs,
+		reportTypeDefs,
 		`
 
 	
@@ -682,7 +703,8 @@ export default (prisma: PrismaClient) => {
 		online: Boolean
 		lastSeen: DateTime
 
-		reports(where: CommandReportPageWhere): [CommandReportPage] 
+		analyticPages(where: CommandAnalyticPageWhere): [CommandAnalyticPage] 
+		reports: [CommandDeviceReport]
 
 		organisation: HiveOrganisation 
 

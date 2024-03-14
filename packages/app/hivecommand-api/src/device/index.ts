@@ -1,5 +1,7 @@
 import { useMutation } from "../gqty";
+export * from './analytics'
 export * from './reports'
+
 /*
 	Create new device
 

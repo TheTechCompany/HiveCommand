@@ -1,13 +1,44 @@
+import { gql, useQuery, useMutation as useApolloMutation} from '@apollo/client'
 import { mutate, useMutation } from '../../gqty'
 
 
-export const useCreateReportPage = (deviceId: string) => {
+export const useDownloadReport = (deviceId: string) => {
+	const [ downloadReport ] = useApolloMutation(gql`
+		mutation Download($deviceId: ID, $reportId: ID, $startDate: DateTime, $endDate: DateTime) {
+			downloadDeviceReports(device: $deviceId, report: $reportId, startDate: $startDate, endDate: $endDate){
+				xlsx
+			}
+		}
+	`, {
 
-	const [ addReportPage ] = useMutation((mutation, args: {name: string}) => {
-		const item = mutation.createCommandReportPage({
+	})
+
+	return async (report: string, startDate: Date, endDate: Date) => await downloadReport({
+		variables: {
+			startDate, 
+			endDate,
+			deviceId,
+			report
+		}});
+}
+
+export const useCreateReport = (deviceId: string) => {
+
+	const [ addReport ] = useMutation((mutation, args: {
+		name: string,
+		recurring: boolean,
+		startDate: Date,
+		endDate?: Date,
+		reportLength?: string
+	}) => {
+		const item = mutation.createCommandDeviceReport({
 			device: deviceId,
 			input: {
-				name: args.name
+				name: args.name,
+				recurring: args.recurring,
+				startDate: args.startDate.toISOString(),
+				endDate: args.endDate?.toISOString(),
+				reportLength: args.reportLength
 			}
 		})
 		return {
@@ -16,16 +47,29 @@ export const useCreateReportPage = (deviceId: string) => {
 			}
 		}
 	})
-	return (name: string) => {
-		return addReportPage({args: {name}})
+	return (report: {
+		name: string, recurring: boolean, startDate: Date, endDate?: Date, reportLength?: string
+	}) => {
+		return addReport({
+			args: {
+				...report
+			}
+		})
 	}
 }
 
 
-export const useUpdateReportPage = (deviceId: string) => {
+export const useUpdateReport = (deviceId: string) => {
 
-	const [ updateReportPage ] = useMutation((mutation, args: {id: string, name: string}) => {
-		const item = mutation.updateCommandReportPage({
+	const [ updateReport ] = useMutation((mutation, args: {
+		id: string,
+		name: string,
+		recurring: boolean,
+		startDate: Date,
+		endDate?: Date,
+		reportLength?: string
+	}) => {
+		const item = mutation.updateCommandAnalyticPage({
 			device: deviceId,
 			id: args.id,
 			input: {
@@ -38,16 +82,24 @@ export const useUpdateReportPage = (deviceId: string) => {
 			}
 		}
 	})
-	return (id: string, name: string) => {
-		return updateReportPage({args: {id: id, name}})
+	return (
+		id: string, 
+	report: {
+		name: string, recurring: boolean, startDate: Date, endDate?: Date, reportLength?: string
+	}) => {
+		return updateReport({
+			args: {
+				id: id,
+				...report,
+			}})
 	}
 }
 
 
-export const useRemoveReportPage = (deviceId: string) => {
+export const useRemoveReport = (deviceId: string) => {
 
-	const [ removeReportPage ] = useMutation((mutation, args: {id: string}) => {
-		const item = mutation.deleteCommandReportPage({
+	const [ removeReport ] = useMutation((mutation, args: {id: string}) => {
+		const item = mutation.deleteCommandDeviceReport({
 			device: deviceId,
 			id: args.id
 		})
@@ -58,40 +110,24 @@ export const useRemoveReportPage = (deviceId: string) => {
 		}
 	})
 	return (id: string) => {
-		return removeReportPage({args: {id}})
+		return removeReport({args: {id}})
 	}
 }
 
 
-export const useAddDeviceChart = (deviceId: string) => {
-	const [ addGraph ] = useMutation((mutation, args: {
-		page: string,
-
-		type: string,
-		templateId: string,
-		keyId: string,
-		unit: string,
-		timeBucket: string,
-		x: number,
-		y: number,
-		w: number,
-		h: number,
-		total?: boolean
+export const useCreateReportField = (deviceId: string) => {
+	const [ addReportField ] = useMutation((mutation, args: {
+		report: string, 
+		device?: string,
+		key?: string,
+		bucket?: string
 	}) => {
-		const item = mutation.createCommandDeviceReport({
-			page: args.page,
+		const item = mutation.createCommandDeviceReportField({
+			report: args.report,
 			input: {
-				type: args.type,
-				x: args.x,
-				y: args.y,
-				width: args.w,
-				height: args.h,
-				total: args.total,
-				unit: args.unit,
-				tagId: args.templateId,
-				subkeyId: args.keyId,
-				timeBucket: args.timeBucket,
-				device: deviceId
+				device: args.device,
+				key: args.key,
+				bucket: args.bucket
 			}
 		})
 	
@@ -101,54 +137,31 @@ export const useAddDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
-		return addGraph({
+	return (report: string, field?: {device: string, key: string, bucket: string}) => {
+		return addReportField({
 			args: {
-				page: page,
-				type,
-				templateId,
-				keyId,
-				unit,
-				x,
-				y,
-				w,
-				h,
-				total,
-				timeBucket
+				report,
+				...field
 			}
 		})
 	}
 }
 
-export const useUpdateDeviceChart = (deviceId: string) => {
-	const [ addGraph ] = useMutation((mutation, args: {
-		page: string,
+export const useUpdateReportField = (deviceId: string) => {
+	const [ updateReportField ] = useMutation((mutation, args: {
+		report: string,
 		id: string,
-		type: string,
-		templateId: string,
-		keyId: string,
-		unit: string,
-		timeBucket: string,
-		x: number,
-		y: number,
-		w: number,
-		h: number,
-		total?: boolean
+		device?: string,
+		key?: string,
+		bucket?: string
 	}) => {
-		const item = mutation.updateCommandDeviceReport({
+		const item = mutation.updateCommandDeviceReportField({
 			id: args.id,
-			page: args.page,
+			report: args.report,
 			input: {
-				type: args.type,
-				total: args.total,
-				x: args.x,
-				y: args.y,
-				width: args.w,
-				height: args.h,
-				unit: args.unit,
-				timeBucket: args.timeBucket,
-				tagId: args.templateId,
-				subkeyId: args.keyId
+				device: args.device,
+				key: args.key,
+				bucket: args.bucket
 			}
 		})
 
@@ -158,78 +171,27 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
-		return addGraph({
+	return (report: string, id: string, field?: {device: string, key: string, bucket: string}) => {
+		return updateReportField({
 			args: {
-				page,
+				report,
 				id,
-				type,
-				templateId,
-				keyId,
-				unit,
-				timeBucket,
-				x,
-				y,
-				w,
-				h,
-				total
+				...field,
 			}
 		})
 	}
 }
 
 
-export const useUpdateDeviceChartGrid = (deviceId: string) => {
-	const [ addGraph ] = useMutation((mutation, args: {
-		page: string,
-		items: {
-			id: string,
-			x: number,
-			y: number,
-			w: number,
-			h: number,
-		}[]
-	}) => {
+export const useRemoveReportField = (deviceId: string) => {
 
-		const item = mutation.updateCommandDeviceReportGrid({
-			device: deviceId,
-			page: args.page,
-			grid: args.items.map((item) => ({
-				id: item.id,
-				x: item.x,
-				y: item.y,
-				width: item.w,
-				height: item.h
-			}))
-		})
-
-
-		return {
-			item: [
-				...item || []
-			]
-		}
-	})
-	return (page: string, items: {id: string,  x: number, y: number, w: number, h: number}[]) => {
-		return addGraph({
-			args: {
-				page,
-				items
-			}
-		})
-	}
-}
-
-
-export const useRemoveDeviceChart = (deviceId: string) => {
-
-	const [ removeGraph ] = useMutation((mutation, args: {
+	const [ removeField ] = useMutation((mutation, args: {
 		id: string,
 		page: string
 	}) => {
 
-		const item = mutation.deleteCommandDeviceReport({
-			page: args.page,
+		const item = mutation.deleteCommandDeviceReportField({
+			report: args.page,
 			id: args.id
 		})
 		
@@ -240,7 +202,7 @@ export const useRemoveDeviceChart = (deviceId: string) => {
 		}
 	})
 	return (page: string, id: string) => {
-		return removeGraph({
+		return removeField({
 			args: {
 				page,
 				id: id

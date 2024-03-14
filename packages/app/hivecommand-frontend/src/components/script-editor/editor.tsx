@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useMemo } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import * as monaco from 'monaco-editor';
 import { styled } from '@mui/material';
 
@@ -120,6 +120,12 @@ export const Editor: React.FC<EditorProps> = (props) => {
         }
     }
 
+    const onChange = useCallback((value: string) => {
+        console.log("onChange", props.value, value)
+        if(props.value && props.value != value) props.onChange?.(value)
+
+    }, [props.value])
+
 	useEffect(() => {
 		if (divEl.current) {
 
@@ -193,7 +199,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			});
 
             editor.current.onDidChangeModelContent((e) => {
-                props.onChange?.(editor.current.getValue())
+                onChange?.(editor.current?.getValue());
             })
 
 
@@ -202,7 +208,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			editor.current.dispose();
             editor.current = null;
 		};
-	}, []);
+	}, [props.value]);
 
     useEffect(() => {
         let model = monaco.editor.getModel(monaco.Uri.parse('file:///main.tsx'));

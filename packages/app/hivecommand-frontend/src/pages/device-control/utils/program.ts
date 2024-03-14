@@ -19,13 +19,16 @@ import { useEffect } from "react";
 
                 online
             
-
-          
-                reports {
+                analyticPages {
                     id
                     name
                 }
 
+
+                reports {
+                    id
+                    name
+                }
        
                 activeProgram {
                     id

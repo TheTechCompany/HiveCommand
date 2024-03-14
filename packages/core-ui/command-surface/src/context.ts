@@ -1,7 +1,7 @@
 import React from 'react';
 import { CommandSurfaceClient, HMIProgram } from '.';
 import { RemoteComponentCache } from '@hive-command/remote-components';
-import { ReportChart } from './views/reports';
+import { ReportChart } from './views/analytics';
 
 export const DeviceControlContext = React.createContext<{
 	// controlId?: string;
@@ -51,10 +51,26 @@ export const DeviceControlContext = React.createContext<{
 	activePage?: string;
 	templatePacks?: any[];
 
-	reports?: {
+	analytics?: {
 		id: string;
 		charts: ReportChart[] //{x: number, y: number, width: number, height: number, label: string, values: {timestamp: Date, value: any}[] }[]
 	}[];
+
+	reports?: {
+		id: string,
+		name: string,
+		startDate: Date,
+		endDate?: Date,
+		reportLength?: string,
+		recurring?: boolean,
+		fields?: {
+			id: string,
+			device: any,
+			key: any,
+			bucket: string
+		}[]
+	}[];
+
 	changeDeviceMode?:any
 	actions?: any[],
 	

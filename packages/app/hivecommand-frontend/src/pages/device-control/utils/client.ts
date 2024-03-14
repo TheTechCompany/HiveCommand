@@ -1,16 +1,19 @@
 import { gql, useMutation } from "@apollo/client";
 import { CommandSurfaceClient } from "@hive-command/command-surface";
 import { useState } from "react";
-import { useDeviceReportActions, useDeviceReports } from "./report";
+import { useDeviceAnalytics, useDeviceAnalyticActions } from "./analytics";
 import { useValues } from "./value";
 import { useConnectivity } from "./program";
 import { useAcknowledgeAlarm, useAlarms } from "./alarm";
+import { useDeviceReportActions, useDeviceReports } from "./reports";
 
 export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
 
     const [ startDate, setDate ] = useState(new Date(Date.now() - (7 * 24 * 60 * 60 * 1000)))
 
-    const { results: reports } = useDeviceReports(deviceId)
+    const { results: analytics } = useDeviceAnalytics(deviceId)
+
+    const { results: reports } = useDeviceReports(deviceId);
 
     const [ _changeDevValue ] = useMutation(gql`
         mutation ChangeDeviceValue($deviceId: String, $deviceName: String, $key: String, $value: String) {
@@ -31,20 +34,32 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
     }
 
     const { 
+        downloadAnalytic,
         addChart, 
         updateChart, 
         updateChartGrid, 
         removeChart,
-        createReportPage,
-        updateReportPage,
-        removeReportPage,
-        useReportValues
+        createAnalyticPage,
+        updateAnalyticPage,
+        removeAnalyticPage,
+        useAnalyticValues
+    } = useDeviceAnalyticActions(deviceId);
+
+    const {
+        downloadReport,
+        createReport,
+        updateReport,
+        deleteReport,
+        createReportField,
+        updateReportField,
+        deleteReportField
     } = useDeviceReportActions(deviceId);
 
 
     const acknowledgeAlarm = useAcknowledgeAlarm(deviceId);
 
     return {
+        analytics,
         reports,
         acknowledgeAlarm,
         useAlarms: () => {
@@ -56,14 +71,22 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         useConnectivity: () => {
             return useConnectivity(deviceId);
         },
-        useReportValues: (report: string, horizon: {start: Date, end: Date}) => useReportValues(deviceId, report, horizon),
-        createReportPage,
-        updateReportPage,
-        removeReportPage,
+        useAnalyticValues: (report: string, horizon: {start: Date, end: Date}) => useAnalyticValues(deviceId, report, horizon),
+        createAnalyticPage,
+        updateAnalyticPage,
+        removeAnalyticPage,
         addChart,
         updateChart,
         updateChartGrid,
         removeChart,
+        createReport,
+        updateReport,
+        deleteReport,
+        downloadReport,
+        downloadAnalytic,
+        createReportField,
+        updateReportField,
+        deleteReportField,
         writeTagValue
     }
 }

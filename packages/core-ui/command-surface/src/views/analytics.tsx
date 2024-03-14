@@ -15,6 +15,21 @@ import { unit as mathUnit } from 'mathjs';
 import { Box, Typography, IconButton, Button } from '@mui/material'
 import { useParams } from "react-router-dom";
 import { debounce } from 'lodash';
+import { DeviceGraphExportModal } from "../components/modals/device-graph-export";
+import saveAs from "file-saver";
+
+const baseToBlob = (base64String, contentType = '') => {
+  console.log(base64String)
+  const byteCharacters : any = atob(base64String);
+  const byteArrays: any[]= [];
+
+  for (let i = 0; i < byteCharacters.length; i++) {
+      byteArrays.push(byteCharacters.charCodeAt(i));
+  }
+
+  const byteArray = new Uint8Array(byteArrays);
+  return new Blob([byteArray], { type: contentType });
+}
 
 export type ReportHorizon = { start: Date, end: Date };
 
@@ -33,7 +48,7 @@ export interface ReportChart {
   unit: string;
 }
 
-export interface ReportViewProps {
+export interface AnalyticViewProps {
   // addChart?: () => void;
   // startDate?: Date;
   // endDate?: Date;
@@ -46,14 +61,13 @@ export interface ReportViewProps {
   editable?: boolean;
 }
 
-export const ReportView: React.FC<ReportViewProps> = (props) => {
+export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
 
   const { activePage } = useParams();
 
+  const { analytics, client, refresh, activeProgram } = useContext(DeviceControlContext);
 
-  const { reports, client, refresh, activeProgram } = useContext(DeviceControlContext);
-
-  const [selected, setSelected] = useState();
+  const [selected, setSelected] = useState<any>(null);
 
   const report_periods = ['7d', '1d', '12hr', '1hr', '30min']
 
@@ -120,8 +134,7 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
     setFetchHorizon(horizon)
   }, [horizon])
 
-  const { results, loading } = client?.useReportValues?.(activePage || '', fetchHorizon) || {}
-
+  const { results, loading } = client?.useAnalyticValues?.(activePage || '', fetchHorizon) || {}
 
   const prevPeriod = () => {
 
@@ -281,10 +294,10 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
 
 
   const [modalOpen, openModal] = useState(false);
-
+  const [ graphExportOpen, openGraphExport ] = useState(false);
 
   const charts = useMemo(() => {
-    return (reports?.find((a) => a.id == activePage)?.charts || []).map((chart) => {
+    return (analytics?.find((a) => a.id == activePage)?.charts || []).map((chart) => {
 
       let chartValue = results?.find((a) => a.id === chart.id)
 
@@ -297,12 +310,30 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
       }
     })
 
-  }, [activePage, reports, results]);
+  }, [activePage, analytics, results]);
 
   return (
     <Box
       style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}
     >
+
+      <DeviceGraphExportModal 
+        open={graphExportOpen} 
+        selected={selected}
+        tags={activeProgram?.tags || []}
+        types={activeProgram?.types || []}
+        onSubmit={(startDate, endDate, bucket) => {
+          if(activePage) client?.downloadAnalytic?.(activePage, selected?.id, startDate, endDate, bucket).then((data) => {
+              const string = data?.data?.downloadCommandDeviceAnalytic
+
+            saveAs(new Blob([string]), `${selected?.tag?.name}${selected?.subkey ? `.${selected?.subkey?.name}` : ''}-${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.csv`)
+
+          })
+        }}
+        onClose={() => {
+          openGraphExport(false)
+        }}/>
+
       <ControlGraphModal
         open={modalOpen}
         selected={selected}
@@ -402,6 +433,10 @@ export const ReportView: React.FC<ReportViewProps> = (props) => {
                 onEdit={() => {
                   openModal(true);
                   setSelected(item)
+                }}
+                onExport={() => {
+                  setSelected({...item, horizon})
+                  openGraphExport(true)
                 }}
                 dataKey={item.subkey?.name}
                 label={`${item.tag?.name} - ${item.subkey?.name}`}
