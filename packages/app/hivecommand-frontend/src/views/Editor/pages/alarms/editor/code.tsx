@@ -112,7 +112,7 @@ export const CodeEditor = (props: any) => {
         }})
     }
 
-    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 200), [program])
+    const _debounceUpdate = useMemo(() => debounce(updateAlarm, 500), [program])
 
     const currentAlarm = alarms?.find((a) => a.id == activeId)
 
@@ -120,6 +120,7 @@ export const CodeEditor = (props: any) => {
         <Box sx={{flex: 1, display: 'flex'}}>
             <Editor 
                 onChange={(value) => {
+                    console.log("Updating value", value)
                     _debounceUpdate(activeId, value);
                 }}
                 extraLib={`

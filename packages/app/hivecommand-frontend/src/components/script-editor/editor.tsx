@@ -121,8 +121,11 @@ export const Editor: React.FC<EditorProps> = (props) => {
     }
 
     const onChange = useCallback((value: string) => {
-        console.log("onChange", props.value, value)
-        if(props.value && props.value != value) props.onChange?.(value)
+        if(props.value != value) {
+            console.log("onChange", props.value, value)
+
+            props.onChange?.(value)
+        }
 
     }, [props.value])
 
