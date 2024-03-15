@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "DeviceReportField" ADD COLUMN     "createdAt" TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP;

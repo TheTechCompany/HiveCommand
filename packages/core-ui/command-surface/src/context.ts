@@ -63,11 +63,13 @@ export const DeviceControlContext = React.createContext<{
 		endDate?: Date,
 		reportLength?: string,
 		recurring?: boolean,
+		createdAt?: Date,
 		fields?: {
 			id: string,
 			device: any,
 			key: any,
-			bucket: string
+			bucket: string,
+			createdAt: Date,
 		}[]
 	}[];
 

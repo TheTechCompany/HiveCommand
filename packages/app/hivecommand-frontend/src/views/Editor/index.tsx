@@ -280,7 +280,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     promise = updateProgramTemplate(editItem.id, {name: data.name})
                     break;
                 case 'hmi':
-                    // promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
+                    promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
                     break;
             }
         }else{

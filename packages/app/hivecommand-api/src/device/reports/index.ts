@@ -69,11 +69,15 @@ export const useUpdateReport = (deviceId: string) => {
 		endDate?: Date,
 		reportLength?: string
 	}) => {
-		const item = mutation.updateCommandAnalyticPage({
+		const item = mutation.updateCommandDeviceReport({
 			device: deviceId,
 			id: args.id,
 			input: {
-				name: args.name
+				name: args.name,
+				recurring: args.recurring,
+				startDate: args.startDate?.toISOString(),
+				endDate: args.endDate?.toISOString(),
+				reportLength: args.reportLength
 			}
 		})
 		return {
@@ -85,8 +89,13 @@ export const useUpdateReport = (deviceId: string) => {
 	return (
 		id: string, 
 	report: {
-		name: string, recurring: boolean, startDate: Date, endDate?: Date, reportLength?: string
+		name: string, 
+		recurring: boolean, 
+		startDate: Date, 
+		endDate?: Date, 
+		reportLength?: string
 	}) => {
+		console.log({report})
 		return updateReport({
 			args: {
 				id: id,

@@ -29,7 +29,7 @@ export default (prisma: PrismaClient) => {
 		},
 		CommandHMIDevicePack: {
 			elements: async (root: any, args: any, context: any) => {
-				console.log({root})
+				// console.log({root})
 				if(!root.url) return root.elements || [];
 				let contents = await axios.get(root.url);
 				let data = contents.data;

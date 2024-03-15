@@ -40,7 +40,7 @@ export default (prisma: PrismaClient) => {
 		{
 			DeviceAlarm: {
 				ack: (root: any) => {
-					console.log({root})
+					// console.log({root})
 					return root.ackBy?.id != null && root.ackBy?.id != undefined
 				}
 			},

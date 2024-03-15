@@ -35,6 +35,7 @@ export interface CommandSurfaceClient {
     analytics?: {
         id: string;
         name: string;
+        createdAt?: Date,
         charts: ReportChart[];
     }[]
 
@@ -45,11 +46,13 @@ export interface CommandSurfaceClient {
         endDate?: Date,
         reportLength?: string,
         recurring?: boolean,
+        createdAt?: Date,
         fields?: {
             id: string,
             device: any,
             key: any,
             bucket: string,
+            createdAt: Date,
         }[]
     }[]
 
@@ -304,9 +307,10 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const [maintenanceWindow, setMaintenanceWindow] = useState(false);
 
-    const [selectedReport, setSelectedReport] = useState<any>(null);
+    const [selectedAnalytic, setSelectedAnalytic] = useState<any>(null);
     const [editAnalyticPage, setEditAnalyticPage] = useState<any>(null)
     
+    const [selectedReport, setSelectedReport] = useState<any>({});
     const [ editReportPage, setEditReportPage ] = useState(false);
 
     const [infoTarget, setInfoTarget] = useState<{ x?: number, y?: number, width?: number, height?: number, dataFunction?: (state: any) => any }>();
@@ -595,8 +599,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const onTreeEdit = (nodeId?: string) => {
-        console.log({ nodeId })
-
         let nodes = drawerMenu.reduce((prev, curr) => [...prev, curr, ...(curr.children || []).map((x) => ({ ...x, parent: curr.id }))], [] as any[])
 
         let node = nodes.find((a) => a.id == nodeId)
@@ -604,8 +606,12 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
         switch (page) {
             case 'analytics':
-                setSelectedReport(node)
+                setSelectedAnalytic(node)
                 setEditAnalyticPage(true)
+                break;
+            case 'reports':
+                setSelectedReport(reports?.find((a) => a.id == node?.id))
+                setEditReportPage(true)
                 break;
         }
     }
@@ -680,38 +686,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
         return activeProgram?.interface?.map(mapHMI);
     }, [activeProgram?.interface])
 
+    console.log({reports, analytics})
 
-
-    // const parseValue = (value: any, type: keyof typeof DataTypes) => {
-    //     let isArray = type.indexOf('[]') > -1;
-
-    //     if(isArray && !Array.isArray(value)) value = []
-    //     if(isArray) type = type?.replace('[]', '') as any
-
-    //     switch (DataTypes[type]) {
-    //         case DataTypes.Boolean:
-    //             return isArray ? value.map((value) => (value == true || value == "true" || value == 1 || value == "1")) : (value == true || value == "true" || value == 1 || value == "1");
-    //         case DataTypes.Number:
-
-    //             return isArray ? value.map((value) => {
-    //                 let val = parseFloat(value || 0);
-    //                 if (Number.isNaN(val)) {
-    //                     val = 0;
-    //                 }
-    //                 return val.toFixed(2);
-    //             }) : (() => {
-    //                 let val = parseFloat(value || 0);
-
-    //                 if(Number.isNaN(val)) {
-    //                     val = 0;
-    //                 }
-    //                 return val.toFixed(2);
-    //             })()
-    //         default:
-    //             console.log({ type })
-    //             break;
-    //     }
-    // }
 
     const drawerMenu: (TreeMenuItem & { pathRoot: string, component?: JSX.Element })[] = [
         {
@@ -738,7 +714,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             name: 'Analytics',
             pathRoot: 'analytics',
             dontEdit: true,
-            children: analytics?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
+            children: analytics?.slice()?.sort((a, b) => (a.createdAt ? new Date(a.createdAt)?.getTime() : 0) - (b.createdAt ? new Date(b.createdAt)?.getTime() : 0) )?.map((x: any) => ({ id: x.id, name: x.name, dontAdd: true })),
             component: <AnalyticView />
         },
         {
@@ -746,7 +722,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
             name: 'Reports',
             pathRoot: 'reports',
             dontEdit: true,
-            children: reports?.map((x: any) => ({id: x.id, name: x.name, dontAdd: true})), 
+            children: reports?.slice()?.sort((a, b) => (a.createdAt ? new Date(a.createdAt)?.getTime() : 0) - (b.createdAt ? new Date(b.createdAt)?.getTime() : 0) )?.map((x: any) => ({id: x.id, name: x.name, dontAdd: true})), 
             component: <ReportView />
         }
     ];
@@ -828,57 +804,70 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                             }} />
                         <DeviceReportModal 
                             open={editReportPage}
+                            selected={selectedReport}
                             onSubmit={(report) => {
                                 if(report.id){
                                     client?.updateReport?.(report.id, {
                                         name: report.name,
-                                        startDate: report.startDate,
-                                        endDate: report.endDate,
+                                        startDate: report.startDate ?  new Date(report.startDate) : undefined,
+                                        endDate: !report.recurring ? (report.endDate ? new Date(report.endDate) : new Date()) : undefined,
                                         recurring: report.recurring,
                                         reportLength: report.reportLength
                                     }).then(() => {
                                         setEditReportPage(false);
+                                        setSelectedReport({})
                                     })
                                 }else{
                                     client?.createReport?.({
                                         ...report,
-                                        startDate: report.startDate || new Date(),
-                                        endDate: report.recurring ? (report.endDate || new Date()) : undefined
+                                        startDate: report.startDate ? new Date(report.startDate) : new Date(),
+                                        endDate: !report.recurring ? (report.endDate ? new Date(report.endDate) : new Date()) : undefined
                                     }).then(() => {
                                         setEditReportPage(false);
+                                        setSelectedReport({})
                                     })
                                 }
 
                             }}
+                            onDelete={() => {
+                                client?.deleteReport?.(selectedReport?.id).then(() => {
+                                    setEditReportPage(false);
+                                    setSelectedReport({})
+                                })
+                            }}
+                            onClose={() => {
+                                setEditReportPage(false)
+                                setSelectedReport({})
+                            }}
                             />
                         <DeviceAnalyticModal
-                            selected={selectedReport}
+                            selected={selectedAnalytic}
                             onSubmit={(page) => {
 
                                 if (page.id) {
                                     client?.updateAnalyticPage?.(page.id, page.name).then(() => {
                                         setEditAnalyticPage(null);
-                                        setSelectedReport(null)
+                                        setSelectedAnalytic(null)
                                     })
 
                                 } else {
                                     client?.createAnalyticPage?.(page.name).then(() => {
                                         setEditAnalyticPage(null);
-                                        setSelectedReport(null)
+                                        setSelectedAnalytic(null)
                                     });
                                 }
 
 
                             }}
                             onDelete={() => {
-                                client?.removeAnalyticPage?.(selectedReport.id).then(() => {
+                                client?.removeAnalyticPage?.(selectedAnalytic.id).then(() => {
                                     setEditAnalyticPage(null);
-                                    setSelectedReport(null)
+                                    setSelectedAnalytic(null)
                                 })
                             }}
                             onClose={() => {
                                 setEditAnalyticPage(null)
-                                setSelectedReport(null)
+                                setSelectedAnalytic(null)
                             }}
                             open={Boolean(editAnalyticPage)} />
                         <Paper

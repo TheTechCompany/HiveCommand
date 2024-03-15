@@ -243,7 +243,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
 
     return {
         reports: reportPages,
-        createReportPage: async (name) => {
+        createAnalyticPage: async (name) => {
             let reports = reportPages.slice();
             // let ix = reports.map((x) => x.name).indexOf(name)
             // if(ix < 0){
@@ -252,7 +252,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
             // }
             setReportPages(reports)
         },
-        updateReportPage: async (id, name) => {
+        updateAnalyticPage: async (id, name) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(id)
             if (ix > -1) {
@@ -260,7 +260,7 @@ export const useLocalClient = (devices: any[]): CommandSurfaceClient => {
             }
             setReportPages(reports)
         },
-        removeReportPage: async (id) => {
+        removeAnalyticPage: async (id) => {
             let reports = reportPages.slice();
             let ix = reports.map((x) => x.id).indexOf(id)
             if (ix > -1) {
