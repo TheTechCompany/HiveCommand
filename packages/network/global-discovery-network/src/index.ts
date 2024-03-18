@@ -26,6 +26,23 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 
 
     const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string) => {
+
+        const updateIfAfter = async () => {
+            let canUpdate = true;
+
+            const lastUpdated = await redisCli.HGET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`);
+            if(lastUpdated){
+                canUpdate = new Date(lastUpdated).getTime() < new Date(timestamp).getTime();
+            }
+
+            if(canUpdate){
+                await Promise.all([
+                    redisCli.HSET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`, new Date(timestamp).getTime()),
+                    redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
+                ])
+            }
+        }
+
         await Promise.all([
             prisma.deviceValue.create({
                 data: {
@@ -45,7 +62,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
                     lastSeen: new Date(timestamp)
                 }
             }),
-            redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
+            updateIfAfter
         ]);
     };
 
