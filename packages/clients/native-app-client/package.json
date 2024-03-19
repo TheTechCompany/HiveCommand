@@ -15,7 +15,7 @@
 		"@hive-command/remote-components": "^1.4.15-alpha.289",
 		"@hive-command/scripting": "^1.4.15-alpha.289",
 		"@hive-command/sidecar-client": "^1.4.15-alpha.298",
-		"@monaco-editor/react": "^4.4.6",
+		"@monaco-editor/react": "^4.6.0",
 		"@mui/icons-material": "^5.11.16",
 		"@mui/lab": "5.0.0-alpha.102",
 		"@mui/material": "^5.13.6",

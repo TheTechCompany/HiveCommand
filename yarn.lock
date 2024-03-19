@@ -4501,7 +4501,7 @@ __metadata:
     mathjs: ^10.0.1
     mermaid: ^10.4.0
     moment-timezone: ^0.5.34
-    monaco-editor: ^0.38.0
+    monaco-editor: 0.47.0
     monaco-editor-auto-typings: ^0.4.4
     monaco-editor-webpack-plugin: ^7.0.1
     papaparse: ^5.4.1
@@ -4582,7 +4582,7 @@ __metadata:
     jest-environment-jsdom: 27.x
     jest-preview: ^0.3.1
     jest-transform-css: ^6.0.1
-    monaco-editor: ^0.46.0
+    monaco-editor: 0.47.0
     nanoid: ^5.0.3
     typescript: 4.9.5
   peerDependencies:
@@ -4635,7 +4635,7 @@ __metadata:
     "@hive-command/remote-components": ^1.4.15-alpha.289
     "@hive-command/scripting": ^1.4.15-alpha.289
     "@hive-command/sidecar-client": ^1.4.15-alpha.298
-    "@monaco-editor/react": ^4.4.6
+    "@monaco-editor/react": ^4.6.0
     "@mui/icons-material": ^5.11.16
     "@mui/lab": 5.0.0-alpha.102
     "@mui/material": ^5.13.6
@@ -4886,7 +4886,7 @@ __metadata:
     "@storybook/react": ^7.4.3
     "@storybook/react-webpack5": ^7.4.3
     "@storybook/testing-library": ^0.2.1
-    monaco-editor: ^0.46.0
+    monaco-editor: 0.47.0
     prop-types: ^15.8.1
     react: 17.x
     react-dom: ^17.x
@@ -5926,7 +5926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@monaco-editor/react@npm:^4.4.6":
+"@monaco-editor/react@npm:^4.4.6, @monaco-editor/react@npm:^4.6.0":
   version: 4.6.0
   resolution: "@monaco-editor/react@npm:4.6.0"
   dependencies:
@@ -27406,17 +27406,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:^0.38.0":
-  version: 0.38.0
-  resolution: "monaco-editor@npm:0.38.0"
-  checksum: c5dcd6f9d178f9b87eb06021dc6f50a199bdc0e3ceecc608e2959867c48c3bf0c8723ac4e94270b20c89da188058afe928d2af141b5d87e8e1388e6a4d974eea
-  languageName: node
-  linkType: hard
-
-"monaco-editor@npm:^0.46.0":
-  version: 0.46.0
-  resolution: "monaco-editor@npm:0.46.0"
-  checksum: be7aaa2747b8d3a3537f56c9353ebe779b188eb1480f6453fa1e346d8ccdd27068cb4508c8f6f3b8cc07ac0f792a3d6df36168d54cd6e074742182525115be86
+"monaco-editor@npm:0.47.0":
+  version: 0.47.0
+  resolution: "monaco-editor@npm:0.47.0"
+  checksum: a1c5fe6a0d71214aa2fd4fd635f89a7df6ad599e4e01492a268eb70a456e7a29dfa301324e00b577eaf9fa69813b8a28924980ab8457d89faf14d13fcbbc2d6e
   languageName: node
   linkType: hard
 

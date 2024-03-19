@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
 import * as monaco from 'monaco-editor';
 import { styled } from '@mui/material';
+import { IDisposable } from 'monaco-editor';
 
 // // @ts-ignore
 // self.MonacoEnvironment = {
@@ -47,6 +48,9 @@ export const Editor: React.FC<EditorProps> = (props) => {
 	const editor = useRef<monaco.editor.IStandaloneCodeEditor>();
 
     const [ workingValue, setWorkingValue ] = useState<any>(null);
+    
+    const subscription = useRef<IDisposable>();
+    const preventTriggerChangeEvent = useRef<boolean>(false);
 
     const extraLib = props.extraLib ? 
         typeof(props.extraLib) == 'string' ? `
@@ -89,17 +93,21 @@ export const Editor: React.FC<EditorProps> = (props) => {
     }
 
     const onChange = useCallback((value: string) => {
-        if(workingValue != value) {
-            console.log("onChange", props.value, value)
-            setWorkingValue(value)
+        if(props.value != value) {
 
-            props.onChange?.(value)
+                if(preventTriggerChangeEvent.current) return;
+                props.onChange?.(value)
         }
 
-    }, [workingValue])
+    }, [props.value])
 
     useEffect(() => {
-        setWorkingValue(props.value)
+        // setWorkingValue(props.value)
+
+        subscription.current?.dispose();
+        subscription.current = editor.current?.onDidChangeModelContent((e) => {
+            setTimeout(() => onChange?.(editor.current?.getModel()?.getValue()), 1);
+        })
     }, [props.value])
 
 	useEffect(() => {
@@ -174,8 +182,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
 				// language: 'typescript',
 			});
 
-            editor.current.onDidChangeModelContent((e) => {
-                onChange?.(editor.current?.getValue());
+            subscription.current = editor.current.onDidChangeModelContent((e) => {
+                setTimeout(() => onChange?.(editor.current?.getModel()?.getValue()), 1);
             })
 
 
@@ -184,15 +192,19 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			editor.current.dispose();
             editor.current = null;
 		};
-	}, [props.value]);
+	}, []);
 
     useEffect(() => {
         let model = monaco.editor.getModel(monaco.Uri.parse('file:///main.tsx'));
 
-        if(model && model.getValue() !== workingValue){
-            // if(workingValue) model.setValue(workingValue);
+        if(model && model.getValue() !== props.value){
+            preventTriggerChangeEvent.current = true;
+
+            if(props.value) model.setValue(props.value);
+              
+            preventTriggerChangeEvent.current = false;
         }
-    }, [workingValue]);
+    }, [props.value]);
 
     useEffect(() => {
         loadLibs()
