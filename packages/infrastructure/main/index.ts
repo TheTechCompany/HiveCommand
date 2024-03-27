@@ -9,6 +9,7 @@ import { Service } from './src/service'
 // import SyncServer from './src/sync-server'
 import { config } from 'dotenv';
 import { DiscoveryServer } from './src/discovery-server'
+import { RecoveryServer } from './src/recovery-server'
 
 import * as k8s from '@pulumi/kubernetes'
 
@@ -65,6 +66,7 @@ const main = (async () => {
     })
 
     const { deployment: discoveryServer } = await DiscoveryServer(provider, namespace, dbUrl, dbPass, config.require('discoveryUrl'), redisUrl, externalURL)
+    const { deployment: recoveryServer } = await RecoveryServer(provider, namespace, dbUrl, dbPass, redisUrl, externalURL)
 
 
     const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn));

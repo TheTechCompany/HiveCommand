@@ -4546,22 +4546,17 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/gds@workspace:packages/network/global-discovery-network"
   dependencies:
-    "@hive-command/alarm-engine": "workspace:^"
-    "@hive-command/amqp-hub": "workspace:^"
     "@hive-command/data": "workspace:^"
     "@hive-command/interface-types": "workspace:^"
     "@hive-command/rabbitmq-auth": "workspace:^"
     "@types/cors": ^2.8.12
     "@types/express": ^4.17.14
     "@types/jsonwebtoken": ^8.5.9
-    amqplib: ^0.10.3
     cors: ^2.8.5
     express: ^4.18.2
     jest: 27.x
     jsonwebtoken: ^8.5.1
-    mqtt: ^5.2.2
     nanoid: 3.x
-    redis: ^4.6.5
     ts-node: ^10.9.1
     typescript: 4.9.5
   languageName: unknown
@@ -4570,6 +4565,18 @@ __metadata:
 "@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert":
   version: 0.0.0-use.local
   resolution: "@hive-command/global-ping-alert@workspace:packages/network/global-ping-alert"
+  languageName: unknown
+  linkType: soft
+
+"@hive-command/grs@workspace:packages/network/global-recovery-network":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/grs@workspace:packages/network/global-recovery-network"
+  dependencies:
+    "@hive-command/alarm-engine": "workspace:^"
+    "@hive-command/amqp-hub": "workspace:^"
+    "@hive-command/data": "workspace:^"
+    redis: ^4.6.13
+    typescript: ^5.4.3
   languageName: unknown
   linkType: soft
 
@@ -33604,7 +33611,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"redis@npm:^4.6.5":
+"redis@npm:^4.6.13":
   version: 4.6.13
   resolution: "redis@npm:4.6.13"
   dependencies:
@@ -37104,7 +37111,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3 < 6, typescript@npm:^5.3.3":
+"typescript@npm:>=3 < 6, typescript@npm:^5.3.3, typescript@npm:^5.4.3":
   version: 5.4.3
   resolution: "typescript@npm:5.4.3"
   bin:

@@ -1,0 +1,23 @@
+{
+  "name": "@hive-command/grs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "start:prod": "node index.js"
+  },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
+  "packageManager": "yarn@3.6.0",
+  "devDependencies": {
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@hive-command/alarm-engine": "workspace:^",
+    "@hive-command/amqp-hub": "workspace:^",
+    "@hive-command/data": "workspace:^",
+    "redis": "^4.6.13"
+  }
+}
