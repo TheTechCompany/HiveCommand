@@ -204,4 +204,4 @@ import { createClient } from "redis";
     } catch (e) {
         console.error({ e });
     }
-})
+})();

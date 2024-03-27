@@ -45,8 +45,7 @@ const canCompile = (tsCode: string) => {
 export default (prisma: PrismaClient) => {
 
     const typeDefs = `
-     
-        
+    
         type Mutation {
             createCommandProgramAlarm(program: ID, input: CommandProgramAlarmInput): CommandProgramAlarm
             updateCommandProgramAlarm(program: ID, id: ID!, input: CommandProgramAlarmInput): CommandProgramAlarm
