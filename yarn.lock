@@ -4576,6 +4576,7 @@ __metadata:
     "@hive-command/amqp-hub": "workspace:^"
     "@hive-command/data": "workspace:^"
     mqtt: ^5.5.0
+    nanoid: 3.x
     redis: ^4.6.13
     typescript: ^5.4.3
   languageName: unknown

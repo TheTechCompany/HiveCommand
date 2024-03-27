@@ -14,7 +14,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
         metadata: { labels: appLabels, namespace: namespace.metadata.name },
         spec: {
-            replicas: 2,
+            replicas: 3,
             strategy: { type: "RollingUpdate" },
             selector: { matchLabels: appLabels },
             template: {
