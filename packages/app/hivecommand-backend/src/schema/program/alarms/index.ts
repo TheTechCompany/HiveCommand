@@ -74,7 +74,6 @@ export default (prisma: PrismaClient) => {
             rank: String
 
             createdAt: DateTime
-
         }
 
         input CommandProgramAlarmPathwayInput {
