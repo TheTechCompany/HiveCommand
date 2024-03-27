@@ -66,14 +66,16 @@ export class MQTTHub {
     
         })
 
-        this.client.on('message', (topic, payload, packet) => {
+        this.client.handleMessage = async (packet, cb) => {
+            const { topic, payload } = packet;
+
             if(topic.indexOf(this.DEVICE_DATA_PREFIX) > -1){
 
                 let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
 
                 const regex = new RegExp(`${this.DEVICE_DATA_PREFIX}/(.+?)/`);
 
-                this.options.onMessage?.({
+                await this.options.onMessage?.({
                     routingKey: topic.replace(regex, ''),
                     messageContent: messageContent,
                     userId: topic.match(regex)?.[1]
@@ -91,11 +93,44 @@ export class MQTTHub {
 
                 console.log("LWAT ", online_id, messageContent, topic)
                 if(online_id && messageContent.offline != null){
-                    this.options.onStatus?.(online_id, messageContent.offline ? 'OFFLINE' : 'ONLINE')
+                    await this.options.onStatus?.(online_id, messageContent.offline ? 'OFFLINE' : 'ONLINE')
                 }
             }
 
-        })
+            cb();
+
+        }
+
+        // this.client.on('message', (topic, payload, packet) => {
+        //     if(topic.indexOf(this.DEVICE_DATA_PREFIX) > -1){
+
+        //         let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
+
+        //         const regex = new RegExp(`${this.DEVICE_DATA_PREFIX}/(.+?)/`);
+
+        //         this.options.onMessage?.({
+        //             routingKey: topic.replace(regex, ''),
+        //             messageContent: messageContent,
+        //             userId: topic.match(regex)?.[1]
+        //         });
+        //     }else{
+        //         console.log("Message received on topic: " + topic);
+        //     }
+
+        //     if(topic.indexOf(this.DEVICE_ONLINE_PREFIX) > -1){
+        //         const regex = new RegExp(`${this.DEVICE_ONLINE_PREFIX}/(.+?)/`);
+
+        //         let messageContent = JSON.parse(payload?.toString() || '{error: "No message content"}');
+
+        //         const online_id = topic.match(regex)?.[1];
+
+        //         console.log("LWAT ", online_id, messageContent, topic)
+        //         if(online_id && messageContent.offline != null){
+        //             this.options.onStatus?.(online_id, messageContent.offline ? 'OFFLINE' : 'ONLINE')
+        //         }
+        //     }
+
+        // })
 
         this.client.on('reconnect', () => {
             console.log("MQTT Client reconnecting...");
