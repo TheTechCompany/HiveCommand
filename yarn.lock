@@ -4575,6 +4575,7 @@ __metadata:
     "@hive-command/alarm-engine": "workspace:^"
     "@hive-command/amqp-hub": "workspace:^"
     "@hive-command/data": "workspace:^"
+    mqtt: ^5.5.0
     redis: ^4.6.13
     typescript: ^5.4.3
   languageName: unknown
@@ -27814,7 +27815,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mqtt@npm:^5.2.0, mqtt@npm:^5.2.2":
+"mqtt@npm:^5.2.0, mqtt@npm:^5.2.2, mqtt@npm:^5.5.0":
   version: 5.5.0
   resolution: "mqtt@npm:5.5.0"
   dependencies:
