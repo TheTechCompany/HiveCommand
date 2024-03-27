@@ -62,6 +62,7 @@ export default (prisma: PrismaClient) => {
             script: String
         }
 
+        
         type CommandProgramAlarm {
             id: ID
 

@@ -1,7 +1,6 @@
 import { Provider } from '@pulumi/kubernetes'
 import * as k8s from '@pulumi/kubernetes'
 import { Deployment } from './deployment'
-import { Service } from './service'
 import { Config, Input, Output } from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 
