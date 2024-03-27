@@ -59,7 +59,6 @@ export default (prisma: PrismaClient) => {
 
         input CommandProgramAlarmInput {
             title: String
-
             script: String
         }
 
