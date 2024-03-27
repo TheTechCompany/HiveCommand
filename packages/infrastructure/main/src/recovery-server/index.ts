@@ -18,5 +18,5 @@ export const RecoveryServer = async (provider: Provider, namespace: k8s.core.v1.
 
     const deployment = Deployment(provider, namespace, appName, appLabels, dbUrl, dbPass, redisURL, iotEndpoint);
 
-    return {deployment,service}
+    return {deployment}
 }
