@@ -69,6 +69,7 @@ export default (prisma: PrismaClient) => {
             script: String
 
             compileError: Boolean
+            
 
             rank: String
 
