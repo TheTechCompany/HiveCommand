@@ -1,6 +1,6 @@
 import { Box, Button, Checkbox, Dialog, DialogActions, DialogContent, DialogTitle, FormControlLabel, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { unit as mathUnit } from 'mathjs';
 
 export interface DeviceReport {
@@ -15,6 +15,9 @@ export interface DeviceReport {
 
 export interface DeviceReportModalProps {
     open: boolean;
+    selected?: any;
+
+    onDelete?: () => void;
     onClose?: () => void;
     onSubmit?: (report: DeviceReport) => void;
 }
@@ -32,6 +35,10 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
           return true;
         }
       }, [report.reportLength])
+
+    useEffect(() => {
+        setReport({...props.selected})
+    }, [props.selected])
       
     return (
         <Dialog 
@@ -39,7 +46,7 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
             open={props.open} 
             onClose={props.onClose}>
             <DialogTitle>
-                Create Report
+                {props.selected ? "Update" : "Create"} Report
             </DialogTitle>
             <DialogContent>
                 <Box sx={{marginTop: '8px', display: 'flex', flexDirection: 'column'}}>
@@ -89,9 +96,14 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
                     </Box>
                 </Box>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={props.onClose}>Close</Button>
-                <Button onClick={() => props.onSubmit?.(report)} variant="contained" color="primary">Save</Button>
+            <DialogActions sx={{display: 'flex', justifyContent: props.selected ? "space-between" : 'flex-end'}}>
+                {props.selected ? (<Button onClick={props.onDelete} color="error" variant="contained">Delete</Button>) : null}
+                <Box sx={{display: 'flex', alignItems: 'center'}}>
+                    <Button onClick={props.onClose}>Close</Button>
+                    <Button onClick={() => {
+                        if(!timeBucketError) props.onSubmit?.(report)
+                    }} variant="contained" color="primary">{props.selected ? "Save": "Create"}</Button>
+                </Box>
             </DialogActions>
         </Dialog>
     )

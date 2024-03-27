@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/ui",
-  "version": "1.4.15-alpha.297",
+  "version": "1.4.15-alpha.299",
   "publishConfig": {
     "access": "public"
   },
@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "@hive-command/electrical-editor": "workspace:^",
-    "monaco-editor": "^0.46.0"
+    "monaco-editor": "0.47.0"
   }
 }

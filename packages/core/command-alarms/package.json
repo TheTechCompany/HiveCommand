@@ -1,19 +1,22 @@
 {
   "name": "@hive-command/alarm-engine",
   "main": "dist/index.js",
-  "version": "1.4.15-alpha.297",
+  "version": "1.4.15-alpha.299",
   "packageManager": "yarn@3.6.0",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "start": "ts-node scr/index.ts",
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "test": "jest"
   },
   "devDependencies": {
+    "jest": "27.x",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@hive-command/interface-types": "workspace:^"
+    "@hive-command/interface-types": "workspace:^",
+    "nanoid": "3.x"
   }
 }

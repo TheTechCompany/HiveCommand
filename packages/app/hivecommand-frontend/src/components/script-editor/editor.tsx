@@ -1,6 +1,7 @@
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useRef, useEffect, useMemo, useCallback, useState } from 'react';
 import * as monaco from 'monaco-editor';
 import { styled } from '@mui/material';
+import { IDisposable } from 'monaco-editor';
 
 // // @ts-ignore
 // self.MonacoEnvironment = {
@@ -46,40 +47,11 @@ export const Editor: React.FC<EditorProps> = (props) => {
 
 	const editor = useRef<monaco.editor.IStandaloneCodeEditor>();
 
-    // const deviceValueMap = useMemo(() => {
-
-    //     const printJson =  (elem: ValueStoreItem) => {
-
-    //         if(elem.name.match('[-=.\/:]') != null) return '';
-            
-    //         return elem.children && elem.children.length > 0 ? 
-    //             `${elem.name}: { ${elem.children.map(printJson).join('\n')} }` : 
-    //             `${elem.name}: ${getOPCType(elem.type)};`
-    //     }
-        
-
-    //     //TODO add readonly fields
-    //     let inf = `interface ValueStore {
-    //         ${(props.valueStore || [])?.map(printJson).join(';\n')}
-    //     }`
-    //     return inf;
-
-    // }, [props.valueStore])
-
-    // console.log(props.variables)
-
-    // const variableMap = useMemo(() => {
-        
-    //     const printJson = (elem: HMIVariable) => {
-    //         return `${elem.name}: ${elem.type}`;
-    //     }
-
-    //     let inf = `interface VariableStore {
-    //         ${(props.variables || [])?.map(printJson).join(';\n')}
-    //     }`
-    //     return inf;
-    // }, [props.variables])
+    const [ workingValue, setWorkingValue ] = useState<any>(null);
     
+    const subscription = useRef<IDisposable>();
+    const preventTriggerChangeEvent = useRef<boolean>(false);
+
     const extraLib = props.extraLib ? 
         typeof(props.extraLib) == 'string' ? `
             type DeepPartial<T> = {
@@ -122,11 +94,20 @@ export const Editor: React.FC<EditorProps> = (props) => {
 
     const onChange = useCallback((value: string) => {
         if(props.value != value) {
-            console.log("onChange", props.value, value)
 
-            props.onChange?.(value)
+                if(preventTriggerChangeEvent.current) return;
+                props.onChange?.(value)
         }
 
+    }, [props.value])
+
+    useEffect(() => {
+        // setWorkingValue(props.value)
+
+        subscription.current?.dispose();
+        subscription.current = editor.current?.onDidChangeModelContent((e) => {
+            setTimeout(() => onChange?.(editor.current?.getModel()?.getValue()), 1);
+        })
     }, [props.value])
 
 	useEffect(() => {
@@ -201,8 +182,8 @@ export const Editor: React.FC<EditorProps> = (props) => {
 				// language: 'typescript',
 			});
 
-            editor.current.onDidChangeModelContent((e) => {
-                onChange?.(editor.current?.getValue());
+            subscription.current = editor.current.onDidChangeModelContent((e) => {
+                setTimeout(() => onChange?.(editor.current?.getModel()?.getValue()), 1);
             })
 
 
@@ -211,13 +192,17 @@ export const Editor: React.FC<EditorProps> = (props) => {
 			editor.current.dispose();
             editor.current = null;
 		};
-	}, [props.value]);
+	}, []);
 
     useEffect(() => {
         let model = monaco.editor.getModel(monaco.Uri.parse('file:///main.tsx'));
 
-        if(model && props.value && model.getValue() !== props.value){
-            model.setValue(props.value);
+        if(model && model.getValue() !== props.value){
+            preventTriggerChangeEvent.current = true;
+
+            if(props.value) model.setValue(props.value);
+              
+            preventTriggerChangeEvent.current = false;
         }
     }, [props.value]);
 

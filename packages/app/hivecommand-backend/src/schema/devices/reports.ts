@@ -61,6 +61,8 @@ export default (prisma: PrismaClient) => {
 			reportLength: String
 			
 			device: CommandDevice 
+
+			createdAt: DateTime
 		}
 
 		type CommandDeviceReportField {
@@ -69,6 +71,8 @@ export default (prisma: PrismaClient) => {
 			device: CommandProgramTag
 		  
 			key: CommandProgramTypeField
+
+			createdAt: DateTime
 		  
 			bucket: String
 		}
@@ -76,7 +80,10 @@ export default (prisma: PrismaClient) => {
     `
 
     const resolvers = {
-	
+		CommandDeviceReport: {
+			// endDate: (root: any) => {
+			// }
+		},
 		Mutation: {
 			downloadDeviceReports: async (root: any, args: any, context: any) => {
 
@@ -149,7 +156,7 @@ export default (prisma: PrismaClient) => {
 								name: args.input.name,
 								recurring: args.input.recurring,
 								startDate: args.input.startDate,
-								endDate: args.input.endDate,
+								endDate: args.input.endDate || null,
 								reportLength: !args.input.reportLength ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
 								// reports: [],
 							}]
@@ -164,6 +171,7 @@ export default (prisma: PrismaClient) => {
 			},
 			updateCommandDeviceReport: async (root: any, args: any, context: any) => {
 
+				console.log({args})
 				const device = await prisma.device.update({
 					where: {
 						id: args.device
@@ -176,8 +184,8 @@ export default (prisma: PrismaClient) => {
 									name: args.input.name,
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
-									endDate: args.input.endDate,
-									reportLength: !args.input.reportLength ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
+									endDate: args.input.endDate || null,
+									reportLength: (args.input.reportLength == null || args.input.reportLength == undefined) ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
 								}
 							}
 						}
@@ -234,11 +242,15 @@ export default (prisma: PrismaClient) => {
 				let key = {};
 				if( args.input.key ){
 					key = { key: { connect : {id: args.input.key } } };
+				}else {
+					key = {key: {disconnect: true}}
 				}
 
 				let device = {}
 				if(args.input.device){
 					device = {device: {connect: {id: args.input.device}}}
+				}else{
+					device = {device: {disconnect: true}}
 				}
 
 				return await prisma.deviceReportField.update({

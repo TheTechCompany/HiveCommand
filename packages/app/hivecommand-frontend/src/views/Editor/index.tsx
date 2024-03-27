@@ -101,6 +101,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
 
                     compileError
 
+                    createdAt
+
                 }
 
                 alarms {
@@ -111,6 +113,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     compileError
                     
                     rank
+
+                    createdAt
                 }
 
         
@@ -280,7 +284,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     promise = updateProgramTemplate(editItem.id, {name: data.name})
                     break;
                 case 'hmi':
-                    // promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
+                    promise = updateProgramHMI(editItem.id, data.name, data.localHomepage, data.remoteHomepage)
                     break;
             }
         }else{
@@ -384,7 +388,7 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
         {
           id: 'pathways-root',
           name: 'Alarm Pathways',
-          children: program?.alarmPathways?.map((pathway) => ({
+          children: program?.alarmPathways?.slice()?.sort((a, b) => (new Date(a.createdAt)?.getTime() || 0) - (new Date(b.createdAt)?.getTime() || 0)).map((pathway) => ({
             id: pathway.id,
             icon: pathway.compileError ? <Error fontSize="small" sx={{color: 'red'}} /> : null,
             name: pathway.name

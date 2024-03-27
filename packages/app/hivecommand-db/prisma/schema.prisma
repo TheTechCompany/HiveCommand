@@ -125,6 +125,8 @@ model DeviceReportField {
 
   bucket String?
 
+  createdAt DateTime? @default(now())
+
   report DeviceReport @relation(name: "hasReportFields", fields: [reportId], references: [id], onDelete: Cascade)
   reportId String
 }
@@ -404,6 +406,8 @@ model ProgramAlarmPathway {
 
   program Program @relation(name: "hasAlarmPathway", references: [id], fields: [programId])
   programId String
+
+  createdAt DateTime @default(now())
 
   @@unique([name, programId])
 

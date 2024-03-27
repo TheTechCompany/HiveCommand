@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+import { Autocomplete, Box, Button, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { DeviceControlContext } from '../../context';
@@ -23,8 +23,6 @@ export const ReportFields = () => {
         let updateFields = fields?.slice();
 
         let field_ix = fields?.findIndex((a) => a.id == field);
-
-        console.log("UpdateField", field, key, value, field_ix)
 
         if(field_ix > -1){
             fields[field_ix] = {
@@ -54,19 +52,22 @@ export const ReportFields = () => {
 
     const debouncedUpdate = useMemo(() => debounce(client?.updateReportField || (() => {}), 500), [])
 
+    console.log({workingReport})
+
     return (
-        <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}>
-            <Table size='small'>
+        <Box sx={{flex: 1, display: 'flex', minHeight: 0, flexDirection: 'column'}}>
+            <TableContainer>
+            <Table size='small' stickyHeader>
                 <TableHead>
                     <TableRow>
-                        <TableCell width="30%">Device</TableCell>
-                        <TableCell width="30%">Key</TableCell>
-                        <TableCell width="30%">Bucket</TableCell>
-                        <TableCell></TableCell>
+                        <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}} width="30%">Device</TableCell>
+                        <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}} width="30%">Key</TableCell>
+                        <TableCell sx={{padding: '3px', bgcolor: 'secondary.main'}} width="30%">Bucket</TableCell>
+                        <TableCell sx={{padding: 0, bgcolor: 'secondary.main'}}></TableCell>
                     </TableRow>
                 </TableHead>
-                <TableBody>
-                    {workingReport?.fields?.map((field) => {
+                <TableBody sx={{overflowY: 'auto'}}>
+                    {workingReport?.fields?.slice()?.sort((a, b) => (new Date(a.createdAt)?.getTime() || 0) - (new Date(b.createdAt)?.getTime() || 0))?.map((field) => {
                         let timeError = true;
                         try{
                             if(field.bucket) timeError = (mathUnit(field.bucket).to('seconds') == null)
@@ -79,14 +80,14 @@ export const ReportFields = () => {
 
                         console.log({types: activeProgram?.types, activeType, field, type: field.device})
 
-                        return <TableRow>
+                        return <TableRow key={`report-${activePage}-field-${field.id}`}>
                             <TableCell padding='none'>
                                 <Autocomplete
                                     options={activeProgram.tags || []}
-                                    value={activeProgram.tags?.find((a) => a.id == field.device?.id)}
+                                    value={activeProgram.tags?.find((a) => a.id == field.device?.id) || null}
                                     getOptionLabel={(option) => option.name}
                                     onChange={(ev, value) => {
-                                        updateField(field?.id, 'device', value.id, {id: value.id})
+                                        updateField(field?.id, 'device', value?.id, {id: value?.id})
                                     }}
                                     renderInput={(params) => <TextField {...params} size="small" />} />
                            
@@ -94,10 +95,10 @@ export const ReportFields = () => {
                             <TableCell padding='none'>
                                 <Autocomplete
                                     options={activeType?.fields || []}
-                                    value={activeType?.fields?.find((a) => a.id == field.key?.id)}
+                                    value={activeType?.fields?.find((a) => a.id == field.key?.id) || null}
                                     getOptionLabel={(option) => option.name}
                                     onChange={(ev, value) => {
-                                        updateField(field?.id, 'key', value.id, {id: value.id})
+                                        updateField(field?.id, 'key', value?.id, {id: value?.id})
                                     }}
                                     renderInput={(params) => <TextField {...params} size="small" />} />
                               
@@ -135,6 +136,7 @@ export const ReportFields = () => {
                     })}
                 </TableBody>
             </Table>
+            </TableContainer>
             <Button onClick={() => {
 
                 if(activePage) client?.createReportField?.(activePage)

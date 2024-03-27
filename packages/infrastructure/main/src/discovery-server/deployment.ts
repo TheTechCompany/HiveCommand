@@ -42,7 +42,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                             // { name: 'REDIS_URL', value: redisUrl.apply(url => url)},
                             // { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`)},
                             { name: 'JWT_SECRET', value: process.env.JWT_SECRET},
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100&connection_limit=20`) },
 
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},

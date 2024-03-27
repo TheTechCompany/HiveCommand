@@ -29,7 +29,7 @@ export const ReportView = () => {
                 </ButtonGroup>
             </Box>
             <Divider />
-            <Box sx={{flex: 1, display: 'flex'}}>
+            <Box sx={{flex: 1, minHeight:0, display: 'flex'}}>
                 <Routes>
                     <Route path="" element={<Outlet />}>
                         <Route path="" element={<ReportList />} />

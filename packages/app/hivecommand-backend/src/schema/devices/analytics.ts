@@ -82,6 +82,8 @@ export default (prisma: PrismaClient) => {
 			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
 
 			device: CommandDevice 
+
+			createdAt: DateTime
 		}
 
         type CommandDeviceTimeseriesTotal  {

@@ -19,8 +19,12 @@ export const useDeviceReports = (id: string) => {
 
           recurring
 
+          createdAt 
+
           fields {
             id
+
+            createdAt
 
             device {
               id

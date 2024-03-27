@@ -22,12 +22,27 @@ import { useEffect } from "react";
                 analyticPages {
                     id
                     name
+
+                    createdAt
                 }
 
 
                 reports {
                     id
                     name
+
+                    startDate
+                    endDate
+                    reportLength
+          
+                    recurring
+
+                    createdAt
+
+                    fields {
+                        id
+                        createdAt
+                    }
                 }
        
                 activeProgram {

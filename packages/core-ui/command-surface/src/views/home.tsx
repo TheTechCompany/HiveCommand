@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom'
 export const HomeView = () => {
 
     const loc = useLocation();
-    console.log("Home lic", loc)
 
     const { setView } = useContext(DeviceControlContext);
 

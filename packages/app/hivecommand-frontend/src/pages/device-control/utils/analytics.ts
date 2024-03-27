@@ -10,6 +10,7 @@ export const useDeviceAnalytics = (id: string) => {
         analyticPages {
           id
           name
+          createdAt 
 
           charts {
             id
@@ -63,6 +64,7 @@ export const useDeviceAnalyticData = (deviceId: string, analyticId: string, hori
         
         analyticPages (where: { ids: [$analyticId] }) {
           id
+          createdAt
 
           charts {
             id
