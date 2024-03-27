@@ -9,6 +9,10 @@ import { createClient } from "redis";
 
 (async () => {
 
+    const runtimeId = nanoid();
+
+    let watching = [];
+
     const prisma = new PrismaClient();
 
     const redisCli = createClient({
@@ -65,6 +69,17 @@ import { createClient } from "redis";
             messageContent?: { dataType: string, value: any, timestamp: number },
             userId?: string
         }) => {
+
+            const watcher = await redisCli.GET(`watchers:${userId}`)
+
+            if(!watcher){
+
+                await redisCli.SET(`watchers:${userId}`, runtimeId);
+                await redisCli.EXPIRE(`watchers:${userId}`, 10);
+
+            }else if(watcher && watcher != runtimeId){
+                return;
+            }
 
             console.log(`Data from ${userId} ${routingKey}`)
             console.log(messageContent?.value);

@@ -92,9 +92,7 @@ export default (prisma: PrismaClient) => {
             createdAt: DateTime
         }
 
-
     `
-
     const resolvers = {
         CommandProgramAlarmPathway: {
             compileError: (root: any) => {
