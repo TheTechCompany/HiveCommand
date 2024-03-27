@@ -18,6 +18,7 @@
     "@hive-command/alarm-engine": "workspace:^",
     "@hive-command/amqp-hub": "workspace:^",
     "@hive-command/data": "workspace:^",
+    "mqtt": "^5.5.0",
     "redis": "^4.6.13"
   }
 }
