@@ -75,8 +75,6 @@ export default (prisma: PrismaClient) => {
             createdAt: DateTime
         }
 
-        
-
         input CommandProgramAlarmPathwayInput {
             name: String
             scope: String

@@ -14,7 +14,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
     const deployment = new k8s.apps.v1.Deployment(`${appName}-dep`, {
         metadata: { labels: appLabels, namespace: namespace.metadata.name },
         spec: {
-            replicas: 1,
+            replicas: 2,
             strategy: { type: "RollingUpdate" },
             selector: { matchLabels: appLabels },
             template: {
@@ -23,7 +23,7 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                     containers: [{
                         imagePullPolicy: "Always",
                         name: appName,
-                        image: `thetechcompany/hive-command-gds:${imageTag}`,
+                        image: `thetechcompany/hive-command-grs:${imageTag}`,
                         ports: [{ name: "http", containerPort: 8004 }],
                         volumeMounts: [
                         ],
@@ -42,19 +42,19 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                             // { name: 'REDIS_URL', value: redisUrl.apply(url => url)},
                             // { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`)},
                             { name: 'JWT_SECRET', value: process.env.JWT_SECRET},
-                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
+                            { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100&connection_limit=10`) },
 
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},
                             // { name: "NEO4J_URI", value: process.env.NEO4J_URI /*neo4Url.apply((url) => `neo4j://${url}.default.svc.cluster.local`)*/ },
                             // { name: "MONGO_URL", value: mongoUrl.apply((url) => `mongodb://${url}.default.svc.cluster.local`) },
                         ],
-                        readinessProbe: {
-                            httpGet: {
-                                path: '/',
-                                port: 'http'
-                            }
-                        },
+                        // readinessProbe: {
+                        //     httpGet: {
+                        //         path: '/',
+                        //         port: 'http'
+                        //     }
+                        // },
                         
                         // livenessProbe: {
                         //     httpGet: {
