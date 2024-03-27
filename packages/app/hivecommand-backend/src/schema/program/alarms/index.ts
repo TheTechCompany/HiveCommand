@@ -12,6 +12,7 @@ const canCompile = (tsCode: string) => {
     //         compilerOptions: {skipLibCheck: true}
     //     });
 
+    
     //     const id = nanoid();
     //     console.time(`Create source file ${id}`)
 

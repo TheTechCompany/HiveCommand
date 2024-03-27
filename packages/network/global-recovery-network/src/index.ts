@@ -6,6 +6,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 import { PrismaClient } from '@hive-command/data';
 
 import { createClient } from "redis";
+import {nanoid} from 'nanoid';
 
 (async () => {
 
