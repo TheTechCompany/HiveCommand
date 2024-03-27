@@ -70,7 +70,6 @@ export default (prisma: PrismaClient) => {
 
             compileError: Boolean
             
-
             rank: String
 
             createdAt: DateTime

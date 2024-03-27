@@ -10,7 +10,6 @@
   "installConfig": {
     "hoistingLimits": "dependencies"
   },
-  "packageManager": "yarn@3.6.0",
   "devDependencies": {
     "typescript": "^5.4.3"
   },
