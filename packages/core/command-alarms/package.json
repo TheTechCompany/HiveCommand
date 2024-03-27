@@ -6,6 +6,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "scripts": {
     "start": "ts-node scr/index.ts",
     "build": "tsc -b",
