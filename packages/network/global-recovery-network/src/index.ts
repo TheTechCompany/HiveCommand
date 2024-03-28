@@ -175,37 +175,37 @@ import { nanoid } from 'nanoid';
                 if (!device || !routingKey || !messageContent) return;
 
                 try {
-                    const results = await redisCli.HGETALL(`device:${device.id}:values`);
+                    // const results = await redisCli.HGETALL(`device:${device.id}:values`);
 
-                    const values = Object.keys(results).map((r) => {
-                        return {
-                            deviceId: device.id,
-                            placeholder: r?.split(':')?.[0],
-                            key: r?.split(':')?.[1],
-                            value: results?.[r]
-                        }
-                    })
+                    // const values = Object.keys(results).map((r) => {
+                    //     return {
+                    //         deviceId: device.id,
+                    //         placeholder: r?.split(':')?.[0],
+                    //         key: r?.split(':')?.[1],
+                    //         value: results?.[r]
+                    //     }
+                    // })
 
-                    const { tags = [], types = [] } = device?.activeProgram || {};
+                    // const { tags = [], types = [] } = device?.activeProgram || {};
 
-                    const deviceTags = (tags || []).map((tag) => {
-                        return {
-                            ...tag,
-                            type: tag.type ? formatTagType(tag.type) : null
-                        }
-                    })
+                    // const deviceTags = (tags || []).map((tag) => {
+                    //     return {
+                    //         ...tag,
+                    //         type: tag.type ? formatTagType(tag.type) : null
+                    //     }
+                    // })
 
-                    const deviceTypes = (types || []).map((type) => {
-                        return {
-                            ...type,
-                            fields: type.fields.map((field) => {
-                                return {
-                                    ...field,
-                                    type: formatTagType(field)
-                                }
-                            })
-                        }
-                    })
+                    // const deviceTypes = (types || []).map((type) => {
+                    //     return {
+                    //         ...type,
+                    //         fields: type.fields.map((field) => {
+                    //             return {
+                    //                 ...field,
+                    //                 type: formatTagType(field)
+                    //             }
+                    //         })
+                    //     }
+                    // })
 
                     // const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
 
