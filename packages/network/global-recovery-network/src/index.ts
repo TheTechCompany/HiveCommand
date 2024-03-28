@@ -62,7 +62,7 @@ import {nanoid} from 'nanoid';
             const lastUpdated = await redisCli.HGET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`);
             
             if(lastUpdated){
-                canUpdate = new Date(lastUpdated).getTime() < new Date(timestamp).getTime();
+                canUpdate = new Date(parseInt(lastUpdated)).getTime() < new Date(timestamp).getTime();
             }
 
             if(canUpdate){
