@@ -101,7 +101,6 @@ export default (prisma: PrismaClient) => {
 								lastUpdated: 'desc'
 							}
 							
-							
 						})
 					}else{
 						const results = await redis.HGETALL(`device:${root.id}:values`);
