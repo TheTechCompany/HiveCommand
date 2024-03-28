@@ -22,6 +22,38 @@ import {nanoid} from 'nanoid';
 
     await redisCli.connect();
 
+    await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
+    await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
+
+    setInterval(() => {
+
+        console.log("Running leader election");
+
+        await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
+        await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
+    
+        const rawNodes = await redisCli.KEYS(`recovery-nodes:*`);
+
+        const devices = await prisma.device.findMany({});
+
+        let ix = rawNodes.indexOf(`recovery-nodes:${runtimeId}`);
+
+        let devices_per_node = Math.ceil(devices.length / rawNodes.length);
+
+        let start_ix = ix * devices_per_node;
+        let end_ix = (ix + 1) * devices_per_node;
+        if(end_ix > devices.length){
+            end_ix = devices.length - 1;
+        }
+
+        await Promise.all(devices.slice(start_ix, end_ix).map((device) => {
+            await redisCli.SET(`watchers:${device.network_name}`, runtimeId);
+            await redisCli.EXPIRE(`watchers:${device.network_name}`, 15);
+        }))
+
+    }, 7500)
+    
+
     const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string) => {
 
         const updateIfAfter = async () => {
@@ -71,15 +103,15 @@ import {nanoid} from 'nanoid';
             userId?: string
         }) => {
 
+
             const watcher = await redisCli.GET(`watchers:${userId}`)
 
-            if(!watcher){
-
-                await redisCli.SET(`watchers:${userId}`, runtimeId);
-                await redisCli.EXPIRE(`watchers:${userId}`, 10);
-
-            }else if(watcher && watcher != runtimeId){
+            console.log({watcher, runtimeId});
+        
+            if(watcher && watcher != runtimeId){
                 return;
+            }else if(!watcher){
+                console.log("No watcher specified");
             }
 
             console.log(`Data from ${userId} ${routingKey}`)
