@@ -69,6 +69,8 @@ import {nanoid} from 'nanoid';
                     redisCli.HSET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`, new Date(timestamp).getTime()),
                     redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
                 ])
+            }else{
+                console.log(`failed to update value because lastUpdated was after timestamp`. {lastUpdated, timestamp})
             }
         }
 
