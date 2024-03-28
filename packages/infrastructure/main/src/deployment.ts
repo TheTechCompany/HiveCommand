@@ -77,6 +77,9 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                         //     }
                         // }
                     }],
+                    nodeSelector: {
+                        role: 'worker'
+                    }
                     // volumes: [{
                     //     name: `endpoints-config`,
                     //     configMap: {
