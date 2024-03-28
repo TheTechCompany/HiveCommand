@@ -6,6 +6,7 @@ export default (prisma: PrismaClient) => {
     const typeDefs = `
    
     type Mutation {
+        
 
         createCommandProgramComponent(program: ID, input: CommandProgramComponentInput): CommandProgramComponent
         updateCommandProgramComponent(program: ID, id: ID!, input: CommandProgramComponentInput): CommandProgramComponent
