@@ -60,6 +60,7 @@ import {nanoid} from 'nanoid';
             let canUpdate = true;
 
             const lastUpdated = await redisCli.HGET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`);
+            
             if(lastUpdated){
                 canUpdate = new Date(lastUpdated).getTime() < new Date(timestamp).getTime();
             }
@@ -93,7 +94,7 @@ import {nanoid} from 'nanoid';
                     lastSeen: new Date(timestamp)
                 }
             }),
-            updateIfAfter
+            updateIfAfter()
         ]);
     };
 

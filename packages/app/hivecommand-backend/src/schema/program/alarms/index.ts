@@ -33,13 +33,14 @@ const canCompile = (tsCode: string) => {
     //     console.timeEnd(`Get source file diags ${id}`)
 
 
+    
     //     // const diagnostics = proj.()
         
     //     return diagnostics?.length <= 0;
     // }catch(e){
     //     return false;
     // }
-    
+
 
     return true;
 
