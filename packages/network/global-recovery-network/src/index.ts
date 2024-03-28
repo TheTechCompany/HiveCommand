@@ -22,15 +22,14 @@ import { nanoid } from 'nanoid';
 
     await redisCli.connect();
 
-    await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
-    await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
+    await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now(), {EX: 15})
 
     setInterval(async () => {
 
         console.log("Running leader election");
 
-        await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
-        await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
+        await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now(), {EX: 15})
+        // await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
 
         const rawNodes = await redisCli.KEYS(`recovery-nodes:*`);
 
@@ -47,8 +46,7 @@ import { nanoid } from 'nanoid';
         }
 
         await Promise.all(devices.slice(start_ix, end_ix).map(async (device) => {
-            await redisCli.SET(`watchers:${device.network_name}`, runtimeId);
-            await redisCli.EXPIRE(`watchers:${device.network_name}`, 15);
+            await redisCli.SET(`watchers:${device.network_name}`, runtimeId, {EX: 15});
         }))
 
     }, 7500)
