@@ -32,13 +32,14 @@ const canCompile = (tsCode: string) => {
     //     // const diagnostics = sourceFile.getPreEmitDiagnostics()
     //     console.timeEnd(`Get source file diags ${id}`)
 
-    
+
     //     // const diagnostics = proj.()
         
     //     return diagnostics?.length <= 0;
     // }catch(e){
     //     return false;
     // }
+    
 
     return true;
 
