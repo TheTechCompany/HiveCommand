@@ -36,10 +36,6 @@ const prisma = new PrismaClient();
 	}
 
 
-	// const deviceMQ = await amqp.connect(
-	// 	process.env.DEVICE_MQ || ''
-	// )
-
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
 	const graphServer = new HiveGraph({

@@ -59,6 +59,17 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                                 port: 'http'
                             }
                         },
+
+                        resources: {
+                            requests: {
+                                cpu: '0.5',
+                                memory: '0.5Gi'
+                            },
+                            limits: {
+                                cpu: '1',
+                                memory: '1Gi'
+                            }
+                        }
                         // livenessProbe: {
                         //     httpGet: {
                         //         path: '/graphql',
