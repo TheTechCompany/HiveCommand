@@ -25,7 +25,7 @@ import {nanoid} from 'nanoid';
     await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
     await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
 
-    setInterval(() => {
+    setInterval(async () => {
 
         console.log("Running leader election");
 
@@ -46,7 +46,7 @@ import {nanoid} from 'nanoid';
             end_ix = devices.length - 1;
         }
 
-        await Promise.all(devices.slice(start_ix, end_ix).map((device) => {
+        await Promise.all(devices.slice(start_ix, end_ix).map(async (device) => {
             await redisCli.SET(`watchers:${device.network_name}`, runtimeId);
             await redisCli.EXPIRE(`watchers:${device.network_name}`, 15);
         }))
@@ -70,7 +70,7 @@ import {nanoid} from 'nanoid';
                     redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
                 ])
             }else{
-                console.log(`failed to update value because lastUpdated was after timestamp`. {lastUpdated, timestamp})
+                console.log(`failed to update value because lastUpdated was after timestamp`, {lastUpdated, timestamp})
             }
         }
 
