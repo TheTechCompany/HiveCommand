@@ -35,7 +35,6 @@ const prisma = new PrismaClient();
 		await deviceMQ.connect();
 	}
 
-
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
 	const graphServer = new HiveGraph({
