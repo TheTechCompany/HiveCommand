@@ -6,7 +6,7 @@ import { PrismaRegister } from './alarm-center/prisma-register';
 import { PrismaClient } from '@hive-command/data';
 
 import { createClient } from "redis";
-import {nanoid} from 'nanoid';
+import { nanoid } from 'nanoid';
 
 (async () => {
 
@@ -31,7 +31,7 @@ import {nanoid} from 'nanoid';
 
         await redisCli.SET(`recovery-nodes:${runtimeId}`, Date.now())
         await redisCli.EXPIRE(`recovery-nodes:${runtimeId}`, 15);
-    
+
         const rawNodes = await redisCli.KEYS(`recovery-nodes:*`);
 
         const devices = await prisma.device.findMany({});
@@ -42,7 +42,7 @@ import {nanoid} from 'nanoid';
 
         let start_ix = ix * devices_per_node;
         let end_ix = (ix + 1) * devices_per_node;
-        if(end_ix > devices.length){
+        if (end_ix > devices.length) {
             end_ix = devices.length - 1;
         }
 
@@ -52,7 +52,7 @@ import {nanoid} from 'nanoid';
         }))
 
     }, 7500)
-    
+
 
     const publishValue = async (deviceId: string, deviceName: string, value: any, timestamp: number, key?: string) => {
 
@@ -60,18 +60,18 @@ import {nanoid} from 'nanoid';
             let canUpdate = true;
 
             const lastUpdated = await redisCli.HGET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`);
-            
-            if(lastUpdated){
+
+            if (lastUpdated) {
                 canUpdate = new Date(parseInt(lastUpdated)).getTime() < new Date(timestamp).getTime();
             }
 
-            if(canUpdate){
+            if (canUpdate) {
                 await Promise.all([
                     redisCli.HSET(`device:${deviceId}:valuesLastUpdate`, `${deviceName}${key ? `:${key}` : ''}`, new Date(timestamp).getTime()),
                     redisCli.HSET(`device:${deviceId}:values`, `${deviceName}${key ? `:${key}` : ''}`, `${value}`)
                 ])
-            }else{
-                console.log(`failed to update value because lastUpdated was after timestamp`, {lastUpdated, timestamp})
+            } else {
+                console.log(`failed to update value because lastUpdated was after timestamp`, { lastUpdated, timestamp })
             }
         }
 
@@ -107,138 +107,143 @@ import {nanoid} from 'nanoid';
         }) => {
 
 
-            const watcher = await redisCli.GET(`watchers:${userId}`)
-
-            console.log({watcher, runtimeId});
-        
-            if(watcher && watcher != runtimeId){
-                return;
-            }else if(!watcher){
-                console.log("No watcher specified");
-            }
-
-            console.log(`Data from ${userId} ${routingKey}`)
-            console.log(messageContent?.value);
-
-            const device = await prisma.device.findFirst({
-                where: { network_name: userId },
-                include: {
-                    activeProgram: {
-                        include: {
-                            types: {
-                                include: {
-                                    fields: {
-                                        include: {
-                                            type: true
-                                        }
-                                    }
-                                }
-                            },
-                            tags: {
-                                include: {
-                                    type: {
-                                        include: {
-                                            type: true
-                                        }
-                                    }
-                                }
-                            },
-                            alarms: true,
-                            alarmPathways: true
-                        }
-                    }
-                }
-            })
-            //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
-
-            if (!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
-
-            if (typeof (messageContent.value) == "object") {
-
-                await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
-                    try {
-                        await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
-                    } catch (e) {
-                        console.error("publish multi error", e, routingKey, messageContent);
-                    }
-                }))
-
-            } else {
-                try {
-                    let mainKey = routingKey?.split('/')?.[0]
-                    let subKey = routingKey?.split('/')?.[1]
-
-                    await publishValue(device.id, mainKey, messageContent?.value, messageContent.timestamp, subKey)
-                } catch (e) {
-                    console.error("publish single error", e, routingKey, messageContent);
-                }
-            }
-            if (!device || !routingKey || !messageContent) return;
-
             try {
-                const results = await redisCli.HGETALL(`device:${device.id}:values`);
 
-                const values = Object.keys(results).map((r) => {
-                    return {
-                        deviceId: device.id,
-                        placeholder: r?.split(':')?.[0],
-                        key: r?.split(':')?.[1],
-                        value: results?.[r]
+                const watcher = await redisCli.GET(`watchers:${userId}`)
+
+                if (watcher && watcher != runtimeId) {
+                    return;
+                } else if (!watcher) {
+                    console.log("No watcher specified");
+                }
+
+                console.log(`Data from ${userId} ${routingKey} ${Date.now()}`)
+
+                const device = await prisma.device.findFirst({
+                    where: { network_name: userId },
+                    include: {
+                        // activeProgram: {
+                        //     include: {
+                        //         types: {
+                        //             include: {
+                        //                 fields: {
+                        //                     include: {
+                        //                         type: true
+                        //                     }
+                        //                 }
+                        //             }
+                        //         },
+                        //         tags: {
+                        //             include: {
+                        //                 type: {
+                        //                     include: {
+                        //                         type: true
+                        //                     }
+                        //                 }
+                        //             }
+                        //         },
+                        //         alarms: true,
+                        //         alarmPathways: true
+                        //     }
+                        // }
                     }
                 })
+                //Log into timeseries with routingKey describing opc tree state and messageContent containing the value
 
-                const { tags = [], types = [] } = device?.activeProgram || {};
+                if (!device || !routingKey || !messageContent) throw new Error("No routingKey or no device or no messageContent");
 
-                const deviceTags = (tags || []).map((tag) => {
+                if (typeof (messageContent.value) == "object") {
+
+                    await Promise.all(Object.keys(messageContent.value).map(async (valueKey) => {
+                        try {
+                            await publishValue(device.id, routingKey, messageContent?.value[valueKey], messageContent.timestamp, valueKey);
+                        } catch (e) {
+                            console.error("publish multi error", e, routingKey, messageContent);
+                        }
+                    }))
+
+                } else {
+                    try {
+                        let mainKey = routingKey?.split('/')?.[0]
+                        let subKey = routingKey?.split('/')?.[1]
+
+                        await publishValue(device.id, mainKey, messageContent?.value, messageContent.timestamp, subKey)
+                    } catch (e) {
+                        console.error("publish single error", e, routingKey, messageContent);
+                    }
+                }
+                if (!device || !routingKey || !messageContent) return;
+
+                try {
+                    const results = await redisCli.HGETALL(`device:${device.id}:values`);
+
+                    const values = Object.keys(results).map((r) => {
+                        return {
+                            deviceId: device.id,
+                            placeholder: r?.split(':')?.[0],
+                            key: r?.split(':')?.[1],
+                            value: results?.[r]
+                        }
+                    })
+
+                    const { tags = [], types = [] } = device?.activeProgram || {};
+
+                    const deviceTags = (tags || []).map((tag) => {
                         return {
                             ...tag,
                             type: tag.type ? formatTagType(tag.type) : null
                         }
-                })
+                    })
 
-                const deviceTypes = (types || []).map((type) => {
-                    return {
-                        ...type,
-                        fields: type.fields.map((field) => {
-                            return {
-                                ...field,
-                                type: formatTagType(field)
-                            }
-                        })
-                    }
-                })
+                    const deviceTypes = (types || []).map((type) => {
+                        return {
+                            ...type,
+                            fields: type.fields.map((field) => {
+                                return {
+                                    ...field,
+                                    type: formatTagType(field)
+                                }
+                            })
+                        }
+                    })
 
-                const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
+                    // const snapshot: any = formatSnapshot(deviceTags, deviceTypes, values)
 
-                const typedSnapshot = invertSnapshot(snapshot, deviceTags)
+                    // const typedSnapshot = invertSnapshot(snapshot, deviceTags)
 
-                const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
+                    // const alarmCenter = new AlarmCenter(new PrismaRegister(device.id, prisma));
 
-                const alarmPathways = (device?.activeProgram?.alarmPathways || [])?.filter((a) => a.scope?.toLowerCase() == "remote")?.map((pathway) => ({ ...pathway, script: pathway.script || '' }))
-                alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
+                    // const alarmPathways = (device?.activeProgram?.alarmPathways || [])?.filter((a) => a.scope?.toLowerCase() == "remote")?.map((pathway) => ({ ...pathway, script: pathway.script || '' }))
+                    // alarmCenter.hook(device?.activeProgram?.alarms || [], alarmPathways, snapshot, typedSnapshot)
 
+                } catch (err) {
+                    console.error("Error with alarmCenter.hook")
+                }
             } catch (err) {
-                console.error("Error with alarmCenter.hook")
+                console.error("Error with onMessage handler")
             }
         }
 
         const onStatus = async (id: string, status: "OFFLINE" | "ONLINE") => {
+            try{
+                console.log('onStatus: ', id, status);
 
-            console.log('onStatus: ', id, status);
+                const device = await prisma.device.findFirst({ where: { network_name: id } })
 
-            const device = await prisma.device.findFirst({ where: { network_name: id } })
+                if (!device) return;
 
-            if (!device) return;
-
-            await prisma.device.update({
-                where: {
-                    id: device.id
-                },
-                data: {
-                    online: status == "ONLINE",
-                    lastSeen: new Date()
-                }
-            })
+                await prisma.device.update({
+                    where: {
+                        id: device.id
+                    },
+                    data: {
+                        online: status == "ONLINE",
+                        lastSeen: new Date()
+                    }
+                })
+            }catch(err){
+                console.error("Error with onStatus");
+            }
         }
 
         const mqttHub = new MQTTHub({
