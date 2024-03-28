@@ -12,7 +12,7 @@ const canCompile = (tsCode: string) => {
     //         compilerOptions: {skipLibCheck: true}
     //     });
 
-    
+
     //     const id = nanoid();
     //     console.time(`Create source file ${id}`)
 
@@ -32,6 +32,7 @@ const canCompile = (tsCode: string) => {
     //     // const diagnostics = sourceFile.getPreEmitDiagnostics()
     //     console.timeEnd(`Get source file diags ${id}`)
 
+    
     //     // const diagnostics = proj.()
         
     //     return diagnostics?.length <= 0;
