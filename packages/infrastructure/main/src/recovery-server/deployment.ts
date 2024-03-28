@@ -63,6 +63,9 @@ export const Deployment = (provider: Provider, namespace: k8s.core.v1.Namespace,
                         //     }
                         // }
                     }],
+                    nodeSelector: {
+                        role: 'worker'
+                    }
                     // volumes: [{
                     //     name: `endpoints-config`,
                     //     configMap: {

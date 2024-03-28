@@ -63,7 +63,6 @@ const prisma = new PrismaClient();
 				actions: ['create', 'read', 'update', 'delete']
 			}
 		],
-	
 		contextFactory: contextFactory
 	})
 
