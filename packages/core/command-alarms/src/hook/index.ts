@@ -16,7 +16,7 @@ export class Hook {
         this.alarmPathways = alarmPathways;
     }
 
-    async run(values: any, typedValues: {[key: string]: {[key: string]: any}}){
+    async run(lastValues: any, values: any, typedValues: {[key: string]: {[key: string]: any}}){
 
         const compiledAlarms = this.alarms.map((x) => {
 
@@ -36,10 +36,9 @@ export class Hook {
             return hook;
         })
 
-        await Promise.all(compiledAlarms.map(async (alm) => {
-            await alm.handler?.(values, typedValues);
+        return await Promise.all(compiledAlarms.map(async (alm) => {
+            return await alm.handler?.(lastValues, values, typedValues);
         }));
-
     }
 
 

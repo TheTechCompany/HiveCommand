@@ -1,4 +1,5 @@
 import { transpile, ModuleKind, JsxEmit } from 'typescript'
+import { HookInstance } from './types';
 
 export enum ALARM_LEVEL {
     CRITICAL,
@@ -33,7 +34,7 @@ export const makeHook = (
     raiseAlarm: (message: string, level?: ALARM_LEVEL, sticky?: boolean) => Promise<boolean>,
     sendNotification: (message: string, pathway?: string) => void
 ) : {
-    handler?: (tags: any, typedTags: any) => void
+    handler?: HookInstance
 } => {
     const jsCode = transpile(`
 
@@ -60,7 +61,7 @@ export const makeHook = (
         jsCode);
 
 
-    const exports : {handler?: (tags: any, typedTags: any) => void} = {};
+    const exports : {handler?: HookInstance} = {};
     const module = {exports};
 
     func(module, exports, raiseAlarm, sendNotification) //, microRequire(`${parent ? parent : ''}${name}`))
