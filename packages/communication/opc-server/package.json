@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/opcua-server",
-  "version": "1.4.15-alpha.302",
+  "version": "1.4.15-alpha.303",
   "description": "> TODO: description",
   "author": "Ross Leitch <professional.balbatross@gmail.com>",
   "homepage": "https://github.com/TheTechCompany/sudbuster#readme",
@@ -30,7 +30,7 @@
     "node-opcua": "2.116.0"
   },
   "devDependencies": {
-    "@hive-command/opcua-client": "^1.4.15-alpha.302",
+    "@hive-command/opcua-client": "^1.4.15-alpha.303",
     "@types/jest": "^27.0.3",
     "jest": "^26.6.3",
     "ts-jest": "^26.5.6",
