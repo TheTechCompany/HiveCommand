@@ -201,7 +201,6 @@ export class ScadaCommand extends EventEmitter {
         }
     }
 
-
     setConfig(options: LocalOptions) {
         this.conf?.updateConf(options)
 
