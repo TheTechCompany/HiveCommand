@@ -4456,7 +4456,7 @@ __metadata:
     "@hive-command/interface-types": "workspace:^"
     jest: 27.x
     nanoid: 3.x
-    typescript: ^5.3.3
+    typescript: 4.9.5
   languageName: unknown
   linkType: soft
 
@@ -4655,7 +4655,7 @@ __metadata:
   resolution: "@hive-command/discovery-api-types@workspace:packages/types/discovery-api"
   dependencies:
     "@hive-command/interface-types": "workspace:^"
-    typescript: ^5.3.3
+    typescript: 4.9.5
   languageName: unknown
   linkType: soft
 
@@ -4972,7 +4972,7 @@ __metadata:
     mqtt: ^5.5.0
     nanoid: 3.x
     redis: ^4.6.13
-    typescript: ^5.4.3
+    typescript: 4.9.5
   languageName: unknown
   linkType: soft
 
@@ -5186,6 +5186,7 @@ __metadata:
   resolution: "@hive-command/schematic-export@workspace:packages/core/command-schematic-export"
   dependencies:
     "@hive-command/export-page": "workspace:^"
+    "@types/node": ^20.12.7
     express: ^4.18.2
     pdf-lib: ^1.17.1
     puppeteer-core: ^21.1.1
@@ -12549,6 +12550,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^20.12.7":
+  version: 20.12.7
+  resolution: "@types/node@npm:20.12.7"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 7cc979f7e2ca9a339ec71318c3901b9978555257929ef3666987f3e447123bc6dc92afcc89f6347e09e07d602fde7d51bcddea626c23aa2bb74aeaacfd1e1686
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.4
   resolution: "@types/normalize-package-data@npm:2.4.4"
@@ -16920,7 +16930,7 @@ __metadata:
     moment: ^2.30.1
     nanoid: 3.x
     ts-node: ^10.9.2
-    typescript: ^5.4.4
+    typescript: 4.9.5
     xlsx: ^0.18.5
   languageName: unknown
   linkType: soft
@@ -37607,23 +37617,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3 < 6, typescript@npm:^5.3.3, typescript@npm:^5.4.3":
+"typescript@npm:>=3 < 6":
   version: 5.4.3
   resolution: "typescript@npm:5.4.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: d74d731527e35e64d8d2dcf2f897cf8cfbc3428be0ad7c48434218ba4ae41239f53be7c90714089db1068c05cae22436af2ecba71fd36ecc5e7a9118af060198
-  languageName: node
-  linkType: hard
-
-"typescript@npm:^5.4.4":
-  version: 5.4.4
-  resolution: "typescript@npm:5.4.4"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: a7b54515d2adfc75c8d14188af0216b6b9ae3c192c9732797c24b1d14608eac1c83be7b1c65ce6f4ced0f2c40583f11b495fe1ba3d982afadbcc523517d183c8
   languageName: node
   linkType: hard
 

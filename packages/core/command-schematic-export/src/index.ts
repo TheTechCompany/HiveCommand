@@ -4,7 +4,7 @@ import express from 'express';
 import { PDFDocument } from 'pdf-lib';
 import { writeFileSync } from 'fs';
 
-const html_index = require.resolve('@hive-command/export-page');
+const html_index = path.join(__dirname, 'node_modules/@hive-command/export-page'); //require.resolve('@hive-command/export-page');
 
 export const export_schematic = async (schematic: {
     name: string, 
