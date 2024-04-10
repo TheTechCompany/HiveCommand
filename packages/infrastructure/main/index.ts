@@ -49,12 +49,12 @@ const main = (async () => {
     const internalURL = mqttRef.getOutput('internalURL');
     const externalURL = mqttRef.getOutput('externalURL');
 
-    const exportLambda = lambdaRef.getOutput('exportFunction');
+    // const exportLambda = lambdaRef.getOutput('exportFunction');
 
 
     const exportLambda = lambdaRef.getOutput('exportFunction');
 
-    // const reportBotBucket = lambdaRef.getOutput('reportBotBucket');
+    const reportBotBucket = lambdaRef.getOutput('reportBotBucket');
     // const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
     const provider = new Provider('eks', { 
@@ -73,7 +73,7 @@ const main = (async () => {
     const { deployment: recoveryServer } = await RecoveryServer(provider, namespace, dbUrl, dbPass, redisUrl, externalURL)
 
 
-    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn));
+    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn, reportBotBucket));
     const service = await Service(provider)
 
     return {
