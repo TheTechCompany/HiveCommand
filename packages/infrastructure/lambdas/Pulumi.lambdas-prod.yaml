@@ -1,2 +1,4 @@
 config:
   aws:region: ap-southeast-2
+  hivecommand-lambdas:org: ultraviolet
+  hivecommand-lambdas:suffix: prod 

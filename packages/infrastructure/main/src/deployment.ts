@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string, reportBucket: string) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string, reportBucket: Output<any>) => {
 
     const config = new Config();
 
