@@ -16,7 +16,7 @@
   },
   "devDependencies": {
     "jest": "27.x",
-    "typescript": "^5.3.3"
+    "typescript": "4.9.5"
   },
   "dependencies": {
     "@hive-command/interface-types": "workspace:^",
