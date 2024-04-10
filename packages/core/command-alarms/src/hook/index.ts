@@ -41,7 +41,11 @@ export class Hook {
         })
 
         return await Promise.all(compiledAlarms.map(async (alm) => {
-            return await alm?.handler?.(lastValues, values, typedValues);
+            try{
+                return await alm?.handler?.(lastValues, values, typedValues);
+            }catch(err){
+                console.error(`Error running hook: `, err)
+            }
         }));
     }
 
