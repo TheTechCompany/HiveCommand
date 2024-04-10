@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string, reportBucket: string) => {
 
     const config = new Config();
 
@@ -47,7 +47,7 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`) },
 
                             { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
-
+                            { name: 'REPORT_BUCKET', value: reportBucket }
                             // { name: 'UI_URL',  value: `https://${domainName}/dashboard` },
                             // { name: 'BASE_URL',  value: `https://${domainName}`},
                             // { name: "NEO4J_URI", value: process.env.NEO4J_URI /*neo4Url.apply((url) => `neo4j://${url}.default.svc.cluster.local`)*/ },
