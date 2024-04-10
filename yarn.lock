@@ -4714,7 +4714,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/editor-toolbar@workspace:packages/core-ui/editor-toolbar"
   dependencies:
-    "@mui/base": ^5.0.0-beta.18
+    "@mui/base": 5.0.0-beta.40
     typescript: 4.9.5
   peerDependencies:
     "@mui/material": "*"

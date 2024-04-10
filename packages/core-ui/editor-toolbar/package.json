@@ -13,6 +13,6 @@
     "@mui/material": "*"
   },
   "dependencies": {
-    "@mui/base": "^5.0.0-beta.18"
+    "@mui/base": "5.0.0-beta.40"
   }
 }
