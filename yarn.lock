@@ -4874,7 +4874,6 @@ __metadata:
     "@types/papaparse": ^5.3.7
     "@types/react": ^17.0.11
     "@types/react-dom": ^17.0.8
-    "@types/requirejs": ^2.1.34
     "@types/scriptjs": ^0.0.2
     "@types/systemjs": ^6.1.0
     "@types/testing-library__jest-dom": ^5.14.0
@@ -12728,13 +12727,6 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 58625586589a2cbcf19d7bff5a9b61e961b42e438e5a4f537633785efdcacfad15d3b32df3d27926696b36b43eb86eeb790fce9373fa357ab87720c64f86618b
-  languageName: node
-  linkType: hard
-
-"@types/requirejs@npm:^2.1.34":
-  version: 2.1.37
-  resolution: "@types/requirejs@npm:2.1.37"
-  checksum: f38459342eb3875dad124c90c0fb2ef9dd4aa303d5474c540d3989b3971f121a6a5f5889bcb1e6b24303759c941ce14a15aa736b5a6a6328336f5db1370e9bd8
   languageName: node
   linkType: hard
 
