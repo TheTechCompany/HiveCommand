@@ -64,6 +64,12 @@ export const DeviceControlContext = React.createContext<{
 		reportLength?: string,
 		recurring?: boolean,
 		createdAt?: Date,
+		instances?: {
+			done: boolean,
+			startDate: Date,
+			endDate: Date,
+			url: string
+		}[],
 		fields?: {
 			id: string,
 			device: any,

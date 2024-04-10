@@ -1,4 +1,4 @@
-import { Box, Button, CircularProgress, IconButton, List, ListItem, ListItemButton, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, IconButton, List, ListItem, ListItemButton, Tooltip, Typography } from "@mui/material";
 import React, { useContext, useMemo, useState } from "react";
 import { DeviceControlContext } from "../../context";
 import { useParams } from "react-router-dom";
@@ -27,7 +27,7 @@ export const ReportList = () => {
 
     const activeReport = reports?.find((a) => a.id == activePage);
 
-    const [ downloading, setDownloading ] = useState<string[]>([]);
+    const [ downloading, setDownloading ] = useState<number[]>([]);
 
     const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
         const byteCharacters = atob(b64Data);
@@ -50,62 +50,73 @@ export const ReportList = () => {
     }
 
   
-    const download = async (startDate: Date, endDate: Date) => {
+    const download = async (reportName: string, url: string) => {
         if(activePage)
-        return client?.downloadReport?.(activePage, startDate, endDate).then(async (data) => {
-            // const res = await fetch(`data:application/vnd.ms-excel;base64,${data.downloadDeviceReports?.xlsx}`)
-            // const blob = await res.blob()
-            saveAs(baseToBlob(data.data.downloadDeviceReports?.xlsx?.replace(/\r\n/g, '')), `${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.xlsx`)
-        });
+        return await fetch(url).then((r) => r.blob()).then((data) => {
+            saveAs(data, `${reportName}-${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.xlsx`)
+        })
+
+        // return client?.downloadReport?.(activePage, startDate, endDate).then(async (data) => {
+        //     // const res = await fetch(`data:application/vnd.ms-excel;base64,${data.downloadDeviceReports?.xlsx}`)
+        //     // const blob = await res.blob()
+        //     saveAs(baseToBlob(data.data.downloadDeviceReports?.xlsx?.replace(/\r\n/g, '')), `${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.xlsx`)
+        // });
     }
 
     const periods = useMemo(() => {
 
-        const recurring = activeReport?.recurring;
 
-        const startPeriod = moment(activeReport?.startDate);
-        const nextPeriod = activeReport?.endDate || moment.duration(...(activeReport?.reportLength?.split(' ') || []))
 
-        if(recurring){
 
-            console.log(moment(activeReport?.reportLength))
-            const duration = moment.duration(...(activeReport?.reportLength?.split(' ') || []))
+        return (activeReport?.instances || [])?.slice()?.sort((a, b) => new Date(a.startDate)?.getTime() - new Date(b.startDate)?.getTime());
 
-            const periods = Math.floor(
-                moment().diff(moment(startPeriod), 'seconds') / duration.as('seconds')
-            )
+
+
+        // const recurring = activeReport?.recurring;
+
+        // const startPeriod = moment(activeReport?.startDate);
+        // const nextPeriod = activeReport?.endDate || moment.duration(...(activeReport?.reportLength?.split(' ') || []))
+
+        // if(recurring){
+
+        //     console.log(moment(activeReport?.reportLength))
+        //     const duration = moment.duration(...(activeReport?.reportLength?.split(' ') || []))
+
+        //     const periods = Math.floor(
+        //         moment().diff(moment(startPeriod), 'seconds') / duration.as('seconds')
+        //     )
             
-            console.log({periods, duration});
+        //     console.log({periods, duration});
 
-             return Array.from(Array(periods)).map((p, ix) => {
-                 return {
-                    startDate: moment(startPeriod).add(ix * duration.as('seconds'), 'seconds'),
-                    endDate: moment(startPeriod).add((ix + 1) * duration.as('seconds'), 'seconds')
-                 }
-            })
-        }else{
-            return [{startDate: startPeriod, endDate: nextPeriod}]
-        }
+        //      return Array.from(Array(periods)).map((p, ix) => {
+        //          return {
+        //             startDate: moment(startPeriod).add(ix * duration.as('seconds'), 'seconds'),
+        //             endDate: moment(startPeriod).add((ix + 1) * duration.as('seconds'), 'seconds')
+        //          }
+        //     })
+        // }else{
+        //     return [{startDate: startPeriod, endDate: nextPeriod}]
+        // }
 
     }, [activeReport])
 
-    console.log({periods});
 
     return (
         <Box sx={{flex: 1, display: 'flex'}}>
-            <List sx={{flex: 1}}>
+            <List sx={{overflow: 'auto', flex: 1}}>
                 {periods.map((p, ix) => (
                     <ListItem secondaryAction={
-                        <IconButton onClick={() => {
+
+                        p.done ? <IconButton onClick={() => {
                             setDownloading([...downloading, ix])
-                            download(p.startDate, p.endDate).then(() => {
+                            download(activeReport?.name, p.url).then(() => {
                                 setDownloading(downloading.filter((a) => a != ix))
                             }).catch((err) => {
                                 setDownloading(downloading.filter((a) => a != ix))
                             })
                         }} size="small">
-                            {downloading.indexOf(ix) > -1  ? <CircularProgress size="small" /> : <Download fontSize="inherit"/>}
-                        </IconButton>
+                            {downloading.indexOf(ix) > -1  ? <CircularProgress sx={{width: '20px'}} size="small" /> : <Download fontSize="inherit"/>}
+                        </IconButton> : <Tooltip title="Processing report"><CircularProgress sx={{width: '20px'}} size="small" /></Tooltip>
                     }>
                         <ListItemButton>
                             {moment(p.startDate).format('DD/MM/YYYY')} - {moment(p.endDate).format('DD/MM/YYYY')}

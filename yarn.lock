@@ -1270,6 +1270,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@aws-sdk/s3-request-presigner@npm:^3.552.0":
+  version: 3.552.0
+  resolution: "@aws-sdk/s3-request-presigner@npm:3.552.0"
+  dependencies:
+    "@aws-sdk/signature-v4-multi-region": 3.552.0
+    "@aws-sdk/types": 3.535.0
+    "@aws-sdk/util-format-url": 3.535.0
+    "@smithy/middleware-endpoint": ^2.5.1
+    "@smithy/protocol-http": ^3.3.0
+    "@smithy/smithy-client": ^2.5.1
+    "@smithy/types": ^2.12.0
+    tslib: ^2.6.2
+  checksum: 4510860fda0bda0acf3525666edd3f34a5931a79f460d62dde899625f8a58081e9e22bc06b5a39cdc1eab9fb433eea5dc568896c5bc7e91c65ec10cda3de7e14
+  languageName: node
+  linkType: hard
+
 "@aws-sdk/signature-v4-multi-region@npm:3.535.0":
   version: 3.535.0
   resolution: "@aws-sdk/signature-v4-multi-region@npm:3.535.0"
@@ -4496,6 +4512,8 @@ __metadata:
   dependencies:
     "@allenbradley/l5x": ^1.0.0-beta.5
     "@aws-sdk/client-lambda": ^3.410.0
+    "@aws-sdk/client-s3": ^3.552.0
+    "@aws-sdk/s3-request-presigner": ^3.552.0
     "@casl/ability": ^6.5.0
     "@graphql-tools/merge": ^9.0.0
     "@hexhive/graphql-server": 1.0.2-beta.70

@@ -32,7 +32,7 @@ const prisma = new PrismaClient();
         GROUP BY "DeviceReport"."id") as totals
         WHERE totals.instances < totals.reports
     `
-    
+
     if(uncompiled_reports?.length <= 0){
         console.log("No reports found that need compiling exiting succesfully now!");
         console.timeEnd('Compiling Reports');
@@ -96,6 +96,9 @@ const prisma = new PrismaClient();
                         await client.send(command);
                     }catch(err){
                         console.error("Error making S3 request", err);
+
+                        // await prisma.deviceReportInstance.delete({where: {id}})
+                        // continue;
                     }
 
                     await prisma.deviceReportInstance.update({
@@ -104,6 +107,8 @@ const prisma = new PrismaClient();
                             done: true
                         }
                     })
+                }else{
+                    await prisma.deviceReportInstance.delete({where: {id}})
                 }
             }
            

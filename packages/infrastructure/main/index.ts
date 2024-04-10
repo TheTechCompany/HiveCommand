@@ -51,6 +51,10 @@ const main = (async () => {
 
     const exportLambda = lambdaRef.getOutput('exportFunction');
 
+
+    const exportLambda = lambdaRef.getOutput('exportFunction');
+
+    // const reportBotBucket = lambdaRef.getOutput('reportBotBucket');
     // const hexhiveZone = await aws.route53.getZone({name: "hexhive.io"})
 
     const provider = new Provider('eks', { 
