@@ -182,13 +182,15 @@ export class ScadaCommand extends EventEmitter {
 
         const snapshot = structureSnapshot(this.eventedValues.values)
         
-        this.alarmEngine.hook(
-            conf?.alarms || [], 
-            conf?.alarmPathways || [], 
-            this.lastState,
-            snapshot, 
-            invertSnapshot(snapshot, conf?.tags || [])
-        );
+        if(this.driverRegistry?.allReady){
+            this.alarmEngine.hook(
+                conf?.alarms || [], 
+                conf?.alarmPathways || [], 
+                this.lastState,
+                snapshot, 
+                invertSnapshot(snapshot, conf?.tags || [])
+            );
+        }
 
         this.lastState = snapshot;
     }
@@ -217,7 +219,7 @@ export class ScadaCommand extends EventEmitter {
             })
         )
 
-        
+
         Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
             const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
                 [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])

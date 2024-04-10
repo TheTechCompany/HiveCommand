@@ -73,6 +73,10 @@ export class DriverRegistry {
         }
     }
 
+    get allReady(){
+        return Object.keys(this.drivers).map((key) => this.drivers[key].ready() as any).indexOf(false) < 0
+    }
+
     get yarnManifest() : Manifest | null | undefined{
         return this.yarnWorkspace?.manifest;
     }

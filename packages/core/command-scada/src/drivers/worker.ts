@@ -5,6 +5,7 @@ let Driver: any;
 let instance: BaseCommandDriver;
 
 expose({
+    ready: () => instance.ready,
     start: async () => {
         await instance.start()
     },

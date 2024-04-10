@@ -11,6 +11,8 @@ export default class OPCUADriver extends BaseCommandDriver {
     private basePath: string;
     private namespace: string;
 
+    public ready: boolean = false;
+
     constructor(options: DriverOptions) {
         super(options);
         this.client = new OPCUAClient();
@@ -68,6 +70,8 @@ export default class OPCUADriver extends BaseCommandDriver {
                 }
 
                 bar1.stop();
+
+                this.ready = true;
 
                 //Subscribe
 
