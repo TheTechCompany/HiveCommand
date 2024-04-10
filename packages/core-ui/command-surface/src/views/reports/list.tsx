@@ -50,7 +50,7 @@ export const ReportList = () => {
     }
 
   
-    const download = async (reportName: string, url: string) => {
+    const download = async (url: string, reportName?: string, startDate?: Date, endDate?: Date) => {
         if(activePage)
         return await fetch(url).then((r) => r.blob()).then((data) => {
             saveAs(data, `${reportName}-${moment(startDate).format('DD/MM/YYYY')}-${moment(endDate).format('DD/MM/YYYY')}.xlsx`)
@@ -109,7 +109,7 @@ export const ReportList = () => {
 
                         p.done ? <IconButton onClick={() => {
                             setDownloading([...downloading, ix])
-                            download(activeReport?.name, p.url).then(() => {
+                            download(p.url, activeReport?.name, p.startDate, p.endDate).then(() => {
                                 setDownloading(downloading.filter((a) => a != ix))
                             }).catch((err) => {
                                 setDownloading(downloading.filter((a) => a != ix))
