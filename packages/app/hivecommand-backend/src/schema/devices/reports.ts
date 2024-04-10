@@ -101,8 +101,6 @@ export default (prisma: PrismaClient) => {
 				try{
 					const getCommand = new GetObjectCommand({Bucket: process.env.REPORT_BUCKET || 'test-bucket', Key: `${root.id}.xlsx`});
 
-					console.log("Presigned Schematic!")
-				
 					return getSignedUrl(client, getCommand, {expiresIn: 3600});
 				}catch(err){
 

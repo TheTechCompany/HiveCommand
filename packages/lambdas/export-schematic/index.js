@@ -26,7 +26,6 @@ exports.handler = async function (event, context) {
         executablePath: await chromium.executablePath
     })
 
-
     console.log("Exported Schematic!")
 
     const id = nanoid();
