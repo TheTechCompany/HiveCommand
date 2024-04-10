@@ -27,6 +27,8 @@ export abstract class BaseCommandDriver {
     
     options : DriverOptions;
 
+    ready: boolean = true;
+
     constructor(options: DriverOptions){
 
         this.options = options;

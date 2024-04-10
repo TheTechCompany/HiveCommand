@@ -22,22 +22,30 @@ export class Hook {
 
             const runtimeId = nanoid();
 
-            const hook = makeHook(
-                x.script || '', 
-                this.alarmPathways, 
-                async (message: string, level?: ALARM_LEVEL, sticky?: boolean) => {
-                    return  await this.raiseAlarm(x.id, message, level, sticky);
-                }, 
-                async (message: string, pathway?: string) => {
-                    return await this.sendNotification(message, pathway);
-                })
+            try{
+                const hook = makeHook(
+                    x.script || '', 
+                    this.alarmPathways, 
+                    async (message: string, level?: ALARM_LEVEL, sticky?: boolean) => {
+                        return  await this.raiseAlarm(x.id, message, level, sticky);
+                    }, 
+                    async (message: string, pathway?: string) => {
+                        return await this.sendNotification(message, pathway);
+                    })
+                return hook;
+                
+            }catch(err){
+                console.error(`Error making hook: `, err)
+            }
 
-
-            return hook;
         })
 
         return await Promise.all(compiledAlarms.map(async (alm) => {
-            return await alm.handler?.(lastValues, values, typedValues);
+            try{
+                return await alm?.handler?.(lastValues, values, typedValues);
+            }catch(err){
+                console.error(`Error running hook: `, err)
+            }
         }));
     }
 
