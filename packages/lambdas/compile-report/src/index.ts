@@ -88,7 +88,7 @@ const prisma = new PrismaClient();
                     const command = new PutObjectCommand({
                         Bucket: process.env.BUCKET || "test-bucket",
                         Key: `${id}.xlsx`,
-                        Body: readFileSync(path, 'binary'),
+                        Body: readFileSync(path),
                     });
 
                     try{
