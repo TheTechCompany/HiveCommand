@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/scada",
-  "version": "1.4.15-alpha.300",
+  "version": "1.4.15-alpha.301",
   "publishConfig": {
     "access": "public"
   },
