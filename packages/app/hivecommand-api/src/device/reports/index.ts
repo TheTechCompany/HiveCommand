@@ -95,7 +95,6 @@ export const useUpdateReport = (deviceId: string) => {
 		endDate?: Date, 
 		reportLength?: string
 	}) => {
-		console.log({report})
 		return updateReport({
 			args: {
 				id: id,

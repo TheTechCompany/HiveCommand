@@ -22,8 +22,6 @@ export const structureSnapshot = (valueStore: any) => {
 
 export const invertSnapshot = (snapshot: any, tags: HMITag[]) => {
 
-    console.log(snapshot, tags);
-
     const typedSnapshot = tags?.reduce((prev, tag) => {
 
         let typeName = tag.type //types?.find((a) => a.id == tag.type?.typeId)?.name;

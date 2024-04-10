@@ -73,8 +73,12 @@ export class DriverRegistry {
         }
     }
 
-    get allReady(){
-        return Object.keys(this.drivers).map((key) => this.drivers[key].ready() as any).indexOf(false) < 0
+    async allReady(){
+        const ready_arr = await Promise.all(
+            Object.keys(this.drivers).map(async (key) => await this.drivers[key].ready())
+        )
+        
+        return ready_arr.indexOf(false) < 0
     }
 
     get yarnManifest() : Manifest | null | undefined{
@@ -295,6 +299,7 @@ export const Driver = async (options: {driver: string, configuration: any}) => {
     const worker : Worker = new Worker('./worker');
 
     const driver = await spawn<{
+        ready: () => boolean,
         start: () => void,
         stop: () => void,
         read: (tag: {name: string, alias: string}) => any,

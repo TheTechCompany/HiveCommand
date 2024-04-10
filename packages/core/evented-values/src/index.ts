@@ -52,8 +52,6 @@ export class EventedValueStore extends (EventEmitter as new () => TypedEmitter<V
         setTimeout(async () => {
             this.internalValues[key] = this.cleanValue(value);
 
-            console.log("updateValue", {key, value: this.internalValues[key], type: typeof(value)})
-            
             this.slowNormaliser();
         })
     }

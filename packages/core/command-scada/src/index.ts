@@ -182,7 +182,8 @@ export class ScadaCommand extends EventEmitter {
 
         const snapshot = structureSnapshot(this.eventedValues.values)
         
-        if(this.driverRegistry?.allReady){
+        const allReady = await this.driverRegistry?.allReady();
+        if(allReady){
             this.alarmEngine.hook(
                 conf?.alarms || [], 
                 conf?.alarmPathways || [], 
