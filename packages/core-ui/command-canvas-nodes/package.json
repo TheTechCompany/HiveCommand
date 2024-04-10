@@ -30,7 +30,7 @@
 		"@emotion/react": "^11.11.1",
 		"@hexhive/styles": "^1.0.1-alpha.65",
 		"@hexhive/ui": "1.0.1-alpha.119",
-		"@mui/material": "^5.13.5",
+		"@mui/material": "*",
 		"react": "17.x",
 		"react-dom": "*"
 	},
