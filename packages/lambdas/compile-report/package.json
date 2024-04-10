@@ -1,6 +1,6 @@
 {
   "name": "compile-report",
-  "version": "1.4.15-alpha.301",
+  "version": "1.4.15-alpha.302",
   "description": "",
   "main": "dist/index.js",
   "private": true,
