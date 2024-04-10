@@ -1,8 +1,6 @@
 {
   "name": "@hive-command/grs",
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "scripts": {
     "build": "tsc -b",
     "start:prod": "node index.js"
