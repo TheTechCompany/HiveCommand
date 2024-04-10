@@ -217,6 +217,7 @@ export class ScadaCommand extends EventEmitter {
             })
         )
 
+        
         Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
             const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
                 [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
