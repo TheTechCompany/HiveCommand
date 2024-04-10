@@ -171,7 +171,6 @@ export default (prisma: PrismaClient) => {
 			},
 			updateCommandDeviceReport: async (root: any, args: any, context: any) => {
 
-				console.log({args})
 				const device = await prisma.device.update({
 					where: {
 						id: args.device
@@ -181,6 +180,7 @@ export default (prisma: PrismaClient) => {
 							update: {
 								where: {id: args.id},
 								data: {
+									version: nanoid(),
 									name: args.input.name,
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
@@ -223,7 +223,8 @@ export default (prisma: PrismaClient) => {
 					device = {device: {connect: {id: args.input.device}}}
 				}
 
-				return await prisma.deviceReportField.create({
+				const [ field, report ] = await Promise.all([
+					prisma.deviceReportField.create({
 					data: {
 						id: nanoid(),
 
@@ -235,7 +236,16 @@ export default (prisma: PrismaClient) => {
 							connect: {id: args.report}
 						}
 					}
-				})
+				}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})]);
+				return field;
 			},
 			updateCommandDeviceReportField: async (root: any, args: any) => {
 
@@ -253,17 +263,37 @@ export default (prisma: PrismaClient) => {
 					device = {device: {disconnect: true}}
 				}
 
-				return await prisma.deviceReportField.update({
+				const [field, report] = await Promise.all([
+				prisma.deviceReportField.update({
 					where: {id: args.id},
 					data: {
 						bucket: args.input.bucket,
 						...device,						
 						...key
 					}
-				})
+				}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})])
+				return field;
 			},
 			deleteCommandDeviceReportField: async (root: any, args: any) => {
-				return await prisma.deviceReportField.delete({where: {id: args.id}})
+				const [ field, report ] = await Promise.all([
+				 prisma.deviceReportField.delete({where: {id: args.id}}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})])
+				return field;
 			}
 		}
     }

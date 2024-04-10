@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "DeviceReportInstance" ADD COLUMN     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "done" BOOLEAN NOT NULL DEFAULT false;
