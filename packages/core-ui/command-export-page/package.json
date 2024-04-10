@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/export-page",
-  "version": "1.4.15-alpha.303",
+  "version": "1.4.15-alpha.304",
   "private": true,
   "main": "build/index.html",
   "files": [
