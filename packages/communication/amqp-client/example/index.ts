@@ -14,8 +14,6 @@ import { MQTTPublisher } from "../src";
     
     await publisher.connect()
 
-    console.log("Connected")
-
     await publisher.subscribe(async (message) => {
         console.log("STUFF", message)
     })
