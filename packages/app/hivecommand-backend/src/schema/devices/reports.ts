@@ -8,7 +8,7 @@ import xlsx from 'xlsx'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
 const {getSignedUrl} = require("@aws-sdk/s3-request-presigner");
 
-const client = new S3Client({});
+const client = new S3Client({region: 'ap-southeast-2'});
 
 export default (prisma: PrismaClient) => {
 

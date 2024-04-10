@@ -153,9 +153,7 @@ export default (prisma: PrismaClient) => {
 					!context.jwt.acl.can('control', 'CommandDevice')
 				) throw new Error("Not allowed to access device list");
 
-				//  .indexOf('APPLICATION')
-				// context.jwt.permissions.indexOf('GET_DEVICES' || 'CONTROL_DEVICE', ) 
-
+		
 				let whereArg : any = {};
 				if(args.where){
 					if(args.where.id) whereArg['id'] = args.where.id;
