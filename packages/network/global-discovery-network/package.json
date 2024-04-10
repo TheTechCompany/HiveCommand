@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.4.15-alpha.304",
+  "version": "1.4.15-alpha.305",
   "description": "",
   "main": "index.js",
   "private": true,
