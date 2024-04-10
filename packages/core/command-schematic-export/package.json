@@ -1,11 +1,11 @@
 {
   "name": "@hive-command/schematic-export",
-  "version": "1.4.15-alpha.305",
+  "version": "1.4.15-alpha.306",
   "description": "",
   "main": "dist/index.js",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "ts-node src/test.ts",
     "build": "tsc -b"
   },
   "installConfig": {
@@ -15,12 +15,13 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.12.7",
+    "ts-node": "^10.9.2",
     "typescript": "4.9.5"
   },
   "dependencies": {
     "@hive-command/export-page": "workspace:^",
     "express": "^4.18.2",
     "pdf-lib": "^1.17.1",
-    "puppeteer-core": "^21.1.1"
+    "puppeteer-core": "19.4.0"
   }
 }
