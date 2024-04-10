@@ -118,5 +118,4 @@ const prisma = new PrismaClient();
    
     console.timeEnd('Compiling Reports');
 
-
 })();
