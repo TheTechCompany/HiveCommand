@@ -94,6 +94,8 @@ model MaintenanceWindow {
 model DeviceReport {
   id String @id
 
+  version String?
+
   name String
 
   fields DeviceReportField[] @relation(name: "hasReportFields")
@@ -110,6 +112,26 @@ model DeviceReport {
 
   device Device? @relation(name: "hasDeviceReport", fields: [deviceId], references: [id], onDelete: Cascade)
   deviceId String?
+
+  instances DeviceReportInstance[] @relation(name: "hasReportInstance")
+
+  createdAt DateTime @default(now())
+}
+
+model DeviceReportInstance {
+  id String @id
+
+  fileId String
+
+  done Boolean @default(false)
+
+  startDate DateTime
+  endDate DateTime
+
+  version String?
+
+  report DeviceReport @relation(name: "hasReportInstance", fields: [reportId], references: [id])
+  reportId String
 
   createdAt DateTime @default(now())
 }

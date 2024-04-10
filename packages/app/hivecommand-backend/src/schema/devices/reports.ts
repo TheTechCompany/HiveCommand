@@ -5,14 +5,16 @@ import {unit as mathUnit} from 'mathjs';
 import { nanoid } from "nanoid";
 import { stringify as csvStringify } from 'csv';
 import xlsx from 'xlsx'
+import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+const {getSignedUrl} = require("@aws-sdk/s3-request-presigner");
+
+const client = new S3Client({});
 
 export default (prisma: PrismaClient) => {
 
     const typeDefs = `
 
 		type Mutation {
-			downloadDeviceReports(device: ID, report: ID, startDate: DateTime, endDate: DateTime): CommandDeviceReportInstance
-
 			createCommandDeviceReport(device: ID, input: CommandDeviceReportInput): CommandDeviceReport
 			updateCommandDeviceReport(device: ID, id: ID, input: CommandDeviceReportInput): CommandDeviceReport
 			deleteCommandDeviceReport(device: ID, id: ID): CommandDeviceReport
@@ -40,12 +42,22 @@ export default (prisma: PrismaClient) => {
 		}
 
 		type CommandDeviceReportInstance {
-			xlsx: String
+			id: ID
 
+			fileId: String
+
+			done: Boolean
+		  
 			startDate: DateTime
 			endDate: DateTime
-
+		  
+			version: String
+		  
 			report: CommandDeviceReport
+		  
+			url: String
+
+			createdAt: DateTime
 		}
 
 		type CommandDeviceReport {
@@ -61,6 +73,8 @@ export default (prisma: PrismaClient) => {
 			reportLength: String
 			
 			device: CommandDevice 
+
+			instances: [CommandDeviceReportInstance]
 
 			createdAt: DateTime
 		}
@@ -80,70 +94,81 @@ export default (prisma: PrismaClient) => {
     `
 
     const resolvers = {
-		CommandDeviceReport: {
+		CommandDeviceReportInstance: {
 			// endDate: (root: any) => {
 			// }
+			url: async (root: any) => {
+				try{
+					const getCommand = new GetObjectCommand({Bucket: process.env.REPORT_BUCKET || 'test-bucket', Key: `${root.id}.xlsx`});
+
+					console.log("Presigned Schematic!")
+				
+					return getSignedUrl(client, getCommand, {expiresIn: 3600});
+				}catch(err){
+
+				}
+			}
 		},
 		Mutation: {
-			downloadDeviceReports: async (root: any, args: any, context: any) => {
+			// downloadDeviceReports: async (root: any, args: any, context: any) => {
 
-				const report = await prisma.deviceReport.findFirst({
-					where: {
-						device: {
-							id: args.device
-						},
-						id: args.report
-					},
-					include: {
-						fields: {
-							include: {
-								device: true,
-								key: true
-							}
-						}
-					}
-				})
-
-
-				const id = nanoid();
-
-				console.time(`Creating workbook ${id}`)
-
-				const workbook = xlsx.utils.book_new();
-
-				const fields = (report?.fields || []).filter((a) => a.bucket && a.device);
-
-				for(var i = 0; i < (fields || []).length; i++){
-					const field = fields[i];
-
-					console.time(`Creating worksheet ${i}-${id}`)
-
-					const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
-
-					const result : any[] = await prisma.$queryRaw`
-						SELECT placeholder, key, avg(value::float) as value, time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated") as time 
-						FROM "DeviceValue"
-						WHERE "deviceId" = ${args.device} 
-						AND placeholder=${field.device?.name}
-						${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-						AND "lastUpdated" > ${args?.startDate} 
-						AND "lastUpdated" < ${args.endDate}
-						GROUP BY placeholder, key, time ORDER BY time ASC
-					`
-
-					const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({...x, time: new Date(x).getTime() })));
-					xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
-
-					console.timeEnd(`Creating worksheet ${i}-${id}`)
-				}
-
-				console.timeEnd(`Creating workbook ${id}`)
+			// 	const report = await prisma.deviceReport.findFirst({
+			// 		where: {
+			// 			device: {
+			// 				id: args.device
+			// 			},
+			// 			id: args.report
+			// 		},
+			// 		include: {
+			// 			fields: {
+			// 				include: {
+			// 					device: true,
+			// 					key: true
+			// 				}
+			// 			}
+			// 		}
+			// 	})
 
 
-				return {
-					xlsx: Buffer.from(xlsx.write(workbook, {type: 'buffer', bookType: 'xlsx'})).toString('base64')
-				}
-			},
+			// 	const id = nanoid();
+
+			// 	console.time(`Creating workbook ${id}`)
+
+			// 	const workbook = xlsx.utils.book_new();
+
+			// 	const fields = (report?.fields || []).filter((a) => a.bucket && a.device);
+
+			// 	for(var i = 0; i < (fields || []).length; i++){
+			// 		const field = fields[i];
+
+			// 		console.time(`Creating worksheet ${i}-${id}`)
+
+			// 		const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
+
+			// 		const result : any[] = await prisma.$queryRaw`
+			// 			SELECT placeholder, key, avg(value::float) as value, time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated") as time 
+			// 			FROM "DeviceValue"
+			// 			WHERE "deviceId" = ${args.device} 
+			// 			AND placeholder=${field.device?.name}
+			// 			${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
+			// 			AND "lastUpdated" > ${args?.startDate} 
+			// 			AND "lastUpdated" < ${args.endDate}
+			// 			GROUP BY placeholder, key, time ORDER BY time ASC
+			// 		`
+
+			// 		const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({...x, time: new Date(x).getTime() })));
+			// 		xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
+
+			// 		console.timeEnd(`Creating worksheet ${i}-${id}`)
+			// 	}
+
+			// 	console.timeEnd(`Creating workbook ${id}`)
+
+
+			// 	return {
+			// 		xlsx: Buffer.from(xlsx.write(workbook, {type: 'buffer', bookType: 'xlsx'})).toString('base64')
+			// 	}
+			// },
 			createCommandDeviceReport: async (root: any, args: any, context: any) => {
 				const id = nanoid();
 
@@ -171,7 +196,6 @@ export default (prisma: PrismaClient) => {
 			},
 			updateCommandDeviceReport: async (root: any, args: any, context: any) => {
 
-				console.log({args})
 				const device = await prisma.device.update({
 					where: {
 						id: args.device
@@ -181,6 +205,7 @@ export default (prisma: PrismaClient) => {
 							update: {
 								where: {id: args.id},
 								data: {
+									version: nanoid(),
 									name: args.input.name,
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
@@ -223,7 +248,8 @@ export default (prisma: PrismaClient) => {
 					device = {device: {connect: {id: args.input.device}}}
 				}
 
-				return await prisma.deviceReportField.create({
+				const [ field, report ] = await Promise.all([
+					prisma.deviceReportField.create({
 					data: {
 						id: nanoid(),
 
@@ -235,7 +261,16 @@ export default (prisma: PrismaClient) => {
 							connect: {id: args.report}
 						}
 					}
-				})
+				}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})]);
+				return field;
 			},
 			updateCommandDeviceReportField: async (root: any, args: any) => {
 
@@ -253,17 +288,37 @@ export default (prisma: PrismaClient) => {
 					device = {device: {disconnect: true}}
 				}
 
-				return await prisma.deviceReportField.update({
+				const [field, report] = await Promise.all([
+				prisma.deviceReportField.update({
 					where: {id: args.id},
 					data: {
 						bucket: args.input.bucket,
 						...device,						
 						...key
 					}
-				})
+				}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})])
+				return field;
 			},
 			deleteCommandDeviceReportField: async (root: any, args: any) => {
-				return await prisma.deviceReportField.delete({where: {id: args.id}})
+				const [ field, report ] = await Promise.all([
+				 prisma.deviceReportField.delete({where: {id: args.id}}),
+				prisma.deviceReport.update({
+					where: {
+						id: args.report
+					},
+					data: {
+						version: nanoid()
+					}
+				})])
+				return field;
 			}
 		}
     }

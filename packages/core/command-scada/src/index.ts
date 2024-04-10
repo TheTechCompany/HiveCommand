@@ -24,6 +24,8 @@ export class ScadaCommand extends EventEmitter {
     private alarmEngine : AlarmCenter;
     private alarmRegister : AlarmRegister;
 
+    private lastState: any;
+
     constructor(config?: LocalOptions) {
         super();
 
@@ -183,11 +185,13 @@ export class ScadaCommand extends EventEmitter {
         this.alarmEngine.hook(
             conf?.alarms || [], 
             conf?.alarmPathways || [], 
+            this.lastState,
             snapshot, 
             invertSnapshot(snapshot, conf?.tags || [])
         );
-    }
 
+        this.lastState = snapshot;
+    }
 
     getTagPaths(object: any, parent?: string): any {
         if (typeof (object) == 'object' && !Array.isArray(object)) {
@@ -196,7 +200,6 @@ export class ScadaCommand extends EventEmitter {
             return { parent, tag: object };
         }
     }
-
 
     setConfig(options: LocalOptions) {
         this.conf?.updateConf(options)

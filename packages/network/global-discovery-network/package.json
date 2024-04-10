@@ -1,11 +1,9 @@
 {
   "name": "@hive-command/gds",
-  "version": "1.4.15-alpha.299",
+  "version": "1.4.15-alpha.300",
   "description": "",
   "main": "index.js",
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
     "start:prod": "node index.js",

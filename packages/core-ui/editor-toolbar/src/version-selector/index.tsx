@@ -10,7 +10,7 @@ export const VersionSelector = React.forwardRef(function CustomSelect<
     const slots: SelectProps<TValue, Multiple>['slots'] = {
         root: StyledButton,
         listbox: StyledListbox,
-        popper: StyledPopper,
+        popup: StyledPopper,
         ...props.slots,
       };
       

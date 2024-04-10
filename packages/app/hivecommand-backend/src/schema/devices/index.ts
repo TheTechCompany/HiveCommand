@@ -174,6 +174,7 @@ export default (prisma: PrismaClient) => {
 						screens: true,
 						reports: {
 							include: {
+								instances: true,
 								fields: {
 									include: {
 										device: {

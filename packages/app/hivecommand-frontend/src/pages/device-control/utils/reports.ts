@@ -21,6 +21,15 @@ export const useDeviceReports = (id: string) => {
 
           createdAt 
 
+          instances {
+            version
+            startDate
+            endDate
+            done
+
+            url
+          }
+
           fields {
             id
 

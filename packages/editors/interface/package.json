@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/interface-editor",
-  "version": "1.4.15-alpha.299",
+  "version": "1.4.15-alpha.300",
   "packageManager": "yarn@3.6.4",
   "private": true,
   "files": [

@@ -1,7 +1,7 @@
 {
   "name": "@hive-command/alarm-engine",
   "main": "dist/index.js",
-  "version": "1.4.15-alpha.299",
+  "version": "1.4.15-alpha.300",
   "packageManager": "yarn@3.6.0",
   "publishConfig": {
     "access": "public"
