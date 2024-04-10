@@ -10,7 +10,6 @@ const client = new S3Client({});
 const prisma = new PrismaClient();
 
 (async () => {
-
     //Get all reports that need compiling
     console.time('Compiling Reports');
 
