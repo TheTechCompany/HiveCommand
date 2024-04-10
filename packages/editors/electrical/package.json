@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/electrical-editor-v2",
-  "version": "1.4.15-alpha.304",
+  "version": "1.4.15-alpha.305",
   "private": true,
   "packageManager": "yarn@3.6.0",
   "main": "dist/index.js",
