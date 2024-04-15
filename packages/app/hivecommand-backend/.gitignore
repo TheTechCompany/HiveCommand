@@ -3,3 +3,5 @@ node_modules
 .env
 example/write-report.ts
 example/s3-get.ts
+example/get-schematic.ts
+example/express.ts
