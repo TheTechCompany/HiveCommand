@@ -23,20 +23,20 @@ export default (prisma: PrismaClient) => {
 		{
 			CommandSchematicVersion: {
 				createdBy: (root: any) => {
-					return {id: root.createdBy}
+					return { id: root.createdBy }
 				},
 				compiled: async (root: any) => {
-					if(root.compiled){
+					if (root.compiled) {
 						return true;
-					}else{
+					} else {
 						const headCmd = new HeadObjectCommand({
 							Bucket: process.env.SCHEMATIC_BUCKET || '',
 							Key: root?.id,
 						})
-						
-						try{
+
+						try {
 							const res = await s3Client.send(headCmd);
-							
+
 							await prisma.electricalSchematicVersion.update({
 								where: {
 									id: root.id
@@ -46,8 +46,8 @@ export default (prisma: PrismaClient) => {
 								}
 							})
 							return true;
-						}catch(e){
-							if(e instanceof NotFound){
+						} catch (e) {
+							if (e instanceof NotFound) {
 								return false;
 							}
 						}
@@ -125,7 +125,7 @@ export default (prisma: PrismaClient) => {
 
 					const schematic = await prisma.electricalSchematic.findFirst({
 						where: {
-							id: args.id, 
+							id: args.id,
 							organisation: context?.jwt?.organisation
 						},
 						include: {
@@ -134,7 +134,7 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
-					const {versions} = schematic || {};
+					const { versions } = schematic || {};
 
 					const nextVersion = (versions?.sort((a, b) => b.rank - a.rank)?.[0]?.rank || 0) + 1;
 
@@ -145,7 +145,7 @@ export default (prisma: PrismaClient) => {
 							rank: nextVersion,
 							commit: args.input.commit,
 							createdBy: context?.jwt?.id,
-							schematic: {connect: {id: args.id}}
+							schematic: { connect: { id: args.id } }
 						}
 					})
 
@@ -159,13 +159,13 @@ export default (prisma: PrismaClient) => {
 					const url = await getSignedUrl(s3Client, putCmd)
 
 					await fetch(
-						url, 
+						url,
 						{
-							method: 'PUT', 
+							method: 'PUT',
 							body: JSON.stringify({
 								...schematic,
 								version: (version?.rank || 1),
-								versionDate: moment(version?.createdAt).format('DD/MM/YY') 
+								versionDate: moment(version?.createdAt).format('DD/MM/YY')
 							})
 						})
 
@@ -174,14 +174,12 @@ export default (prisma: PrismaClient) => {
 					const invokeCommand = new InvokeCommand({
 						FunctionName: process.env.EXPORT_LAMBDA || '',
 						Payload: JSON.stringify({
-							program: { 
-								sourceKey,
-								targetKey: version.id
-								// ...currentProgram, 
-								// // version: (version?.rank || 0) + 1,
-								// version: (version?.rank || 1), 
-								// versionDate: moment(version?.createdAt).format('DD/MM/YY') 
-							}
+							sourceKey,
+							targetKey: version.id
+							// ...currentProgram, 
+							// // version: (version?.rank || 0) + 1,
+							// version: (version?.rank || 1), 
+							// versionDate: moment(version?.createdAt).format('DD/MM/YY') 
 						})
 					})
 
@@ -204,21 +202,21 @@ export default (prisma: PrismaClient) => {
 
 					const version = currentProgram?.versions?.sort((a, b) => b.rank - a.rank)?.[0];
 
-					if(!version?.compiled) throw new Error("Version not compiled yet");
+					if (!version?.compiled) throw new Error("Version not compiled yet");
 					// if(version?.compiled){
-						
+
 					const getCmd = new GetObjectCommand({
 						Bucket: process.env.SCHEMATIC_BUCKET,
 						Key: version.id
 					})
 
-					const url = await getSignedUrl(s3Client, getCmd, {expiresIn: 3600});
+					const url = await getSignedUrl(s3Client, getCmd, { expiresIn: 3600 });
 					// }else{
 					// 	const headCmd = new HeadObjectCommand({
 					// 		Bucket: process.env.SCHEMATIC_BUCKET || '',
 					// 		Key: version?.id,
 					// 	})
-						
+
 					// 	try{
 					// 		const res = await s3Client.send(headCmd);
 
@@ -272,7 +270,7 @@ export default (prisma: PrismaClient) => {
 
 					let newRank = aboveRank.between(belowRank).toString()
 
-					console.log({rank, aboveRank, belowRank, newRank})
+					console.log({ rank, aboveRank, belowRank, newRank })
 
 					return await prisma.electricalSchematicPage.create({
 
@@ -373,7 +371,7 @@ export default (prisma: PrismaClient) => {
 							}
 						}
 					});
-				},	
+				},
 				updateCommandSchematicPageTemplate: async (root: any, args: { schematic: string, id: string, input: any }, context: any) => {
 					return await prisma.electricalSchematicPageTemplate.update({
 						where: {
