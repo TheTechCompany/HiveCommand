@@ -12,6 +12,8 @@ exports.handler = async function (event, context) {
 
     const { sourceKey, targetKey } = event;
 
+    console.log({event})
+
     if(!sourceKey || !targetKey) throw new Error("No sourceKey or no targetKey");
 
     const getCmd = new GetObjectCommand({
@@ -21,7 +23,9 @@ exports.handler = async function (event, context) {
 
     const sourceSchematic = await client.send(getCmd)
 
-    const sourceProgram = JSON.parse(sourceSchematic.Body);
+    const schematicString = sourceSchematic.Body?.transformToString('utf-8');
+
+    const sourceProgram = JSON.parse(schematicString);
 
     const pdfPath = path.join(__dirname, 'output.pdf');
     console.log("Exporting Schematic...")

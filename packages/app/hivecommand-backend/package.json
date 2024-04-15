@@ -11,7 +11,7 @@
     "db:update": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
     "db:seed": "prisma db seed",
-    "test": "ts-node example/s3-test.ts"
+    "test": "ts-node example/s3-get.ts"
   },
   "installConfig": {
     "hoistingLimits": "dependencies"
