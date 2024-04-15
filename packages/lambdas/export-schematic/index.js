@@ -23,7 +23,7 @@ exports.handler = async function (event, context) {
 
     const sourceSchematic = await client.send(getCmd)
 
-    const schematicString = sourceSchematic.Body?.transformToString('utf-8');
+    const schematicString = await sourceSchematic.Body?.transformToString('utf-8');
 
     const sourceProgram = JSON.parse(schematicString);
 
