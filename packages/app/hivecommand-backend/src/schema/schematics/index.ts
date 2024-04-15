@@ -54,6 +54,17 @@ export default (prisma: PrismaClient) => {
 					}
 				}
 			},
+			CommandSchematic: {
+				versions: async (root: any, args: any, context: any) => {
+					let where = args.where || {};
+					return await prisma.electricalSchematicVersion.findMany({
+						where: {
+							...where,
+							schematicId: root.id
+						}
+					})
+				}
+			},	
 			Query: {
 				commandSchematics: async (root: any, args: any, context: any) => {
 
@@ -64,8 +75,7 @@ export default (prisma: PrismaClient) => {
 						where: { ...filter, organisation: context.jwt.organisation },
 						include: {
 							pages: true,
-							templates: true,
-							versions: true
+							templates: true
 						}
 					});
 
@@ -481,7 +491,7 @@ export default (prisma: PrismaClient) => {
 	type CommandSchematic {
 		id: ID! 
 		name: String
-		versions: [CommandSchematicVersion]
+		versions(where: CommandSchematicWhere): [CommandSchematicVersion]
 
         pages: [CommandSchematicPage]
 		templates: [CommandSchematicPageTemplate]
