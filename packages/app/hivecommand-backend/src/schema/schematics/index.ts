@@ -149,6 +149,8 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
+					console.log("New version created, pushing sourceFiles");
+
 					const sourceKey = `sources/${version.id}`;
 
 					const putCmd = new PutObjectCommand({
@@ -158,17 +160,24 @@ export default (prisma: PrismaClient) => {
 
 					const url = await getSignedUrl(s3Client, putCmd)
 
+					console.log("Created pesigned post")
+
+					const sourceFile = JSON.stringify({
+						...schematic,
+						version: (version?.rank || 1),
+						versionDate: moment(version?.createdAt).format('DD/MM/YY')
+					});
+
+					console.log("Posting ", sourceFile.length / 1024 / 1024, "MB")
+
 					await fetch(
 						url,
 						{
 							method: 'PUT',
-							body: JSON.stringify({
-								...schematic,
-								version: (version?.rank || 1),
-								versionDate: moment(version?.createdAt).format('DD/MM/YY')
-							})
+							body: sourceFile
 						})
 
+					console.log("Sent!")
 					// await s3Client.send(putCmd);
 
 					const invokeCommand = new InvokeCommand({
@@ -184,6 +193,8 @@ export default (prisma: PrismaClient) => {
 					})
 
 					lambda.send(invokeCommand)
+
+					console.log("Lambda triggered")
 
 					return nextVersion + 1;
 				},
