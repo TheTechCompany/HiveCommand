@@ -161,7 +161,11 @@ export default (prisma: PrismaClient) => {
 						})
 					})
 
-					await s3Client.send(putCmd);
+					const url = await getSignedUrl(s3Client, putCmd)
+
+					await fetch(url, {method: 'PUT'})
+
+					// await s3Client.send(putCmd);
 
 					const invokeCommand = new InvokeCommand({
 						FunctionName: process.env.EXPORT_LAMBDA || '',
