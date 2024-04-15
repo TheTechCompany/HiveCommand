@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/ui",
-  "version": "1.4.15-alpha.306",
+  "version": "1.4.15-alpha.307",
   "publishConfig": {
     "access": "public"
   },

@@ -26,7 +26,7 @@ const main = (async () => {
         kubeconfig
     });
 
-    const exportFn = await ExportLambda();
+    const {fn: exportFn, s3: schematicBucket} = await ExportLambda();
 
     const namespace = new k8s.core.v1.Namespace(`hivecommand-reportbot-${suffix}`, {
         metadata: {
@@ -45,11 +45,13 @@ const main = (async () => {
     return {
         exportFunction: exportFn.name,
         key,
-        bucket
+        bucket,
+        schematicBucket
     }
 })();
 
 export const exportFunction = main.then((res) => res.exportFunction)
+export const schematicBucket = main.then((res) => res.schematicBucket);
 
 export const reportBotSecret = main.then((res) => res.key.secret);
 export const reportBotKey = main.then((res) => res.key.id);

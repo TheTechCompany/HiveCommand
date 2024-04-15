@@ -26,6 +26,8 @@ export const SchematicEditor = () => {
                     id
                     rank
 
+                    compiled
+
                     createdAt
 		            createdBy {
                         name

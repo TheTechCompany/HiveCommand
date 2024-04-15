@@ -9,7 +9,7 @@ export interface ExportModalProps {
     onClose?: () => void;
     onDownload?: (version: string) => Promise<void>;
 
-    versions: { id: string, rank: number, createdAt: Date, createdBy: any }[]
+    versions: { id: string, compiled?: boolean, rank: number, createdAt: Date, createdBy: any }[]
 }
 
 export const ExportModal : React.FC<ExportModalProps> = (props) => {
@@ -92,7 +92,7 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
                 color="primary" 
                 disabled={downloading}
                 variant="contained">
-                    {downloading ? <CircularProgress size={'small'} /> : null} Download PDF
+                    {(downloading || !activeVersion?.compiled) ? <CircularProgress sx={{width: '20px', height: '20px'}} /> : null} Download PDF
                 </Button>
             </DialogActions>
         </Dialog>
