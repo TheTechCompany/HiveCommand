@@ -258,6 +258,8 @@ model ElectricalSchematicVersion {
 
   data Json?
 
+  compiled Boolean @default(false)
+
   commit String?
 
   createdAt DateTime @default(now())

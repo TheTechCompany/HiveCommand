@@ -10,10 +10,23 @@ const client = new S3Client({region: 'ap-southeast-2'});
 
 exports.handler = async function (event, context) {
 
+    const { sourceKey, targetKey } = event;
+
+    if(!sourceKey || !targetKey) throw new Error("No sourceKey or no targetKey");
+
+    const getCmd = new GetObjectCommand({
+        Bucket: process.env.BUCKET_NAME || "test-bucket",
+        Key: sourceKey
+    })
+
+    const sourceSchematic = await client.send(getCmd)
+
+    const sourceProgram = JSON.parse(sourceSchematic.Body);
+
     const pdfPath = path.join(__dirname, 'output.pdf');
     console.log("Exporting Schematic...")
 
-    const data = await export_schematic(event.program || {
+    const data = await export_schematic(sourceProgram || {
         name: "Default Project",
         pages: [
             {id: '1', nodes: [{id: '1', type: 'electricalSymbol', position: {x: 50, y: 10}, data: {} }, {id: '2', type: 'electricalSymbol', position: {x:  1200, y: 800}, data: {symbol: 'AcCoil'} }]},
@@ -28,11 +41,9 @@ exports.handler = async function (event, context) {
 
     console.log("Exported Schematic!")
 
-    const id = nanoid();
-
     const putCommand = new PutObjectCommand({
         Bucket: process.env.BUCKET_NAME || "test-bucket",
-        Key: id,
+        Key: targetKey,
         Body: data
     });
 
@@ -40,9 +51,9 @@ exports.handler = async function (event, context) {
 
     console.log("Posted Schematic!")
 
-    const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: id});
+    // const getCommand = new GetObjectCommand({Bucket: process.env.BUCKET_NAME || 'test-bucket', Key: targetKey});
 
-    console.log("Presigned Schematic!")
+    // console.log("Presigned Schematic!")
 
-    return getSignedUrl(client, getCommand, {expiresIn: 3600});
+    return targetKey; //getSignedUrl(client, getCommand, {expiresIn: 3600});
 };

@@ -1,6 +1,9 @@
 import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers } from '@graphql-tools/merge'
 
+
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+
 import gql from "graphql-tag";
 import { nanoid } from "nanoid";
 import { subject } from "@casl/ability";
@@ -8,16 +11,47 @@ import { subject } from "@casl/ability";
 import { LexoRank } from 'lexorank';
 import { InvokeCommand, LambdaClient } from '@aws-sdk/client-lambda'
 import moment from "moment";
+import { HeadObjectCommand, PutObjectCommand, S3Client, NotFound, GetObjectCommand } from "@aws-sdk/client-s3";
 
 export default (prisma: PrismaClient) => {
 
 	const lambda = new LambdaClient({ region: 'ap-southeast-2' })
+
+	const s3Client = new S3Client({ region: 'ap-southeast-2' })
 
 	const resolvers = mergeResolvers([
 		{
 			CommandSchematicVersion: {
 				createdBy: (root: any) => {
 					return {id: root.createdBy}
+				},
+				compiled: async (root: any) => {
+					if(root.compiled){
+						return true;
+					}else{
+						const headCmd = new HeadObjectCommand({
+							Bucket: process.env.SCHEMATIC_BUCKET || '',
+							Key: root?.id,
+						})
+						
+						try{
+							const res = await s3Client.send(headCmd);
+							
+							await prisma.electricalSchematicVersion.update({
+								where: {
+									id: root.id
+								},
+								data: {
+									compiled: true
+								}
+							})
+							return true;
+						}catch(e){
+							if(e instanceof NotFound){
+								return false;
+							}
+						}
+					}
 				}
 			},
 			Query: {
@@ -115,9 +149,40 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
+					const sourceKey = `sources/${version.id}`;
+
+					const putCmd = new PutObjectCommand({
+						Bucket: process.env.SCHEMATIC_BUCKET,
+						Key: sourceKey,
+						Body: JSON.stringify({
+							...schematic,
+							version: (version?.rank || 1),
+							versionDate: moment(version?.createdAt).format('DD/MM/YY') 
+						})
+					})
+
+					await s3Client.send(putCmd);
+
+					const invokeCommand = new InvokeCommand({
+						FunctionName: process.env.EXPORT_LAMBDA || '',
+						Payload: JSON.stringify({
+							program: { 
+								sourceKey,
+								targetKey: version.id
+								// ...currentProgram, 
+								// // version: (version?.rank || 0) + 1,
+								// version: (version?.rank || 1), 
+								// versionDate: moment(version?.createdAt).format('DD/MM/YY') 
+							}
+						})
+					})
+
+					lambda.send(invokeCommand)
+
 					return nextVersion + 1;
 				},
 				exportCommandSchematic: async (root: any, args: { id: string }, context: any) => {
+
 					const currentProgram = await prisma.electricalSchematic.findFirst({
 						where: {
 							id: args.id,
@@ -131,22 +196,54 @@ export default (prisma: PrismaClient) => {
 
 					const version = currentProgram?.versions?.sort((a, b) => b.rank - a.rank)?.[0];
 
-					const invokeCommand = new InvokeCommand({
-						FunctionName: process.env.EXPORT_LAMBDA || '',
-						Payload: JSON.stringify({
-							program: { ...currentProgram, version: (version?.rank || 0) + 1, versionDate: moment(version?.createdAt).format('DD/MM/YY') }
-						})
+					if(!version?.compiled) throw new Error("Version not compiled yet");
+					// if(version?.compiled){
+						
+					const getCmd = new GetObjectCommand({
+						Bucket: process.env.SCHEMATIC_BUCKET,
+						Key: version.id
 					})
 
-					const result = await lambda.send(invokeCommand)
+					const url = await getSignedUrl(s3Client, getCmd, {expiresIn: 3600});
+					// }else{
+					// 	const headCmd = new HeadObjectCommand({
+					// 		Bucket: process.env.SCHEMATIC_BUCKET || '',
+					// 		Key: version?.id,
+					// 	})
+						
+					// 	try{
+					// 		const res = await s3Client.send(headCmd);
 
-					if (result.Payload) {
-						let url = Buffer.from(result.Payload).toString('utf-8');
-						return url.substring(1, url.length - 1);
-					} else {
-						throw new Error("No payload received");
-					}
+					// 	// if(res.)
+					// 	}catch(e){
+					// 		if(e instanceof NotFound){
+					// 			throw new Error("Schematic not ready yet");
+					// 		}
+					// 	}
+					// }
 
+					// const invokeCommand = new InvokeCommand({
+					// 	FunctionName: process.env.EXPORT_LAMBDA || '',
+					// 	Payload: JSON.stringify({
+					// 		program: { 
+					// 			...currentProgram, 
+					// 			// version: (version?.rank || 0) + 1,
+					// 			version: (version?.rank || 1), 
+					// 			versionDate: moment(version?.createdAt).format('DD/MM/YY') 
+					// 		}
+					// 	})
+					// })
+
+					// const result = await lambda.send(invokeCommand)
+
+					// if (result.Payload) {
+					// 	let url = Buffer.from(result.Payload).toString('utf-8');
+					// 	return url.substring(1, url.length - 1);
+					// } else {
+					// 	throw new Error("No payload received");
+					// }
+
+					return url;
 				},
 				createCommandSchematicPage: async (root: any, args: { schematic: string, input: any }, context: any) => {
 
@@ -351,6 +448,8 @@ export default (prisma: PrismaClient) => {
 		id: ID
 	  
 		rank: Int
+
+		compiled: Boolean
 	  
 		data: JSON
 	  

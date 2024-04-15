@@ -90,5 +90,5 @@ export const ExportLambda = async () => {
         }
     })
 
-    return fn;
+    return {fn, s3: s3.bucket};
 }

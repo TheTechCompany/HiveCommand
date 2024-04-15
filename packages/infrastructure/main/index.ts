@@ -52,6 +52,7 @@ const main = (async () => {
     // const exportLambda = lambdaRef.getOutput('exportFunction');
 
 
+    const schematicBucket = lambdaRef.getOutput('schematicBucket');
     const exportLambda = lambdaRef.getOutput('exportFunction');
 
     const reportBotBucket = lambdaRef.getOutput('reportBotBucket');
@@ -73,7 +74,7 @@ const main = (async () => {
     const { deployment: recoveryServer } = await RecoveryServer(provider, namespace, dbUrl, dbPass, redisUrl, externalURL)
 
 
-    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn, reportBotBucket));
+    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn, schematicBucket, reportBotBucket));
     const service = await Service(provider)
 
     return {
