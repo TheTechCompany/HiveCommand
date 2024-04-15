@@ -1,7 +1,7 @@
 import { PrismaClient } from "@hive-command/data";
 import { mergeResolvers } from '@graphql-tools/merge'
 
-
+import fetch from 'node-fetch'
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import gql from "graphql-tag";
