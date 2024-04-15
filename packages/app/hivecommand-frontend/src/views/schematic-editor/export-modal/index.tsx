@@ -35,6 +35,7 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
         setActiveVersion(defaultVersion)
     }, [props.versions])
 
+
     return (
         <Dialog 
             fullWidth
@@ -90,9 +91,9 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
                 }} 
                 sx={{display: 'flex', alignItems: 'center'}}
                 color="primary" 
-                disabled={downloading}
+                disabled={downloading || !selectedVersion?.compiled}
                 variant="contained">
-                    {(downloading || !activeVersion?.compiled) ? <CircularProgress sx={{width: '20px', height: '20px'}} /> : null} Download PDF
+                    {(downloading || !selectedVersion?.compiled) ? <CircularProgress size="small" style={{width: '20px', height: '20px', marginRight: '6px'}} /> : null} Download PDF
                 </Button>
             </DialogActions>
         </Dialog>

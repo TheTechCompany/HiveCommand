@@ -202,7 +202,34 @@ export default (prisma: PrismaClient) => {
 
 					const version = currentProgram?.versions?.sort((a, b) => b.rank - a.rank)?.[0];
 
-					if (!version?.compiled) throw new Error("Version not compiled yet");
+
+					if (!version?.compiled) {
+
+						const headCmd = new HeadObjectCommand({
+							Bucket: process.env.SCHEMATIC_BUCKET || '',
+							Key: root?.id,
+						})
+
+						try {
+							const res = await s3Client.send(headCmd);
+
+							await prisma.electricalSchematicVersion.update({
+								where: {
+									id: root.id
+								},
+								data: {
+									compiled: true
+								}
+							})
+							
+						} catch (e) {
+							if (e instanceof NotFound) {
+								throw new Error("Version not compiled yet");
+							}
+						}
+					}
+
+					if (!version) throw new Error("No version found");
 					// if(version?.compiled){
 
 					const getCmd = new GetObjectCommand({

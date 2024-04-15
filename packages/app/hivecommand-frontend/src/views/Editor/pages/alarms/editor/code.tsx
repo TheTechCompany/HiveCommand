@@ -151,7 +151,7 @@ export const CodeEditor = (props: any) => {
                 ${typeDefs?.join('\n')}
 `}
                 value={currentAlarm?.script}
-                defaultValue={`export const handler = async (tags: Tags, types: Types) => {
+                defaultValue={`export const handler = async (lastState: Tags, currentState: Tags, types: Types) => {
 
 }`}
                 />
