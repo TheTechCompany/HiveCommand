@@ -1,4 +1,4 @@
-import { gql, useMutation } from '@apollo/client';
+import { gql, useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { Box, CircularProgress, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -29,6 +29,39 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
     `, {
         refetchQueries: ['GetSchematic']
     })
+
+    const { data } = useQuery(gql`
+        query GetCompiledState ($id: ID, $version: ID){
+            commandSchematics(where: {id: $id}){
+
+                versions(where: {id: $version}){
+                    compiled
+                  
+                }
+            }
+        }
+    `, {
+        fetchPolicy: 'no-cache',
+        variables: {
+            id,
+            version: activeVersion
+        }
+    })
+
+
+    const client = useApolloClient();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            client.refetchQueries({include: ['GetCompiledState']})
+        }, 5 * 1000);
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [activeVersion, id])
+
+    const compiled = selectedVersion?.compiled || data?.commandSchematics?.[0]?.versions?.[0]?.compiled;
 
     useEffect(() => {
         const defaultVersion = props.versions?.slice()?.sort((a, b) => a.rank - b.rank)?.[props.versions?.length - 1]?.id;
@@ -91,9 +124,9 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
                 }} 
                 sx={{display: 'flex', alignItems: 'center'}}
                 color="primary" 
-                disabled={downloading || !selectedVersion?.compiled}
+                disabled={downloading || !compiled}
                 variant="contained">
-                    {(downloading || !selectedVersion?.compiled) ? <CircularProgress size="small" style={{width: '20px', height: '20px', marginRight: '6px'}} /> : null} Download PDF
+                    {(downloading || !compiled) ? <CircularProgress size="small" style={{width: '20px', height: '20px', marginRight: '6px'}} /> : null} Download PDF
                 </Button>
             </DialogActions>
         </Dialog>
