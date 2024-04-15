@@ -153,17 +153,21 @@ export default (prisma: PrismaClient) => {
 
 					const putCmd = new PutObjectCommand({
 						Bucket: process.env.SCHEMATIC_BUCKET,
-						Key: sourceKey,
-						Body: JSON.stringify({
-							...schematic,
-							version: (version?.rank || 1),
-							versionDate: moment(version?.createdAt).format('DD/MM/YY') 
-						})
+						Key: sourceKey
 					})
 
 					const url = await getSignedUrl(s3Client, putCmd)
 
-					await fetch(url, {method: 'PUT'})
+					await fetch(
+						url, 
+						{
+							method: 'PUT', 
+							body: JSON.stringify({
+								...schematic,
+								version: (version?.rank || 1),
+								versionDate: moment(version?.createdAt).format('DD/MM/YY') 
+							})
+						})
 
 					// await s3Client.send(putCmd);
 
