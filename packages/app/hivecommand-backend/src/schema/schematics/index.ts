@@ -123,7 +123,9 @@ export default (prisma: PrismaClient) => {
 				},
 				createCommandSchematicVersion: async (root: any, args: any, context: any) => {
 
-					const schematic = await prisma.electricalSchematic.findFirst({
+					console.log("Getting schematic");
+
+					const schematic : any = await prisma.electricalSchematic.findFirst({
 						where: {
 							id: args.id,
 							organisation: context?.jwt?.organisation
@@ -133,10 +135,15 @@ export default (prisma: PrismaClient) => {
 							versions: true
 						}
 					})
+					
+					console.log("Creating new schematic version");
 
 					const { versions } = schematic || {};
 
-					const nextVersion = (versions?.sort((a, b) => b.rank - a.rank)?.[0]?.rank || 0) + 1;
+					const nextVersion = (versions?.slice()?.sort((a, b) => b.rank - a.rank)?.[0]?.rank || 0) + 1;
+
+					if(schematic)
+						delete schematic.versions;
 
 					const version = await prisma.electricalSchematicVersion.create({
 						data: {
