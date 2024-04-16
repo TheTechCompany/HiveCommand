@@ -49,19 +49,22 @@ export const ExportModal : React.FC<ExportModalProps> = (props) => {
     })
 
 
+    const compiled = selectedVersion?.compiled || data?.commandSchematics?.[0]?.versions?.[0]?.compiled;
+
     const client = useApolloClient();
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            client.refetchQueries({include: ['GetCompiledState']})
-        }, 5 * 1000);
+        let interval : any;
+        if(!compiled){
+            interval = setInterval(() => {
+                client.refetchQueries({include: ['GetCompiledState']})
+            }, 5 * 1000);
+        }
 
         return () => {
-            clearInterval(interval)
+            if(!compiled) clearInterval(interval)
         }
-    }, [activeVersion, id])
-
-    const compiled = selectedVersion?.compiled || data?.commandSchematics?.[0]?.versions?.[0]?.compiled;
+    }, [compiled, activeVersion, id])
 
     useEffect(() => {
         const defaultVersion = props.versions?.slice()?.sort((a, b) => a.rank - b.rank)?.[props.versions?.length - 1]?.id;
