@@ -603,6 +603,8 @@ model CanvasDataTemplate {
 
   edges CanvasDataTemplateEdge[] @relation(name: "transformsAlongEdge")
 
+  systemOptions Json?
+
   transforms CanvasDataTransformer[] @relation(name: "transformsCanvasData")
 
   program   Program @relation(name: "hasTemplates", fields: [programId], references: [id], onDelete: Cascade)

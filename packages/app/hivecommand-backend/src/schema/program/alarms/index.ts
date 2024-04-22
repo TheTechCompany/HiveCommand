@@ -4,6 +4,7 @@ import { isStringType } from "../types/util";
 import { LexoRank } from "lexorank";
 import { JsxEmit, ModuleKind, ScriptTarget, transpile } from 'typescript';
 import { Project } from 'ts-morph'
+import { defaultAlarm, defaultAlarmPathway } from "./defaults";
 
 const canCompile = (tsCode: string) => {
 
@@ -145,7 +146,7 @@ export default (prisma: PrismaClient) => {
                     data: {
                         id: nanoid(),
                         title: args.input.title,
-                        script: args.input.script,
+                        script: args.input.script || defaultAlarm,
                         rank,
                         program: { 
                             connect: { 
@@ -204,7 +205,7 @@ export default (prisma: PrismaClient) => {
                         id: nanoid(),
                         name: args.input.name,
                         scope: args.input.scope,
-                        script: args.input.script,
+                        script: args.input.script || defaultAlarmPathway,
                         program: {
                             connect: {id: args.program}
                         }

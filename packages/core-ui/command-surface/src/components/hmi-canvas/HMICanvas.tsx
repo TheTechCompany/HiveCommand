@@ -90,7 +90,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
     
     const dataNodes = useMemo(() => {
         console.log("DataNodes", props.deviceValues)
-        return nodes.map((node) => {
+        return nodes.map((node, ix) => {
             
 
             // let values = (props.deviceValues || []).filter((a) => a.placeholder == node.extras?.devicePlaceholder?.tag).reduce((prev, curr) => ({
@@ -104,6 +104,7 @@ export const HMICanvas : React.FC<HMICanvasProps> = (props) => {
                 ...node,
                 extras: {
                     ...node.extras,
+                    // badge: ix == 2 && {content: "1234", left: '-10%', top: 0}
                     // dataValue: node.options
                 }
             }

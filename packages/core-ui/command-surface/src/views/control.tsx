@@ -104,7 +104,7 @@ export const ControlView = () => {
     })
    
 
-	const program = useMemo(() => ({
+	const viewProgram = useMemo(() => ({
         ...activeProgram,
         interface: {
             id: '',
@@ -248,10 +248,10 @@ export const ControlView = () => {
 			<Box sx={{ flex: 1, display: 'flex' }}>
 
 				<HMICanvas
-					id={program?.id || ''}
-					nodes={program?.interface?.nodes || []}
+					id={viewProgram?.id || ''}
+					nodes={viewProgram?.interface?.nodes || []}
 					templatePacks={templatePacks}
-					paths={program?.interface?.edges || []}
+					paths={viewProgram?.interface?.edges || []}
 		
 					deviceValues={stateValues}
 					modes={[]}

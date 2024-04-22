@@ -3,7 +3,7 @@ import * as k8s from '@pulumi/kubernetes'
 import { all, Config, Output } from '@pulumi/pulumi'
 import * as eks from '@pulumi/eks'
 
-export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, rabbitHost: Output<any>, mongoUrl: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string, schematicBucket: Output<any>, reportBucket: Output<any>) => {
+export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output<any>, dbPass: Output<any>, redisUrl: Output<any>, mqttURL: string, lambdaFunction: string, schematicBucket: Output<any>, reportBucket: Output<any>) => {
 
     const config = new Config();
 
@@ -39,13 +39,11 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             { name: 'EXPORT_LAMBDA', value: lambdaFunction },
                             { name: 'NODE_ENV', value: 'production' },
                             { name: 'ROOT_SERVER', value: `http://${rootServer}` },
-                            { name: "RABBIT_URL",  value: rabbitHost.apply(url => `amqp://${url}`) },
                             { name: 'DEVICE_MQ_HOST', value: mqttURL },
                             { name: 'DEVICE_MQ_USER', value: process.env.IOT_USER },
                             { name: 'DEVICE_MQ_PASS', value: process.env.IOT_PASS },
                             { name: "VERSION_SHIM", value: '1.0.10' },
                             { name: 'REDIS_URL', value: redisUrl.apply(url => url) },
-                            { name: 'MONGO_URL', value: mongoUrl.apply((url) => `mongodb://${url}/hivecommand`) },
 
                             { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
                             { name: 'REPORT_BUCKET', value: reportBucket },

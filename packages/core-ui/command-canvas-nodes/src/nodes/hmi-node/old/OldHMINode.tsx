@@ -11,6 +11,10 @@ export interface IconNodeProps {
     building?: boolean;
     className?: string;
     extras?: {
+        systemValues?: {
+            badge?: any;
+        }
+
         options?: any;
         dataValue?: any;
 
@@ -98,7 +102,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
         
             <BaseIconNode
                 key={`base-node:${props.id}`}
-               
+
                 width={props.extras?.label ? '96px' : '55px'}
                 height={props.extras?.label ? '42px' : '55px'}
                 {...props}>
@@ -115,6 +119,7 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             }}
                           
                             sx={{ 
+                                position: 'relative',
                                 // pointerEvents: 'all',
                                 // background: 'red',
                                 cursor: 'pointer',
@@ -148,10 +153,22 @@ export const UnstyledIconNode = (props: IconNodeProps) => {
                             </div>
 
                             {icon}
-
+                            
+                            {props.extras?.systemValues?.badge ? (
+                                <Box sx={{
+                                    position: 'absolute',
+                                    left: props.extras?.systemValues?.badge?.left,
+                                    top: props?.extras?.systemValues?.badge?.top
+                                }}>
+                                    {/*Badge*/}
+                                    {props?.extras?.systemValues?.badge?.content?.()}
+                                </Box>
+                            ) : null}
+                         
                         </Box>
                     </>
                 )}
+          
 
             </BaseIconNode>
 

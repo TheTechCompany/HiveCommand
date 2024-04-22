@@ -8,9 +8,31 @@ import { useParams } from 'react-router-dom';
 // import { ScriptEditorModal } from '../../../../components/script-editor';
 import { ScriptEditorModal } from '@hive-command/ui'
 
-import { DataTypes, formatInterface, fromOPCType, lookupType } from '@hive-command/scripting'
+import { DataTypes, formatInterface, fromOPCType, lookupType, toJSType } from '@hive-command/scripting'
 
 export const TemplateEditor = (props: any) => {
+
+    const systemOutputs = [{
+        key: "badge",
+        template: `import React from "react";
+        
+export const getter = (inputs: Inputs) : (
+    {
+        left: string, 
+        top: string, 
+        content: any
+    } | null
+) => {
+    return {
+        left: '',
+        top: '',
+        content: (
+            <>
+            </>
+        )
+    }
+}`
+    }]
 
     const { activeId } = useParams()
 
@@ -68,26 +90,39 @@ export const TemplateEditor = (props: any) => {
         }
     `)
 
+    const [ updateTemplateSysOpt ] = useMutation(gql`
+        mutation UpdateTemplateSys ($template: ID!, $key: String, $script: String) {
+            updateCommandTemplateSystemEdge(template: $template, key: $key, script: $script)
+        }
+    `)
+
 
 
     const activeTemplate = templates?.find((a) => a.id === activeId);
     
+    const formatType = (object: any) => {
+        let t = '{\n';
+        for(var k in object){
+            t += `  ${k}: ${object[k]},\n`
+        }
+        t += '}';
+        return t;
+    }
 
-    const getDefault = (type: 'Function' | keyof typeof DataTypes) => {
+    const getDefault = (type: 'Function' | keyof typeof DataTypes | object) => {
         if(type === 'Function'){
             return `export const handler = (elem: {x: number, y: number, width: number, height: number}, state: Inputs, setState: SetInputs, args: any[], transformer: (state: any) => any) => {
 
 }`
+        }else if(typeof(type) == 'object'){
+            
+            return `export const getter = (inputs: Inputs) : ${formatType(type)} => {
+
+}`
         }else{ 
 
-        return `export const getter = (inputs: Inputs) : ${lookupType(type)} => {
+        return `export const getter = (inputs: Inputs) : ${toJSType(lookupType(type))} => {
     return inputs;
-}
-        
-export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
-    setInputs({
-
-    })
 }`
         }
     }
@@ -180,9 +215,9 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                 `
             }].concat(componentsInterface)
     }, [activeTemplate, components])
-
-
     
+    console.log({systemOutputs})
+
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}> 
             <ScriptEditorModal
@@ -191,7 +226,18 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                     setDefaultSrc(null)
                 }}
                 onSubmit={(codeValue) => {
-                    if(defaultSrc?.srcId){
+                    if((defaultSrc?.srcId || '').indexOf('system:') > -1){
+                        updateTemplateSysOpt({
+                            variables: {
+                                template: activeId,
+                                key: defaultSrc?.id,
+                                script: codeValue
+                            }
+                        }).then(() => {
+                            refetch?.();
+                            setDefaultSrc(null);
+                        })
+                    }else if(defaultSrc?.srcId){
                         updateTemplateEdge({
                             variables: {
                                 template: activeId,
@@ -323,60 +369,103 @@ export const setter = (value: ${lookupType(type)}, setInputs: SetInputs) => {
                         ))}
                     </List>
                 </Paper>
-                <Paper sx={{flex: 1, margin: '6px', display: 'flex', flexDirection: 'column'}}>
-                    <Box sx={{display: 'flex', padding: '6px', alignItems: 'center', justifyContent: 'space-between'}}>
-                    
-                        <Typography>Outputs</Typography>
-                        <IconButton onClick={() => setDirection('output')}>
-                            <Add />
-                        </IconButton>
-                    </Box>
-                    <Divider />
-                    <List sx={{flex: 1}}>
-                        {(activeTemplate?.outputs || []).map((output) => (
-                            <ListItem 
-                                secondaryAction={
-                                    <>
-                                        <IconButton 
-                                            onClick={() => {
-                                                let activeScript = (activeTemplate?.edges || []).find((a) => a.to?.id === output?.id);
+                <Box sx={{ flexDirection: 'column', flex: 1, display: 'flex'}}>
+                    <Paper sx={{flex: 0.7, margin: '6px', display: 'flex', flexDirection: 'column'}}>
+                        <Box sx={{display: 'flex', padding: '6px', alignItems: 'center', justifyContent: 'space-between'}}>
+                        
+                            <Typography>Outputs</Typography>
+                            <IconButton onClick={() => setDirection('output')}>
+                                <Add />
+                            </IconButton>
+                        </Box>
+                        <Divider />
+                        <List sx={{flex: 1}}>
+                            {(activeTemplate?.outputs || []).map((output) => (
+                                <ListItem 
+                                    secondaryAction={
+                                        <>
+                                            <IconButton 
+                                                onClick={() => {
+                                                    let activeScript = (activeTemplate?.edges || []).find((a) => a.to?.id === output?.id);
 
-                                                if(activeScript){
-                                                    setDefaultSrc({src: activeScript.script, srcId: activeScript.id, id: output.id});
-                                                }else{
-                                                    // output.type
-                                                    const defaultSrc = getDefault(output.type as any)
+                                                    if(activeScript){
+                                                        setDefaultSrc({src: activeScript.script, srcId: activeScript.id, id: output.id});
+                                                    }else{
+                                                        // output.type
+                                                        const defaultSrc = getDefault(output.type as any)
 
-                                                    setDefaultSrc({src: defaultSrc, id: output.id})
-                                                }
-                                            }}
-                                            edge="end" size="small">
-                                            <Javascript fontSize="inherit" />
-                                        </IconButton>
-                                         <IconButton 
-                                            onClick={() => {
-                                                setDirection('output')
-                                                setSelected(output)
+                                                        setDefaultSrc({src: defaultSrc, id: output.id})
+                                                    }
+                                                }}
+                                                edge="end" size="small">
+                                                <Javascript fontSize="inherit" />
+                                            </IconButton>
+                                            <IconButton 
+                                                onClick={() => {
+                                                    setDirection('output')
+                                                    setSelected(output)
 
-                                            }}
-                                            size="small">
-                                            <MoreVert fontSize='inherit'/>   
-                                        </IconButton>
-                                    </>
-                              
-                                }
-                                 sx={{display: 'flex', position: 'relative', padding: '6px'}}>
-                                <ListItemButton>
-                                    <ListItemText>
-                                        {output.name} : {output.type} - {(activeTemplate?.edges || []).filter((a) => a.to?.id === output.id)?.length}
-                                    </ListItemText>
-                                </ListItemButton>
+                                                }}
+                                                size="small">
+                                                <MoreVert fontSize='inherit'/>   
+                                            </IconButton>
+                                        </>
                                 
-                            </ListItem>
-                        ))}
-                    </List>
+                                    }
+                                    sx={{display: 'flex', position: 'relative', padding: '6px'}}>
+                                    <ListItemButton>
+                                        <ListItemText>
+                                            {output.name} : {output.type} - {(activeTemplate?.edges || []).filter((a) => a.to?.id === output.id)?.length}
+                                        </ListItemText>
+                                    </ListItemButton>
+                                    
+                                </ListItem>
+                            ))}
+                        </List>
 
-                </Paper>
+                    </Paper>
+                    <Paper sx={{flex: 0.3, margin: '6px', flexDirection: 'column', display: 'flex'}}>
+                        <Box sx={{display: 'flex', padding: '6px', alignItems: 'center', justifyContent: 'space-between'}}>
+                            <Typography>Base Outputs</Typography>
+                        
+                        </Box>
+                        <Divider />
+                        <List sx={{flex: 1}}>
+                            {systemOutputs?.map((output) => (
+                                <ListItem secondaryAction={  <>
+                                    <IconButton 
+                                        onClick={() => {
+
+                                            if(activeTemplate?.systemOptions?.[output.key]){
+                                                setDefaultSrc({src: activeTemplate?.systemOptions?.[output.key], srcId: `system:${output.key}`, id: output.key})
+
+                                            }else{
+                                                setDefaultSrc({src: output.template, srcId: `system:${output.key}`, id: output.key})
+                                            }
+                                            // let activeScript = (activeTemplate?.edges || []).find((a) => a.to?.id === output?.id);
+
+                                            // if(activeScript){
+                                            //     setDefaultSrc({src: activeScript.script, srcId: activeScript.id, id: output.id});
+                                            // }else{
+                                            //     // output.type
+                                            //     const defaultSrc = getDefault(output.type as any)
+
+                                            //     setDefaultSrc({src: defaultSrc, id: output.id})
+                                            // }
+                                        }}
+                                        edge="end" size="small">
+                                        <Javascript fontSize="inherit" />
+                                    </IconButton>
+                        
+                                </>}>
+                                    <ListItemText>
+                                    {output.key}
+                                    </ListItemText>
+                                </ListItem>
+                            ))}
+                        </List>
+                    </Paper>
+                </Box>
             </Box>
         </Box>
     )

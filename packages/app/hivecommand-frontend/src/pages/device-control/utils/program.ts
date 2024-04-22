@@ -158,6 +158,8 @@ import { useEffect } from "react";
                                             }
                                             script
                                         }
+
+                                        systemOptions
                                     }
 
                                     options
