@@ -1,7 +1,7 @@
 {
   "name": "@hive-command/interface-types",
   "packageManager": "yarn@3.6.4",
-  "version": "1.4.15-alpha.307",
+  "version": "1.4.15-alpha.308",
   "publishConfig": {
     "access": "public"
   },
