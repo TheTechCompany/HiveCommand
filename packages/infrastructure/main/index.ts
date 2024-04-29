@@ -39,11 +39,9 @@ const main = (async () => {
 
     const rootServer = gatewayRef.getOutput('internalGatewayUrl');
 
-    const rabbitURL = dbRef.getOutput('rabbitURL');
     const redisUrl = dbRef.getOutput('redisUrl');
     
     const dbUrl = dbRef.getOutput('timescale_url');
-    const mongoUrl = dbRef.getOutput('mongo_url');
     const dbPass = dbRef.getOutput('postgres_pass');
 
     const internalURL = mqttRef.getOutput('internalURL');
@@ -74,18 +72,15 @@ const main = (async () => {
     const { deployment: recoveryServer } = await RecoveryServer(provider, namespace, dbUrl, dbPass, redisUrl, externalURL)
 
 
-    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, rabbitURL, mongoUrl, redisUrl, `mqtt://${internal}`, lambdaFn, schematicBucket, reportBotBucket));
+    const deployment = await all([rootServer, internalURL, exportLambda]).apply(async ([url, internal, lambdaFn]) => await Deployment(provider, url, dbUrl, dbPass, redisUrl, `mqtt://${internal}`, lambdaFn, schematicBucket, reportBotBucket));
     const service = await Service(provider)
 
     return {
         service,
-        deployment,
-        rabbitURL,
+        deployment
         // syncServer
     }
 })()
-
-export const rabbitURL = main.then((res) => res.rabbitURL)
 
 export const deployment = main.then((res) => res.deployment.metadata.name)
 

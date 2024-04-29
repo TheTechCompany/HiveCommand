@@ -130,7 +130,7 @@ export const Editor: React.FC<EditorProps> = (props) => {
                 moduleResolution: monaco.languages.typescript.ModuleResolutionKind.NodeJs,
                 module: monaco.languages.typescript.ModuleKind.CommonJS,
                 noEmit: true,
-                jsx: monaco.languages.typescript.JsxEmit.Preserve
+                jsx: monaco.languages.typescript.JsxEmit.React
                 // typeRoots: ["node_modules/@types"]
             });
 
@@ -154,11 +154,13 @@ export const Editor: React.FC<EditorProps> = (props) => {
               declare module "@mui/x-date-pickers";
               declare module "@mui/icons-material";
               declare module "@hexhive/ui";
+              declare module "react";
               `)
             }else{
               monaco.editor.createModel( `
               declare module "@mui/material";
               declare module "@mui/icons-material";
+              declare module "react";
               `, "typescript", monaco.Uri.parse(modelLib));
             }
             //ENDLIBS

@@ -137,6 +137,8 @@ export const EditorPage: React.FC<EditorProps> = (props) => {
                     id
                     name
 
+                    systemOptions
+
                     inputs {
                         id
                         name

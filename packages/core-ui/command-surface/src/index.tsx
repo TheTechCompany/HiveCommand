@@ -263,8 +263,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
 
     const { results: alarms } = client?.useAlarms?.() || {};
 
-    console.log({ online, lastSeen });
-
     /*
         Parse the values blob internally and represent it as a clean tag system
         {
@@ -297,7 +295,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     //     //     return props.values;
     //     // }
     // }, [props.values])
-
 
     const [activePage, setActivePage] = useState<any>(null)
 
@@ -685,9 +682,6 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     const memoisedHmi = useMemo(() => {
         return activeProgram?.interface?.map(mapHMI);
     }, [activeProgram?.interface])
-
-    console.log({reports, analytics})
-
 
     const drawerMenu: (TreeMenuItem & { pathRoot: string, component?: JSX.Element })[] = [
         {

@@ -108,65 +108,6 @@ export default (prisma: PrismaClient) => {
 			}
 		},
 		Mutation: {
-			// downloadDeviceReports: async (root: any, args: any, context: any) => {
-
-			// 	const report = await prisma.deviceReport.findFirst({
-			// 		where: {
-			// 			device: {
-			// 				id: args.device
-			// 			},
-			// 			id: args.report
-			// 		},
-			// 		include: {
-			// 			fields: {
-			// 				include: {
-			// 					device: true,
-			// 					key: true
-			// 				}
-			// 			}
-			// 		}
-			// 	})
-
-
-			// 	const id = nanoid();
-
-			// 	console.time(`Creating workbook ${id}`)
-
-			// 	const workbook = xlsx.utils.book_new();
-
-			// 	const fields = (report?.fields || []).filter((a) => a.bucket && a.device);
-
-			// 	for(var i = 0; i < (fields || []).length; i++){
-			// 		const field = fields[i];
-
-			// 		console.time(`Creating worksheet ${i}-${id}`)
-
-			// 		const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
-
-			// 		const result : any[] = await prisma.$queryRaw`
-			// 			SELECT placeholder, key, avg(value::float) as value, time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated") as time 
-			// 			FROM "DeviceValue"
-			// 			WHERE "deviceId" = ${args.device} 
-			// 			AND placeholder=${field.device?.name}
-			// 			${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-			// 			AND "lastUpdated" > ${args?.startDate} 
-			// 			AND "lastUpdated" < ${args.endDate}
-			// 			GROUP BY placeholder, key, time ORDER BY time ASC
-			// 		`
-
-			// 		const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({...x, time: new Date(x).getTime() })));
-			// 		xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
-
-			// 		console.timeEnd(`Creating worksheet ${i}-${id}`)
-			// 	}
-
-			// 	console.timeEnd(`Creating workbook ${id}`)
-
-
-			// 	return {
-			// 		xlsx: Buffer.from(xlsx.write(workbook, {type: 'buffer', bookType: 'xlsx'})).toString('base64')
-			// 	}
-			// },
 			createCommandDeviceReport: async (root: any, args: any, context: any) => {
 				const id = nanoid();
 

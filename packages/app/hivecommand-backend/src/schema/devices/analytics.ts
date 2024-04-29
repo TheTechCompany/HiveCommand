@@ -110,12 +110,9 @@ export default (prisma: PrismaClient) => {
     const resolvers = {
 		CommandDeviceAnalytic: {
 			values: async (root: any, args: {startDate: Date, endDate?: Date, format?: string}) => {
-
-
 				let query = ``;
 
 				let params = [root.page?.device?.id, root.tag?.id]
-				// console.log("Analaytics values")
 
 				const afterTime = args.startDate ? moment(args.startDate) : undefined;
 
@@ -160,14 +157,7 @@ export default (prisma: PrismaClient) => {
 					console.log({e})
 				}
 
-				// const result = await client.query(
-				// 	query,
-				// 	params
-				// )				
-
-				// console.log("Analaytics values")
-
-				// await client.release()
+		
 			
 			},
 			totalValue: async (root: any, args: any, context: any) => {
@@ -183,53 +173,6 @@ export default (prisma: PrismaClient) => {
 				if(beforeTime && moment(beforeTime).isAfter(moment())){
 					beforeTime = moment();
 				}
-
-				// const session = driver.session()
-
-				//TODO get time dimension
-
-				// const unitResult = await session.run(`
-				// 	MATCH (:CommandDevice {id: $id})-[:RUNNING_PROGRAM]->(:CommandProgram)-[:USES_DEVICE]->(device:CommandProgramDevicePlaceholder {name: $name})-[:USES_TEMPLATE]->()-->(stateItem:CommandProgramDeviceState {key: $key})
-				// 	OPTIONAL MATCH (device)-[:MAPS_UNIT]->(unitConfig:CommandProgramDeviceUnit)-[:MAPS_STATE_UNIT]->(stateItem)
-				// 	RETURN unitConfig{.*}
-				// `, { id: deviceId, name: device, key: valueKey })
-
-				// const unitConfig = unitResult.records?.[0]?.get(0)
-
-				// let timeDimension = 60; //divide value by 60 to go from minutes to seconds, divide by 3,600 to go from hours to seconds
-
-				// console.log({unitConfig})
-				// if(unitConfig && (unitConfig.displayUnit || unitConfig.inputUnit)){
-				// 	let unitRegex = /(.+)\/(.+)/
-				// 	let [ fullText, unit, dimension ] = (unitConfig.displayUnit ? unitConfig.displayUnit.match(unitRegex) : unitConfig.inputUnit.match(unitRegex)) || [];
-					
-
-				// 	if(dimension != undefined){
-				// 		try{
-				// 			let timeUnit = mathUnit(dimension).to('seconds');
-				// 			console.log("Found", {unit, dimension})
-
-				// 			timeDimension = timeUnit.toNumber()
-				// 			console.log({timeDimension})
-				// 		}catch(e) {
-				// 			console.error("Could not parse time unit", {unit, dimension, e})
-				// 		}
-				// 	}
-
-				// }
-
-				/*
-	
-					(
-
-						*
-
-			
-			
-						
-			
-						 */
-
 					
 				const { unit } = root;
 				let unitTimeDimension = 60; //60 = minutedata, 60 * 60 = hrdata, 60 * 60 * 24 = daydata

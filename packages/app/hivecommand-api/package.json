@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/api",
-  "version": "1.4.15-alpha.307",
+  "version": "1.4.15-alpha.309",
   "description": "",
   "main": "dist/index.js",
   "private": true,
@@ -27,7 +27,7 @@
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.8.1",
+    "@apollo/client": "3.9",
     "react": "*"
   }
 }

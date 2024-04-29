@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { Profiler, useMemo } from 'react';
 import { Box } from '@mui/material';
 import { CommandSurface } from '@hive-command/command-surface';
 import { useWatchers } from './utils/watchers';

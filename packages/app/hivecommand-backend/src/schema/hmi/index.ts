@@ -29,7 +29,6 @@ export default (prisma: PrismaClient) => {
 		},
 		CommandHMIDevicePack: {
 			elements: async (root: any, args: any, context: any) => {
-				// console.log({root})
 				if(!root.url) return root.elements || [];
 				let contents = await axios.get(root.url);
 				let data = contents.data;
@@ -44,8 +43,6 @@ export default (prisma: PrismaClient) => {
 
 				const _initialRequire = (name: string) => {
 					if(!(name in baseRequirements)){
-						// console.log("Init Loader")
-
 						let isPath = name.indexOf('./') == 0
 						let isSubNpm = (name.match(/\//g) || []).length > 1;
 						
@@ -58,7 +55,6 @@ export default (prisma: PrismaClient) => {
 								let url : any;
 
 								if(isPath){
-									// console.log({base_url})
 									url = new URL(name.substring(2, name.length) + '.js', base_url).toString();
 
 									try{
@@ -68,16 +64,8 @@ export default (prisma: PrismaClient) => {
 										data = await axios.get(url)
 									
 									}
-									// if(data.data.indexOf("Couldn't find the requested file") == 0){
-									// 	}
 
-
-									// console.log({url})
-									// url = base_url + name.substring(2, name.length) + '.js';
 								}else{
-									// url = `https://cdn.jsdelivr.net/npm/${name}`
-
-
 									if(!isSubNpm){
 										let pkg = await axios.get(`https://cdn.jsdelivr.net/npm/${name}/package.json`)
 
@@ -87,33 +75,13 @@ export default (prisma: PrismaClient) => {
 
 										data = await axios.get(url)
 									}
-									// url = new URL()
-									// if(!isSubNpm){
-									// 	// console.log(`https://cdn.jsdelivr.net/npm/${name}/package.json`)
-									// 	let pkg = await axios.get(`https://cdn.jsdelivr.net/npm/${name}/package.json`);
-									// 	// const data = pkg.data
-									// 	// console.log({pkg})
-									// 	try{
-									// 	let pkgJson = pkg.data
-									// 	url = new URL(pkgJson.main, `https://cdn.jsdelivr.net/npm/${name}/`).toString();
-										
-									// 	}catch(e){
-									// 		console.error(`Couldnt parse package for ${name}`)
-									// 	}
-										
-									// }else{
-									// 	// url += '.js'
-									// }
-									// base_url = url;
+									
 								}
 
 								if(!url) return;
 
 								const m_name = name;
 								const m = data //await axios.get(url)
-								// console.log({m_name, m})
-
-								// console.log({m: m.data, mData: m.data.length, name});
 
 								let exports = {};
 								let module = {exports};
@@ -146,7 +114,6 @@ export default (prisma: PrismaClient) => {
 			
 				const load = await load_exports(_initialRequire, root.url)
 				
-				console.log("Start fetch")
 				await Promise.all(Object.keys(requirementFetch).map((x) => requirementFetch[x]()))
 
 				const module = await load_exports(_requires, root.url)
@@ -592,156 +559,6 @@ export default (prisma: PrismaClient) => {
 			},
 			deleteCommandProgramInterfaceEdge: async (root: any, args: any, context: any) => {
 				return await prisma.canvasEdge.delete({ where: { id: args.id } });
-			},
-			createCommandProgramInterfaceGroup: async (root: any, args: any, context: any) => {
-				const { nodes, ports } = args.input;
-
-				// console.log(JSON.stringify({ nodes }))
-				// return await prisma.canvasNodeGroup.create({
-				// 	data: {
-				// 		id: nanoid(),
-				// 		x: args.input.x || 0,
-				// 		y: args.input.y || 0,
-				// 		nodes: {
-
-				// 			createMany: {
-				// 				data: nodes.map((node: any) => ({
-				// 					id: nanoid(),
-				// 					x: node.x,
-				// 					y: node.y,
-				// 					rotation: node.rotation || 0,
-				// 					scaleX: node.scaleX || 1,
-				// 					scaleY: node.scaleY || 1,
-				// 					z: node.z || 1,
-				// 					templateId: node.type,
-				// 					showTotalizer: node.showTotalizer || false,
-
-				// 				}))
-				// 			}
-				// 		},
-				// 		ports: {
-
-				// 			createMany: {
-				// 				data: ports.map((port: any) => ({
-				// 					id: nanoid(),
-				// 					key: port.key,
-				// 					x: port.x,
-				// 					y: port.y,
-				// 					rotation: port.rotation || 0,
-				// 					length: port.length || 1
-
-				// 				}))
-				// 			}
-				// 		},
-				// 		hmi: {
-				// 			connect: { programId: args.program }
-				// 		}
-				// 	}
-				// 	// create: {
-				// 	// 	nodes: {
-
-				// 	// 	},
-				// 	// 	ports: {
-
-				// 	// 	}
-				// 	// }
-
-
-				// })
-			},
-			updateCommandProgramInterfaceGroup: async (root: any, args: any, context: any) => {
-				const { nodes, ports } = args.input;
-
-				// let nodeUpdate : any = {};
-				// let portUpdate : any = {};
-
-				// if(nodes && nodes.length > 0) {
-				// 	let createNodes = nodes.filter((a: any) => a.id);
-				// 	let updateNodes = nodes.filter((a: any) => !a.id);
-
-				// 	if(createNodes.length > 0){
-				// 		nodeUpdate['createMany'] = {
-				// 			data: createNodes.map((node: any) => ({
-				// 					id: nanoid(),
-				// 					x: node.x,
-				// 					y: node.y,
-				// 					rotation: node.rotation || 0,
-				// 					scaleX: node.scaleX || 1,
-				// 					scaleY: node.scaleY || 1,
-				// 					templateId: node.type,
-								
-				// 			}))
-				// 		}
-				// 	}
-				// 	if(updateNodes.length > 0){
-				// 		nodeUpdate['updateMany'] = updateNodes.map((node: any) => ({
-				// 			where: { id: node.id },
-				// 			data: {
-				// 				x: node.x,
-				// 				y: node.y,
-				// 				rotation: node.rotation || 0,
-				// 				scaleX: node.scaleX || 1,
-				// 				scaleY: node.scaleY || 1,
-				// 				templateId: node.type,
-				// 			}
-				// 		}))
-				// 	}
-				// }
-
-				// if(ports && ports.length > 0) {
-				// 	let createNodes = ports.filter((a: any) => a.id);
-				// 	let updateNodes = ports.filter((a: any) => !a.id);
-
-				// 	if(createNodes.length > 0){
-				// 		portUpdate['createMany'] = {
-				// 			data: createNodes.map((port: any) => ({
-				// 				id: nanoid(),
-				// 				key: port.key,
-				// 				x: port.x,
-				// 				y: port.y,
-				// 				rotation: port.rotation || 0,
-				// 				length: port.length || 1
-				// 			}))
-				// 		}
-				// 	}
-
-				// 	if(updateNodes.length > 0){
-				// 		portUpdate['updateMany'] = updateNodes.map((port: any) => ({
-				// 			where: { id: port.id },
-				// 			data: {
-				// 				key: port.key,
-				// 				x: port.x,
-				// 				y: port.y,
-				// 				rotation: port.rotation || 0,
-				// 				length: port.length || 1
-				// 			}
-				// 		}))
-				// 	}
-				// }
-
-				// return await prisma.canvasNodeGroup.update({
-				// 	where: { id: args.id },
-				// 	data: {
-				// 		x: args.input.x,
-				// 		y: args.input.y,
-				// 		nodes: {
-				// 			...nodeUpdate
-				// 		},
-				// 		ports: {
-				// 			...portUpdate
-				// 		}
-				// 	}
-				// })
-			},
-			deleteCommandProgramInterfaceGroup: async (root: any, args: any, context: any) => {
-				// return await prisma.canvasNode.update({
-				// 	where: { id: args.node },
-				// 	data: {
-				// 		group: {
-				// 			delete: true
-				// 		}
-				// 	}
-				// })
 			}
 		}
 	}
@@ -777,9 +594,6 @@ export default (prisma: PrismaClient) => {
 		updateCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID, input: ComandProgramInterfaceEdgeInput!): CommandHMIEdge
 		deleteCommandProgramInterfaceEdge (program: ID, hmi: ID, id: ID!): CommandHMIEdge
 
-		createCommandProgramInterfaceGroup (program: ID, node: ID, input: ComandProgramInterfaceGroupInput!): CommandHMIGroup
-		updateCommandProgramInterfaceGroup (program: ID, node: ID, id: ID, input: ComandProgramInterfaceGroupInput!): CommandHMIGroup
-		deleteCommandProgramInterfaceGroup (program: ID, node: ID, id: ID!): CommandHMIGroup
 	}
 
 	input CommandProgramInterfaceInput {
@@ -800,34 +614,6 @@ export default (prisma: PrismaClient) => {
 
 		nodes: [CommandHMINode]
 		programs: [CommandProgram]
-	}
-
-
-	union CommandHMINodes = CommandHMINode | CommandHMIGroup
-
-	input ComandProgramInterfaceGroupInput {
-		x: Float
-		y: Float
-
-		nodes: [ComandProgramInterfaceNodeInput]
-		ports: [CommandHMIPortInput]
-	}
-
-	type CommandHMIGroup {
-		id: ID! 
-		x: Float
-		y: Float
-
-		width: Float
-		height: Float
-
-		rotation: Float
-
-		nodes: [CommandHMINode]
-		ports: [CommandHMIPort]
-
-		inputs: [CommandHMINode]
-		outputs: [CommandHMINode] 
 	}
 
 	input CommandHMIPortInput {

@@ -20,6 +20,8 @@ export default (prisma: PrismaClient) => {
             updateCommandTemplateEdge(template: ID!, id: ID!, input: CommandTemplateEdgeInput!): CommandTemplateEdge
             deleteCommandTemplateEdge(template: ID!, id: ID!): CommandTemplateEdge
 
+            updateCommandTemplateSystemEdge(template: ID!, key: String, script: String): Boolean
+
         }
 
         input CommandTemplateEdgeInput {
@@ -48,6 +50,8 @@ export default (prisma: PrismaClient) => {
 
             inputs: [CommandTemplateIO]
             outputs: [CommandTemplateIO]
+
+            systemOptions: JSON
         }
 
         type CommandDataTransformer {
@@ -237,6 +241,26 @@ export default (prisma: PrismaClient) => {
                         }
                     }
                 })
+            },
+            updateCommandTemplateSystemEdge: async (root: any, args: any) => {
+                const dataTemplate = await prisma.canvasDataTemplate.findFirst({
+                    where: {
+                        id: args.template
+                    }
+                });
+
+                await prisma.canvasDataTemplate.update({
+                    where: {
+                        id: args.template
+                    },
+                    data: {
+                        systemOptions: {
+                            ...dataTemplate?.systemOptions as any,
+                            [args.key]: args.script
+                        }
+                    }
+                })
+                return true;
             },
             createCommandTemplateIO: async (root: any, args: any, context: any) => {
                 const { direction } = args.input;

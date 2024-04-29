@@ -54,9 +54,6 @@ export default (prisma: PrismaClient) => {
     
         Mutation: {
             importCommandProgramTags: async (root: any, args: any, context: any) => {
-                // const doc = new Document(args.file);
-                // console.log({doc})
-                       
                 const program = await prisma.program.findFirst({
                     where: {
                         id: args.program,
@@ -213,7 +210,6 @@ export default (prisma: PrismaClient) => {
                 return {...tag, type: tag.type || {}};
             },
             deleteCommandProgramTag: async (root: any, args: { program: string, id: string }, context: any) => {
-                console.log(args.id, args.program, context?.jwt)
                
                 const program = await prisma.programTag.findFirst({
                     where: {

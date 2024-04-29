@@ -228,7 +228,6 @@ export const useNodesWithValues = (
 
 			}).filter((a) => a).reduce((prev, curr) => ({ ...prev, ...(curr ? { [curr.key]: curr.value } : {}) }), {})
 
-
 			if (templateInputs) {
 				nodeInputValues.current.values[node.id] = { ...templateInputs }
 
@@ -241,6 +240,8 @@ export const useNodesWithValues = (
 			if (templateOutputs) {
 				nodeOutputValues.current.values[node.id] = { ...templateOutputs }
 			}
+
+
 		})
 
 	}, [values, nodes])
@@ -294,8 +295,6 @@ export const useNodesWithValues = (
 				console.error("error parsing value", { e, node, optionKey });
 			}
 
-
-
 			return { key: optionKey, value: parsedValue }
 
 		}).reduce((prev, curr) => ({
@@ -303,16 +302,62 @@ export const useNodesWithValues = (
 			[curr.key]: curr.value
 		}), {})
 
+		const systemValues = getSystemValues(
+			node.dataTransformer?.template?.systemOptions || {}, //|| 
+			// {badge: 'import React from  "react"; export const getter = (state: any) => { return { x: 0, y: 0, content: () => <div style={{color: "white"}}>12345</div> } }'}, 
+			nodeInputValues.current?.values[node.id] || {});
+			// valueRef.current.values || {});
+		
 		return {
 			...node,
 			// options: values
 			extras: {
 				...node.extras,
+				systemValues,
 				dataValue: values
 			}
 		}
 
 	}), [JSON.stringify(valueRef.current.values), nodes, JSON.stringify(nodeInputValues.current.values), components])
+}
+
+export const getSystemValues = (
+	systemScripts: {[key: string]: string},
+	normalisedValues: any,
+) => {
+	return Object.keys(systemScripts).map((scriptKey) => {
+
+		try{
+
+			const exports: { getter?: (inputs: any) => void } = {};
+
+			const module = { exports };
+
+			const func = new Function(
+				"module",
+				"exports",
+				"React",
+				"require",
+				transpile(systemScripts[scriptKey], {
+					module: ModuleKind.CommonJS, 
+					target: ScriptTarget.ES5, 
+					jsx: JsxEmit.React 
+				})
+			);
+
+			func(module, exports, baseRequirements['react'], _require([]) );
+
+			if ('getter' in exports) {
+				return {
+					key: scriptKey,
+					value: exports?.getter?.(normalisedValues)
+				}
+			}
+		}catch(e){
+			console.debug(`Error making systemOption hook`, e)
+		}
+	
+	}).reduce((prev, curr) => ({...prev, [curr?.key || '']: curr?.value}), {})
 }
 
 

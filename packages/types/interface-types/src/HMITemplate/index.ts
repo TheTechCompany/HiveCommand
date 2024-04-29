@@ -7,5 +7,6 @@ export interface HMITemplate {
     outputs?: {id: string, name: string, type: string}[];
 
     edges?: any[];
-
+    
+    systemOptions?: any;
 }

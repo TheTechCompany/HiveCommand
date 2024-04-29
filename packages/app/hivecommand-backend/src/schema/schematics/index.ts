@@ -133,8 +133,6 @@ export default (prisma: PrismaClient) => {
 				},
 				createCommandSchematicVersion: async (root: any, args: any, context: any) => {
 
-					console.log("Getting schematic");
-
 					const schematic : any = await prisma.electricalSchematic.findFirst({
 						where: {
 							id: args.id,
@@ -146,8 +144,6 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 					
-					console.log("Creating new schematic version");
-
 					const { versions } = schematic || {};
 
 					const nextVersion = (versions?.slice()?.sort((a, b) => b.rank - a.rank)?.[0]?.rank || 0) + 1;
@@ -166,8 +162,6 @@ export default (prisma: PrismaClient) => {
 						}
 					})
 
-					console.log("New version created, pushing sourceFiles");
-
 					const sourceKey = `sources/${version.id}`;
 
 					const putCmd = new PutObjectCommand({
@@ -177,15 +171,11 @@ export default (prisma: PrismaClient) => {
 
 					const url = await getSignedUrl(s3Client, putCmd)
 
-					console.log("Created pesigned post")
-
 					const sourceFile = JSON.stringify({
 						...schematic,
 						version: (version?.rank || 1),
 						versionDate: moment(version?.createdAt).format('DD/MM/YY')
 					});
-
-					console.log("Posting ", sourceFile.length / 1024 / 1024, "MB")
 
 					await fetch(
 						url,
@@ -194,8 +184,6 @@ export default (prisma: PrismaClient) => {
 							body: sourceFile
 						})
 
-					console.log("Sent!")
-					// await s3Client.send(putCmd);
 
 					const invokeCommand = new InvokeCommand({
 						FunctionName: process.env.EXPORT_LAMBDA || '',
@@ -210,8 +198,6 @@ export default (prisma: PrismaClient) => {
 					})
 
 					lambda.send(invokeCommand)
-
-					console.log("Lambda triggered")
 
 					return nextVersion + 1;
 				},
@@ -325,8 +311,6 @@ export default (prisma: PrismaClient) => {
 
 					let newRank = aboveRank.between(belowRank).toString()
 
-					console.log({ rank, aboveRank, belowRank, newRank })
-
 					return await prisma.electricalSchematicPage.create({
 
 						data: {
@@ -377,8 +361,6 @@ export default (prisma: PrismaClient) => {
 
 					if (!schematic) throw new Error("Schematic not found");
 
-					console.log(args);
-
 					const pages = schematic?.pages?.sort((a, b) => (a.rank || '').localeCompare(b.rank || ''))
 
 
@@ -402,8 +384,6 @@ export default (prisma: PrismaClient) => {
 					let belowRank = LexoRank.parse(belowIx || LexoRank.max().toString())
 
 					let newRank = aboveRank.between(belowRank).toString()
-
-					console.log(newRank.toString())
 
 					const result = await prisma.electricalSchematicPage.update({
 						where: {

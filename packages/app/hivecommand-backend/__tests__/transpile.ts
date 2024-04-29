@@ -60,5 +60,3 @@ const text = ts.transpileModule(`
 
 });
 
-
-console.log({text})

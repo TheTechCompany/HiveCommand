@@ -1,7 +1,7 @@
 {
   "name": "@hive-command/frontend",
   "private": true,
-  "version": "1.4.15-alpha.307",
+  "version": "1.4.15-alpha.309",
   "scripts": {
     "start": "webpack serve --port 8504",
     "start:standalone": "webpack serve --env standalone",
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@allenbradley/l5x": "^1.0.0-beta.8",
-    "@apollo/client": "^3.8.1",
+    "@apollo/client": "3.9",
     "@codemirror/autocomplete": "6.x",
     "@codemirror/state": "6.x",
     "@codemirror/view": "6.x",
@@ -69,9 +69,9 @@
     "@hexhive/auth-ui": "1.0.2-beta.44",
     "@hexhive/styles": "1.0.1-alpha.84",
     "@hexhive/ui": "1.0.1-alpha.119",
-    "@hive-command/api": "^1.4.15-alpha.307",
-    "@hive-command/canvas-nodes": "^1.4.15-alpha.307",
-    "@hive-command/command-surface": "^1.4.15-alpha.307",
+    "@hive-command/api": "^1.4.15-alpha.309",
+    "@hive-command/canvas-nodes": "^1.4.15-alpha.309",
+    "@hive-command/command-surface": "^1.4.15-alpha.309",
     "@hive-command/data-types": "^1.4.15-alpha.52",
     "@hive-command/electrical-editor": "^1.4.15-alpha.289",
     "@hive-command/electrical-editor-v2": "workspace:^",
