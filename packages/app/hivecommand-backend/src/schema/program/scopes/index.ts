@@ -120,7 +120,6 @@ export default (prisma: PrismaClient) => {
                 })
             },
             deleteCommandProgramDataScope: async (root: any, args: { program: string, id: string }, context: any) => {
-                console.log(args.id, args.program, context?.jwt)
                
                 const program = await prisma.programDataScope.findFirst({
                     where: {

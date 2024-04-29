@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@allenbradley/l5x": "^1.0.0-beta.8",
-    "@apollo/client": "^3.8.1",
+    "@apollo/client": "3.9",
     "@codemirror/autocomplete": "6.x",
     "@codemirror/state": "6.x",
     "@codemirror/view": "6.x",

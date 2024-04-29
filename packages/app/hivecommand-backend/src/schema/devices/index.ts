@@ -13,22 +13,7 @@ import { subject } from '@casl/ability'
 
 const Moniker = require('moniker')
 
-const withCancel = (asyncIterator: AsyncIterator<any>, onCancel: () => void) => {
-	const asyncReturn = asyncIterator.return;
-  
-	asyncIterator.return = () => {
-		console.log("Async Cancel")
-	  onCancel();
-	  return asyncReturn ? asyncReturn.call(asyncIterator) : Promise.resolve({ value: undefined, done: true });
-	};
-  
-	return asyncIterator;
-};
 
-// //TODO move this out of memory
-// const watching = {
-
-// }
 export default (prisma: PrismaClient) => {
 
 	const {typeDefs: analyticTypeDefs, resolvers: analyticResolvers} = analytics(prisma)
@@ -40,7 +25,6 @@ export default (prisma: PrismaClient) => {
 		{
 			DeviceAlarm: {
 				ack: (root: any) => {
-					// console.log({root})
 					return root.ackBy?.id != null && root.ackBy?.id != undefined
 				}
 			},
@@ -113,37 +97,12 @@ export default (prisma: PrismaClient) => {
 								value: results?.[r]
 							}
 						})
-						// //Get data from mongocache
-						// result = await prisma.deviceValue.findMany({
-						// 	where: {
-						// 		deviceId: root.id,
-						// 	},
-						// 	orderBy: {
-						// 		lastUpdated: 'desc'
-						// 	},
-						// 	distinct: ['deviceId', 'placeholder', 'key']
-						// })
 
-						// result = await cache.DeviceValue.find({
-						// 	deviceId: root.id
-						// });
 					}
-					// console.log(await cache.DeviceValue.find())
 					
 
 					return result;
 
-					// return await prisma.$queryRaw`
-					// 	SELECT latest.* FROM (
-					// 		SELECT DISTINCT placeholder, key, "deviceId", MAX("lastUpdated") as latest FROM "DeviceValue"
-					// 		WHERE "deviceId"=${root.id}
-					// 		GROUP BY placeholder, key, "deviceId"
-					// 	) AS uniq
-					// 	JOIN "DeviceValue" latest ON uniq.placeholder = latest.placeholder 
-					// 	AND uniq."deviceId" = latest."deviceId" 
-					// 	AND uniq.latest = latest."lastUpdated" 
-					// 	AND uniq.key = latest.key					
-					// `
 				}
 			},
 		Query: {
@@ -299,8 +258,6 @@ export default (prisma: PrismaClient) => {
 		Subscription: {
 			watchingDevice: {
 				subscribe: async (root: any, args: any, context: GraphQLContext) => {
-					console.log("Subscribe to watchingDevice", {args, pubSub: context.pubSub})
-
 					const redisTag = `watchingDevice:${args.device}`
 
 					const iter = context.pubSub.asyncIterator(`${redisTag}-channel`);
@@ -318,7 +275,6 @@ export default (prisma: PrismaClient) => {
 
 							const ttl = await context.redis.ttl(`${redisTag}:${(context as any)?.jwt?.id}`);
 
-							console.log({ttl})
 						}, 30 * 1000)
 					})
 					// await co	ntext.redis.sAdd(redisTag, (context as any)?.jwt?.id)
@@ -329,16 +285,9 @@ export default (prisma: PrismaClient) => {
 						MATCH: `${redisTag}:*`,
 						COUNT: 0,
 					})){
-						// console.log({key})
 						watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
 					}
 
-			
-					// const items = await context.redis.scan(0, [`${redisTag}:*`]);
-
-					// console.log({items});
-
-					// const watching = await context.redis.sMembers(redisTag)
 					setTimeout(async () => {
 						await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
 					}, 100);
@@ -346,14 +295,13 @@ export default (prisma: PrismaClient) => {
 					const asyncReturn = iter.return;
 
 					iter.return = async () => {
-						console.log("Cancel");
 
 						clearInterval(interval);
 
 						const redisTag = `watchingDevice:${args.device}`
 
 						const count = await context.redis.decr(`${redisTag}:${(context as any)?.jwt?.id}`)
-						console.log({count})
+
 						if(count <= 0){
 							await context.redis.del([`${redisTag}:${(context as any)?.jwt?.id}`])
 
@@ -364,7 +312,6 @@ export default (prisma: PrismaClient) => {
 								MATCH: `${redisTag}:*`,
 								COUNT: 0,
 							})){
-								// console.log({key})
 								watching.push(key.match(/(.+):(.+):(.+)/)?.[3])
 							}
 		
@@ -376,20 +323,9 @@ export default (prisma: PrismaClient) => {
 					}
 
 					return iter 
-					// withCancel(iter, async () => {
-					// 	console.log("Unsubscribe", {context, args})
-					// 	const redisTag = `watchingDevice:${args.device}`
-	
-					// 	await context.redis.sRem(redisTag, (context as any)?.jwt?.id)
-	
-					// 	const watching = await context.redis.sMembers(redisTag)
-						
-					// 	await context.pubSub.publish(`${redisTag}-channel`, {watchers: watching.map((x) => ({id: x}))})
 					
-					// }) //context.pubSub.asyncIterator("watchingDevice");
 				},
 				resolve: (payload: any) => {
-					console.log("Send new info", {payload})
 					return payload.watchers;
 				}
 			}

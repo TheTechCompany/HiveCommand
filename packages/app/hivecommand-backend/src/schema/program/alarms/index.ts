@@ -8,40 +8,6 @@ import { defaultAlarm, defaultAlarmPathway } from "./defaults";
 
 const canCompile = (tsCode: string) => {
 
-    // try{
-    //     const proj = new Project({
-    //         compilerOptions: {skipLibCheck: true}
-    //     });
-
-
-    //     const id = nanoid();
-    //     console.time(`Create source file ${id}`)
-
-    //     const sourceFile = proj.createSourceFile('module.ts', tsCode);
-    //     console.timeEnd(`Create source file ${id}`)
-
-    //     console.time(`Get source file diags ${id}`)
-
-    //     // proj.getSema
-
-    //     console.log(proj.getSourceFiles().length)
-
-    //     const diagnostics = proj.getProgram().getSemanticDiagnostics(sourceFile)
-
-    //     // getSemanticDiagnostics
-
-    //     // const diagnostics = sourceFile.getPreEmitDiagnostics()
-    //     console.timeEnd(`Get source file diags ${id}`)
-
-
-    
-    //     // const diagnostics = proj.()
-        
-    //     return diagnostics?.length <= 0;
-    // }catch(e){
-    //     return false;
-    // }
-
 
     return true;
 
@@ -101,7 +67,6 @@ export default (prisma: PrismaClient) => {
     const resolvers = {
         CommandProgramAlarmPathway: {
             compileError: (root: any) => {
-                console.log(root.script, canCompile(root.script))
                 const id = nanoid();
                 console.time(`Compile error - ${id}`)
                 if(root.script){

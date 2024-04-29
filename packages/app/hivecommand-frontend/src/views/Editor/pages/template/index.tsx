@@ -159,7 +159,7 @@ export const getter = (inputs: Inputs) : (
             [curr.key]: curr.value
         }), {})
 
-        const inputInterface = formatInterface('Inputs', activeInputs)
+        const inputInterface = formatInterface('MainInputs', activeInputs)
 
         /*
     interface Inputs {
@@ -188,8 +188,10 @@ export const getter = (inputs: Inputs) : (
             {
                 path: 'ts:facts.d.ts',
                 content: `
-                ${inputInterface}
-                
+                    ${inputInterface}
+                    
+                    declare type Inputs = DeepPartial<MainInputs>;
+
                     declare type SetInputs = (inputs: DeepPartial<Inputs>) => void;
 
                     declare function showWindow(
@@ -215,8 +217,6 @@ export const getter = (inputs: Inputs) : (
                 `
             }].concat(componentsInterface)
     }, [activeTemplate, components])
-    
-    console.log({systemOutputs})
 
     return (
         <Box sx={{flex: 1, display: 'flex', flexDirection: 'column'}}> 

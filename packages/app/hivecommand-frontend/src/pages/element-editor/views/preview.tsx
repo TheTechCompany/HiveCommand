@@ -3,7 +3,6 @@ import { useContext } from "react";
 import { HMINodeFactory } from "@hive-command/canvas-nodes";
 import { ElementEditorContext } from "../context";
 import { CanvasStyle } from "../../../style";
-import * as HMIIcons from '../../../assets/hmi-elements'
 
 export const PreviewView = () => {
 

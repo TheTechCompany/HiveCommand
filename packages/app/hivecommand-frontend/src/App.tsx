@@ -77,8 +77,6 @@ const splitLink = split(
         contextConfig,
       );
 
-      console.log({ options });
-
       fetch(uri, {
         method: "POST",
         credentials: 'include',
@@ -95,37 +93,15 @@ const splitLink = split(
           ({ done, value } = await reader?.read() || {});
 
           let strValue = new TextDecoder().decode(value)
-          // console.log({strValue})
+
           let parsed = strValue.toString()?.match(/data: (.+)/)?.[1];
 
-          // console.log({parsed})
           if (parsed)
             observer.next(JSON.parse(parsed));
         }
       })
 
     })
-
-    // uri: URL,
-    // fetch: async (url, options) => {
-
-    //   const result = await fetch(url, {
-    //     ...options,
-    //     credentials: 'include'
-    //   });
-
-    //   const reader = result.body.getReader();
-
-    //   let done, value;
-
-    //   while(!done){
-    //       ({value, done} = await reader.read());
-
-    //       console.log( new TextDecoder().decode(value) );
-    //   }
-
-    //   console.log({result})
-    //   return result;
 
   }),
   //Base
@@ -144,10 +120,7 @@ const client = new ApolloClient({
 function App(props: any) {
   const navigate = useNavigate()
 
-
   const path = useLocation()
-
-  console.log({path})
 
   return (
     <LocalizationProvider

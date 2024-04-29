@@ -27,7 +27,7 @@
     "lodash": "^4.17.21"
   },
   "peerDependencies": {
-    "@apollo/client": "^3.8.1",
+    "@apollo/client": "3.9",
     "react": "*"
   }
 }

@@ -221,9 +221,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.8.1":
-  version: 3.9.9
-  resolution: "@apollo/client@npm:3.9.9"
+"@apollo/client@npm:3.9":
+  version: 3.9.11
+  resolution: "@apollo/client@npm:3.9.11"
   dependencies:
     "@graphql-typed-document-node/core": ^3.1.1
     "@wry/caches": ^1.0.0
@@ -254,7 +254,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: 77c12baba06206c749d354f94b88f952b453b6797c9b5727c576cddba082f5a23eba94805c3f14a865ef1780970c15834489bb93c0e0bfc0546a2cf1e16b998a
+  checksum: 503dde039d9701eeb3c8113494e5b568dad63d70d06a5b37af142cc57f96db436d7b175b4b556f00123f07ba7f1542ca51f4ea108a2cd66bcabfba5e5e4ccc94
   languageName: node
   linkType: hard
 
@@ -4501,7 +4501,7 @@ __metadata:
     process: ^0.11.10
     typescript: 4.9.5
   peerDependencies:
-    "@apollo/client": ^3.8.1
+    "@apollo/client": 3.9
     react: "*"
   languageName: unknown
   linkType: soft
@@ -4622,7 +4622,7 @@ __metadata:
     reactflow: 11.7.2
     typescript: 4.9.5
   peerDependencies:
-    "@apollo/client": ^3.8.1
+    "@apollo/client": 3.9
     "@hexhive/ui": 1.0.1-alpha.119
     "@mui/icons-material": ^5.10.6
     "@mui/lab": 5.0.0-alpha.170
@@ -4832,7 +4832,7 @@ __metadata:
   resolution: "@hive-command/frontend@workspace:packages/app/hivecommand-frontend"
   dependencies:
     "@allenbradley/l5x": ^1.0.0-beta.8
-    "@apollo/client": ^3.8.1
+    "@apollo/client": 3.9
     "@babel/core": ^7.14.6
     "@babel/eslint-parser": ^7.14.7
     "@babel/plugin-transform-runtime": ^7.14.5
@@ -5033,7 +5033,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/native@workspace:packages/clients/native-app-client"
   dependencies:
-    "@apollo/client": ^3.8.1
+    "@apollo/client": 3.9
     "@emotion/react": 11.10.4
     "@hexhive/styles": ^1.0.1-alpha.77
     "@hexhive/ui": 1.0.1-alpha.119
@@ -5312,7 +5312,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hivecomand-clients/root@workspace:."
   dependencies:
-    "@apollo/client": ^3.8.1
+    "@apollo/client": 3.9
     "@babel/preset-env": ^7.22.20
     "@babel/preset-react": ^7.22.15
     "@babel/preset-typescript": ^7.22.15
