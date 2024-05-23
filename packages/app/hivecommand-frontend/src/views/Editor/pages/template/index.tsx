@@ -20,13 +20,13 @@ export const getter = (inputs: Inputs) : (
     {
         left: string, 
         top: string, 
-        content: any
+        content: () => any
     } | null
 ) => {
     return {
         left: '',
         top: '',
-        content: (
+        content: () => (
             <>
             </>
         )

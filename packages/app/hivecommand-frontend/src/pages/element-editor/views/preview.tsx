@@ -1,3 +1,4 @@
+import React from 'react';
 import { InfiniteCanvas } from "@hexhive/ui"
 import { useContext } from "react";
 import { HMINodeFactory } from "@hive-command/canvas-nodes";
@@ -34,7 +35,7 @@ export const PreviewView = () => {
                     // devicePlaceholder: x.devicePlaceholder,
                     iconString: editDevice?.name,
                     icon: editDevice.Component //HMIIcons[editDevice?.name],
-                },
+                }
             }
         ] as any}
         style={CanvasStyle} />
