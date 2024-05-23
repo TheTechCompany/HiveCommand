@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/command-surface",
-	"version": "1.4.15-alpha.310",
+	"version": "1.4.15-alpha.311",
 	"description": "",
 	"private": true,
 	"publishConfig": {
@@ -54,10 +54,10 @@
 	},
 	"dependencies": {
 		"@babel/core": "^7.22.5",
-		"@hive-command/canvas-nodes": "^1.4.15-alpha.310",
+		"@hive-command/canvas-nodes": "^1.4.15-alpha.311",
 		"@hive-command/interface-types": "workspace:^",
 		"@hive-command/remote-components": "^1.4.15-alpha.289",
-		"@hive-command/scripting": "^1.4.15-alpha.289",
+		"@hive-command/scripting": "^1.4.15-alpha.311",
 		"@mui/system": "^5.13.6",
 		"@mui/x-tree-view": "^6.17.0",
 		"dot": "^1.1.3",
