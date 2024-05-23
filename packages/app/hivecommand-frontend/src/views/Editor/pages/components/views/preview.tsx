@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef } from 'react';
 import { transpile, ModuleKind, JsxEmit, ScriptTarget } from 'typescript';
 import { ErrorBoundary, useErrorBoundary } from 'react-error-boundary'
 import path from 'path';
+import { FnTranspileOptions } from '@hive-command/scripting';
 
 const PreviewComponent = (props: any) => {
     const { mainId, files } = props;
@@ -93,7 +94,7 @@ const Loader = (files: { id: string, path: string, content: string }[], mainId: 
 
     if(file?.content){
         // const data = await fetch(url)
-        const stringFunc = transpile(file?.content, { kind: ModuleKind.CommonJS, jsx: JsxEmit.React, target: ScriptTarget.ES5 })
+        const stringFunc = transpile(file?.content, FnTranspileOptions)
 
         console.log(stringFunc, files, mainId)
 

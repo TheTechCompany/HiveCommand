@@ -12,6 +12,7 @@ import path from 'path';
 import { Node } from 'reactflow';
 import { isEqual, merge } from 'lodash'
 import { DataTransformer } from '../DataTransformer';
+import { FnTranspileOptions } from '@hive-command/scripting'
 
 export * from './useNodesWithValues'
 
@@ -57,7 +58,7 @@ const _require = (components: any[], parent?: string) => {
 
 				const module = { exports };
 
-				const jsCode = 	transpile(content, { module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React })
+				const jsCode = 	transpile(content, FnTranspileOptions)
 
 				const func = new Function(
 					"module",
@@ -87,7 +88,7 @@ const _require = (components: any[], parent?: string) => {
 
 			const module = { exports };
 
-			const jsCode = transpile(fileObj.content, { module: ModuleKind.CommonJS, jsx: JsxEmit.React, esModuleInterop: true });
+			const jsCode = transpile(fileObj.content, FnTranspileOptions);
 
 
 			const func = new Function(
@@ -173,7 +174,7 @@ export const getOptionValues = (
 			"showTagWindow",
 			"React",
 			"require",
-			transpile(templateOverride, { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React })) as any;
+			transpile(templateOverride, FnTranspileOptions)) as any;
 
 		func(module, exports, (elem, data) => {
 			return functions.showWindow(elem, (state: any) => {
@@ -263,7 +264,7 @@ export const getOptionValues = (
 				"showTagWindow",
 				"React",
 				"require",
-				transpile(optionValue.replace('script://', ''), { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React }));
+				transpile(optionValue.replace('script://', ''), FnTranspileOptions));
 
 
 

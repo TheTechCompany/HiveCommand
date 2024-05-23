@@ -83,6 +83,7 @@ export class Configuration {
 
     rehydrate() {
         if (this.confExists()) {
+            console.log(this.path)
             try {
                 const confJson = JSON.parse(this.readFile() || '{}')
                 return confJson;

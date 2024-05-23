@@ -58,8 +58,6 @@ export default class Client {
 
     constructor(discoveryServer?: string){
         // super();
-
-        console.log("Construct")
         this.client = OPCUAClient.create({
             endpointMustExist: false,
             // discoveryUrl: discoveryServer,

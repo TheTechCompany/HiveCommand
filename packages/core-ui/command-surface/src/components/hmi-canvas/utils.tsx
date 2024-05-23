@@ -3,6 +3,7 @@ import { useRemoteComponents } from "@hive-command/remote-components";
 import {compile, templateSettings, template} from 'dot'
 import { HMINode } from '../../';
 import {transpile, ModuleKind } from 'typescript'
+import { FnTranspileOptions } from '@hive-command/scripting';
 export interface HMICanvasNode {
     id: string;
     width?: number;
@@ -63,7 +64,7 @@ export const getNodeValues = (node: HMINode) : {[key: string]: any }=> {
 
             const exports : {getter?: (inputs: any) => void, setter?: () => void }= {};
             const module = { exports };
-            const func = new Function("module", "exports", transpile(templateOverride, { module: ModuleKind.CommonJS }) );
+            const func = new Function("module", "exports", transpile(templateOverride, FnTranspileOptions) );
             func(module, exports);
 
             return { key: optionKey, value: exports.getter?.({device: {on: true}}) }
@@ -89,7 +90,7 @@ export const getNodeValues = (node: HMINode) : {[key: string]: any }=> {
                 //Is function
                 const exports : { handler?: () => void }= {};
                 const module = { exports };
-                const func = new Function("module", "exports", transpile(optionValue.fn, {kind: ModuleKind.CommonJS}) );
+                const func = new Function("module", "exports", transpile(optionValue.fn, FnTranspileOptions) );
                 func(module, exports);
 
                 return { key: optionKey, value: exports?.handler?.() };

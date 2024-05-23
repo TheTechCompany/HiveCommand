@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@hive-command/interface-types": "workspace:^",
+    "@hive-command/scripting": "workspace:^",
     "nanoid": "3.x"
   }
 }

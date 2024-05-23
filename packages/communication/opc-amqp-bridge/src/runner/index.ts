@@ -1,4 +1,4 @@
-import { load_exports, parseValue } from "@hive-command/scripting";
+import { FnTranspileOptions, load_exports, parseValue } from "@hive-command/scripting";
 import { DataType } from "node-opcua";
 import {transpile, ModuleKind} from 'typescript';
 import { OPCMQTTClient, SidecarOptions } from "..";
@@ -33,7 +33,7 @@ export class Runner {
             let tagValue = deviceMap.tag;
             
             if (tagValue?.indexOf('script://') == 0) {
-                const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+                const jsCode = transpile(tagValue?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', FnTranspileOptions)
                 const { getter, setter } = load_exports(jsCode)
             
                 return {path: deviceMap.path, fn: (valueStructure: any) => getter(valueStructure)};
@@ -81,7 +81,7 @@ export class Runner {
 
         if (tag?.indexOf('script://') == 0) {
 
-            const jsCode = transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', { module: ModuleKind.CommonJS })
+            const jsCode = transpile(tag?.match(/script:\/\/([.\s\S]+)/)?.[1] || '', FnTranspileOptions)
             const { getter, setter } = load_exports(jsCode)
 
             await new Promise((resolve, reject) => {

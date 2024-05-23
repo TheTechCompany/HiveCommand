@@ -71,8 +71,11 @@ export class ScadaCommand extends EventEmitter {
     }
 
     async setup() {
+        console.debug("Setting up driverRegistry");
+
         await this.driverRegistry?.setup()
 
+        console.debug("Connecting to MQTT");
 
         await this.client?.connect(async (message) => {
             try {
@@ -96,6 +99,8 @@ export class ScadaCommand extends EventEmitter {
         })
 
         if (this.options?.dataScopes) {
+            console.debug("Setting up connections to remote data-sources");
+
             let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({ pkg: x }))
             await this.ensureDrivers(drivers)
 
@@ -127,6 +132,8 @@ export class ScadaCommand extends EventEmitter {
                 
         
             }))
+
+            console.debug("Finished setting up remote data-sources")
 
         }
     }

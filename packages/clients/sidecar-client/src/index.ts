@@ -15,7 +15,6 @@ import { ScadaCommand } from '@hive-command/scada';
 
 const OPC_PROXY_PORT = 8484;
 
-
 (async () => {
 
     const scada = new ScadaCommand();

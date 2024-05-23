@@ -4454,6 +4454,7 @@ __metadata:
   resolution: "@hive-command/alarm-engine@workspace:packages/core/command-alarms"
   dependencies:
     "@hive-command/interface-types": "workspace:^"
+    "@hive-command/scripting": "workspace:^"
     jest: 27.x
     nanoid: 3.x
     typescript: 4.9.5
@@ -5004,6 +5005,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/interface-types@workspace:packages/types/interface-types"
   dependencies:
+    "@hive-command/scripting": "workspace:^"
     "@types/node": ^20.9.0
     typescript: 4.9.5
   peerDependencies:
@@ -5208,7 +5210,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scripting@^1.4.15-alpha.289, @hive-command/scripting@workspace:packages/core/command-scripting":
+"@hive-command/scripting@^1.4.15-alpha.289, @hive-command/scripting@workspace:^, @hive-command/scripting@workspace:packages/core/command-scripting":
   version: 0.0.0-use.local
   resolution: "@hive-command/scripting@workspace:packages/core/command-scripting"
   dependencies:
