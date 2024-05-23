@@ -2,7 +2,7 @@
   "name": "@hive-command/discovery-api-types",
   "packageManager": "yarn@3.6.0",
   "main": "dist/index.js",
-  "version": "1.4.15-alpha.308",
+  "version": "1.4.15-alpha.309",
   "publishConfig": {
     "access": "public"
   },
