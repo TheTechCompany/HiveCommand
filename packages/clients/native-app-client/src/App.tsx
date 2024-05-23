@@ -19,7 +19,6 @@ import { LoadingView } from './views/loading';
 const cmd = Command.sidecar('binaries/sidecar')
 
 function App() {
-  
 
   const { isReady, authState, setAuthState, updateGlobalState, updateAuthState } = useContext(DataContext)
 
