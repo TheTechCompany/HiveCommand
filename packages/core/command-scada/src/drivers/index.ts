@@ -259,14 +259,14 @@ export class DriverRegistry {
         }
     }
 
-    getDriver(pkg: string){
-        return this.drivers[pkg];
+    getDriver(id: string){
+        return this.drivers[id];
     }
 
-    async loadDriver(pkg: string, configuration: any){
+    async loadDriver(id: string, pkg: string, configuration: any) {
 
-        if(this.drivers[pkg] && isEqual(this.driverConfigurations[pkg], configuration)) {
-            return this.drivers[pkg];
+        if(this.drivers[id] && isEqual(this.driverConfigurations[id], configuration)) {
+            return this.drivers[id];
         }
         
         const driver = await Driver({
@@ -274,21 +274,21 @@ export class DriverRegistry {
             configuration
         });
 
-        this.driverConfigurations[pkg] = configuration;
-        this.drivers[pkg] = driver //as unknown as BaseCommandDriver
+        this.driverConfigurations[id] = configuration;
+        this.drivers[id] = driver //as unknown as BaseCommandDriver
 
         try{
-            await this.drivers[pkg].start()
+            await this.drivers[id].start()
         }catch(e){
-            console.log("Error starting driver", pkg, e);
+            console.log("Error starting driver", id, pkg, e);
         }
-        return this.drivers[pkg]
+        return this.drivers[id]
     }
 
-    async unloadDriver(pkg: string){
-        this.drivers[pkg].stop?.();
+    async unloadDriver(id: string){
+        this.drivers[id].stop?.();
 
-        delete this.drivers[pkg]
+        delete this.drivers[id]
     }
 
 

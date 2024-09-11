@@ -13,8 +13,10 @@ const client = new OPCClient();
 
     await client.connect("opc.tcp://localhost:4840");
 
-    const type =await client.getType(`/Objects/0:Server/4:AC500 PM56xx-2ETH/3:Resources/4:Application/3:GlobalVars/4:GVL/4:STSP_NF_Permeate`);
-    console.log(type) //DataType[type]);
+    const results = await client.getDetails(`/Objects/0:Server/4:AC500 PM56xx-2ETH/3:Resources/4:Application/3:GlobalVars/4:GVL/4:FT501/4:Flow`)
+
+    // const type =await client.getType(`/Objects/0:Server/4:AC500 PM56xx-2ETH/3:Resources/4:Application/3:GlobalVars/4:GVL/4:FT501`);
+    console.log(results) //DataType[type]);
 
     // await client.setDetails(`/Objects/1:A`, DataType.Boolean, true);
 

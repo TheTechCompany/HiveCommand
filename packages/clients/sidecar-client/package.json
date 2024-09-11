@@ -2,9 +2,7 @@
 	"name": "@hive-command/sidecar-client",
 	"version": "1.4.15-alpha.310",
 	"main": "dist/index.js",
-	"publishConfig": {
-		"access": "public"
-	},
+	"private": true,
 	"license": "MIT",
 	"bin": "dist/index.js",
 	"files": [

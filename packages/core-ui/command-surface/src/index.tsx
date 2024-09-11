@@ -680,8 +680,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const memoisedHmi = useMemo(() => {
-        return activeProgram?.interface?.map(mapHMI);
-    }, [activeProgram?.interface])
+        return activeProgram?.interface?.map(mapHMI)?.sort((a,b) => a.name?.localeCompare(b.name));
+    }, [activeProgram?.interface]);
 
     const drawerMenu: (TreeMenuItem & { pathRoot: string, component?: JSX.Element })[] = [
         {
