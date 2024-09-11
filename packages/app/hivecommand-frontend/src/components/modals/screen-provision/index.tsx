@@ -48,11 +48,11 @@ export const ScreenProvisionModal = (props) => {
                 onChange={(e) => updateScreenData('name', e.target.value)}
                 size="small"  
                 fullWidth 
-                label="Screen name" />
+                label="Token name" />
 
             <FormControlLabel 
                 sx={{marginTop: '6px'}}
-                label="Development screen"
+                label="Development token"
                 control={
                     <Checkbox />
                 } />
@@ -69,7 +69,7 @@ export const ScreenProvisionModal = (props) => {
         }},
         {id: 'provisioning', label: "Provision", view: (
             <Box>
-                <TextField size="small" label="Provision Code" value={screenData.provisionCode} disabled fullWidth />
+                <TextField size="small" label="Token" value={screenData.provisionCode} disabled fullWidth />
                 {/* <Typography>Provisioning...</Typography> */}
             </Box>
         ), beforeNext: async () => {
@@ -81,7 +81,7 @@ export const ScreenProvisionModal = (props) => {
         }},
         {id: 'finished', label: "Finish", view: (
             <Box>
-                <Typography>Screen Provisioned successfully</Typography>
+                <Typography>Token created successfully</Typography>
             </Box>
         )}
     ]
@@ -118,14 +118,14 @@ export const ScreenProvisionModal = (props) => {
             open={props.open}
             onClose={props.onClose}>
             <DialogTitle>
-                Provision screen
+                Create token
             </DialogTitle>
             <DialogContent >
                 <Box sx={{padding: '6px'}}>
                     {renderStep()}
                 </Box>
             </DialogContent>
-            <DialogActions sx={{justifyContent: 'space-between'}}>
+            <DialogActions sx={{justifyContent: screenData.id ? 'space-between' : 'flex-end'}}>
                 {screenData.id && <Button color="error">Delete</Button>}
 
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
