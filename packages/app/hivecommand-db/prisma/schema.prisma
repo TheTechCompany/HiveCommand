@@ -223,6 +223,9 @@ model AnalyticPageChart {
 
   timeBucket String?
 
+  xAxisDomain Json?
+  yAxisDomain Json? 
+
   page   AnalyticPage @relation(name: "hasAnalyticChart", fields: [pageId], references: [id], onDelete: Cascade)
   pageId String
 }

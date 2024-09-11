@@ -36,6 +36,9 @@ export const useDeviceAnalytics = (id: string) => {
             unit
    
             timeBucket
+
+            xAxisDomain
+            yAxisDomain
             
           }
       

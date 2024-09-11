@@ -45,6 +45,9 @@ export interface ReportChart {
   totalValue: { total: any };
   values: { timestamp: any, value: any }[];
 
+  xAxisDomain?: any;
+  yAxisDomain?: any;
+
   unit: string;
 }
 
@@ -441,7 +444,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
                 dataKey={item.subkey?.name}
                 label={`${item.tag?.name} - ${item.subkey?.name}`}
                 total={item?.totalValue?.total ? (item?.totalValue?.total + (item.unit ? mathUnit(item.unit).units?.[0]?.unit.name : '')) : ''}>
-                <Graph data={item.values} xKey={"timestamp"} yKey={"value"} />
+                <Graph xAxisDomain={item.xAxisDomain} yAxisDomain={item.yAxisDomain} data={item.values} xKey={"timestamp"} yKey={"value"} />
               </GraphContainer>
             )}
           </GraphGrid>
