@@ -9,5 +9,7 @@ CLI access to the HiveCommand client which is responsible for SCADA integrations
 
 ## Arguments
 
---token
---endpointURL
+| Argument | Type | Description |
+| -------- | ---- | ----------- |
+| --discoveryServer | URL | Discovery server to point SCADA data at (default: http://discovery.hexhive.io) |
+| --provisionCode | String | Provision code to authenticate with |
