@@ -4353,27 +4353,38 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hexhive/graphql-server@npm:1.0.2-beta.70":
-  version: 1.0.2-beta.70
-  resolution: "@hexhive/graphql-server@npm:1.0.2-beta.70"
+"@hexhive/crypto@npm:^1.0.2-beta.82":
+  version: 1.0.2-beta.82
+  resolution: "@hexhive/crypto@npm:1.0.2-beta.82"
+  dependencies:
+    node-rsa: ^1.1.1
+  checksum: 891b058d85f0e0f1188123c1b6a0dd2cab40d2d8c7eb26466fdacba0d1242fe6485a3b0b07b5fccd5624f1c63e817110985e7062056b38ea3725d1f9bb1c1ef4
+  languageName: node
+  linkType: hard
+
+"@hexhive/graphql-server@npm:1.0.2-beta.82":
+  version: 1.0.2-beta.82
+  resolution: "@hexhive/graphql-server@npm:1.0.2-beta.82"
   dependencies:
     "@casl/ability": ^6.5.0
     "@graphql-tools/merge": ^8.2.6
     "@graphql-tools/schema": ^8.3.5
     "@graphql-tools/stitch": ^8.6.2
     "@graphql-tools/stitching-directives": ^2.2.9
+    "@hexhive/crypto": ^1.0.2-beta.82
     "@ucast/core": ^1.10.2
     "@ucast/mongo2js": ^1.3.4
     graphql-helix: ^1.12.0
+    graphql-http: ^1.22.1
     graphql-scalars: ^1.17.0
     graphql-type-json: ^0.3.2
     graphql-upload: ^13.0.0
     jsonwebtoken: ^8.5.1
     jwks-rsa: ^2.0.5
+    node-rsa: ^1.1.1
   peerDependencies:
     graphql: 16.x
-    neo4j-driver: ^4.4.1
-  checksum: 7d9f3f212a04a86dbe5dd446fa420c9336e64beb7a7350c569906abff6ab9c2e9ffc9e87d05047cc10ac3d40e6d90a5db3702c3fda184001d71a7a4ff6edac76
+  checksum: 5169334d6ff095f88eeb1b285145370c466a0f8c67b1c42f5303046d638c77bc3671c9be6a58ce5add009163c3cb1cf5eb5b86471b1600085a591b8dc4d6a833
   languageName: node
   linkType: hard
 
@@ -4454,13 +4465,14 @@ __metadata:
   resolution: "@hive-command/alarm-engine@workspace:packages/core/command-alarms"
   dependencies:
     "@hive-command/interface-types": "workspace:^"
+    "@hive-command/scripting": "workspace:^"
     jest: 27.x
     nanoid: 3.x
     typescript: 4.9.5
   languageName: unknown
   linkType: soft
 
-"@hive-command/amqp-client@^1.4.15-alpha.309, @hive-command/amqp-client@workspace:^, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
+"@hive-command/amqp-client@^1.4.15-alpha.313, @hive-command/amqp-client@workspace:^, @hive-command/amqp-client@workspace:packages/communication/amqp-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-client@workspace:packages/communication/amqp-client"
   dependencies:
@@ -4475,8 +4487,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/amqp-hub@workspace:packages/communication/amqp-hub"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.309
-    "@hive-command/data": ^1.4.15-alpha.309
+    "@hive-command/amqp-client": ^1.4.15-alpha.313
+    "@hive-command/data": ^1.4.15-alpha.313
     "@types/amqplib": ^0.10.1
     amqplib: ^0.10.3
     dotenv: ^16.0.3
@@ -4488,7 +4500,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/api@^1.4.15-alpha.309, @hive-command/api@workspace:packages/app/hivecommand-api":
+"@hive-command/api@^1.4.15-alpha.313, @hive-command/api@workspace:packages/app/hivecommand-api":
   version: 0.0.0-use.local
   resolution: "@hive-command/api@workspace:packages/app/hivecommand-api"
   dependencies:
@@ -4516,10 +4528,10 @@ __metadata:
     "@aws-sdk/s3-request-presigner": ^3.554.0
     "@casl/ability": ^6.5.0
     "@graphql-tools/merge": ^9.0.0
-    "@hexhive/graphql-server": 1.0.2-beta.70
-    "@hive-command/amqp-client": ^1.4.15-alpha.309
-    "@hive-command/data": ^1.4.15-alpha.309
-    "@hive-command/scripting": ^1.4.15-alpha.289
+    "@hexhive/graphql-server": 1.0.2-beta.82
+    "@hive-command/amqp-client": ^1.4.15-alpha.313
+    "@hive-command/data": ^1.4.15-alpha.313
+    "@hive-command/scripting": ^1.4.15-alpha.313
     "@prisma/client": ^3.12.0
     "@types/amqplib": ^0.8.2
     "@types/cors": ^2.8.12
@@ -4529,7 +4541,7 @@ __metadata:
     axios: ^0.27.2
     cors: ^2.8.5
     csv: ^6.3.8
-    dotenv: ^10.0.0
+    dotenv: ^15.0.0
     express: ^4.17.2
     express-graphql: ^0.12.0
     graphql: 15.x
@@ -4553,7 +4565,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/canvas-nodes@^1.4.15-alpha.309, @hive-command/canvas-nodes@workspace:^, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
+"@hive-command/canvas-nodes@^1.4.15-alpha.313, @hive-command/canvas-nodes@workspace:^, @hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes":
   version: 0.0.0-use.local
   resolution: "@hive-command/canvas-nodes@workspace:packages/core-ui/command-canvas-nodes"
   dependencies:
@@ -4580,7 +4592,7 @@ __metadata:
   resolution: "@hive-command/cli-client@workspace:packages/clients/cli-client"
   dependencies:
     "@hive-command/discovery-api-types": "workspace:^"
-    "@hive-command/scada": ^1.4.15-alpha.309
+    "@hive-command/scada": ^1.4.15-alpha.313
     axios: ^1.3.3
     loglevel: ^1.8.1
     typescript: 4.9.5
@@ -4590,7 +4602,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/command-surface@^1.4.15-alpha.309, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
+"@hive-command/command-surface@^1.4.15-alpha.313, @hive-command/command-surface@workspace:packages/core-ui/command-surface":
   version: 0.0.0-use.local
   resolution: "@hive-command/command-surface@workspace:packages/core-ui/command-surface"
   dependencies:
@@ -4600,10 +4612,10 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.45
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.309
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.313
     "@hive-command/interface-types": "workspace:^"
     "@hive-command/remote-components": ^1.4.15-alpha.289
-    "@hive-command/scripting": ^1.4.15-alpha.289
+    "@hive-command/scripting": ^1.4.15-alpha.313
     "@mui/material": 5.15.0
     "@mui/system": ^5.13.6
     "@mui/x-tree-view": ^6.17.0
@@ -4641,12 +4653,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/data@^1.4.15-alpha.309, @hive-command/data@workspace:^, @hive-command/data@workspace:packages/app/hivecommand-db":
+"@hive-command/data@^1.4.15-alpha.313, @hive-command/data@workspace:^, @hive-command/data@workspace:packages/app/hivecommand-db":
   version: 0.0.0-use.local
   resolution: "@hive-command/data@workspace:packages/app/hivecommand-db"
   dependencies:
     "@prisma/client": ^5.0.0
     prisma: ^5.0.0
+    ts-node: ^10.9.2
     typescript: 4.9.5
   languageName: unknown
   linkType: soft
@@ -4660,7 +4673,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/drivers-base@^1.4.15-alpha.309, @hive-command/drivers-base@workspace:^, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
+"@hive-command/drivers-base@^1.4.15-alpha.313, @hive-command/drivers-base@workspace:^, @hive-command/drivers-base@workspace:packages/drivers/command-driver":
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-base@workspace:packages/drivers/command-driver"
   dependencies:
@@ -4674,7 +4687,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-ethernet-ip@workspace:packages/drivers/command-ethernet-ip"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.309
+    "@hive-command/drivers-base": ^1.4.15-alpha.313
     "@hive-command/ethernet-ip": ^2.5.6-alpha.37
     jest: ^27.x
     observable-fns: ^0.6.1
@@ -4686,8 +4699,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/drivers-opcua@workspace:packages/drivers/command-opcua"
   dependencies:
-    "@hive-command/drivers-base": ^1.4.15-alpha.309
-    "@hive-command/opcua-client": ^1.4.15-alpha.309
+    "@hive-command/drivers-base": ^1.4.15-alpha.313
+    "@hive-command/opcua-client": ^1.4.15-alpha.313
     "@types/cli-progress": ^3.11.5
     cli-progress: ^3.12.0
     typescript: 4.9.5
@@ -4767,7 +4780,7 @@ __metadata:
   resolution: "@hive-command/enip-bridge@workspace:packages/communication/opc-ethernet-ip-bridge"
   dependencies:
     "@hive-command/ethernet-ip": ^2.5.6-alpha.31
-    "@hive-command/opcua-server": ^1.4.15-alpha.309
+    "@hive-command/opcua-server": ^1.4.15-alpha.313
     "@types/express": ^4.17.14
     express: ^4.18.2
     jest: ^29.4.2
@@ -4792,7 +4805,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hive-command/evented-values@^1.4.15-alpha.309, @hive-command/evented-values@workspace:^, @hive-command/evented-values@workspace:packages/core/evented-values":
+"@hive-command/evented-values@^1.4.15-alpha.313, @hive-command/evented-values@workspace:^, @hive-command/evented-values@workspace:packages/core/evented-values":
   version: 0.0.0-use.local
   resolution: "@hive-command/evented-values@workspace:packages/core/evented-values"
   dependencies:
@@ -4849,16 +4862,16 @@ __metadata:
     "@hexhive/auth-ui": 1.0.2-beta.44
     "@hexhive/styles": 1.0.1-alpha.84
     "@hexhive/ui": 1.0.1-alpha.119
-    "@hive-command/api": ^1.4.15-alpha.309
-    "@hive-command/canvas-nodes": ^1.4.15-alpha.309
-    "@hive-command/command-surface": ^1.4.15-alpha.309
+    "@hive-command/api": ^1.4.15-alpha.313
+    "@hive-command/canvas-nodes": ^1.4.15-alpha.313
+    "@hive-command/command-surface": ^1.4.15-alpha.313
     "@hive-command/data-types": ^1.4.15-alpha.52
     "@hive-command/electrical-editor": ^1.4.15-alpha.289
     "@hive-command/electrical-editor-v2": "workspace:^"
     "@hive-command/interface-editor": "workspace:^"
     "@hive-command/interface-types": "workspace:^"
     "@hive-command/remote-components": ^1.4.15-alpha.289
-    "@hive-command/scripting": ^1.4.15-alpha.289
+    "@hive-command/scripting": ^1.4.15-alpha.313
     "@monaco-editor/react": ^4.4.6
     "@mui/base": 5.0.0-beta.40
     "@mui/icons-material": ^5.6.2
@@ -5004,6 +5017,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/interface-types@workspace:packages/types/interface-types"
   dependencies:
+    "@hive-command/scripting": "workspace:^"
     "@types/node": ^20.9.0
     typescript: 4.9.5
   peerDependencies:
@@ -5015,7 +5029,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/mqtt-auth-server@workspace:packages/network/mqtt-auth-server"
   dependencies:
-    "@hive-command/data": ^1.4.15-alpha.309
+    "@hive-command/data": ^1.4.15-alpha.313
     "@hive-command/rabbitmq-auth": ^1.4.15-alpha.289
     "@types/body-parser": ^1.19.2
     "@types/cors": ^2.8.13
@@ -5038,12 +5052,12 @@ __metadata:
     "@hexhive/styles": ^1.0.1-alpha.77
     "@hexhive/ui": 1.0.1-alpha.119
     "@hexhive/utils": ^0.0.6-alpha.13
-    "@hive-command/api": ^1.4.15-alpha.309
-    "@hive-command/command-surface": ^1.4.15-alpha.309
+    "@hive-command/api": ^1.4.15-alpha.313
+    "@hive-command/command-surface": ^1.4.15-alpha.313
     "@hive-command/discovery-api-types": "workspace:^"
     "@hive-command/remote-components": ^1.4.15-alpha.289
-    "@hive-command/scripting": ^1.4.15-alpha.289
-    "@hive-command/sidecar-client": ^1.4.15-alpha.309
+    "@hive-command/scripting": ^1.4.15-alpha.313
+    "@hive-command/sidecar-client": ^1.4.15-alpha.313
     "@monaco-editor/react": 4.6.0
     "@mui/icons-material": ^5.11.16
     "@mui/lab": 5.0.0-alpha.170
@@ -5079,9 +5093,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-amqp-bridge@workspace:packages/communication/opc-amqp-bridge"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.309
-    "@hive-command/opcua-client": ^1.4.15-alpha.309
-    "@hive-command/scripting": ^1.4.15-alpha.289
+    "@hive-command/amqp-client": ^1.4.15-alpha.313
+    "@hive-command/opcua-client": ^1.4.15-alpha.313
+    "@hive-command/scripting": ^1.4.15-alpha.313
     jest: 27.x
     lodash: ^4.17.21
     loglevel: ^1.8.1
@@ -5091,11 +5105,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-client@^1.4.15-alpha.309, @hive-command/opcua-client@workspace:packages/communication/opc-client":
+"@hive-command/opcua-client@^1.4.15-alpha.313, @hive-command/opcua-client@workspace:packages/communication/opc-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-client@workspace:packages/communication/opc-client"
   dependencies:
-    "@hive-command/opcua-server": ^1.4.15-alpha.309
+    "@hive-command/opcua-server": ^1.4.15-alpha.313
     "@hive-command/opcua-utils": ^1.4.15-alpha.289
     "@sinonjs/fake-timers": ^10.0.2
     "@types/jest": ^27.0.3
@@ -5106,18 +5120,18 @@ __metadata:
     node-opcua: 2.116.0
     sinon: ^15.0.1
     ts-jest: ^26.5.6
-    ts-node: ^9.1.1
+    ts-node: 10
     typescript: 4.9.5
   bin:
     opcua-client: ./dist/cmd.js
   languageName: unknown
   linkType: soft
 
-"@hive-command/opcua-server@^1.4.15-alpha.309, @hive-command/opcua-server@workspace:packages/communication/opc-server":
+"@hive-command/opcua-server@^1.4.15-alpha.313, @hive-command/opcua-server@workspace:packages/communication/opc-server":
   version: 0.0.0-use.local
   resolution: "@hive-command/opcua-server@workspace:packages/communication/opc-server"
   dependencies:
-    "@hive-command/opcua-client": ^1.4.15-alpha.309
+    "@hive-command/opcua-client": ^1.4.15-alpha.313
     "@hive-command/opcua-utils": ^1.4.15-alpha.289
     "@types/jest": ^27.0.3
     jest: ^26.6.3
@@ -5161,7 +5175,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scada@^1.4.15-alpha.309, @hive-command/scada@workspace:^, @hive-command/scada@workspace:packages/core/command-scada":
+"@hive-command/scada@^1.4.15-alpha.313, @hive-command/scada@workspace:^, @hive-command/scada@workspace:packages/core/command-scada":
   version: 0.0.0-use.local
   resolution: "@hive-command/scada@workspace:packages/core/command-scada"
   dependencies:
@@ -5208,7 +5222,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/scripting@^1.4.15-alpha.289, @hive-command/scripting@workspace:packages/core/command-scripting":
+"@hive-command/scripting@^1.4.15-alpha.313, @hive-command/scripting@workspace:^, @hive-command/scripting@workspace:packages/core/command-scripting":
   version: 0.0.0-use.local
   resolution: "@hive-command/scripting@workspace:packages/core/command-scripting"
   dependencies:
@@ -5220,13 +5234,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@hive-command/sidecar-client@^1.4.15-alpha.309, @hive-command/sidecar-client@workspace:packages/clients/sidecar-client":
+"@hive-command/sidecar-client@^1.4.15-alpha.313, @hive-command/sidecar-client@workspace:packages/clients/sidecar-client":
   version: 0.0.0-use.local
   resolution: "@hive-command/sidecar-client@workspace:packages/clients/sidecar-client"
   dependencies:
-    "@hive-command/amqp-client": ^1.4.15-alpha.309
-    "@hive-command/drivers-base": ^1.4.15-alpha.309
-    "@hive-command/evented-values": ^1.4.15-alpha.309
+    "@hive-command/amqp-client": ^1.4.15-alpha.313
+    "@hive-command/drivers-base": ^1.4.15-alpha.313
+    "@hive-command/evented-values": ^1.4.15-alpha.313
     "@hive-command/scada": "workspace:^"
     "@hive-command/threads": ^1.7.0
     "@types/express": ^4.17.14
@@ -14812,7 +14826,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1@npm:~0.2.3":
+"asn1@npm:^0.2.4, asn1@npm:~0.2.3":
   version: 0.2.6
   resolution: "asn1@npm:0.2.6"
   dependencies:
@@ -19157,6 +19171,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^15.0.0":
+  version: 15.0.1
+  resolution: "dotenv@npm:15.0.1"
+  checksum: acebaa5b0bb23fdbbdc50827936bdf6782e935b73c6048e949df352515576ec9542455a93f58cc3eefd839e45c670fbfed250a1061eb72f536dab05745d1bf33
+  languageName: node
+  linkType: hard
+
 "dotenv@npm:^16.0.0, dotenv@npm:^16.0.1, dotenv@npm:^16.0.3, dotenv@npm:^16.3.1":
   version: 16.4.5
   resolution: "dotenv@npm:16.4.5"
@@ -22326,6 +22347,15 @@ __metadata:
   peerDependencies:
     graphql: ^15.3.0 || ^16.0.0
   checksum: 04c08557b7f118b4ccb795e91752b36ba96bd56314892ad9738de36bb602e0208e2cc978143f0969a143a07fa5a9511f96f820100eea4da2d6030b592054cb42
+  languageName: node
+  linkType: hard
+
+"graphql-http@npm:^1.22.1":
+  version: 1.22.1
+  resolution: "graphql-http@npm:1.22.1"
+  peerDependencies:
+    graphql: ">=0.11 <=16"
+  checksum: b514ed17837c7622834ab306d886586296cc504abb1055223cb50ec145804ba4769a9d0b523504d79e955cc3e9469cf29f8153353d8715a94ee0c98fa5c54a3b
   languageName: node
   linkType: hard
 
@@ -29682,6 +29712,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-rsa@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "node-rsa@npm:1.1.1"
+  dependencies:
+    asn1: ^0.2.4
+  checksum: c03a6c8f69557326d2110086ce9610b4b17ef0fd594f76202225b7eb93fc0b342fb31714f6b3cf8d38320cf63c4790a3034e5d47a12f2c27d1900599ec9bd545
+  languageName: node
+  linkType: hard
+
 "node-watch@npm:0.7.3":
   version: 0.7.3
   resolution: "node-watch@npm:0.7.3"
@@ -37000,7 +37039,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:^10.4.0, ts-node@npm:^10.9.1, ts-node@npm:^10.9.2":
+"ts-node@npm:10, ts-node@npm:^10.4.0, ts-node@npm:^10.9.1, ts-node@npm:^10.9.2":
   version: 10.9.2
   resolution: "ts-node@npm:10.9.2"
   dependencies:

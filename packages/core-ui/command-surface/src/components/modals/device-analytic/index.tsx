@@ -25,7 +25,7 @@ export const DeviceAnalyticModal = (props: {
             fullWidth
             open={props.open} 
             onClose={props.onClose}>
-            <DialogTitle>{props.selected ? "Update": "Create"} Report</DialogTitle>
+            <DialogTitle>{props.selected ? "Update": "Create"} Chart</DialogTitle>
             <DialogContent>
                 <TextField 
                     value={report.name}

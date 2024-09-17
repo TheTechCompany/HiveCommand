@@ -45,6 +45,9 @@ export interface ReportChart {
   totalValue: { total: any };
   values: { timestamp: any, value: any }[];
 
+  xAxisDomain?: any;
+  yAxisDomain?: any;
+
   unit: string;
 }
 
@@ -348,8 +351,8 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
           if (!activePage) return;
 
           if (!graph.id) {
-            console.log("Add chart")
-            client?.addChart?.(activePage, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, 0, 0, 8, 6, graph.totalize).then(() => {
+            console.log("Add chart", graph)
+            client?.addChart?.(activePage, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, 0, 0, 8, 6, graph.totalize, graph.xAxisDomain, graph.yAxisDomain).then(() => {
               openModal(false);
               console.log("Chart added");
               // refetchStructure?.()
@@ -357,7 +360,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
               setSelected(undefined)
             })
           } else {
-            client?.updateChart?.(activePage, graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, graph.x, graph.y, graph.w, graph.h, graph.totalize).then(() => {
+            client?.updateChart?.(activePage, graph.id, 'line-chart', graph.deviceID, graph.keyID, graph.unit, graph.timeBucket, graph.x, graph.y, graph.w, graph.h, graph.totalize, graph.xAxisDomain, graph.yAxisDomain).then(() => {
               openModal(false);
               // refetchStructure?.()
               // refetchValues?.()
@@ -441,7 +444,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
                 dataKey={item.subkey?.name}
                 label={`${item.tag?.name} - ${item.subkey?.name}`}
                 total={item?.totalValue?.total ? (item?.totalValue?.total + (item.unit ? mathUnit(item.unit).units?.[0]?.unit.name : '')) : ''}>
-                <Graph data={item.values} xKey={"timestamp"} yKey={"value"} />
+                <Graph xAxisDomain={item.xAxisDomain} yAxisDomain={item.yAxisDomain} data={item.values} xKey={"timestamp"} yKey={"value"} />
               </GraphContainer>
             )}
           </GraphGrid>

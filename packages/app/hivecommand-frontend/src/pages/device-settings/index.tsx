@@ -68,7 +68,7 @@ export const DeviceSettings = () => {
             <Divider />
 
             <Box sx={{padding: '6px', display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                <Typography>Screens</Typography>
+                <Typography>Tokens</Typography>
                 <IconButton onClick={() => openProvisioner(true)} size="small">
                     <Add fontSize="inherit"/>
                 </IconButton>

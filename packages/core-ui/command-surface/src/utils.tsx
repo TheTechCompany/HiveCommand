@@ -6,6 +6,7 @@ import { template } from 'dot';
 // import { baseRequirements } from '@hive-command/remote-components';
 import { isEqual } from 'lodash';
 import path from 'path';
+import { FnTranspileOptions } from '@hive-command/scripting';
 
 export interface DevicePlaceholder {
 	tag: string,
@@ -75,7 +76,7 @@ const _require = (components: any[], parent?: string) => {
 
 				const module = { exports };
 
-				const jsCode = 	transpile(content, { module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React })
+				const jsCode = 	transpile(content, FnTranspileOptions)
 
 				const func = new Function(
 					"module",
@@ -96,7 +97,7 @@ const _require = (components: any[], parent?: string) => {
 
 			const module = { exports };
 
-			const jsCode = transpile(fileObj.content, { module: ModuleKind.CommonJS, jsx: JsxEmit.React, esModuleInterop: true });
+			const jsCode = transpile(fileObj.content, FnTranspileOptions);
 
 
 			const func = new Function(
@@ -338,11 +339,7 @@ export const getSystemValues = (
 				"exports",
 				"React",
 				"require",
-				transpile(systemScripts[scriptKey], {
-					module: ModuleKind.CommonJS, 
-					target: ScriptTarget.ES5, 
-					jsx: JsxEmit.React 
-				})
+				transpile(systemScripts[scriptKey], FnTranspileOptions)
 			);
 
 			func(module, exports, baseRequirements['react'], _require([]) );
@@ -416,7 +413,7 @@ export const getOptionValues = (
 			"showTagWindow",
 			"React",
 			"require",
-			transpile(templateOverride, { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React }));
+			transpile(templateOverride, FnTranspileOptions));
 
 		func(module, exports, (elem, data) => {
 			return functions.showWindow(elem, (state: any) => {
@@ -504,7 +501,7 @@ export const getOptionValues = (
 				"showTagWindow",
 				"React",
 				"require",
-				transpile(optionValue.replace('script://', ''), { module: ModuleKind.CommonJS, target: ScriptTarget.ES5, jsx: JsxEmit.React }));
+				transpile(optionValue.replace('script://', ''), FnTranspileOptions));
 
 
 

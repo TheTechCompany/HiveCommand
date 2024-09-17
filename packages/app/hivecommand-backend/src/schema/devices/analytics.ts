@@ -59,6 +59,9 @@ export default (prisma: PrismaClient) => {
 			unit: String
 			timeBucket: String
 
+			xAxisDomain: JSON
+			yAxisDomain: JSON
+
 			device: String
 		}
 
@@ -82,6 +85,9 @@ export default (prisma: PrismaClient) => {
 			totalValue(startDate: DateTime, endDate: DateTime): CommandDeviceTimeseriesTotal
 
 			device: CommandDevice 
+
+			xAxisDomain: JSON
+			yAxisDomain: JSON
 
 			createdAt: DateTime
 		}
@@ -366,6 +372,9 @@ export default (prisma: PrismaClient) => {
 						width: args.input.width,
 						height: args.input.height,
 
+						xAxisDomain: args.input.xAxisDomain,
+						yAxisDomain: args.input.yAxisDomain,
+						
 						tag: {
 							connect: {id: args.input.tagId}
 						},
@@ -395,6 +404,9 @@ export default (prisma: PrismaClient) => {
 						y: args.input.y,
 						width: args.input.width,
 						height: args.input.height,
+
+						xAxisDomain: args.input.xAxisDomain,
+						yAxisDomain: args.input.yAxisDomain,
 
 						tag: {
 							connect: {id: args.input.tagId}

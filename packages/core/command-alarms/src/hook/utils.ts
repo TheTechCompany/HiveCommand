@@ -1,5 +1,6 @@
 import { transpile, ModuleKind, JsxEmit } from 'typescript'
 import { HookInstance } from './types';
+import { FnTranspileOptions } from '@hive-command/scripting'
 
 export enum ALARM_LEVEL {
     CRITICAL,
@@ -11,7 +12,7 @@ export const makeNotification = (
     script: string
 ) => {
 
-    const jsCode = transpile(script, {module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React})
+    const jsCode = transpile(script, FnTranspileOptions)
 
     const func = new Function(
         "module",
@@ -50,7 +51,7 @@ export const makeHook = (
 
         ${script}
     
-    `, { module: ModuleKind.CommonJS, esModuleInterop: true, jsx: JsxEmit.React })
+    `, FnTranspileOptions)
 
     const func = new Function(
         "module",

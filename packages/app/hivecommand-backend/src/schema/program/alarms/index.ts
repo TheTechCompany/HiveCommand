@@ -5,6 +5,7 @@ import { LexoRank } from "lexorank";
 import { JsxEmit, ModuleKind, ScriptTarget, transpile } from 'typescript';
 import { Project } from 'ts-morph'
 import { defaultAlarm, defaultAlarmPathway } from "./defaults";
+import { FnTranspileOptions } from "@hive-command/scripting";
 
 const canCompile = (tsCode: string) => {
 
@@ -134,7 +135,7 @@ export default (prisma: PrismaClient) => {
                 let compiled;
                 
                 try{
-                    compiled = transpile(args.input.script, {module: ModuleKind.CommonJS, target: ScriptTarget.ES5})
+                    compiled = transpile(args.input.script, FnTranspileOptions)
                 }catch(err){
 
                 }
@@ -181,7 +182,7 @@ export default (prisma: PrismaClient) => {
                 let compiled;
                 
                 try{
-                    compiled = transpile(args.input.script, {module: ModuleKind.CommonJS, target: ScriptTarget.ES5})
+                    compiled = transpile(args.input.script, FnTranspileOptions)
                 }catch(err){
 
                 }

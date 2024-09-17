@@ -3,6 +3,7 @@ import { DataTypes } from './types';
 export * from './generators'
 export * from './types'
 export * from './loaders'
+export * from './transpilation'
 
 
 export const parseValue = (type: string, value: any ) => {

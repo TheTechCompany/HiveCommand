@@ -2,13 +2,14 @@
 
 SCADA system for IIOT 4.0
 
-- [Electrical Editor](packages/core-ui/command-electrical-editor/README.md)
-
 ## Getting Started
 
-Developer pathway
+### Developer pathway
 
 Get dependencies
+
+[HexHive Gateway](https://github.com/TheTechCompany/HexHive)
+
 ```
 git clone 
 
@@ -17,23 +18,17 @@ cd HiveCommand/
 yarn
 ```
 
-Start Storybook (Component development)
+Start gateway, backend + web-frontend
 ```
-cd packages/core-ui/command-electrical-editor
+hexhive-dev
 
-yarn storybook
-```
-
-
-Start backend + web-frontend (HexHive gateway needs configuring first) [HexHive Gateway](https://github.com/TheTechCompany/HexHive)
-```
 cd packages/app/hivecommand-backend/; yarn start
 
 cd packages/app/hivecommand-frontend/; yarn start
 
 ```
 
-## Typescript references
+#### Typescript references
 To keep typescript inference throughout the monorepo follow the below steps;
 
 Keep the root tsconfig.json up to date with project references
@@ -43,13 +38,38 @@ Add references at the bottom of modules that use shared modules
 
 For webpack ts-loader with projectReferences and tsconfig-paths-webpack-plugin must be setup
 
-Integrator pathway
+### Integrator pathway
 
-[Download Builder](https://github.com/TheTechCompany/HiveCommand/releases)
+[Device onboarding](/docs/device-onboarding.md)
 
-End-user pathway
+Architecture
 
-[Sign Up](https://hivecommand.dev)
+```
+┌─────────────────────┐         
+│EdgeDevice (RPi / PC)│         
+└┬────────────────────┘         
+┌▽────────────────┐             
+│SCADA Client     │             
+└┬───────────────┬┘             
+┌▽─────────────┐┌▽─────────────┐
+│Evented values││PLC Driver Bus│
+└┬─────────────┘└┬─────────────┘
+┌▽───┐┌──────────▽┐             
+│MQTT││PLC        │             
+└────┘└───────────┘             
+```
+
+Available SCADA Clients
+
+- [@hive-command/cli-client](/packages/clients/cli-client/)
+- [@hive-command/native](https://github.com/TheTechCompany/HiveCommand/releases)
+
+Available PLC Drivers
+
+- [Driver interface](/packages/drivers/command-driver/)
+- [OPC-UA](/packages/drivers/command-opcua/)
+- [Ethernet/IP](/packages/drivers/command-ethernet-ip/)
+
 
 ## Testing
 

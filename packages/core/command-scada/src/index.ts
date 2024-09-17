@@ -71,8 +71,11 @@ export class ScadaCommand extends EventEmitter {
     }
 
     async setup() {
+        console.debug("Setting up driverRegistry");
+
         await this.driverRegistry?.setup()
 
+        console.debug("Connecting to MQTT");
 
         await this.client?.connect(async (message) => {
             try {
@@ -96,15 +99,20 @@ export class ScadaCommand extends EventEmitter {
         })
 
         if (this.options?.dataScopes) {
+            console.debug("Setting up connections to remote data-sources");
+
             let drivers = [...new Set(this.options.dataScopes.map((x) => x.plugin.module))].map((x) => ({ pkg: x }))
             await this.ensureDrivers(drivers)
 
-            await Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
+            for(var i = 0; i < (this.options?.dataScopes || [])?.length; i++){
+            // await Promise.all((this.options?.dataScopes || []).map(async (dataScope) => {
+                const dataScope = this.options?.dataScopes[i];
+
                 const configuration = Object.keys(dataScope.plugin.configuration).map((x) => ({
                     [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
                 })).reduce((prev, curr) => ({...prev, ...curr}), {})
                 
-                const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
+                const driver = await this.driverRegistry?.loadDriver(dataScope.id, dataScope.plugin.module, configuration)
 
                 let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
                     let type = this.options?.types?.find((a) => a.name === tag.type)
@@ -124,9 +132,14 @@ export class ScadaCommand extends EventEmitter {
                         this.eventedValues.updateValue(dataKey, dataPatch[dataKey]);
                     })
                 });
+
+                await new Promise((resolve) => setInterval(() => driver?.ready && resolve(true), 100))
                 
         
-            }))
+            // }))
+            }
+
+            console.debug("Finished setting up remote data-sources")
 
         }
     }
@@ -150,7 +163,7 @@ export class ScadaCommand extends EventEmitter {
         let tagOption = this.options?.tags?.find((a) => a.name == tagRoot);
 
         if(tagOption?.scope){
-            const plugin = this.driverRegistry?.getDriver(tagOption.scope.plugin.module)
+            const plugin = this.driverRegistry?.getDriver(tagOption.scope.id)
             try{
                 await plugin?.write(tagPath, value);
                 this.eventedValues.updateValue(tagPath, value)
@@ -226,7 +239,7 @@ export class ScadaCommand extends EventEmitter {
                 [x]: formatValue(dataScope.configuration[x], dataScope.plugin.configuration[x])
             })).reduce((prev, curr) => ({...prev, ...curr}), {})
 
-            const driver = await this.driverRegistry?.loadDriver(dataScope.plugin.module, configuration)
+            const driver = await this.driverRegistry?.loadDriver(dataScope.id, dataScope.plugin.module, configuration)
 
             let subscriptionTags = this.options?.tags?.filter((a) => a.scope?.id == dataScope.id).map((tag) => {
                 let type = this.options?.types?.find((a) => a.name === tag.type)

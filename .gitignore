@@ -12,3 +12,8 @@ dist/
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+*stack
+
+
+*.key

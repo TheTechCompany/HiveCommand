@@ -2,8 +2,6 @@
  * GQTY AUTO-GENERATED CODE: PLEASE DO NOT MODIFY MANUALLY
  */
 
-import { SchemaUnionsKey } from "gqty";
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -41,13 +39,6 @@ export interface ComandProgramInterfaceEdgeInput {
   to?: InputMaybe<Scalars["String"]>;
   toHandle?: InputMaybe<Scalars["String"]>;
   toPoint?: InputMaybe<Scalars["JSON"]>;
-}
-
-export interface ComandProgramInterfaceGroupInput {
-  nodes?: InputMaybe<Array<InputMaybe<ComandProgramInterfaceNodeInput>>>;
-  ports?: InputMaybe<Array<InputMaybe<CommandHMIPortInput>>>;
-  x?: InputMaybe<Scalars["Float"]>;
-  y?: InputMaybe<Scalars["Float"]>;
 }
 
 export interface ComandProgramInterfaceNodeInput {
@@ -95,7 +86,9 @@ export interface CommandDeviceAnalyticInput {
   unit?: InputMaybe<Scalars["String"]>;
   width?: InputMaybe<Scalars["Int"]>;
   x?: InputMaybe<Scalars["Int"]>;
+  xAxisDomain?: InputMaybe<Scalars["JSON"]>;
   y?: InputMaybe<Scalars["Int"]>;
+  yAxisDomain?: InputMaybe<Scalars["JSON"]>;
 }
 
 export interface CommandDeviceInput {
@@ -333,12 +326,6 @@ export const generatedSchema = {
     toHandle: { __type: "String" },
     toPoint: { __type: "JSON" },
   },
-  ComandProgramInterfaceGroupInput: {
-    nodes: { __type: "[ComandProgramInterfaceNodeInput]" },
-    ports: { __type: "[CommandHMIPortInput]" },
-    x: { __type: "Float" },
-    y: { __type: "Float" },
-  },
   ComandProgramInterfaceNodeInput: {
     children: { __type: "[ComandProgramInterfaceNodeInput]" },
     height: { __type: "Float" },
@@ -423,6 +410,7 @@ export const generatedSchema = {
   },
   CommandDeviceAnalytic: {
     __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
     device: { __type: "CommandDevice" },
     height: { __type: "Int" },
     id: { __type: "ID!" },
@@ -438,11 +426,13 @@ export const generatedSchema = {
     unit: { __type: "String" },
     values: {
       __type: "[CommandDeviceTimeseriesData]",
-      __args: { endDate: "DateTime", format: "String", startDate: "DateTime" },
+      __args: { endDate: "DateTime", startDate: "DateTime" },
     },
     width: { __type: "Int" },
     x: { __type: "Int" },
+    xAxisDomain: { __type: "JSON" },
     y: { __type: "Int" },
+    yAxisDomain: { __type: "JSON" },
   },
   CommandDeviceAnalyticInput: {
     device: { __type: "String" },
@@ -456,7 +446,9 @@ export const generatedSchema = {
     unit: { __type: "String" },
     width: { __type: "Int" },
     x: { __type: "Int" },
+    xAxisDomain: { __type: "JSON" },
     y: { __type: "Int" },
+    yAxisDomain: { __type: "JSON" },
   },
   CommandDeviceInput: {
     deviceSnapshot: { __type: "[CommandDeviceSnapshotInput]" },
@@ -466,9 +458,12 @@ export const generatedSchema = {
   },
   CommandDeviceReport: {
     __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
     device: { __type: "CommandDevice" },
+    endDate: { __type: "DateTime" },
     fields: { __type: "[CommandDeviceReportField]" },
     id: { __type: "ID!" },
+    instances: { __type: "[CommandDeviceReportInstance]" },
     name: { __type: "String" },
     recurring: { __type: "Boolean" },
     reportLength: { __type: "String" },
@@ -477,6 +472,7 @@ export const generatedSchema = {
   CommandDeviceReportField: {
     __typename: { __type: "String!" },
     bucket: { __type: "String" },
+    createdAt: { __type: "DateTime" },
     device: { __type: "CommandProgramTag" },
     id: { __type: "ID!" },
     key: { __type: "CommandProgramTypeField" },
@@ -492,6 +488,18 @@ export const generatedSchema = {
     recurring: { __type: "Boolean" },
     reportLength: { __type: "String" },
     startDate: { __type: "DateTime" },
+  },
+  CommandDeviceReportInstance: {
+    __typename: { __type: "String!" },
+    createdAt: { __type: "DateTime" },
+    done: { __type: "Boolean" },
+    endDate: { __type: "DateTime" },
+    fileId: { __type: "String" },
+    id: { __type: "ID" },
+    report: { __type: "CommandDeviceReport" },
+    startDate: { __type: "DateTime" },
+    url: { __type: "String" },
+    version: { __type: "String" },
   },
   CommandDeviceScreen: {
     __typename: { __type: "String!" },
@@ -598,19 +606,6 @@ export const generatedSchema = {
     toHandle: { __type: "String" },
     toPoint: { __type: "JSON" },
   },
-  CommandHMIGroup: {
-    __typename: { __type: "String!" },
-    height: { __type: "Float" },
-    id: { __type: "ID!" },
-    inputs: { __type: "[CommandHMINode]" },
-    nodes: { __type: "[CommandHMINode]" },
-    outputs: { __type: "[CommandHMINode]" },
-    ports: { __type: "[CommandHMIPort]" },
-    rotation: { __type: "Float" },
-    width: { __type: "Float" },
-    x: { __type: "Float" },
-    y: { __type: "Float" },
-  },
   CommandHMINode: {
     __typename: { __type: "String!" },
     children: { __type: "[CommandHMINode]" },
@@ -637,10 +632,6 @@ export const generatedSchema = {
     id: { __type: "ID" },
     sourceHandle: { __type: "String" },
     targetHandle: { __type: "String" },
-  },
-  CommandHMINodes: {
-    __typename: { __type: "String!" },
-    $on: { __type: "$CommandHMINodes!" },
   },
   CommandHMIPort: {
     __typename: { __type: "String!" },
@@ -704,6 +695,7 @@ export const generatedSchema = {
   CommandProgramAlarmPathway: {
     __typename: { __type: "String!" },
     compileError: { __type: "Boolean" },
+    createdAt: { __type: "DateTime" },
     id: { __type: "ID" },
     name: { __type: "String" },
     scope: { __type: "String" },
@@ -834,7 +826,10 @@ export const generatedSchema = {
     organisation: { __type: "HiveOrganisation" },
     pages: { __type: "[CommandSchematicPage]" },
     templates: { __type: "[CommandSchematicPageTemplate]" },
-    versions: { __type: "[CommandSchematicVersion]" },
+    versions: {
+      __type: "[CommandSchematicVersion]",
+      __args: { where: "CommandSchematicWhere" },
+    },
   },
   CommandSchematicInput: {
     name: { __type: "String" },
@@ -868,6 +863,7 @@ export const generatedSchema = {
   CommandSchematicVersion: {
     __typename: { __type: "String!" },
     commit: { __type: "String" },
+    compiled: { __type: "Boolean" },
     createdAt: { __type: "DateTime" },
     createdBy: { __type: "HiveUser" },
     data: { __type: "JSON" },
@@ -907,6 +903,7 @@ export const generatedSchema = {
     inputs: { __type: "[CommandTemplateIO]" },
     name: { __type: "String" },
     outputs: { __type: "[CommandTemplateIO]" },
+    systemOptions: { __type: "JSON" },
   },
   CommandTemplateTransformerInput: { name: { __type: "String" } },
   ConnectDevicesInput: {
@@ -1057,14 +1054,6 @@ export const generatedSchema = {
         program: "ID",
       },
     },
-    createCommandProgramInterfaceGroup: {
-      __type: "CommandHMIGroup",
-      __args: {
-        input: "ComandProgramInterfaceGroupInput!",
-        node: "ID",
-        program: "ID",
-      },
-    },
     createCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: {
@@ -1182,10 +1171,6 @@ export const generatedSchema = {
       __type: "CommandHMIEdge",
       __args: { hmi: "ID", id: "ID!", program: "ID" },
     },
-    deleteCommandProgramInterfaceGroup: {
-      __type: "CommandHMIGroup",
-      __args: { id: "ID!", node: "ID", program: "ID" },
-    },
     deleteCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: { hmi: "ID", id: "ID!", program: "ID" },
@@ -1226,6 +1211,16 @@ export const generatedSchema = {
     deleteDeviceScreen: {
       __type: "CommandDeviceScreen",
       __args: { device: "ID", id: "ID!" },
+    },
+    downloadCommandDeviceAnalytic: {
+      __type: "String",
+      __args: {
+        bucket: "String",
+        endDate: "DateTime",
+        id: "ID",
+        page: "ID",
+        startDate: "DateTime",
+      },
     },
     exportCommandSchematic: { __type: "String", __args: { id: "ID!" } },
     importCommandProgramTags: {
@@ -1366,15 +1361,6 @@ export const generatedSchema = {
         program: "ID",
       },
     },
-    updateCommandProgramInterfaceGroup: {
-      __type: "CommandHMIGroup",
-      __args: {
-        id: "ID",
-        input: "ComandProgramInterfaceGroupInput!",
-        node: "ID",
-        program: "ID",
-      },
-    },
     updateCommandProgramInterfaceNode: {
       __type: "CommandHMINode",
       __args: {
@@ -1441,6 +1427,10 @@ export const generatedSchema = {
       __type: "CommandTemplateIO",
       __args: { id: "ID!", input: "CommandTemplateIOInput!", template: "ID!" },
     },
+    updateCommandTemplateSystemEdge: {
+      __type: "Boolean",
+      __args: { key: "String", script: "String", template: "ID!" },
+    },
     updateDeviceScreen: {
       __type: "CommandDeviceScreen",
       __args: { device: "ID", id: "ID!", input: "DeviceScreenInput!" },
@@ -1474,7 +1464,6 @@ export const generatedSchema = {
     __typename: { __type: "String!" },
     watchingDevice: { __type: "[HiveUser]", __args: { device: "ID!" } },
   },
-  [SchemaUnionsKey]: { CommandHMINodes: ["CommandHMIGroup", "CommandHMINode"] },
 } as const;
 
 export interface CommandAnalyticPage {
@@ -1539,6 +1528,7 @@ export interface CommandDevice {
 
 export interface CommandDeviceAnalytic {
   __typename?: "CommandDeviceAnalytic";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   device?: Maybe<CommandDevice>;
   height?: Maybe<ScalarsEnums["Int"]>;
   id: ScalarsEnums["ID"];
@@ -1554,19 +1544,23 @@ export interface CommandDeviceAnalytic {
   unit?: Maybe<ScalarsEnums["String"]>;
   values: (args?: {
     endDate?: Maybe<Scalars["DateTime"]>;
-    format?: Maybe<Scalars["String"]>;
     startDate?: Maybe<Scalars["DateTime"]>;
   }) => Maybe<Array<Maybe<CommandDeviceTimeseriesData>>>;
   width?: Maybe<ScalarsEnums["Int"]>;
   x?: Maybe<ScalarsEnums["Int"]>;
+  xAxisDomain?: Maybe<ScalarsEnums["JSON"]>;
   y?: Maybe<ScalarsEnums["Int"]>;
+  yAxisDomain?: Maybe<ScalarsEnums["JSON"]>;
 }
 
 export interface CommandDeviceReport {
   __typename?: "CommandDeviceReport";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   device?: Maybe<CommandDevice>;
+  endDate?: Maybe<ScalarsEnums["DateTime"]>;
   fields?: Maybe<Array<Maybe<CommandDeviceReportField>>>;
   id: ScalarsEnums["ID"];
+  instances?: Maybe<Array<Maybe<CommandDeviceReportInstance>>>;
   name?: Maybe<ScalarsEnums["String"]>;
   recurring?: Maybe<ScalarsEnums["Boolean"]>;
   reportLength?: Maybe<ScalarsEnums["String"]>;
@@ -1576,9 +1570,23 @@ export interface CommandDeviceReport {
 export interface CommandDeviceReportField {
   __typename?: "CommandDeviceReportField";
   bucket?: Maybe<ScalarsEnums["String"]>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   device?: Maybe<CommandProgramTag>;
   id: ScalarsEnums["ID"];
   key?: Maybe<CommandProgramTypeField>;
+}
+
+export interface CommandDeviceReportInstance {
+  __typename?: "CommandDeviceReportInstance";
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
+  done?: Maybe<ScalarsEnums["Boolean"]>;
+  endDate?: Maybe<ScalarsEnums["DateTime"]>;
+  fileId?: Maybe<ScalarsEnums["String"]>;
+  id?: Maybe<ScalarsEnums["ID"]>;
+  report?: Maybe<CommandDeviceReport>;
+  startDate?: Maybe<ScalarsEnums["DateTime"]>;
+  url?: Maybe<ScalarsEnums["String"]>;
+  version?: Maybe<ScalarsEnums["String"]>;
 }
 
 export interface CommandDeviceScreen {
@@ -1662,20 +1670,6 @@ export interface CommandHMIEdge {
   toPoint?: Maybe<ScalarsEnums["JSON"]>;
 }
 
-export interface CommandHMIGroup {
-  __typename?: "CommandHMIGroup";
-  height?: Maybe<ScalarsEnums["Float"]>;
-  id: ScalarsEnums["ID"];
-  inputs?: Maybe<Array<Maybe<CommandHMINode>>>;
-  nodes?: Maybe<Array<Maybe<CommandHMINode>>>;
-  outputs?: Maybe<Array<Maybe<CommandHMINode>>>;
-  ports?: Maybe<Array<Maybe<CommandHMIPort>>>;
-  rotation?: Maybe<ScalarsEnums["Float"]>;
-  width?: Maybe<ScalarsEnums["Float"]>;
-  x?: Maybe<ScalarsEnums["Float"]>;
-  y?: Maybe<ScalarsEnums["Float"]>;
-}
-
 export interface CommandHMINode {
   __typename?: "CommandHMINode";
   children?: Maybe<Array<Maybe<CommandHMINode>>>;
@@ -1703,11 +1697,6 @@ export interface CommandHMINodeFlow {
   id?: Maybe<ScalarsEnums["ID"]>;
   sourceHandle?: Maybe<ScalarsEnums["String"]>;
   targetHandle?: Maybe<ScalarsEnums["String"]>;
-}
-
-export interface CommandHMINodes {
-  __typename?: "CommandHMIGroup" | "CommandHMINode";
-  $on: $CommandHMINodes;
 }
 
 export interface CommandHMIPort {
@@ -1763,6 +1752,7 @@ export interface CommandProgramAlarm {
 export interface CommandProgramAlarmPathway {
   __typename?: "CommandProgramAlarmPathway";
   compileError?: Maybe<ScalarsEnums["Boolean"]>;
+  createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   id?: Maybe<ScalarsEnums["ID"]>;
   name?: Maybe<ScalarsEnums["String"]>;
   scope?: Maybe<ScalarsEnums["String"]>;
@@ -1847,7 +1837,9 @@ export interface CommandSchematic {
   organisation?: Maybe<HiveOrganisation>;
   pages?: Maybe<Array<Maybe<CommandSchematicPage>>>;
   templates?: Maybe<Array<Maybe<CommandSchematicPageTemplate>>>;
-  versions?: Maybe<Array<Maybe<CommandSchematicVersion>>>;
+  versions: (args?: {
+    where?: Maybe<CommandSchematicWhere>;
+  }) => Maybe<Array<Maybe<CommandSchematicVersion>>>;
 }
 
 export interface CommandSchematicPage {
@@ -1870,6 +1862,7 @@ export interface CommandSchematicPageTemplate {
 export interface CommandSchematicVersion {
   __typename?: "CommandSchematicVersion";
   commit?: Maybe<ScalarsEnums["String"]>;
+  compiled?: Maybe<ScalarsEnums["Boolean"]>;
   createdAt?: Maybe<ScalarsEnums["DateTime"]>;
   createdBy?: Maybe<HiveUser>;
   data?: Maybe<ScalarsEnums["JSON"]>;
@@ -1900,6 +1893,7 @@ export interface CommandTemplateTransformer {
   inputs?: Maybe<Array<Maybe<CommandTemplateIO>>>;
   name?: Maybe<ScalarsEnums["String"]>;
   outputs?: Maybe<Array<Maybe<CommandTemplateIO>>>;
+  systemOptions?: Maybe<ScalarsEnums["JSON"]>;
 }
 
 export interface DeviceAlarm {
@@ -2027,11 +2021,6 @@ export interface Mutation {
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
-  createCommandProgramInterfaceGroup: (args: {
-    input: ComandProgramInterfaceGroupInput;
-    node?: Maybe<Scalars["ID"]>;
-    program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandHMIGroup>;
   createCommandProgramInterfaceNode: (args: {
     hmi?: Maybe<Scalars["ID"]>;
     input: ComandProgramInterfaceNodeInput;
@@ -2146,11 +2135,6 @@ export interface Mutation {
     id: Scalars["ID"];
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
-  deleteCommandProgramInterfaceGroup: (args: {
-    id: Scalars["ID"];
-    node?: Maybe<Scalars["ID"]>;
-    program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandHMIGroup>;
   deleteCommandProgramInterfaceNode: (args: {
     hmi?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
@@ -2195,6 +2179,13 @@ export interface Mutation {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
   }) => Maybe<CommandDeviceScreen>;
+  downloadCommandDeviceAnalytic: (args?: {
+    bucket?: Maybe<Scalars["String"]>;
+    endDate?: Maybe<Scalars["DateTime"]>;
+    id?: Maybe<Scalars["ID"]>;
+    page?: Maybe<Scalars["ID"]>;
+    startDate?: Maybe<Scalars["DateTime"]>;
+  }) => Maybe<ScalarsEnums["String"]>;
   exportCommandSchematic: (args: {
     id: Scalars["ID"];
   }) => Maybe<ScalarsEnums["String"]>;
@@ -2309,12 +2300,6 @@ export interface Mutation {
     input: ComandProgramInterfaceEdgeInput;
     program?: Maybe<Scalars["ID"]>;
   }) => Maybe<CommandHMIEdge>;
-  updateCommandProgramInterfaceGroup: (args: {
-    id?: Maybe<Scalars["ID"]>;
-    input: ComandProgramInterfaceGroupInput;
-    node?: Maybe<Scalars["ID"]>;
-    program?: Maybe<Scalars["ID"]>;
-  }) => Maybe<CommandHMIGroup>;
   updateCommandProgramInterfaceNode: (args: {
     hmi?: Maybe<Scalars["ID"]>;
     id?: Maybe<Scalars["ID"]>;
@@ -2371,6 +2356,11 @@ export interface Mutation {
     input: CommandTemplateIOInput;
     template: Scalars["ID"];
   }) => Maybe<CommandTemplateIO>;
+  updateCommandTemplateSystemEdge: (args: {
+    key?: Maybe<Scalars["String"]>;
+    script?: Maybe<Scalars["String"]>;
+    template: Scalars["ID"];
+  }) => Maybe<ScalarsEnums["Boolean"]>;
   updateDeviceScreen: (args: {
     device?: Maybe<Scalars["ID"]>;
     id: Scalars["ID"];
@@ -2416,6 +2406,7 @@ export interface SchemaObjectTypes {
   CommandDeviceAnalytic: CommandDeviceAnalytic;
   CommandDeviceReport: CommandDeviceReport;
   CommandDeviceReportField: CommandDeviceReportField;
+  CommandDeviceReportInstance: CommandDeviceReportInstance;
   CommandDeviceScreen: CommandDeviceScreen;
   CommandDeviceSnapshot: CommandDeviceSnapshot;
   CommandDeviceTimeseriesData: CommandDeviceTimeseriesData;
@@ -2425,7 +2416,6 @@ export interface SchemaObjectTypes {
   CommandHMIDevicePack: CommandHMIDevicePack;
   CommandHMIDevicePort: CommandHMIDevicePort;
   CommandHMIEdge: CommandHMIEdge;
-  CommandHMIGroup: CommandHMIGroup;
   CommandHMINode: CommandHMINode;
   CommandHMINodeFlow: CommandHMINodeFlow;
   CommandHMIPort: CommandHMIPort;
@@ -2467,6 +2457,7 @@ export type SchemaObjectTypesNames =
   | "CommandDeviceAnalytic"
   | "CommandDeviceReport"
   | "CommandDeviceReportField"
+  | "CommandDeviceReportInstance"
   | "CommandDeviceScreen"
   | "CommandDeviceSnapshot"
   | "CommandDeviceTimeseriesData"
@@ -2476,7 +2467,6 @@ export type SchemaObjectTypesNames =
   | "CommandHMIDevicePack"
   | "CommandHMIDevicePort"
   | "CommandHMIEdge"
-  | "CommandHMIGroup"
   | "CommandHMINode"
   | "CommandHMINodeFlow"
   | "CommandHMIPort"
@@ -2508,11 +2498,6 @@ export type SchemaObjectTypesNames =
   | "Point"
   | "Query"
   | "Subscription";
-
-export interface $CommandHMINodes {
-  CommandHMIGroup?: CommandHMIGroup;
-  CommandHMINode?: CommandHMINode;
-}
 
 export interface GeneratedSchema {
   query: Query;

@@ -56,7 +56,7 @@ export default class OPCUADriver extends BaseCommandDriver {
 
             bar1.start(subscribeTags.length, 0);
 
-            new Promise(async (resolve) => {
+            const p = new Promise(async (resolve) => {
 
                 //First read
                 console.log(`Performing first read of ${subscribeTags.length} tags`);
@@ -70,6 +70,8 @@ export default class OPCUADriver extends BaseCommandDriver {
                 }
 
                 bar1.stop();
+
+                console.log(`Performed first read of ${subscribeTags.length}`)
 
                 this.ready = true;
 

@@ -96,7 +96,9 @@ export const useAddDeviceChart = (deviceId: string) => {
 		y: number,
 		w: number,
 		h: number,
-		total?: boolean
+		total?: boolean,
+        xAxisDomain?: any,
+        yAxisDomain?: any
 	}) => {
 		const item = mutation.createCommandDeviceAnalytic({
 			page: args.page,
@@ -111,7 +113,9 @@ export const useAddDeviceChart = (deviceId: string) => {
 				tagId: args.templateId,
 				subkeyId: args.keyId,
 				timeBucket: args.timeBucket,
-				device: deviceId
+				device: deviceId,
+				xAxisDomain: args.xAxisDomain,
+				yAxisDomain: args.yAxisDomain
 			}
 		})
 	
@@ -121,7 +125,7 @@ export const useAddDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean, xAxisDomain?: any, yAxisDomain?: any) => {
 		return addGraph({
 			args: {
 				page: page,
@@ -134,7 +138,9 @@ export const useAddDeviceChart = (deviceId: string) => {
 				w,
 				h,
 				total,
-				timeBucket
+				timeBucket,
+				xAxisDomain,
+				yAxisDomain
 			}
 		})
 	}
@@ -153,7 +159,9 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 		y: number,
 		w: number,
 		h: number,
-		total?: boolean
+		total?: boolean,
+        xAxisDomain?: any,
+        yAxisDomain?: any
 	}) => {
 		const item = mutation.updateCommandDeviceAnalytic({
 			id: args.id,
@@ -168,7 +176,9 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 				unit: args.unit,
 				timeBucket: args.timeBucket,
 				tagId: args.templateId,
-				subkeyId: args.keyId
+				subkeyId: args.keyId,
+				xAxisDomain: args.xAxisDomain,
+				yAxisDomain: args.yAxisDomain
 			}
 		})
 
@@ -178,7 +188,8 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 			}
 		}
 	})
-	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean) => {
+	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean, xAxisDomain?: any, yAxisDomain?: any) => {
+		console.log({xAxisDomain, yAxisDomain})
 		return addGraph({
 			args: {
 				page,
@@ -192,7 +203,9 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 				y,
 				w,
 				h,
-				total
+				total,
+				xAxisDomain,
+				yAxisDomain
 			}
 		})
 	}
