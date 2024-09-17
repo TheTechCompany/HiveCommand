@@ -6,7 +6,7 @@ SCADA system for IIOT 4.0
 
 ### Developer pathway
 
-Get dependencies
+#### Dependencies
 
 [HexHive Gateway](https://github.com/TheTechCompany/HexHive)
 
@@ -18,9 +18,27 @@ cd HiveCommand/
 yarn
 ```
 
+#### Env Configuration
+
+Create a .env file in packages/app/hivecommand-backend and populate with the following
+
+| key | description |
+| --- | ----------- |
+| DATABASE_URL | Postgres db connection url prefixed with postgresql:// |
+
+Run the initial prisma migrations 
+
+```
+cd packages/app/hivecommand-db
+
+npx prisma migrate dev
+```
+
+#### Startup
+
 Start gateway, backend + web-frontend
 ```
-hexhive-dev
+hexhive dev
 
 cd packages/app/hivecommand-backend/; yarn start
 
