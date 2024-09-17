@@ -37,7 +37,6 @@ const prisma = new PrismaClient();
 
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
-	console.log(process.env.HEXHIVE_SECRET)
 	const graphServer = new HiveGraph({
 		dev: false,
 		
