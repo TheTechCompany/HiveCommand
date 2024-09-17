@@ -6,7 +6,7 @@ SCADA system for IIOT 4.0
 
 ### Developer pathway
 
-Get dependencies
+#### Dependencies
 
 [HexHive Gateway](https://github.com/TheTechCompany/HexHive)
 
@@ -34,6 +34,7 @@ cd packages/app/hivecommand-db
 npx prisma migrate dev
 ```
 
+#### Startup
 
 Start gateway, backend + web-frontend
 ```
