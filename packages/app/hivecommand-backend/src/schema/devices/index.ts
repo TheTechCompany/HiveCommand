@@ -55,7 +55,9 @@ export default (prisma: PrismaClient) => {
 												include: {
 													device: true
 												}
-											}
+											},
+											// xAxisDomain: true,
+											// yAxisDomain: true
 										}
 									},
 									device: true

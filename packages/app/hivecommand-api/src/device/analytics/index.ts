@@ -189,6 +189,7 @@ export const useUpdateDeviceChart = (deviceId: string) => {
 		}
 	})
 	return (page: string, id: string, type: string, templateId: string, keyId: string, unit: string, timeBucket: string, x: number, y: number, w: number, h: number, total?: boolean, xAxisDomain?: any, yAxisDomain?: any) => {
+		console.log({xAxisDomain, yAxisDomain})
 		return addGraph({
 			args: {
 				page,

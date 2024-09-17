@@ -37,9 +37,16 @@ const prisma = new PrismaClient();
 
 	const { typeDefs, resolvers } = schema(prisma, deviceMQ);
 
+	console.log(process.env.HEXHIVE_SECRET)
 	const graphServer = new HiveGraph({
 		dev: false,
+		
+		name: 'HiveCommand',
+		backend_url: 'http://localhost:9010/graphql',
+		entrypoint: 'http://localhost:8504/hivecommand-app-frontend.js',
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
+		slug: 'command',
+		
 		schema: {
 			typeDefs: typeDefs,
 			resolvers: resolvers,

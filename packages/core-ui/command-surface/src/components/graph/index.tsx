@@ -26,14 +26,36 @@ export interface BaseGraphProps {
 
 const BaseGraph: React.FC<BaseGraphProps> = (props) => {
 
+  const xAxisDomain = props.xAxisDomain?.map((domain) => {
+    try{
+      let val = parseFloat(domain)
+      if(isNaN(val)) return domain;
+      return val;
+    }catch(e){
+      return domain;
+    }
+  })
+
+  const yAxisDomain = props.yAxisDomain?.map((domain) => {
+    try{
+      let val = parseFloat(domain)
+      if(isNaN(val)) return domain;
+      return val;
+    }catch(e){
+      return domain;
+    }
+  })
+
+  console.log({xAxisDomain, yAxisDomain})
+
   return (
     <ResponsiveContainer>
       <LineChart
         margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
         data={props.data?.map((x) => ({...x, [props.yKey || '']: typeof(x?.[props.yKey || '']) === "number" ? x?.[props.yKey || ''] : parseFloat(x?.[props.yKey || ''])}))}
       >
-        <XAxis domain={props.xAxisDomain} dataKey={props.xKey} angle={-45} tickMargin={40} height={85} />
-        <YAxis domain={props.yAxisDomain} dataKey={props.yKey} />
+        <XAxis domain={xAxisDomain} dataKey={props.xKey} angle={-45} tickMargin={40} height={85} />
+        <YAxis domain={yAxisDomain} dataKey={props.yKey} />
         <Tooltip />
         <CartesianGrid stroke="#f5f5f5" />
         <Line

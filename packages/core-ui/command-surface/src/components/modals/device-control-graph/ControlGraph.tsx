@@ -119,6 +119,8 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
      
           <FormControlLabel label="Totalise" control={<Checkbox checked={graph.totalize || false} onChange={(e) => setGraph({...graph, totalize: e.target.checked})} />} />
 
+          <Divider />
+          
           <FormControlLabel label="Custom Axis" control={<Checkbox checked={customAxis} onChange={(e, checked) => {
             if(checked){
                setGraph({...graph, xAxisDomain: ['0', 'auto'], yAxisDomain: ['0', 'auto']})
@@ -130,13 +132,37 @@ export const ControlGraphModal = (props: {tags: HMITag[], types: HMIType[], sele
           {customAxis ? (
             <Box sx={{display: 'flex', flexDirection: "column"}}>
               <Divider />
-              <Box sx={{display: 'flex'}}>
-                <TextField onChange={(e) => setGraph({...graph, xAxisDomain: [ e.target.value, graph.xAxisDomain?.[1] || ''] })} value={graph.xAxisDomain?.[0] || ''} label={"X Start"} /> 
-                <TextField onChange={(e) => setGraph({...graph, xAxisDomain: [ graph.xAxisDomain?.[0] || '',  e.target.value ] })} value={graph.xAxisDomain?.[1] || ''} label={"X End"} />
+              <Box sx={{display: 'flex', marginBottom: '12px'}}>
+                <TextField 
+                  sx={{marginRight: '6px'}}
+                  fullWidth 
+                  size="small" 
+                  onChange={(e) => setGraph({...graph, xAxisDomain: [ e.target.value, graph.xAxisDomain?.[1] || ''] })} 
+                  value={graph.xAxisDomain?.[0] || ''} 
+                  label={"X Start"} /> 
+                <TextField 
+                  sx={{marginLeft: '6px'}}
+                  fullWidth 
+                  size="small" 
+                  onChange={(e) => setGraph({...graph, xAxisDomain: [ graph.xAxisDomain?.[0] || '',  e.target.value ] })} 
+                  value={graph.xAxisDomain?.[1] || ''} 
+                  label={"X End"} />
               </Box>
               <Box sx={{display: 'flex'}}>
-                <TextField onChange={(e) => setGraph({...graph, yAxisDomain: [ e.target.value, graph.yAxisDomain?.[1] || ''] })} value={graph.yAxisDomain?.[0] || ''} label={"Y Start"} /> 
-                <TextField onChange={(e) => setGraph({...graph, yAxisDomain: [ graph.yAxisDomain?.[0] || '',  e.target.value ] })} value={graph.yAxisDomain?.[1] || ''} label={"Y End"} />
+                <TextField 
+                  sx={{marginRight: '6px'}}
+                  fullWidth 
+                  size="small" 
+                  onChange={(e) => setGraph({...graph, yAxisDomain: [ e.target.value, graph.yAxisDomain?.[1] || ''] })} 
+                  value={graph.yAxisDomain?.[0] || ''} 
+                  label={"Y Start"} /> 
+                <TextField
+                  sx={{marginLeft: '6px'}}
+                  fullWidth
+                  size="small" 
+                  onChange={(e) => setGraph({...graph, yAxisDomain: [ graph.yAxisDomain?.[0] || '',  e.target.value ] })} 
+                  value={graph.yAxisDomain?.[1] || ''} 
+                  label={"Y End"} />
               </Box>
             </Box>
           ) : null}

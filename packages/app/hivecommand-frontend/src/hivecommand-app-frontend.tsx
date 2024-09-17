@@ -8,7 +8,7 @@ const lifecycles = singleSpaReact({
   React,
   ReactDOM,
   rootComponent: () => (
-    <Router basename={process.env.PUBLIC_URL || "/dashboard/command"}>
+    <Router basename={`/${window.location.href.split('/').slice(3, 5).join("/")}` || process.env.PUBLIC_URL || "/dashboard/command"}>
       <App />
     </Router>),
   errorBoundary(err, info, props) {
