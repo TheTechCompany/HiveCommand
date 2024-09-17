@@ -41,7 +41,7 @@ WORKDIR /app
 RUN cp -Lr /app/packages/app/hivecommand-backend/node_modules/ _node_modules/
 
 
-FROM node:16-slim
+FROM node:22-slim
 
 RUN apt-get update && apt-get install -y openssl
 
