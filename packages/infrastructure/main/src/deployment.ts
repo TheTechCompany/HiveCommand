@@ -45,6 +45,10 @@ export const Deployment = (provider: Provider, rootServer: string, dbUrl: Output
                             { name: "VERSION_SHIM", value: '1.0.10' },
                             { name: 'REDIS_URL', value: redisUrl.apply(url => url) },
 
+                            { name: 'BACKEND_ENTRYPOINT', value: process.env.BACKEND_ENTRYPOINT },
+                            { name: 'ENTRYPOINT', value: process.env.ENTRYPOINT },
+                            { name: 'HEXHIVE_SECRET', value: process.env.HEXHIVE_SECRET },
+
                             { name: "DATABASE_URL", value: all([dbUrl, dbPass]).apply(([url, pass]) => `postgresql://postgres:${pass}@${url}/hivecommand?connect_timeout=100`) },
                             { name: 'REPORT_BUCKET', value: reportBucket },
                             { name: "SCHEMATIC_BUCKET", value: schematicBucket }

@@ -236,6 +236,7 @@ jobs:
           stack-name: ${{env.STACK_NAME}}
           work-dir: ./packages/infrastructure/main
         env:
+          HEXHIVE_SECRET: ${{ secrets.HEXHIVE_SECRET }}
           IOT_USER: ${{ secrets.IOT_USER }}
           IOT_PASS: ${{ secrets.IOT_PASS }}
           IOT_EXCHANGE: ${{ secrets.IOT_EXCHANGE }}

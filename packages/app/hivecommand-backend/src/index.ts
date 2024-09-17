@@ -42,8 +42,8 @@ const prisma = new PrismaClient();
 		dev: false,
 		
 		name: 'HiveCommand',
-		backend_url: 'http://localhost:9010/graphql',
-		entrypoint: 'http://localhost:8504/hivecommand-app-frontend.js',
+		backend_url: process.env.BACKEND_ENTRYPOINT || 'http://localhost:9010/graphql',
+		entrypoint: process.env.ENTRYPOINT || 'http://localhost:8504/hivecommand-app-frontend.js',
 		rootServer: process.env.ROOT_SERVER || 'http://localhost:7000',
 		slug: 'command',
 		
