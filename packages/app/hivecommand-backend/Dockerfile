@@ -1,4 +1,4 @@
-FROM node:16-slim as build
+FROM node:22-slim as build
 
 ARG BUILD_ENV=github
 
