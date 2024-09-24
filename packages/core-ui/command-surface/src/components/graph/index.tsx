@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 
 import {
   ResponsiveContainer,
@@ -48,14 +48,40 @@ const BaseGraph: React.FC<BaseGraphProps> = (props) => {
 
   console.log({xAxisDomain, yAxisDomain})
 
+  const yTicks = useMemo(() => {
+    const tickCount = 5;
+    if(typeof(yAxisDomain?.[0]) == 'number' && typeof(yAxisDomain?.[1]) == 'number'){
+      let tickWidth = (yAxisDomain?.[1] - yAxisDomain?.[0]) / tickCount;
+      let ticks : any[] = [];
+      for(var i = 0; i < tickCount; i++){
+        ticks.push(yAxisDomain?.[0] + (tickWidth * i))
+      }
+
+      return ticks;
+    }
+    return undefined;
+  }, [yAxisDomain])
+
+  const yInterval = useMemo(() => {
+    if(typeof(yAxisDomain?.[0]) == 'number' && typeof(yAxisDomain?.[1]) == 'number'){
+      return 0;
+    }
+    return undefined;
+  }, [yAxisDomain])
+
   return (
     <ResponsiveContainer>
       <LineChart
         margin={{ left: 0, top: 8, bottom: 8, right: 8 }}
         data={props.data?.map((x) => ({...x, [props.yKey || '']: typeof(x?.[props.yKey || '']) === "number" ? x?.[props.yKey || ''] : parseFloat(x?.[props.yKey || ''])}))}
       >
-        <XAxis domain={xAxisDomain} dataKey={props.xKey} angle={-45} tickMargin={40} height={85} />
-        <YAxis domain={yAxisDomain} dataKey={props.yKey} />
+        <XAxis allowDataOverflow domain={xAxisDomain} dataKey={props.xKey} angle={-45} tickMargin={40} height={85} />
+        <YAxis 
+          allowDataOverflow 
+          ticks={yTicks}
+          interval={yInterval}
+          domain={yAxisDomain} 
+          dataKey={props.yKey} />
         <Tooltip />
         <CartesianGrid stroke="#f5f5f5" />
         <Line
