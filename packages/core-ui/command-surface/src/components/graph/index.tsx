@@ -53,8 +53,10 @@ const BaseGraph: React.FC<BaseGraphProps> = (props) => {
     if(typeof(yAxisDomain?.[0]) == 'number' && typeof(yAxisDomain?.[1]) == 'number'){
       let tickWidth = (yAxisDomain?.[1] - yAxisDomain?.[0]) / tickCount;
       let ticks : any[] = [];
-      for(var i = 0; i < tickCount; i++){
-        ticks.push(yAxisDomain?.[0] + (tickWidth * i))
+      for(var i = 0; i <= tickCount; i++){
+        let tickVal: any = yAxisDomain?.[0] + (tickWidth * i)
+        if(tickVal % 1 != 0) tickVal = tickVal.toFixed(2);
+        ticks.push(tickVal)
       }
 
       return ticks;
