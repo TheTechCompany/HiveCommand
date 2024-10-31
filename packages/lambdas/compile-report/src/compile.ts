@@ -28,6 +28,24 @@ export const compileReport = async (
 
         console.time(`Creating worksheet ${i}-${id} for ${period}s`)
 
+        const startRecord : {date: Date}[] = await prisma.$queryRaw`
+            SELECT MAX("lastUpdated") as date
+            FROM "DeviceValue"
+            WHERE "deviceId" = ${deviceId} AND 
+            placeholder=${field.device?.name}
+            ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
+            AND "lastUpdated" <= ${startDate}
+        `;
+
+        const endRecord : {date: Date}[] = await prisma.$queryRaw`
+            SELECT MIN("lastUpdated") as date
+            FROM "DeviceValue"
+            WHERE "deviceId" = ${deviceId} AND 
+            placeholder=${field.device?.name}
+            ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
+            AND "lastUpdated" >= ${endDate}
+        `;
+
 
         const result : any[] = await prisma.$queryRaw`
             SELECT placeholder, 
@@ -39,14 +57,16 @@ export const compileReport = async (
                 "deviceId" = ${deviceId} AND 
                 placeholder=${field.device?.name} 
                 ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-                AND "lastUpdated" > ${startDate} 
-                AND "lastUpdated" < ${endDate}
+                AND "lastUpdated" > ${startRecord?.[0]?.date || startDate} 
+                AND "lastUpdated" < ${endRecord?.[0]?.date || endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
         console.log(`Found ${result.length} results for ${field.device?.name}${field.key ? '.' + field.key?.name : ''}`)
 
-        const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({
+        const sheet = xlsx.utils.json_to_sheet(result.filter((result) => {
+            return startDate < result.lastUpdated && endDate > result.lastUpdated
+        }).map((x) => ({
             ...x, 
             date: moment(new Date(x.time)).format('DD/MM/YYYY - hh:mma'), 
             time: new Date(x.time).getTime() 
@@ -54,7 +74,7 @@ export const compileReport = async (
 
         xlsx.utils.book_append_sheet(workbook, sheet, `${field.device?.name}${field.key ? '.'+ field.key?.name : ''}`)
 
-        console.timeEnd(`Creating worksheet ${i}-${id}`)
+        console.timeEnd(`Creating worksheet ${i}-${id} for ${period}s`)
     }
 
     console.timeEnd(`Creating workbook ${id}`)
