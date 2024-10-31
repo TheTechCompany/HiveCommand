@@ -24,18 +24,16 @@ export const compileReport = async (
     for(var i = 0; i < (fields || []).length; i++){
         const field = fields[i];
 
-        console.time(`Creating worksheet ${i}-${id}`)
-
         const period = mathUnit(field.bucket || '1 minute').toNumber('seconds');
 
-        // console.log(
-        //     `
-        //     SELECT placeholder, key, avg(value::float) as value, time_bucket(${period}::decimal * '1 second'::interval, "lastUpdated") as time FROM "DeviceValue" WHERE "deviceId" = ${deviceId} AND placeholder=${field.device?.name} ${field.key ? ` AND key=${field.key?.name}` : ''} AND "lastUpdated" > ${startDate} AND "lastUpdated" < ${endDate}
-        // `)
+        console.time(`Creating worksheet ${i}-${id} for ${period}s`)
 
 
         const result : any[] = await prisma.$queryRaw`
-            SELECT placeholder, key, locf(avg(value::float)) as value, time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated")  as time
+            SELECT placeholder, 
+                   key, 
+                   locf(avg(value::float)) as value, 
+                   time_bucket_gapfill(${period}::decimal * '1 second'::interval, "lastUpdated") as time
                 FROM "DeviceValue" 
             WHERE 
                 "deviceId" = ${deviceId} AND 
@@ -45,6 +43,8 @@ export const compileReport = async (
                 AND "lastUpdated" < ${endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
+
+        console.log(`Found ${result.length} results for ${field.device?.name}${field.key ? '.' + field.key?.name : ''}`)
 
         const sheet = xlsx.utils.json_to_sheet(result.map((x) => ({
             ...x, 
