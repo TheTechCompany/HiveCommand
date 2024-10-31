@@ -46,6 +46,7 @@ export const compileReport = async (
             AND "lastUpdated" >= ${endDate}
         `;
 
+console.log({startRecord, endRecord})
 
         const result : any[] = await prisma.$queryRaw`
             SELECT placeholder, 
@@ -57,8 +58,8 @@ export const compileReport = async (
                 "deviceId" = ${deviceId} AND 
                 placeholder=${field.device?.name} 
                 ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-                AND "lastUpdated" > ${startRecord?.[0]?.date || startDate} 
-                AND "lastUpdated" < ${endRecord?.[0]?.date || endDate}
+                AND "lastUpdated" > ${startRecord?.[0] ? moment(startRecord?.[0]?.date).toDate() : startDate} 
+                AND "lastUpdated" < ${endRecord?.[0] ? moment(endRecord?.[0]?.date).toDate() : endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
