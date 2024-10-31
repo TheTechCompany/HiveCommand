@@ -63,11 +63,13 @@ console.log({startRecord, endRecord})
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
-        console.log(`Found ${result.length} results for ${field.device?.name}${field.key ? '.' + field.key?.name : ''}`)
+        const sliced_result = result.filter((result) => {
+            return moment(startDate).isBefore(moment(result.time)) && moment(endDate).isAfter(moment(result.time))
+        });
 
-        const sheet = xlsx.utils.json_to_sheet(result.filter((result) => {
-            return moment(startDate).isBefore(moment(result.lastUpdated)) && moment(endDate).isAfter(moment(result.lastUpdated))
-        }).map((x) => ({
+        console.log(`Found ${sliced_result.length} results for ${field.device?.name}${field.key ? '.' + field.key?.name : ''}`)
+
+        const sheet = xlsx.utils.json_to_sheet(sliced_result.map((x) => ({
             ...x, 
             date: moment(new Date(x.time)).format('DD/MM/YYYY - hh:mma'), 
             time: new Date(x.time).getTime() 
