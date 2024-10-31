@@ -131,7 +131,7 @@ model DeviceReportInstance {
 
   version String?
 
-  report DeviceReport @relation(name: "hasReportInstance", fields: [reportId], references: [id])
+  report DeviceReport @relation(name: "hasReportInstance", fields: [reportId], references: [id], onDelete: Cascade)
   reportId String
 
   createdAt DateTime @default(now())
