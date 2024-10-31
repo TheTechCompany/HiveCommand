@@ -32,7 +32,26 @@ const prisma = new PrismaClient();
         WHERE totals.instances < totals.reports
     `
 
-    if (uncompiled_reports?.length <= 0) {
+
+    const unfinishedReportInstances = await prisma.deviceReportInstance.findMany({
+        where: {
+            done: false
+        },
+        include: {
+            report: {
+                include: {
+                    fields: {
+                        include: {
+                            device: true,
+                            key: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    if (uncompiled_reports?.length <= 0 && unfinishedReportInstances?.length <= 0) {
         console.log("No reports found that need compiling exiting succesfully now!");
         console.timeEnd('Compiling Reports');
         return true;
@@ -52,23 +71,6 @@ const prisma = new PrismaClient();
         }
     })
 
-    const unfinishedReportInstances = await prisma.deviceReportInstance.findMany({
-        where: {
-            done: false
-        },
-        include: {
-            report: {
-                include: {
-                    fields: {
-                        include: {
-                            device: true,
-                            key: true
-                        }
-                    }
-                }
-            }
-        }
-    })
 
     for (var i = 0; i < reports.length; i++) {
         let report = reports[i];
