@@ -2,10 +2,10 @@ import { DateTimePicker } from '@mui/x-date-pickers'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
-export const MaintenanceWindow = (props) => {
+export const DownloadWindow = (props: {open: boolean, onClose: () => void, onSubmit?: (window: {startTime: Date | null, endTime: Date | null}) => void}) => {
 
-    const [ startTime, setStartTime ] = useState(new Date());
-    const [ endTime, setEndTime ] = useState(new Date());
+    const [ startTime, setStartTime ] = useState<Date | null>(new Date());
+    const [ endTime, setEndTime ] = useState<Date | null>(new Date());
 
     const onSubmit = () => {
         props.onSubmit?.({startTime, endTime})
@@ -17,19 +17,19 @@ export const MaintenanceWindow = (props) => {
     return (
         <Dialog open={props.open} onClose={props.onClose}>
             <DialogTitle>
-                Maintenance Window
+                Download device data
             </DialogTitle>
 
             <DialogContent>
-                <Typography>Select a time window to lock-out for maintenance</Typography>
+                <Typography>Select a time window to download data for</Typography>
 
                 <DateTimePicker 
                     label="Start Time"
                     value={startTime}
-                    onChange={(date) => {
+                    onChange={(date: Date | null) => {
                         setStartTime(date)
                     }}
-                    renderInput={(params) => (
+                    renderInput={(params: any) => (
                         <TextField 
                             sx={{
                                 marginTop: '9px'
@@ -38,15 +38,14 @@ export const MaintenanceWindow = (props) => {
                             size="small" 
                             {...params} />
                     )} />
-
                 <DateTimePicker
                     
                     label="End Time" 
                     value={endTime}
-                    onChange={(date) => {
+                    onChange={(date: Date | null) => {
                         setEndTime(date)
                     }}
-                    renderInput={(params) => (
+                    renderInput={(params: any) => (
                         <TextField 
                             sx={{
                                 marginTop: '9px'
@@ -58,7 +57,7 @@ export const MaintenanceWindow = (props) => {
             </DialogContent>
             <DialogActions>
                 <Button onClick={props.onClose}>Close</Button>
-                <Button color="primary" variant="contained" onClick={onSubmit}>Submit</Button>
+                <Button color="primary" variant="contained" onClick={onSubmit}>Download</Button>
             </DialogActions>
         </Dialog>
     )

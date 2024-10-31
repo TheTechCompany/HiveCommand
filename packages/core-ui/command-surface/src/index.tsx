@@ -6,7 +6,7 @@ import { Outlet, Route, Routes, matchPath, useLocation, useMatches, useNavigate 
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { KeyboardArrowLeft, Timelapse, Engineering, Settings } from '@mui/icons-material';
+import { KeyboardArrowLeft, Timelapse, Engineering, Settings, Download } from '@mui/icons-material';
 import Toolbar from './toolbar';
 import { DeviceControlProvider } from './context';
 import { ReportChart, AnalyticView } from './views/analytics'
@@ -15,7 +15,7 @@ import { Paper, Box, Button, Typography, IconButton, Divider, Switch, FormContro
 // import { useSubscription } from '@apollo/client';
 // import { stringToColor } from '@hexhive/utils';
 import { TreeMenu, TreeMenuItem } from './components/tree-menu';
-import { MaintenanceWindow } from './components/modals/maintenance';
+import { DownloadWindow } from './components/modals';
 
 import { DeviceAnalyticModal } from './components/modals/device-analytic';
 import { ControlView } from './views/control';
@@ -68,11 +68,12 @@ export interface CommandSurfaceClient {
     updateReportField?: (report: string, id: string, field?: {device: string, key: string, bucket: string}) => Promise<any>,
     deleteReportField?: (report: string, id: string) => Promise<any>,
 
+    createReportInstance?: (report: string) => Promise<void>;
     downloadReport?: (report: string, startDate: Date, endDate: Date) => Promise<any>;
 
     downloadAnalytic?: (page: string, id: string, startDate: Date, endDate: Date, bucket: string) => Promise<any>
 
-    useAnalyticValues?: (report: string, horizon: { start: Date, end: Date }) => ({ results: any, loading: boolean });
+    useAnalyticValues?: (report: string, horizon: { start: Date | undefined, end: Date | undefined }) => ({ results: any, loading: boolean });
 
     addChart?: (
         pageId: string, 
@@ -551,15 +552,15 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
     }
 
     const toolbar_menu = [
-        {
-            id: 'maintain',
-            label: "Maintain",
-            icon: <Engineering />,
-            active: maintenanceWindow,
-            onClick: () => {
-                setMaintenanceWindow(true)
-            }
-        },
+        // {
+        //     id: 'download',
+        //     label: "Download data",
+        //     icon: <Download />,
+        //     active: maintenanceWindow,
+        //     onClick: () => {
+        //         setMaintenanceWindow(true)
+        //     }
+        // },
         {
             id: 'time-machine',
             label: "History",
@@ -813,7 +814,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                         functions,
                         templatePacks,
                     }}>
-                        <MaintenanceWindow
+                        <DownloadWindow
                             open={maintenanceWindow}
                             onSubmit={(period) => {
                                 if (!period.startTime || !period.endTime) return;

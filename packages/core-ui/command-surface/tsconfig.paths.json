@@ -13,6 +13,9 @@
       "@hive-command/interface-types": ["../../types/interface-types/src"]
     }
   },
+  "exclude": [
+    "dist/"
+  ],
   "references": [
     {
       "path": "../command-canvas-nodes"

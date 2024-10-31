@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { DeviceControlContext } from "../../context";
 import { useParams } from "react-router-dom";
 import moment from 'moment';
-import { Download } from "@mui/icons-material";
+import { Add, Download } from "@mui/icons-material";
 import {saveAs} from 'file-saver'
 
 const baseToBlob = (base64String, contentType = '') => {
@@ -106,7 +106,6 @@ export const ReportList = () => {
             <List sx={{overflow: 'auto', flex: 1}}>
                 {periods.map((p, ix) => (
                     <ListItem secondaryAction={
-
                         p.done ? <IconButton onClick={() => {
                             setDownloading([...downloading, ix])
                             download(p.url, activeReport?.name, p.startDate, p.endDate).then(() => {
@@ -118,11 +117,17 @@ export const ReportList = () => {
                             {downloading.indexOf(ix) > -1  ? <CircularProgress sx={{width: '20px'}} size="small" /> : <Download fontSize="inherit"/>}
                         </IconButton> : <Tooltip title="Processing report"><CircularProgress sx={{width: '20px'}} size="small" /></Tooltip>
                     }>
-                        <ListItemButton>
-                            {moment(p.startDate).format('DD/MM/YYYY')} - {moment(p.endDate).format('DD/MM/YYYY')}
+                        <ListItemButton sx={{display: 'flex', alignItems: 'flex-start', flexDirection: "column"}}>
+                            <span>{moment(p.startDate).format('DD/MM/YYYY')} - {moment(p.endDate).format('DD/MM/YYYY')}</span>
+                            <span style={{fontSize: '12px'}}>Created: {moment(p.createdAt).format('DD/MM/YYYY')}</span>
                         </ListItemButton>
                     </ListItem>
                 ))}
+                {!activeReport?.recurring && (<ListItem onClick={() => {
+                    if(activeReport) client?.createReportInstance?.(activeReport?.id)
+                }} disablePadding>
+                    <ListItemButton sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}><Add sx={{marginRight: '12px'}} />Create revision</ListItemButton>
+                </ListItem>)}
             </List>
  
         </Box>

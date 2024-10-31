@@ -22,30 +22,30 @@ export const pages = [
         path: '',
         component: <Devices/>
     },
-    {
-        icon: <Psychology />,
-        label: "Functions",
-        path: "functions",
-        component: <Outlet />,
-        children: [
-            {
-                path: '',
-                component: <FunctionList />
-            }
-        ]
-    },
-    {
-        icon: <Schema />,
-        label: "Schematics",
-        path: "schematics",
-        component: <Outlet />,
-        children: [
-            {
-                path: '',
-                component: <SchematicList />
-            }
-        ]
-    },
+    // {
+    //     icon: <Psychology />,
+    //     label: "Functions",
+    //     path: "functions",
+    //     component: <Outlet />,
+    //     children: [
+    //         {
+    //             path: '',
+    //             component: <FunctionList />
+    //         }
+    //     ]
+    // },
+    // {
+    //     icon: <Schema />,
+    //     label: "Schematics",
+    //     path: "schematics",
+    //     component: <Outlet />,
+    //     children: [
+    //         {
+    //             path: '',
+    //             component: <SchematicList />
+    //         }
+    //     ]
+    // },
     {
         icon: <Handyman />,
         label: "Programs",
