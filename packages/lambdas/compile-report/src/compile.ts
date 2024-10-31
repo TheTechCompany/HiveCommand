@@ -46,6 +46,7 @@ export const compileReport = async (
             AND "lastUpdated" >= ${endDate}
         `;
 
+console.log({startRecord, endRecord})
 
         const result : any[] = await prisma.$queryRaw`
             SELECT placeholder, 
@@ -57,15 +58,15 @@ export const compileReport = async (
                 "deviceId" = ${deviceId} AND 
                 placeholder=${field.device?.name} 
                 ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-                AND "lastUpdated" > ${startRecord?.[0]?.date || startDate} 
-                AND "lastUpdated" < ${endRecord?.[0]?.date || endDate}
+                AND "lastUpdated" > ${startRecord?.[0] ? moment(startRecord?.[0]?.date).toDate() : startDate} 
+                AND "lastUpdated" < ${endRecord?.[0] ? moment(endRecord?.[0]?.date).toDate() : endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
         console.log(`Found ${result.length} results for ${field.device?.name}${field.key ? '.' + field.key?.name : ''}`)
 
         const sheet = xlsx.utils.json_to_sheet(result.filter((result) => {
-            return startDate < result.lastUpdated && endDate > result.lastUpdated
+            return moment(startDate).isBefore(moment(result.lastUpdated)) && moment(endDate).isAfter(moment(result.lastUpdated))
         }).map((x) => ({
             ...x, 
             date: moment(new Date(x.time)).format('DD/MM/YYYY - hh:mma'), 
