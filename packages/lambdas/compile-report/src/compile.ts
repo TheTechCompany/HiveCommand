@@ -58,8 +58,8 @@ console.log({startRecord, endRecord})
                 "deviceId" = ${deviceId} AND 
                 placeholder=${field.device?.name} 
                 ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-                AND "lastUpdated" > ${startRecord?.[0] ? moment(startRecord?.[0]?.date).toDate() : startDate} 
-                AND "lastUpdated" < ${endRecord?.[0] ? moment(endRecord?.[0]?.date).toDate() : endDate}
+                AND "lastUpdated" >= ${startRecord?.[0] ? moment(startRecord?.[0]?.date).toDate() : startDate} 
+                AND "lastUpdated" <= ${endRecord?.[0] ? moment(endRecord?.[0]?.date).toDate() : endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
