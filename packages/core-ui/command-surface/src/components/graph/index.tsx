@@ -46,8 +46,6 @@ const BaseGraph: React.FC<BaseGraphProps> = (props) => {
     }
   })
 
-  console.log({xAxisDomain, yAxisDomain})
-
   const yTicks = useMemo(() => {
     const tickCount = 5;
     if(typeof(yAxisDomain?.[0]) == 'number' && typeof(yAxisDomain?.[1]) == 'number'){

@@ -10,13 +10,14 @@ import moment from "moment";
 import { Graph, GraphContainer } from "../components/graph";
 // import { useApolloClient } from "@apollo/client";
 import { MoreVert, KeyboardArrowDown as Down, NavigateBefore as Previous, Add, NavigateNext as Next } from "@mui/icons-material";
-import { ButtonGroup, CircularProgress, Menu, Paper } from "@mui/material";
+import { ButtonGroup, CircularProgress, Menu, Paper, TextField } from "@mui/material";
 import { unit as mathUnit } from 'mathjs';
 import { Box, Typography, IconButton, Button } from '@mui/material'
 import { useParams } from "react-router-dom";
 import { debounce } from 'lodash';
 import { DeviceGraphExportModal } from "../components/modals/device-graph-export";
 import saveAs from "file-saver";
+import { DatePicker } from "@mui/x-date-pickers";
 
 const baseToBlob = (base64String, contentType = '') => {
   console.log(base64String)
@@ -74,7 +75,10 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
 
   const report_periods = ['7d', '1d', '12hr', '1hr', '30min']
 
-  const [period, setPeriod] = useState<'7d' | '1d' | '12hr' | '1hr' | '30min'>('30min');
+  const [period, setPeriod] = useState<'7d' | '1d' | '12hr' | '1hr' | '30min' | null>('30min');
+
+  const [ customPeriod, setCustomPeriod ] = useState<[Date | null, Date | null] | null>(null)
+
   const [datum, setDatum] = useState(props.date || new Date())
 
   const period_format = useMemo(() => {
@@ -101,7 +105,6 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
       case '1hr':
         return moment(datum).startOf('hour');
       case '30min':
-      default:
         return moment(datum).subtract(30, 'minutes')
     }
   }, [datum, period]);
@@ -117,7 +120,6 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
       case '1hr':
         return moment(datum).endOf('hour');
       case '30min':
-      default:
         return moment(datum);
     }
   }, [datum, period]);
@@ -129,13 +131,13 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
     }
   }, [startOfPeriod, endOfPeriod])
 
-  const [fetchHorizon, _setFetchHorizon] = useState<{ start: Date, end: Date }>(horizon)
+  const [fetchHorizon, _setFetchHorizon] = useState<{ start: Date | undefined, end: Date | undefined}>(horizon)
 
   const setFetchHorizon = useMemo(() => debounce(_setFetchHorizon, 500), [])
 
   useEffect(() => {
-    setFetchHorizon(horizon)
-  }, [horizon])
+    setFetchHorizon(customPeriod  ? {start: customPeriod[0] || undefined, end: customPeriod[1] || undefined} : horizon)
+  }, [horizon, customPeriod])
 
   const { results, loading } = client?.useAnalyticValues?.(activePage || '', fetchHorizon) || {}
 
@@ -315,6 +317,43 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
 
   }, [activePage, analytics, results]);
 
+  const renderDateView = () => {
+    if(!customPeriod){
+      return (
+        <Box sx={{display: 'flex', alignItems: 'center', pointerEvents: 'all'}}>
+        <IconButton
+        onClick={prevPeriod}>
+        <Previous />
+      </IconButton>
+      <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
+      <IconButton
+        disabled={!canNext}
+        onClick={nextPeriod}
+      >
+        <Next />
+      </IconButton>
+      </Box>
+      )
+    }else{
+      return (
+        <Box sx={{display: 'flex', gap: '6px', alignItems: 'center', pointerEvents: 'all'}}>
+        <DatePicker 
+          inputFormat="DD/MM/YYYY"
+          value={customPeriod[0]}
+          onChange={(e) => {setCustomPeriod([e, customPeriod[1]])}}
+          renderInput={(params) => <TextField {...params} size="small" />}
+          label="Start" />
+        <DatePicker 
+          inputFormat="DD/MM/YYYY"
+          value={customPeriod[1]}
+          onChange={(e) => {setCustomPeriod([customPeriod[0], e])}}
+          renderInput={(params) => <TextField {...params} size="small" />}
+          label="End" />
+        </Box>
+      )
+    }
+  }
+
   return (
     <Box
       style={{ position: 'relative', flex: 1, display: 'flex', flexDirection: 'column' }}
@@ -370,31 +409,31 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
 
         }}
       />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row' }}>
+      <Box sx={{ display: 'flex', marginTop: '8px', position: 'relative', justifyContent: 'space-between', flexDirection: 'row' }}>
         <Box sx={{ display: 'flex', marginLeft: '6px', alignItems: 'center' }}>
           <ButtonGroup size="small">
+            <Button onClick={() => {
+              //Custom period
+              setCustomPeriod([new Date(), new Date()])
+              setPeriod(null)
+
+            }} variant={customPeriod != null ? 'contained' : undefined}>
+              Custom
+            </Button>
             {report_periods.map((period_i) => (
               <Button
-                onClick={() => setPeriod(period_i as any)}
+                onClick={() => {
+                  setPeriod(period_i as any)
+                  setCustomPeriod(null)
+                }}
                 variant={period === period_i ? 'contained' : undefined}>
                 {period_i}
               </Button>
             ))}
           </ButtonGroup>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
-          <IconButton
-            onClick={prevPeriod}>
-            <Previous />
-          </IconButton>
-          <Typography>{moment(horizon?.start)?.format(period_format)} - {moment(horizon?.end)?.format(period_format)}</Typography>
-          <IconButton
-            disabled={!canNext}
-            onClick={nextPeriod}
-          >
-            <Next />
-          </IconButton>
-
+        <Box sx={{ position: 'absolute', pointerEvents: 'none', top: 0, left: 0, right: 0, bottom: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+          {renderDateView()}
         </Box>
 
         <IconButton
@@ -442,7 +481,7 @@ export const AnalyticView: React.FC<AnalyticViewProps> = (props) => {
                   openGraphExport(true)
                 }}
                 dataKey={item.subkey?.name}
-                label={`${item.tag?.name} - ${item.subkey?.name}`}
+                label={`${item.tag?.name}${item.subkey ? ' - ' + item.subkey?.name : ''}`}
                 total={item?.totalValue?.total ? (item?.totalValue?.total + (item.unit ? mathUnit(item.unit).units?.[0]?.unit.name : '')) : ''}>
                 <Graph xAxisDomain={item.xAxisDomain} yAxisDomain={item.yAxisDomain} data={item.values} xKey={"timestamp"} yKey={"value"} />
               </GraphContainer>

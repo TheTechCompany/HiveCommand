@@ -13,7 +13,7 @@ const prisma = new PrismaClient();
     //Get all reports that need compiling
     console.time('Compiling Reports');
 
-    const uncompiled_reports = await prisma.$queryRaw<{id: string, lastInstance?: Date, reportsNeeded?: number}[]>`
+    const uncompiled_reports = await prisma.$queryRaw<{ id: string, lastInstance?: Date, reportsNeeded?: number }[]>`
  		SELECT
             totals.id,
             "lastInstance",
@@ -32,7 +32,7 @@ const prisma = new PrismaClient();
         WHERE totals.instances < totals.reports
     `
 
-    if(uncompiled_reports?.length <= 0){
+    if (uncompiled_reports?.length <= 0) {
         console.log("No reports found that need compiling exiting succesfully now!");
         console.timeEnd('Compiling Reports');
         return true;
@@ -40,7 +40,7 @@ const prisma = new PrismaClient();
 
     const reports = await prisma.deviceReport.findMany({
         where: {
-            id: {in: uncompiled_reports?.map((x) => x.id)}
+            id: { in: uncompiled_reports?.map((x) => x.id) }
         },
         include: {
             fields: {
@@ -52,22 +52,40 @@ const prisma = new PrismaClient();
         }
     })
 
-    for(var i = 0; i < reports.length; i++){
+    const unfinishedReportInstances = await prisma.deviceReportInstance.findMany({
+        where: {
+            done: false
+        },
+        include: {
+            report: {
+                include: {
+                    fields: {
+                        include: {
+                            device: true,
+                            key: true
+                        }
+                    }
+                }
+            }
+        }
+    })
+
+    for (var i = 0; i < reports.length; i++) {
         let report = reports[i];
-        let { lastInstance, reportsNeeded = 0} = uncompiled_reports?.find((a) => a.id == report.id) || {};
-        if(!lastInstance) lastInstance = report.startDate;
+        let { lastInstance, reportsNeeded = 0 } = uncompiled_reports?.find((a) => a.id == report.id) || {};
+        if (!lastInstance) lastInstance = report.startDate;
 
         console.time(`Creating ${reportsNeeded} reports for ${report.deviceId} ${report.id}`)
-        for(var r = 0; r < reportsNeeded; r++){
+        for (var r = 0; r < reportsNeeded; r++) {
             const duration = moment.duration(...(report?.reportLength?.split(' ') || []));
 
             let startDate = moment(new Date(lastInstance)).add(r * duration.as('seconds'), 'seconds').toDate();
             let endDate = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds').toDate();
-            
+
             console.log("Compiling report for ", report.deviceId, report.id, " ", startDate, endDate);
 
-            if(report.deviceId){
-                
+            if (report.deviceId) {
+
                 const id = nanoid();
 
                 await prisma.deviceReportInstance.create({
@@ -82,18 +100,18 @@ const prisma = new PrismaClient();
                     }
                 })
 
-                const {path} = await compileReport(prisma, id, report.deviceId, report, startDate, endDate) || {}
+                const { path } = await compileReport(prisma, id, report.deviceId, report, startDate, endDate) || {}
 
-                if(path){
+                if (path) {
                     const command = new PutObjectCommand({
                         Bucket: process.env.BUCKET || "test-bucket",
                         Key: `${id}.xlsx`,
                         Body: readFileSync(path),
                     });
 
-                    try{
+                    try {
                         await client.send(command);
-                    }catch(err){
+                    } catch (err) {
                         console.error("Error making S3 request", err);
 
                         // await prisma.deviceReportInstance.delete({where: {id}})
@@ -101,21 +119,61 @@ const prisma = new PrismaClient();
                     }
 
                     await prisma.deviceReportInstance.update({
-                        where: {id},
+                        where: { id },
                         data: {
                             done: true
                         }
                     })
-                }else{
-                    await prisma.deviceReportInstance.delete({where: {id}})
+                } else {
+                    await prisma.deviceReportInstance.delete({ where: { id } })
                 }
             }
-           
+
         }
         console.timeEnd(`Creating ${reportsNeeded} reports for ${report.deviceId} ${report.id}`)
+    }
+
+    console.time(`Creating ${unfinishedReportInstances.length} unfinished reports`)
+
+    for (var i = 0; i < unfinishedReportInstances.length; i++) {
+        const report = unfinishedReportInstances[i];
+
+        let startDate = moment(new Date(report.startDate)).toDate();
+        let endDate = moment(new Date(report.endDate)).toDate();
+
+        console.log("Compiling report for ", report.report.deviceId, report.id, " ", startDate, endDate);
+
+        if (report.report.deviceId) {
+
+            const { path } = await compileReport(prisma, report.id, report.report.deviceId, report.report, startDate, endDate) || {}
+
+            if (path) {
+                const command = new PutObjectCommand({
+                    Bucket: process.env.BUCKET || "test-bucket",
+                    Key: `${report.id}.xlsx`,
+                    Body: readFileSync(path),
+                });
+
+                try {
+                    await client.send(command);
+                } catch (err) {
+                    console.error("Error making S3 request", err);
+                }
+
+                await prisma.deviceReportInstance.update({
+                    where: { id: report.id },
+                    data: {
+                        done: true
+                    }
+                })
+            } else {
+                await prisma.deviceReportInstance.delete({ where: { id: report.id } })
+            }
+        }
 
     }
-   
+    console.timeEnd(`Creating ${unfinishedReportInstances.length} unfinished reports`)
+
     console.timeEnd('Compiling Reports');
 
 })();

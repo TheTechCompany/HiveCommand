@@ -15,7 +15,6 @@ export const ReportView = () => {
 
     const location = useLocation();
 
-    console.log({location})
 
     const navigate = useNavigate();
 

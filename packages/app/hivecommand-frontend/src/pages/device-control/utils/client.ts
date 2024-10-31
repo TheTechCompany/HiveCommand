@@ -52,7 +52,8 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         deleteReport,
         createReportField,
         updateReportField,
-        deleteReportField
+        deleteReportField,
+        createReportInstance
     } = useDeviceReportActions(deviceId);
 
 
@@ -71,7 +72,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         useConnectivity: () => {
             return useConnectivity(deviceId);
         },
-        useAnalyticValues: (report: string, horizon: {start: Date, end: Date}) => useAnalyticValues(deviceId, report, horizon),
+        useAnalyticValues: (report: string, horizon: {start?: Date, end?: Date}) => useAnalyticValues(deviceId, report, horizon),
         createAnalyticPage,
         updateAnalyticPage,
         removeAnalyticPage,
@@ -87,6 +88,7 @@ export const useWebClient = (deviceId: string) : CommandSurfaceClient => {
         createReportField,
         updateReportField,
         deleteReportField,
+        createReportInstance,
         writeTagValue
     }
 }

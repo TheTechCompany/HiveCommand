@@ -19,6 +19,8 @@ export default (prisma: PrismaClient) => {
 			updateCommandDeviceReport(device: ID, id: ID, input: CommandDeviceReportInput): CommandDeviceReport
 			deleteCommandDeviceReport(device: ID, id: ID): CommandDeviceReport
 
+			createCommandDeviceReportInstance(device: ID, report: ID): CommandDeviceReportInstance
+
 			createCommandDeviceReportField(report: ID, input: CommandDeviceReportFieldInput!): CommandDeviceReportField!
 			updateCommandDeviceReportField(report: ID, id: ID, input: CommandDeviceReportFieldInput!): CommandDeviceReportField!
 			deleteCommandDeviceReportField(report: ID, id: ID): CommandDeviceReportField!
@@ -174,6 +176,32 @@ export default (prisma: PrismaClient) => {
 						}
 					}
 				})
+			},
+			createCommandDeviceReportInstance: async (root: any, args: any) => {
+				const report = await prisma.deviceReport.findFirst({
+					where: {
+						device: {id: args.device},
+						id: args.report
+					}
+				})
+				if(!report) throw new Error('No device report');
+				if(report?.recurring) throw new Error(`Can't instantiate recurring reports manually`);
+				if(!report.endDate) throw new Error('Need endDate for report compilation');
+
+				const id = nanoid();
+				
+				return await prisma.deviceReportInstance.create({
+					data: {
+						id,
+						startDate: report.startDate,
+						endDate: report.endDate,
+						report: {connect: {id: report.id}},
+                        version: report.version,
+                        fileId: `${id}.xlsx`,
+						done: false
+					}
+				})
+
 			},
 			createCommandDeviceReportField: async (root: any, args: any) => {
 

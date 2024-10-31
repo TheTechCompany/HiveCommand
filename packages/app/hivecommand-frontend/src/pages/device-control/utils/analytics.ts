@@ -60,7 +60,7 @@ export const useDeviceAnalytics = (id: string) => {
 }
 
 
-export const useDeviceAnalyticData = (deviceId: string, analyticId: string, horizon: {start: Date, end?: Date}) => {
+export const useDeviceAnalyticData = (deviceId: string, analyticId: string, horizon: {start?: Date, end?: Date}) => {
   const { data: analyticData, loading } = useQuery(gql`
     query AnalyticDataValue($id: ID, $analyticId: ID, $startDate: DateTime, $endDate: DateTime){
       commandDevices(where: {id: $id}){

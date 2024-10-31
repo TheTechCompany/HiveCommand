@@ -1,6 +1,6 @@
 import { useQuery, useApolloClient, gql } from "@apollo/client"
 import { useAddDeviceChart, useCreateAnalyticPage, useRemoveDeviceChart, useRemoveAnalyticPage, useUpdateDeviceChart, useUpdateDeviceChartGrid, useUpdateAnalyticPage } from "@hive-command/api";
-import { useDownloadReport, useCreateReport, useUpdateReport, useRemoveReport, useCreateReportField, useUpdateReportField, useRemoveReportField } from "@hive-command/api";
+import { useDownloadReport, useCreateReportInstance, useCreateReport, useUpdateReport, useRemoveReport, useCreateReportField, useUpdateReportField, useRemoveReportField } from "@hive-command/api";
 import { withRefetch } from "./analytics";
 
 export const useDeviceReports = (id: string) => {
@@ -84,6 +84,8 @@ export const useDeviceReportActions = (id: string) => {
   const updateReportField = withRefetch(useUpdateReportField(id), refetch);
   const deleteReportField = withRefetch(useRemoveReportField(id), refetch);
 
+  const createReportInstance = withRefetch(useCreateReportInstance(id), refetch)
+
   return {
     // useAnalyticValues: useDeviceAnalyticData,
     downloadReport,
@@ -92,6 +94,7 @@ export const useDeviceReportActions = (id: string) => {
     deleteReport,
     createReportField,
     updateReportField,
-    deleteReportField
+    deleteReportField,
+    createReportInstance
   }
 }

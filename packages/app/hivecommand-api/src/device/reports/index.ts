@@ -22,6 +22,24 @@ export const useDownloadReport = (deviceId: string) => {
 		}});
 }
 
+export const useCreateReportInstance = (deviceId: string) => {
+	const [ createInstance ] = useApolloMutation(gql`
+		mutation CreateReportInstance($deviceId: ID, $reportId: ID) {
+			createCommandDeviceReportInstance(device: $deviceId, report: $reportId){
+				id
+			}
+		}
+	`, {
+
+	})
+
+	return async (report: string) => await createInstance({
+		variables: {
+			deviceId,
+			reportId: report
+		}});
+}
+
 export const useCreateReport = (deviceId: string) => {
 
 	const [ addReport ] = useMutation((mutation, args: {
