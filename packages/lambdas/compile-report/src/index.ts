@@ -79,10 +79,20 @@ const prisma = new PrismaClient();
 
         console.time(`Creating ${reportsNeeded} reports for ${report.deviceId} ${report.id}`)
         for (var r = 0; r < reportsNeeded; r++) {
-            const duration = moment.duration(...(report?.reportLength?.split(' ') || []));
 
-            let startDate = moment(new Date(lastInstance)).add(r * duration.as('seconds'), 'seconds').toDate();
-            let endDate = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds').toDate();
+            const duration = moment.duration(...(report?.reportLength?.split(' ') || []));
+            const durationType = report.reportLength?.split(' ')[1]
+
+            let startMoment = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds');
+            let endMoment = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds');
+
+            if(durationType){
+                startMoment.startOf(durationType as any)
+                endMoment.endOf(durationType as any)
+            }
+
+            let startDate = startMoment.toDate()
+            let endDate = endMoment.toDate()
 
             console.log("Compiling report for ", report.deviceId, report.id, " ", startDate, endDate);
 

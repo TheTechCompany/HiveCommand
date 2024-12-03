@@ -120,10 +120,10 @@ export default (prisma: PrismaClient) => {
 							create: [{
 								id: id,
 								name: args.input.name,
-								recurring: args.input.recurring,
+								recurring: args.input.recurring || false,
 								startDate: args.input.startDate,
 								endDate: args.input.endDate || null,
-								reportLength: !args.input.reportLength ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
+								reportLength: mathUnit(args.input.reportLength).format({})
 								// reports: [],
 							}]
 						}
@@ -151,7 +151,7 @@ export default (prisma: PrismaClient) => {
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
 									endDate: args.input.endDate || null,
-									reportLength: (args.input.reportLength == null || args.input.reportLength == undefined) ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
+									reportLength: mathUnit(args.input.reportLength).format({})
 								}
 							}
 						}

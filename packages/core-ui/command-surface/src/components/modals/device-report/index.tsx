@@ -28,8 +28,9 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
 
     const timeBucketError = useMemo(() => {
         try{
-          if(report.reportLength) return (mathUnit(report.reportLength).to('seconds') == null)
-          return false;
+            if(report.recurring && !report.reportLength) return true;
+            if(report.reportLength) return (mathUnit(report.reportLength).to('seconds') == null || mathUnit(report.reportLength).to('seconds').toNumber() == 0)
+            return false;
         }catch(e){
           console.log({error: e})
           return true;
@@ -61,7 +62,14 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
 
                     <FormControlLabel 
                         control={
-                            <Checkbox checked={report.recurring} onChange={(e) => setReport({...report, recurring: e.target.checked})} />
+                            <Checkbox checked={report.recurring} onChange={(e) => {
+                                setReport({...report, recurring: e.target.checked})
+                                if(e.target.checked){
+                                    setReport({...report, endDate: null})
+                                }else{
+                                    setReport({...report, endDate: new Date()})
+                                }
+                            }} />
                         } 
                         label="Recurring" />
 
