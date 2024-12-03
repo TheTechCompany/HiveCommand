@@ -25,7 +25,10 @@ export const useDeviceReports = (id: string) => {
             version
             startDate
             endDate
+            
             done
+
+            createdAt 
 
             url
           }

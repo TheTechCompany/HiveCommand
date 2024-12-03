@@ -5,7 +5,7 @@ import {unit as mathUnit} from 'mathjs';
 import { nanoid } from "nanoid";
 import { stringify as csvStringify } from 'csv';
 import xlsx from 'xlsx'
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { GetObjectCommand, DeleteObjectCommand, S3Client } from '@aws-sdk/client-s3';
 const {getSignedUrl} = require("@aws-sdk/s3-request-presigner");
 
 const client = new S3Client({region: 'ap-southeast-2'});
@@ -120,10 +120,10 @@ export default (prisma: PrismaClient) => {
 							create: [{
 								id: id,
 								name: args.input.name,
-								recurring: args.input.recurring,
+								recurring: args.input.recurring || false,
 								startDate: args.input.startDate,
 								endDate: args.input.endDate || null,
-								reportLength: !args.input.reportLength ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
+								reportLength: mathUnit(args.input.reportLength).format({})
 								// reports: [],
 							}]
 						}
@@ -151,7 +151,7 @@ export default (prisma: PrismaClient) => {
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
 									endDate: args.input.endDate || null,
-									reportLength: (args.input.reportLength == null || args.input.reportLength == undefined) ? moment(args.input.startDate).diff(moment(args.input.endDate), 'seconds') + 's' : args.input.reportLength
+									reportLength: mathUnit(args.input.reportLength).format({})
 								}
 							}
 						}
@@ -164,6 +164,24 @@ export default (prisma: PrismaClient) => {
 				return device.reports?.find((a) => a.id == args.id);
 			},
 			deleteCommandDeviceReport: async (root: any, args: any, context: any) => {
+
+				const reports = await prisma.deviceReportInstance.findMany({
+					where: {
+						report: {
+							id: args.id
+						}
+					}
+				})
+
+				await Promise.all(reports.map(async (report) => {
+					const deleteCmd = new DeleteObjectCommand({
+						Key: report.fileId,
+                        Bucket: process.env.REPORT_BUCKET || "test-bucket",
+					})
+
+					await client.send(deleteCmd)
+				}))
+				
 				return await prisma.device.update({
 					where: {
 						id: args.device

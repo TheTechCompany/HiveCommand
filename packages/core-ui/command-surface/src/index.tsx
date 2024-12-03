@@ -836,7 +836,7 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                         startDate: report.startDate ?  new Date(report.startDate) : undefined,
                                         endDate: !report.recurring ? (report.endDate ? new Date(report.endDate) : new Date()) : undefined,
                                         recurring: report.recurring,
-                                        reportLength: report.reportLength
+                                        reportLength: report.recurring ? report.reportLength : undefined
                                     }).then(() => {
                                         setEditReportPage(false);
                                         setSelectedReport({})
@@ -845,7 +845,8 @@ export const CommandSurface: React.FC<CommandSurfaceProps> = (props) => {
                                     client?.createReport?.({
                                         ...report,
                                         startDate: report.startDate ? new Date(report.startDate) : new Date(),
-                                        endDate: !report.recurring ? (report.endDate ? new Date(report.endDate) : new Date()) : undefined
+                                        endDate: !report.recurring ? (report.endDate ? new Date(report.endDate) : new Date()) : undefined,
+                                        reportLength: report.recurring ? report.reportLength : undefined
                                     }).then(() => {
                                         setEditReportPage(false);
                                         setSelectedReport({})
