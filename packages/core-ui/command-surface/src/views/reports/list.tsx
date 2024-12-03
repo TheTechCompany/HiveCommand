@@ -118,8 +118,8 @@ export const ReportList = () => {
                         </IconButton> : <Tooltip title="Processing report"><CircularProgress sx={{width: '20px'}} size="small" /></Tooltip>
                     }>
                         <ListItemButton sx={{display: 'flex', alignItems: 'flex-start', flexDirection: "column"}}>
-                            <span>{moment(p.startDate).format('DD/MM/YYYY')} - {moment(p.endDate).format('DD/MM/YYYY')}</span>
-                            <span style={{fontSize: '12px'}}>Created: {moment(p.createdAt).format('DD/MM/YYYY')}</span>
+                            <span>{moment.utc(p.startDate).format('DD/MM/YYYY')} - {moment.utc(p.endDate).format('DD/MM/YYYY')}</span>
+                            <span style={{fontSize: '12px'}}>Created: {moment.utc(p.createdAt).format('DD/MM/YYYY')}</span>
                         </ListItemButton>
                     </ListItem>
                 ))}

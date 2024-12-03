@@ -13,24 +13,56 @@ const prisma = new PrismaClient();
     //Get all reports that need compiling
     console.time('Compiling Reports');
 
-    const uncompiled_reports = await prisma.$queryRaw<{ id: string, lastInstance?: Date, reportsNeeded?: number }[]>`
- 		SELECT
-            totals.id,
-            "lastInstance",
-            totals.reports - totals.instances as "reportsNeeded"
-        FROM 
-        (SELECT 
-            "DeviceReport".id,
-            FLOOR((1000*EXTRACT(EPOCH FROM now() - "DeviceReport"."startDate")) / (1000 * EXTRACT(EPOCH FROM "reportLength"::interval))) as reports,
-            COUNT("DeviceReportInstance"."id") as instances,
-            max("DeviceReportInstance"."endDate") as "lastInstance"
-        FROM "DeviceReport" 
-        LEFT JOIN "DeviceReportInstance" 
-        ON "DeviceReportInstance"."reportId" = "DeviceReport"."id"
-        WHERE "DeviceReport"."recurring" = TRUE
-        GROUP BY "DeviceReport"."id") as totals
-        WHERE totals.instances < totals.reports
-    `
+    let recurring_reports : any[] = await prisma.deviceReport.findMany({
+        where: {
+            startDate: {
+                lte: new Date()
+            },
+            recurring: true,
+            reportLength: {
+                not: null
+            }
+        },
+        include: {
+            instances: {
+                orderBy: {
+                    endDate: 'asc'
+                }
+            }
+        }
+    })
+
+    recurring_reports = recurring_reports.map((report) => {
+        let lastDate = report.instances?.[report.instances.length - 1]?.endDate || report.startDate;
+
+        return {
+            ...report,
+            lastDate,
+        }
+    }).filter((report) => {
+        let lastDate = report.lastDate
+
+        return moment.duration(moment.utc().diff(moment.utc(lastDate))) > moment.duration(...report.reportLength?.split(' ') as any)
+    })
+
+    // const uncompiled_reports = await prisma.$queryRaw<{ id: string, lastInstance?: Date, reportsNeeded?: number }[]>`
+ 	// 	SELECT
+    //         totals.id,
+    //         "lastInstance",
+    //         totals.reports - totals.instances as "reportsNeeded"
+    //     FROM 
+    //     (SELECT 
+    //         "DeviceReport".id,
+    //         FLOOR((1000*EXTRACT(EPOCH FROM now() - "DeviceReport"."startDate")) / (1000 * EXTRACT(EPOCH FROM "reportLength"::interval))) as reports,
+    //         COUNT("DeviceReportInstance"."id") as instances,
+    //         max("DeviceReportInstance"."endDate") as "lastInstance"
+    //     FROM "DeviceReport" 
+    //     LEFT JOIN "DeviceReportInstance" 
+    //     ON "DeviceReportInstance"."reportId" = "DeviceReport"."id"
+    //     WHERE "DeviceReport"."recurring" = TRUE
+    //     GROUP BY "DeviceReport"."id") as totals
+    //     WHERE totals.instances < totals.reports
+    // `
 
 
     const unfinishedReportInstances = await prisma.deviceReportInstance.findMany({
@@ -51,7 +83,7 @@ const prisma = new PrismaClient();
         }
     })
 
-    if (uncompiled_reports?.length <= 0 && unfinishedReportInstances?.length <= 0) {
+    if (recurring_reports?.length <= 0 && unfinishedReportInstances?.length <= 0) {
         console.log("No reports found that need compiling exiting succesfully now!");
         console.timeEnd('Compiling Reports');
         return true;
@@ -59,7 +91,7 @@ const prisma = new PrismaClient();
 
     const reports = await prisma.deviceReport.findMany({
         where: {
-            id: { in: uncompiled_reports?.map((x) => x.id) }
+            id: { in: recurring_reports?.map((x) => x.id) }
         },
         include: {
             fields: {
@@ -74,17 +106,21 @@ const prisma = new PrismaClient();
 
     for (var i = 0; i < reports.length; i++) {
         let report = reports[i];
-        let { lastInstance, reportsNeeded = 0 } = uncompiled_reports?.find((a) => a.id == report.id) || {};
-        if (!lastInstance) lastInstance = report.startDate;
+        let { lastDate } = recurring_reports?.find((a) => a.id == report.id) || {};
+        // if (!lastInstance) lastInstance = report.startDate;
+
+        const duration = moment.duration(...(report?.reportLength?.split(' ') || []));
+
+        const reportsNeeded = (moment.duration(moment.utc().diff(moment.utc(lastDate))) as any) / (duration as any)
 
         console.time(`Creating ${reportsNeeded} reports for ${report.deviceId} ${report.id}`)
         for (var r = 0; r < reportsNeeded; r++) {
 
-            const duration = moment.duration(...(report?.reportLength?.split(' ') || []));
             const durationType = report.reportLength?.split(' ')[1]
+            const durationCount = parseFloat(report.reportLength?.split(' ')[0] || '0')
 
-            let startMoment = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds');
-            let endMoment = moment(new Date(lastInstance)).add((r + 1) * duration.as('seconds'), 'seconds');
+            let startMoment = moment.utc(new Date(lastDate)).add((r + 1) * durationCount, durationType as any);
+            let endMoment = moment.utc(new Date(lastDate)).add((r + 1) * durationCount, durationType as any);
 
             if(durationType){
                 startMoment.startOf(durationType as any)
@@ -93,6 +129,8 @@ const prisma = new PrismaClient();
 
             let startDate = startMoment.toDate()
             let endDate = endMoment.toDate()
+
+            if(endDate > new Date()) continue; //Date range messed up it's trying to get to the future
 
             console.log("Compiling report for ", report.deviceId, report.id, " ", startDate, endDate);
 
@@ -150,8 +188,8 @@ const prisma = new PrismaClient();
     for (var i = 0; i < unfinishedReportInstances.length; i++) {
         const report = unfinishedReportInstances[i];
 
-        let startDate = moment(new Date(report.startDate)).toDate();
-        let endDate = moment(new Date(report.endDate)).toDate();
+        let startDate = moment.utc(new Date(report.startDate)).toDate();
+        let endDate = moment.utc(new Date(report.endDate)).toDate();
 
         console.log("Compiling report for ", report.report.deviceId, report.id, " ", startDate, endDate);
 
