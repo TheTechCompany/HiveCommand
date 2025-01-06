@@ -113,6 +113,8 @@ const prisma = new PrismaClient();
 
         const reportsNeeded = (moment.duration(moment.utc().diff(moment.utc(lastDate))) as any) / (duration as any)
 
+        console.log(`${report.id} needs ${reportsNeeded}`)
+
         console.time(`Creating ${reportsNeeded} reports for ${report.deviceId} ${report.id}`)
         for (var r = 0; r < reportsNeeded; r++) {
 
@@ -163,9 +165,6 @@ const prisma = new PrismaClient();
                         await client.send(command);
                     } catch (err) {
                         console.error("Error making S3 request", err);
-
-                        // await prisma.deviceReportInstance.delete({where: {id}})
-                        // continue;
                     }
 
                     await prisma.deviceReportInstance.update({
