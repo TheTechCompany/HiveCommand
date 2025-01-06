@@ -38,12 +38,12 @@ export const compileReport = async (
         `;
 
         const endRecord : {date: Date}[] = await prisma.$queryRaw`
-            SELECT MIN("lastUpdated") as date
+            SELECT MAX("lastUpdated") as date
             FROM "DeviceValue"
             WHERE "deviceId" = ${deviceId} AND 
             placeholder=${field.device?.name}
             ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-            AND "lastUpdated" >= ${endDate}
+            AND "lastUpdated" <= ${endDate}
         `;
 
 console.log({startRecord, endRecord})
