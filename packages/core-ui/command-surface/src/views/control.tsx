@@ -110,7 +110,7 @@ export const ControlView = () => {
             id: '',
             // ...activeProgram?.interface,
             ...hmi,
-            nodes: fullHMIElements
+            nodes: fullHMIElements //.map((x) => ({...x, draggable: false}))
         },
         tags,
         types
