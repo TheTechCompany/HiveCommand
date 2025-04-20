@@ -16873,7 +16873,7 @@ __metadata:
     nanoid: 3.x
     ts-node: ^10.9.2
     typescript: 4.9.5
-    xlsx: ^0.18.5
+    xlsx: "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   languageName: unknown
   linkType: soft
 
@@ -39354,6 +39354,15 @@ __metadata:
   version: 4.0.0
   resolution: "xdg-basedir@npm:4.0.0"
   checksum: 0073d5b59a37224ed3a5ac0dd2ec1d36f09c49f0afd769008a6e9cd3cd666bd6317bd1c7ce2eab47e1de285a286bad11a9b038196413cd753b79770361855f3c
+  languageName: node
+  linkType: hard
+
+"xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz":
+  version: 0.20.3
+  resolution: "xlsx@https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
+  bin:
+    xlsx: ./bin/xlsx.njs
+  checksum: c08ac699e6d31222404871240aa2c2804cb8bae59f0bea08d3293e99756cf0d3122fd34739189edaae1d9b0b493bbb8eb95d021950ee7b5cba9d55ecd6fcb4e4
   languageName: node
   linkType: hard
 
