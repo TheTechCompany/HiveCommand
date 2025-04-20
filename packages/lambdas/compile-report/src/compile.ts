@@ -46,7 +46,6 @@ export const compileReport = async (
             AND "lastUpdated" <= ${endDate}
         `;
 
-console.log({startRecord, endRecord})
 
         const result : any[] = await prisma.$queryRaw`
             SELECT placeholder, 
@@ -58,8 +57,8 @@ console.log({startRecord, endRecord})
                 "deviceId" = ${deviceId} AND 
                 placeholder=${field.device?.name} 
                 ${field.key ? Prisma.sql` AND key=${field.key?.name}` : Prisma.empty} 
-                AND "lastUpdated" >= ${startRecord?.[0] ? moment(startRecord?.[0]?.date).toDate() : startDate} 
-                AND "lastUpdated" <= ${endRecord?.[0] ? moment(endRecord?.[0]?.date).toDate() : endDate}
+                AND "lastUpdated" >= ${startRecord?.[0]?.date ? moment(startRecord?.[0]?.date).toDate() : startDate} 
+                AND "lastUpdated" <= ${endRecord?.[0]?.date ? moment(endRecord?.[0]?.date).toDate() : endDate}
                 GROUP BY placeholder, key, time ORDER BY time ASC
         `
 
@@ -86,7 +85,7 @@ console.log({startRecord, endRecord})
 
         const xlsxPath = path.join(__dirname, `${id}.xlsx`);
 
-        xlsx.writeFile(workbook, xlsxPath);
+        xlsx.writeFile(workbook, xlsxPath, {bookSST: true, compression: true});
 
         return {path: xlsxPath, id};
 
