@@ -47,7 +47,7 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
             open={props.open} 
             onClose={props.onClose}>
             <DialogTitle>
-                {props.selected ? "Update" : "Create"} Report
+                {props.selected?.id ? "Update" : "Create"} Report
             </DialogTitle>
             <DialogContent>
                 <Box sx={{marginTop: '8px', display: 'flex', flexDirection: 'column'}}>
@@ -104,13 +104,13 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
                     </Box>
                 </Box>
             </DialogContent>
-            <DialogActions sx={{display: 'flex', justifyContent: props.selected ? "space-between" : 'flex-end'}}>
-                {props.selected ? (<Button onClick={props.onDelete} color="error" variant="contained">Delete</Button>) : null}
+            <DialogActions sx={{display: 'flex', justifyContent: props.selected?.id ? "space-between" : 'flex-end'}}>
+                {props.selected?.id ? (<Button onClick={props.onDelete} color="error" variant="contained">Delete</Button>) : null}
                 <Box sx={{display: 'flex', alignItems: 'center'}}>
                     <Button onClick={props.onClose}>Close</Button>
                     <Button onClick={() => {
                         if(!timeBucketError) props.onSubmit?.(report)
-                    }} variant="contained" color="primary">{props.selected ? "Save": "Create"}</Button>
+                    }} variant="contained" color="primary">{props.selected?.id ? "Save": "Create"}</Button>
                 </Box>
             </DialogActions>
         </Dialog>

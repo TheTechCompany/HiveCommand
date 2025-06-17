@@ -14,7 +14,6 @@ export const compileReport = async (
     endDate: Date
 ) => {
 
-
     console.time(`Creating workbook ${id}`)
 
     const workbook = xlsx.utils.book_new();
