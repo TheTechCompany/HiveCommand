@@ -123,7 +123,7 @@ export default (prisma: PrismaClient) => {
 								recurring: args.input.recurring || false,
 								startDate: args.input.startDate,
 								endDate: args.input.endDate || null,
-								reportLength: mathUnit(args.input.reportLength).format({})
+								reportLength: args.input.reportLength ? mathUnit(args.input.reportLength).format({}) : undefined
 								// reports: [],
 							}]
 						}
@@ -151,7 +151,7 @@ export default (prisma: PrismaClient) => {
 									recurring: args.input.recurring,
 									startDate: args.input.startDate,
 									endDate: args.input.endDate || null,
-									reportLength: mathUnit(args.input.reportLength).format({})
+									reportLength: args.input.reportLength ? mathUnit(args.input.reportLength).format({}) : undefined
 								}
 							}
 						}

@@ -24,7 +24,9 @@ export interface DeviceReportModalProps {
 
 export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
     
-    const [ report, setReport ] = useState<DeviceReport>({})
+    const [ report, setReport ] = useState<DeviceReport>({
+        recurring: false
+    })
 
     const timeBucketError = useMemo(() => {
         try{
@@ -38,9 +40,11 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
       }, [report.reportLength])
 
     useEffect(() => {
-        setReport({...props.selected})
+        setReport({...props.selected, recurring: props.selected?.recurring || false})
     }, [props.selected])
       
+    console.log("REC", {recurring: report.recurring})
+
     return (
         <Dialog 
             fullWidth
@@ -53,7 +57,7 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
                 <Box sx={{marginTop: '8px', display: 'flex', flexDirection: 'column'}}>
                     <TextField 
                         fullWidth
-                        value={report.name}
+                        value={report.name || ''}
                         onChange={(e) => {
                             setReport({...report, name: e.target.value})
                         }}
@@ -62,12 +66,12 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
 
                     <FormControlLabel 
                         control={
-                            <Checkbox checked={report.recurring} onChange={(e) => {
-                                setReport({...report, recurring: e.target.checked})
+                            <Checkbox checked={report.recurring || false} onChange={(e) => {
+                                setReport((r) => ({...r, recurring: e.target.checked}))
                                 if(e.target.checked){
-                                    setReport({...report, endDate: null})
+                                    setReport((r) => ({...r, endDate: null}))
                                 }else{
-                                    setReport({...report, endDate: new Date()})
+                                    setReport((r) => ({...r, endDate: new Date()}))
                                 }
                             }} />
                         } 
@@ -84,6 +88,7 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
                     <Box sx={{marginTop: '8px'}}>
                     {report.recurring ? 
                         (<TextField
+                            key={'report-length'}
                             error={timeBucketError}
                             value={report.reportLength}
                             onChange={(e) => setReport({
@@ -94,6 +99,8 @@ export const DeviceReportModal : React.FC<DeviceReportModalProps> = (props) => {
                             size="small" 
                             label="Report length" />) : 
                         <DatePicker 
+                            key={'report-end'}
+
                             inputFormat='DD/MM/YYYY'
                             renderInput={(params) => <TextField {...params} fullWidth size="small" label="End Date" />}
                             value={report.endDate}
