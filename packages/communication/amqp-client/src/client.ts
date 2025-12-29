@@ -87,12 +87,13 @@ export class MQTTClient extends EventEmitter {
         })
 
         this.client.on('close', () => {
-            console.log("MQTT Connection closed")
+            console.log("MQTT Connection closed, unsubscribing...")
+            this.client?.unsubscribe(`${this.DEVICE_CONTROL_PREFIX}/#`);
         })
 
         this.client.on('error', (err) => {
-            console.log("MQTT Client Error", err);
-
+            console.log("MQTT Client Error, unsubscribing...", err);
+            this.client?.unsubscribe(`${this.DEVICE_CONTROL_PREFIX}/#`);
         })
 
         this.client.on('reconnect', () => {

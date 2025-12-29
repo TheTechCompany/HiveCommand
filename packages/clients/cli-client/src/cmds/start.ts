@@ -21,9 +21,8 @@ type Options = {
   export const builder: CommandBuilder<Options, Options> = (yargs) =>
 	yargs
 	  .options({
-		
         discoveryServer: {type: 'string', required: true, description: 'Discovery server host', default: 'http://discovery.hexhive.io'},
-       
+
         provisionCode: {type: 'string', required: true, description: 'Provision Code'}
 
 	  })

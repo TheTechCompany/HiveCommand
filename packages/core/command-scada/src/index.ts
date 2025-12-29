@@ -43,7 +43,7 @@ export class ScadaCommand extends EventEmitter {
         this.eventedValues = new EventedValueStore();
 
         this.alarmRegister = new LocalRegister();
-        this.alarmEngine = new AlarmCenter(this.alarmRegister);
+        this.alarmEngine = new AlarmCenter(this.alarmRegister, config?.alarms, config?.alarmPathways);
 
         this.driverRegistry = new DriverRegistry({
             pluginDir: path.join(this.workingDirectory, 'hivecommand-plugins'),
@@ -133,14 +133,20 @@ export class ScadaCommand extends EventEmitter {
                     })
                 });
 
-                await new Promise((resolve) => setInterval(() => driver?.ready && resolve(true), 100))
+                await new Promise((resolve) => {
+                    const interval = setInterval(() => {
+                        if(driver?.ready){
+                            clearInterval(interval);
+                            resolve(true)
+                        }
+                    }, 100);
+                });
                 
         
             // }))
             }
 
             console.debug("Finished setting up remote data-sources")
-
         }
     }
 
@@ -198,8 +204,8 @@ export class ScadaCommand extends EventEmitter {
         const allReady = await this.driverRegistry?.allReady();
         if(allReady){
             this.alarmEngine.hook(
-                conf?.alarms || [], 
-                conf?.alarmPathways || [], 
+                // conf?.alarms || [], 
+                // conf?.alarmPathways || [], 
                 this.lastState,
                 snapshot, 
                 invertSnapshot(snapshot, conf?.tags || [])
@@ -260,6 +266,8 @@ export class ScadaCommand extends EventEmitter {
             })
 
         }))
+
+        this.alarmEngine = new AlarmCenter(this.alarmRegister, options?.alarms || [], options?.alarmPathways || [])
 
     }
 

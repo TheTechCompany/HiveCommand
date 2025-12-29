@@ -2,9 +2,11 @@ import { nanoid } from "nanoid";
 import { ALARM_LEVEL, makeHook, makeNotification } from "./utils";
 import { AlarmRegister } from "../alarm";
 import { Alarm, AlarmPathway } from "@hive-command/interface-types";
+import { HookInstance } from "./types";
 
 export class Hook {
 
+    private compiledAlarms: ({handler?: HookInstance| undefined} | undefined)[];
     private alarms : Alarm[];
     private alarmPathways: AlarmPathway[];
 
@@ -14,13 +16,10 @@ export class Hook {
         this.register = register;
         this.alarms = alarms;
         this.alarmPathways = alarmPathways;
-    }
 
-    async run(lastValues: any, values: any, typedValues: {[key: string]: {[key: string]: any}}){
 
-        const compiledAlarms = this.alarms.map((x) => {
-
-            const runtimeId = nanoid();
+        this.compiledAlarms = this.alarms.map((x) => {
+            // const runtimeId = nanoid();
 
             try{
                 const hook = makeHook(
@@ -39,8 +38,11 @@ export class Hook {
             }
 
         })
+    }
 
-        return await Promise.all(compiledAlarms.map(async (alm) => {
+    async run(lastValues: any, values: any, typedValues: {[key: string]: {[key: string]: any}}){
+
+        return await Promise.all(this.compiledAlarms.map(async (alm) => {
             try{
                 return await alm?.handler?.(lastValues, values, typedValues);
             }catch(err){

@@ -19,25 +19,27 @@ export class AlarmCenter {
 
     private register: AlarmRegister;
 
-    private cleanupHooks : (HookCleanup | undefined)[] = [];
+    private cleanupHooks? : (HookCleanup | undefined)[] = [];
+    private alarmHook : Hook | undefined;
 
-    constructor(register: AlarmRegister){
+    constructor(register: AlarmRegister, alarms?: Alarm[], alarmPathways?: AlarmPathway[]){
         this.register = register;
+        this.alarmHook = new Hook(this.register, alarms || [], alarmPathways || []);
     }
 
     //Only works for local command-scada currently
-    async hook (alarms: Alarm[], alarmPathways: AlarmPathway[], lastValues: any, values: any, typedValues: any) {
+    async hook (lastValues: any, values: any, typedValues: any) {
 
         //Cleanup from last hook call
-        await Promise.all(this.cleanupHooks.map((cleanup) => {
+        await Promise.all((this.cleanupHooks || []).map((cleanup) => {
             cleanup?.();
         }));
         
-        //Setup new bulk hooks
-        const hookInst = new Hook(this.register, alarms, alarmPathways);
+        // //Setup new bulk hooks
+        // const hookInst = new Hook(this.register, alarms, alarmPathways);
 
         //Run hook and store alarm post processing function
-        this.cleanupHooks = await hookInst.run(lastValues, values, typedValues)
+        this.cleanupHooks = await this.alarmHook?.run(lastValues, values, typedValues)
 
     }   
 }
