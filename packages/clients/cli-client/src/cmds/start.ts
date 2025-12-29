@@ -35,7 +35,6 @@ type Options = {
     } = argv;
 
 	console.info(`Starting IOT-Cli v${pkg.version}`);
-	
 
 	const iotCli = new IOTCLI({
         discoveryServer,
