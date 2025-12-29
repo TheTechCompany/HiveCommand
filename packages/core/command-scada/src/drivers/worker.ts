@@ -4,6 +4,7 @@ import { BaseCommandDriver } from '@hive-command/drivers-base';
 let Driver: any;
 let instance: BaseCommandDriver;
 
+
 expose({
     ready: async () => instance.ready,
     start: async () => {

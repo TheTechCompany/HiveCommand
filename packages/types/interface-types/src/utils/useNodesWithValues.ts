@@ -18,6 +18,7 @@ export const useNodesWithValues = (
 	updateValues: (values: any) => void
 ) => {
 
+	
 	const valueRef = useRef<{ values: any }>({ values })
 
 	const [valueState, setValues] = useState<any>(values || {})

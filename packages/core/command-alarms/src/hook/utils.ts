@@ -61,7 +61,6 @@ export const makeHook = (
         // "require",
         jsCode);
 
-
     const exports : {handler?: HookInstance} = {};
     const module = {exports};
 

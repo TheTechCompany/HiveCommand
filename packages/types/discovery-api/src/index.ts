@@ -13,6 +13,7 @@ export interface GDSNetworkLayout {
         iotToken: string,
 }
 
+
 export interface GDSControlLayout {
     tags: HMITag[],
     types: HMIType[],

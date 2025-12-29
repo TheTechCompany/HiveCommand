@@ -12,7 +12,6 @@ export const useExtensions = (props: any) => {
     const autocompletionExtension = useAutocompletionExtension(props);
     const [focusExtension, isFocus] = useFocusExtension(props.onFocus);
     const changeExtension = useChangeExtension(props.onChange);
-    // const bracketMatch = 
 
     const rawExtensions = useMemo(
         () => [
