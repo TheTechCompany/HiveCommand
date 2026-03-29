@@ -4707,6 +4707,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@hive-command/drivers-pccc@workspace:packages/drivers/command-pccc":
+  version: 0.0.0-use.local
+  resolution: "@hive-command/drivers-pccc@workspace:packages/drivers/command-pccc"
+  dependencies:
+    "@hive-command/drivers-base": "workspace:^"
+    "@types/events": ^3.0.3
+    "@types/node": ^25.5.0
+    nodepccc: ^0.1.17
+    typescript: ^6.0.2
+  languageName: unknown
+  linkType: soft
+
 "@hive-command/editor-canvas@workspace:^, @hive-command/editor-canvas@workspace:packages/core-ui/editor-canvas":
   version: 0.0.0-use.local
   resolution: "@hive-command/editor-canvas@workspace:packages/core-ui/editor-canvas"
@@ -12188,6 +12200,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/events@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "@types/events@npm:3.0.3"
+  checksum: 50af9312fab001fd6bd4bb3ff65830f940877e6778de140a92481a0d9bf5f4853d44ec758a8800ef60e0598ac43ed1b5688116a3c65906ae54e989278d6c7c82
+  languageName: node
+  linkType: hard
+
 "@types/express-serve-static-core@npm:*, @types/express-serve-static-core@npm:^4.17.33":
   version: 4.17.43
   resolution: "@types/express-serve-static-core@npm:4.17.43"
@@ -12547,6 +12566,15 @@ __metadata:
   dependencies:
     undici-types: ~5.26.4
   checksum: 7cc979f7e2ca9a339ec71318c3901b9978555257929ef3666987f3e447123bc6dc92afcc89f6347e09e07d602fde7d51bcddea626c23aa2bb74aeaacfd1e1686
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^25.5.0":
+  version: 25.5.0
+  resolution: "@types/node@npm:25.5.0"
+  dependencies:
+    undici-types: ~7.18.0
+  checksum: ea0908794d5c011f4f2b5d2e93737ae047ff4a9fd1ec6da27e13a1f976d8d0e029830ddf2d4177e00a2601307e8bbc06e7b4cb3e29e889489d42dd44b49c796a
   languageName: node
   linkType: hard
 
@@ -29728,6 +29756,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"nodepccc@npm:^0.1.17":
+  version: 0.1.17
+  resolution: "nodepccc@npm:0.1.17"
+  checksum: 2390f7407342d783a422bbc4eeeef5c0ed7472f97fdd99c20bbb16ee32deb8a3dd544d4fcc6c46d65409b5b3f5ae3e1b9b67b3b8b458ce73c5ce843166f41ddc
+  languageName: node
+  linkType: hard
+
 "non-layered-tidy-tree-layout@npm:^2.0.2":
   version: 2.0.2
   resolution: "non-layered-tidy-tree-layout@npm:2.0.2"
@@ -37469,6 +37504,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typescript@npm:^6.0.2":
+  version: 6.0.2
+  resolution: "typescript@npm:6.0.2"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: a95632e5e4f7b9e7d9e9e9b79b4f147b45181258e7cae4c9f9f2a24176aff688d25e798cddf78cc39cb95423c8c63b36fd4ed5ac4028d37667dcc62a1e89e9e7
+  languageName: node
+  linkType: hard
+
 "typescript@npm:~3.8.3":
   version: 3.8.3
   resolution: "typescript@npm:3.8.3"
@@ -37528,6 +37573,13 @@ __metadata:
   version: 5.26.5
   resolution: "undici-types@npm:5.26.5"
   checksum: 3192ef6f3fd5df652f2dc1cd782b49d6ff14dc98e5dced492aa8a8c65425227da5da6aafe22523c67f035a272c599bb89cfe803c1db6311e44bed3042fc25487
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~7.18.0":
+  version: 7.18.2
+  resolution: "undici-types@npm:7.18.2"
+  checksum: 23da306c8366574adec305b06a8519ab5c7d09e3f5d16c1a98709a34fae17da09ec95198f30f86c00055e02efa8bfcc843e84e8aebeb9b8d6bb3e06afccae07a
   languageName: node
   linkType: hard
 
