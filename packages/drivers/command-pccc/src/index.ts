@@ -1,7 +1,7 @@
 import { BaseCommandDriver, DriverOptions } from "@hive-command/drivers-base";
 import { Observable, Subject } from "observable-fns";
 
-const NodePCCC = require('node-pccc');
+const NodePCCC = require('nodepccc');
 
 export default class PCCCDriver extends BaseCommandDriver {
 
