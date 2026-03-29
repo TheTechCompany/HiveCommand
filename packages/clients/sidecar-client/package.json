@@ -1,6 +1,6 @@
 {
 	"name": "@hive-command/sidecar-client",
-	"version": "1.4.15-alpha.314",
+	"version": "1.4.15-alpha.316",
 	"main": "dist/index.js",
 	"private": true,
 	"license": "MIT",
