@@ -17,7 +17,8 @@
   "description": "",
   "dependencies": {
     "@hive-command/drivers-base": "workspace:^",
-    "nodepccc": "^0.1.17"
+    "nodepccc": "^0.1.17",
+    "observable-fns": "^0.6.1"
   },
   "devDependencies": {
     "@types/events": "^3.0.3",

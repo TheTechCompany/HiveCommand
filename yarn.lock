@@ -4715,6 +4715,7 @@ __metadata:
     "@types/events": ^3.0.3
     "@types/node": ^25.5.0
     nodepccc: ^0.1.17
+    observable-fns: ^0.6.1
     typescript: ^6.0.2
   languageName: unknown
   linkType: soft

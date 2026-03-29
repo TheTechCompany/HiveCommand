@@ -1,5 +1,5 @@
 import { BaseCommandDriver, DriverOptions } from "@hive-command/drivers-base";
-import { Observable, Subject } from "@hive-command/threads/observable";
+import { Observable, Subject } from "observable-fns";
 
 const NodePCCC = require('node-pccc');
 
@@ -40,7 +40,7 @@ export default class PCCCDriver extends BaseCommandDriver {
                     subject.next(values)
                 });
             }, 5 * 1000)
-            
+
             // let plcTags : any[] = [];
 
             // for(var i = 0; i < tags.length; i++){
