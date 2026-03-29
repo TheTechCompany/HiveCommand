@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.15-alpha.317](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.316...v1.4.15-alpha.317) (2026-03-29)
+
+**Note:** Version bump only for package @hive-command/alarm-engine
+
+
+
+
+
 ## [1.4.15-alpha.316](https://github.com/TheTechCompany/HiveCommand/compare/v1.4.15-alpha.315...v1.4.15-alpha.316) (2025-12-29)
 
 **Note:** Version bump only for package @hive-command/alarm-engine
