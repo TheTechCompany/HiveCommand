@@ -25,6 +25,7 @@ export default class PCCCDriver extends BaseCommandDriver {
         })
     }
 
+
     subscribe(tags: { name: string; alias?: string; }[]): Promise<Observable<{ [key: string]: any; }>> {
         return new Promise(async (resolve) => {
 
@@ -39,6 +40,7 @@ export default class PCCCDriver extends BaseCommandDriver {
                     subject.next(values)
                 });
             }, 5 * 1000)
+            
             // let plcTags : any[] = [];
 
             // for(var i = 0; i < tags.length; i++){
