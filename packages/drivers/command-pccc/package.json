@@ -1,6 +1,6 @@
 {
   "name": "@hive-command/drivers-pccc",
-  "version": "1.4.15-alpha.320",
+  "version": "1.4.15-alpha.321",
   "main": "dist/index.js",
   "files": [
     "dist/"
