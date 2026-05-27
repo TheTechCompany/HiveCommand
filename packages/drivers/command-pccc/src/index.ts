@@ -29,7 +29,7 @@ export default class PCCCDriver extends BaseCommandDriver {
     subscribe(tags: { name: string; alias?: string; }[]): Promise<Observable<{ [key: string]: any; }>> {
         return new Promise(async (resolve) => {
 
-            this.client.addItems(tags?.map((x) => x.name));
+            this.client.addItems(tags?.map((x) => x.name?.replace(/\./g, ':')));
 
             const subject = new Subject<{ [key: string]: any }>();
 
@@ -37,6 +37,11 @@ export default class PCCCDriver extends BaseCommandDriver {
                 this.client.readAllItems((err: any, values: any) => {
                     if (err) console.error(err);
 
+                    //Change key in values object from : to .
+                    Object.keys(values).forEach((key) => {
+                        values[key.replace(/\:/g, '.')] = values[key];
+                        delete values[key];
+                    });
                     subject.next(values)
                 });
             }, 5 * 1000)
